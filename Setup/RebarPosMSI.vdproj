@@ -3,7 +3,7 @@
 "VSVersion" = "3:800"
 "ProjectType" = "8:{978C614F-708E-4E1A-B201-565925725DBA}"
 "IsWebType" = "8:FALSE"
-"ProjectName" = "8:PolyObjMSI"
+"ProjectName" = "8:RebarPosMSI"
 "LanguageId" = "3:1033"
 "CodePage" = "3:1252"
 "UILanguageId" = "3:1033"
@@ -15,7 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_8218A072D22E4D30BC84F45C0704AE88"
+        "MsmKey" = "8:_2ED07EEF136C43F182EFB272526CC5E4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -151,24 +151,24 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:ObjectEnabler for AsdkPolyObj"
+        "ProductName" = "8:ObjectEnabler for RebarPos"
         "ProductCode" = "8:{225C2B3C-00C1-41F8-B190-32FC548D6A7A}"
-        "PackageCode" = "8:{38888C5A-A625-4583-8EDB-C111620D87A8}"
+        "PackageCode" = "8:{E009841C-F66F-45C2-8CD3-851245907DD6}"
         "UpgradeCode" = "8:{E4C65509-7B3A-433C-B1E3-BFA8470C63C8}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:1.0.0"
-        "Manufacturer" = "8:Autodesk Inc."
+        "Manufacturer" = "8:OZOZ"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:ObjectEnabler for AsdkPolyObj"
+        "Title" = "8:ObjectEnabler for RebarPos"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:Autodesk Inc."
+        "ARPCONTACT" = "8:OZOZ"
         "Keywords" = "8:"
-        "ARPCOMMENTS" = "8:ObjectEnabler for AsdkPolyObj"
-        "ARPURLINFOABOUT" = "8:www.autodesk.com"
+        "ARPCOMMENTS" = "8:ObjectEnabler for RebarPos"
+        "ARPURLINFOABOUT" = "8:"
         "ARPPRODUCTICON" = "8:"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
@@ -636,7 +636,7 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_8218A072D22E4D30BC84F45C0704AE88"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_2ED07EEF136C43F182EFB272526CC5E4"
             {
             "SourcePath" = "8:DebugMSM\\PolyObjMSM.msm"
             "TargetName" = "8:"
@@ -658,7 +658,7 @@
             "ProjectOutputGroupRegister" = "3:1"
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:Built"
-            "OutputProjectGuid" = "8:{D743D047-D2C2-4964-AA17-7B9B4B8C00A6}"
+            "OutputProjectGuid" = "8:{DCA46BD2-BA46-45AF-B78F-CF1A18784AD6}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {
@@ -668,21 +668,7 @@
                 "UseDynamicProperties" = "11:TRUE"
                 "IsDependency" = "11:FALSE"
                 "SourcePath" = "8:DebugMSM\\PolyObjMSM.msm"
-                    "Properties"
-                    {
-                        "_A12510D53F7445D8A4A40253679EE1A1.6E45658FE0A14AEF99D59235A813586A"
-                        {
-                        "Name" = "8:_A12510D53F7445D8A4A40253679EE1A1.6E45658FE0A14AEF99D59235A813586A"
-                        "DisplayName" = "8:Module Retargetable Folder"
-                        "Description" = "8:"
-                        "Type" = "3:32769"
-                        "ContextData" = "8:_RetargetableFolder"
-                        "Attributes" = "3:6"
-                        "Setting" = "3:1"
-                        "UsePlugInResources" = "11:FALSE"
-                        }
-                    }
-                "LanguageId" = "3:1033"
+                "LanguageId" = "3:0"
                 "Exclude" = "11:FALSE"
                 "Folder" = "8:_2655FC9693B74323940A5AFD0F13CBF3"
                 "Feature" = "8:"

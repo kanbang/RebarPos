@@ -1,5 +1,5 @@
-#ifndef POLYSAMP_COMMAND_H
-#define POLYSAMP_COMMAND_H
+#pragma once
+
 //
 // (C) Copyright 1996-2008 by Autodesk, Inc. 
 //
@@ -39,4 +39,3 @@ void polyCommand2();
 void polyeditCommand();
 void transactCommand();
 
-#endif /*POLYSAMP_COMMAND_H*/

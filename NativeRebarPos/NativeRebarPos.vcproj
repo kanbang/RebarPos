@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\..\..\inc;..\..\..\inc"
-				PreprocessorDefinitions=";POLYSAMP;ACRXAPP;RADPACK;"
+				PreprocessorDefinitions="ACRXAPP;RADPACK;POLYSAMP;"
 				UsePrecompiledHeader="0"
 			/>
 			<Tool
@@ -112,7 +112,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\..\..\inc;..\..\..\inc"
-				PreprocessorDefinitions=";POLYSAMP;ACRXAPP;RADPACK;"
+				PreprocessorDefinitions="ACRXAPP;RADPACK;POLYSAMP;"
 				UsePrecompiledHeader="0"
 			/>
 			<Tool

@@ -1,3 +1,5 @@
+#pragma once
+
 // (C) Copyright 1996-2002 by Autodesk, Inc. 
 //
 // Permission to use, copy, modify, and distribute this software in

@@ -21,6 +21,7 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 #pragma once
+
 #include <tchar.h>
 using namespace System;
 using namespace Autodesk::AutoCAD::Geometry;

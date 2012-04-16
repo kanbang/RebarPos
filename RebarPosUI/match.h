@@ -1,5 +1,5 @@
-#ifndef POLYSAMP_MATCH_H
-#define POLYSAMP_MATCH_H
+#pragma once
+
 //
 // (C) Copyright 1994-2006 by Autodesk, Inc. 
 //
@@ -47,4 +47,3 @@ class AppEventCatcher : public AcRxDLinkerReactor
 };
 
 
-#endif // POLYSAMP_MATCH_H

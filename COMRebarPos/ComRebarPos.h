@@ -21,8 +21,7 @@
 //
 // ComPolygon.h : Declaration of the CComPolygon
 
-#ifndef __COMPOLYGON_H_
-#define __COMPOLYGON_H_
+#pragma once
 
 #include "resource.h"       // main symbols
 #include "dynprops.h"
@@ -176,4 +175,3 @@ END_OPMPROP_MAP()
         AcDbObjectIdArray mObjectIdArray;
 };
 
-#endif //__COMPOLYGON_H_

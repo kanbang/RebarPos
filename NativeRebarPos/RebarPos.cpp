@@ -1890,123 +1890,6 @@ CRebarPos::dwgOutFields(AcDbDwgFiler* filer) const
 }
 
 
-#ifdef ORDER_DEPENDENT
-
-Acad::ErrorStatus
-CRebarPos::dxfInFields(AcDbDxfFiler* filer)
-{
-    assertWriteEnabled();
-    
-    if ((AcDbCurve::dxfInFields(filer) != Acad::eOk) ||
-        !filer->atSubclassData(_T("AsdkPoly")) )
-    {
-        return filer->filerStatus();
-    }
-    
-    try
-    {
-        resbuf rb;
-        
-        // Object Version
-        Adesk::Int16 version;
-        filer->readItem(&rb);
-        if (rb.restype != AcDb::kDxfInt16) 
-            throw AcDb::kDxfInt16;
-            
-        version = rb.resval.rint;
-        if (version > VERSION)
-            return Acad::eMakeMeProxy;
-        
-        if (version == 1)
-        {
-            AcGePoint3d cent,sp;
-            
-            filer->readItem(&rb);
-            if (rb.restype != AcDb::kDxfXCoord) 
-                throw AcDb::kDxfXCoord
-                cent = asPnt3d(rb.resval.rpoint);
-            
-            filer->readItem(&rb);
-            if (rb.restype != AcDb::kDxfXCoord + 1) 
-                throw AcDb::kDxfXCoord + 1;
-            sp = asPnt3d(rb.resval.rpoint);
-            
-            filer->readItem(&rb);
-            if (rb.restype != AcDb::kDxfInt32) 
-                throw AcDb::kDxfInt32;
-            mNumSides = rb.resval.rlong;
-            
-            filer->readItem(&rb);
-            if (rb.restype != AcDb::kDxfNormalX) 
-                throw AcDb::kDxfNormalX
-                mPlaneNormal = asVec3d(rb.resval.rpoint);
-            
-            filer->readItem(&rb);
-            if (rb.restype != AcDb::kDxfText) 
-                throw AcDb::kDxfText;
-            setName(rb.resval.rstring);
-            
-            filer->readItem(&rb);
-            if (rb.restype != kDxfHardPointerId) 
-                throw AcDb::kDxfHardPointerId;
-            acdbGetObjectId(mTextStyle, rb.resval.rlname);
-            
-            //convert data from old format
-            acdbWcs2Ecs(asDblArray(cent),asDblArray(cent),asDblArray(mPlaneNormal),Adesk::kFalse);
-            mCenter.set(cent.x,cent.y);
-            mElevation = cent.z;
-            acdbWcs2Ecs(asDblArray(sp),asDblArray(sp),asDblArray(mPlaneNormal),Adesk::kFalse);
-            mStartPoint.set(sp.x,sp.y);
-            assert(mElevation == sp.z);
-        } 
-        else if (version == 2)
-        {
-            filer->readItem(&rb);
-            if (rb.restype != AcDb::kDxfXCoord) 
-                throw AcDb::kDxfXCoord;
-            mCenter = asPnt2d(rb.resval.rpoint);
-            
-            filer->readItem(&rb);
-            if (rb.restype != AcDb::kDxfXCoord + 1) 
-                throw AcDb::kDxfXCoord + 1;
-            mStartPoint = asPnt2d(rb.resval.rpoint);
-            
-            filer->readItem(&rb);
-            if (rb.restype != AcDb::kDxfInt32) 
-                throw AcDb::kDxfInt32
-                mNumSides = rb.resval.rlong;
-            
-            filer->readItem(&rb);
-            if (rb.restype != AcDb::kDxfNormalX)
-                throw AcDb::kDxfNormalX;
-            mPlaneNormal = asVec3d(rb.resval.rpoint);
-            
-            filer->readItem(&rb);
-            if (rb.restype != AcDb::kDxfText) 
-                throw AcDb::kDxfText
-                setName(rb.resval.rstring);
-            
-            filer->readItem(&rb);
-            if (rb.restype != AcDb::kDxfHardPointerId) 
-                throw AcDb::kDxfHardPointerId;
-            acdbGetObjectId(mTextStyle, rb.resval.rlname);
-            
-            filer->readItem(&rb);
-            if (rb.restype != AcDb::kDxfReal) 
-                throw AcDb::kDxfReal;
-            mElevation = rb.resval.rreal;
-        } 
-        else assert(false);
-    }
-    catch (AcDb::DxfCode code)
-    {
-        filer->pushBackItem();
-        filer->setError(Acad::eInvalidDxfCode,
-            _T("\nError: expected group code %d"), code);
-        return filer->filerStatus();
-    }
-}
-#else
 
 Acad::ErrorStatus
 CRebarPos::dxfInFields(AcDbDxfFiler* filer)
@@ -2147,8 +2030,6 @@ CRebarPos::dxfInFields(AcDbDxfFiler* filer)
     }
     return es;
 }
-
-#endif // ORDER_DEPENDENT 
 
 
 Acad::ErrorStatus

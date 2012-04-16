@@ -1,5 +1,5 @@
-#ifndef _ASDK_POLYJIG_H
-#define _ASDK_POLYJIG_H
+#pragma once
+
 //
 // (C) Copyright 1996-2006 by Autodesk, Inc. 
 //
@@ -70,4 +70,3 @@ class AsdkPolyJig : public  AcEdJig
     CRebarPos*	       mPoly;
 };
 
-#endif

@@ -25,7 +25,7 @@ Imports Autodesk.AutoCAD.DatabaseServices
 Imports Autodesk.AutoCAD.Geometry
 
 ' import the custom entity wrapper
-Imports Autodesk.ObjectDbxSample.Poly
+Imports Autodesk.ObjectDbxSample.RebarPos
 
 Imports DBTransMan = Autodesk.AutoCAD.DatabaseServices.TransactionManager
 

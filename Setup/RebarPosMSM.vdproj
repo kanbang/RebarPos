@@ -3,7 +3,7 @@
 "VSVersion" = "3:800"
 "ProjectType" = "8:{06A35CCD-C46D-44D5-987B-CF40FF872267}"
 "IsWebType" = "8:FALSE"
-"ProjectName" = "8:PolyObjMSM"
+"ProjectName" = "8:RebarPosMSM"
 "LanguageId" = "3:1033"
 "CodePage" = "3:1252"
 "UILanguageId" = "3:1033"
@@ -143,9 +143,9 @@
         {
         "ModuleSignature" = "8:MergeModule.6E45658FE0A14AEF99D59235A813586A"
         "Version" = "8:1.0.0.0"
-        "Title" = "8:PolyObjMSM"
+        "Title" = "8:RebarPosMSM"
         "Subject" = "8:"
-        "Author" = "8:Autodesk Inc."
+        "Author" = "8:OZOZ"
         "Keywords" = "8:"
         "Comments" = "8:"
         "SearchPath" = "8:"
@@ -159,7 +159,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_BA1DCABB0E9B48B5BC00808753668C86"
             {
-            "SourcePath" = "8:c:\\NativeRebarPos.dbx"
+            "SourcePath" = "8:..\\x64\\Debug\\NativeRebarPos.dbx"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_2CD329C36902447B86EED3D43170E854"
