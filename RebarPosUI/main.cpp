@@ -33,7 +33,7 @@
 #include "rxregsvc.h"
 #include "aced.h"
 
-#include "../NativeRebarPos/poly.h"
+#include "../NativeRebarPos/RebarPos.h"
 #include "command.h"
 #include "match.h"
 

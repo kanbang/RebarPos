@@ -41,8 +41,8 @@
 #include "dbents.h"
 #include "dbsymtb.h"
 
-#include "poly.h"
-#include "util.h"
+#include "RebarPos.h"
+#include "Utility.h"
 
 #include "dbxutil.h"
 

@@ -40,7 +40,7 @@ END
 
 3 TEXTINCLUDE DISCARDABLE 
 BEGIN
-    "1 TYPELIB ""compoly.tlb""\r\n"
+    "1 TYPELIB ""RebarPos.tlb""\r\n"
     "\0"
 END
 
@@ -71,12 +71,12 @@ BEGIN
         BLOCK "040904B0"
         BEGIN
             VALUE "CompanyName", "\0"
-            VALUE "FileDescription", "compoly Module\0"
+            VALUE "FileDescription", "RebarPos Module\0"
             VALUE "FileVersion", "1, 0, 0, 1\0"
-            VALUE "InternalName", "COMPOLY\0"
-            VALUE "LegalCopyright", "Copyright 1997\0"
-            VALUE "OriginalFilename", "COMPOLY.DLL\0"
-            VALUE "ProductName", "compoly Module\0"
+            VALUE "InternalName", "COMREBARPOS\0"
+            VALUE "LegalCopyright", "Copyright 2012\0"
+            VALUE "OriginalFilename", "COMREBARPOS.DLL\0"
+            VALUE "ProductName", "RebarPos Module\0"
             VALUE "ProductVersion", "1, 0, 0, 1\0"
             VALUE "OLESelfRegister", "\0"
         END
@@ -95,7 +95,7 @@ END
 // REGISTRY
 //
 
-IDR_COMPOLYGON          REGISTRY DISCARDABLE    "ComPolygon.rgs"
+IDR_COMPOLYGON          REGISTRY DISCARDABLE    "RebarPos.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -104,7 +104,7 @@ IDR_COMPOLYGON          REGISTRY DISCARDABLE    "ComPolygon.rgs"
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_PROJNAME            "Compoly"
+    IDS_PROJNAME            "RebarPos"
 END
 
 #endif    // English (U.S.) resources

@@ -49,8 +49,8 @@
 #include "dbxutil.h"
 #include "acutmem.h"
 
-#include "util.h"
-#include "poly.h"
+#include "Utility.h"
+#include "RebarPos.h"
 
 #include "acdb.h"
 #include "dbidmap.h"
@@ -61,7 +61,7 @@
 #include "tchar.h"
 
 #include <initguid.h>
-#include "..\COMRebarPos\compoly_i.c"
+#include "..\COMRebarPos\COMRebarPos_i.c"
 #include <basetsd.h>
 #include "ac64bithelpers.h"
 

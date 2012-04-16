@@ -52,9 +52,9 @@ CComModule _Module;
 
 #include "gepnt3d.h"
 
-#include "../NativeRebarPos/poly.h"
-#include "polyjig.h"
-#include "../NativeRebarPos/util.h"
+#include "../NativeRebarPos/RebarPos.h"
+#include "RebarPosJIG.h"
+#include "../NativeRebarPos/Utility.h"
 #include "dbxutil.h"
 #include "dbapserv.h"
 
@@ -62,15 +62,15 @@ CComModule _Module;
 #include "acdocman.h"
 
 #include "acadi.h"
-#include "../COMRebarPos/compoly_i.h"
-#include "../COMRebarPos/compoly_i.c"
+#include "../COMRebarPos/COMRebarPos_i.h"
+#include "../COMRebarPos/COMRebarPos_i.c"
 #include "axpnt2d.h"
 #include "initguid.h"
 #include "axboiler.h"
 #include "axpnt2d.h"
 #include "axpnt3d.h"
 
-#include "polycmd.h"
+#include "RebarPosCmd.h"
 
 
 // static functions used in this file.

@@ -27,9 +27,9 @@
 #error _DEBUG should not be defined except in internal Adesk debug builds
 #endif
 
-#include "polyjig.h"
+#include "RebarPosJIG.h"
 #include "dbmain.h"
-#include "../NativeRebarPos/poly.h"
+#include "../NativeRebarPos/RebarPos.h"
 #include "adslib.h"
 
 

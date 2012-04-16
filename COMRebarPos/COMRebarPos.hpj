@@ -2,22 +2,22 @@
 
 [OPTIONS]
 COMPRESS=12 Hall Zeck
-ERRORLOG=Compoly.log
+ERRORLOG=RebarPos.log
 LCID=0x409 0x0 0x0 ; English (United States)
 REPORT=Yes
 CONTENTS=IDH_CONTENTS
-TITLE=Compoly Sample Application
-COPYRIGHT=Compoly Sample Application 1.0
-HLP=Compoly.hlp
+TITLE=RebarPos Library
+COPYRIGHT=RebarPos Library 1.0
+HLP=RebarPos.hlp
 
 [FILES]
-compoly.RTF
+RebarPos.RTF
 
 [MAP]
-#include compoly.hm
+#include RebarPos.hm
 
 [WINDOWS]
-LangRef="Compoly Sample Application",(653,102,360,600),62212,(r14876671),(r12632256),f3
+LangRef="RebarPos Library",(653,102,360,600),62212,(r14876671),(r12632256),f3
 main="",(18,10,600,435),60672,(r14876671),(r12632256),f6
 
 [CONFIG]

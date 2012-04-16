@@ -25,10 +25,10 @@
 #error _DEBUG should not be defined except in internal Adesk debug builds
 #endif
 
-#include "compoly_i.h"
-#include "ComPolygon.h"
+#include "COMRebarPos_i.h"
+#include "ComRebarPos.h"
 #include "dbsymtb.h"
-#include "../NativeRebarPos/poly.h"
+#include "../NativeRebarPos/RebarPos.h"
 #include "axpnt3d.h"
 #include "axpnt2d.h"
 #include "dbxutil.h"

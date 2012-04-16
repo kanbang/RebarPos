@@ -34,12 +34,12 @@
 #include "resource.h"
 #include "initguid.h"
 
-#include "compoly_i.h"
+#include "COMRebarPos_i.h"
 
-#include "compoly_i.c"
+#include "COMRebarPos_i.c"
 
-#include "ComPolygon.h"
-#include "../NativeRebarPos/poly.h"
+#include "ComRebarPos.h"
+#include "../NativeRebarPos/RebarPos.h"
 
 
 

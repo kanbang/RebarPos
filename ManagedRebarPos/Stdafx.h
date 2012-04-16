@@ -46,8 +46,8 @@
 #include "dbmain.h"
 
 // poly includes
-#include "..\NativeRebarPos\poly.h"
-#include "mgPoly.h"
+#include "..\NativeRebarPos\RebarPos.h"
+#include "MgRebarPos.h"
 
 #ifndef WINVER
 #define WINVER 0x500

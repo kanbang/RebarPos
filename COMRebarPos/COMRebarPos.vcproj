@@ -137,7 +137,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="axdb.lib ..\NativeRebarPos\$(IntDir)\NativeRebarPos.lib "
 				AdditionalLibraryDirectories="..\..\..\lib;..\..\..\..\lib;..\;..\NativeRebarPos"
-				ModuleDefinitionFile="compoly.def"
+				ModuleDefinitionFile="COMRebarPos.def"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -310,19 +310,19 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath=".\compoly.cpp"
+				RelativePath=".\ComRebarPos.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\compoly.hpj"
+				RelativePath=".\COMRebarPos.hpj"
 				>
 			</File>
 			<File
-				RelativePath=".\compoly.idl"
+				RelativePath=".\COMRebarPos.idl"
 				>
 			</File>
 			<File
-				RelativePath=".\compoly.rc"
+				RelativePath=".\COMRebarPos.rc"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -358,7 +358,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\ComPolygon.cpp"
+				RelativePath=".\COMRebarPosApp.cpp"
 				>
 			</File>
 			<File
@@ -403,15 +403,15 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\compoly.hm"
+				RelativePath=".\ComRebarPos.h"
 				>
 			</File>
 			<File
-				RelativePath=".\ComPolygon.h"
+				RelativePath="..\NativeRebarPos\RebarPos.h"
 				>
 			</File>
 			<File
-				RelativePath="..\NativeRebarPos\poly.h"
+				RelativePath=".\RebarPos.hm"
 				>
 			</File>
 			<File
@@ -428,11 +428,11 @@
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe"
 			>
 			<File
-				RelativePath=".\compoly.RTF"
+				RelativePath=".\RebarPos.rgs"
 				>
 			</File>
 			<File
-				RelativePath=".\ComPolygon.rgs"
+				RelativePath=".\RebarPos.RTF"
 				>
 			</File>
 		</Filter>

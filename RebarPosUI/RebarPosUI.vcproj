@@ -295,35 +295,35 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90"
 			>
 			<File
-				RelativePath=".\command.cpp"
+				RelativePath=".\Command.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\hilit.cpp"
+				RelativePath=".\Hilit.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\main.cpp"
+				RelativePath=".\Main.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\polycmd.cpp"
+				RelativePath=".\RebarPosCmd.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\polyjig.cpp"
+				RelativePath=".\RebarPosJIG.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\polymnu.cpp"
+				RelativePath=".\RebarPosMenu.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\transact.cpp"
+				RelativePath=".\Transact.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\utilui.cpp"
+				RelativePath=".\UtilUI.cpp"
 				>
 			</File>
 		</Filter>
@@ -332,27 +332,27 @@
 			Filter="h;hpp;hxx;hm;inl;fi;fd"
 			>
 			<File
-				RelativePath=".\command.h"
+				RelativePath=".\Command.h"
 				>
 			</File>
 			<File
-				RelativePath=".\match.h"
+				RelativePath=".\Match.h"
 				>
 			</File>
 			<File
-				RelativePath="..\NativeRebarPos\poly.h"
+				RelativePath="..\NativeRebarPos\RebarPos.h"
 				>
 			</File>
 			<File
-				RelativePath=".\polycmd.h"
+				RelativePath=".\RebarPosCmd.h"
 				>
 			</File>
 			<File
-				RelativePath=".\polyjig.h"
+				RelativePath=".\RebarPosJIG.h"
 				>
 			</File>
 			<File
-				RelativePath="..\NativeRebarPos\util.h"
+				RelativePath="..\NativeRebarPos\Utility.h"
 				>
 			</File>
 		</Filter>

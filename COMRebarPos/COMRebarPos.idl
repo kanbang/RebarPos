@@ -18,15 +18,15 @@
 // restrictions set forth in FAR 52.227-19 (Commercial Computer
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
-#include "compoly.hm"
+#include "RebarPos.hm"
 //
 // Type library section and components
 //
 [
 	uuid(60E2E250-99CE-42EB-8881-54C193F35E40),
 	version(1.0),
-	helpstring("Compoly 1.0 Type Library"),
-	helpfile("compoly.hlp")
+	helpstring("RebarPos 1.0 Type Library"),
+	helpfile("RebarPos.hlp")
 ]
 library COMPOLYLib
 {

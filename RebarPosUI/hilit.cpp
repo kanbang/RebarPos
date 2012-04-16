@@ -36,8 +36,8 @@
 
 #include "gepnt3d.h"
 
-#include "../NativeRebarPos/poly.h"
-#include "../NativeRebarPos/util.h"
+#include "../NativeRebarPos/RebarPos.h"
+#include "../NativeRebarPos/Utility.h"
 #include "tchar.h"
 
 

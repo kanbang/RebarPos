@@ -37,11 +37,11 @@ extern CComModule _Module;
 #include "rxobject.h"
 #include "acadi.h"
 
-#include "..\COMRebarPos\compoly_i.h"
-#include "..\COMRebarPos\compolygon.h"
+#include "..\COMRebarPos\COMRebarPos_i.h"
+#include "..\COMRebarPos\COMRebarPos.h"
 
 #include "acdocman.h"
-#include "polycmd.h"
+#include "RebarPosCmd.h"
 
 
 

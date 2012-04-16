@@ -291,15 +291,15 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90"
 			>
 			<File
-				RelativePath="..\COMRebarPos\compoly.idl"
+				RelativePath="..\COMRebarPos\COMRebarPos.idl"
 				>
 			</File>
 			<File
-				RelativePath=".\poly.cpp"
+				RelativePath=".\RebarPos.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\utilobj.cpp"
+				RelativePath=".\Utility.cpp"
 				>
 			</File>
 		</Filter>
@@ -308,15 +308,15 @@
 			Filter="h;hpp;hxx;hm;inl;fi;fd"
 			>
 			<File
-				RelativePath="..\COMRebarPos\compoly_i.c"
+				RelativePath="..\COMRebarPos\COMRebarPos_i.c"
 				>
 			</File>
 			<File
-				RelativePath=".\poly.h"
+				RelativePath=".\RebarPos.h"
 				>
 			</File>
 			<File
-				RelativePath=".\util.h"
+				RelativePath=".\Utility.h"
 				>
 			</File>
 		</Filter>
