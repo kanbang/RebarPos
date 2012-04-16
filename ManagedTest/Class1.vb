@@ -44,7 +44,7 @@ Public Class mgPolyTestApp
         ' start our try/catch block
         Try
             ' create a poly samp object via the .net wrapper
-            Dim poly As New Autodesk.ObjectDbxSample.Poly()
+            Dim poly As New Autodesk.ObjectDbxSample.RebarPos()
             ' set the properties for the poly
             poly.Center = New Point2d(100, 100)
             poly.StartPoint2d = New Point2d(300, 100)

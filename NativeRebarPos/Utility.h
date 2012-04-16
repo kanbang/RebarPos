@@ -1,5 +1,5 @@
-#ifndef POLYSAMP_UTIL_H
-#define POLYSAMP_UTIL_H
+#pragma once
+
 //
 // (C) Copyright 1996-2007 by Autodesk, Inc. 
 //
@@ -91,7 +91,6 @@ Acad::ErrorStatus rx_makeSpline(const AcGePoint3dArray&     pts,
 Acad::ErrorStatus
 getUniformKnots(int numCtrlPts, int degree, int form, AcGeDoubleArray& knots);
 
-#endif /*POLYSAMP_UTIL_H*/
 
 //- This line allows us to get rid of the .def file in ARX projects
 #ifndef _WIN64

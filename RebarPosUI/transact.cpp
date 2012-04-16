@@ -54,7 +54,7 @@
 
 static Acad::ErrorStatus createAndPostPoly();
 static Acad::ErrorStatus
-extrudePoly(AsdkPoly* pPoly, double height, AcDbObjectId& savedExtrusionId);
+extrudePoly(CRebarPos* pPoly, double height, AcDbObjectId& savedExtrusionId);
 static Acad::ErrorStatus getASolid(TCHAR* prompt, 
     AcTransaction* pTransaction, 
     AcDb::OpenMode mode,
@@ -96,7 +96,7 @@ transactCommand()
     // Select the poly and extrude it.
     //
     AcDbObject   *pObj = NULL;
-    AsdkPoly     *pPoly = NULL;
+    CRebarPos     *pPoly = NULL;
     AcDb3dSolid  *pSolid = NULL;
     AcDbObjectId  objId;
 
@@ -121,7 +121,7 @@ transactCommand()
             }
             assert(pObj != NULL);
 
-            pPoly = AsdkPoly::cast(pObj);
+            pPoly = CRebarPos::cast(pObj);
             if (pPoly == NULL) {
                 acutPrintf(_T("\nNot a polygon. Try again"));
                 continue;
@@ -444,7 +444,7 @@ createAndPostPoly()
                 start = asPnt2d(startPt);
     AcGeVector3d norm = asVec3d(normal);
 
-    AsdkPoly *pPoly = new AsdkPoly;
+    CRebarPos *pPoly = new CRebarPos;
 
     if (pPoly==NULL)
         return Acad::eOutOfMemory;
@@ -463,7 +463,7 @@ createAndPostPoly()
 // Extrudes the poly to a given height.
 
 static Acad::ErrorStatus
-extrudePoly(AsdkPoly* pPoly, double height, AcDbObjectId& savedExtrusionId)
+extrudePoly(CRebarPos* pPoly, double height, AcDbObjectId& savedExtrusionId)
 {
     Acad::ErrorStatus es = Acad::eOk;
 

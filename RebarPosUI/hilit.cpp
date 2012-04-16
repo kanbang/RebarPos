@@ -60,7 +60,7 @@ hilitPoly()
 {
     acutPrintf(_T("\nSelect a poly"));
 
-    AsdkPoly    *poly = NULL;
+    CRebarPos    *poly = NULL;
     AcDbEntity  *ent = NULL;
     AcDbObjectId polyId;
     ads_name     ename, sset;
@@ -104,7 +104,7 @@ hilitPoly()
 				continue;
             assert(ent != NULL);
 
-            poly = AsdkPoly::cast(ent);
+            poly = CRebarPos::cast(ent);
             if (poly == NULL) {
                 acutPrintf(_T("\nNot a polygon."));
 				ent->close();
@@ -325,9 +325,9 @@ createInsert()
 
     // Polys
     //
-    AsdkPoly *poly1, *poly2, *poly3;
+    CRebarPos *poly1, *poly2, *poly3;
     AcGeVector3d norm(0, 0, 1);
-    if ((poly1=new AsdkPoly)==NULL){
+    if ((poly1=new CRebarPos)==NULL){
         acutPrintf(_T("\nOut of Memory."));
         return;
     }
@@ -336,7 +336,7 @@ createInsert()
         delete poly1;
         return;
     }
-    if ((poly2=new AsdkPoly)==NULL){
+    if ((poly2=new CRebarPos)==NULL){
         acutPrintf(_T("\nOut of Memory."));
         delete poly1;
         return;
@@ -347,7 +347,7 @@ createInsert()
         delete poly2;
         return;
     }
-    if ((poly3=new AsdkPoly)==NULL){
+    if ((poly3=new CRebarPos)==NULL){
         acutPrintf(_T("\nOut of Memory."));
         delete poly1;
         delete poly2;

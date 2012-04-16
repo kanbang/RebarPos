@@ -77,17 +77,17 @@ CComModule _Module;
 
 static Acad::ErrorStatus getEditOption(TCHAR* option, size_t nOption, Adesk::Boolean& interrupted);
 
-static Acad::ErrorStatus    growPoly	(AsdkPoly* poly);
-static Acad::ErrorStatus    shrinkPoly	(AsdkPoly* poly);
-static Acad::ErrorStatus    morePoly	(AsdkPoly* poly);
-static Acad::ErrorStatus    lessPoly	(AsdkPoly* poly);
-static Acad::ErrorStatus    thickenPoly (AsdkPoly* poly, AcDbEntity*& ent, AcGePoint2d&  savedCenter,AcGePoint2d&   savedStartPoint,
+static Acad::ErrorStatus    growPoly	(CRebarPos* poly);
+static Acad::ErrorStatus    shrinkPoly	(CRebarPos* poly);
+static Acad::ErrorStatus    morePoly	(CRebarPos* poly);
+static Acad::ErrorStatus    lessPoly	(CRebarPos* poly);
+static Acad::ErrorStatus    thickenPoly (CRebarPos* poly, AcDbEntity*& ent, AcGePoint2d&  savedCenter,AcGePoint2d&   savedStartPoint,
 int& savedNumSides,AcGeVector3d&  savedNormal,TCHAR*    savedName , size_t nSavedName, double& savedElevation);
 static Acad::ErrorStatus    flattenPoly (AcDb3dSolid* solid, AcDbEntity*& ent, const AcGePoint2d&  savedCenter, const AcGePoint2d&   savedStartPoint,
 int savedNumSides,const AcGeVector3d&  savedNormal,const TCHAR*    savedName, double savedElevation);
-static Acad::ErrorStatus    namePoly	(AsdkPoly* poly);
-static Acad::ErrorStatus    stylePoly	(AsdkPoly* poly);
-static Acad::ErrorStatus    setPolyArea (AsdkPoly* poly, double area);
+static Acad::ErrorStatus    namePoly	(CRebarPos* poly);
+static Acad::ErrorStatus    stylePoly	(CRebarPos* poly);
+static Acad::ErrorStatus    setPolyArea (CRebarPos* poly, double area);
 static Acad::ErrorStatus    replaceEntity(AcDbEntity*& thisOne, 
                                           AcDbEntity*  with);
 
@@ -104,7 +104,7 @@ void setUseDragData()
     int val, status;
     for(;;) {
         acutPrintf(_T("\nNew value for USEDRAGDATA <%s>: "),
-            AsdkPoly::useDragData() ? _T("1") : _T("0"));
+            CRebarPos::useDragData() ? _T("1") : _T("0"));
         status = acedGetInt(NULL, &val);
         if (status != RTNORM)
             break;
@@ -114,7 +114,7 @@ void setUseDragData()
             continue;
         }
         
-        AsdkPoly::setUseDragData(val == 1 ? true : false);
+        CRebarPos::setUseDragData(val == 1 ? true : false);
         break;
     }
 }
@@ -281,7 +281,7 @@ polyCommand()
     AcGePoint2d cen = asPnt2d(center), start = asPnt2d(startPt);
     AcGeVector3d norm = asVec3d(normal);
     
-    AsdkPoly* poly = new AsdkPoly;
+    CRebarPos* poly = new CRebarPos;
     if (poly==NULL){
         acutPrintf(_T("\nOut of memory."));
         return;
@@ -314,7 +314,7 @@ polyeditCommand()
     
     // Select an AsdkPoly entity.
     
-    AsdkPoly	 *poly = NULL;
+    CRebarPos	 *poly = NULL;
     AcDb3dSolid  *solid = NULL;
     AcDbObjectId  objId;
     
@@ -337,7 +337,7 @@ polyeditCommand()
 				if ( acdbOpenAcDbEntity(ent, objId, AcDb::kForRead) == Acad::eOk )
 				{
 				assert(ent != NULL);
-				poly = AsdkPoly::cast(ent);
+				poly = CRebarPos::cast(ent);
 				if (poly == NULL) {
 					acutPrintf(_T("\nNot a polygon."));
 						ent->close();
@@ -360,7 +360,7 @@ polyeditCommand()
 			if ( acdbOpenAcDbEntity(ent, objId, AcDb::kForRead) == Acad::eOk )
 			{
 			assert(ent != NULL);
-			poly = AsdkPoly::cast(ent);
+			poly = CRebarPos::cast(ent);
 			if (poly == NULL) {
 				acutPrintf(_T("\nNot a polygon."));
 					ent->close();
@@ -392,7 +392,7 @@ polyeditCommand()
         
         if (_tcscmp(option, _T("Grow")) == 0) {
             
-            if (!ent->isKindOf(AsdkPoly::desc())) {
+            if (!ent->isKindOf(CRebarPos::desc())) {
                 acutPrintf(_T("\nNot Applicable"));
                 continue;
             }
@@ -401,7 +401,7 @@ polyeditCommand()
             
         } else if (_tcscmp(option, _T("Shrink")) == 0) {
             
-            if (!ent->isKindOf(AsdkPoly::desc())) {
+            if (!ent->isKindOf(CRebarPos::desc())) {
                 acutPrintf(_T("\nNot Applicable"));
                 continue;
             }
@@ -410,7 +410,7 @@ polyeditCommand()
             
         } else if (_tcscmp(option, _T("More")) == 0) {
             
-            if (!ent->isKindOf(AsdkPoly::desc())) {
+            if (!ent->isKindOf(CRebarPos::desc())) {
                 acutPrintf(_T("\nNot Applicable"));
                 continue;
             }
@@ -419,7 +419,7 @@ polyeditCommand()
             
         } else if (_tcscmp(option, _T("Less")) == 0) {
             
-            if (!ent->isKindOf(AsdkPoly::desc())) {
+            if (!ent->isKindOf(CRebarPos::desc())) {
                 acutPrintf(_T("\nNot Applicable"));
                 continue;
             }
@@ -428,7 +428,7 @@ polyeditCommand()
             
         } else if (_tcscmp(option, _T("Thicken")) == 0) {
             
-            if (!ent->isKindOf(AsdkPoly::desc())) {
+            if (!ent->isKindOf(CRebarPos::desc())) {
                 acutPrintf(_T("\nNot Applicable"));
                 continue;
             }
@@ -455,13 +455,13 @@ polyeditCommand()
 			if ( flattenPoly(solid,ent,savedCenter,savedStartPoint, savedNumSides,savedNormal,savedName,savedElevation) != Acad::eOk )
 				continue;
             
-            poly = AsdkPoly::cast(ent);
+            poly = CRebarPos::cast(ent);
             assert(poly != NULL);
             solid = NULL;
             
         } else if (_tcscmp(option, _T("Name")) == 0) {
             
-            if (!ent->isKindOf(AsdkPoly::desc())) {
+            if (!ent->isKindOf(CRebarPos::desc())) {
                 acutPrintf(_T("\nNot Applicable"));
                 continue;
             }
@@ -522,7 +522,7 @@ getEditOption(TCHAR* option, size_t nOption, Adesk::Boolean& interrupted)
 // area. New area = 1.25 * old area
 
 static Acad::ErrorStatus 
-growPoly(AsdkPoly* poly)
+growPoly(CRebarPos* poly)
 {
     Acad::ErrorStatus es = Acad::eOk;
     
@@ -546,7 +546,7 @@ growPoly(AsdkPoly* poly)
 // will bring the polygon back to its original size.
 
 static Acad::ErrorStatus 
-shrinkPoly(AsdkPoly* poly)
+shrinkPoly(CRebarPos* poly)
 {
     Acad::ErrorStatus es = Acad::eOk;
     
@@ -568,7 +568,7 @@ shrinkPoly(AsdkPoly* poly)
 // Increases the number of sides of the polygon by one.
 
 static Acad::ErrorStatus 
-morePoly(AsdkPoly* poly)
+morePoly(CRebarPos* poly)
 {
     Acad::ErrorStatus es = Acad::eOk;
     
@@ -591,7 +591,7 @@ morePoly(AsdkPoly* poly)
 // Decreases the number of sides of the polygon by one.
 
 static Acad::ErrorStatus 
-lessPoly(AsdkPoly* poly)
+lessPoly(CRebarPos* poly)
 {
     Acad::ErrorStatus es = Acad::eOk;
     
@@ -619,7 +619,7 @@ lessPoly(AsdkPoly* poly)
 // Extrudes the region to a height that is one-fourth the perimeter.
 
 static Acad::ErrorStatus 
-thickenPoly(AsdkPoly* poly,AcDbEntity*& ent, AcGePoint2d&  savedCenter,AcGePoint2d&   savedStartPoint,
+thickenPoly(CRebarPos* poly,AcDbEntity*& ent, AcGePoint2d&  savedCenter,AcGePoint2d&   savedStartPoint,
 int& savedNumSides,AcGeVector3d&  savedNormal,TCHAR*    savedName,size_t nSavedName,double& savedElevation)
 {
     Acad::ErrorStatus es = Acad::eOk;
@@ -747,7 +747,7 @@ int savedNumSides,const AcGeVector3d& savedNormal,const TCHAR* savedName, double
 {
     Acad::ErrorStatus es = Acad::eOk;
     
-    AsdkPoly* poly = new AsdkPoly;
+    CRebarPos* poly = new CRebarPos;
     if (poly==NULL)
         return Acad::eOutOfMemory;
 
@@ -784,7 +784,7 @@ int savedNumSides,const AcGeVector3d& savedNormal,const TCHAR* savedName, double
 // Solicit a new name for the polygon
 
 static Acad::ErrorStatus 
-namePoly(AsdkPoly* poly)
+namePoly(CRebarPos* poly)
 {
     Acad::ErrorStatus es = Acad::eOk;
     
@@ -807,7 +807,7 @@ namePoly(AsdkPoly* poly)
 // Solicit a new text style for the polygon
 
 static Acad::ErrorStatus 
-stylePoly(AsdkPoly* poly)
+stylePoly(CRebarPos* poly)
 {
     Acad::ErrorStatus es = Acad::eOk;
     
@@ -839,7 +839,7 @@ stylePoly(AsdkPoly* poly)
 
 
 static Acad::ErrorStatus 
-setPolyArea(AsdkPoly* poly, double area)
+setPolyArea(CRebarPos* poly, double area)
 {
     Acad::ErrorStatus es = Acad::eOk;
     

@@ -93,99 +93,98 @@ AcRx::AppRetCode __declspec(dllexport) acrxEntryPoint(AcRx::AppMsgCode msg, void
 // Statics functions used in this file. 
 //*************************************************************************
 
-static Acad::ErrorStatus drawFacets(const AsdkPoly*         poly,
+static Acad::ErrorStatus drawFacets(const CRebarPos*         poly,
                                           AcGiWorldDraw*    worldDraw,
                                           AcGiViewportDraw* vportDraw);
 
-static Acad::ErrorStatus drawEdges (const AsdkPoly*         poly,
+static Acad::ErrorStatus drawEdges (const CRebarPos*         poly,
                                           AcGiWorldDraw*    worldDraw,
                                           AcGiViewportDraw* vportDraw);
 
-static Acad::ErrorStatus intLine   (const AsdkPoly*         poly, 
+static Acad::ErrorStatus intLine   (const CRebarPos*         poly, 
                                     const AcGeLine3d        line,
                                           AcGePoint3dArray& points);
 
-static Acad::ErrorStatus intLine   (const AsdkPoly*         poly, 
+static Acad::ErrorStatus intLine   (const CRebarPos*         poly, 
                                     const AcDbLine*         line,
                                           AcDb::Intersect   intType,
                                     const AcGePlane*        projPlane,
                                           AcGePoint3dArray& points);
 
-static Acad::ErrorStatus intLine   (const AsdkPoly*         poly, 
+static Acad::ErrorStatus intLine   (const CRebarPos*         poly, 
                                     const AcGeLineSeg3d     line,
                                           AcDb::Intersect   intType,
                                     const AcGePlane*        projPlane,
                                           AcGePoint3dArray& points);
 
-static Acad::ErrorStatus intArc    (const AsdkPoly*         poly, 
+static Acad::ErrorStatus intArc    (const CRebarPos*         poly, 
                                     const AcDbArc*          arc,
                                           AcDb::Intersect   intType,
                                     const AcGePlane*        projPlane,
                                           AcGePoint3dArray& points);
 
-static Acad::ErrorStatus intArc    (const AsdkPoly*         poly, 
+static Acad::ErrorStatus intArc    (const CRebarPos*         poly, 
                                     const AcGeCircArc3d     arc,
                                           AcDb::Intersect   intType,
                                     const AcGePlane*        projPlane,
                                           AcGePoint3dArray& points);
 
-static Acad::ErrorStatus intCircle (const AsdkPoly*         poly, 
+static Acad::ErrorStatus intCircle (const CRebarPos*         poly, 
                                     const AcDbCircle*       circle,
                                           AcDb::Intersect   intType,
                                     const AcGePlane*        projPlane,
                                           AcGePoint3dArray& points);
 
-static Acad::ErrorStatus intCircle (const AsdkPoly*         poly, 
+static Acad::ErrorStatus intCircle (const CRebarPos*         poly, 
                                     const AcGeCircArc3d     circle,
                                           AcDb::Intersect   intType,
                                     const AcGePlane*        projPlane,
                                           AcGePoint3dArray& points);
 
-static Acad::ErrorStatus intPline  (const AsdkPoly*         poly, 
+static Acad::ErrorStatus intPline  (const CRebarPos*         poly, 
                                           AcDb2dPolyline*   pline,
                                           AcDb::Intersect   intType,
                                     const AcGePlane*        projPlane,
                                           AcGePoint3dArray& points);
 
-static Acad::ErrorStatus intPline  (const AsdkPoly*         poly, 
+static Acad::ErrorStatus intPline  (const CRebarPos*         poly, 
                                           AcDb3dPolyline*   pline,
                                           AcDb::Intersect   intType,
                                     const AcGePlane*        projPlane,
                                           AcGePoint3dArray& points);
 
-static Acad::ErrorStatus drawName(const AsdkPoly*           poly,
+static Acad::ErrorStatus drawName(const CRebarPos*           poly,
                                         AcGiWorldDraw*      worldDraw);
 
 //*************************************************************************
 // Static class data initialization 
 //*************************************************************************
 
-bool AsdkPoly::mUseDragData = false;
+bool CRebarPos::mUseDragData = false;
 
 //*************************************************************************
 // Code for the Class Body. 
 //*************************************************************************
 
-ACRX_DXF_DEFINE_MEMBERS(AsdkPoly, AcDbCurve,
+ACRX_DXF_DEFINE_MEMBERS(CRebarPos, AcDbCurve,
 AcDb::kDHL_CURRENT, AcDb::kMReleaseCurrent, 
-AcDbProxyEntity::kAllAllowedBits, POLYGON, 
-"AsdkPolyOBJ2.0\
-|Product Desc:     PolyCAD ARX App For Polygon Entity\
-|Company:          Autodesk,Inc.\
-|WEB Address:      www.autodesk.com");
+AcDbProxyEntity::kAllAllowedBits, REBARPOS, 
+"RebarPos2.0\
+|Product Desc:     RebarPos Entity\
+|Company:          OZOZ");
 
 //*************************************************************************
 // Constructors and destructors 
 //*************************************************************************
 
-AsdkPoly::AsdkPoly() :
+CRebarPos::CRebarPos() :
     mCenter(0,0),mStartPoint(0,0), mNumSides(3),mPlaneNormal(0,0,1),
     mTextStyle(AcDbObjectId::kNull),mpName(NULL),mDragDataFlags(0),
     mShowAffordances(false)
 {
 }
 
-Acad::ErrorStatus AsdkPoly::set(const AcGePoint2d&   center,
+Acad::ErrorStatus CRebarPos::set(const AcGePoint2d&   center,
                    const AcGePoint2d&   startPoint,
                          int            numSides, 
                    const AcGeVector3d&  normal,
@@ -212,7 +211,7 @@ Acad::ErrorStatus AsdkPoly::set(const AcGePoint2d&   center,
     return setName(name);
 }
 
-Acad::ErrorStatus AsdkPoly::set(const AcGePoint2d&   center,
+Acad::ErrorStatus CRebarPos::set(const AcGePoint2d&   center,
                    const AcGePoint2d&   startPoint,
                          int            numSides, 
                    const AcGeVector3d&  normal,
@@ -242,16 +241,16 @@ Acad::ErrorStatus AsdkPoly::set(const AcGePoint2d&   center,
     return setName(name);
 }
 
-AsdkPoly::~AsdkPoly()
+CRebarPos::~CRebarPos()
 {
     acutDelString(mpName);
 }
 
 
 //*************************************************************************
-// Methods specific to AsdkPoly 
+// Methods specific to CRebarPos 
 //*************************************************************************
-void AsdkPoly::getCenter(AcGePoint3d& cent) const
+void CRebarPos::getCenter(AcGePoint3d& cent) const
 {
     assertReadEnabled();
     AcGePoint2d c2d(center());
@@ -259,21 +258,21 @@ void AsdkPoly::getCenter(AcGePoint3d& cent) const
     acdbEcs2Wcs(asDblArray(cent),asDblArray(cent),asDblArray(normal()),Adesk::kFalse);
 }
 const TCHAR*
-AsdkPoly::name() const
+CRebarPos::name() const
 {
     assertReadEnabled();
     return mpName;
 }
 
 const AcDbObjectId&
-AsdkPoly::styleId() const
+CRebarPos::styleId() const
 {
     assertReadEnabled();
     return mTextStyle;
 }
 
 Acad::ErrorStatus  
-AsdkPoly::setCenter(const AcGePoint2d& cen)
+CRebarPos::setCenter(const AcGePoint2d& cen)
 {
     assertWriteEnabled();
     mCenter = cen;
@@ -282,7 +281,7 @@ AsdkPoly::setCenter(const AcGePoint2d& cen)
 }
 
 Acad::ErrorStatus  
-AsdkPoly::setNormal(const AcGeVector3d& norm)
+CRebarPos::setNormal(const AcGeVector3d& norm)
 {
     assertWriteEnabled();
     mPlaneNormal = norm.normal();
@@ -291,7 +290,7 @@ AsdkPoly::setNormal(const AcGeVector3d& norm)
 }
 
 Acad::ErrorStatus  
-AsdkPoly::setStartPoint(const AcGePoint2d& startPt)
+CRebarPos::setStartPoint(const AcGePoint2d& startPt)
 {
     assertWriteEnabled();
     mStartPoint = startPt;
@@ -300,7 +299,7 @@ AsdkPoly::setStartPoint(const AcGePoint2d& startPt)
 }
     
 Acad::ErrorStatus
-AsdkPoly::setName(const TCHAR* pName)
+CRebarPos::setName(const TCHAR* pName)
 {
     assertWriteEnabled();
     
@@ -318,7 +317,7 @@ AsdkPoly::setName(const TCHAR* pName)
 // THE FOLLOWING CODE APPEARS IN THE SDK DOCUMENT.
 
 Acad::ErrorStatus  
-AsdkPoly::setNumSides(int numSides)    
+CRebarPos::setNumSides(int numSides)    
 {
     assertWriteEnabled(Adesk::kFalse, Adesk::kTrue);
     if (numSides<3)
@@ -333,7 +332,7 @@ AsdkPoly::setNumSides(int numSides)
     //
     AcDbDwgFiler *pFiler = NULL;
     if ((pFiler = undoFiler()) != NULL) {
-        undoFiler()->writeAddress(AsdkPoly::desc());
+        undoFiler()->writeAddress(CRebarPos::desc());
         undoFiler()->writeItem((Adesk::Int16)kSetNumSides);
         undoFiler()->writeItem((Adesk::Int32)mNumSides);
     }
@@ -345,7 +344,7 @@ AsdkPoly::setNumSides(int numSides)
 // END CODE APPEARING IN SDK DOCUMENT.
 
 Acad::ErrorStatus
-AsdkPoly::setTextStyle(const AcDbObjectId& tsId)
+CRebarPos::setTextStyle(const AcDbObjectId& tsId)
 {
     assertWriteEnabled();
     mTextStyle = tsId;
@@ -354,7 +353,7 @@ AsdkPoly::setTextStyle(const AcDbObjectId& tsId)
 
 
 AcGeVector3d
-AsdkPoly::sideVector(int whichSide) const
+CRebarPos::sideVector(int whichSide) const
 {
     assertReadEnabled();
 
@@ -370,7 +369,7 @@ AsdkPoly::sideVector(int whichSide) const
 }
 
 Acad::ErrorStatus 
-AsdkPoly::getVertices2d(AcGePoint2dArray& vertexArray) const
+CRebarPos::getVertices2d(AcGePoint2dArray& vertexArray) const
 {
     assertReadEnabled();
 
@@ -396,7 +395,7 @@ AsdkPoly::getVertices2d(AcGePoint2dArray& vertexArray) const
 }
 
 Acad::ErrorStatus 
-AsdkPoly::getVertices3d(AcGePoint3dArray& vertexArray) const
+CRebarPos::getVertices3d(AcGePoint3dArray& vertexArray) const
 {
     AcGePoint2dArray temparray;
     getVertices2d(temparray);
@@ -417,7 +416,7 @@ AsdkPoly::getVertices3d(AcGePoint3dArray& vertexArray) const
 
 
 Acad::ErrorStatus 
-AsdkPoly::getPointAtParam(double param, AcGePoint3d& point) const
+CRebarPos::getPointAtParam(double param, AcGePoint3d& point) const
 {
     assertReadEnabled();
 
@@ -456,7 +455,7 @@ AsdkPoly::getPointAtParam(double param, AcGePoint3d& point) const
 
 
 Acad::ErrorStatus 
-AsdkPoly::getParamAtPoint(const AcGePoint3d& point3d, double& param) const
+CRebarPos::getParamAtPoint(const AcGePoint3d& point3d, double& param) const
 {
     assertReadEnabled();
 
@@ -512,7 +511,7 @@ AsdkPoly::getParamAtPoint(const AcGePoint3d& point3d, double& param) const
 
 
 Acad::ErrorStatus 
-AsdkPoly::getDistAtParam(double param, double& dist)  const
+CRebarPos::getDistAtParam(double param, double& dist)  const
 {
     assertReadEnabled();
 
@@ -538,7 +537,7 @@ AsdkPoly::getDistAtParam(double param, double& dist)  const
 
 
 Acad::ErrorStatus 
-AsdkPoly::getParamAtDist(double dist, double& param) const 
+CRebarPos::getParamAtDist(double dist, double& param) const 
 {
     assertReadEnabled();
 
@@ -571,7 +570,7 @@ AsdkPoly::getParamAtDist(double dist, double& param) const
 
 
 Acad::ErrorStatus 
-AsdkPoly::getDistAtPoint(const AcGePoint3d& point, double& dist)  const
+CRebarPos::getDistAtPoint(const AcGePoint3d& point, double& dist)  const
 {
     assertReadEnabled();
 
@@ -591,7 +590,7 @@ AsdkPoly::getDistAtPoint(const AcGePoint3d& point, double& dist)  const
 
 
 Acad::ErrorStatus 
-AsdkPoly::getPointAtDist(double dist, AcGePoint3d& point) const
+CRebarPos::getPointAtDist(double dist, AcGePoint3d& point) const
 {
     assertReadEnabled();
 
@@ -611,7 +610,7 @@ AsdkPoly::getPointAtDist(double dist, AcGePoint3d& point) const
 
 
 Acad::ErrorStatus 
-AsdkPoly::getFirstDeriv(double param, AcGeVector3d& firstDeriv) const
+CRebarPos::getFirstDeriv(double param, AcGeVector3d& firstDeriv) const
 {
     assertReadEnabled();
 
@@ -641,7 +640,7 @@ AsdkPoly::getFirstDeriv(double param, AcGeVector3d& firstDeriv) const
 
 
 Acad::ErrorStatus 
-AsdkPoly::getFirstDeriv(const AcGePoint3d&  point, 
+CRebarPos::getFirstDeriv(const AcGePoint3d&  point, 
                               AcGeVector3d& firstDeriv) const
 {
     assertReadEnabled();
@@ -658,7 +657,7 @@ AsdkPoly::getFirstDeriv(const AcGePoint3d&  point,
 
 
 Acad::ErrorStatus 
-AsdkPoly::getClosestPointTo (const AcGePoint3d&   givenPoint,
+CRebarPos::getClosestPointTo (const AcGePoint3d&   givenPoint,
                                    AcGePoint3d&   pointOnCurve,
                                    Adesk::Boolean /*extend*/) const
 {
@@ -693,7 +692,7 @@ AsdkPoly::getClosestPointTo (const AcGePoint3d&   givenPoint,
 
 
 Acad::ErrorStatus 
-AsdkPoly::getClosestPointTo (const AcGePoint3d&   givenPoint,
+CRebarPos::getClosestPointTo (const AcGePoint3d&   givenPoint,
                              const AcGeVector3d&  normal,
                                    AcGePoint3d&   pointOnCurve,
                                    Adesk::Boolean /*extend*/) const
@@ -750,7 +749,7 @@ AsdkPoly::getClosestPointTo (const AcGePoint3d&   givenPoint,
 
 
 Acad::ErrorStatus 
-AsdkPoly::getOrthoProjectedCurve(const AcGePlane&  plane,
+CRebarPos::getOrthoProjectedCurve(const AcGePlane&  plane,
                                        AcDbCurve*& projectedCurve) const
 {
     assertReadEnabled();
@@ -761,7 +760,7 @@ AsdkPoly::getOrthoProjectedCurve(const AcGePlane&  plane,
 
 
 Acad::ErrorStatus 
-AsdkPoly::getProjectedCurve(const AcGePlane&    plane,
+CRebarPos::getProjectedCurve(const AcGePlane&    plane,
                             const AcGeVector3d& projDir,
                                   AcDbCurve*&   projectedCurve) const
 {
@@ -805,7 +804,7 @@ AsdkPoly::getProjectedCurve(const AcGePlane&    plane,
         getStartPoint(startPoint);
         startPoint = startPoint.project(plane, projDir);
 
-        AsdkPoly* newPoly = new AsdkPoly();
+        CRebarPos* newPoly = new CRebarPos();
         if (newPoly==NULL)
             return Acad::eOutOfMemory;
         acdbWcs2Ecs(asDblArray(center),asDblArray(center),asDblArray(plane.normal()),Adesk::kTrue);
@@ -824,7 +823,7 @@ AsdkPoly::getProjectedCurve(const AcGePlane&    plane,
 
 
 Acad::ErrorStatus 
-AsdkPoly::getOffsetCurves(double            offsetDist, 
+CRebarPos::getOffsetCurves(double            offsetDist, 
                           AcDbVoidPtrArray& offsetCurves) const
 {
     assertReadEnabled();
@@ -842,7 +841,7 @@ AsdkPoly::getOffsetCurves(double            offsetDist,
 
     AcGePoint2d startPt = startPoint() + x;
 
-    AsdkPoly* offsetPoly = new AsdkPoly();
+    CRebarPos* offsetPoly = new CRebarPos();
     if (offsetPoly==NULL)
         return Acad::eOutOfMemory;
 
@@ -859,7 +858,7 @@ AsdkPoly::getOffsetCurves(double            offsetDist,
 
 
 Acad::ErrorStatus 
-AsdkPoly::getSplitCurves(const AcGeDoubleArray&  parameters,
+CRebarPos::getSplitCurves(const AcGeDoubleArray&  parameters,
                                AcDbVoidPtrArray& curveSegments) const
 {
     assertReadEnabled();
@@ -939,7 +938,7 @@ AsdkPoly::getSplitCurves(const AcGeDoubleArray&  parameters,
 
 
 Acad::ErrorStatus 
-AsdkPoly::getSplitCurves(const AcGePoint3dArray& points,
+CRebarPos::getSplitCurves(const AcGePoint3dArray& points,
                                AcDbVoidPtrArray& curveSegments) const
 {
     assertReadEnabled();
@@ -956,7 +955,7 @@ AsdkPoly::getSplitCurves(const AcGePoint3dArray& points,
 
 
 Acad::ErrorStatus 
-AsdkPoly::getArea(double& area) const
+CRebarPos::getArea(double& area) const
 {
     assertReadEnabled();
 
@@ -975,7 +974,7 @@ AsdkPoly::getArea(double& area) const
 
 
 Acad::ErrorStatus 
-AsdkPoly::subGetSubentPathsAtGsMarker(AcDb::SubentType     type, 
+CRebarPos::subGetSubentPathsAtGsMarker(AcDb::SubentType     type, 
                                    Adesk::GsMarker      gsMark,
                                    const AcGePoint3d&   pickPoint,
                                    const AcGeMatrix3d&  viewXform,
@@ -1038,7 +1037,7 @@ AsdkPoly::subGetSubentPathsAtGsMarker(AcDb::SubentType     type,
 
 
 Acad::ErrorStatus 
-AsdkPoly::subGetGsMarkersAtSubentPath(const AcDbFullSubentPath& path, 
+CRebarPos::subGetGsMarkersAtSubentPath(const AcDbFullSubentPath& path, 
                                          AcDbIntPtrArray&       gsMarkers) const
 {
     Acad::ErrorStatus es;
@@ -1076,7 +1075,7 @@ AsdkPoly::subGetGsMarkersAtSubentPath(const AcDbFullSubentPath& path,
 
 
 AcDbEntity* 
-AsdkPoly::subSubentPtr(const AcDbFullSubentPath& path) const
+CRebarPos::subSubentPtr(const AcDbFullSubentPath& path) const
 {
     Acad::ErrorStatus es;
 
@@ -1130,7 +1129,7 @@ AsdkPoly::subSubentPtr(const AcDbFullSubentPath& path) const
 // THE FOLLOWING CODE APPEARS IN THE SDK DOCUMENT.
 
 Acad::ErrorStatus
-AsdkPoly::subGetOsnapPoints(
+CRebarPos::subGetOsnapPoints(
     AcDb::OsnapMode       osnapMode,
     Adesk::GsMarker       gsSelectionMark,
     const AcGePoint3d&    pickPoint,
@@ -1234,7 +1233,7 @@ AsdkPoly::subGetOsnapPoints(
 }
 
 Acad::ErrorStatus
-AsdkPoly::subGetGripPoints(
+CRebarPos::subGetGripPoints(
     AcGePoint3dArray& gripPoints,
     AcDbIntArray& osnapModes,
     AcDbIntArray& geomIds) const
@@ -1256,7 +1255,7 @@ AsdkPoly::subGetGripPoints(
 }
 
 Acad::ErrorStatus
-AsdkPoly::subMoveGripPointsAt(
+CRebarPos::subMoveGripPointsAt(
     const AcDbIntArray& indices,
     const AcGeVector3d& offset)
 {
@@ -1300,7 +1299,7 @@ AsdkPoly::subMoveGripPointsAt(
 // for the center of the polygon.
 //
 Acad::ErrorStatus
-AsdkPoly::subGetStretchPoints(
+CRebarPos::subGetStretchPoints(
     AcGePoint3dArray& stretchPoints) const
 {
     assertReadEnabled();
@@ -1319,7 +1318,7 @@ AsdkPoly::subGetStretchPoints(
 }
 
 Acad::ErrorStatus
-AsdkPoly::subMoveStretchPointsAt(
+CRebarPos::subMoveStretchPointsAt(
     const AcDbIntArray& indices,
     const AcGeVector3d& offset)
 {
@@ -1328,7 +1327,7 @@ AsdkPoly::subMoveStretchPointsAt(
 
 // Transform points and create a polyline out of them.
 //
-Acad::ErrorStatus AsdkPoly::subGetTransformedCopy(
+Acad::ErrorStatus CRebarPos::subGetTransformedCopy(
     const AcGeMatrix3d& mat,
     AcDbEntity*& ent) const
 {
@@ -1360,7 +1359,7 @@ Acad::ErrorStatus AsdkPoly::subGetTransformedCopy(
 }
 
 Acad::ErrorStatus
-AsdkPoly::subIntersectWith(
+CRebarPos::subIntersectWith(
     const AcDbEntity* ent,
     AcDb::Intersect intType,
     AcGePoint3dArray& points,
@@ -1444,7 +1443,7 @@ AsdkPoly::subIntersectWith(
 }
 
 Acad::ErrorStatus
-AsdkPoly::subIntersectWith(
+CRebarPos::subIntersectWith(
     const AcDbEntity* ent,
     AcDb::Intersect intType,
     const AcGePlane& projPlane,
@@ -1584,7 +1583,7 @@ AsdkPoly::subIntersectWith(
 // END CODE APPEARING IN SDK DOCUMENT.
 
 void            
-AsdkPoly::subList() const
+CRebarPos::subList() const
 {
     assertReadEnabled();
 
@@ -1626,7 +1625,7 @@ AsdkPoly::subList() const
 // THE FOLLOWING CODE APPEARS IN THE SDK DOCUMENT.
 
 Acad::ErrorStatus
-AsdkPoly::subTransformBy(const AcGeMatrix3d& xform)
+CRebarPos::subTransformBy(const AcGeMatrix3d& xform)
 {
     // If we're dragging, we aren't really going to change our
     // data, so we don't want to make an undo recording nor do
@@ -1655,7 +1654,7 @@ AsdkPoly::subTransformBy(const AcGeMatrix3d& xform)
 // END CODE APPEARING IN SDK DOCUMENT.
 
 Acad::ErrorStatus       
-AsdkPoly::subExplode(AcDbVoidPtrArray& entitySet) const
+CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 {
     assertReadEnabled();
 
@@ -1702,7 +1701,7 @@ AsdkPoly::subExplode(AcDbVoidPtrArray& entitySet) const
 }
 
 Adesk::Boolean 
-AsdkPoly::subWorldDraw(AcGiWorldDraw* worldDraw)
+CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 {
     assertReadEnabled();
 
@@ -1748,7 +1747,7 @@ AsdkPoly::subWorldDraw(AcGiWorldDraw* worldDraw)
 }
 
 Adesk::Boolean
-AsdkPoly::subCloneMeForDragging()
+CRebarPos::subCloneMeForDragging()
 {
     if (mUseDragData) {
         // let the rest of poly's code know we've been called
@@ -1770,7 +1769,7 @@ AsdkPoly::subCloneMeForDragging()
 // THE FOLLOWING CODE APPEARS IN THE SDK DOCUMENT.
 
 Acad::ErrorStatus 
-AsdkPoly::applyPartialUndo(AcDbDwgFiler* filer,
+CRebarPos::applyPartialUndo(AcDbDwgFiler* filer,
                            AcRxClass*    classObj)
 {
     // The first thing to check is whether the class matches with
@@ -1778,7 +1777,7 @@ AsdkPoly::applyPartialUndo(AcDbDwgFiler* filer,
     // applyPartialUndo(); hopefully, one of them will
     // take care of it.
     //
-    if (classObj != AsdkPoly::desc())
+    if (classObj != CRebarPos::desc())
         return AcDbCurve::applyPartialUndo(filer, classObj);
 
     // Read the op-code and call the appropriate "set"
@@ -1806,7 +1805,7 @@ AsdkPoly::applyPartialUndo(AcDbDwgFiler* filer,
 
 
 Acad::ErrorStatus
-AsdkPoly::dwgInFields(AcDbDwgFiler* filer)
+CRebarPos::dwgInFields(AcDbDwgFiler* filer)
 {
     assertWriteEnabled();
     Acad::ErrorStatus es;
@@ -1864,7 +1863,7 @@ AsdkPoly::dwgInFields(AcDbDwgFiler* filer)
 }
 
 Acad::ErrorStatus
-AsdkPoly::dwgOutFields(AcDbDwgFiler* filer) const
+CRebarPos::dwgOutFields(AcDbDwgFiler* filer) const
 {
     assertReadEnabled();
     Acad::ErrorStatus es;
@@ -1902,7 +1901,7 @@ AsdkPoly::dwgOutFields(AcDbDwgFiler* filer) const
 #ifdef ORDER_DEPENDENT
 
 Acad::ErrorStatus
-AsdkPoly::dxfInFields(AcDbDxfFiler* filer)
+CRebarPos::dxfInFields(AcDbDxfFiler* filer)
 {
     assertWriteEnabled();
     
@@ -2018,7 +2017,7 @@ AsdkPoly::dxfInFields(AcDbDxfFiler* filer)
 #else
 
 Acad::ErrorStatus
-AsdkPoly::dxfInFields(AcDbDxfFiler* filer)
+CRebarPos::dxfInFields(AcDbDxfFiler* filer)
 {
     assertWriteEnabled();
     Acad::ErrorStatus es = Acad::eOk;
@@ -2161,7 +2160,7 @@ AsdkPoly::dxfInFields(AcDbDxfFiler* filer)
 
 
 Acad::ErrorStatus
-AsdkPoly::dxfOutFields(AcDbDxfFiler* filer) const
+CRebarPos::dxfOutFields(AcDbDxfFiler* filer) const
 {
     assertReadEnabled();
     Acad::ErrorStatus es;
@@ -2190,7 +2189,7 @@ AsdkPoly::dxfOutFields(AcDbDxfFiler* filer) const
 
 
 Acad::ErrorStatus
-AsdkPoly::subDeepClone(AcDbObject*    pOwner,
+CRebarPos::subDeepClone(AcDbObject*    pOwner,
                     AcDbObject*&   pClonedObject,
                     AcDbIdMapping& idMap,
                     Adesk::Boolean isPrimary) const
@@ -2215,7 +2214,7 @@ AsdkPoly::subDeepClone(AcDbObject*    pOwner,
 
     // Create the clone
     //
-    AsdkPoly *pClone = (AsdkPoly*)isA()->create();
+    CRebarPos *pClone = (CRebarPos*)isA()->create();
     if (pClone != NULL)
         pClonedObject = pClone;    // set the return value
     else
@@ -2318,7 +2317,7 @@ AsdkPoly::subDeepClone(AcDbObject*    pOwner,
 
 
 Acad::ErrorStatus
-AsdkPoly::subWblockClone(AcRxObject*    pOwner,
+CRebarPos::subWblockClone(AcRxObject*    pOwner,
                       AcDbObject*&   pClonedObject,
                       AcDbIdMapping& idMap,
                       Adesk::Boolean isPrimary) const
@@ -2391,7 +2390,7 @@ AsdkPoly::subWblockClone(AcRxObject*    pOwner,
     // STEP 1:
     // Create the clone
     //
-    AsdkPoly *pClone = (AsdkPoly*)isA()->create();
+    CRebarPos *pClone = (CRebarPos*)isA()->create();
     if (pClone != NULL)
         pClonedObject = pClone;    // set the return value
     else
@@ -2537,7 +2536,7 @@ AsdkPoly::subWblockClone(AcRxObject*    pOwner,
 
 
 //return the CLSID of the class here
-Acad::ErrorStatus   AsdkPoly::subGetClassID(CLSID* pClsid) const
+Acad::ErrorStatus   CRebarPos::subGetClassID(CLSID* pClsid) const
 {
     assertReadEnabled();
     *pClsid = CLSID_ComPolygon;
@@ -2546,20 +2545,20 @@ Acad::ErrorStatus   AsdkPoly::subGetClassID(CLSID* pClsid) const
 // END CODE APPEARING IN SDK DOCUMENT.
 
 void
-AsdkPoly::setUseDragData(bool use)
+CRebarPos::setUseDragData(bool use)
 {
     mUseDragData = use;
 }
 
 
 bool
-AsdkPoly::useDragData()
+CRebarPos::useDragData()
 {
     return mUseDragData;
 }
 
 Acad::ErrorStatus 
-AsdkPoly::subHighlight (const AcDbFullSubentPath& path , const Adesk::Boolean highlightAll) const
+CRebarPos::subHighlight (const AcDbFullSubentPath& path , const Adesk::Boolean highlightAll) const
 {
     AcDbObjectId id = objectId();
 #ifdef _DEBUG
@@ -2571,7 +2570,7 @@ AsdkPoly::subHighlight (const AcDbFullSubentPath& path , const Adesk::Boolean hi
 }
 
 Acad::ErrorStatus 
-AsdkPoly::subUnhighlight(const AcDbFullSubentPath& path, const Adesk::Boolean highlightAll) const
+CRebarPos::subUnhighlight(const AcDbFullSubentPath& path, const Adesk::Boolean highlightAll) const
 {
     AcDbObjectId id = objectId();
 #ifdef _DEBUG
@@ -2587,7 +2586,7 @@ AsdkPoly::subUnhighlight(const AcDbFullSubentPath& path, const Adesk::Boolean hi
 // Statics functions used in this file. 
 //*************************************************************************
 
-static Acad::ErrorStatus drawFacets(const AsdkPoly*         poly,
+static Acad::ErrorStatus drawFacets(const CRebarPos*         poly,
                                           AcGiWorldDraw*    worldDraw,
                                           AcGiViewportDraw* vportDraw)
 {
@@ -2638,7 +2637,7 @@ static Acad::ErrorStatus drawFacets(const AsdkPoly*         poly,
 }
 
 
-static Acad::ErrorStatus drawEdges(const AsdkPoly*         poly,
+static Acad::ErrorStatus drawEdges(const CRebarPos*         poly,
                                          AcGiWorldDraw*    worldDraw,
                                          AcGiViewportDraw* vportDraw)
 {
@@ -2685,7 +2684,7 @@ static Acad::ErrorStatus drawEdges(const AsdkPoly*         poly,
 }
 
 
-static Acad::ErrorStatus drawName(const AsdkPoly*      poly,
+static Acad::ErrorStatus drawName(const CRebarPos*      poly,
                                         AcGiWorldDraw* worldDraw)
 {
     const TCHAR *pName = poly->name();
@@ -2720,7 +2719,7 @@ static Acad::ErrorStatus drawName(const AsdkPoly*      poly,
 }
 
 
-static Acad::ErrorStatus intLine(const AsdkPoly*         poly, 
+static Acad::ErrorStatus intLine(const CRebarPos*         poly, 
                                  const AcGeLine3d        line,
                                        AcGePoint3dArray& points)
 {
@@ -2749,7 +2748,7 @@ static Acad::ErrorStatus intLine(const AsdkPoly*         poly,
 }
 
 
-static Acad::ErrorStatus intLine(const AsdkPoly*         poly, 
+static Acad::ErrorStatus intLine(const CRebarPos*         poly, 
                                  const AcDbLine*         line,
                                        AcDb::Intersect   intType,
                                  const AcGePlane*        projPlane,
@@ -2764,7 +2763,7 @@ static Acad::ErrorStatus intLine(const AsdkPoly*         poly,
 }
 
 
-static Acad::ErrorStatus intLine(const AsdkPoly*         poly, 
+static Acad::ErrorStatus intLine(const CRebarPos*         poly, 
                                  const AcGeLineSeg3d     lnsg,
                                        AcDb::Intersect   intType,
                                  const AcGePlane*        projPlane,
@@ -2824,7 +2823,7 @@ static Acad::ErrorStatus intLine(const AsdkPoly*         poly,
     return es;
 }
 
-static Acad::ErrorStatus intArc(const AsdkPoly*         poly, 
+static Acad::ErrorStatus intArc(const CRebarPos*         poly, 
                                 const AcDbArc*          arc,
                                       AcDb::Intersect   intType,
                                 const AcGePlane*        projPlane,
@@ -2841,7 +2840,7 @@ static Acad::ErrorStatus intArc(const AsdkPoly*         poly,
 }
 
 
-static Acad::ErrorStatus intArc(const AsdkPoly*         poly, 
+static Acad::ErrorStatus intArc(const CRebarPos*         poly, 
                                 const AcGeCircArc3d     arc,
                                       AcDb::Intersect   intType,
                                 const AcGePlane*        projPlane,
@@ -2923,7 +2922,7 @@ static Acad::ErrorStatus intArc(const AsdkPoly*         poly,
 }
 
 
-static Acad::ErrorStatus intCircle(const AsdkPoly*         poly, 
+static Acad::ErrorStatus intCircle(const CRebarPos*         poly, 
                                    const AcDbCircle*       circle,
                                          AcDb::Intersect   intType,
                                    const AcGePlane*        projPlane,
@@ -2939,7 +2938,7 @@ static Acad::ErrorStatus intCircle(const AsdkPoly*         poly,
 }
 
 
-static Acad::ErrorStatus intCircle(const AsdkPoly*         poly, 
+static Acad::ErrorStatus intCircle(const CRebarPos*         poly, 
                                    const AcGeCircArc3d     circle,
                                          AcDb::Intersect   intType,
                                    const AcGePlane*        projPlane,
@@ -2992,7 +2991,7 @@ static Acad::ErrorStatus intCircle(const AsdkPoly*         poly,
 }
 
 
-static Acad::ErrorStatus intPline(const AsdkPoly*         poly, 
+static Acad::ErrorStatus intPline(const CRebarPos*         poly, 
                                         AcDb2dPolyline*   pline,
                                         AcDb::Intersect   intType,
                                   const AcGePlane*        projPlane,
@@ -3094,7 +3093,7 @@ static Acad::ErrorStatus intPline(const AsdkPoly*         poly,
 }
 
 
-static Acad::ErrorStatus intPline(const AsdkPoly*         poly, 
+static Acad::ErrorStatus intPline(const CRebarPos*         poly, 
                                         AcDb3dPolyline*   pline,
                                         AcDb::Intersect   intType,
                                   const AcGePlane*        projPlane,
@@ -3181,11 +3180,10 @@ static Acad::ErrorStatus intPline(const AsdkPoly*         poly,
 void changeAppNameCallback(const AcRxClass* classObj, TCHAR*& newAppName,
     int saveVer)
 {
-    if (saveVer == AcDb::kDHL_1014 && classObj == AsdkPoly::desc())
-        acutNewString(_T("AsdkPolyOBJ")
-        _T("|Product Desc:     PolyCAD ARX App For Polygon Entity")
-        _T("|Company:          Autodesk,Inc.")
-        _T("|WEB Address:      www.autodesk.com"), newAppName);
+    if (saveVer == AcDb::kDHL_1014 && classObj == CRebarPos::desc())
+        acutNewString(_T("RebarPos")
+        _T("|Product Desc:     RebarPos ARX App")
+        _T("|Company:          OZOZ"), newAppName);
 }
 
 AcRx::AppRetCode __declspec(dllexport)
@@ -3201,7 +3199,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 
         acrxRegisterAppMDIAware(pkt);
 
-        AsdkPoly::rxInit(changeAppNameCallback);
+        CRebarPos::rxInit(changeAppNameCallback);
         
         // Register a service using the class name.
         if (!acrxServiceIsRegistered(_T("AsdkPoly")))
@@ -3216,7 +3214,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
         if (obj != NULL)
             delete obj;
 
-        deleteAcRxClass(AsdkPoly::desc());
+        deleteAcRxClass(CRebarPos::desc());
         break;
     }
     return AcRx::kRetOK;

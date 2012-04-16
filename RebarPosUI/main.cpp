@@ -104,7 +104,7 @@ addMatchPoly()
         pSvc->addDependency();
         
         pMatchPoly = new AsdkPolyMatchProp;
-        AsdkPoly::desc()->addX(AcDbMatchProperties::desc(), pMatchPoly);
+        CRebarPos::desc()->addX(AcDbMatchProperties::desc(), pMatchPoly);
        
         AppEventCatcher::thisAppLoaded = 1;
         
@@ -120,11 +120,11 @@ void
 AsdkPolyMatchProp::copyProperties(AcDbEntity *pSrcEntity, AcDbEntity *pTrgEntity, 
                                   unsigned int gMatchFlag) const
 {
-    AsdkPoly *pPoly = AsdkPoly::cast(pTrgEntity);
+    CRebarPos *pPoly = CRebarPos::cast(pTrgEntity);
 
     //Do Poly property related property painting....
-    if (pSrcEntity->isKindOf(AsdkPoly::desc())) {
-      AsdkPoly *pSrcPoly = AsdkPoly::cast(pSrcEntity);
+    if (pSrcEntity->isKindOf(CRebarPos::desc())) {
+      CRebarPos *pSrcPoly = CRebarPos::cast(pSrcEntity);
 
       // copy num sides
       pPoly->setNumSides(pSrcPoly->numSides());
@@ -329,7 +329,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
         if (pTemp = acrxServiceDictionary->at(_T("MatchProperties")))
         {
             // remove the protocol extension.
-            AsdkPoly::desc()->delX(AsdkPolyMatchProp::desc());
+            CRebarPos::desc()->delX(AsdkPolyMatchProp::desc());
             delete pMatchPoly;
 
             AcRxService *pSvc = AcRxService::cast(pTemp);

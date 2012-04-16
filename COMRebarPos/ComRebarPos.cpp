@@ -87,7 +87,7 @@ STDMETHODIMP CComPolygon::GetElementValue(
             if (dwCookie>2)
                 throw Acad::eInvalidInput;
             Acad::ErrorStatus es;
-            AcAxObjectRefPtr<AsdkPoly> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+            AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
 	        if((es=pPoly.openStatus()) != Acad::eOk)
                 throw es;
 
@@ -144,7 +144,7 @@ STDMETHODIMP CComPolygon::SetElementValue(
             if (dwCookie>2)
                 throw Acad::eInvalidInput;
             Acad::ErrorStatus es;
-            AcAxObjectRefPtr<AsdkPoly> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+            AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
 	        if((es=pPoly.openStatus()) != Acad::eOk)
                 throw es;
 
@@ -390,12 +390,12 @@ STDMETHODIMP CComPolygon::CreateObject(AcDbObjectId ownerId, TCHAR *keyName)
         try 
         {
             Acad::ErrorStatus es;
-            AcDbObjectPointer<AsdkPoly> pPoly;
+            AcDbObjectPointer<CRebarPos> pPoly;
             if((es = pPoly.create()) != Acad::eOk)
                 throw es;
 
             pPoly->setDatabaseDefaults(ownerId.database());
-            AsdkPoly *pTmp = NULL;
+            CRebarPos *pTmp = NULL;
             pPoly.release(pTmp);
             
             SetObject((AcDbObject*&)pTmp);
@@ -415,7 +415,7 @@ STDMETHODIMP CComPolygon::AddToDb(AcDbObjectId& objId, AcDbObjectId ownerId, TCH
         AXEntityDocLock(ownerId);
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<AsdkPoly> pPoly(&m_objRef, AcDb::kForRead);
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef, AcDb::kForRead);
 
         AcDbBlockTableRecordPointer pBlockTableRecord(ownerId, AcDb::kForWrite);
         if((es = pBlockTableRecord.openStatus()) != Acad::eOk)
@@ -440,7 +440,7 @@ STDMETHODIMP CComPolygon::get_TextString(BSTR * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<AsdkPoly> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
 	    if((es=pPoly.openStatus()) != Acad::eOk)
             throw es;
         
@@ -461,7 +461,7 @@ STDMETHODIMP CComPolygon::put_TextString(BSTR newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<AsdkPoly> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
 	    if((es=pPoly.openStatus()) != Acad::eOk)
             throw es;
         
@@ -484,7 +484,7 @@ STDMETHODIMP CComPolygon::get_NumSides(long * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<AsdkPoly> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
 	    if((es=pPoly.openStatus()) != Acad::eOk)
             throw es;
         
@@ -504,7 +504,7 @@ STDMETHODIMP CComPolygon::put_NumSides(long newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<AsdkPoly> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
 	    if((es=pPoly.openStatus()) != Acad::eOk)
             throw es;
         
@@ -527,7 +527,7 @@ STDMETHODIMP CComPolygon::get_Normal(VARIANT * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<AsdkPoly> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
 	    if((es=pPoly.openStatus()) != Acad::eOk)
             throw es;
         AcAxPoint3d pt = pPoly->normal();
@@ -552,7 +552,7 @@ STDMETHODIMP CComPolygon::put_Normal(VARIANT newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<AsdkPoly> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
 	    if((es=pPoly.openStatus()) != Acad::eOk)
             throw es;
         
@@ -579,7 +579,7 @@ STDMETHODIMP CComPolygon::get_Center(VARIANT * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<AsdkPoly> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
 	    if((es=pPoly.openStatus()) != Acad::eOk)
             throw es;
         AcAxPoint2d pt = pPoly->center();
@@ -605,7 +605,7 @@ STDMETHODIMP CComPolygon::put_Center(VARIANT newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<AsdkPoly> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
 	    if((es=pPoly.openStatus()) != Acad::eOk)
             throw es;
         
@@ -631,7 +631,7 @@ STDMETHODIMP CComPolygon::get_StartPoint(VARIANT * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<AsdkPoly> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
 	    if((es=pPoly.openStatus()) != Acad::eOk)
             throw es;
         AcAxPoint2d pt = pPoly->startPoint();
@@ -656,7 +656,7 @@ STDMETHODIMP CComPolygon::put_StartPoint(VARIANT newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<AsdkPoly> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
 	    if((es=pPoly.openStatus()) != Acad::eOk)
             throw es;
         
@@ -682,7 +682,7 @@ STDMETHODIMP CComPolygon::get_TextStyleName(BSTR * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<AsdkPoly> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
 	    if((es=pPoly.openStatus()) != Acad::eOk)
             throw es;
         AcDbTextStyleTableRecordPointer pTextStyleRecord(pPoly->styleId(),AcDb::kForRead);
@@ -713,7 +713,7 @@ STDMETHODIMP CComPolygon::put_TextStyleName(BSTR newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<AsdkPoly> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
 	    if((es=pPoly.openStatus()) != Acad::eOk)
             throw es;
 
@@ -746,7 +746,7 @@ STDMETHODIMP CComPolygon::GetVertices(VARIANT* coordinates)
 {
 	try
     {
-        AcAxObjectRefPtr<AsdkPoly> pPoly(&m_objRef, AcDb::kForRead);
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef, AcDb::kForRead);
 		Acad::ErrorStatus es;
         if((es=pPoly.openStatus()) != Acad::eOk)
             throw es;
@@ -775,7 +775,7 @@ STDMETHODIMP CComPolygon::get_Elevation(double *pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<AsdkPoly> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
 	    if((es=pPoly.openStatus()) != Acad::eOk)
             throw es;
         *pVal = pPoly->elevation();
@@ -798,7 +798,7 @@ STDMETHODIMP CComPolygon::put_Elevation(double newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<AsdkPoly> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
 	    if((es=pPoly.openStatus()) != Acad::eOk)
             throw es;
 

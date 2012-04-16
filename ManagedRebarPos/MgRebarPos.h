@@ -29,18 +29,18 @@ using namespace Autodesk::AutoCAD::DatabaseServices;
 namespace Autodesk {
     namespace ObjectDbxSample
     {
-        [Autodesk::AutoCAD::Runtime::Wrapper("AsdkPoly")]
-        public __gc class Poly :  public Autodesk::AutoCAD::DatabaseServices::Curve
+        [Autodesk::AutoCAD::Runtime::Wrapper("CRebarPos")]
+        public __gc class RebarPos :  public Autodesk::AutoCAD::DatabaseServices::Curve
         {
 
         public:
-            Poly();
+            RebarPos();
 
         public private:
-            Poly(System::IntPtr unmanagedPointer, bool autoDelete);
-            inline AsdkPoly*  GetImpObj()
+            RebarPos(System::IntPtr unmanagedPointer, bool autoDelete);
+            inline CRebarPos*  GetImpObj()
             {
-                return static_cast<AsdkPoly*>(UnmanagedObject.ToPointer());
+                return static_cast<CRebarPos*>(UnmanagedObject.ToPointer());
             }
 
         public:

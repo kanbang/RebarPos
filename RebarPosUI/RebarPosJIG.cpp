@@ -53,7 +53,7 @@ AsdkPolyJig::initializePoly(AcGePoint2d  cen,
                             int          numSides,
                             double elev)
 {
-    mPoly = new AsdkPoly();
+    mPoly = new CRebarPos();
     mPoly->setNumSides(numSides);
     mPoly->setCenter(cen);
     mPoly->setNormal(norm);

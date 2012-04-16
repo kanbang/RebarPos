@@ -35,7 +35,7 @@
 #include "tchar.h"
 
 class AcGePoint3d;
-class AsdkPoly;
+class CRebarPos;
 
 
 class AsdkPolyJig : public  AcEdJig
@@ -67,7 +67,7 @@ class AsdkPolyJig : public  AcEdJig
 
 
  private:
-    AsdkPoly*	       mPoly;
+    CRebarPos*	       mPoly;
 };
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef POLYSAMP_POLY_H
-#define POLYSAMP_POLY_H
+#pragma once
+
 //
 // (C) Copyright 1996-2008 by Autodesk, Inc. 
 //
@@ -67,17 +67,17 @@
 // the exported API.  It is not necessary for any custom classes that
 // are not exporting an API of their own.
 //
-class DLLIMPEXP AsdkPoly: public  AcDbCurve
+class DLLIMPEXP CRebarPos: public  AcDbCurve
 {
 public:
-    ACRX_DECLARE_MEMBERS(AsdkPoly);
+    ACRX_DECLARE_MEMBERS(CRebarPos);
     
     //*************************************************************************
     // Constructors and destructor
     //*************************************************************************
     
-    AsdkPoly();
-    virtual ~AsdkPoly();
+    CRebarPos();
+    virtual ~CRebarPos();
     
     Acad::ErrorStatus set(const AcGePoint2d&   center,
         const AcGePoint2d&   startPoint,
@@ -453,7 +453,6 @@ private:
     mutable bool mShowAffordances;
 };
 
-#endif /* POLYSAMP_POLY_H */
 
 //- This line allows us to get rid of the .def file in ARX projects
 #ifndef _WIN64
