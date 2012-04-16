@@ -81,14 +81,6 @@
 // double mElevation
 #define VERSION 2
 
-extern "C" {
-
-// locally defined entry point invoked by Rx.
-
-AcRx::AppRetCode __declspec(dllexport) acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt);
-
-}
-
 //*************************************************************************
 // Statics functions used in this file. 
 //*************************************************************************
@@ -3175,47 +3167,4 @@ static Acad::ErrorStatus intPline(const CRebarPos*         poly,
     }
 
     return es;
-}
-
-void changeAppNameCallback(const AcRxClass* classObj, TCHAR*& newAppName,
-    int saveVer)
-{
-    if (saveVer == AcDb::kDHL_1014 && classObj == CRebarPos::desc())
-        acutNewString(_T("RebarPos")
-        _T("|Product Desc:     RebarPos ARX App")
-        _T("|Company:          OZOZ"), newAppName);
-}
-
-AcRx::AppRetCode __declspec(dllexport)
-acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
-{
-    
-
-    switch(msg) {
-
-    case AcRx::kInitAppMsg:
-
-        acrxUnlockApplication(pkt);     // Try to allow unloading
-
-        acrxRegisterAppMDIAware(pkt);
-
-        CRebarPos::rxInit(changeAppNameCallback);
-        
-        // Register a service using the class name.
-        if (!acrxServiceIsRegistered(_T("AsdkPoly")))
-            acrxRegisterService(_T("AsdkPoly"));
-
-        acrxBuildClassHierarchy();
-        break;
-
-    case AcRx::kUnloadAppMsg:
-        // Unregister the service
-        AcRxObject *obj = acrxServiceDictionary->remove(_T("AsdkPoly"));
-        if (obj != NULL)
-            delete obj;
-
-        deleteAcRxClass(CRebarPos::desc());
-        break;
-    }
-    return AcRx::kRetOK;
 }

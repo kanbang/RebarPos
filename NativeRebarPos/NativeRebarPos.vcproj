@@ -299,6 +299,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\RebarPosApp.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Utility.cpp"
 				>
 			</File>
