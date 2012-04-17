@@ -52,23 +52,11 @@ HRESULT CComPolyCmd::OnChanged(DISPID dispId)
         case DISPID_TEXTSTRING:
            bGotTextString = true;
            break;
-        case DISPID_NUMSIDES:
-           bGotNumSides = true;
-           break;
-        case DISPID_NORMAL:
-           bGotNormal = true;
-           break;
         case DISPID_CENTER:
            bGotCenter = true;
            break;
-        case DISPID_STARTPOINT:
-           bGotStartPoint = true;
-           break;
         case DISPID_TEXTSTYLENAME:
            bGotTextStyleName = true;
-           break;
-        case DISPID_ELEVATION:
-           bGotElevation = true;
            break;
         default:
            break;

@@ -36,80 +36,28 @@
 //////////////////////////////////////////////////////////////////////////
 // constructor
 Autodesk::ObjectDbxSample::RebarPos::RebarPos() 
-:Autodesk::AutoCAD::DatabaseServices::Curve(new CRebarPos(), true)
+:Autodesk::AutoCAD::DatabaseServices::Entity(new CRebarPos(), true)
 {
 	acutPrintf(_T("\n*********************Constructor"));
 }
 
 //////////////////////////////////////////////////////////////////////////
 Autodesk::ObjectDbxSample::RebarPos::RebarPos(System::IntPtr unmanagedPointer, bool autoDelete)
-: Autodesk::AutoCAD::DatabaseServices::Curve(unmanagedPointer,autoDelete)
+: Autodesk::AutoCAD::DatabaseServices::Entity(unmanagedPointer,autoDelete)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////
 // set the centre of the poly
-void Autodesk::ObjectDbxSample::RebarPos::set_Center(Point2d point)
+void Autodesk::ObjectDbxSample::RebarPos::set_Center(Point3d point)
 {
-  Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setCenter(GETPOINT2D(point)));
+  Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setCenter(GETPOINT3D(point)));
 }
 //////////////////////////////////////////////////////////////////////////
 // get the center point
-Point2d Autodesk::ObjectDbxSample::RebarPos::get_Center()
+Point3d Autodesk::ObjectDbxSample::RebarPos::get_Center()
 {
-    return ToPoint2d (GetImpObj()->center());
-}
-
-//////////////////////////////////////////////////////////////////////////
-// set the start point
-void Autodesk::ObjectDbxSample::RebarPos::set_StartPoint2d(Point2d point)
-{
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setStartPoint(GETPOINT2D(point)));
-}
-//////////////////////////////////////////////////////////////////////////
-// get the start point
-Point2d Autodesk::ObjectDbxSample::RebarPos::get_StartPoint2d()
-{
-    return ToPoint2d (GetImpObj()->startPoint());
-}
-
-//////////////////////////////////////////////////////////////////////////
-// set number of polygon sides
-void Autodesk::ObjectDbxSample::RebarPos::set_NumberOfSides(long value)
-{
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setNumSides(value));
-}
-//////////////////////////////////////////////////////////////////////////
-// get the number of polygon sides
-long Autodesk::ObjectDbxSample::RebarPos::get_NumberOfSide()
-{
-    return GetImpObj()->numSides();
-}
-
-//////////////////////////////////////////////////////////////////////////
-// set the normal vector
-void Autodesk::ObjectDbxSample::RebarPos::set_Normal(Vector3d vector)
-{
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setNormal(GETVECTOR3D(vector)));
-}
-//////////////////////////////////////////////////////////////////////////
-// get the normal vector
-Vector3d Autodesk::ObjectDbxSample::RebarPos::get_Normal()
-{
-    return ToVector3d(GetImpObj()->normal());
-}
-
-//////////////////////////////////////////////////////////////////////////
-// set the elevation
-void Autodesk::ObjectDbxSample::RebarPos::set_Elevation(double value)
-{
-    GetImpObj()->setElevation(value);
-}
-//////////////////////////////////////////////////////////////////////////
-// get the elevation
-double Autodesk::ObjectDbxSample::RebarPos::get_Elevation()
-{
-    return GetImpObj()->elevation();
+    return ToPoint3d (GetImpObj()->getCenter());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -130,17 +78,4 @@ String* Autodesk::ObjectDbxSample::RebarPos::get_Name()
 void Autodesk::ObjectDbxSample::RebarPos::set_TextStyle(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
 {
     Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setTextStyle(GETOBJECTID(value)));
-}
-
-//////////////////////////////////////////////////////////////////////////
-// get the vertices into a 2d point array
-Point2dCollection* Autodesk::ObjectDbxSample::RebarPos::get_Vertices()
-{
-    AcGePoint2dArray* pArr = new AcGePoint2dArray();
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->getVertices2d(*pArr));
-
-    Point2dCollection* ret = 
-        __try_cast<Point2dCollection*>(Autodesk::AutoCAD::Runtime::DisposableWrapper::Create(__typeof(Point2dCollection),pArr,true));
-
-    return ret;
 }

@@ -299,10 +299,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Hilit.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Main.cpp"
 				>
 			</File>
@@ -311,15 +307,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RebarPosJIG.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\RebarPosMenu.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Transact.cpp"
 				>
 			</File>
 			<File
@@ -345,10 +333,6 @@
 			</File>
 			<File
 				RelativePath=".\RebarPosCmd.h"
-				>
-			</File>
-			<File
-				RelativePath=".\RebarPosJIG.h"
 				>
 			</File>
 			<File

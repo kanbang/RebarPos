@@ -126,8 +126,8 @@ AsdkPolyMatchProp::copyProperties(AcDbEntity *pSrcEntity, AcDbEntity *pTrgEntity
     if (pSrcEntity->isKindOf(CRebarPos::desc())) {
       CRebarPos *pSrcPoly = CRebarPos::cast(pSrcEntity);
 
-      // copy num sides
-      pPoly->setNumSides(pSrcPoly->numSides());
+      // copy text
+	  pPoly->setName(pSrcPoly->name());
 
       // add more polysamp properties to match here 
     }
@@ -175,65 +175,6 @@ void initModule()
                             _T("POLY"),
                             ACRX_CMD_MODAL,
                             &polyCommand);
-
-    acedRegCmds->addCommand(_T("ASDK_POLYGON"),
-                            _T("PPOLY"),
-                            _T("PPOLY"),
-                            ACRX_CMD_MODAL | ACRX_CMD_INTERRUPTIBLE,
-                            &polyCommand2);
-
-    acedRegCmds->addCommand(_T("ASDK_POLYGON"),
-                            _T("ASDK_DRAGPOLY"),
-                            _T("DRAGPOLY"),
-                            ACRX_CMD_MODAL,
-                            &dragPolyCommand);
-
-    acedRegCmds->addCommand(_T("ASDK_POLYGON"),
-                            _T("ASDK_POLYEDIT"),
-                            _T("POLYEDIT"),
-                            ACRX_CMD_MODAL | ACRX_CMD_USEPICKSET,
-                            &polyeditCommand);
-
-    acedRegCmds->addCommand(_T("ASDK_POLYGON"),
-                            _T("ASDK_TRANSACT"),
-                            _T("TRANSACT"),
-                            ACRX_CMD_MODAL,
-                            &transactCommand);
-
-    acedRegCmds->addCommand(_T("ASDK_POLYGON"),
-                            _T("ASDK_HILITPOLY"),
-                            _T("HILITPOLY"),
-                            ACRX_CMD_MODAL,
-                            &hilitPoly);
-
-    acedRegCmds->addCommand(_T("ASDK_POLYGON"),
-                            _T("ASDK_HILITSOLID"),
-                            _T("HILITSOLID"),
-                            ACRX_CMD_MODAL,
-                            &hilitSolid);
-
-    acedRegCmds->addCommand(_T("ASDK_POLYGON"),
-                            _T("ASDK_CREATEINSERT"),
-                            _T("CREATEINSERT"),
-                            ACRX_CMD_MODAL,
-                            &createInsert);
-
-    acedRegCmds->addCommand(_T("ASDK_POLYGON"),
-                            _T("ASDK_HILITINSERT"),
-                            _T("HILITINSERT"),
-                            ACRX_CMD_MODAL,
-                            &hilitInsert);
-
-    acedRegCmds->addCommand(_T("ASDK_POLYGON"),
-                            _T("ASDK_USEDRAGDATA"),
-                            _T("USEDRAGDATA"),
-                            ACRX_CMD_TRANSPARENT,
-                            setUseDragData);
-	acedRegCmds->addCommand(_T("ASDK_POLYGON"),
-							_T("ASDK_POLYCLEANUI"),
-							_T("POLYCLEANUI"),
-							ACRX_CMD_TRANSPARENT,
-							&CleanUpUserInterfaceForPolySamp);
 		
 	UpdateUserInterfaceForPolySamp();
 }
@@ -258,13 +199,6 @@ void updateRegistry()
 	
 	// Write out all our commands (Global,Local).
 	appInfo.writeCommandNameToRegistry(_T("ASDK_POLY"),_T("POLY"));
-	appInfo.writeCommandNameToRegistry(_T("ASDK_DRAGPOLY"),_T("DRAGPOLY"));
-	appInfo.writeCommandNameToRegistry(_T("ASDK_POLYEDIT"),_T("POLYEDIT"));
-	appInfo.writeCommandNameToRegistry(_T("ASDK_TRANSACT"),_T("TRANSACT"));
-	appInfo.writeCommandNameToRegistry(_T("ASDK_HILITPOLY"),_T("HILITPOLY"));
-	appInfo.writeCommandNameToRegistry(_T("ASDK_HILITSOLID"),_T("HILITSOLID"));
-	appInfo.writeCommandNameToRegistry(_T("ASDK_CREATEINSERT"),_T("CREATEINSERT"));
-	appInfo.writeCommandNameToRegistry(_T("ASDK_HILITINSERT"),_T("HILITINSERT"));
 }
 
 // END CODE APPEARING IN SDK DOCUMENT.

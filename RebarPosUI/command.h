@@ -28,14 +28,5 @@
 // This file contains declarations for commands and functions in
 // polysamp.
 
-void createInsert();
-void hilitInsert();
-void setUseDragData();
-void dragPolyCommand();
-void hilitPoly();
-void hilitSolid();
 void polyCommand();
-void polyCommand2();
-void polyeditCommand();
-void transactCommand();
 

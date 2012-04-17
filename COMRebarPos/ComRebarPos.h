@@ -30,13 +30,13 @@
 
 // DISPIDs for resources
 #define DISPID_TEXTSTRING   0x00000001
-#define DISPID_NUMSIDES     0x00000002
-#define DISPID_NORMAL       0x00000003
+//#define DISPID_NUMSIDES     0x00000002
+//#define DISPID_NORMAL       0x00000003
 #define DISPID_CENTER       0x00000004
-#define DISPID_STARTPOINT   0x00000005
+//#define DISPID_STARTPOINT   0x00000005
 #define DISPID_TEXTSTYLENAME 0x00000006
-#define DISPID_GETVERTICES  0x00000007
-#define DISPID_ELEVATION    0x00000008
+//#define DISPID_GETVERTICES  0x00000007
+//#define DISPID_ELEVATION    0x00000008
 
 /////////////////////////////////////////////////////////////////////////////
 // CComPolygon
@@ -94,19 +94,19 @@ END_COM_MAP()
 
 // IComPolygon
 public:
-	STDMETHOD(get_Elevation)(/*[out, retval]*/ double *pVal);
-	STDMETHOD(put_Elevation)(/*[in]*/ double newVal);
-	STDMETHOD(GetVertices)(/*[retval, out]*/ VARIANT* pnts);
+	//STDMETHOD(get_Elevation)(/*[out, retval]*/ double *pVal);
+	//STDMETHOD(put_Elevation)(/*[in]*/ double newVal);
+	//STDMETHOD(GetVertices)(/*[retval, out]*/ VARIANT* pnts);
 	STDMETHOD(get_TextStyleName)(/*[out, retval]*/ BSTR *pVal);
 	STDMETHOD(put_TextStyleName)(/*[in]*/ BSTR newVal);
-	STDMETHOD(get_StartPoint)(/*[out, retval]*/ VARIANT *pVal);
-	STDMETHOD(put_StartPoint)(/*[in]*/ VARIANT newVal);
+	//STDMETHOD(get_StartPoint)(/*[out, retval]*/ VARIANT *pVal);
+	//STDMETHOD(put_StartPoint)(/*[in]*/ VARIANT newVal);
 	STDMETHOD(get_Center)(/*[out, retval]*/ VARIANT *pVal);
 	STDMETHOD(put_Center)(/*[in]*/ VARIANT newVal);
-	STDMETHOD(get_Normal)(/*[out, retval]*/ VARIANT *pVal);
-	STDMETHOD(put_Normal)(/*[in]*/ VARIANT newVal);
-	STDMETHOD(get_NumSides)(/*[out, retval]*/ long *pVal);
-	STDMETHOD(put_NumSides)(/*[in]*/ long newVal);
+	//STDMETHOD(get_Normal)(/*[out, retval]*/ VARIANT *pVal);
+	//STDMETHOD(put_Normal)(/*[in]*/ VARIANT newVal);
+	//STDMETHOD(get_NumSides)(/*[out, retval]*/ long *pVal);
+	//STDMETHOD(put_NumSides)(/*[in]*/ long newVal);
 	STDMETHOD(get_TextString)(/*[out, retval]*/ BSTR *pVal);
 	STDMETHOD(put_TextString)(/*[in]*/ BSTR newVal);
 
@@ -117,12 +117,12 @@ public:
 // IOPMPropertyExtension
 BEGIN_OPMPROP_MAP()
     OPMPROP_ENTRY(0, 0x00000001, PROPCAT_Text, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, 0x00000002, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, 0x00000003, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    //OPMPROP_ENTRY(0, 0x00000002, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    //OPMPROP_ENTRY(0, 0x00000003, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, 0x00000004, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, 0x00000005, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    //OPMPROP_ENTRY(0, 0x00000005, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, 0x00000006, PROPCAT_Text, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, 0x00000008, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    //OPMPROP_ENTRY(0, 0x00000008, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
 END_OPMPROP_MAP()
 
 

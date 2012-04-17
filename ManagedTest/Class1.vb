@@ -46,9 +46,7 @@ Public Class mgPolyTestApp
             ' create a poly samp object via the .net wrapper
             Dim poly As New Autodesk.ObjectDbxSample.RebarPos()
             ' set the properties for the poly
-            poly.Center = New Point2d(100, 100)
-            poly.StartPoint2d = New Point2d(300, 100)
-            poly.NumberOfSides = 5
+            poly.Center = New Point3d(100, 100, 0)
             poly.Name = "Managed Poly"
 
             ' get the blocktable as before, but lets open it for read within the transaction manager

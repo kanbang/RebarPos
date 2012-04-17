@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0500 */
-/* at Mon Apr 16 17:16:43 2012
+/* at Tue Apr 17 11:57:36 2012
  */
 /* Compiler settings for .\COMRebarPos.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -95,28 +95,10 @@ EXTERN_C const IID IID_IComPolygon;
         virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_TextString( 
             /* [in] */ BSTR newVal) = 0;
         
-        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_NumSides( 
-            /* [retval][out] */ long *pVal) = 0;
-        
-        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_NumSides( 
-            /* [in] */ long newVal) = 0;
-        
-        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Normal( 
-            /* [retval][out] */ VARIANT *pVal) = 0;
-        
-        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_Normal( 
-            /* [in] */ VARIANT newVal) = 0;
-        
         virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Center( 
             /* [retval][out] */ VARIANT *pVal) = 0;
         
         virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_Center( 
-            /* [in] */ VARIANT newVal) = 0;
-        
-        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_StartPoint( 
-            /* [retval][out] */ VARIANT *pVal) = 0;
-        
-        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_StartPoint( 
             /* [in] */ VARIANT newVal) = 0;
         
         virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_TextStyleName( 
@@ -124,15 +106,6 @@ EXTERN_C const IID IID_IComPolygon;
         
         virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_TextStyleName( 
             /* [in] */ BSTR newVal) = 0;
-        
-        virtual /* [helpcontext][helpstring][id] */ HRESULT STDMETHODCALLTYPE GetVertices( 
-            /* [out][retval] */ VARIANT *pnts) = 0;
-        
-        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Elevation( 
-            /* [retval][out] */ double *pVal) = 0;
-        
-        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_Elevation( 
-            /* [in] */ double newVal) = 0;
         
     };
     
@@ -440,35 +413,11 @@ EXTERN_C const IID IID_IComPolygon;
             IComPolygon * This,
             /* [in] */ BSTR newVal);
         
-        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_NumSides )( 
-            IComPolygon * This,
-            /* [retval][out] */ long *pVal);
-        
-        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_NumSides )( 
-            IComPolygon * This,
-            /* [in] */ long newVal);
-        
-        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Normal )( 
-            IComPolygon * This,
-            /* [retval][out] */ VARIANT *pVal);
-        
-        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Normal )( 
-            IComPolygon * This,
-            /* [in] */ VARIANT newVal);
-        
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Center )( 
             IComPolygon * This,
             /* [retval][out] */ VARIANT *pVal);
         
         /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Center )( 
-            IComPolygon * This,
-            /* [in] */ VARIANT newVal);
-        
-        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_StartPoint )( 
-            IComPolygon * This,
-            /* [retval][out] */ VARIANT *pVal);
-        
-        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_StartPoint )( 
             IComPolygon * This,
             /* [in] */ VARIANT newVal);
         
@@ -479,18 +428,6 @@ EXTERN_C const IID IID_IComPolygon;
         /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_TextStyleName )( 
             IComPolygon * This,
             /* [in] */ BSTR newVal);
-        
-        /* [helpcontext][helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *GetVertices )( 
-            IComPolygon * This,
-            /* [out][retval] */ VARIANT *pnts);
-        
-        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Elevation )( 
-            IComPolygon * This,
-            /* [retval][out] */ double *pVal);
-        
-        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Elevation )( 
-            IComPolygon * This,
-            /* [in] */ double newVal);
         
         END_INTERFACE
     } IComPolygonVtbl;
@@ -683,44 +620,17 @@ EXTERN_C const IID IID_IComPolygon;
 #define IComPolygon_put_TextString(This,newVal)	\
     ( (This)->lpVtbl -> put_TextString(This,newVal) ) 
 
-#define IComPolygon_get_NumSides(This,pVal)	\
-    ( (This)->lpVtbl -> get_NumSides(This,pVal) ) 
-
-#define IComPolygon_put_NumSides(This,newVal)	\
-    ( (This)->lpVtbl -> put_NumSides(This,newVal) ) 
-
-#define IComPolygon_get_Normal(This,pVal)	\
-    ( (This)->lpVtbl -> get_Normal(This,pVal) ) 
-
-#define IComPolygon_put_Normal(This,newVal)	\
-    ( (This)->lpVtbl -> put_Normal(This,newVal) ) 
-
 #define IComPolygon_get_Center(This,pVal)	\
     ( (This)->lpVtbl -> get_Center(This,pVal) ) 
 
 #define IComPolygon_put_Center(This,newVal)	\
     ( (This)->lpVtbl -> put_Center(This,newVal) ) 
 
-#define IComPolygon_get_StartPoint(This,pVal)	\
-    ( (This)->lpVtbl -> get_StartPoint(This,pVal) ) 
-
-#define IComPolygon_put_StartPoint(This,newVal)	\
-    ( (This)->lpVtbl -> put_StartPoint(This,newVal) ) 
-
 #define IComPolygon_get_TextStyleName(This,pVal)	\
     ( (This)->lpVtbl -> get_TextStyleName(This,pVal) ) 
 
 #define IComPolygon_put_TextStyleName(This,newVal)	\
     ( (This)->lpVtbl -> put_TextStyleName(This,newVal) ) 
-
-#define IComPolygon_GetVertices(This,pnts)	\
-    ( (This)->lpVtbl -> GetVertices(This,pnts) ) 
-
-#define IComPolygon_get_Elevation(This,pVal)	\
-    ( (This)->lpVtbl -> get_Elevation(This,pVal) ) 
-
-#define IComPolygon_put_Elevation(This,newVal)	\
-    ( (This)->lpVtbl -> put_Elevation(This,newVal) ) 
 
 #endif /* COBJMACROS */
 

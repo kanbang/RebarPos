@@ -143,31 +143,6 @@ void CreateToolbars()
     hr = tlbr->AddToolbarButton(index, L"POLY", L"Creates poly entity", L"_poly ", vtFalse, &button);
     hr=button->SetBitmaps(CComBSTR(csPath+_T("1_Poly1.ico")),CComBSTR(csPath+_T("1_Poly1.ico")));
     button->Release();
-    hr = tlbr->AddToolbarButton(index, L"DRAGPOLY", L"Creates poly entity using dragging", L"_dragpoly ", vtFalse, &button);
-    hr=button->SetBitmaps(CComBSTR(csPath+_T("1_Poly2.ico")),CComBSTR(csPath+_T("1_Poly2.ico")));
-    button->Release();
-    hr = tlbr->AddToolbarButton(index, L"POLYEDIT", L"Edits poly entity", L"_POLYEDIT ", vtFalse, &button);
-    hr=button->SetBitmaps(CComBSTR(csPath+_T("1_Poly3.ico")),CComBSTR(csPath+_T("1_Poly3.ico")));
-    button->Release();
-    hr = tlbr->AddToolbarButton(index, L"TRANSACT", L"Test Transaction on  poly entity", L"_TRANSACT ", vtFalse, &button);
-    hr=button->SetBitmaps(CComBSTR(csPath+_T("1_Poly4.ico")),CComBSTR(csPath+_T("1_Poly4.ico")));
-    button->Release();
-    hr = tlbr->AddToolbarButton(index, L"HILITPOLY", L"Hilight poly entity", L"_HILITPOLY ", vtFalse, &button);
-    hr=button->SetBitmaps(CComBSTR(csPath+_T("1_Poly5.ico")),CComBSTR(csPath+_T("1_Poly5.ico")));
-    button->Release();
-    hr = tlbr->AddToolbarButton(index, L"HILITSOLID", L"Hilight solid entity", L"_HILITSOLID ", vtFalse, &button);
-    hr=button->SetBitmaps(CComBSTR(csPath+_T("1_Poly6.ico")),CComBSTR(csPath+_T("1_Poly6.ico")));
-    button->Release();
-    hr = tlbr->AddToolbarButton(index, L"CREATEINSERT", L"Creates inserted entity", L"_CREATEINSERT ", vtFalse, &button);
-    hr=button->SetBitmaps(CComBSTR(csPath+_T("1_Poly7.ico")),CComBSTR(csPath+_T("1_Poly7.ico")));
-    button->Release();
-    hr = tlbr->AddToolbarButton(index, L"HILITINSERT", L"Highlight inserted entity", L"_HILITINSERT ", vtFalse, &button);
-    hr=button->SetBitmaps(CComBSTR(csPath+_T("1_Poly8.ico")),CComBSTR(csPath+_T("1_Poly8.ico")));
-    button->Release();
-    hr = tlbr->AddToolbarButton(index, L"USEDRAGDATA", L"Test user dragging mechanism", L"_USEDRAGDATA ", vtFalse, &button);
-    hr=button->SetBitmaps(CComBSTR(csPath+_T("1_Poly1.ico")),CComBSTR(csPath+_T("1_Poly1.ico")));
-    button->Release();
-
 
     tlbr->Dock(acToolbarDockLeft);
     tlbr->Release();
@@ -242,21 +217,7 @@ void CreateMenus()
 
     vtIndex.lVal = 1;
     hr = polyMnu->AddMenuItem(vtIndex, L"POLYEDIT", L"_polyedit ", &polycmds);
-    vtIndex.lVal = 2;
-    hr = polyMnu->AddMenuItem(vtIndex, L"TRANSACT", L"_TRANSACT ", &polycmds);
-    vtIndex.lVal = 3;
-    hr = polyMnu->AddMenuItem(vtIndex, L"HILITPOLY", L"_HILITPOLY ", &polycmds);
-    vtIndex.lVal = 4;
-    hr = polyMnu->AddMenuItem(vtIndex, L"CREATEINSERT", L"_CREATEINSERT ", &polycmds);
-    vtIndex.lVal = 5;
-    hr = polyMnu->AddMenuItem(vtIndex, L"HILITINSERT", L"_HILITINSERT ", &polycmds);
-    vtIndex.lVal = 6;
-    hr = polyMnu->AddMenuItem(vtIndex, L"USEDRAGDATA", L"_USEDRAGDATA ", &polycmds);
-    vtIndex.lVal = 7;
-    hr = polyMnu->AddMenuItem(vtIndex, L"HILITINSERT", L"_HILITINSERT ", &polycmds);
-    vtIndex.lVal = 8;
-    hr = polyMnu->AddMenuItem(vtIndex, L"HILITINSERT", L"_HILITINSERT ", &polycmds);
-//    polycmds->Release();
+
     polyMnu->Release();
 
     return;

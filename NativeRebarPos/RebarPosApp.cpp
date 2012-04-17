@@ -44,8 +44,7 @@ AcRx::AppRetCode __declspec(dllexport) acrxEntryPoint(AcRx::AppMsgCode msg, void
 
 }
 
-void changeAppNameCallback(const AcRxClass* classObj, TCHAR*& newAppName,
-    int saveVer)
+void changeAppNameCallback(const AcRxClass* classObj, TCHAR*& newAppName, int saveVer)
 {
     if (saveVer == AcDb::kDHL_1014 && classObj == CRebarPos::desc())
         acutNewString(_T("RebarPos")
@@ -56,16 +55,11 @@ void changeAppNameCallback(const AcRxClass* classObj, TCHAR*& newAppName,
 AcRx::AppRetCode __declspec(dllexport)
 acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 {
-    
-
-    switch(msg) {
-
+    switch(msg) 
+	{
     case AcRx::kInitAppMsg:
-
         acrxUnlockApplication(pkt);     // Try to allow unloading
-
         acrxRegisterAppMDIAware(pkt);
-
         CRebarPos::rxInit(changeAppNameCallback);
         
         // Register a service using the class name.
