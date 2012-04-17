@@ -31,13 +31,13 @@ namespace Autodesk {
     namespace ObjectDbxSample
     {
         [Autodesk::AutoCAD::Runtime::Wrapper("CRebarPos")]
-        public __gc class RebarPos :  public Autodesk::AutoCAD::DatabaseServices::Entity
+        public ref class RebarPos :  public Autodesk::AutoCAD::DatabaseServices::Entity
         {
 
         public:
             RebarPos();
 
-        public private:
+        internal:
             RebarPos(System::IntPtr unmanagedPointer, bool autoDelete);
             inline CRebarPos*  GetImpObj()
             {
@@ -45,13 +45,10 @@ namespace Autodesk {
             }
 
         public:
-        __property void set_Center(Point3d point);
-        __property Point3d get_Center();
+			property Point3d Center { Point3d get(); void set(Point3d value); }
+			property String^ Name   { String^ get(); void set(String^ value); }
 
-        __property void set_Name(String* value);
-        __property String* get_Name();
-
-        __property void set_TextStyle(Autodesk::AutoCAD::DatabaseServices::ObjectId value);
+			property Autodesk::AutoCAD::DatabaseServices::ObjectId TextStyle { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
         };
     }
 

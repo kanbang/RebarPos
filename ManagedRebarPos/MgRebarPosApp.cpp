@@ -29,7 +29,7 @@
 #include <vcclr.h>
 #include "mgdinterop.h" 
 
-static AcMgObjectFactoryBase __nogc * __nogc *g_PEs = NULL;
+static AcMgObjectFactoryBase **g_PEs = NULL;
 
 extern "C" AcRx::AppRetCode __declspec(dllexport)
 acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
