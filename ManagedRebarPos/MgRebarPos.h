@@ -27,8 +27,9 @@ using namespace System;
 using namespace Autodesk::AutoCAD::Geometry;
 using namespace Autodesk::AutoCAD::DatabaseServices;
 
-namespace Autodesk {
-    namespace ObjectDbxSample
+namespace OZOZ 
+{
+    namespace RebarPosWrapper 
     {
         [Autodesk::AutoCAD::Runtime::Wrapper("CRebarPos")]
         public ref class RebarPos :  public Autodesk::AutoCAD::DatabaseServices::Entity

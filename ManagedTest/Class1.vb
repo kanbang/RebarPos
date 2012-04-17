@@ -25,7 +25,7 @@ Imports Autodesk.AutoCAD.DatabaseServices
 Imports Autodesk.AutoCAD.Geometry
 
 ' import the custom entity wrapper
-Imports Autodesk.ObjectDbxSample.RebarPos
+Imports OZOZ.RebarPosWrapper.RebarPos
 
 Imports DBTransMan = Autodesk.AutoCAD.DatabaseServices.TransactionManager
 
@@ -44,7 +44,7 @@ Public Class mgPolyTestApp
         ' start our try/catch block
         Try
             ' create a poly samp object via the .net wrapper
-            Dim poly As New Autodesk.ObjectDbxSample.RebarPos()
+            Dim poly As New OZOZ.RebarPosWrapper.RebarPos()
             ' set the properties for the poly
             poly.Center = New Point3d(100, 100, 0)
             poly.Name = "Managed Poly"

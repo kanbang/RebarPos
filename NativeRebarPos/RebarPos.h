@@ -38,7 +38,7 @@ public:
     virtual ~CRebarPos();
        
     //*************************************************************************
-    // Methods specific to AsdkPoly 
+    // Methods specific to custom entity 
     //*************************************************************************
     
     const AcGePoint3d& getCenter() const;

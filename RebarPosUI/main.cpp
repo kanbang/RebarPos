@@ -90,7 +90,7 @@ addMatchPoly()
     if (pTemp = acrxServiceDictionary->at(_T("MatchProperties")))
     {
         acutPrintf (_T("MatchProperties is now available.\n")
-                    _T("Now adding match prop protocol extension to AsdkPoly.\n"));
+                    _T("Now adding match prop protocol extension to RebarPos.\n"));
         acedPostCommandPrompt();
 
 
@@ -161,7 +161,7 @@ AsdkPolyMatchProp::copyProperties(AcDbEntity *pSrcEntity, AcDbEntity *pTrgEntity
 void initModule()
 {
 
-    // add match prop protocol extension to AsdkPoly
+    // add match prop protocol extension to RebarPos
     //
     if (!addMatchPoly()) 
     {

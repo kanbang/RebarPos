@@ -44,7 +44,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 			// create a new object factory array
 			static AcMgObjectFactoryBase* PEs[] = 
 			{
-				new AcMgObjectFactory<Autodesk::ObjectDbxSample::RebarPos,CRebarPos>(), 
+				new AcMgObjectFactory<OZOZ::RebarPosWrapper::RebarPos,CRebarPos>(), 
 				// end the array with a NULL
 				NULL
 			};

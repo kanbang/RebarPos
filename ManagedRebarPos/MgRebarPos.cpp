@@ -31,58 +31,58 @@
 #include <dbdate.h>
 #include "mgdinterop.h"
 
-
+using namespace OZOZ::RebarPosWrapper;
 
 //////////////////////////////////////////////////////////////////////////
 // constructor
-Autodesk::ObjectDbxSample::RebarPos::RebarPos() 
+RebarPos::RebarPos() 
 :Autodesk::AutoCAD::DatabaseServices::Entity(IntPtr(new CRebarPos()), true)
 {
 	acutPrintf(_T("\n*********************Constructor"));
 }
 
 //////////////////////////////////////////////////////////////////////////
-Autodesk::ObjectDbxSample::RebarPos::RebarPos(System::IntPtr unmanagedPointer, bool autoDelete)
+RebarPos::RebarPos(System::IntPtr unmanagedPointer, bool autoDelete)
 : Autodesk::AutoCAD::DatabaseServices::Entity(unmanagedPointer,autoDelete)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////
 // set the centre of the poly
-void Autodesk::ObjectDbxSample::RebarPos::Center::set(Point3d point)
+void RebarPos::Center::set(Point3d point)
 {
   Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setCenter(GETPOINT3D(point)));
 }
 //////////////////////////////////////////////////////////////////////////
 // get the center point
-Point3d Autodesk::ObjectDbxSample::RebarPos::Center::get()
+Point3d RebarPos::Center::get()
 {
     return ToPoint3d (GetImpObj()->getCenter());
 }
 
 //////////////////////////////////////////////////////////////////////////
 // set the string name
-void Autodesk::ObjectDbxSample::RebarPos::Name::set(String^ value)
+void RebarPos::Name::set(String^ value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setName(StringToCIF(value)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setName(StringToWchar(value)));
 }
 //////////////////////////////////////////////////////////////////////////
 // get the string name
-String^ Autodesk::ObjectDbxSample::RebarPos::Name::get()
+String^ RebarPos::Name::get()
 {
-    return CIFToString(GetImpObj()->name());
+    return WcharToString(GetImpObj()->name());
 }
 
 //////////////////////////////////////////////////////////////////////////
 // set the text style record 
-void Autodesk::ObjectDbxSample::RebarPos::TextStyle::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
+void RebarPos::TextStyle::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
 {
     Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setTextStyle(GETOBJECTID(value)));
 }
 
 //////////////////////////////////////////////////////////////////////////
 // get the text style record 
-Autodesk::AutoCAD::DatabaseServices::ObjectId Autodesk::ObjectDbxSample::RebarPos::TextStyle::get()
+Autodesk::AutoCAD::DatabaseServices::ObjectId RebarPos::TextStyle::get()
 {
 	return ToObjectId(GetImpObj()->styleId());
 }

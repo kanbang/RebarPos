@@ -545,7 +545,7 @@ Acad::ErrorStatus CRebarPos::subWblockClone(AcRxObject*    pOwner,
         return AcDbEntity::subWblockClone(pOwner, pClonedObject,
             idMap, isPrimary);
 
-    // If this is an Xref bind operation and this AsdkPoly
+    // If this is an Xref bind operation and this 
     // entity is in Paper Space,  then we don't want to
     // clone because Xref bind doesn't support cloning
     // entities in Paper Space.  So we simply return
