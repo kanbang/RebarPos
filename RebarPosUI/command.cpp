@@ -77,11 +77,11 @@ void polyCommand()
 {
     ads_point center;
     
-    if (acedGetPoint(NULL, _T("\nLocate center of polygon: "), center) != RTNORM)
+    if (acedGetPoint(NULL, _T("\nInsertion point: "), center) != RTNORM)
         return;
       
     TCHAR nameBuf[133];
-    if (acedGetString(Adesk::kTrue, _T("\nEnter polygon name: "), nameBuf) != RTNORM)
+    if (acedGetString(Adesk::kTrue, _T("\nText: "), nameBuf) != RTNORM)
         return;   
     
     AcGePoint3d cen = asPnt3d(center);
@@ -92,8 +92,8 @@ void polyCommand()
         return;
     }
     
-	poly->setCenter(asPnt3d(center));
-	poly->setName(nameBuf);
+	poly->setBasePoint(asPnt3d(center));
+	poly->setPos(nameBuf);
     
     poly->setDatabaseDefaults(acdbHostApplicationServices()->workingDatabase());
     postToDb(poly);

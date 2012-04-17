@@ -46,8 +46,8 @@ Public Class mgPolyTestApp
             ' create a poly samp object via the .net wrapper
             Dim poly As New OZOZ.RebarPosWrapper.RebarPos()
             ' set the properties for the poly
-            poly.Center = New Point3d(100, 100, 0)
-            poly.Name = "Managed Poly"
+            poly.BasePoint = New Point3d(100, 100, 0)
+            poly.Pos = "Managed Poly"
 
             ' get the blocktable as before, but lets open it for read within the transaction manager
             Dim bt As BlockTable = CType(tm.GetObject(db.BlockTableId, OpenMode.ForRead, False), BlockTable)

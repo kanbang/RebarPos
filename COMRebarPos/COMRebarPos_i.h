@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0500 */
-/* at Tue Apr 17 11:57:36 2012
+/* at Tue Apr 17 15:19:33 2012
  */
 /* Compiler settings for .\COMRebarPos.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -89,23 +89,17 @@ EXTERN_C const IID IID_IComPolygon;
     IComPolygon : public IAcadEntity
     {
     public:
-        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_TextString( 
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Pos( 
             /* [retval][out] */ BSTR *pVal) = 0;
         
-        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_TextString( 
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_Pos( 
             /* [in] */ BSTR newVal) = 0;
         
-        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Center( 
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_BasePoint( 
             /* [retval][out] */ VARIANT *pVal) = 0;
         
-        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_Center( 
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_BasePoint( 
             /* [in] */ VARIANT newVal) = 0;
-        
-        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_TextStyleName( 
-            /* [retval][out] */ BSTR *pVal) = 0;
-        
-        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_TextStyleName( 
-            /* [in] */ BSTR newVal) = 0;
         
     };
     
@@ -405,29 +399,21 @@ EXTERN_C const IID IID_IComPolygon;
             /* [in][idldescattr] */ ACAD_COLOR noname,
             /* [retval][out] */ void *retval);
         
-        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_TextString )( 
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Pos )( 
             IComPolygon * This,
             /* [retval][out] */ BSTR *pVal);
         
-        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_TextString )( 
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Pos )( 
             IComPolygon * This,
             /* [in] */ BSTR newVal);
         
-        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Center )( 
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_BasePoint )( 
             IComPolygon * This,
             /* [retval][out] */ VARIANT *pVal);
         
-        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Center )( 
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_BasePoint )( 
             IComPolygon * This,
             /* [in] */ VARIANT newVal);
-        
-        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_TextStyleName )( 
-            IComPolygon * This,
-            /* [retval][out] */ BSTR *pVal);
-        
-        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_TextStyleName )( 
-            IComPolygon * This,
-            /* [in] */ BSTR newVal);
         
         END_INTERFACE
     } IComPolygonVtbl;
@@ -614,23 +600,17 @@ EXTERN_C const IID IID_IComPolygon;
     ( (This)->lpVtbl -> put_color(This,noname,retval) ) 
 
 
-#define IComPolygon_get_TextString(This,pVal)	\
-    ( (This)->lpVtbl -> get_TextString(This,pVal) ) 
+#define IComPolygon_get_Pos(This,pVal)	\
+    ( (This)->lpVtbl -> get_Pos(This,pVal) ) 
 
-#define IComPolygon_put_TextString(This,newVal)	\
-    ( (This)->lpVtbl -> put_TextString(This,newVal) ) 
+#define IComPolygon_put_Pos(This,newVal)	\
+    ( (This)->lpVtbl -> put_Pos(This,newVal) ) 
 
-#define IComPolygon_get_Center(This,pVal)	\
-    ( (This)->lpVtbl -> get_Center(This,pVal) ) 
+#define IComPolygon_get_BasePoint(This,pVal)	\
+    ( (This)->lpVtbl -> get_BasePoint(This,pVal) ) 
 
-#define IComPolygon_put_Center(This,newVal)	\
-    ( (This)->lpVtbl -> put_Center(This,newVal) ) 
-
-#define IComPolygon_get_TextStyleName(This,pVal)	\
-    ( (This)->lpVtbl -> get_TextStyleName(This,pVal) ) 
-
-#define IComPolygon_put_TextStyleName(This,newVal)	\
-    ( (This)->lpVtbl -> put_TextStyleName(This,newVal) ) 
+#define IComPolygon_put_BasePoint(This,newVal)	\
+    ( (This)->lpVtbl -> put_BasePoint(This,newVal) ) 
 
 #endif /* COBJMACROS */
 

@@ -47,42 +47,29 @@ RebarPos::RebarPos(System::IntPtr unmanagedPointer, bool autoDelete)
 {
 }
 
-//////////////////////////////////////////////////////////////////////////
-// set the centre of the poly
-void RebarPos::Center::set(Point3d point)
+void RebarPos::BasePoint::set(Point3d point)
 {
-  Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setCenter(GETPOINT3D(point)));
+  Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setBasePoint(GETPOINT3D(point)));
 }
-//////////////////////////////////////////////////////////////////////////
-// get the center point
-Point3d RebarPos::Center::get()
+Point3d RebarPos::BasePoint::get()
 {
-    return ToPoint3d (GetImpObj()->getCenter());
+    return ToPoint3d (GetImpObj()->BasePoint());
 }
 
-//////////////////////////////////////////////////////////////////////////
-// set the string name
-void RebarPos::Name::set(String^ value)
+void RebarPos::Pos::set(String^ value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setName(StringToWchar(value)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setPos(StringToWchar(value)));
 }
-//////////////////////////////////////////////////////////////////////////
-// get the string name
-String^ RebarPos::Name::get()
+String^ RebarPos::Pos::get()
 {
-    return WcharToString(GetImpObj()->name());
+    return WcharToString(GetImpObj()->Pos());
 }
 
-//////////////////////////////////////////////////////////////////////////
-// set the text style record 
-void RebarPos::TextStyle::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
+void RebarPos::ShapeId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setTextStyle(GETOBJECTID(value)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setShapeId(GETOBJECTID(value)));
 }
-
-//////////////////////////////////////////////////////////////////////////
-// get the text style record 
-Autodesk::AutoCAD::DatabaseServices::ObjectId RebarPos::TextStyle::get()
+Autodesk::AutoCAD::DatabaseServices::ObjectId RebarPos::ShapeId::get()
 {
-	return ToObjectId(GetImpObj()->styleId());
+	return ToObjectId(GetImpObj()->ShapeId());
 }

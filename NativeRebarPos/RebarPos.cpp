@@ -40,7 +40,7 @@
 #include <basetsd.h>
 #include "ac64bithelpers.h"
 
-#define VERSION 1
+Adesk::UInt32 CRebarPos::kCurrentVersionNumber = 1;
 
 //*************************************************************************
 // Code for the Class Body. 
@@ -58,62 +58,347 @@ ACRX_DXF_DEFINE_MEMBERS(CRebarPos, AcDbCurve,
 //*************************************************************************
 
 CRebarPos::CRebarPos() :
-    mCenter(0, 0, 0), mTextStyle(AcDbObjectId::kNull), mpName(NULL)
+	m_BasePoint(0, 0, 0), direction(1, 0, 0), up(0, 1, 0), norm(0, 0, 1), m_NoteGrip(-4.2133, 0.75 * -1.075, 0),
+	m_ShowLength(Adesk::kTrue), isModified(true), m_Text(NULL), m_Length(NULL), m_Key(NULL),
+	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), m_Multiplier(1), 
+	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL),
+	m_ShapeID(AcDbObjectId::kNull), m_GroupID(AcDbObjectId::kNull)
 {
 }
 
 CRebarPos::~CRebarPos()
 {
-    acutDelString(mpName);
+    acutDelString(m_Key);
+    acutDelString(m_Text);
+    acutDelString(m_Length);
+    acutDelString(m_Pos);
+    acutDelString(m_Count);
+    acutDelString(m_Diameter);
+    acutDelString(m_Spacing);
+    acutDelString(m_Note);
+    acutDelString(m_A);
+    acutDelString(m_B);
+    acutDelString(m_C);
+    acutDelString(m_D);
+    acutDelString(m_E);
+    acutDelString(m_F);
 }
 
 
 //*************************************************************************
-// Methods specific to CRebarPos 
+// Properties
 //*************************************************************************
-const AcGePoint3d& CRebarPos::getCenter() const
+const AcGePoint3d CRebarPos::BasePoint(void) const
 {
-    assertReadEnabled();
-	return mCenter;
-}
-Acad::ErrorStatus CRebarPos::setCenter(const AcGePoint3d& cen)
-{
-    assertWriteEnabled();
-    mCenter = cen;
-    return Acad::eOk;
+	assertReadEnabled();
+	return m_BasePoint;
 }
 
-const TCHAR* CRebarPos::name() const
+Acad::ErrorStatus CRebarPos::setBasePoint(const AcGePoint3d newVal)
 {
-    assertReadEnabled();
-    return mpName;
+	assertWriteEnabled();
+	m_BasePoint = newVal;
+	return Acad::eOk;
 }
-Acad::ErrorStatus CRebarPos::setName(const TCHAR* pName)
-{
-    assertWriteEnabled();
-    
-    acutDelString(mpName);
-    mpName = NULL;
 
-    if(pName != NULL)
+const AcGePoint3d CRebarPos::NoteGrip(void) const
+{
+	assertReadEnabled();
+	return m_NoteGrip;
+}
+
+Acad::ErrorStatus CRebarPos::setNoteGrip(const AcGePoint3d newVal)
+{
+	assertWriteEnabled();
+	m_NoteGrip = newVal;
+	return Acad::eOk;
+}
+
+const ACHAR* CRebarPos::Text(void) const
+{
+	Calculate();
+	return m_Text;
+}
+
+const ACHAR* CRebarPos::Length(void) const
+{
+	Calculate();
+	return m_Length;
+}
+
+const ACHAR* CRebarPos::Pos(void) const
+{
+	assertReadEnabled();
+	return m_Pos;
+}
+
+Acad::ErrorStatus CRebarPos::setPos(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+
+    acutDelString(m_Pos);
+    m_Pos = NULL;
+    if(newVal != NULL)
     {
-        acutUpdString(pName, mpName);
+        acutUpdString(newVal, m_Pos);
     }
 
-    return Acad::eOk;
+	isModified = true;
+	return Acad::eOk;
 }
 
-const AcDbObjectId& CRebarPos::styleId() const
+const ACHAR* CRebarPos::Note(void) const
 {
-    assertReadEnabled();
-    return mTextStyle;
+	assertReadEnabled();
+	return m_Note;
 }
 
-Acad::ErrorStatus CRebarPos::setTextStyle(const AcDbObjectId& tsId)
+Acad::ErrorStatus CRebarPos::setNote(const ACHAR* newVal)
 {
-    assertWriteEnabled();
-    mTextStyle = tsId;
-    return Acad::eOk;
+	assertWriteEnabled();
+
+	acutDelString(m_Note);
+    m_Note = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_Note);
+    }
+
+	isModified = true;
+	return Acad::eOk;
+}
+
+const ACHAR* CRebarPos::Count(void) const
+{
+	assertReadEnabled();
+	return m_Count;
+}
+
+Acad::ErrorStatus CRebarPos::setCount(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+	acutDelString(m_Count);
+    m_Count = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_Count);
+    }
+	isModified = true;
+	return Acad::eOk;
+}
+
+const ACHAR* CRebarPos::Diameter(void) const
+{
+	assertReadEnabled();
+	return m_Diameter;
+}
+
+Acad::ErrorStatus CRebarPos::setDiameter(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+	acutDelString(m_Diameter);
+    m_Diameter = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_Diameter);
+    }
+	isModified = true;
+	return Acad::eOk;
+}
+
+const ACHAR* CRebarPos::Spacing(void) const
+{
+	assertReadEnabled();
+	return m_Spacing;
+}
+
+Acad::ErrorStatus CRebarPos::setSpacing(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+	acutDelString(m_Spacing);
+    m_Spacing = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_Spacing);
+    }
+	isModified = true;
+	return Acad::eOk;
+}
+
+const Adesk::Int32 CRebarPos::Multiplier(void) const
+{
+	assertReadEnabled();
+	return m_Multiplier;
+}
+
+Acad::ErrorStatus CRebarPos::setMultiplier(const Adesk::Int32 newVal)
+{
+	assertWriteEnabled();
+	m_Multiplier = newVal;
+	isModified = true;
+	return Acad::eOk;
+}
+
+const Adesk::Boolean CRebarPos::ShowLength(void) const
+{
+	assertReadEnabled();
+	return m_ShowLength;
+}
+
+Acad::ErrorStatus CRebarPos::setShowLength(const Adesk::Boolean newVal)
+{
+	assertWriteEnabled();
+	m_ShowLength = newVal;
+	isModified = true;
+	return Acad::eOk;
+}
+
+const ACHAR* CRebarPos::A(void) const
+{
+	assertReadEnabled();
+	return m_A;
+}
+
+Acad::ErrorStatus CRebarPos::setA(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+	acutDelString(m_A);
+    m_A = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_A);
+    }
+	isModified = true;
+	return Acad::eOk;
+}
+
+const ACHAR* CRebarPos::B(void) const
+{
+	assertReadEnabled();
+	return m_B;
+}
+
+Acad::ErrorStatus CRebarPos::setB(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+	acutDelString(m_B);
+    m_B = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_B);
+    }
+	isModified = true;
+	return Acad::eOk;
+}
+
+const ACHAR* CRebarPos::C(void) const
+{
+	assertReadEnabled();
+	return m_C;
+}
+
+Acad::ErrorStatus CRebarPos::setC(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+	acutDelString(m_C);
+    m_C = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_C);
+    }
+	isModified = true;
+	return Acad::eOk;
+}
+
+const ACHAR* CRebarPos::D(void) const
+{
+	assertReadEnabled();
+	return m_D;
+}
+
+Acad::ErrorStatus CRebarPos::setD(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+	acutDelString(m_D);
+    m_D = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_D);
+    }
+	isModified = true;
+	return Acad::eOk;
+}
+
+const ACHAR* CRebarPos::E(void) const
+{
+	assertReadEnabled();
+	return m_E;
+}
+
+Acad::ErrorStatus CRebarPos::setE(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+	acutDelString(m_E);
+    m_E = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_E);
+    }
+	isModified = true;
+	return Acad::eOk;
+}
+
+const ACHAR* CRebarPos::F(void) const
+{
+	assertReadEnabled();
+	return m_F;
+}
+
+Acad::ErrorStatus CRebarPos::setF(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+	acutDelString(m_F);
+    m_F = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_F);
+    }
+	isModified = true;
+	return Acad::eOk;
+}
+
+const AcDbObjectId& CRebarPos::ShapeId(void) const
+{
+	assertReadEnabled();
+	return m_ShapeID;
+}
+
+Acad::ErrorStatus CRebarPos::setShapeId(const AcDbObjectId& newVal)
+{
+	assertWriteEnabled();
+	m_ShapeID = newVal;
+	isModified = true;
+	return Acad::eOk;
+}
+
+const AcDbObjectId& CRebarPos::GroupId(void) const
+{
+	assertReadEnabled();
+	return m_GroupID;
+}
+
+Acad::ErrorStatus CRebarPos::setGroupId(const AcDbObjectId& newVal)
+{
+	assertWriteEnabled();
+	m_GroupID = newVal;
+	isModified = true;
+	return Acad::eOk;
+}
+
+const ACHAR* CRebarPos::PosKey() const
+{
+	Calculate();
+	return m_Key;
 }
 
 //*************************************************************************
@@ -129,9 +414,15 @@ Acad::ErrorStatus CRebarPos::subGetOsnapPoints(
     AcGePoint3dArray&     snapPoints,
     AcDbIntArray&         /*geomIds*/) const
 {
-    assertReadEnabled();
-    snapPoints.append(mCenter);
-    return Acad::eOk;
+	assertReadEnabled();
+
+	if(gsSelectionMark == 0)
+        return Acad::eOk;
+
+	if(osnapMode == AcDb::kOsModeIns)
+		snapPoints.append(m_BasePoint);
+
+	return Acad::eOk;
 }
 
 Acad::ErrorStatus CRebarPos::subGetGripPoints(
@@ -139,20 +430,67 @@ Acad::ErrorStatus CRebarPos::subGetGripPoints(
     AcDbIntArray& osnapModes,
     AcDbIntArray& geomIds) const
 {
-    assertReadEnabled();
-    gripPoints.append(mCenter);
-    return Acad::eOk;
+	assertReadEnabled();
+	gripPoints.append(m_BasePoint);
+	gripPoints.append(m_NoteGrip);
+	return Acad::eOk;
 }
 
 Acad::ErrorStatus CRebarPos::subMoveGripPointsAt(
     const AcDbIntArray& indices,
     const AcGeVector3d& offset)
 {
-    if (indices.length()== 0 || offset.isZeroLength())
+    if(indices.length()== 0 || offset.isZeroLength())
         return Acad::eOk;
 
-    assertWriteEnabled();
-    return transformBy(AcGeMatrix3d::translation(offset));
+	assertWriteEnabled();
+
+	// If there are more than one hot points or base point is hot, transform the entire entity
+	if(indices.length() > 1 || (indices.length() == 1 && indices[0] == 0))
+		transformBy(AcGeMatrix3d::translation(offset));
+
+	// Transform the note grip
+	if(indices.length() == 1 && indices[0] == 1)
+		m_NoteGrip.transformBy(AcGeMatrix3d::translation(offset));
+
+	return Acad::eOk;
+}
+
+Acad::ErrorStatus CRebarPos::subTransformBy(const AcGeMatrix3d& xform)
+{
+	assertWriteEnabled();
+	
+	m_BasePoint.transformBy(xform);
+	m_NoteGrip.transformBy(xform);
+	direction.transformBy(xform);
+	up.transformBy(xform);
+
+	// Text always left to right
+	if(direction.x < 0)
+	{
+		AcGeMatrix3d mirror = AcGeMatrix3d::kIdentity;
+		mirror.setToMirroring(AcGeLine3d(m_BasePoint, up));
+		m_BasePoint.transformBy(mirror);
+		m_NoteGrip.transformBy(mirror);
+		direction.transformBy(mirror);
+		up.transformBy(mirror);
+	}
+
+	// Text always upright
+	if(up.y < 0)
+	{
+		AcGeMatrix3d mirror = AcGeMatrix3d::kIdentity;
+		mirror.setToMirroring(AcGeLine3d(m_BasePoint, direction));
+		m_BasePoint.transformBy(mirror);
+		m_NoteGrip.transformBy(mirror);
+		direction.transformBy(mirror);
+		up.transformBy(mirror);
+	}
+
+	// Calculate normal
+	norm = direction.crossProduct(up);
+
+	return Acad::eOk;
 }
 
 void CRebarPos::subList() const
@@ -162,39 +500,42 @@ void CRebarPos::subList() const
 	// Call parent first
     AcDbEntity::subList();
 
-    acutPrintf(_T("%18s%16s "), _T(/*MSG0*/""), _T("Center:"));
+    AcGePoint3d pt;
 
-    //AcGePoint3d cent(center().x,center().y,elevation());
-    //acdbEcs2Ucs(asDblArray(cent), asDblArray(cent), asDblArray(normal()),Adesk::kFalse);
-    //acutPrintf(_T("X = %-9.16q0, Y = %-9.16q0, Z = %-9.16q0\n"), 
-    //                  cent.x, cent.y);
-}
+	// Base point
+    acutPrintf(_T("%18s%16s "), _T(/*MSG0*/""), _T("Base Point:"));
+	pt = m_BasePoint;
+    acdbEcs2Ucs(asDblArray(pt), asDblArray(pt), asDblArray(norm), Adesk::kFalse);
+    acutPrintf(_T("X = %-9.16q0, Y = %-9.16q0, Z = %-9.16q0\n"), pt.x, pt.y, pt.z);
 
-Acad::ErrorStatus CRebarPos::subTransformBy(const AcGeMatrix3d& xform)
-{
-    assertWriteEnabled();
-    mCenter.transformBy(xform);
-    return Acad::eOk;
+	// TODO: List all properties
+	// Pos
+	if ((m_Pos != NULL) && (m_Pos[0] != _T('\0')))
+	{
+		acutPrintf(_T("%18s%16s "), _T(/*MSG0*/""), _T("Marker:"));
+		acutPrintf(_T("%18s%16s "), _T(/*MSG0*/""), m_Pos);
+	}
 }
 
 Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 {
     assertReadEnabled();
 
+	// TODO: Fix this
     Acad::ErrorStatus es = Acad::eOk;
 
     AcDbText *text ;
 
-    if ((mpName != NULL) && (mpName[0] != _T('\0')))
+    if ((m_Pos != NULL) && (m_Pos[0] != _T('\0')))
     {
-        AcGeVector3d direction(1, 0, 0);
-
+		/*
         if (mTextStyle != AcDbObjectId::kNull)
-            text = new AcDbText (mCenter, mpName, mTextStyle, 0, direction.angleTo (AcGeVector3d (1, 0, 0))) ;
+            text = new AcDbText(m_BasePoint, m_Pos, mTextStyle, 0, direction.angleTo (AcGeVector3d (1, 0, 0)));
         else
-            text =new AcDbText (mCenter, mpName, mTextStyle, direction.length() / 20, direction.angleTo (AcGeVector3d (1, 0, 0))) ;
-
-        entitySet.append (text) ;
+            text = new AcDbText(m_BasePoint, m_Pos, mTextStyle, direction.length() / 20, direction.angleTo (AcGeVector3d (1, 0, 0)));
+		*/
+		text = new AcDbText(m_BasePoint, m_Pos, AcDbObjectId::kNull, direction.length() / 20, direction.angleTo(AcGeVector3d(1, 0, 0)));
+        entitySet.append(text) ;
     }
 
     return es;
@@ -204,14 +545,16 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 {
     assertReadEnabled();
 
-    if (worldDraw->regenAbort()) {
+	// TODO: Fix this
+    if (worldDraw->regenAbort())
+	{
         return Adesk::kTrue;
     }
 
-    const TCHAR *pName = name();
-    AcDbObjectId id = styleId();
 
+	/*
     AcGiTextStyle textStyle;
+    AcDbObjectId id = styleId();
 
     if (id != AcDbObjectId::kNull)
         if (rx_getTextStyle(textStyle, id) != Acad::eOk)
@@ -230,6 +573,15 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
             worldDraw->geometry().text(mCenter, normal, direction,
                  direction.length() / 20, 1, 0, pName);
     }
+	*/
+	if ((m_Pos != NULL) && (m_Pos[0] != _T('\0')))
+	{
+		worldDraw->geometry().text(m_BasePoint, norm, direction, direction.length() / 20, 1, 0, m_Pos);
+	}
+
+	// Direction markers
+	worldDraw->subEntityTraits().setColor(6);
+	worldDraw->geometry().circle(m_BasePoint, 0.2, AcGeVector3d::kZAxis);
 
     return Adesk::kTrue; // Don't call viewportDraw().
 }
@@ -238,114 +590,246 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 // Overridden methods from AcDbObject
 //*************************************************************************
 
-Acad::ErrorStatus CRebarPos::dwgInFields(AcDbDwgFiler* filer)
+Acad::ErrorStatus CRebarPos::dwgInFields(AcDbDwgFiler* pFiler)
 {
-    assertWriteEnabled();
-    Acad::ErrorStatus es;
+	assertWriteEnabled();
 
-    if ((es = AcDbEntity::dwgInFields(filer)) != Acad::eOk) 
-    {
-        return es;
-    }
+	// Read parent class information first.
+	Acad::ErrorStatus es;
+	if((es = AcDbEntity::dwgInFields(pFiler)) != Acad::eOk)
+		return es;
 
-    // Object Version - must always be the first item.
-    //
-    Adesk::Int16 version;
-    filer->readItem(&version);
-    if (version > VERSION)
-      return Acad::eMakeMeProxy;
+	// Object version number needs to be read first
+	Adesk::UInt32 version = 0;
+	pFiler->readItem(&version);
+	if (version > CRebarPos::kCurrentVersionNumber)
+		return Acad::eMakeMeProxy;
 
-    switch (version)
-    {
-    case 1:
-        filer->readPoint3d(&mCenter);
-        acutDelString(mpName);
-        filer->readString(&mpName);
-        filer->readHardPointerId(&mTextStyle);
-        break;
-    default:
-        assert(false);
-    }
-    return filer->filerStatus();
+	// Read params
+	if (version >= 1)
+	{
+		pFiler->readItem(&m_BasePoint);
+		pFiler->readItem(&m_NoteGrip);
+		pFiler->readItem(&direction);
+		pFiler->readItem(&up);
+		norm = direction.crossProduct(up);
+		
+		acutDelString(m_Pos);
+		acutDelString(m_Note);
+		acutDelString(m_Count);
+		acutDelString(m_Diameter);
+		acutDelString(m_Spacing);
+		acutDelString(m_A);
+		acutDelString(m_B);
+		acutDelString(m_C);
+		acutDelString(m_D);
+		acutDelString(m_E);
+		acutDelString(m_F);
+
+		pFiler->readString(&m_Pos);
+		pFiler->readString(&m_Note);
+		pFiler->readString(&m_Count);
+		pFiler->readString(&m_Diameter);
+		pFiler->readString(&m_Spacing);
+		pFiler->readItem(&m_Multiplier);
+		pFiler->readItem(&m_ShowLength);
+		pFiler->readString(&m_A);
+		pFiler->readString(&m_B);
+		pFiler->readString(&m_C);
+		pFiler->readString(&m_D);
+		pFiler->readString(&m_E);
+		pFiler->readString(&m_F);
+
+		// Styles
+		pFiler->readHardPointerId(&m_ShapeID);
+		pFiler->readHardPointerId(&m_GroupID);
+	}
+
+	return pFiler->filerStatus();
 }
 
-Acad::ErrorStatus CRebarPos::dwgOutFields(AcDbDwgFiler* filer) const
+Acad::ErrorStatus CRebarPos::dwgOutFields(AcDbDwgFiler* pFiler) const
 {
-    assertReadEnabled();
-    Acad::ErrorStatus es;
+	assertReadEnabled();
 
-    if ((es = AcDbEntity::dwgOutFields(filer)) != Acad::eOk)
-    {
-        return es;
-    }
+	// Save parent class information first.
+	Acad::ErrorStatus es;
+	if((es = AcDbEntity::dwgOutFields(pFiler)) != Acad::eOk)
+		return es;
 
-    // Object Version - must always be the first item.
-    // 
-    Adesk::Int16 version = VERSION;
-    filer->writeItem(version);
+	// Object version number
+	pFiler->writeItem(CRebarPos::kCurrentVersionNumber);
 
-    filer->writePoint3d(mCenter);
-    if (mpName)
-        filer->writeString(mpName);
-    else
-        filer->writeString(_T(""));
+	pFiler->writeItem(m_BasePoint);
+	pFiler->writeItem(m_NoteGrip);
+	pFiler->writeItem(direction);
+	pFiler->writeItem(up);
 
-    // mTextStyle is a hard pointer id, so filing it out to
-    // the purge filer (kPurgeFiler) prevents purging of
-    // this object.
-    //
-    filer->writeHardPointerId(mTextStyle);
-    return filer->filerStatus();
+	if (m_Pos)
+		pFiler->writeString(m_Pos);
+	else
+		pFiler->writeString(_T(""));
+	if(m_Note)
+		pFiler->writeString(m_Note);
+	else
+		pFiler->writeString(_T(""));
+	if(m_Count)
+		pFiler->writeString(m_Count);
+	else
+		pFiler->writeString(_T(""));
+	if(m_Diameter)
+		pFiler->writeString(m_Diameter);
+	else
+		pFiler->writeString(_T(""));
+	if(m_Spacing)
+		pFiler->writeString(m_Spacing);
+	else
+		pFiler->writeString(_T(""));
+	pFiler->writeItem(m_Multiplier);
+	pFiler->writeItem(m_ShowLength);
+	if(m_A)
+		pFiler->writeString(m_A);
+	else
+		pFiler->writeString(_T(""));
+	if(m_B)
+		pFiler->writeString(m_B);
+	else
+		pFiler->writeString(_T(""));
+	if(m_C)
+		pFiler->writeString(m_C);
+	else
+		pFiler->writeString(_T(""));
+	if(m_D)
+		pFiler->writeString(m_D);
+	else
+		pFiler->writeString(_T(""));
+	if(m_E)
+		pFiler->writeString(m_E);
+	else
+		pFiler->writeString(_T(""));
+	if(m_F)
+		pFiler->writeString(m_F);
+	else
+		pFiler->writeString(_T(""));
+
+	// Style
+	pFiler->writeHardPointerId(m_ShapeID);
+	pFiler->writeHardPointerId(m_GroupID);
+
+	return pFiler->filerStatus();
 }
 
-Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* filer)
+Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 {
-    assertWriteEnabled();
-    Acad::ErrorStatus es = Acad::eOk;
-    resbuf rb;
+	assertWriteEnabled();
 
-    if ((AcDbEntity::dxfInFields(filer) != Acad::eOk) || !filer->atSubclassData(_T("RebarPos")))
+	// Read parent class information first.
+	Acad::ErrorStatus es;
+	if(((es = AcDbEntity::dxfInFields(pFiler)) != Acad::eOk) || !pFiler->atSubclassData(_T("RebarPos")))
+		return es;
+
+	resbuf rb;
+	// Object version number
+    Adesk::UInt32 version;
+    pFiler->readItem(&rb);
+    if (rb.restype != AcDb::kDxfInt32) 
     {
-        return filer->filerStatus();
+        pFiler->pushBackItem();
+        pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: expected group code %d (version)"), AcDb::kDxfInt32);
+        return pFiler->filerStatus();
     }
+    version = rb.resval.rlong;
+	if (version > CRebarPos::kCurrentVersionNumber)
+		return Acad::eMakeMeProxy;
 
-    // Object Version
-    Adesk::Int16 version;
-    filer->readItem(&rb);
-    if (rb.restype != AcDb::kDxfInt16) 
-    {
-        filer->pushBackItem();
-        filer->setError(Acad::eInvalidDxfCode,
-            _T("\nError: expected group code %d (version)"), AcDb::kDxfInt16);
-        return filer->filerStatus();
-    }
-    version = rb.resval.rint;
-    if (version > VERSION)
-        return Acad::eMakeMeProxy;
+	// Read params
+	AcGePoint3d t_BasePoint, t_NoteGrip;
+	AcGeVector3d t_Direction, t_Up;
+	ACHAR* t_Pos = NULL;
+	ACHAR* t_Note = NULL;
+	ACHAR* t_Count = NULL;
+	ACHAR* t_Diameter = NULL;
+	ACHAR* t_Spacing = NULL;
+	Adesk::Int32 t_Multiplier;
+	Adesk::Boolean t_ShowLength;
+	ACHAR* t_A = NULL;
+	ACHAR* t_B = NULL;
+	ACHAR* t_C = NULL;
+	ACHAR* t_D = NULL;
+	ACHAR* t_E = NULL;
+	ACHAR* t_F = NULL;
+	AcDbObjectId t_ShapeID, t_GroupID;
 
-    AcGePoint3d cen3d;
-    AcDbObjectId textStyle;
-    TCHAR * pName = NULL;
-    while ((es == Acad::eOk) && ((es = filer->readResBuf(&rb)) == Acad::eOk))
+    while ((es == Acad::eOk) && ((es = pFiler->readResBuf(&rb)) == Acad::eOk))
     {
         switch (rb.restype) {
 
         case AcDb::kDxfXCoord:
-            cen3d = asPnt3d(rb.resval.rpoint);
+            t_BasePoint = asPnt3d(rb.resval.rpoint);
+            break;
+        case AcDb::kDxfXCoord + 1:
+            t_NoteGrip = asPnt3d(rb.resval.rpoint);
+            break;
+        case AcDb::kDxfXCoord + 2:
+			t_Direction = asVec3d(rb.resval.rpoint);
+            break;
+        case AcDb::kDxfXCoord + 3:
+            t_Up = asVec3d(rb.resval.rpoint);
             break;
 
-        case AcDb::kDxfText:
-            acutUpdString(rb.resval.rstring,pName);
+        case AcDb::kDxfXTextString:
+            acutUpdString(rb.resval.rstring, t_Pos);
+            break;
+        case AcDb::kDxfXTextString + 1:
+            acutUpdString(rb.resval.rstring, t_Note);
+            break;
+        case AcDb::kDxfXTextString + 2:
+            acutUpdString(rb.resval.rstring, t_Count);
+            break;
+        case AcDb::kDxfXTextString + 3:
+            acutUpdString(rb.resval.rstring, t_Diameter);
+            break;
+        case AcDb::kDxfXTextString + 4:
+            acutUpdString(rb.resval.rstring, t_Spacing);
+            break;
+
+        case AcDb::kDxfInt32 + 1:
+            t_Multiplier = rb.resval.rlong;
+            break;
+        case AcDb::kDxfBool:
+			t_ShowLength = rb.resval.rint == 0 ? Adesk::kFalse : Adesk::kTrue;
+            break;
+
+        case AcDb::kDxfXTextString + 5:
+            acutUpdString(rb.resval.rstring, t_A);
+            break;
+        case AcDb::kDxfXTextString + 6:
+            acutUpdString(rb.resval.rstring, t_B);
+            break;
+        case AcDb::kDxfXTextString + 7:
+            acutUpdString(rb.resval.rstring, t_C);
+            break;
+        case AcDb::kDxfXTextString + 8:
+            acutUpdString(rb.resval.rstring, t_D);
+            break;
+        case AcDb::kDxfXTextString + 9:
+            acutUpdString(rb.resval.rstring, t_E);
+            break;
+        case AcDb::kDxfXTextString + 10:
+            acutUpdString(rb.resval.rstring, t_F);
             break;
 
         case AcDb::kDxfHardPointerId:
-            acdbGetObjectId(textStyle, rb.resval.rlname);
+            acdbGetObjectId(t_ShapeID, rb.resval.rlname);
+            break;
+        case AcDb::kDxfHardPointerId + 1:
+            acdbGetObjectId(t_GroupID, rb.resval.rlname);
             break;
 
         default:
             // An unrecognized group. Push it back so that
             // the subclass can read it again.
-            filer->pushBackItem();
+            pFiler->pushBackItem();
             es = Acad::eEndOfFile;
             break;
         }
@@ -359,35 +843,117 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* filer)
     if (es != Acad::eEndOfFile)
         return Acad::eInvalidResBuf;
 
-    mTextStyle = textStyle;
-    setName(pName);
-    acutDelString(pName);
-    mCenter.set(cen3d.x, cen3d.y, cen3d.z);
+	// Successfully read DXF codes; set object properties.
+	m_BasePoint = t_BasePoint;
+	m_NoteGrip = t_NoteGrip;
+	direction = t_Direction;
+	up = t_Up;
+	setPos(t_Pos);
+	setNote(t_Note);
+	setCount(t_Count);
+	setDiameter(t_Diameter);
+	setSpacing(t_Spacing);
+	m_Multiplier = t_Multiplier;
+	m_ShowLength = t_ShowLength;
+	setA(t_A);
+	setB(t_B);
+	setC(t_C);
+	setD(t_D);
+	setE(t_E);
+	setF(t_F);
+	m_ShapeID = t_ShapeID;
+	m_GroupID = t_GroupID;
+
+	acutDelString(t_Pos);
+	acutDelString(t_Note);
+	acutDelString(t_Count);
+	acutDelString(t_Diameter);
+	acutDelString(t_Spacing);
+	acutDelString(t_A);
+	acutDelString(t_B);
+	acutDelString(t_C);
+	acutDelString(t_D);
+	acutDelString(t_E);
+	acutDelString(t_F);
 
     return es;
 }
 
-Acad::ErrorStatus CRebarPos::dxfOutFields(AcDbDxfFiler* filer) const
+Acad::ErrorStatus CRebarPos::dxfOutFields(AcDbDxfFiler* pFiler) const
 {
-    assertReadEnabled();
-    Acad::ErrorStatus es;
+	assertReadEnabled();
 
-    if ((es = AcDbEntity::dxfOutFields(filer)) != Acad::eOk)
-    {
-        return es;
-    }
-    filer->writeItem(AcDb::kDxfSubclass, _T("RebarPos"));
+	// Save parent class information first.
+	Acad::ErrorStatus es;
+	if((es = AcDbEntity::dxfOutFields(pFiler)) != Acad::eOk)
+		return es;
 
-    // Object Version
-    //
-    Adesk::Int16 version = VERSION;
-    filer->writeInt16(AcDb::kDxfInt16, version);
-    filer->writePoint3d(AcDb::kDxfXCoord, mCenter);
-    //always use max precision when writing out the normal
-    //filer->writeVector3d(AcDb::kDxfNormalX, mPlaneNormal,16);
-    filer->writeString(AcDb::kDxfText, mpName);
-    filer->writeItem(AcDb::kDxfHardPointerId, mTextStyle);
-    return filer->filerStatus();
+	// Subclass
+	pFiler->writeItem(AcDb::kDxfSubclass, _T("RebarPos"));
+
+	// Object version number
+	pFiler->writeItem(AcDb::kDxfInt32, CRebarPos::kCurrentVersionNumber);
+
+	// Geometry
+	pFiler->writePoint3d(AcDb::kDxfXCoord, m_BasePoint);
+	pFiler->writePoint3d(AcDb::kDxfXCoord + 1, m_NoteGrip);
+	// Use max precision when writing out direction vectors
+	pFiler->writeVector3d(AcDb::kDxfXCoord + 2, direction, 16);
+	pFiler->writeVector3d(AcDb::kDxfXCoord + 3, up, 16);
+
+	// Properties
+	if(m_Pos)
+		pFiler->writeString(AcDb::kDxfXTextString, m_Pos);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString, _T(""));
+	if(m_Note)
+		pFiler->writeString(AcDb::kDxfXTextString + 1, m_Note);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 1, _T(""));
+	if(m_Count)
+		pFiler->writeString(AcDb::kDxfXTextString + 2, m_Count);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 2, _T(""));
+	if(m_Diameter)
+		pFiler->writeString(AcDb::kDxfXTextString + 3, m_Diameter);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 3, _T(""));
+	if(m_Spacing)
+		pFiler->writeString(AcDb::kDxfXTextString + 4, m_Spacing);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 4, _T(""));
+	pFiler->writeInt32(AcDb::kDxfInt32 + 1, m_Multiplier);
+	pFiler->writeItem(AcDb::kDxfBool, m_ShowLength);
+	if(m_A)
+		pFiler->writeString(AcDb::kDxfXTextString + 5, m_A);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 5, _T(""));
+	if(m_B)
+		pFiler->writeString(AcDb::kDxfXTextString + 6, m_B);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 6, _T(""));
+	if(m_C)
+		pFiler->writeString(AcDb::kDxfXTextString + 7, m_C);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 7, _T(""));
+	if(m_D)
+		pFiler->writeString(AcDb::kDxfXTextString + 8, m_D);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 8, _T(""));
+	if(m_E)
+		pFiler->writeString(AcDb::kDxfXTextString + 9, m_E);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 9, _T(""));
+	if(m_F)
+		pFiler->writeString(AcDb::kDxfXTextString + 10, m_F);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 10, _T(""));
+	
+    // Styles
+	pFiler->writeItem(AcDb::kDxfHardPointerId, m_ShapeID);
+    pFiler->writeItem(AcDb::kDxfHardPointerId + 1, m_GroupID);
+
+	return pFiler->filerStatus();
 }
 
 
@@ -742,4 +1308,41 @@ Acad::ErrorStatus   CRebarPos::subGetClassID(CLSID* pClsid) const
     assertReadEnabled();
     *pClsid = CLSID_ComPolygon;
     return Acad::eOk;
+}
+
+const void CRebarPos::Calculate(void) const
+{
+	if(isModified)
+	{
+		assertReadEnabled();
+/*
+		// TODO: Fix this
+		m_Length = "1200";
+
+		AcDbObjectPointer<CPosGroup> group(m_GroupID, AcDb::kForRead);
+		AcDbObjectPointer<CPosStyle> pstyle(group->Style(), AcDb::kForRead);
+		m_Text = m_Pos + m_Count + "T" + m_Diameter;
+		if(!m_Spacing.isEmpty())
+			m_Text += "/" + m_Spacing;
+		if(m_ShowLength && !m_Length.isEmpty())
+			m_Text += " L=" + m_Length;
+		pstyle->close();
+		group->close();
+
+		// Shape code
+		AcString shape;
+		shape.format(_T("_%i_%i_"), m_ShapeID.handle().low(), m_ShapeID.handle().high());
+
+		m_Key = _T("");
+		m_Key = m_Key.concat(m_Diameter);
+		m_Key = m_Key.concat(shape);
+		m_Key = m_Key.concat(m_A).concat(m_B).concat(m_C).concat(m_D).concat(m_E).concat(m_F);
+
+		// Check if variable length
+		m_IsVarLength = (m_A.findOneOf(_T("-~")) != -1) || (m_B.findOneOf(_T("-~")) != -1) ||
+			(m_C.findOneOf(_T("-~")) != -1) || (m_D.findOneOf(_T("-~")) != -1) ||
+			(m_E.findOneOf(_T("-~")) != -1) || (m_F.findOneOf(_T("-~")) != -1);
+*/
+		isModified = false;
+	}
 }

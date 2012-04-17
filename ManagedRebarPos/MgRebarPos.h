@@ -46,10 +46,10 @@ namespace OZOZ
             }
 
         public:
-			property Point3d Center { Point3d get(); void set(Point3d value); }
-			property String^ Name   { String^ get(); void set(String^ value); }
+			property Point3d BasePoint { Point3d get(); void set(Point3d value); }
+			property String^ Pos   { String^ get(); void set(String^ value); }
 
-			property Autodesk::AutoCAD::DatabaseServices::ObjectId TextStyle { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
+			property Autodesk::AutoCAD::DatabaseServices::ObjectId ShapeId { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
         };
     }
 

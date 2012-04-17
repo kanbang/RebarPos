@@ -62,9 +62,9 @@ STDMETHODIMP CComPolygon::InterfaceSupportsErrorInfo(REFIID riid)
         &IID_IAcadEntity,
         &IID_IOPMPropertyExpander
 	};
-	for (int i=0;i<sizeof(arr)/sizeof(arr[0]);i++)
+	for (int i=0; i < sizeof(arr) / sizeof(arr[0]); i++)
 	{
-		if (InlineIsEqualGUID(*arr[i],riid))
+		if (InlineIsEqualGUID(*arr[i], riid))
 			return S_OK;
 	}
 	return S_FALSE;
@@ -86,13 +86,13 @@ STDMETHODIMP CComPolygon::GetElementValue(
 
         Acad::ErrorStatus es;
         AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead, Adesk::kTrue);
-        if((es=pPoly.openStatus()) != Acad::eOk)
+        if((es = pPoly.openStatus()) != Acad::eOk)
             throw es;
 
-		if (dispID == DISPID_CENTER)
+		if (dispID == DISPID_BASEPOINT)
 		{
 			AcGePoint3d pt;
-		    pt = pPoly->getCenter();
+		    pt = pPoly->BasePoint();
             // TODO: translate from wcs to ucs
             //acdbEcs2Ucs(asDblArray(pt), asDblArray(pt), asDblArray(pPoly->normal()), Adesk::kFalse);
             ::VariantCopy(pVarOut, &CComVariant(pt[dwCookie]));
@@ -119,35 +119,36 @@ STDMETHODIMP CComPolygon::SetElementValue(
 {
     try
     {
-        if (dwCookie > 2)
-            throw Acad::eInvalidInput;
-
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
-        if((es=pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef, AcDb::kForWrite, Adesk::kTrue);
+        if((es = pPoly.openStatus()) != Acad::eOk)
             throw es;
 
-		AcGePoint3d pt;
-		if (dispID == DISPID_CENTER)
+		if (dispID == DISPID_BASEPOINT)
         {
-		    pt = pPoly->getCenter();
+			if (dwCookie > 2)
+				throw Acad::eInvalidInput;
+
+			AcGePoint3d pt;
+			pt = pPoly->BasePoint();
+
             //TODO: translate from wcs to ucs
             //acdbEcs2Ucs(asDblArray(pt),asDblArray(pt),asDblArray(pPoly->normal()),Adesk::kFalse);
-        }
-        pt[dwCookie] = V_R8(&VarIn);
+	        pt[dwCookie] = V_R8(&VarIn);
 
-        if ((es=pPoly->setCenter(pt))!=Acad::eOk)
-            throw es;
+		    if ((es = pPoly->setBasePoint(pt)) != Acad::eOk)
+			    throw es;
+        }
 
         Fire_Notification(dispID);
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object",IID_IComPolygon,E_FAIL);
+        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
     }
     catch(const HRESULT hr)
     {
-        return Error(L"Invalid argument.",IID_IComPolygon,hr);
+        return Error(L"Invalid argument.", IID_IComPolygon, hr);
     }
 
 	return S_OK;
@@ -162,19 +163,19 @@ STDMETHODIMP CComPolygon::GetElementStrings(
 {
     long size;
 
-    if (dispID == DISPID_CENTER)
+    if (dispID == DISPID_BASEPOINT)
     {
         size = 3;
         pCaStringsOut->pElems = (LPOLESTR *)::CoTaskMemAlloc(sizeof(LPOLESTR) * size);
         pCaCookiesOut->pElems = (DWORD *)::CoTaskMemAlloc(sizeof(DWORD) * size);
-        for (long i=0;i<size;i++)
+        for (long i = 0; i < size; i++)
             pCaCookiesOut->pElems[i] = i;
         pCaStringsOut->cElems = size;
         pCaCookiesOut->cElems = size;
 
-        pCaStringsOut->pElems[0] = ::SysAllocString(L"Center X");
-        pCaStringsOut->pElems[1] = ::SysAllocString(L"Center Y");
-		pCaStringsOut->pElems[2] = ::SysAllocString(L"Center Z");
+        pCaStringsOut->pElems[0] = ::SysAllocString(L"Base point X");
+        pCaStringsOut->pElems[1] = ::SysAllocString(L"Base point Y");
+		pCaStringsOut->pElems[2] = ::SysAllocString(L"Base point Z");
     }
 
     return S_OK;
@@ -209,6 +210,9 @@ STDMETHODIMP CComPolygon::GetGroupCount(
 //we need to override this function a provide dynamic list of text styles to OPM.
 STDMETHODIMP CComPolygon::GetPredefinedStrings(DISPID dispID, CALPOLESTR *pCaStringsOut, CADWORD *pCaCookiesOut)
 {
+    return  IOPMPropertyExtensionImpl<CComPolygon>::GetPredefinedStrings(dispID, pCaStringsOut, pCaCookiesOut);
+
+	/*
     if (dispID != DISPID_TEXTSTYLENAME)
         return  IOPMPropertyExtensionImpl<CComPolygon>::GetPredefinedStrings(dispID,pCaStringsOut,pCaCookiesOut);
 
@@ -256,6 +260,7 @@ STDMETHODIMP CComPolygon::GetPredefinedStrings(DISPID dispID, CALPOLESTR *pCaStr
             delete pIter;
         pTT->close();
     }
+	*/
     return S_OK;
 }
 
@@ -267,6 +272,9 @@ STDMETHODIMP CComPolygon::GetPredefinedStrings(DISPID dispID, CALPOLESTR *pCaStr
 //the put_TextStyle method needs that.
 STDMETHODIMP CComPolygon::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VARIANT *pVarOut)
 {
+    return  IOPMPropertyExtensionImpl<CComPolygon>::GetPredefinedValue(dispID,dwCookie, pVarOut);
+
+	/*
     if (dispID != DISPID_TEXTSTYLENAME)
         return  IOPMPropertyExtensionImpl<CComPolygon>::GetPredefinedValue(dispID,dwCookie, pVarOut);
 
@@ -288,6 +296,8 @@ STDMETHODIMP CComPolygon::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VARI
         hr = E_FAIL;
     pTTR->close();
     return hr;
+	*/
+	return S_OK;
 }
 
 HRESULT CComPolygon::CreateNewObject(AcDbObjectId& objId, AcDbObjectId& ownerId, TCHAR* keyName)
@@ -313,11 +323,11 @@ HRESULT CComPolygon::CreateNewObject(AcDbObjectId& objId, AcDbObjectId& ownerId,
 // IAcadBaseObject2Impl
 STDMETHODIMP CComPolygon::ForceDbResident(VARIANT_BOOL *forceDbResident)
 {
-        if (NULL == forceDbResident)
-            return E_POINTER;
-        
-        *forceDbResident = ACAX_VARIANT_FALSE;
-        return S_OK;
+	if (NULL == forceDbResident)
+		return E_POINTER;
+
+	*forceDbResident = ACAX_VARIANT_FALSE;
+	return S_OK;
 }
 
 STDMETHODIMP CComPolygon::CreateObject(AcDbObjectId ownerId, TCHAR *keyName) 
@@ -362,34 +372,34 @@ STDMETHODIMP CComPolygon::AddToDb(AcDbObjectId& objId, AcDbObjectId ownerId, TCH
     }
     catch(const Acad::ErrorStatus)
     {
-        //we can becaome more sophisticated 
+        //we can became more sophisticated 
         return Error(L"Failed to add object to database", IID_IComPolygon, E_FAIL);
     }
 
     return SetObjectId(objId);
 }
 
-STDMETHODIMP CComPolygon::get_TextString(BSTR * pVal)
+STDMETHODIMP CComPolygon::get_Pos(BSTR * pVal)
 {
     CHECKOUTPARAM(pVal);
     try
     {
         Acad::ErrorStatus es;
         AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
-	    if((es=pPoly.openStatus()) != Acad::eOk)
+	    if((es = pPoly.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        *pVal = SysAllocString(CT2W(pPoly->name()));
+        *pVal = SysAllocString(CT2W(pPoly->Pos()));
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object",IID_IComPolygon,E_FAIL);
+        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::put_TextString(BSTR newVal)
+STDMETHODIMP CComPolygon::put_Pos(BSTR newVal)
 {
     try
     {
@@ -397,18 +407,18 @@ STDMETHODIMP CComPolygon::put_TextString(BSTR newVal)
 
         Acad::ErrorStatus es;
         AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
-	    if((es=pPoly.openStatus()) != Acad::eOk)
+	    if((es = pPoly.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        if ((es=pPoly->setName(W2T(newVal)))!=Acad::eOk)
+        if ((es = pPoly->setPos(W2T(newVal))) != Acad::eOk)
             throw es;
         else 
-            Fire_Notification(DISPID_TEXTSTRING);
+            Fire_Notification(DISPID_POS);
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to set name.",IID_IComPolygon,E_FAIL);
+        return Error(L"Failed to set property.", IID_IComPolygon, E_FAIL);
     }
 	return S_OK;
 }
@@ -511,32 +521,31 @@ STDMETHODIMP CComPolygon::put_Normal(VARIANT newVal)
 }
 */
 
-STDMETHODIMP CComPolygon::get_Center(VARIANT * pVal)
+STDMETHODIMP CComPolygon::get_BasePoint(VARIANT * pVal)
 {
 	CHECKOUTPARAM(pVal);
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef, AcDb::kForRead, Adesk::kTrue);
 	    if((es = pPoly.openStatus()) != Acad::eOk)
             throw es;
         AcAxPoint3d pt;
-		pt = pPoly->getCenter();
+		pt = pPoly->BasePoint();
         pt.setVariant(pVal);
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object.",IID_IComPolygon,E_FAIL);
+        return Error(L"Failed to open object.", IID_IComPolygon, E_FAIL);
     }
     catch(const HRESULT hr)
     {
-        return Error(L"Invalid argument.",IID_IComPolygon,hr);
+        return Error(L"Invalid argument.", IID_IComPolygon,hr);
     }
 	return S_OK;
-
 }
 
-STDMETHODIMP CComPolygon::put_Center(VARIANT newVal)
+STDMETHODIMP CComPolygon::put_BasePoint(VARIANT newVal)
 {
     try
     {
@@ -544,22 +553,22 @@ STDMETHODIMP CComPolygon::put_Center(VARIANT newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef, AcDb::kForWrite, Adesk::kTrue);
 	    if((es = pPoly.openStatus()) != Acad::eOk)
             throw es;
         
-        if ((es = pPoly->setCenter(pt))!=Acad::eOk)
+        if ((es = pPoly->setBasePoint(pt)) != Acad::eOk)
             throw es;
         else
-            Fire_Notification(DISPID_CENTER);
+            Fire_Notification(DISPID_BASEPOINT);
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to set Center.",IID_IComPolygon,E_FAIL);
+        return Error(L"Failed to set base point.", IID_IComPolygon, E_FAIL);
     }
     catch(const HRESULT hr)
     {
-        return Error(L"Invalid argument.",IID_IComPolygon,hr);
+        return Error(L"Invalid argument.", IID_IComPolygon, hr);
     }
 	return S_OK;
 }
@@ -616,7 +625,7 @@ STDMETHODIMP CComPolygon::put_StartPoint(VARIANT newVal)
 	return S_OK;
 }
 */
-
+/*
 STDMETHODIMP CComPolygon::get_TextStyleName(BSTR * pVal)
 {
 	CHECKOUTPARAM(pVal);
@@ -667,7 +676,7 @@ STDMETHODIMP CComPolygon::put_TextStyleName(BSTR newVal)
         if((es=pTextStyleRecord.openStatus()) != Acad::eOk)
             throw es;
 
-        if ((es=pPoly->setTextStyle(pTextStyleRecord->objectId()))!=Acad::eOk)
+        if ((es = pPoly->setTextStyle(pTextStyleRecord->objectId()))!=Acad::eOk)
             throw es;
         else
             Fire_Notification(DISPID_TEXTSTYLENAME);
@@ -682,7 +691,7 @@ STDMETHODIMP CComPolygon::put_TextStyleName(BSTR newVal)
     }
 	return S_OK;
 }
-
+*/
 /*
 STDMETHODIMP CComPolygon::GetVertices(VARIANT* coordinates)
 {

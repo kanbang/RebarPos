@@ -21,48 +21,170 @@
 #define DLLIMPEXP
 #endif
 
-// The "DLLIMPEXP" is only required for exporting a poly API or using
-// the exported API.  It is not necessary for any custom classes that
-// are not exporting an API of their own.
-//
+/// ---------------------------------------------------------------------------
+/// The CRebarPos represents a rebar marker in the drawing. It contains
+/// marker number, rebar shape, diameter, spacing, piece lengths and some
+/// metadata as well.
+/// ---------------------------------------------------------------------------
 class DLLIMPEXP CRebarPos: public  AcDbEntity
 {
 public:
+	/// Define additional RTT information for AcRxObject base type.
     ACRX_DECLARE_MEMBERS(CRebarPos);
     
-    //*************************************************************************
-    // Constructors and destructor
-    //*************************************************************************
-    
+protected:
+	/// Object version number serialized in the drawing database.
+	static Adesk::UInt32 kCurrentVersionNumber;
+
+public:
+    /// Constructors and destructor    
     CRebarPos();
     virtual ~CRebarPos();
        
-    //*************************************************************************
-    // Methods specific to custom entity 
-    //*************************************************************************
-    
-    const AcGePoint3d& getCenter() const;
-    Acad::ErrorStatus  setCenter     (const AcGePoint3d& cen);
+public:
+	enum PosHitTest
+	{ 
+		NONE = 0,
+		POS = 1,
+		COUNT = 2,
+		DIAMETER = 3,
+		SPACING = 4,
+		GROUP = 5,
+		MULTIPLIER = 6,
+		LENGTH = 7,
+		NOTE = 8
+	};
 
-    const TCHAR*	       name()	     const;
-    Acad::ErrorStatus  setName	     (const TCHAR* pName);
+private:
+	/// Property backing fields
+	AcGePoint3d m_BasePoint;
+	AcGePoint3d m_NoteGrip;
+	mutable ACHAR* m_Key;
+	mutable ACHAR* m_Text;
+	mutable ACHAR* m_Length;
+	ACHAR* m_Pos;
+	ACHAR* m_Count;
+	ACHAR* m_Diameter;
+	ACHAR* m_Spacing;
+	Adesk::Int32 m_Multiplier;
+	Adesk::Boolean m_ShowLength;
+	ACHAR* m_Note;
+	ACHAR* m_A;
+	ACHAR* m_B;
+	ACHAR* m_C;
+	ACHAR* m_D;
+	ACHAR* m_E;
+	ACHAR* m_F;
 
-    const AcDbObjectId&	styleId()     const;
-    
-    Acad::ErrorStatus  setTextStyle  (const AcDbObjectId& );
+	AcDbHardPointerId m_ShapeID;
+	AcDbHardPointerId m_GroupID;
 
-    //*************************************************************************
-    // Overridden methods from AcDbObject
-    //*************************************************************************
-    
+	/// Locals
+	AcGeVector3d direction, up, norm;
+	mutable bool isModified;
+
+protected:
+	/// Calculates pos text when the pos is modified.
+	const void Calculate(void) const;
+
+public:
+public:
+	/// Determines which part is under the given point
+	const CRebarPos::PosHitTest HitTest(const AcGePoint3d pt0) const;
+
+	/// Gets or sets the base grip point
+	const AcGePoint3d BasePoint(void) const;
+	Acad::ErrorStatus setBasePoint(const AcGePoint3d newVal);
+
+	/// Gets or sets the note grip point
+	const AcGePoint3d NoteGrip(void) const;
+	Acad::ErrorStatus setNoteGrip(const AcGePoint3d newVal);
+
+	/// Gets or sets pos marker number
+	const ACHAR* Pos(void) const;
+	Acad::ErrorStatus setPos(const ACHAR* newVal);
+
+	/// Gets or sets the note text
+	const ACHAR* Note(void) const;
+	Acad::ErrorStatus setNote(const ACHAR* newVal);
+
+	/// Gets or sets the count. Simple arithmetic allowed, ie. 4x2, 2x3x4
+	const ACHAR* Count(void) const;
+	Acad::ErrorStatus setCount(const ACHAR* newVal);
+
+	/// Gets or sets the rebar diameter
+	const ACHAR* Diameter(void) const;
+	Acad::ErrorStatus setDiameter(const ACHAR* newVal);
+
+	/// Gets or sets the bar spacing
+	const ACHAR* Spacing(void) const;
+	Acad::ErrorStatus setSpacing(const ACHAR* newVal);
+
+	/// Gets or sets the BOQ multiplier
+	const Adesk::Int32 Multiplier(void) const;
+	Acad::ErrorStatus setMultiplier(const Adesk::Int32 newVal);
+
+	/// Gets or sets whether length text is shown
+	const Adesk::Boolean ShowLength(void) const;
+	Acad::ErrorStatus setShowLength(const Adesk::Boolean newVal);
+
+	/// Gets or sets the A piece length
+	const ACHAR* A(void) const;
+	Acad::ErrorStatus setA(const ACHAR* newVal);
+
+	/// Gets or sets the B piece length
+	const ACHAR* B(void) const;
+	Acad::ErrorStatus setB(const ACHAR* newVal);
+
+	/// Gets or sets the C piece length
+	const ACHAR* C(void) const;
+	Acad::ErrorStatus setC(const ACHAR* newVal);
+
+	/// Gets or sets the D piece length
+	const ACHAR* D(void) const;
+	Acad::ErrorStatus setD(const ACHAR* newVal);
+
+	/// Gets or sets the E piece length
+	const ACHAR* E(void) const;
+	Acad::ErrorStatus setE(const ACHAR* newVal);
+
+	/// Gets or sets the F piece length
+	const ACHAR* F(void) const;
+	Acad::ErrorStatus setF(const ACHAR* newVal);
+
+	/// Gets or sets the shape style
+	const AcDbObjectId& ShapeId(void) const;
+	Acad::ErrorStatus setShapeId(const AcDbObjectId& newVal);
+
+	/// Gets or sets the pos group
+	const AcDbObjectId& GroupId(void) const;
+	Acad::ErrorStatus setGroupId(const AcDbObjectId& newVal);
+
+
+public:
+	/// Gets the pos text
+	const ACHAR* Text(void) const;
+
+	/// Gets length text
+	const ACHAR* Length(void) const;
+
+	/// Gets the height of the drawing object
+	const double Height(void) const;
+
+	/// Gets a string key identifying a pos with a certain diameter,
+	/// shape and piece lengths
+	const ACHAR* PosKey() const;
+ 
+public:
+	/// AcDbEntity overrides: database    
     virtual Acad::ErrorStatus	dwgInFields(AcDbDwgFiler* filer);
     virtual Acad::ErrorStatus	dwgOutFields(AcDbDwgFiler* filer) const;
     
     virtual Acad::ErrorStatus	dxfInFields(AcDbDxfFiler* filer);
     virtual Acad::ErrorStatus	dxfOutFields(AcDbDxfFiler* filer) const;
 
-
 protected:
+	/// AcDbEntity overrides: geometry
     virtual Acad::ErrorStatus subGetOsnapPoints(
         AcDb::OsnapMode       osnapMode,
         Adesk::GsMarker       gsSelectionMark,
@@ -79,18 +201,15 @@ protected:
     virtual Acad::ErrorStatus   subMoveGripPointsAt(const AcDbIntArray& indices,
         const AcGeVector3d&     offset);
 
-    virtual void                subList() const;
-
     virtual Acad::ErrorStatus   subTransformBy(const AcGeMatrix3d& xform);
+
+    virtual void                subList() const;
 
     virtual Acad::ErrorStatus	subExplode(AcDbVoidPtrArray& entitySet) const;
 
     virtual Adesk::Boolean      subWorldDraw(AcGiWorldDraw*	mode);
     
-    //*************************************************************************
-    // Overridden methods from AcDbObject
-    //*************************************************************************
-    
+    /// Overridden methods from AcDbObject    
     virtual Acad::ErrorStatus subDeepClone(AcDbObject* pOwnerObject,
         AcDbObject*& pClonedObject,
         AcDbIdMapping& idMap,
@@ -127,13 +246,8 @@ private:
 #define new DEBUG_NEW
 #define delete DEBUG_DELETE
 #endif
-
-    AcGePoint3d   mCenter;
-    
-    TCHAR*	  mpName;
-    AcDbHardPointerId  mTextStyle;       
+     
 };
-
 
 //- This line allows us to get rid of the .def file in ARX projects
 #ifndef _WIN64

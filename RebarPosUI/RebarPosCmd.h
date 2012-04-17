@@ -40,9 +40,8 @@ class ATL_NO_VTABLE CComPolyCmd :
 public:
 	CComPolyCmd()
         : m_pDoc(NULL),
-          bGotTextString(false),
-          bGotCenter(false),
-          bGotTextStyleName(false)
+          bGotPos(false),
+          bGotBasePoint(false)
 	{
 	}
 
@@ -67,7 +66,6 @@ protected:
 private:
     AcApDocument *m_pDoc;
     
-    DEFINE_CMDFLAG(GotTextString);
-    DEFINE_CMDFLAG(GotCenter);
-    DEFINE_CMDFLAG(GotTextStyleName);
+    DEFINE_CMDFLAG(GotPos);
+    DEFINE_CMDFLAG(GotBasePoint);
 };

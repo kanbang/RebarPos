@@ -49,14 +49,11 @@ extern CComModule _Module;
 HRESULT CComPolyCmd::OnChanged(DISPID dispId)
 {
     switch(dispId) {
-        case DISPID_TEXTSTRING:
-           bGotTextString = true;
+        case DISPID_POS:
+           bGotPos = true;
            break;
-        case DISPID_CENTER:
-           bGotCenter = true;
-           break;
-        case DISPID_TEXTSTYLENAME:
-           bGotTextStyleName = true;
+        case DISPID_BASEPOINT:
+           bGotBasePoint = true;
            break;
         default:
            break;

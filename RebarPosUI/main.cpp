@@ -127,7 +127,7 @@ AsdkPolyMatchProp::copyProperties(AcDbEntity *pSrcEntity, AcDbEntity *pTrgEntity
       CRebarPos *pSrcPoly = CRebarPos::cast(pSrcEntity);
 
       // copy text
-	  pPoly->setName(pSrcPoly->name());
+	  pPoly->setPos(pSrcPoly->Pos());
 
       // add more polysamp properties to match here 
     }

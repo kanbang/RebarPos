@@ -59,18 +59,18 @@ library COMPOLYLib
 	]
 	interface IComPolygon : IAcadEntity
 	{
-		[propget, id(1), helpstring("property TextString"),helpcontext(IDH_TEXTSTRING)] HRESULT TextString([out, retval] BSTR *pVal);
-		[propput, id(1), helpstring("property TextString"),helpcontext(IDH_TEXTSTRING)] HRESULT TextString([in] BSTR newVal);
+		[propget, id(1), helpstring("property Pos"),helpcontext(IDH_POS)] HRESULT Pos([out, retval] BSTR *pVal);
+		[propput, id(1), helpstring("property Pos"),helpcontext(IDH_POS)] HRESULT Pos([in] BSTR newVal);
 		//[propget, id(2), helpstring("property NumSides"),helpcontext(IDH_NUMSIDES)] HRESULT NumSides([out, retval] long *pVal);
 		//[propput, id(2), helpstring("property NumSides"),helpcontext(IDH_NUMSIDES)] HRESULT NumSides([in] long newVal);
 		//[propget, id(3), helpstring("property Normal"),helpcontext(IDH_NORMAL)] HRESULT Normal([out, retval] VARIANT *pVal);
 		//[propput, id(3), helpstring("property Normal"),helpcontext(IDH_NORMAL)] HRESULT Normal([in] VARIANT newVal);
-		[propget, id(4), helpstring("property Center"),helpcontext(IDH_CENTER)] HRESULT Center([out, retval] VARIANT *pVal);
-		[propput, id(4), helpstring("property Center"),helpcontext(IDH_CENTER)] HRESULT Center([in] VARIANT newVal);
+		[propget, id(4), helpstring("property BasePoint"),helpcontext(IDH_BASEPOINT)] HRESULT BasePoint([out, retval] VARIANT *pVal);
+		[propput, id(4), helpstring("property BasePoint"),helpcontext(IDH_BASEPOINT)] HRESULT BasePoint([in] VARIANT newVal);
 		//[propget, id(5), helpstring("property StartPoint"),helpcontext(IDH_STARTPOINT)] HRESULT StartPoint([out, retval] VARIANT *pVal);
 		//[propput, id(5), helpstring("property StartPoint"),helpcontext(IDH_STARTPOINT)] HRESULT StartPoint([in] VARIANT newVal);
-		[propget, id(6), helpstring("property TextStyleName"),helpcontext(IDH_TEXTSTYLENAME)] HRESULT TextStyleName([out, retval] BSTR *pVal);
-		[propput, id(6), helpstring("property TextStyleName"),helpcontext(IDH_TEXTSTYLENAME)] HRESULT TextStyleName([in] BSTR newVal);
+		//[propget, id(6), helpstring("property TextStyleName"),helpcontext(IDH_TEXTSTYLENAME)] HRESULT TextStyleName([out, retval] BSTR *pVal);
+		//[propput, id(6), helpstring("property TextStyleName"),helpcontext(IDH_TEXTSTYLENAME)] HRESULT TextStyleName([in] BSTR newVal);
 		//[id(7), helpstring("method GetVertices"),helpcontext(IDH_GETVERTICES)] HRESULT GetVertices([retval, out] VARIANT* pnts);
 		//[propget, id(8), helpstring("property Elevation"),helpcontext(IDH_ELEVATION)] HRESULT Elevation([out, retval] double *pVal);
 		//[propput, id(8), helpstring("property Elevation"),helpcontext(IDH_ELEVATION)] HRESULT Elevation([in] double newVal);
