@@ -16,7 +16,5 @@ RebarPosCommands/bin/
 RebarPosCommands/obj/
 Win32/
 x64/
-/Setup/ReleaseMSI
-/Setup/ReleaseMSM
-/Setup/DebugMSI
-/Setup/DebugMSM
+*.msi
+*.msm
