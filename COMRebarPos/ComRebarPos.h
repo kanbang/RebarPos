@@ -29,14 +29,24 @@
 #include "tchar.h"
 
 // DISPIDs for resources
-#define DISPID_POS          0x00000001
-//#define DISPID_NUMSIDES     0x00000002
-//#define DISPID_NORMAL       0x00000003
-#define DISPID_BASEPOINT    0x00000004
-//#define DISPID_STARTPOINT   0x00000005
-//#define DISPID_TEXTSTYLENAME 0x00000006
-//#define DISPID_GETVERTICES  0x00000007
-//#define DISPID_ELEVATION    0x00000008
+#define	DISPID_BASEPOINT		0x00000001
+#define	DISPID_NOTEGRIP		0x00000002
+#define	DISPID_POS		0x00000003
+#define	DISPID_COUNT		0x00000004
+#define	DISPID_DIAMETER		0x00000005
+#define	DISPID_SPACING		0x00000006
+#define	DISPID_MULTIPLIER		0x00000007
+#define	DISPID_SHOWLENGTH		0x00000008
+#define	DISPID_NOTE		0x00000009
+#define	DISPID_A		0x00000010
+#define	DISPID_B		0x00000011
+#define	DISPID_C		0x00000012
+#define	DISPID_D		0x00000013
+#define	DISPID_E		0x00000014
+#define	DISPID_F		0x00000015
+#define	DISPID_LENGTH		0x00000016
+#define	DISPID_SHAPE		0x00000017
+#define	DISPID_GROUP		0x00000018
 
 /////////////////////////////////////////////////////////////////////////////
 // CComPolygon
@@ -94,35 +104,65 @@ END_COM_MAP()
 
 // IComPolygon
 public:
-	//STDMETHOD(get_Elevation)(/*[out, retval]*/ double *pVal);
-	//STDMETHOD(put_Elevation)(/*[in]*/ double newVal);
-	//STDMETHOD(GetVertices)(/*[retval, out]*/ VARIANT* pnts);
-	//STDMETHOD(get_TextStyleName)(/*[out, retval]*/ BSTR *pVal);
-	//STDMETHOD(put_TextStyleName)(/*[in]*/ BSTR newVal);
-	//STDMETHOD(get_StartPoint)(/*[out, retval]*/ VARIANT *pVal);
-	//STDMETHOD(put_StartPoint)(/*[in]*/ VARIANT newVal);
 	STDMETHOD(get_BasePoint)(/*[out, retval]*/ VARIANT *pVal);
 	STDMETHOD(put_BasePoint)(/*[in]*/ VARIANT newVal);
-	//STDMETHOD(get_Normal)(/*[out, retval]*/ VARIANT *pVal);
-	//STDMETHOD(put_Normal)(/*[in]*/ VARIANT newVal);
-	//STDMETHOD(get_NumSides)(/*[out, retval]*/ long *pVal);
-	//STDMETHOD(put_NumSides)(/*[in]*/ long newVal);
+	STDMETHOD(get_NoteGrip)(/*[out, retval]*/ VARIANT *pVal);
+	STDMETHOD(put_NoteGrip)(/*[in]*/ VARIANT newVal);
 	STDMETHOD(get_Pos)(/*[out, retval]*/ BSTR *pVal);
 	STDMETHOD(put_Pos)(/*[in]*/ BSTR newVal);
-
+	STDMETHOD(get_Count)(/*[out, retval]*/ BSTR *pVal);
+	STDMETHOD(put_Count)(/*[in]*/ BSTR newVal);
+	STDMETHOD(get_Diameter)(/*[out, retval]*/ BSTR *pVal);
+	STDMETHOD(put_Diameter)(/*[in]*/ BSTR newVal);
+	STDMETHOD(get_Spacing)(/*[out, retval]*/ BSTR *pVal);
+	STDMETHOD(put_Spacing)(/*[in]*/ BSTR newVal);
+	STDMETHOD(get_Multiplier)(/*[out, retval]*/ long *pVal);
+	STDMETHOD(put_Multiplier)(/*[in]*/ long newVal);
+	STDMETHOD(get_ShowLength)(/*[out, retval]*/ VARIANT_BOOL *pVal);
+	STDMETHOD(put_ShowLength)(/*[in]*/ VARIANT_BOOL newVal);
+	STDMETHOD(get_Note)(/*[out, retval]*/ BSTR *pVal);
+	STDMETHOD(put_Note)(/*[in]*/ BSTR newVal);
+	STDMETHOD(get_A)(/*[out, retval]*/ BSTR *pVal);
+	STDMETHOD(put_A)(/*[in]*/ BSTR newVal);
+	STDMETHOD(get_B)(/*[out, retval]*/ BSTR *pVal);
+	STDMETHOD(put_B)(/*[in]*/ BSTR newVal);
+	STDMETHOD(get_C)(/*[out, retval]*/ BSTR *pVal);
+	STDMETHOD(put_C)(/*[in]*/ BSTR newVal);
+	STDMETHOD(get_D)(/*[out, retval]*/ BSTR *pVal);
+	STDMETHOD(put_D)(/*[in]*/ BSTR newVal);
+	STDMETHOD(get_E)(/*[out, retval]*/ BSTR *pVal);
+	STDMETHOD(put_E)(/*[in]*/ BSTR newVal);
+	STDMETHOD(get_F)(/*[out, retval]*/ BSTR *pVal);
+	STDMETHOD(put_F)(/*[in]*/ BSTR newVal);
+	STDMETHOD(get_Length)(/*[out, retval]*/ BSTR *pVal);
+	STDMETHOD(get_Shape)(/*[out, retval]*/ BSTR *pVal);
+	STDMETHOD(put_Shape)(/*[in]*/ BSTR newVal);
+	STDMETHOD(get_Group)(/*[out, retval]*/ BSTR *pVal);
+	STDMETHOD(put_Group)(/*[in]*/ BSTR newVal);
 //
 // OPM
 //
 
 // IOPMPropertyExtension
 BEGIN_OPMPROP_MAP()
-    OPMPROP_ENTRY(0, 0x00000001, PROPCAT_Text, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    //OPMPROP_ENTRY(0, 0x00000002, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    //OPMPROP_ENTRY(0, 0x00000003, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, 0x00000004, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    //OPMPROP_ENTRY(0, 0x00000005, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    //OPMPROP_ENTRY(0, 0x00000006, PROPCAT_Text, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    //OPMPROP_ENTRY(0, 0x00000008, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_BASEPOINT, PROPCAT_Position, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_NOTEGRIP, PROPCAT_Position, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_POS, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_COUNT, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_DIAMETER, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_SPACING, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_MULTIPLIER, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_SHOWLENGTH, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_NOTE, PROPCAT_Text, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_A, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_B, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_C, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_D, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_E, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_F, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_LENGTH, PROPCAT_Data, 0, 0, 0, _T(""), 0, 0, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_SHAPE, PROPCAT_Misc, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_GROUP, PROPCAT_Misc, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
 END_OPMPROP_MAP()
 
 

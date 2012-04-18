@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0500 */
-/* at Tue Apr 17 15:19:33 2012
+/* at Wed Apr 18 11:04:35 2012
  */
 /* Compiler settings for .\COMRebarPos.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -89,17 +89,110 @@ EXTERN_C const IID IID_IComPolygon;
     IComPolygon : public IAcadEntity
     {
     public:
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_BasePoint( 
+            /* [retval][out] */ VARIANT *pVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_BasePoint( 
+            /* [in] */ VARIANT newVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_NoteGrip( 
+            /* [retval][out] */ VARIANT *pVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_NoteGrip( 
+            /* [in] */ VARIANT newVal) = 0;
+        
         virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Pos( 
             /* [retval][out] */ BSTR *pVal) = 0;
         
         virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_Pos( 
             /* [in] */ BSTR newVal) = 0;
         
-        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_BasePoint( 
-            /* [retval][out] */ VARIANT *pVal) = 0;
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Count( 
+            /* [retval][out] */ BSTR *pVal) = 0;
         
-        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_BasePoint( 
-            /* [in] */ VARIANT newVal) = 0;
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_Count( 
+            /* [in] */ BSTR newVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Diameter( 
+            /* [retval][out] */ BSTR *pVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_Diameter( 
+            /* [in] */ BSTR newVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Spacing( 
+            /* [retval][out] */ BSTR *pVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_Spacing( 
+            /* [in] */ BSTR newVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Multiplier( 
+            /* [retval][out] */ long *pVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_Multiplier( 
+            /* [in] */ long newVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_ShowLength( 
+            /* [retval][out] */ VARIANT_BOOL *pVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_ShowLength( 
+            /* [in] */ VARIANT_BOOL newVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Note( 
+            /* [retval][out] */ BSTR *pVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_Note( 
+            /* [in] */ BSTR newVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_A( 
+            /* [retval][out] */ BSTR *pVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_A( 
+            /* [in] */ BSTR newVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_B( 
+            /* [retval][out] */ BSTR *pVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_B( 
+            /* [in] */ BSTR newVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_C( 
+            /* [retval][out] */ BSTR *pVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_C( 
+            /* [in] */ BSTR newVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_D( 
+            /* [retval][out] */ BSTR *pVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_D( 
+            /* [in] */ BSTR newVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_E( 
+            /* [retval][out] */ BSTR *pVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_E( 
+            /* [in] */ BSTR newVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_F( 
+            /* [retval][out] */ BSTR *pVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_F( 
+            /* [in] */ BSTR newVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Length( 
+            /* [retval][out] */ BSTR *pVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Shape( 
+            /* [retval][out] */ BSTR *pVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_Shape( 
+            /* [in] */ BSTR newVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Group( 
+            /* [retval][out] */ BSTR *pVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_Group( 
+            /* [in] */ BSTR newVal) = 0;
         
     };
     
@@ -399,6 +492,22 @@ EXTERN_C const IID IID_IComPolygon;
             /* [in][idldescattr] */ ACAD_COLOR noname,
             /* [retval][out] */ void *retval);
         
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_BasePoint )( 
+            IComPolygon * This,
+            /* [retval][out] */ VARIANT *pVal);
+        
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_BasePoint )( 
+            IComPolygon * This,
+            /* [in] */ VARIANT newVal);
+        
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_NoteGrip )( 
+            IComPolygon * This,
+            /* [retval][out] */ VARIANT *pVal);
+        
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_NoteGrip )( 
+            IComPolygon * This,
+            /* [in] */ VARIANT newVal);
+        
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Pos )( 
             IComPolygon * This,
             /* [retval][out] */ BSTR *pVal);
@@ -407,13 +516,121 @@ EXTERN_C const IID IID_IComPolygon;
             IComPolygon * This,
             /* [in] */ BSTR newVal);
         
-        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_BasePoint )( 
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
             IComPolygon * This,
-            /* [retval][out] */ VARIANT *pVal);
+            /* [retval][out] */ BSTR *pVal);
         
-        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_BasePoint )( 
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Count )( 
             IComPolygon * This,
-            /* [in] */ VARIANT newVal);
+            /* [in] */ BSTR newVal);
+        
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Diameter )( 
+            IComPolygon * This,
+            /* [retval][out] */ BSTR *pVal);
+        
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Diameter )( 
+            IComPolygon * This,
+            /* [in] */ BSTR newVal);
+        
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Spacing )( 
+            IComPolygon * This,
+            /* [retval][out] */ BSTR *pVal);
+        
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Spacing )( 
+            IComPolygon * This,
+            /* [in] */ BSTR newVal);
+        
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Multiplier )( 
+            IComPolygon * This,
+            /* [retval][out] */ long *pVal);
+        
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Multiplier )( 
+            IComPolygon * This,
+            /* [in] */ long newVal);
+        
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_ShowLength )( 
+            IComPolygon * This,
+            /* [retval][out] */ VARIANT_BOOL *pVal);
+        
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_ShowLength )( 
+            IComPolygon * This,
+            /* [in] */ VARIANT_BOOL newVal);
+        
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Note )( 
+            IComPolygon * This,
+            /* [retval][out] */ BSTR *pVal);
+        
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Note )( 
+            IComPolygon * This,
+            /* [in] */ BSTR newVal);
+        
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_A )( 
+            IComPolygon * This,
+            /* [retval][out] */ BSTR *pVal);
+        
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_A )( 
+            IComPolygon * This,
+            /* [in] */ BSTR newVal);
+        
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_B )( 
+            IComPolygon * This,
+            /* [retval][out] */ BSTR *pVal);
+        
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_B )( 
+            IComPolygon * This,
+            /* [in] */ BSTR newVal);
+        
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_C )( 
+            IComPolygon * This,
+            /* [retval][out] */ BSTR *pVal);
+        
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_C )( 
+            IComPolygon * This,
+            /* [in] */ BSTR newVal);
+        
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_D )( 
+            IComPolygon * This,
+            /* [retval][out] */ BSTR *pVal);
+        
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_D )( 
+            IComPolygon * This,
+            /* [in] */ BSTR newVal);
+        
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_E )( 
+            IComPolygon * This,
+            /* [retval][out] */ BSTR *pVal);
+        
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_E )( 
+            IComPolygon * This,
+            /* [in] */ BSTR newVal);
+        
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_F )( 
+            IComPolygon * This,
+            /* [retval][out] */ BSTR *pVal);
+        
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_F )( 
+            IComPolygon * This,
+            /* [in] */ BSTR newVal);
+        
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Length )( 
+            IComPolygon * This,
+            /* [retval][out] */ BSTR *pVal);
+        
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Shape )( 
+            IComPolygon * This,
+            /* [retval][out] */ BSTR *pVal);
+        
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Shape )( 
+            IComPolygon * This,
+            /* [in] */ BSTR newVal);
+        
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Group )( 
+            IComPolygon * This,
+            /* [retval][out] */ BSTR *pVal);
+        
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Group )( 
+            IComPolygon * This,
+            /* [in] */ BSTR newVal);
         
         END_INTERFACE
     } IComPolygonVtbl;
@@ -600,17 +817,110 @@ EXTERN_C const IID IID_IComPolygon;
     ( (This)->lpVtbl -> put_color(This,noname,retval) ) 
 
 
+#define IComPolygon_get_BasePoint(This,pVal)	\
+    ( (This)->lpVtbl -> get_BasePoint(This,pVal) ) 
+
+#define IComPolygon_put_BasePoint(This,newVal)	\
+    ( (This)->lpVtbl -> put_BasePoint(This,newVal) ) 
+
+#define IComPolygon_get_NoteGrip(This,pVal)	\
+    ( (This)->lpVtbl -> get_NoteGrip(This,pVal) ) 
+
+#define IComPolygon_put_NoteGrip(This,newVal)	\
+    ( (This)->lpVtbl -> put_NoteGrip(This,newVal) ) 
+
 #define IComPolygon_get_Pos(This,pVal)	\
     ( (This)->lpVtbl -> get_Pos(This,pVal) ) 
 
 #define IComPolygon_put_Pos(This,newVal)	\
     ( (This)->lpVtbl -> put_Pos(This,newVal) ) 
 
-#define IComPolygon_get_BasePoint(This,pVal)	\
-    ( (This)->lpVtbl -> get_BasePoint(This,pVal) ) 
+#define IComPolygon_get_Count(This,pVal)	\
+    ( (This)->lpVtbl -> get_Count(This,pVal) ) 
 
-#define IComPolygon_put_BasePoint(This,newVal)	\
-    ( (This)->lpVtbl -> put_BasePoint(This,newVal) ) 
+#define IComPolygon_put_Count(This,newVal)	\
+    ( (This)->lpVtbl -> put_Count(This,newVal) ) 
+
+#define IComPolygon_get_Diameter(This,pVal)	\
+    ( (This)->lpVtbl -> get_Diameter(This,pVal) ) 
+
+#define IComPolygon_put_Diameter(This,newVal)	\
+    ( (This)->lpVtbl -> put_Diameter(This,newVal) ) 
+
+#define IComPolygon_get_Spacing(This,pVal)	\
+    ( (This)->lpVtbl -> get_Spacing(This,pVal) ) 
+
+#define IComPolygon_put_Spacing(This,newVal)	\
+    ( (This)->lpVtbl -> put_Spacing(This,newVal) ) 
+
+#define IComPolygon_get_Multiplier(This,pVal)	\
+    ( (This)->lpVtbl -> get_Multiplier(This,pVal) ) 
+
+#define IComPolygon_put_Multiplier(This,newVal)	\
+    ( (This)->lpVtbl -> put_Multiplier(This,newVal) ) 
+
+#define IComPolygon_get_ShowLength(This,pVal)	\
+    ( (This)->lpVtbl -> get_ShowLength(This,pVal) ) 
+
+#define IComPolygon_put_ShowLength(This,newVal)	\
+    ( (This)->lpVtbl -> put_ShowLength(This,newVal) ) 
+
+#define IComPolygon_get_Note(This,pVal)	\
+    ( (This)->lpVtbl -> get_Note(This,pVal) ) 
+
+#define IComPolygon_put_Note(This,newVal)	\
+    ( (This)->lpVtbl -> put_Note(This,newVal) ) 
+
+#define IComPolygon_get_A(This,pVal)	\
+    ( (This)->lpVtbl -> get_A(This,pVal) ) 
+
+#define IComPolygon_put_A(This,newVal)	\
+    ( (This)->lpVtbl -> put_A(This,newVal) ) 
+
+#define IComPolygon_get_B(This,pVal)	\
+    ( (This)->lpVtbl -> get_B(This,pVal) ) 
+
+#define IComPolygon_put_B(This,newVal)	\
+    ( (This)->lpVtbl -> put_B(This,newVal) ) 
+
+#define IComPolygon_get_C(This,pVal)	\
+    ( (This)->lpVtbl -> get_C(This,pVal) ) 
+
+#define IComPolygon_put_C(This,newVal)	\
+    ( (This)->lpVtbl -> put_C(This,newVal) ) 
+
+#define IComPolygon_get_D(This,pVal)	\
+    ( (This)->lpVtbl -> get_D(This,pVal) ) 
+
+#define IComPolygon_put_D(This,newVal)	\
+    ( (This)->lpVtbl -> put_D(This,newVal) ) 
+
+#define IComPolygon_get_E(This,pVal)	\
+    ( (This)->lpVtbl -> get_E(This,pVal) ) 
+
+#define IComPolygon_put_E(This,newVal)	\
+    ( (This)->lpVtbl -> put_E(This,newVal) ) 
+
+#define IComPolygon_get_F(This,pVal)	\
+    ( (This)->lpVtbl -> get_F(This,pVal) ) 
+
+#define IComPolygon_put_F(This,newVal)	\
+    ( (This)->lpVtbl -> put_F(This,newVal) ) 
+
+#define IComPolygon_get_Length(This,pVal)	\
+    ( (This)->lpVtbl -> get_Length(This,pVal) ) 
+
+#define IComPolygon_get_Shape(This,pVal)	\
+    ( (This)->lpVtbl -> get_Shape(This,pVal) ) 
+
+#define IComPolygon_put_Shape(This,newVal)	\
+    ( (This)->lpVtbl -> put_Shape(This,newVal) ) 
+
+#define IComPolygon_get_Group(This,pVal)	\
+    ( (This)->lpVtbl -> get_Group(This,pVal) ) 
+
+#define IComPolygon_put_Group(This,newVal)	\
+    ( (This)->lpVtbl -> put_Group(This,newVal) ) 
 
 #endif /* COBJMACROS */
 

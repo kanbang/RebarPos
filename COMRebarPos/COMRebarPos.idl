@@ -59,21 +59,41 @@ library COMPOLYLib
 	]
 	interface IComPolygon : IAcadEntity
 	{
-		[propget, id(1), helpstring("property Pos"),helpcontext(IDH_POS)] HRESULT Pos([out, retval] BSTR *pVal);
-		[propput, id(1), helpstring("property Pos"),helpcontext(IDH_POS)] HRESULT Pos([in] BSTR newVal);
-		//[propget, id(2), helpstring("property NumSides"),helpcontext(IDH_NUMSIDES)] HRESULT NumSides([out, retval] long *pVal);
-		//[propput, id(2), helpstring("property NumSides"),helpcontext(IDH_NUMSIDES)] HRESULT NumSides([in] long newVal);
-		//[propget, id(3), helpstring("property Normal"),helpcontext(IDH_NORMAL)] HRESULT Normal([out, retval] VARIANT *pVal);
-		//[propput, id(3), helpstring("property Normal"),helpcontext(IDH_NORMAL)] HRESULT Normal([in] VARIANT newVal);
-		[propget, id(4), helpstring("property BasePoint"),helpcontext(IDH_BASEPOINT)] HRESULT BasePoint([out, retval] VARIANT *pVal);
-		[propput, id(4), helpstring("property BasePoint"),helpcontext(IDH_BASEPOINT)] HRESULT BasePoint([in] VARIANT newVal);
-		//[propget, id(5), helpstring("property StartPoint"),helpcontext(IDH_STARTPOINT)] HRESULT StartPoint([out, retval] VARIANT *pVal);
-		//[propput, id(5), helpstring("property StartPoint"),helpcontext(IDH_STARTPOINT)] HRESULT StartPoint([in] VARIANT newVal);
-		//[propget, id(6), helpstring("property TextStyleName"),helpcontext(IDH_TEXTSTYLENAME)] HRESULT TextStyleName([out, retval] BSTR *pVal);
-		//[propput, id(6), helpstring("property TextStyleName"),helpcontext(IDH_TEXTSTYLENAME)] HRESULT TextStyleName([in] BSTR newVal);
-		//[id(7), helpstring("method GetVertices"),helpcontext(IDH_GETVERTICES)] HRESULT GetVertices([retval, out] VARIANT* pnts);
-		//[propget, id(8), helpstring("property Elevation"),helpcontext(IDH_ELEVATION)] HRESULT Elevation([out, retval] double *pVal);
-		//[propput, id(8), helpstring("property Elevation"),helpcontext(IDH_ELEVATION)] HRESULT Elevation([in] double newVal);
+		[propget, id(1), helpstring("property BasePoint"),helpcontext(IDH_BASEPOINT)] HRESULT BasePoint([out, retval] VARIANT *pVal);
+		[propput, id(1), helpstring("property BasePoint"),helpcontext(IDH_BASEPOINT)] HRESULT BasePoint([in] VARIANT newVal);
+		[propget, id(2), helpstring("property NoteGrip"),helpcontext(IDH_NOTEGRIP)] HRESULT NoteGrip([out, retval] VARIANT *pVal);
+		[propput, id(2), helpstring("property NoteGrip"),helpcontext(IDH_NOTEGRIP)] HRESULT NoteGrip([in] VARIANT newVal);
+		[propget, id(3), helpstring("property Pos"),helpcontext(IDH_POS)] HRESULT Pos([out, retval] BSTR *pVal);
+		[propput, id(3), helpstring("property Pos"),helpcontext(IDH_POS)] HRESULT Pos([in] BSTR newVal);
+		[propget, id(4), helpstring("property Count"),helpcontext(IDH_COUNT)] HRESULT Count([out, retval] BSTR *pVal);
+		[propput, id(4), helpstring("property Count"),helpcontext(IDH_COUNT)] HRESULT Count([in] BSTR newVal);
+		[propget, id(5), helpstring("property Diameter"),helpcontext(IDH_DIAMETER)] HRESULT Diameter([out, retval] BSTR *pVal);
+		[propput, id(5), helpstring("property Diameter"),helpcontext(IDH_DIAMETER)] HRESULT Diameter([in] BSTR newVal);
+		[propget, id(6), helpstring("property Spacing"),helpcontext(IDH_SPACING)] HRESULT Spacing([out, retval] BSTR *pVal);
+		[propput, id(6), helpstring("property Spacing"),helpcontext(IDH_SPACING)] HRESULT Spacing([in] BSTR newVal);
+		[propget, id(7), helpstring("property Multiplier"),helpcontext(IDH_MULTIPLIER)] HRESULT Multiplier([out, retval] long *pVal);
+		[propput, id(7), helpstring("property Multiplier"),helpcontext(IDH_MULTIPLIER)] HRESULT Multiplier([in] long newVal);
+		[propget, id(8), helpstring("property ShowLength"),helpcontext(IDH_SHOWLENGTH)] HRESULT ShowLength([out, retval] VARIANT_BOOL *pVal);
+		[propput, id(8), helpstring("property ShowLength"),helpcontext(IDH_SHOWLENGTH)] HRESULT ShowLength([in] VARIANT_BOOL newVal);
+		[propget, id(9), helpstring("property Note"),helpcontext(IDH_NOTE)] HRESULT Note([out, retval] BSTR *pVal);
+		[propput, id(9), helpstring("property Note"),helpcontext(IDH_NOTE)] HRESULT Note([in] BSTR newVal);
+		[propget, id(10), helpstring("property A"),helpcontext(IDH_A)] HRESULT A([out, retval] BSTR *pVal);
+		[propput, id(10), helpstring("property A"),helpcontext(IDH_A)] HRESULT A([in] BSTR newVal);
+		[propget, id(11), helpstring("property B"),helpcontext(IDH_B)] HRESULT B([out, retval] BSTR *pVal);
+		[propput, id(11), helpstring("property B"),helpcontext(IDH_B)] HRESULT B([in] BSTR newVal);
+		[propget, id(12), helpstring("property C"),helpcontext(IDH_C)] HRESULT C([out, retval] BSTR *pVal);
+		[propput, id(12), helpstring("property C"),helpcontext(IDH_C)] HRESULT C([in] BSTR newVal);
+		[propget, id(13), helpstring("property D"),helpcontext(IDH_D)] HRESULT D([out, retval] BSTR *pVal);
+		[propput, id(13), helpstring("property D"),helpcontext(IDH_D)] HRESULT D([in] BSTR newVal);
+		[propget, id(14), helpstring("property E"),helpcontext(IDH_E)] HRESULT E([out, retval] BSTR *pVal);
+		[propput, id(14), helpstring("property E"),helpcontext(IDH_E)] HRESULT E([in] BSTR newVal);
+		[propget, id(15), helpstring("property F"),helpcontext(IDH_F)] HRESULT F([out, retval] BSTR *pVal);
+		[propput, id(15), helpstring("property F"),helpcontext(IDH_F)] HRESULT F([in] BSTR newVal);
+		[propget, id(16), helpstring("property Length"),helpcontext(IDH_LENGTH)] HRESULT Length([out, retval] BSTR *pVal);
+		[propget, id(17), helpstring("property Shape"),helpcontext(IDH_SHAPE)] HRESULT Shape([out, retval] BSTR *pVal);
+		[propput, id(17), helpstring("property Shape"),helpcontext(IDH_SHAPE)] HRESULT Shape([in] BSTR newVal);
+		[propget, id(18), helpstring("property Group"),helpcontext(IDH_GROUP)] HRESULT Group([out, retval] BSTR *pVal);
+		[propput, id(18), helpstring("property Group"),helpcontext(IDH_GROUP)] HRESULT Group([in] BSTR newVal);
 	};
 	//
 	// coclasses in type library
