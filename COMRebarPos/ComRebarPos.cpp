@@ -29,6 +29,7 @@
 #include "ComRebarPos.h"
 #include "dbsymtb.h"
 #include "../NativeRebarPos/RebarPos.h"
+#include "../NativeRebarPos/PosShape.h"
 #include "axpnt3d.h"
 #include "axpnt2d.h"
 #include "dbxutil.h"
@@ -75,14 +76,6 @@ STDMETHODIMP CComRebarPos::Editable(
 	/* [in] */ DISPID dispID,
 	/* [out] */ BOOL __RPC_FAR *bEditable)
 {
-	return IOPMPropertyExtensionImpl<CComRebarPos>::Editable(dispID, bEditable);
-}
-
-//Override to hide the property from display
-STDMETHODIMP CComRebarPos::ShowProperty(
-	/* [in] */ DISPID dispID, 
-	/* [out] */ BOOL *pShow)
-{
 	if(dispID >= DISPID_A && dispID <= DISPID_F)
 	{
 		try
@@ -117,7 +110,7 @@ STDMETHODIMP CComRebarPos::ShowProperty(
 				;
 			}
 
-			*pShow = (len != NULL) && (len[0] != _T('\0'));
+			*bEditable = (len != NULL) && (len[0] != _T('\0'));
 			acutDelString(len);
 			return S_OK;
 		}
@@ -127,6 +120,14 @@ STDMETHODIMP CComRebarPos::ShowProperty(
 		}
 	}
 
+	return IOPMPropertyExtensionImpl<CComRebarPos>::Editable(dispID, bEditable);
+}
+
+//Override to hide the property from display
+STDMETHODIMP CComRebarPos::ShowProperty(
+	/* [in] */ DISPID dispID, 
+	/* [out] */ BOOL *pShow)
+{
 	return IOPMPropertyExtensionImpl<CComRebarPos>::ShowProperty(dispID, pShow);
 }
 
