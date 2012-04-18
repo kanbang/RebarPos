@@ -1329,7 +1329,7 @@ Acad::ErrorStatus CRebarPos::subWblockClone(AcRxObject*    pOwner,
 Acad::ErrorStatus   CRebarPos::subGetClassID(CLSID* pClsid) const
 {
     assertReadEnabled();
-    *pClsid = CLSID_ComPolygon;
+    *pClsid = CLSID_ComRebarPos;
     return Acad::eOk;
 }
 

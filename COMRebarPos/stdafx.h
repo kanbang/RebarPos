@@ -60,10 +60,11 @@ extern CComModule _Module;
 #endif // !defined(AFX_STDAFX_H__45C7F02C_CD9A_11D1_A2BD_080009DC639A__INCLUDED)
 
 //- This line allows us to get rid of the .def file in ARX projects
+#ifndef NO_ARX_DEF
+#define NO_ARX_DEF
 #ifndef _WIN64
 #pragma comment(linker, "/export:_acrxGetApiVersion,PRIVATE")
 #else
 #pragma comment(linker, "/export:acrxGetApiVersion,PRIVATE")
 #endif
-
-
+#endif

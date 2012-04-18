@@ -20,7 +20,7 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 //
 #include "StdAfx.h"
-// ComPolygon.cpp : Implementation of CComPolygon
+// ComRebarPos.cpp : Implementation of CComRebarPos
 #if defined(_DEBUG) && !defined(AC_FULL_DEBUG)
 #error _DEBUG should not be defined except in internal Adesk debug builds
 #endif
@@ -50,14 +50,14 @@
         throw docLock.lockStatus();
 
 /////////////////////////////////////////////////////////////////////////////
-// CComPolygon
+// CComRebarPos
 #define CHECKOUTPARAM(x) if (x==NULL) return E_POINTER;
 
-STDMETHODIMP CComPolygon::InterfaceSupportsErrorInfo(REFIID riid)
+STDMETHODIMP CComRebarPos::InterfaceSupportsErrorInfo(REFIID riid)
 {
 	static const IID* arr[] = 
 	{
-		&IID_IComPolygon,
+		&IID_IComRebarPos,
         &IID_IAcadObject,
         &IID_IAcadEntity,
         &IID_IOPMPropertyExpander
@@ -71,15 +71,15 @@ STDMETHODIMP CComPolygon::InterfaceSupportsErrorInfo(REFIID riid)
 }
 
 //Override to make property read-only
-STDMETHODIMP CComPolygon::Editable( 
+STDMETHODIMP CComRebarPos::Editable( 
 	/* [in] */ DISPID dispID,
 	/* [out] */ BOOL __RPC_FAR *bEditable)
 {
-	return IOPMPropertyExtensionImpl<CComPolygon>::Editable(dispID, bEditable);
+	return IOPMPropertyExtensionImpl<CComRebarPos>::Editable(dispID, bEditable);
 }
 
 //Override to hide the property from display
-STDMETHODIMP CComPolygon::ShowProperty(
+STDMETHODIMP CComRebarPos::ShowProperty(
 	/* [in] */ DISPID dispID, 
 	/* [out] */ BOOL *pShow)
 {
@@ -123,16 +123,16 @@ STDMETHODIMP CComPolygon::ShowProperty(
 		}
 		catch(const Acad::ErrorStatus)
 		{
-			return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
+			return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
 		}
 	}
 
-	return IOPMPropertyExtensionImpl<CComPolygon>::ShowProperty(dispID, pShow);
+	return IOPMPropertyExtensionImpl<CComRebarPos>::ShowProperty(dispID, pShow);
 }
 
 //This is used to get the value for an element in a group.
 //The element is identified by the dwCookie parameter
-STDMETHODIMP CComPolygon::GetElementValue(
+STDMETHODIMP CComRebarPos::GetElementValue(
 	/* [in] */ DISPID dispID,
 	/* [in] */ DWORD dwCookie,
 	/* [out] */ VARIANT * pVarOut)
@@ -177,11 +177,11 @@ STDMETHODIMP CComPolygon::GetElementValue(
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
     }
     catch(const HRESULT hr)
     {
-        return Error(L"Invalid argument." ,IID_IComPolygon, hr);
+        return Error(L"Invalid argument." ,IID_IComRebarPos, hr);
     }
 
 	return E_NOTIMPL;
@@ -189,7 +189,7 @@ STDMETHODIMP CComPolygon::GetElementValue(
 
 //This is used to set the value for an element in a group.
 //The element is identified by the dwCookie parameter
-STDMETHODIMP CComPolygon::SetElementValue(
+STDMETHODIMP CComRebarPos::SetElementValue(
 	/* [in] */ DISPID dispID,
 	/* [in] */ DWORD dwCookie,
 	/* [in] */ VARIANT VarIn)
@@ -244,11 +244,11 @@ STDMETHODIMP CComPolygon::SetElementValue(
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
     }
     catch(const HRESULT hr)
     {
-        return Error(L"Invalid argument.", IID_IComPolygon, hr);
+        return Error(L"Invalid argument.", IID_IComRebarPos, hr);
     }
 
 	return E_NOTIMPL;
@@ -256,7 +256,7 @@ STDMETHODIMP CComPolygon::SetElementValue(
 
 //This is called to get the display string for each
 //element in a group.
-STDMETHODIMP CComPolygon::GetElementStrings( 
+STDMETHODIMP CComRebarPos::GetElementStrings( 
 	/* [in] */ DISPID dispID,
 	/* [out] */ OPMLPOLESTR __RPC_FAR *pCaStringsOut,
 	/* [out] */ OPMDWORD __RPC_FAR *pCaCookiesOut)
@@ -304,7 +304,7 @@ STDMETHODIMP CComPolygon::GetElementStrings(
 
 //This function is called to determine the number of elements in a group
 //It defaults to the number of elements in the array (3 in this case)
-STDMETHODIMP CComPolygon::GetElementGrouping(
+STDMETHODIMP CComRebarPos::GetElementGrouping(
     /* [in] */ DISPID dispID,
 	/* [out] */ short *groupingNumber)
 {
@@ -315,7 +315,7 @@ STDMETHODIMP CComPolygon::GetElementGrouping(
 //the array.
 //For example in case of the polyline this is the number of vertices.
 //We are not implementing this because it defaults to nGroupCnt = 0
-STDMETHODIMP CComPolygon::GetGroupCount(
+STDMETHODIMP CComRebarPos::GetGroupCount(
     /* [in] */ DISPID dispID,
 	/* [out] */ long *nGroupCnt)
 {
@@ -329,13 +329,13 @@ STDMETHODIMP CComPolygon::GetGroupCount(
 //head file when you use BEGIN_OPMPROP_MAP, OPMPROP_ENTRY, END_OPMPROP_MAP macros.)
 //Since we need a dynamic list of entries in this drop down list and a static map cannot implement this, 
 //we need to override this function a provide dynamic list of text styles to OPM.
-STDMETHODIMP CComPolygon::GetPredefinedStrings(DISPID dispID, CALPOLESTR *pCaStringsOut, CADWORD *pCaCookiesOut)
+STDMETHODIMP CComRebarPos::GetPredefinedStrings(DISPID dispID, CALPOLESTR *pCaStringsOut, CADWORD *pCaCookiesOut)
 {
-    return  IOPMPropertyExtensionImpl<CComPolygon>::GetPredefinedStrings(dispID, pCaStringsOut, pCaCookiesOut);
+    return  IOPMPropertyExtensionImpl<CComRebarPos>::GetPredefinedStrings(dispID, pCaStringsOut, pCaCookiesOut);
 
 	/*
     if (dispID != DISPID_TEXTSTYLENAME)
-        return  IOPMPropertyExtensionImpl<CComPolygon>::GetPredefinedStrings(dispID,pCaStringsOut,pCaCookiesOut);
+        return  IOPMPropertyExtensionImpl<CComRebarPos>::GetPredefinedStrings(dispID,pCaStringsOut,pCaCookiesOut);
 
     USES_CONVERSION;
     AcDbTextStyleTable* pTT;
@@ -391,13 +391,13 @@ STDMETHODIMP CComPolygon::GetPredefinedStrings(DISPID dispID, CALPOLESTR *pCaStr
 //can understand. 
 //In this particular case all we need to do is to provide the name of the text style as
 //the put_TextStyle method needs that.
-STDMETHODIMP CComPolygon::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VARIANT *pVarOut)
+STDMETHODIMP CComRebarPos::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VARIANT *pVarOut)
 {
-    return  IOPMPropertyExtensionImpl<CComPolygon>::GetPredefinedValue(dispID,dwCookie, pVarOut);
+    return  IOPMPropertyExtensionImpl<CComRebarPos>::GetPredefinedValue(dispID,dwCookie, pVarOut);
 
 	/*
     if (dispID != DISPID_TEXTSTYLENAME)
-        return  IOPMPropertyExtensionImpl<CComPolygon>::GetPredefinedValue(dispID,dwCookie, pVarOut);
+        return  IOPMPropertyExtensionImpl<CComRebarPos>::GetPredefinedValue(dispID,dwCookie, pVarOut);
 
     USES_CONVERSION;
 
@@ -421,7 +421,7 @@ STDMETHODIMP CComPolygon::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VARI
 	return S_OK;
 }
 
-HRESULT CComPolygon::CreateNewObject(AcDbObjectId& objId, AcDbObjectId& ownerId, TCHAR* keyName)
+HRESULT CComRebarPos::CreateNewObject(AcDbObjectId& objId, AcDbObjectId& ownerId, TCHAR* keyName)
 {
     try 
     {
@@ -442,7 +442,7 @@ HRESULT CComPolygon::CreateNewObject(AcDbObjectId& objId, AcDbObjectId& ownerId,
 }
 
 // IAcadBaseObject2Impl
-STDMETHODIMP CComPolygon::ForceDbResident(VARIANT_BOOL *forceDbResident)
+STDMETHODIMP CComRebarPos::ForceDbResident(VARIANT_BOOL *forceDbResident)
 {
 	if (NULL == forceDbResident)
 		return E_POINTER;
@@ -451,7 +451,7 @@ STDMETHODIMP CComPolygon::ForceDbResident(VARIANT_BOOL *forceDbResident)
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::CreateObject(AcDbObjectId ownerId, TCHAR *keyName) 
+STDMETHODIMP CComRebarPos::CreateObject(AcDbObjectId ownerId, TCHAR *keyName) 
 {
         try 
         {
@@ -468,13 +468,13 @@ STDMETHODIMP CComPolygon::CreateObject(AcDbObjectId ownerId, TCHAR *keyName)
         }
         catch(const Acad::ErrorStatus)
         {
-            return Error(L"Failed to create object", IID_IComPolygon, E_FAIL);
+            return Error(L"Failed to create object", IID_IComRebarPos, E_FAIL);
         }
         
         return S_OK;
 }
 
-STDMETHODIMP CComPolygon::AddToDb(AcDbObjectId& objId, AcDbObjectId ownerId, TCHAR* keyName)
+STDMETHODIMP CComRebarPos::AddToDb(AcDbObjectId& objId, AcDbObjectId ownerId, TCHAR* keyName)
 {
     try 
     {
@@ -494,7 +494,7 @@ STDMETHODIMP CComPolygon::AddToDb(AcDbObjectId& objId, AcDbObjectId ownerId, TCH
     catch(const Acad::ErrorStatus)
     {
         //we can became more sophisticated 
-        return Error(L"Failed to add object to database", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to add object to database", IID_IComRebarPos, E_FAIL);
     }
 
     return SetObjectId(objId);
@@ -503,7 +503,7 @@ STDMETHODIMP CComPolygon::AddToDb(AcDbObjectId& objId, AcDbObjectId ownerId, TCH
 /************************************************
   OPM Properties
 *************************************************/
-STDMETHODIMP CComPolygon::get_BasePoint(VARIANT * pVal)
+STDMETHODIMP CComRebarPos::get_BasePoint(VARIANT * pVal)
 {
 	CHECKOUTPARAM(pVal);
     try
@@ -518,16 +518,16 @@ STDMETHODIMP CComPolygon::get_BasePoint(VARIANT * pVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object.", IID_IComRebarPos, E_FAIL);
     }
     catch(const HRESULT hr)
     {
-        return Error(L"Invalid argument.", IID_IComPolygon, hr);
+        return Error(L"Invalid argument.", IID_IComRebarPos, hr);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::put_BasePoint(VARIANT newVal)
+STDMETHODIMP CComRebarPos::put_BasePoint(VARIANT newVal)
 {
     try
     {
@@ -546,16 +546,16 @@ STDMETHODIMP CComPolygon::put_BasePoint(VARIANT newVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to set property.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
     }
     catch(const HRESULT hr)
     {
-        return Error(L"Invalid argument.", IID_IComPolygon, hr);
+        return Error(L"Invalid argument.", IID_IComRebarPos, hr);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::get_NoteGrip(VARIANT * pVal)
+STDMETHODIMP CComRebarPos::get_NoteGrip(VARIANT * pVal)
 {
 	CHECKOUTPARAM(pVal);
     try
@@ -570,16 +570,16 @@ STDMETHODIMP CComPolygon::get_NoteGrip(VARIANT * pVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object.", IID_IComRebarPos, E_FAIL);
     }
     catch(const HRESULT hr)
     {
-        return Error(L"Invalid argument.", IID_IComPolygon, hr);
+        return Error(L"Invalid argument.", IID_IComRebarPos, hr);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::put_NoteGrip(VARIANT newVal)
+STDMETHODIMP CComRebarPos::put_NoteGrip(VARIANT newVal)
 {
     try
     {
@@ -598,16 +598,16 @@ STDMETHODIMP CComPolygon::put_NoteGrip(VARIANT newVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to set property.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
     }
     catch(const HRESULT hr)
     {
-        return Error(L"Invalid argument.", IID_IComPolygon, hr);
+        return Error(L"Invalid argument.", IID_IComRebarPos, hr);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::get_Pos(BSTR * pVal)
+STDMETHODIMP CComRebarPos::get_Pos(BSTR * pVal)
 {
     CHECKOUTPARAM(pVal);
     try
@@ -622,12 +622,12 @@ STDMETHODIMP CComPolygon::get_Pos(BSTR * pVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::put_Pos(BSTR newVal)
+STDMETHODIMP CComRebarPos::put_Pos(BSTR newVal)
 {
     try
     {
@@ -646,12 +646,12 @@ STDMETHODIMP CComPolygon::put_Pos(BSTR newVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to set property.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::get_Count(BSTR * pVal)
+STDMETHODIMP CComRebarPos::get_Count(BSTR * pVal)
 {
     CHECKOUTPARAM(pVal);
     try
@@ -666,12 +666,12 @@ STDMETHODIMP CComPolygon::get_Count(BSTR * pVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::put_Count(BSTR newVal)
+STDMETHODIMP CComRebarPos::put_Count(BSTR newVal)
 {
     try
     {
@@ -690,12 +690,12 @@ STDMETHODIMP CComPolygon::put_Count(BSTR newVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to set property.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::get_Diameter(BSTR * pVal)
+STDMETHODIMP CComRebarPos::get_Diameter(BSTR * pVal)
 {
     CHECKOUTPARAM(pVal);
     try
@@ -710,12 +710,12 @@ STDMETHODIMP CComPolygon::get_Diameter(BSTR * pVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::put_Diameter(BSTR newVal)
+STDMETHODIMP CComRebarPos::put_Diameter(BSTR newVal)
 {
     try
     {
@@ -734,12 +734,12 @@ STDMETHODIMP CComPolygon::put_Diameter(BSTR newVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to set property.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::get_Spacing(BSTR * pVal)
+STDMETHODIMP CComRebarPos::get_Spacing(BSTR * pVal)
 {
     CHECKOUTPARAM(pVal);
     try
@@ -754,12 +754,12 @@ STDMETHODIMP CComPolygon::get_Spacing(BSTR * pVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::put_Spacing(BSTR newVal)
+STDMETHODIMP CComRebarPos::put_Spacing(BSTR newVal)
 {
     try
     {
@@ -778,12 +778,12 @@ STDMETHODIMP CComPolygon::put_Spacing(BSTR newVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to set property.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::get_Multiplier(long * pVal)
+STDMETHODIMP CComRebarPos::get_Multiplier(long * pVal)
 {
     CHECKOUTPARAM(pVal);
     try
@@ -797,12 +797,12 @@ STDMETHODIMP CComPolygon::get_Multiplier(long * pVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::put_Multiplier(long newVal)
+STDMETHODIMP CComRebarPos::put_Multiplier(long newVal)
 {
     try
     {
@@ -821,12 +821,12 @@ STDMETHODIMP CComPolygon::put_Multiplier(long newVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to set property.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::get_ShowLength(VARIANT_BOOL * pVal)
+STDMETHODIMP CComRebarPos::get_ShowLength(VARIANT_BOOL * pVal)
 {
     CHECKOUTPARAM(pVal);
     try
@@ -840,12 +840,12 @@ STDMETHODIMP CComPolygon::get_ShowLength(VARIANT_BOOL * pVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::put_ShowLength(VARIANT_BOOL newVal)
+STDMETHODIMP CComRebarPos::put_ShowLength(VARIANT_BOOL newVal)
 {
     try
     {
@@ -864,12 +864,12 @@ STDMETHODIMP CComPolygon::put_ShowLength(VARIANT_BOOL newVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to set property.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::get_ShowMarkerOnly(VARIANT_BOOL * pVal)
+STDMETHODIMP CComRebarPos::get_ShowMarkerOnly(VARIANT_BOOL * pVal)
 {
     CHECKOUTPARAM(pVal);
     try
@@ -883,12 +883,12 @@ STDMETHODIMP CComPolygon::get_ShowMarkerOnly(VARIANT_BOOL * pVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::put_ShowMarkerOnly(VARIANT_BOOL newVal)
+STDMETHODIMP CComRebarPos::put_ShowMarkerOnly(VARIANT_BOOL newVal)
 {
     try
     {
@@ -907,12 +907,12 @@ STDMETHODIMP CComPolygon::put_ShowMarkerOnly(VARIANT_BOOL newVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to set property.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::get_Note(BSTR * pVal)
+STDMETHODIMP CComRebarPos::get_Note(BSTR * pVal)
 {
     CHECKOUTPARAM(pVal);
     try
@@ -927,12 +927,12 @@ STDMETHODIMP CComPolygon::get_Note(BSTR * pVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::put_Note(BSTR newVal)
+STDMETHODIMP CComRebarPos::put_Note(BSTR newVal)
 {
     try
     {
@@ -951,12 +951,12 @@ STDMETHODIMP CComPolygon::put_Note(BSTR newVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to set property.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::get_A(BSTR * pVal)
+STDMETHODIMP CComRebarPos::get_A(BSTR * pVal)
 {
     CHECKOUTPARAM(pVal);
     try
@@ -971,12 +971,12 @@ STDMETHODIMP CComPolygon::get_A(BSTR * pVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::put_A(BSTR newVal)
+STDMETHODIMP CComRebarPos::put_A(BSTR newVal)
 {
     try
     {
@@ -995,12 +995,12 @@ STDMETHODIMP CComPolygon::put_A(BSTR newVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to set property.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::get_B(BSTR * pVal)
+STDMETHODIMP CComRebarPos::get_B(BSTR * pVal)
 {
     CHECKOUTPARAM(pVal);
     try
@@ -1015,12 +1015,12 @@ STDMETHODIMP CComPolygon::get_B(BSTR * pVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::put_B(BSTR newVal)
+STDMETHODIMP CComRebarPos::put_B(BSTR newVal)
 {
     try
     {
@@ -1039,12 +1039,12 @@ STDMETHODIMP CComPolygon::put_B(BSTR newVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to set property.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::get_C(BSTR * pVal)
+STDMETHODIMP CComRebarPos::get_C(BSTR * pVal)
 {
     CHECKOUTPARAM(pVal);
     try
@@ -1059,12 +1059,12 @@ STDMETHODIMP CComPolygon::get_C(BSTR * pVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::put_C(BSTR newVal)
+STDMETHODIMP CComRebarPos::put_C(BSTR newVal)
 {
     try
     {
@@ -1083,12 +1083,12 @@ STDMETHODIMP CComPolygon::put_C(BSTR newVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to set property.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::get_D(BSTR * pVal)
+STDMETHODIMP CComRebarPos::get_D(BSTR * pVal)
 {
     CHECKOUTPARAM(pVal);
     try
@@ -1103,12 +1103,12 @@ STDMETHODIMP CComPolygon::get_D(BSTR * pVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::put_D(BSTR newVal)
+STDMETHODIMP CComRebarPos::put_D(BSTR newVal)
 {
     try
     {
@@ -1127,12 +1127,12 @@ STDMETHODIMP CComPolygon::put_D(BSTR newVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to set property.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::get_E(BSTR * pVal)
+STDMETHODIMP CComRebarPos::get_E(BSTR * pVal)
 {
     CHECKOUTPARAM(pVal);
     try
@@ -1147,12 +1147,12 @@ STDMETHODIMP CComPolygon::get_E(BSTR * pVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::put_E(BSTR newVal)
+STDMETHODIMP CComRebarPos::put_E(BSTR newVal)
 {
     try
     {
@@ -1171,12 +1171,12 @@ STDMETHODIMP CComPolygon::put_E(BSTR newVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to set property.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::get_F(BSTR * pVal)
+STDMETHODIMP CComRebarPos::get_F(BSTR * pVal)
 {
     CHECKOUTPARAM(pVal);
     try
@@ -1191,12 +1191,12 @@ STDMETHODIMP CComPolygon::get_F(BSTR * pVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::put_F(BSTR newVal)
+STDMETHODIMP CComRebarPos::put_F(BSTR newVal)
 {
     try
     {
@@ -1215,12 +1215,12 @@ STDMETHODIMP CComPolygon::put_F(BSTR newVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to set property.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::get_Length(BSTR * pVal)
+STDMETHODIMP CComRebarPos::get_Length(BSTR * pVal)
 {
     CHECKOUTPARAM(pVal);
     try
@@ -1235,12 +1235,12 @@ STDMETHODIMP CComPolygon::get_Length(BSTR * pVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::get_Shape(BSTR * pVal)
+STDMETHODIMP CComRebarPos::get_Shape(BSTR * pVal)
 {
 	CHECKOUTPARAM(pVal);
     try
@@ -1263,16 +1263,16 @@ STDMETHODIMP CComPolygon::get_Shape(BSTR * pVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object.", IID_IComRebarPos, E_FAIL);
     }
     catch(const HRESULT hr)
     {
-        return Error(L"Invalid argument.", IID_IComPolygon, hr);
+        return Error(L"Invalid argument.", IID_IComRebarPos, hr);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::put_Shape(BSTR newVal)
+STDMETHODIMP CComRebarPos::put_Shape(BSTR newVal)
 {
 	try
     {
@@ -1299,16 +1299,16 @@ STDMETHODIMP CComPolygon::put_Shape(BSTR newVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to set property.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
     }
     catch(const HRESULT hr)
     {
-        return Error(L"Invalid argument.", IID_IComPolygon, hr);
+        return Error(L"Invalid argument.", IID_IComRebarPos, hr);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::get_Group(BSTR * pVal)
+STDMETHODIMP CComRebarPos::get_Group(BSTR * pVal)
 {
 	CHECKOUTPARAM(pVal);
     try
@@ -1331,16 +1331,16 @@ STDMETHODIMP CComPolygon::get_Group(BSTR * pVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to open object.", IID_IComRebarPos, E_FAIL);
     }
     catch(const HRESULT hr)
     {
-        return Error(L"Invalid argument.", IID_IComPolygon, hr);
+        return Error(L"Invalid argument.", IID_IComRebarPos, hr);
     }
 	return S_OK;
 }
 
-STDMETHODIMP CComPolygon::put_Group(BSTR newVal)
+STDMETHODIMP CComRebarPos::put_Group(BSTR newVal)
 {
 	try
     {
@@ -1367,11 +1367,11 @@ STDMETHODIMP CComPolygon::put_Group(BSTR newVal)
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to set property.", IID_IComPolygon, E_FAIL);
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
     }
     catch(const HRESULT hr)
     {
-        return Error(L"Invalid argument.", IID_IComPolygon, hr);
+        return Error(L"Invalid argument.", IID_IComRebarPos, hr);
     }
 	return S_OK;
 }

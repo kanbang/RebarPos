@@ -95,7 +95,7 @@ END
 // REGISTRY
 //
 
-IDR_COMPOLYGON          REGISTRY DISCARDABLE    "RebarPos.rgs"
+IDR_COMREBARPOS          REGISTRY DISCARDABLE    "RebarPos.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //

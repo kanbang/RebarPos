@@ -19,7 +19,7 @@
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
 //
-// ComPolygon.h : Declaration of the CComPolygon
+// ComRebarPos.h : Declaration of the CComRebarPos
 
 #pragma once
 
@@ -50,33 +50,33 @@
 #define	DISPID_SHOWMARKERONLY		0x00000013
 
 /////////////////////////////////////////////////////////////////////////////
-// CComPolygon
-class ATL_NO_VTABLE CComPolygon : 
+// CComRebarPos
+class ATL_NO_VTABLE CComRebarPos : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CComPolygon, &CLSID_ComPolygon>,
+	public CComCoClass<CComRebarPos, &CLSID_ComRebarPos>,
 	public ISupportErrorInfo,
-	public IAcadEntityDispatchImpl<CComPolygon, &CLSID_ComPolygon, 
-                                   IComPolygon, &IID_IComPolygon, 
+	public IAcadEntityDispatchImpl<CComRebarPos, &CLSID_ComRebarPos, 
+                                   IComRebarPos, &IID_IComRebarPos, 
                                    &LIBID_COMPOLYLib>,
     //These are the OPM related interfaces. These interfaces
     //are usually not used by any other ObjectDBX host than 
     //AutoCAD, although they could be. AutoCAD uses them
     //to customize the display of this object's properties
     //in the Object Property Manager pane.
-    public IOPMPropertyExtensionImpl<CComPolygon>,
+    public IOPMPropertyExtensionImpl<CComRebarPos>,
     //If a property is VT_ARRAY then IOPMPropertyExpander is QueryInterface-d for
     public IOPMPropertyExpander
 {
 public:
-	CComPolygon()
+	CComRebarPos()
 	{
 	}
 
-DECLARE_REGISTRY_RESOURCEID(IDR_COMPOLYGON)
-DECLARE_NOT_AGGREGATABLE(CComPolygon)
+DECLARE_REGISTRY_RESOURCEID(IDR_COMREBARPOS)
+DECLARE_NOT_AGGREGATABLE(CComRebarPos)
 
-BEGIN_COM_MAP(CComPolygon)
-	COM_INTERFACE_ENTRY(IComPolygon)
+BEGIN_COM_MAP(CComRebarPos)
+	COM_INTERFACE_ENTRY(IComRebarPos)
 	COM_INTERFACE_ENTRY(IDispatch)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
     COM_INTERFACE_ENTRY(IAcadBaseObject)
@@ -103,7 +103,7 @@ END_COM_MAP()
     STDMETHOD(AddToDb)(AcDbObjectId& objId, AcDbObjectId ownerId = AcDbObjectId::kNull, TCHAR* keyName = NULL);
     STDMETHOD(CreateObject)(AcDbObjectId ownerId = AcDbObjectId::kNull, TCHAR *keyName = NULL);
 
-// IComPolygon
+// IComRebarPos
 public:
 	STDMETHOD(get_BasePoint)(/*[out, retval]*/ VARIANT *pVal);
 	STDMETHOD(put_BasePoint)(/*[in]*/ VARIANT newVal);

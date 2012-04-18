@@ -46,7 +46,7 @@
 CComModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
-    OBJECT_ENTRY(CLSID_ComPolygon, CComPolygon)
+    OBJECT_ENTRY(CLSID_ComRebarPos, CComRebarPos)
 END_OBJECT_MAP()
 
 /////////////////////////////////////////////////////////////////////////////

@@ -4,7 +4,7 @@
 // Used by compoly.rc
 //
 #define IDS_PROJNAME                    100
-#define IDR_COMPOLYGON                  101
+#define IDR_COMREBARPOS                  101
 #define IDS_OPM_NORMALXYZ               102
 
 // Next default values for new objects

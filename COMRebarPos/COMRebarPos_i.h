@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0500 */
-/* at Wed Apr 18 12:00:29 2012
+/* at Wed Apr 18 12:47:48 2012
  */
 /* Compiler settings for .\COMRebarPos.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -41,22 +41,22 @@
 
 /* Forward Declarations */ 
 
-#ifndef __IComPolygon_FWD_DEFINED__
-#define __IComPolygon_FWD_DEFINED__
-typedef interface IComPolygon IComPolygon;
-#endif 	/* __IComPolygon_FWD_DEFINED__ */
+#ifndef __IComRebarPos_FWD_DEFINED__
+#define __IComRebarPos_FWD_DEFINED__
+typedef interface IComRebarPos IComRebarPos;
+#endif 	/* __IComRebarPos_FWD_DEFINED__ */
 
 
-#ifndef __ComPolygon_FWD_DEFINED__
-#define __ComPolygon_FWD_DEFINED__
+#ifndef __ComRebarPos_FWD_DEFINED__
+#define __ComRebarPos_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class ComPolygon ComPolygon;
+typedef class ComRebarPos ComRebarPos;
 #else
-typedef struct ComPolygon ComPolygon;
+typedef struct ComRebarPos ComRebarPos;
 #endif /* __cplusplus */
 
-#endif 	/* __ComPolygon_FWD_DEFINED__ */
+#endif 	/* __ComRebarPos_FWD_DEFINED__ */
 
 
 #ifdef __cplusplus
@@ -74,19 +74,19 @@ extern "C"{
 
 EXTERN_C const IID LIBID_COMPOLYLib;
 
-#ifndef __IComPolygon_INTERFACE_DEFINED__
-#define __IComPolygon_INTERFACE_DEFINED__
+#ifndef __IComRebarPos_INTERFACE_DEFINED__
+#define __IComRebarPos_INTERFACE_DEFINED__
 
-/* interface IComPolygon */
+/* interface IComRebarPos */
 /* [unique][helpcontext][helpstring][dual][uuid][object] */ 
 
 
-EXTERN_C const IID IID_IComPolygon;
+EXTERN_C const IID IID_IComRebarPos;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
     MIDL_INTERFACE("4EB91FA1-8DD3-4DF9-9277-E0BA3EA5361F")
-    IComPolygon : public IAcadEntity
+    IComRebarPos : public IAcadEntity
     {
     public:
         virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_BasePoint( 
@@ -204,38 +204,38 @@ EXTERN_C const IID IID_IComPolygon;
     
 #else 	/* C style interface */
 
-    typedef struct IComPolygonVtbl
+    typedef struct IComRebarPosVtbl
     {
         BEGIN_INTERFACE
         
         /* [id][restricted][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ struct GUID *riid,
             /* [out][idldescattr] */ void **ppvObj,
             /* [retval][out] */ void *retval);
         
         /* [id][restricted][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *AddRef )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ unsigned long *retval);
         
         /* [id][restricted][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *Release )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ unsigned long *retval);
         
         /* [id][restricted][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [out][idldescattr] */ unsigned UINT *pctinfo,
             /* [retval][out] */ void *retval);
         
         /* [id][restricted][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ unsigned UINT itinfo,
             /* [in][idldescattr] */ unsigned long lcid,
             /* [out][idldescattr] */ void **pptinfo,
             /* [retval][out] */ void *retval);
         
         /* [id][restricted][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ struct GUID *riid,
             /* [in][idldescattr] */ signed char **rgszNames,
             /* [in][idldescattr] */ unsigned UINT cNames,
@@ -244,7 +244,7 @@ EXTERN_C const IID IID_IComPolygon;
             /* [retval][out] */ void *retval);
         
         /* [id][restricted][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ signed long dispidMember,
             /* [in][idldescattr] */ struct GUID *riid,
             /* [in][idldescattr] */ unsigned long lcid,
@@ -256,124 +256,124 @@ EXTERN_C const IID IID_IComPolygon;
             /* [retval][out] */ void *retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_Handle )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_ObjectName )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *retval);
         
         /* [id][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *GetXData )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ BSTR AppName,
             /* [out][idldescattr] */ VARIANT *XDataType,
             /* [out][idldescattr] */ VARIANT *XDataValue,
             /* [retval][out] */ void *retval);
         
         /* [id][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *SetXData )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ VARIANT XDataType,
             /* [in][idldescattr] */ VARIANT XDataValue,
             /* [retval][out] */ void *retval);
         
         /* [id][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *Delete )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ void *retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_ObjectID )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ LONG_PTR *retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_Application )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ IDispatch **retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_Database )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ IAcadDatabase **retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_HasExtensionDictionary )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BOOLEAN *retval);
         
         /* [id][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *GetExtensionDictionary )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ IAcadDictionary **retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_OwnerID )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ LONG_PTR *retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_Document )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ IDispatch **retval);
         
         /* [id][hidden][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *Erase )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ void *retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_ObjectID32 )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ signed long *retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_OwnerID32 )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ signed long *retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_TrueColor )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ IAcadAcCmColor **retval);
         
         /* [id][propput][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *put_TrueColor )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ IAcadAcCmColor *noname,
             /* [retval][out] */ void *retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_Layer )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *retval);
         
         /* [id][propput][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *put_Layer )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ BSTR noname,
             /* [retval][out] */ void *retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_Linetype )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *retval);
         
         /* [id][propput][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *put_Linetype )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ BSTR noname,
             /* [retval][out] */ void *retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_LinetypeScale )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ ACAD_NOUNITS *retval);
         
         /* [id][propput][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *put_LinetypeScale )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ ACAD_NOUNITS noname,
             /* [retval][out] */ void *retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BOOLEAN *retval);
         
         /* [id][propput][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *put_Visible )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ BOOLEAN noname,
             /* [retval][out] */ void *retval);
         
         /* [id][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *ArrayPolar )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ signed INT NumberOfObjects,
             /* [in][idldescattr] */ double AngleToFill,
             /* [in][idldescattr] */ VARIANT CenterPoint,
             /* [retval][out] */ VARIANT *retval);
         
         /* [id][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *ArrayRectangular )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ signed INT NumberOfRows,
             /* [in][idldescattr] */ signed INT NumberOfColumns,
             /* [in][idldescattr] */ signed INT NumberOfLevels,
@@ -383,275 +383,275 @@ EXTERN_C const IID IID_IComPolygon;
             /* [retval][out] */ VARIANT *retval);
         
         /* [id][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *Highlight )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ BOOLEAN HighlightFlag,
             /* [retval][out] */ void *retval);
         
         /* [id][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *Copy )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ IDispatch **retval);
         
         /* [id][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *Move )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ VARIANT FromPoint,
             /* [in][idldescattr] */ VARIANT ToPoint,
             /* [retval][out] */ void *retval);
         
         /* [id][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *Rotate )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ VARIANT BasePoint,
             /* [in][idldescattr] */ double RotationAngle,
             /* [retval][out] */ void *retval);
         
         /* [id][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *Rotate3D )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ VARIANT Point1,
             /* [in][idldescattr] */ VARIANT Point2,
             /* [in][idldescattr] */ double RotationAngle,
             /* [retval][out] */ void *retval);
         
         /* [id][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *Mirror )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ VARIANT Point1,
             /* [in][idldescattr] */ VARIANT Point2,
             /* [retval][out] */ IDispatch **retval);
         
         /* [id][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *Mirror3D )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ VARIANT Point1,
             /* [in][idldescattr] */ VARIANT Point2,
             /* [in][idldescattr] */ VARIANT point3,
             /* [retval][out] */ IDispatch **retval);
         
         /* [id][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *ScaleEntity )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ VARIANT BasePoint,
             /* [in][idldescattr] */ double ScaleFactor,
             /* [retval][out] */ void *retval);
         
         /* [id][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *TransformBy )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ VARIANT TransformationMatrix,
             /* [retval][out] */ void *retval);
         
         /* [id][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *Update )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ void *retval);
         
         /* [id][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *GetBoundingBox )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [out][idldescattr] */ VARIANT *MinPoint,
             /* [out][idldescattr] */ VARIANT *MaxPoint,
             /* [retval][out] */ void *retval);
         
         /* [id][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *IntersectWith )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ IDispatch *IntersectObject,
             /* [in][idldescattr] */ enum AcExtendOption option,
             /* [retval][out] */ VARIANT *retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_PlotStyleName )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *retval);
         
         /* [id][propput][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *put_PlotStyleName )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ BSTR noname,
             /* [retval][out] */ void *retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_Lineweight )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ ACAD_LWEIGHT *retval);
         
         /* [id][propput][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *put_Lineweight )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ ACAD_LWEIGHT noname,
             /* [retval][out] */ void *retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_Hyperlinks )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ IAcadHyperlinks **retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_Material )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *retval);
         
         /* [id][propput][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *put_Material )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ BSTR noname,
             /* [retval][out] */ void *retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_EntityName )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_EntityType )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ signed long *retval);
         
         /* [id][propget][hidden][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_color )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ ACAD_COLOR *retval);
         
         /* [id][propput][hidden][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *put_color )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in][idldescattr] */ ACAD_COLOR noname,
             /* [retval][out] */ void *retval);
         
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_BasePoint )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ VARIANT *pVal);
         
         /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_BasePoint )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in] */ VARIANT newVal);
         
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_NoteGrip )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ VARIANT *pVal);
         
         /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_NoteGrip )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in] */ VARIANT newVal);
         
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Pos )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *pVal);
         
         /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Pos )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in] */ BSTR newVal);
         
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *pVal);
         
         /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Count )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in] */ BSTR newVal);
         
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Diameter )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *pVal);
         
         /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Diameter )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in] */ BSTR newVal);
         
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Spacing )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *pVal);
         
         /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Spacing )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in] */ BSTR newVal);
         
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Multiplier )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ long *pVal);
         
         /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Multiplier )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in] */ long newVal);
         
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_ShowLength )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ VARIANT_BOOL *pVal);
         
         /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_ShowLength )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in] */ VARIANT_BOOL newVal);
         
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Note )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *pVal);
         
         /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Note )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in] */ BSTR newVal);
         
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_A )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *pVal);
         
         /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_A )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in] */ BSTR newVal);
         
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_B )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *pVal);
         
         /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_B )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in] */ BSTR newVal);
         
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_C )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *pVal);
         
         /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_C )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in] */ BSTR newVal);
         
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_D )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *pVal);
         
         /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_D )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in] */ BSTR newVal);
         
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_E )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *pVal);
         
         /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_E )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in] */ BSTR newVal);
         
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_F )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *pVal);
         
         /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_F )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in] */ BSTR newVal);
         
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Length )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *pVal);
         
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Shape )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *pVal);
         
         /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Shape )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in] */ BSTR newVal);
         
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Group )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ BSTR *pVal);
         
         /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Group )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in] */ BSTR newVal);
         
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_ShowMarkerOnly )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [retval][out] */ VARIANT_BOOL *pVal);
         
         /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_ShowMarkerOnly )( 
-            IComPolygon * This,
+            IComRebarPos * This,
             /* [in] */ VARIANT_BOOL newVal);
         
         END_INTERFACE
-    } IComPolygonVtbl;
+    } IComRebarPosVtbl;
 
-    interface IComPolygon
+    interface IComRebarPos
     {
-        CONST_VTBL struct IComPolygonVtbl *lpVtbl;
+        CONST_VTBL struct IComRebarPosVtbl *lpVtbl;
     };
 
     
@@ -659,287 +659,287 @@ EXTERN_C const IID IID_IComPolygon;
 #ifdef COBJMACROS
 
 
-#define IComPolygon_QueryInterface(This,riid,ppvObj,retval)	\
+#define IComRebarPos_QueryInterface(This,riid,ppvObj,retval)	\
     ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObj,retval) ) 
 
-#define IComPolygon_AddRef(This,retval)	\
+#define IComRebarPos_AddRef(This,retval)	\
     ( (This)->lpVtbl -> AddRef(This,retval) ) 
 
-#define IComPolygon_Release(This,retval)	\
+#define IComRebarPos_Release(This,retval)	\
     ( (This)->lpVtbl -> Release(This,retval) ) 
 
-#define IComPolygon_GetTypeInfoCount(This,pctinfo,retval)	\
+#define IComRebarPos_GetTypeInfoCount(This,pctinfo,retval)	\
     ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo,retval) ) 
 
-#define IComPolygon_GetTypeInfo(This,itinfo,lcid,pptinfo,retval)	\
+#define IComRebarPos_GetTypeInfo(This,itinfo,lcid,pptinfo,retval)	\
     ( (This)->lpVtbl -> GetTypeInfo(This,itinfo,lcid,pptinfo,retval) ) 
 
-#define IComPolygon_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgdispid,retval)	\
+#define IComRebarPos_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgdispid,retval)	\
     ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgdispid,retval) ) 
 
-#define IComPolygon_Invoke(This,dispidMember,riid,lcid,wFlags,pdispparams,pvarResult,pexcepinfo,puArgErr,retval)	\
+#define IComRebarPos_Invoke(This,dispidMember,riid,lcid,wFlags,pdispparams,pvarResult,pexcepinfo,puArgErr,retval)	\
     ( (This)->lpVtbl -> Invoke(This,dispidMember,riid,lcid,wFlags,pdispparams,pvarResult,pexcepinfo,puArgErr,retval) ) 
 
-#define IComPolygon_get_Handle(This,retval)	\
+#define IComRebarPos_get_Handle(This,retval)	\
     ( (This)->lpVtbl -> get_Handle(This,retval) ) 
 
-#define IComPolygon_get_ObjectName(This,retval)	\
+#define IComRebarPos_get_ObjectName(This,retval)	\
     ( (This)->lpVtbl -> get_ObjectName(This,retval) ) 
 
-#define IComPolygon_GetXData(This,AppName,XDataType,XDataValue,retval)	\
+#define IComRebarPos_GetXData(This,AppName,XDataType,XDataValue,retval)	\
     ( (This)->lpVtbl -> GetXData(This,AppName,XDataType,XDataValue,retval) ) 
 
-#define IComPolygon_SetXData(This,XDataType,XDataValue,retval)	\
+#define IComRebarPos_SetXData(This,XDataType,XDataValue,retval)	\
     ( (This)->lpVtbl -> SetXData(This,XDataType,XDataValue,retval) ) 
 
-#define IComPolygon_Delete(This,retval)	\
+#define IComRebarPos_Delete(This,retval)	\
     ( (This)->lpVtbl -> Delete(This,retval) ) 
 
-#define IComPolygon_get_ObjectID(This,retval)	\
+#define IComRebarPos_get_ObjectID(This,retval)	\
     ( (This)->lpVtbl -> get_ObjectID(This,retval) ) 
 
-#define IComPolygon_get_Application(This,retval)	\
+#define IComRebarPos_get_Application(This,retval)	\
     ( (This)->lpVtbl -> get_Application(This,retval) ) 
 
-#define IComPolygon_get_Database(This,retval)	\
+#define IComRebarPos_get_Database(This,retval)	\
     ( (This)->lpVtbl -> get_Database(This,retval) ) 
 
-#define IComPolygon_get_HasExtensionDictionary(This,retval)	\
+#define IComRebarPos_get_HasExtensionDictionary(This,retval)	\
     ( (This)->lpVtbl -> get_HasExtensionDictionary(This,retval) ) 
 
-#define IComPolygon_GetExtensionDictionary(This,retval)	\
+#define IComRebarPos_GetExtensionDictionary(This,retval)	\
     ( (This)->lpVtbl -> GetExtensionDictionary(This,retval) ) 
 
-#define IComPolygon_get_OwnerID(This,retval)	\
+#define IComRebarPos_get_OwnerID(This,retval)	\
     ( (This)->lpVtbl -> get_OwnerID(This,retval) ) 
 
-#define IComPolygon_get_Document(This,retval)	\
+#define IComRebarPos_get_Document(This,retval)	\
     ( (This)->lpVtbl -> get_Document(This,retval) ) 
 
-#define IComPolygon_Erase(This,retval)	\
+#define IComRebarPos_Erase(This,retval)	\
     ( (This)->lpVtbl -> Erase(This,retval) ) 
 
-#define IComPolygon_get_ObjectID32(This,retval)	\
+#define IComRebarPos_get_ObjectID32(This,retval)	\
     ( (This)->lpVtbl -> get_ObjectID32(This,retval) ) 
 
-#define IComPolygon_get_OwnerID32(This,retval)	\
+#define IComRebarPos_get_OwnerID32(This,retval)	\
     ( (This)->lpVtbl -> get_OwnerID32(This,retval) ) 
 
-#define IComPolygon_get_TrueColor(This,retval)	\
+#define IComRebarPos_get_TrueColor(This,retval)	\
     ( (This)->lpVtbl -> get_TrueColor(This,retval) ) 
 
-#define IComPolygon_put_TrueColor(This,noname,retval)	\
+#define IComRebarPos_put_TrueColor(This,noname,retval)	\
     ( (This)->lpVtbl -> put_TrueColor(This,noname,retval) ) 
 
-#define IComPolygon_get_Layer(This,retval)	\
+#define IComRebarPos_get_Layer(This,retval)	\
     ( (This)->lpVtbl -> get_Layer(This,retval) ) 
 
-#define IComPolygon_put_Layer(This,noname,retval)	\
+#define IComRebarPos_put_Layer(This,noname,retval)	\
     ( (This)->lpVtbl -> put_Layer(This,noname,retval) ) 
 
-#define IComPolygon_get_Linetype(This,retval)	\
+#define IComRebarPos_get_Linetype(This,retval)	\
     ( (This)->lpVtbl -> get_Linetype(This,retval) ) 
 
-#define IComPolygon_put_Linetype(This,noname,retval)	\
+#define IComRebarPos_put_Linetype(This,noname,retval)	\
     ( (This)->lpVtbl -> put_Linetype(This,noname,retval) ) 
 
-#define IComPolygon_get_LinetypeScale(This,retval)	\
+#define IComRebarPos_get_LinetypeScale(This,retval)	\
     ( (This)->lpVtbl -> get_LinetypeScale(This,retval) ) 
 
-#define IComPolygon_put_LinetypeScale(This,noname,retval)	\
+#define IComRebarPos_put_LinetypeScale(This,noname,retval)	\
     ( (This)->lpVtbl -> put_LinetypeScale(This,noname,retval) ) 
 
-#define IComPolygon_get_Visible(This,retval)	\
+#define IComRebarPos_get_Visible(This,retval)	\
     ( (This)->lpVtbl -> get_Visible(This,retval) ) 
 
-#define IComPolygon_put_Visible(This,noname,retval)	\
+#define IComRebarPos_put_Visible(This,noname,retval)	\
     ( (This)->lpVtbl -> put_Visible(This,noname,retval) ) 
 
-#define IComPolygon_ArrayPolar(This,NumberOfObjects,AngleToFill,CenterPoint,retval)	\
+#define IComRebarPos_ArrayPolar(This,NumberOfObjects,AngleToFill,CenterPoint,retval)	\
     ( (This)->lpVtbl -> ArrayPolar(This,NumberOfObjects,AngleToFill,CenterPoint,retval) ) 
 
-#define IComPolygon_ArrayRectangular(This,NumberOfRows,NumberOfColumns,NumberOfLevels,DistBetweenRows,DistBetweenCols,DistBetweenLevels,retval)	\
+#define IComRebarPos_ArrayRectangular(This,NumberOfRows,NumberOfColumns,NumberOfLevels,DistBetweenRows,DistBetweenCols,DistBetweenLevels,retval)	\
     ( (This)->lpVtbl -> ArrayRectangular(This,NumberOfRows,NumberOfColumns,NumberOfLevels,DistBetweenRows,DistBetweenCols,DistBetweenLevels,retval) ) 
 
-#define IComPolygon_Highlight(This,HighlightFlag,retval)	\
+#define IComRebarPos_Highlight(This,HighlightFlag,retval)	\
     ( (This)->lpVtbl -> Highlight(This,HighlightFlag,retval) ) 
 
-#define IComPolygon_Copy(This,retval)	\
+#define IComRebarPos_Copy(This,retval)	\
     ( (This)->lpVtbl -> Copy(This,retval) ) 
 
-#define IComPolygon_Move(This,FromPoint,ToPoint,retval)	\
+#define IComRebarPos_Move(This,FromPoint,ToPoint,retval)	\
     ( (This)->lpVtbl -> Move(This,FromPoint,ToPoint,retval) ) 
 
-#define IComPolygon_Rotate(This,BasePoint,RotationAngle,retval)	\
+#define IComRebarPos_Rotate(This,BasePoint,RotationAngle,retval)	\
     ( (This)->lpVtbl -> Rotate(This,BasePoint,RotationAngle,retval) ) 
 
-#define IComPolygon_Rotate3D(This,Point1,Point2,RotationAngle,retval)	\
+#define IComRebarPos_Rotate3D(This,Point1,Point2,RotationAngle,retval)	\
     ( (This)->lpVtbl -> Rotate3D(This,Point1,Point2,RotationAngle,retval) ) 
 
-#define IComPolygon_Mirror(This,Point1,Point2,retval)	\
+#define IComRebarPos_Mirror(This,Point1,Point2,retval)	\
     ( (This)->lpVtbl -> Mirror(This,Point1,Point2,retval) ) 
 
-#define IComPolygon_Mirror3D(This,Point1,Point2,point3,retval)	\
+#define IComRebarPos_Mirror3D(This,Point1,Point2,point3,retval)	\
     ( (This)->lpVtbl -> Mirror3D(This,Point1,Point2,point3,retval) ) 
 
-#define IComPolygon_ScaleEntity(This,BasePoint,ScaleFactor,retval)	\
+#define IComRebarPos_ScaleEntity(This,BasePoint,ScaleFactor,retval)	\
     ( (This)->lpVtbl -> ScaleEntity(This,BasePoint,ScaleFactor,retval) ) 
 
-#define IComPolygon_TransformBy(This,TransformationMatrix,retval)	\
+#define IComRebarPos_TransformBy(This,TransformationMatrix,retval)	\
     ( (This)->lpVtbl -> TransformBy(This,TransformationMatrix,retval) ) 
 
-#define IComPolygon_Update(This,retval)	\
+#define IComRebarPos_Update(This,retval)	\
     ( (This)->lpVtbl -> Update(This,retval) ) 
 
-#define IComPolygon_GetBoundingBox(This,MinPoint,MaxPoint,retval)	\
+#define IComRebarPos_GetBoundingBox(This,MinPoint,MaxPoint,retval)	\
     ( (This)->lpVtbl -> GetBoundingBox(This,MinPoint,MaxPoint,retval) ) 
 
-#define IComPolygon_IntersectWith(This,IntersectObject,option,retval)	\
+#define IComRebarPos_IntersectWith(This,IntersectObject,option,retval)	\
     ( (This)->lpVtbl -> IntersectWith(This,IntersectObject,option,retval) ) 
 
-#define IComPolygon_get_PlotStyleName(This,retval)	\
+#define IComRebarPos_get_PlotStyleName(This,retval)	\
     ( (This)->lpVtbl -> get_PlotStyleName(This,retval) ) 
 
-#define IComPolygon_put_PlotStyleName(This,noname,retval)	\
+#define IComRebarPos_put_PlotStyleName(This,noname,retval)	\
     ( (This)->lpVtbl -> put_PlotStyleName(This,noname,retval) ) 
 
-#define IComPolygon_get_Lineweight(This,retval)	\
+#define IComRebarPos_get_Lineweight(This,retval)	\
     ( (This)->lpVtbl -> get_Lineweight(This,retval) ) 
 
-#define IComPolygon_put_Lineweight(This,noname,retval)	\
+#define IComRebarPos_put_Lineweight(This,noname,retval)	\
     ( (This)->lpVtbl -> put_Lineweight(This,noname,retval) ) 
 
-#define IComPolygon_get_Hyperlinks(This,retval)	\
+#define IComRebarPos_get_Hyperlinks(This,retval)	\
     ( (This)->lpVtbl -> get_Hyperlinks(This,retval) ) 
 
-#define IComPolygon_get_Material(This,retval)	\
+#define IComRebarPos_get_Material(This,retval)	\
     ( (This)->lpVtbl -> get_Material(This,retval) ) 
 
-#define IComPolygon_put_Material(This,noname,retval)	\
+#define IComRebarPos_put_Material(This,noname,retval)	\
     ( (This)->lpVtbl -> put_Material(This,noname,retval) ) 
 
-#define IComPolygon_get_EntityName(This,retval)	\
+#define IComRebarPos_get_EntityName(This,retval)	\
     ( (This)->lpVtbl -> get_EntityName(This,retval) ) 
 
-#define IComPolygon_get_EntityType(This,retval)	\
+#define IComRebarPos_get_EntityType(This,retval)	\
     ( (This)->lpVtbl -> get_EntityType(This,retval) ) 
 
-#define IComPolygon_get_color(This,retval)	\
+#define IComRebarPos_get_color(This,retval)	\
     ( (This)->lpVtbl -> get_color(This,retval) ) 
 
-#define IComPolygon_put_color(This,noname,retval)	\
+#define IComRebarPos_put_color(This,noname,retval)	\
     ( (This)->lpVtbl -> put_color(This,noname,retval) ) 
 
 
-#define IComPolygon_get_BasePoint(This,pVal)	\
+#define IComRebarPos_get_BasePoint(This,pVal)	\
     ( (This)->lpVtbl -> get_BasePoint(This,pVal) ) 
 
-#define IComPolygon_put_BasePoint(This,newVal)	\
+#define IComRebarPos_put_BasePoint(This,newVal)	\
     ( (This)->lpVtbl -> put_BasePoint(This,newVal) ) 
 
-#define IComPolygon_get_NoteGrip(This,pVal)	\
+#define IComRebarPos_get_NoteGrip(This,pVal)	\
     ( (This)->lpVtbl -> get_NoteGrip(This,pVal) ) 
 
-#define IComPolygon_put_NoteGrip(This,newVal)	\
+#define IComRebarPos_put_NoteGrip(This,newVal)	\
     ( (This)->lpVtbl -> put_NoteGrip(This,newVal) ) 
 
-#define IComPolygon_get_Pos(This,pVal)	\
+#define IComRebarPos_get_Pos(This,pVal)	\
     ( (This)->lpVtbl -> get_Pos(This,pVal) ) 
 
-#define IComPolygon_put_Pos(This,newVal)	\
+#define IComRebarPos_put_Pos(This,newVal)	\
     ( (This)->lpVtbl -> put_Pos(This,newVal) ) 
 
-#define IComPolygon_get_Count(This,pVal)	\
+#define IComRebarPos_get_Count(This,pVal)	\
     ( (This)->lpVtbl -> get_Count(This,pVal) ) 
 
-#define IComPolygon_put_Count(This,newVal)	\
+#define IComRebarPos_put_Count(This,newVal)	\
     ( (This)->lpVtbl -> put_Count(This,newVal) ) 
 
-#define IComPolygon_get_Diameter(This,pVal)	\
+#define IComRebarPos_get_Diameter(This,pVal)	\
     ( (This)->lpVtbl -> get_Diameter(This,pVal) ) 
 
-#define IComPolygon_put_Diameter(This,newVal)	\
+#define IComRebarPos_put_Diameter(This,newVal)	\
     ( (This)->lpVtbl -> put_Diameter(This,newVal) ) 
 
-#define IComPolygon_get_Spacing(This,pVal)	\
+#define IComRebarPos_get_Spacing(This,pVal)	\
     ( (This)->lpVtbl -> get_Spacing(This,pVal) ) 
 
-#define IComPolygon_put_Spacing(This,newVal)	\
+#define IComRebarPos_put_Spacing(This,newVal)	\
     ( (This)->lpVtbl -> put_Spacing(This,newVal) ) 
 
-#define IComPolygon_get_Multiplier(This,pVal)	\
+#define IComRebarPos_get_Multiplier(This,pVal)	\
     ( (This)->lpVtbl -> get_Multiplier(This,pVal) ) 
 
-#define IComPolygon_put_Multiplier(This,newVal)	\
+#define IComRebarPos_put_Multiplier(This,newVal)	\
     ( (This)->lpVtbl -> put_Multiplier(This,newVal) ) 
 
-#define IComPolygon_get_ShowLength(This,pVal)	\
+#define IComRebarPos_get_ShowLength(This,pVal)	\
     ( (This)->lpVtbl -> get_ShowLength(This,pVal) ) 
 
-#define IComPolygon_put_ShowLength(This,newVal)	\
+#define IComRebarPos_put_ShowLength(This,newVal)	\
     ( (This)->lpVtbl -> put_ShowLength(This,newVal) ) 
 
-#define IComPolygon_get_Note(This,pVal)	\
+#define IComRebarPos_get_Note(This,pVal)	\
     ( (This)->lpVtbl -> get_Note(This,pVal) ) 
 
-#define IComPolygon_put_Note(This,newVal)	\
+#define IComRebarPos_put_Note(This,newVal)	\
     ( (This)->lpVtbl -> put_Note(This,newVal) ) 
 
-#define IComPolygon_get_A(This,pVal)	\
+#define IComRebarPos_get_A(This,pVal)	\
     ( (This)->lpVtbl -> get_A(This,pVal) ) 
 
-#define IComPolygon_put_A(This,newVal)	\
+#define IComRebarPos_put_A(This,newVal)	\
     ( (This)->lpVtbl -> put_A(This,newVal) ) 
 
-#define IComPolygon_get_B(This,pVal)	\
+#define IComRebarPos_get_B(This,pVal)	\
     ( (This)->lpVtbl -> get_B(This,pVal) ) 
 
-#define IComPolygon_put_B(This,newVal)	\
+#define IComRebarPos_put_B(This,newVal)	\
     ( (This)->lpVtbl -> put_B(This,newVal) ) 
 
-#define IComPolygon_get_C(This,pVal)	\
+#define IComRebarPos_get_C(This,pVal)	\
     ( (This)->lpVtbl -> get_C(This,pVal) ) 
 
-#define IComPolygon_put_C(This,newVal)	\
+#define IComRebarPos_put_C(This,newVal)	\
     ( (This)->lpVtbl -> put_C(This,newVal) ) 
 
-#define IComPolygon_get_D(This,pVal)	\
+#define IComRebarPos_get_D(This,pVal)	\
     ( (This)->lpVtbl -> get_D(This,pVal) ) 
 
-#define IComPolygon_put_D(This,newVal)	\
+#define IComRebarPos_put_D(This,newVal)	\
     ( (This)->lpVtbl -> put_D(This,newVal) ) 
 
-#define IComPolygon_get_E(This,pVal)	\
+#define IComRebarPos_get_E(This,pVal)	\
     ( (This)->lpVtbl -> get_E(This,pVal) ) 
 
-#define IComPolygon_put_E(This,newVal)	\
+#define IComRebarPos_put_E(This,newVal)	\
     ( (This)->lpVtbl -> put_E(This,newVal) ) 
 
-#define IComPolygon_get_F(This,pVal)	\
+#define IComRebarPos_get_F(This,pVal)	\
     ( (This)->lpVtbl -> get_F(This,pVal) ) 
 
-#define IComPolygon_put_F(This,newVal)	\
+#define IComRebarPos_put_F(This,newVal)	\
     ( (This)->lpVtbl -> put_F(This,newVal) ) 
 
-#define IComPolygon_get_Length(This,pVal)	\
+#define IComRebarPos_get_Length(This,pVal)	\
     ( (This)->lpVtbl -> get_Length(This,pVal) ) 
 
-#define IComPolygon_get_Shape(This,pVal)	\
+#define IComRebarPos_get_Shape(This,pVal)	\
     ( (This)->lpVtbl -> get_Shape(This,pVal) ) 
 
-#define IComPolygon_put_Shape(This,newVal)	\
+#define IComRebarPos_put_Shape(This,newVal)	\
     ( (This)->lpVtbl -> put_Shape(This,newVal) ) 
 
-#define IComPolygon_get_Group(This,pVal)	\
+#define IComRebarPos_get_Group(This,pVal)	\
     ( (This)->lpVtbl -> get_Group(This,pVal) ) 
 
-#define IComPolygon_put_Group(This,newVal)	\
+#define IComRebarPos_put_Group(This,newVal)	\
     ( (This)->lpVtbl -> put_Group(This,newVal) ) 
 
-#define IComPolygon_get_ShowMarkerOnly(This,pVal)	\
+#define IComRebarPos_get_ShowMarkerOnly(This,pVal)	\
     ( (This)->lpVtbl -> get_ShowMarkerOnly(This,pVal) ) 
 
-#define IComPolygon_put_ShowMarkerOnly(This,newVal)	\
+#define IComRebarPos_put_ShowMarkerOnly(This,newVal)	\
     ( (This)->lpVtbl -> put_ShowMarkerOnly(This,newVal) ) 
 
 #endif /* COBJMACROS */
@@ -950,15 +950,15 @@ EXTERN_C const IID IID_IComPolygon;
 
 
 
-#endif 	/* __IComPolygon_INTERFACE_DEFINED__ */
+#endif 	/* __IComRebarPos_INTERFACE_DEFINED__ */
 
 
-EXTERN_C const CLSID CLSID_ComPolygon;
+EXTERN_C const CLSID CLSID_ComRebarPos;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("6421F67D-6A0A-4CA4-85BA-F11A0852A656")
-ComPolygon;
+ComRebarPos;
 #endif
 #endif /* __COMPOLYLib_LIBRARY_DEFINED__ */
 
