@@ -38,15 +38,15 @@
 #define	DISPID_MULTIPLIER		0x00000007
 #define	DISPID_SHOWLENGTH		0x00000008
 #define	DISPID_NOTE		0x00000009
-#define	DISPID_A		0x00000010
-#define	DISPID_B		0x00000011
-#define	DISPID_C		0x00000012
-#define	DISPID_D		0x00000013
-#define	DISPID_E		0x00000014
-#define	DISPID_F		0x00000015
-#define	DISPID_LENGTH		0x00000016
-#define	DISPID_SHAPE		0x00000017
-#define	DISPID_GROUP		0x00000018
+#define	DISPID_A		0x0000000A
+#define	DISPID_B		0x0000000B
+#define	DISPID_C		0x0000000C
+#define	DISPID_D		0x0000000D
+#define	DISPID_E		0x0000000E
+#define	DISPID_F		0x0000000F
+#define	DISPID_LENGTH		0x00000010
+#define	DISPID_SHAPE		0x00000011
+#define	DISPID_GROUP		0x00000012
 
 /////////////////////////////////////////////////////////////////////////////
 // CComPolygon
@@ -171,6 +171,16 @@ END_OPMPROP_MAP()
                            /* [in]  */ LCID lcid,
                            /* [out] */ BSTR* pbstrName) { return S_FALSE;}
 
+    //Override to make property read-only
+	STDMETHOD(Editable)( 
+		/* [in] */ DISPID dispID,
+		/* [out] */ BOOL __RPC_FAR *bEditable);
+
+    //Override to hide the property from display
+	STDMETHOD(ShowProperty)(
+		/* [in] */ DISPID dispID, 
+		/* [out] */ BOOL *pShow);
+
     virtual HINSTANCE GetResourceInstance()
     {
         return _Module.GetResourceInstance();
@@ -179,29 +189,29 @@ END_OPMPROP_MAP()
 	STDMETHOD(GetElementValue)(
 		/* [in] */ DISPID dispID,
 		/* [in] */ DWORD dwCookie,
-		/* [out] */ VARIANT * pVarOut) ;
+		/* [out] */ VARIANT * pVarOut);
 
     //Used for property expansion (currently variant types)
 	STDMETHOD(SetElementValue)(
 		/* [in] */ DISPID dispID,
 		/* [in] */ DWORD dwCookie,
-		/* [in] */ VARIANT VarIn) ;       
+		/* [in] */ VARIANT VarIn);       
 
     //Used for property expansion (currently variant types)
 	STDMETHOD(GetElementStrings)( 
 		/* [in] */ DISPID dispID,
 		/* [out] */ OPMLPOLESTR __RPC_FAR *pCaStringsOut,
-		/* [out] */ OPMDWORD __RPC_FAR *pCaCookiesOut) ;
+		/* [out] */ OPMDWORD __RPC_FAR *pCaCookiesOut);
 
     //Used for property expansion (currently variant types)
     STDMETHOD(GetElementGrouping)(
         /* [in] */ DISPID dispID,
-		/* [out] */ short *groupingNumber) ;
+		/* [out] */ short *groupingNumber);
 
     //Used for property expansion (currently variant types)
     STDMETHOD(GetGroupCount)(
         /* [in] */ DISPID dispID,
-		/* [out] */ long *nGroupCnt) ;
+		/* [out] */ long *nGroupCnt);
     STDMETHOD(GetPredefinedStrings)(
         /* [in] */ DISPID dispID,
         /* [out] */ CALPOLESTR *pCaStringsOut,

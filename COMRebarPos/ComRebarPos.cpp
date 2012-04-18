@@ -70,6 +70,66 @@ STDMETHODIMP CComPolygon::InterfaceSupportsErrorInfo(REFIID riid)
 	return S_FALSE;
 }
 
+//Override to make property read-only
+STDMETHODIMP CComPolygon::Editable( 
+	/* [in] */ DISPID dispID,
+	/* [out] */ BOOL __RPC_FAR *bEditable)
+{
+	return E_NOTIMPL;
+}
+
+//Override to hide the property from display
+STDMETHODIMP CComPolygon::ShowProperty(
+	/* [in] */ DISPID dispID, 
+	/* [out] */ BOOL *pShow)
+{
+	if(dispID >= DISPID_A && dispID <= DISPID_F)
+	{
+		try
+		{
+			Acad::ErrorStatus es;
+			AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead, Adesk::kTrue);
+			if((es = pPoly.openStatus()) != Acad::eOk)
+				throw es;
+
+			ACHAR* len = NULL;
+			switch(dispID)
+			{
+			case DISPID_A:
+		        acutUpdString(pPoly->A(), len);
+				break;
+			case DISPID_B:
+		        acutUpdString(pPoly->B(), len);
+				break;
+			case DISPID_C:
+		        acutUpdString(pPoly->C(), len);
+				break;
+			case DISPID_D:
+		        acutUpdString(pPoly->D(), len);
+				break;
+			case DISPID_E:
+		        acutUpdString(pPoly->E(), len);
+				break;
+			case DISPID_F:
+		        acutUpdString(pPoly->F(), len);
+				break;
+			default:
+				;
+			}
+
+			*pShow = (len != NULL) && (len[0] != _T('\0'));
+			acutDelString(len);
+			return S_OK;
+		}
+		catch(const Acad::ErrorStatus)
+		{
+			return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
+		}
+	}
+
+	return E_NOTIMPL;
+}
+
 //This is used to get the value for an element in a group.
 //The element is identified by the dwCookie parameter
 STDMETHODIMP CComPolygon::GetElementValue(
@@ -113,11 +173,11 @@ STDMETHODIMP CComPolygon::GetElementValue(
     }
     catch(const Acad::ErrorStatus)
     {
-        return Error(L"Failed to open object",IID_IComPolygon,E_FAIL);
+        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
     }
     catch(const HRESULT hr)
     {
-        return Error(L"Invalid argument.",IID_IComPolygon,hr);
+        return Error(L"Invalid argument." ,IID_IComPolygon, hr);
     }
 
 	return S_OK;

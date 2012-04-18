@@ -94,6 +94,8 @@ void polyCommand()
     
 	poly->setBasePoint(asPnt3d(center));
 	poly->setPos(nameBuf);
+	poly->setA(_T("100"));
+	poly->setB(_T("20"));
     
     poly->setDatabaseDefaults(acdbHostApplicationServices()->workingDatabase());
     postToDb(poly);
