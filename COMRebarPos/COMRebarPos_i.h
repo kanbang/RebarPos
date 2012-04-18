@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0500 */
-/* at Wed Apr 18 11:12:44 2012
+/* at Wed Apr 18 12:00:29 2012
  */
 /* Compiler settings for .\COMRebarPos.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -193,6 +193,12 @@ EXTERN_C const IID IID_IComPolygon;
         
         virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_Group( 
             /* [in] */ BSTR newVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_ShowMarkerOnly( 
+            /* [retval][out] */ VARIANT_BOOL *pVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_ShowMarkerOnly( 
+            /* [in] */ VARIANT_BOOL newVal) = 0;
         
     };
     
@@ -632,6 +638,14 @@ EXTERN_C const IID IID_IComPolygon;
             IComPolygon * This,
             /* [in] */ BSTR newVal);
         
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_ShowMarkerOnly )( 
+            IComPolygon * This,
+            /* [retval][out] */ VARIANT_BOOL *pVal);
+        
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_ShowMarkerOnly )( 
+            IComPolygon * This,
+            /* [in] */ VARIANT_BOOL newVal);
+        
         END_INTERFACE
     } IComPolygonVtbl;
 
@@ -921,6 +935,12 @@ EXTERN_C const IID IID_IComPolygon;
 
 #define IComPolygon_put_Group(This,newVal)	\
     ( (This)->lpVtbl -> put_Group(This,newVal) ) 
+
+#define IComPolygon_get_ShowMarkerOnly(This,pVal)	\
+    ( (This)->lpVtbl -> get_ShowMarkerOnly(This,pVal) ) 
+
+#define IComPolygon_put_ShowMarkerOnly(This,newVal)	\
+    ( (This)->lpVtbl -> put_ShowMarkerOnly(This,newVal) ) 
 
 #endif /* COBJMACROS */
 

@@ -94,6 +94,8 @@ library COMPOLYLib
 		[propput, id(17), helpstring("property Shape"),helpcontext(IDH_SHAPE)] HRESULT Shape([in] BSTR newVal);
 		[propget, id(18), helpstring("property Group"),helpcontext(IDH_GROUP)] HRESULT Group([out, retval] BSTR *pVal);
 		[propput, id(18), helpstring("property Group"),helpcontext(IDH_GROUP)] HRESULT Group([in] BSTR newVal);
+		[propget, id(19), helpstring("property ShowMarkerOnly"),helpcontext(IDH_SHOWMARKERONLY)] HRESULT ShowMarkerOnly([out, retval] VARIANT_BOOL *pVal);
+		[propput, id(19), helpstring("property ShowMarkerOnly"),helpcontext(IDH_SHOWMARKERONLY)] HRESULT ShowMarkerOnly([in] VARIANT_BOOL newVal);
 	};
 	//
 	// coclasses in type library

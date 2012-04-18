@@ -59,7 +59,7 @@ ACRX_DXF_DEFINE_MEMBERS(CRebarPos, AcDbCurve,
 
 CRebarPos::CRebarPos() :
 	m_BasePoint(0, 0, 0), direction(1, 0, 0), up(0, 1, 0), norm(0, 0, 1), m_NoteGrip(-4.2133, 0.75 * -1.075, 0),
-	m_ShowLength(Adesk::kTrue), isModified(true), m_Text(NULL), m_Length(NULL), m_Key(NULL),
+	m_ShowLength(Adesk::kTrue), m_ShowMarkerOnly(Adesk::kFalse), isModified(true), m_Text(NULL), m_Length(NULL), m_Key(NULL),
 	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), m_Multiplier(1), 
 	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL),
 	m_ShapeID(AcDbObjectId::kNull), m_GroupID(AcDbObjectId::kNull)
@@ -249,6 +249,20 @@ Acad::ErrorStatus CRebarPos::setShowLength(const Adesk::Boolean newVal)
 {
 	assertWriteEnabled();
 	m_ShowLength = newVal;
+	isModified = true;
+	return Acad::eOk;
+}
+
+const Adesk::Boolean CRebarPos::ShowMarkerOnly(void) const
+{
+	assertReadEnabled();
+	return m_ShowMarkerOnly;
+}
+
+Acad::ErrorStatus CRebarPos::setShowMarkerOnly(const Adesk::Boolean newVal)
+{
+	assertWriteEnabled();
+	m_ShowMarkerOnly = newVal;
 	isModified = true;
 	return Acad::eOk;
 }
@@ -512,7 +526,7 @@ void CRebarPos::subList() const
 	// Pos
 	if ((m_Pos != NULL) && (m_Pos[0] != _T('\0')))
 	{
-		acutPrintf(_T("%18s%16s "), _T(/*MSG0*/""), _T("Marker:"));
+		acutPrintf(_T("%18s%16s "), _T(/*MSG0*/""), _T("Pos Marker:"));
 		acutPrintf(_T("%18s%16s "), _T(/*MSG0*/""), m_Pos);
 	}
 }
@@ -633,6 +647,7 @@ Acad::ErrorStatus CRebarPos::dwgInFields(AcDbDwgFiler* pFiler)
 		pFiler->readString(&m_Spacing);
 		pFiler->readItem(&m_Multiplier);
 		pFiler->readItem(&m_ShowLength);
+		pFiler->readItem(&m_ShowMarkerOnly);
 		pFiler->readString(&m_A);
 		pFiler->readString(&m_B);
 		pFiler->readString(&m_C);
@@ -687,6 +702,7 @@ Acad::ErrorStatus CRebarPos::dwgOutFields(AcDbDwgFiler* pFiler) const
 		pFiler->writeString(_T(""));
 	pFiler->writeItem(m_Multiplier);
 	pFiler->writeItem(m_ShowLength);
+	pFiler->writeItem(m_ShowMarkerOnly);
 	if(m_A)
 		pFiler->writeString(m_A);
 	else
@@ -752,6 +768,7 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	ACHAR* t_Spacing = NULL;
 	Adesk::Int32 t_Multiplier;
 	Adesk::Boolean t_ShowLength;
+	Adesk::Boolean t_ShowMarkerOnly;
 	ACHAR* t_A = NULL;
 	ACHAR* t_B = NULL;
 	ACHAR* t_C = NULL;
@@ -796,8 +813,12 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
         case AcDb::kDxfInt32 + 1:
             t_Multiplier = rb.resval.rlong;
             break;
+
         case AcDb::kDxfBool:
 			t_ShowLength = rb.resval.rint == 0 ? Adesk::kFalse : Adesk::kTrue;
+            break;
+        case AcDb::kDxfBool + 1:
+			t_ShowMarkerOnly = rb.resval.rint == 0 ? Adesk::kFalse : Adesk::kTrue;
             break;
 
         case AcDb::kDxfXTextString + 5:
@@ -855,6 +876,7 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	setSpacing(t_Spacing);
 	m_Multiplier = t_Multiplier;
 	m_ShowLength = t_ShowLength;
+	m_ShowMarkerOnly = t_ShowMarkerOnly;
 	setA(t_A);
 	setB(t_B);
 	setC(t_C);
@@ -924,6 +946,7 @@ Acad::ErrorStatus CRebarPos::dxfOutFields(AcDbDxfFiler* pFiler) const
 		pFiler->writeString(AcDb::kDxfXTextString + 4, _T(""));
 	pFiler->writeInt32(AcDb::kDxfInt32 + 1, m_Multiplier);
 	pFiler->writeItem(AcDb::kDxfBool, m_ShowLength);
+	pFiler->writeItem(AcDb::kDxfBool + 1, m_ShowMarkerOnly);
 	if(m_A)
 		pFiler->writeString(AcDb::kDxfXTextString + 5, m_A);
 	else

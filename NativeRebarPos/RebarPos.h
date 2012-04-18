@@ -68,6 +68,7 @@ private:
 	ACHAR* m_Spacing;
 	Adesk::Int32 m_Multiplier;
 	Adesk::Boolean m_ShowLength;
+	Adesk::Boolean m_ShowMarkerOnly;
 	ACHAR* m_Note;
 	ACHAR* m_A;
 	ACHAR* m_B;
@@ -127,6 +128,10 @@ public:
 	/// Gets or sets whether length text is shown
 	const Adesk::Boolean ShowLength(void) const;
 	Acad::ErrorStatus setShowLength(const Adesk::Boolean newVal);
+
+	/// Gets or sets whether only the marker is shown
+	const Adesk::Boolean ShowMarkerOnly(void) const;
+	Acad::ErrorStatus setShowMarkerOnly(const Adesk::Boolean newVal);
 
 	/// Gets or sets the A piece length
 	const ACHAR* A(void) const;

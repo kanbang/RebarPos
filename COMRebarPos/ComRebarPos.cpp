@@ -75,7 +75,7 @@ STDMETHODIMP CComPolygon::Editable(
 	/* [in] */ DISPID dispID,
 	/* [out] */ BOOL __RPC_FAR *bEditable)
 {
-	return E_NOTIMPL;
+	return IOPMPropertyExtensionImpl<CComPolygon>::Editable(dispID, bEditable);
 }
 
 //Override to hide the property from display
@@ -127,7 +127,7 @@ STDMETHODIMP CComPolygon::ShowProperty(
 		}
 	}
 
-	return E_NOTIMPL;
+	return IOPMPropertyExtensionImpl<CComPolygon>::ShowProperty(dispID, pShow);
 }
 
 //This is used to get the value for an element in a group.
@@ -157,6 +157,8 @@ STDMETHODIMP CComPolygon::GetElementValue(
             // TODO: translate from wcs to ucs
             //acdbEcs2Ucs(asDblArray(pt), asDblArray(pt), asDblArray(pPoly->normal()), Adesk::kFalse);
             ::VariantCopy(pVarOut, &CComVariant(pt[dwCookie]));
+
+			return S_OK;
 			break;
 		case DISPID_NOTEGRIP:
 			if (dwCookie > 2)
@@ -166,6 +168,8 @@ STDMETHODIMP CComPolygon::GetElementValue(
             // TODO: translate from wcs to ucs
             //acdbEcs2Ucs(asDblArray(pt), asDblArray(pt), asDblArray(pPoly->normal()), Adesk::kFalse);
             ::VariantCopy(pVarOut, &CComVariant(pt[dwCookie]));
+
+			return S_OK;
 			break;
 		default:
 			;
@@ -180,7 +184,7 @@ STDMETHODIMP CComPolygon::GetElementValue(
         return Error(L"Invalid argument." ,IID_IComPolygon, hr);
     }
 
-	return S_OK;
+	return E_NOTIMPL;
 }
 
 //This is used to set the value for an element in a group.
@@ -212,6 +216,10 @@ STDMETHODIMP CComPolygon::SetElementValue(
 
 		    if ((es = pPoly->setBasePoint(pt)) != Acad::eOk)
 			    throw es;
+
+			Fire_Notification(dispID);
+
+			return S_OK;
 			break;
 		case DISPID_NOTEGRIP:
 			if (dwCookie > 2)
@@ -225,12 +233,14 @@ STDMETHODIMP CComPolygon::SetElementValue(
 
 		    if ((es = pPoly->setNoteGrip(pt)) != Acad::eOk)
 			    throw es;
+
+			Fire_Notification(dispID);
+
+			return S_OK;
 			break;
 		default:
 			;
         }
-
-        Fire_Notification(dispID);
     }
     catch(const Acad::ErrorStatus)
     {
@@ -241,7 +251,7 @@ STDMETHODIMP CComPolygon::SetElementValue(
         return Error(L"Invalid argument.", IID_IComPolygon, hr);
     }
 
-	return S_OK;
+	return E_NOTIMPL;
 }
 
 //This is called to get the display string for each
@@ -267,6 +277,8 @@ STDMETHODIMP CComPolygon::GetElementStrings(
         pCaStringsOut->pElems[0] = ::SysAllocString(L"Base point X");
         pCaStringsOut->pElems[1] = ::SysAllocString(L"Base point Y");
 		pCaStringsOut->pElems[2] = ::SysAllocString(L"Base point Z");
+
+		return S_OK;
 		break;
 	case DISPID_NOTEGRIP:
         size = 3;
@@ -280,12 +292,14 @@ STDMETHODIMP CComPolygon::GetElementStrings(
         pCaStringsOut->pElems[0] = ::SysAllocString(L"Note grip X");
         pCaStringsOut->pElems[1] = ::SysAllocString(L"Note grip Y");
 		pCaStringsOut->pElems[2] = ::SysAllocString(L"Note grip Z");
+
+		return S_OK;
 		break;
 	default:
 		;
     }
 
-    return S_OK;
+    return E_NOTIMPL;
 }
 
 //This function is called to determine the number of elements in a group
@@ -847,6 +861,49 @@ STDMETHODIMP CComPolygon::put_ShowLength(VARIANT_BOOL newVal)
             throw es;
         else 
             Fire_Notification(DISPID_SHOWLENGTH);
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to set property.", IID_IComPolygon, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComPolygon::get_ShowMarkerOnly(VARIANT_BOOL * pVal)
+{
+    CHECKOUTPARAM(pVal);
+    try
+    {
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pPoly.openStatus()) != Acad::eOk)
+            throw es;
+
+		*pVal = (pPoly->ShowMarkerOnly() == Adesk::kTrue ? VARIANT_TRUE : VARIANT_FALSE);
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to open object", IID_IComPolygon, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComPolygon::put_ShowMarkerOnly(VARIANT_BOOL newVal)
+{
+    try
+    {
+        AXEntityDocLockNoDbOk(m_objRef.objectId());
+
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pPoly.openStatus()) != Acad::eOk)
+            throw es;
+        
+        USES_CONVERSION;
+		if ((es = pPoly->setShowMarkerOnly(newVal == VARIANT_TRUE ? Adesk::kTrue : Adesk::kFalse)) != Acad::eOk)
+            throw es;
+        else 
+            Fire_Notification(DISPID_SHOWMARKERONLY);
     }
     catch(const Acad::ErrorStatus)
     {
