@@ -106,31 +106,6 @@ public:
 		pDict->close();
 	}
 
-	/// Creates a default entry or returns the first entry in the table.
-	static AcDbObjectId CreateDefault(void)
-	{
-		AcDbDictionary* pDict = CDictEntry::GetDictionary();
-
-		AcDbObjectId id;
-		// Create a new entry if not present
-		if(pDict->numEntries() == 0)
-		{
-			T *pObject = new T();
-			pDict->setAt(pObject->Name(), pObject, id);
-			pObject->close();
-		}
-		else
-		{
-			AcDbDictionaryIterator* it = pDict->newIterator();
-			it->next();
-			id = it->objectId();
-			delete it;
-		}
-		pDict->close();
-
-		return id;
-	}
-	
 	/// Gets the entry with the given name.
 	static AcDbObjectId GetByName(const ACHAR* name)
 	{

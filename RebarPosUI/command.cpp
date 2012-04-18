@@ -53,6 +53,7 @@ CComModule _Module;
 #include "gepnt3d.h"
 
 #include "../NativeRebarPos/RebarPos.h"
+#include "../NativeRebarPos/PosShape.h"
 #include "../NativeRebarPos/Utility.h"
 #include "dbxutil.h"
 #include "dbapserv.h"
@@ -85,17 +86,16 @@ void polyCommand()
         return;   
     
     AcGePoint3d cen = asPnt3d(center);
-    
+
+	AcDbObjectId id = CPosShape::CreateDefault();
+
     CRebarPos* poly = new CRebarPos;
-    if (poly == NULL){
-        acutPrintf(_T("\nOut of memory."));
-        return;
-    }
     
 	poly->setBasePoint(asPnt3d(center));
 	poly->setPos(nameBuf);
 	poly->setA(_T("100"));
 	poly->setB(_T("20"));
+	poly->setShapeId(id);
     
     poly->setDatabaseDefaults(acdbHostApplicationServices()->workingDatabase());
     postToDb(poly);

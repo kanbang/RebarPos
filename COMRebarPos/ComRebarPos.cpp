@@ -290,9 +290,9 @@ STDMETHODIMP CComRebarPos::GetElementStrings(
         pCaStringsOut->cElems = size;
         pCaCookiesOut->cElems = size;
 
-        pCaStringsOut->pElems[0] = ::SysAllocString(L"Note grip X");
-        pCaStringsOut->pElems[1] = ::SysAllocString(L"Note grip Y");
-		pCaStringsOut->pElems[2] = ::SysAllocString(L"Note grip Z");
+        pCaStringsOut->pElems[0] = ::SysAllocString(L"Note location X");
+        pCaStringsOut->pElems[1] = ::SysAllocString(L"Note location Y");
+		pCaStringsOut->pElems[2] = ::SysAllocString(L"Note location Z");
 
 		return S_OK;
 		break;
@@ -324,102 +324,75 @@ STDMETHODIMP CComRebarPos::GetGroupCount(
 }
 
 //OPM calls this function for each property to obtain a list of strings and cookies if they are available.
-//For our textstyle property we would like to display all the textstyles currently available in the database.
-//This function is declared on the IPerPropertyBrowsing interface. Our IOPMPropertyExtensionImpl
-//class implements this member by reading the values in the OPM property map. (You set this up in your
-//head file when you use BEGIN_OPMPROP_MAP, OPMPROP_ENTRY, END_OPMPROP_MAP macros.)
-//Since we need a dynamic list of entries in this drop down list and a static map cannot implement this, 
-//we need to override this function a provide dynamic list of text styles to OPM.
 STDMETHODIMP CComRebarPos::GetPredefinedStrings(DISPID dispID, CALPOLESTR *pCaStringsOut, CADWORD *pCaCookiesOut)
 {
-    return  IOPMPropertyExtensionImpl<CComRebarPos>::GetPredefinedStrings(dispID, pCaStringsOut, pCaCookiesOut);
+	USES_CONVERSION;
 
-	/*
-    if (dispID != DISPID_TEXTSTYLENAME)
+	long size, i;
+	AcDbDictionaryIterator* it = NULL;
+	switch(dispID)
+	{
+	case DISPID_SHAPE:
+		size = CPosShape::Count();
+		pCaStringsOut->pElems = (LPOLESTR *)::CoTaskMemAlloc(sizeof(LPOLESTR) * size);
+		pCaCookiesOut->pElems = (DWORD *)::CoTaskMemAlloc(sizeof(DWORD) * size);
+
+		mShapeIdArray.removeAll();
+		it = CPosShape::GetIterator();
+		i = 0;
+		for( ; !it->done(); it->next())
+		{
+			pCaStringsOut->pElems[i] = ::SysAllocString(CT2W(it->name()));
+			pCaCookiesOut->pElems[i] = mShapeIdArray.append(it->objectId());
+			i++;
+		}
+		pCaStringsOut->cElems = i;
+		pCaCookiesOut->cElems = i;
+		delete it;
+
+		return S_OK;
+		break;
+	default:
         return  IOPMPropertyExtensionImpl<CComRebarPos>::GetPredefinedStrings(dispID,pCaStringsOut,pCaCookiesOut);
-
-    USES_CONVERSION;
-    AcDbTextStyleTable* pTT;
-    
-    AcDbDatabase *pDb = m_objRef.objectId().database();
-    if (NULL == pDb)
-        pDb = acdbHostApplicationServices()->workingDatabase();
-    
-    if (pDb->getTextStyleTable(pTT,AcDb::kForRead)==Acad::eOk)
-    {
-        AcDbTextStyleTableIterator* pIter;
-        if (pTT->newIterator(pIter)==Acad::eOk)
-        {
-            long size = 0;
-
-            // Clear the array.
-            mObjectIdArray.removeAll();
-
-            for (pIter->start();!pIter->done();pIter->step())
-                size++;
-            pCaStringsOut->pElems = (LPOLESTR *)::CoTaskMemAlloc(sizeof(LPOLESTR) * size);
-            pCaCookiesOut->pElems = (DWORD *)::CoTaskMemAlloc(sizeof(DWORD) * size);
-            long i=0;
-            for (pIter->start();!pIter->done();pIter->step())
-            {
-                AcDbTextStyleTableRecord* pTTR;
-                if (pIter->getRecord(pTTR,AcDb::kForRead)!=Acad::eOk)
-                    continue;
-                const TCHAR* pName = NULL;
-                if (pTTR->getName(pName)==Acad::eOk){
-                    //we want to show the name of the textstyle as 
-                    //it appears in the database
-                    pCaStringsOut->pElems[i] = ::SysAllocString(CT2W(pName));
-                    pCaCookiesOut->pElems[i] = mObjectIdArray.append(pTTR->objectId());
-                }
-                pTTR->close();
-                i++;
-            }
-            pCaStringsOut->cElems = i;
-            pCaCookiesOut->cElems = i;
-        }
-        if (pIter)
-            delete pIter;
-        pTT->close();
-    }
-	*/
-    return S_OK;
+	}
 }
 
 //OPM calls this function when the user selects an element from a drop down list. OPM provides
 //the cookie that we associated with the element in the GetPredefinedStrings function. We are
 //responsible for mapping this cookie back to a value that the properties corresponding put_ function
 //can understand. 
-//In this particular case all we need to do is to provide the name of the text style as
-//the put_TextStyle method needs that.
 STDMETHODIMP CComRebarPos::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VARIANT *pVarOut)
 {
-    return  IOPMPropertyExtensionImpl<CComRebarPos>::GetPredefinedValue(dispID,dwCookie, pVarOut);
+	USES_CONVERSION;
 
-	/*
-    if (dispID != DISPID_TEXTSTYLENAME)
-        return  IOPMPropertyExtensionImpl<CComRebarPos>::GetPredefinedValue(dispID,dwCookie, pVarOut);
+	AcDbObjectId id;
+	AcDbDictionaryIterator* it = NULL;
+	HRESULT hr = E_FAIL;
 
-    USES_CONVERSION;
+	switch(dispID)
+	{
+	case DISPID_SHAPE:
+	    assert((INT_PTR)dwCookie >= 0);
+		assert((INT_PTR)dwCookie < mShapeIdArray.length());
+	    id = mShapeIdArray[dwCookie];
+		assert(!id.isNull());
+		it = CPosShape::GetIterator();
+		for( ; !it->done(); it->next())
+		{
+			if(it->objectId() == id)
+			{
+				hr = S_OK;
+				VariantCopy(pVarOut, &CComVariant(CT2W(it->name())));
+				break;
+			}
+		}
+		delete it;
 
-    assert((INT_PTR)dwCookie >= 0);
-    assert((INT_PTR)dwCookie < mObjectIdArray.length());
-    AcDbObjectId id = mObjectIdArray[dwCookie];
-    assert(!id.isNull());
-
-    AcDbTextStyleTableRecord* pTTR;
-    HRESULT hr = S_OK;
-    if (acdbOpenObject(pTTR,id,AcDb::kForRead)!=Acad::eOk)
-        return E_FAIL;
-    const TCHAR* pName = NULL;
-    if (pTTR->getName(pName)==Acad::eOk)
-        ::VariantCopy(pVarOut,&CComVariant(CT2W(pName)));
-    else
-        hr = E_FAIL;
-    pTTR->close();
-    return hr;
-	*/
-	return S_OK;
+		return hr;
+		break;
+	default:
+		return  IOPMPropertyExtensionImpl<CComRebarPos>::GetPredefinedValue(dispID,dwCookie, pVarOut);
+	}
 }
 
 HRESULT CComRebarPos::CreateNewObject(AcDbObjectId& objId, AcDbObjectId& ownerId, TCHAR* keyName)
@@ -1251,16 +1224,17 @@ STDMETHODIMP CComRebarPos::get_Shape(BSTR * pVal)
 	    if((es = pPoly.openStatus()) != Acad::eOk)
             throw es;
 
-        AcDbTextStyleTableRecordPointer pTextStyleRecord(pPoly->ShapeId(), AcDb::kForRead);
-        if((es = pTextStyleRecord.openStatus()) != Acad::eOk)
-            throw es;
-
-        const TCHAR* pName;
-        if ((es = pTextStyleRecord->getName(pName)) != Acad::eOk)
-            throw es;
-
-        USES_CONVERSION;
-        *pVal = SysAllocString(CT2W(pName));
+		AcDbDictionaryIterator* it = NULL;
+		it = CPosShape::GetIterator();
+		for( ; !it->done(); it->next())
+		{
+			if(it->objectId() == pPoly->ShapeId())
+			{
+		        USES_CONVERSION;
+				*pVal = SysAllocString(CT2W(it->name()));
+				break;
+			}
+		}
     }
     catch(const Acad::ErrorStatus)
     {
@@ -1284,19 +1258,14 @@ STDMETHODIMP CComRebarPos::put_Shape(BSTR newVal)
 	    if((es = pPoly.openStatus()) != Acad::eOk)
             throw es;
 
-        USES_CONVERSION;
-        AcDbDatabase* pDb = m_objRef.objectId().database();
-        if (NULL == pDb)
-            pDb = acdbHostApplicationServices()->workingDatabase();
-        
-        AcDbTextStyleTableRecordPointer pTextStyleRecord(W2T(newVal), pDb, AcDb::kForRead);
-        if((es = pTextStyleRecord.openStatus()) != Acad::eOk)
-            throw es;
-
-        if ((es = pPoly->setShapeId(pTextStyleRecord->objectId())) != Acad::eOk)
-            throw es;
-        else
-            Fire_Notification(DISPID_SHAPE);
+		AcDbObjectId id = CPosShape::GetByName(W2T(newVal));
+		if(id != AcDbObjectId::kNull)
+		{
+	        if ((es = pPoly->setShapeId(id)) != Acad::eOk)
+		        throw es;
+			else
+				Fire_Notification(DISPID_SHAPE);
+		}
     }
     catch(const Acad::ErrorStatus)
     {

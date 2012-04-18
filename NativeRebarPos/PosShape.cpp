@@ -168,6 +168,44 @@ ShapeSize CPosShape::GetShapeCount()
 }
 
 //*************************************************************************
+// Static methods
+//*************************************************************************
+AcDbObjectId CPosShape::CreateDefault(void)
+{
+	AcDbDictionary* pDict = GetDictionary();
+
+	AcDbObjectId id;
+	// Create a new entry if not present
+	if(pDict->numEntries() == 0)
+	{
+		CPosShape *pObject = new CPosShape();
+		pObject->setFields(1);
+		pObject->setFormula(_T("A"));
+		pObject->setFormulaBending(_T("A"));
+		CShapeLine* line = new CShapeLine();
+		line->x1 = 0;
+		line->y1 = 0;
+		line->x2 = 100;
+		line->y2 = 0;
+		pObject->AddShape(line);
+		pDict->upgradeOpen();
+		pDict->setAt(_T("Duz Demir"), pObject, id);
+		pDict->downgradeOpen();
+		pObject->close();
+	}
+	else
+	{
+		AcDbDictionaryIterator* it = pDict->newIterator();
+		it->next();
+		id = it->objectId();
+		delete it;
+	}
+	pDict->close();
+
+	return id;
+}
+
+//*************************************************************************
 // Overrides
 //*************************************************************************
 //- Dwg Filing protocol

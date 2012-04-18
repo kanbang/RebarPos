@@ -226,6 +226,6 @@ END_OPMPROP_MAP()
         /* [out] */ VARIANT *pVarOut);
 
     protected:
-        AcDbObjectIdArray mObjectIdArray;
+        AcDbObjectIdArray mShapeIdArray;
 };
 

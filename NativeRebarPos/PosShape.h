@@ -57,6 +57,9 @@ protected:
 	ACHAR* m_FormulaBending;
 
 	ShapeList m_List;
+public:
+	/// Creates a default entry or returns the first entry in the table.
+	static AcDbObjectId CreateDefault(void);
 
 public:
 	/// Gets or sets the field count.
