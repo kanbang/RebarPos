@@ -1,3 +1,7 @@
+//-----------------------------------------------------------------------------
+//----- RebarPos.cpp : Implementation of CRebarPos
+//-----------------------------------------------------------------------------
+
 #define WIN32_LEAN_AND_MEAN
 #if defined(_DEBUG) && !defined(AC_FULL_DEBUG)
 #error _DEBUG should not be defined except in internal Adesk debug builds
@@ -46,7 +50,7 @@ Adesk::UInt32 CRebarPos::kCurrentVersionNumber = 1;
 // Code for the Class Body. 
 //*************************************************************************
 
-ACRX_DXF_DEFINE_MEMBERS(CRebarPos, AcDbCurve,
+ACRX_DXF_DEFINE_MEMBERS(CRebarPos, AcDbEntity,
 	AcDb::kDHL_CURRENT, AcDb::kMReleaseCurrent,
 	AcDbProxyEntity::kAllAllowedBits, REBARPOS,
 	"RebarPos2.0\

@@ -1,3 +1,6 @@
+//-----------------------------------------------------------------------------
+//----- RebarPos.h : Declaration of the CRebarPos
+//-----------------------------------------------------------------------------
 #pragma once
 
 #include "dbmain.h"
@@ -11,11 +14,11 @@
 #include "windows.h"
 #include "dbxutil.h"
 
-// The following is part of the code used to export a poly API
+// The following is part of the code used to export an API
 // and/or use the exported API.
 //
 #pragma warning( disable: 4275 4251 )
-#ifdef POLYSAMP
+#ifdef REBARPOS_MODULE
 #define DLLIMPEXP __declspec( dllexport )
 #else
 #define DLLIMPEXP
@@ -88,7 +91,6 @@ protected:
 	/// Calculates pos text when the pos is modified.
 	const void Calculate(void) const;
 
-public:
 public:
 	/// Determines which part is under the given point
 	const CRebarPos::PosHitTest HitTest(const AcGePoint3d pt0) const;

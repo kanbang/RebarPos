@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\..\..\inc;..\..\..\inc"
-				PreprocessorDefinitions="ACRXAPP;RADPACK;POLYSAMP;"
+				PreprocessorDefinitions="ACRXAPP;RADPACK;REBARPOS_MODULE;"
 				UsePrecompiledHeader="0"
 			/>
 			<Tool
@@ -112,7 +112,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\..\..\inc;..\..\..\inc"
-				PreprocessorDefinitions="ACRXAPP;RADPACK;POLYSAMP;"
+				PreprocessorDefinitions="ACRXAPP;RADPACK;REBARPOS_MODULE;"
 				UsePrecompiledHeader="0"
 			/>
 			<Tool
@@ -179,7 +179,7 @@
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\..\..\inc;..\..\..\inc"
-				PreprocessorDefinitions="ACRXAPP;RADPACK;POLYSAMP;"
+				PreprocessorDefinitions="ACRXAPP;RADPACK;REBARPOS_MODULE;"
 				UsePrecompiledHeader="0"
 			/>
 			<Tool
@@ -242,7 +242,7 @@
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\..\..\inc;..\..\..\inc"
-				PreprocessorDefinitions="ACRXAPP;RADPACK;POLYSAMP;"
+				PreprocessorDefinitions="ACRXAPP;RADPACK;REBARPOS_MODULE;"
 				UsePrecompiledHeader="0"
 			/>
 			<Tool
@@ -295,6 +295,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PosShape.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\RebarPos.cpp"
 				>
 			</File>
@@ -316,7 +320,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DictEntry.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PosShape.h"
+				>
+			</File>
+			<File
 				RelativePath=".\RebarPos.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Shape.h"
 				>
 			</File>
 			<File

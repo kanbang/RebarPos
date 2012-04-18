@@ -24,8 +24,7 @@
 //      or project specific include files that are used frequently,
 //      but are changed infrequently
 
-#if !defined(AFX_STDAFX_H__45C7F02C_CD9A_11D1_A2BD_080009DC639A__INCLUDED_)
-#define AFX_STDAFX_H__45C7F02C_CD9A_11D1_A2BD_080009DC639A__INCLUDED_
+#pragma once
 
 #if _MSC_VER >= 1000
 #pragma once
@@ -56,8 +55,6 @@ extern CComModule _Module;
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Developer Studio will insert additional declarations immediately before the previous line.
-
-#endif // !defined(AFX_STDAFX_H__45C7F02C_CD9A_11D1_A2BD_080009DC639A__INCLUDED)
 
 //- This line allows us to get rid of the .def file in ARX projects
 #ifndef NO_ARX_DEF
