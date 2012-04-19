@@ -232,7 +232,6 @@ protected:
     virtual Acad::ErrorStatus subGetClassID(CLSID* pClsid) const;
 
 private:
-
     // These are here because otherwise dllexport tries to export the
     // private methods of AcDbObject.  They're private in AcDbObject
     // because vc5 and vc6 do not properly support array new and delete.

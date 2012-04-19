@@ -28,9 +28,6 @@
 #include "dbxutil.h"
 #include "acutmem.h"
 
-#include "Utility.h"
-#include "RebarPos.h"
-
 #include "acdb.h"
 #include "dbidmap.h"
 #include "adesk.h"
@@ -44,6 +41,8 @@
 //-----------------------------------------------------------------------------
 Adesk::UInt32 CPosShape::kCurrentVersionNumber = 1;
 
+ACHAR* CPosShape::Table_Name = _T("OZOZ_REBAR_SHAPES");
+
 //-----------------------------------------------------------------------------
 ACRX_DXF_DEFINE_MEMBERS(CPosShape, AcDbObject,
 	AcDb::kDHL_CURRENT, AcDb::kMReleaseCurrent,
@@ -53,8 +52,7 @@ ACRX_DXF_DEFINE_MEMBERS(CPosShape, AcDbObject,
 	|Company:          OZOZ");
 
 //-----------------------------------------------------------------------------
-CPosShape::CPosShape () : CDictEntry(), 
-	m_Fields(1), m_Formula(NULL), m_FormulaBending(NULL)
+CPosShape::CPosShape () : m_Fields(1), m_Formula(NULL), m_FormulaBending(NULL)
 { }
 
 CPosShape::~CPosShape () 
@@ -692,3 +690,105 @@ Acad::ErrorStatus CPosShape::dxfInFields(AcDbDxfFiler *pFiler)
 	return pFiler->filerStatus();
 }
 
+//*************************************************************************
+// Common static dictionary methods
+//*************************************************************************
+
+AcDbDictionary* CPosShape::GetDictionary()
+{
+	assert(Table_Name != NULL);
+
+	AcDbDatabase *pDb = acdbHostApplicationServices()->workingDatabase();
+
+	// Create the dictionary if not present
+	AcDbDictionary *pNamedobj = NULL;
+	pDb->getNamedObjectsDictionary(pNamedobj, AcDb::kForRead);
+	AcDbDictionary *pDict;
+	if (pNamedobj->getAt(Table_Name, (AcDbObject*&) pDict, AcDb::kForRead) == Acad::eKeyNotFound)
+	{
+		pDict = new AcDbDictionary;
+		AcDbObjectId DictId;
+		pNamedobj->upgradeOpen();
+		pNamedobj->setAt(Table_Name, pDict, DictId);
+		pNamedobj->downgradeOpen();
+	}
+	pNamedobj->close();
+
+	return pDict;
+}
+
+/// Saves the current entry in the table.
+AcDbObjectId CPosShape::Save(const ACHAR* name, CPosShape* pEntry)
+{
+	AcDbDictionary* pDict = GetDictionary();
+
+	pDict->upgradeOpen();
+	AcDbObjectId id;
+	pEntry->upgradeOpen();
+	pDict->setAt(name, pEntry, id);
+	pDict->downgradeOpen();
+	pDict->close();
+
+	return id;
+}
+
+/// Renames an entry in the table.
+bool CPosShape::Rename(const ACHAR* oldName, const ACHAR* newName)
+{
+	AcDbDictionary* pDict = GetDictionary();
+
+	pDict->upgradeOpen();
+	bool ret = pDict->setName(oldName, newName);
+	pDict->downgradeOpen();
+	pDict->close();
+
+	return ret;
+}
+
+void CPosShape::Remove(const ACHAR* name)
+{
+	AcDbDictionary* pDict = GetDictionary();
+
+	pDict->upgradeOpen();
+	pDict->remove(name);
+	pDict->downgradeOpen();
+
+	pDict->close();
+}
+
+/// Gets the entry with the given name.
+AcDbObjectId CPosShape::GetByName(const ACHAR* name)
+{
+	AcDbDictionary* pDict = GetDictionary();
+
+	AcDbObjectId id;
+	if(pDict->getAt(name, id) == Acad::eKeyNotFound)
+	{
+		id = AcDbObjectId::kNull;
+	}
+	pDict->close();
+
+	return id;
+}
+
+/// Determines whether the entry specified by entryName is contained in the dictionary.
+bool CPosShape::Contains(const ACHAR* name)
+{
+	AcDbDictionary* pDict = GetDictionary();
+
+	bool ret = pDict->has(name);
+	pDict->close();
+
+	return ret;
+}
+
+/// Gets the count of entries in the dictionary.
+Adesk::UInt32 CPosShape::Count()
+{
+	AcDbDictionary* pDict = GetDictionary();
+
+	Adesk::UInt32 ret = pDict->numEntries();
+	pDict->close();
+
+	return ret;
+}

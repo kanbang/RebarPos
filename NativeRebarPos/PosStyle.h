@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-//----- PosShape.h : Declaration of the CPosShape
+//----- PosStyle.h : Declaration of the CPosStyle
 //-----------------------------------------------------------------------------
 #pragma once
 
@@ -15,7 +15,6 @@
 #include "dbxutil.h"
 
 #include <vector>
-#include "Shape.h"
 
 // The following is part of the code used to export an API
 // and/or use the exported API.
@@ -27,31 +26,26 @@
 #define DLLIMPEXP
 #endif
 
-typedef std::vector<CShape*> ShapeList;
-typedef std::vector<CShape*>::size_type ShapeSize;
-typedef std::vector<CShape*>::iterator ShapeListIt;
-typedef std::vector<CShape*>::const_iterator ShapeListConstIt;
-
 /// ---------------------------------------------------------------------------
-/// The CPosShape represents the shape definitions of rebar markers.
+/// The CPosStyle represents the style settings of rebar markers.
 /// ---------------------------------------------------------------------------
-class DLLIMPEXP CPosShape : public AcDbObject
+class DLLIMPEXP CPosStyle : public AcDbObject
 {
 
 public:
 	/// Define additional RTT information for AcRxObject base type.
-	ACRX_DECLARE_MEMBERS(CPosShape);
+	ACRX_DECLARE_MEMBERS(CPosStyle);
 
 protected:
 	/// Object version number serialized in the drawing database.
 	static Adesk::UInt32 kCurrentVersionNumber;
 
 public:
-	CPosShape ();
-	virtual ~CPosShape ();
+	CPosStyle ();
+	virtual ~CPosStyle ();
 
 public:
-	/// AcDbObject overrides: database
+	/// AcDbEntity overrides: database
 	virtual Acad::ErrorStatus dwgOutFields(AcDbDwgFiler *pFiler) const;
 	virtual Acad::ErrorStatus dwgInFields(AcDbDwgFiler *pFiler);
 
@@ -60,49 +54,73 @@ public:
 
 protected:
 	/// Property backing fields
-	Adesk::UInt16 m_Fields;
-
 	ACHAR* m_Formula;
-	ACHAR* m_FormulaBending;
 
-	ShapeList m_List;
+	Adesk::UInt16 m_TextColor;
+	Adesk::UInt16 m_PosColor;
+	Adesk::UInt16 m_CircleColor;
+	Adesk::UInt16 m_MultiplierColor;
+	Adesk::UInt16 m_GroupColor;
+	Adesk::UInt16 m_NoteColor;
+	Adesk::UInt16 m_CurrentGroupHighlightColor;
+
+    double m_NoteScale;
+
+    AcDbHardPointerId m_TextStyleID;
+    AcDbHardPointerId m_NoteStyleID;
+
+protected:
+	/// Creates a text style
+	static AcDbObjectId CreateTextStyle(const ACHAR* name, const ACHAR* filename, const double scale);
 
 public:
 	/// Creates a default entry or returns the first entry in the table.
 	static AcDbObjectId CreateDefault(void);
 
 public:
-	/// Gets or sets the field count.
-    const Adesk::UInt16 Fields(void) const;
-	Acad::ErrorStatus setFields(const Adesk::UInt16 newVal);
-
-	/// Gets or sets the formula used to calculate the total length from piece lengths.
-	const ACHAR* Formula(void) const;
+	/// Gets or sets the formula text.
+    const ACHAR* Formula(void) const;
 	Acad::ErrorStatus setFormula(const ACHAR* newVal);
 
-	/// Gets or sets the formula used to calculate the total length from piece lengths
-	/// including bending allowance.
-	const ACHAR* FormulaBending(void) const;
-	Acad::ErrorStatus setFormulaBending(const ACHAR* newVal);
+	/// Gets or sets the text color.
+	const Adesk::UInt16 TextColor(void) const;
+	Acad::ErrorStatus setTextColor(const Adesk::UInt16 newVal);
 
-public:
-	/// Adds a shape.
-	void AddShape(CShape* shape);
+	/// Gets or sets the pos text color.
+	const Adesk::UInt16 PosColor(void) const;
+	Acad::ErrorStatus setPosColor(const Adesk::UInt16 newVal);
 
-	/// Gets the shape at the given index.
-	CShape* GetShape(ShapeSize index);
+	/// Gets or sets the pos circle color.
+	const Adesk::UInt16 CircleColor(void) const;
+	Acad::ErrorStatus setCircleColor(const Adesk::UInt16 newVal);
 
-	/// Sets the shape at the given index.
-	void SetShape(ShapeSize index, CShape* shape);
+	/// Gets or sets the multiplier text color.
+	const Adesk::UInt16 MultiplierColor(void) const;
+	Acad::ErrorStatus setMultiplierColor(const Adesk::UInt16 newVal);
 
-	/// Gets the count of shapes.
-	ShapeSize GetShapeCount();
+	/// Gets or sets the group text color.
+	const Adesk::UInt16 GroupColor(void) const;
+	Acad::ErrorStatus setGroupColor(const Adesk::UInt16 newVal);
 
-	/// Removes the shape at the given index.
-	void RemoveShape(ShapeSize index);
+	/// Gets or sets the note text color.
+	const Adesk::UInt16 NoteColor(void) const;
+	Acad::ErrorStatus setNoteColor(const Adesk::UInt16 newVal);
 
-	/// Clears all shapes.
-	void ClearShapes();
+	/// Gets or sets the highlight color of the pos objects in the current group.
+	const Adesk::UInt16 CurrentGroupHighlightColor(void) const;
+	Acad::ErrorStatus setCurrentGroupHighlightColor(const Adesk::UInt16 newVal);
+
+	/// Gets or sets the note height relative to text height.
+	const double NoteScale(void) const;
+	Acad::ErrorStatus setNoteScale(const double newVal);
+
+	/// Gets or sets pointer to the text style.
+	const AcDbObjectId& TextStyleId(void) const;
+	Acad::ErrorStatus setTextStyleId(const AcDbObjectId& newVal);
+
+	/// Gets or sets pointer to the note style.
+	const AcDbObjectId& NoteStyleId(void) const;
+	Acad::ErrorStatus setNoteStyleId(const AcDbObjectId& newVal);
 
 // Common static dictionary methods
 public:
@@ -112,7 +130,7 @@ public:
 	static AcDbDictionary* GetDictionary();
 
 	/// Saves the current entry in the table.
-	static AcDbObjectId Save(const ACHAR* name, CPosShape* pEntry);
+	static AcDbObjectId Save(const ACHAR* name, CPosStyle* pEntry);
 
 	/// Renames an entry in the table.
 	static bool Rename(const ACHAR* oldName, const ACHAR* newName);
@@ -149,7 +167,6 @@ private:
 #define new DEBUG_NEW
 #define delete DEBUG_DELETE
 #endif
-
 };
 
 //- This line allows us to get rid of the .def file in ARX projects

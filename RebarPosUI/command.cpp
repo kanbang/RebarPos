@@ -54,6 +54,7 @@ CComModule _Module;
 
 #include "../NativeRebarPos/RebarPos.h"
 #include "../NativeRebarPos/PosShape.h"
+#include "../NativeRebarPos/PosStyle.h"
 #include "../NativeRebarPos/Utility.h"
 #include "dbxutil.h"
 #include "dbapserv.h"
@@ -87,7 +88,8 @@ void polyCommand()
     
     AcGePoint3d cen = asPnt3d(center);
 
-	AcDbObjectId id = CPosShape::CreateDefault();
+	AcDbObjectId shapeId = CPosShape::CreateDefault();
+	//AcDbObjectId styleId = CPosStyle::CreateDefault();
 
     CRebarPos* poly = new CRebarPos;
     
@@ -95,7 +97,7 @@ void polyCommand()
 	poly->setPos(nameBuf);
 	poly->setA(_T("100"));
 	poly->setB(_T("20"));
-	poly->setShapeId(id);
+	poly->setShapeId(shapeId);
     
     poly->setDatabaseDefaults(acdbHostApplicationServices()->workingDatabase());
     postToDb(poly);

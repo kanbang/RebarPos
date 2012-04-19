@@ -329,7 +329,9 @@ STDMETHODIMP CComRebarPos::GetPredefinedStrings(DISPID dispID, CALPOLESTR *pCaSt
 	USES_CONVERSION;
 
 	long size, i;
+	AcDbDictionary* pDict = NULL;
 	AcDbDictionaryIterator* it = NULL;
+
 	switch(dispID)
 	{
 	case DISPID_SHAPE:
@@ -338,7 +340,9 @@ STDMETHODIMP CComRebarPos::GetPredefinedStrings(DISPID dispID, CALPOLESTR *pCaSt
 		pCaCookiesOut->pElems = (DWORD *)::CoTaskMemAlloc(sizeof(DWORD) * size);
 
 		mShapeIdArray.removeAll();
-		it = CPosShape::GetIterator();
+
+		pDict = CPosShape::GetDictionary();
+		it = pDict->newIterator();
 		i = 0;
 		for( ; !it->done(); it->next())
 		{
@@ -348,7 +352,9 @@ STDMETHODIMP CComRebarPos::GetPredefinedStrings(DISPID dispID, CALPOLESTR *pCaSt
 		}
 		pCaStringsOut->cElems = i;
 		pCaCookiesOut->cElems = i;
+
 		delete it;
+		pDict->close();
 
 		return S_OK;
 		break;
@@ -366,6 +372,7 @@ STDMETHODIMP CComRebarPos::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VAR
 	USES_CONVERSION;
 
 	AcDbObjectId id;
+	AcDbDictionary* pDict = NULL;
 	AcDbDictionaryIterator* it = NULL;
 	HRESULT hr = E_FAIL;
 
@@ -375,8 +382,9 @@ STDMETHODIMP CComRebarPos::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VAR
 	    assert((INT_PTR)dwCookie >= 0);
 		assert((INT_PTR)dwCookie < mShapeIdArray.length());
 	    id = mShapeIdArray[dwCookie];
-		assert(!id.isNull());
-		it = CPosShape::GetIterator();
+
+		pDict = CPosShape::GetDictionary();
+		it = pDict->newIterator();
 		for( ; !it->done(); it->next())
 		{
 			if(it->objectId() == id)
@@ -387,6 +395,7 @@ STDMETHODIMP CComRebarPos::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VAR
 			}
 		}
 		delete it;
+		pDict->close();
 
 		return hr;
 		break;
@@ -427,25 +436,25 @@ STDMETHODIMP CComRebarPos::ForceDbResident(VARIANT_BOOL *forceDbResident)
 
 STDMETHODIMP CComRebarPos::CreateObject(AcDbObjectId ownerId, TCHAR *keyName) 
 {
-        try 
-        {
-            Acad::ErrorStatus es;
-            AcDbObjectPointer<CRebarPos> pPoly;
-            if((es = pPoly.create()) != Acad::eOk)
-                throw es;
+    try 
+    {
+        Acad::ErrorStatus es;
+        AcDbObjectPointer<CRebarPos> pPoly;
+        if((es = pPoly.create()) != Acad::eOk)
+            throw es;
 
-            pPoly->setDatabaseDefaults(ownerId.database());
-            CRebarPos *pTmp = NULL;
-            pPoly.release(pTmp);
-            
-            SetObject((AcDbObject*&)pTmp);
-        }
-        catch(const Acad::ErrorStatus)
-        {
-            return Error(L"Failed to create object", IID_IComRebarPos, E_FAIL);
-        }
+        pPoly->setDatabaseDefaults(ownerId.database());
+        CRebarPos *pTmp = NULL;
+        pPoly.release(pTmp);
         
-        return S_OK;
+        SetObject((AcDbObject*&)pTmp);
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to create object", IID_IComRebarPos, E_FAIL);
+    }
+    
+    return S_OK;
 }
 
 STDMETHODIMP CComRebarPos::AddToDb(AcDbObjectId& objId, AcDbObjectId ownerId, TCHAR* keyName)
@@ -1224,8 +1233,9 @@ STDMETHODIMP CComRebarPos::get_Shape(BSTR * pVal)
 	    if((es = pPoly.openStatus()) != Acad::eOk)
             throw es;
 
-		AcDbDictionaryIterator* it = NULL;
-		it = CPosShape::GetIterator();
+		AcDbDictionary* pDict = CPosShape::GetDictionary();
+		AcDbDictionaryIterator* it = pDict->newIterator();
+
 		for( ; !it->done(); it->next())
 		{
 			if(it->objectId() == pPoly->ShapeId())
@@ -1235,6 +1245,9 @@ STDMETHODIMP CComRebarPos::get_Shape(BSTR * pVal)
 				break;
 			}
 		}
+
+		delete it;
+		pDict->close();
     }
     catch(const Acad::ErrorStatus)
     {

@@ -28,9 +28,6 @@
 #include "dbxutil.h"
 #include "acutmem.h"
 
-#include "Utility.h"
-#include "RebarPos.h"
-
 #include "acdb.h"
 #include "dbidmap.h"
 #include "adesk.h"
@@ -38,6 +35,8 @@
 #include "dbapserv.h"
 #include "appinfo.h"
 #include "tchar.h"
+
+#include "RebarPos.h"
 
 #include <initguid.h>
 #include "..\COMRebarPos\COMRebarPos_i.c"
@@ -783,8 +782,8 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 
     while ((es == Acad::eOk) && ((es = pFiler->readResBuf(&rb)) == Acad::eOk))
     {
-        switch (rb.restype) {
-
+        switch (rb.restype) 
+		{
         case AcDb::kDxfXCoord:
             t_BasePoint = asPnt3d(rb.resval.rpoint);
             break;
