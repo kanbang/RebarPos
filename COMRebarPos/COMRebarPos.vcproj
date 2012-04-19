@@ -4,7 +4,7 @@
 	Version="9.00"
 	Name="COMRebarPos"
 	ProjectGUID="{06B9D355-F6F9-4029-A614-834774D248C0}"
-	RootNamespace="compoly"
+	RootNamespace="COMRebarPos"
 	Keyword="AtlProj"
 	TargetFrameworkVersion="0"
 	>

@@ -4,7 +4,7 @@
 	Version="9.00"
 	Name="RebarPosUI"
 	ProjectGUID="{AD76FB2C-856B-4ACD-9A34-5BB7B5FDE659}"
-	RootNamespace="polyui"
+	RootNamespace="RebarPosUI"
 	TargetFrameworkVersion="0"
 	>
 	<Platforms>

@@ -4,7 +4,7 @@
 	Version="9.00"
 	Name="NativeRebarPos"
 	ProjectGUID="{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}"
-	RootNamespace="polyobj"
+	RootNamespace="NativeRebarPos"
 	TargetFrameworkVersion="0"
 	>
 	<Platforms>

@@ -4,7 +4,7 @@
 	Version="9.00"
 	Name="ManagedRebarPos"
 	ProjectGUID="{D26DC853-A22B-4C5B-810F-F76D1247FA93}"
-	RootNamespace="mgPoly"
+	RootNamespace="ManagedRebarPos"
 	Keyword="ManagedCProj"
 	TargetFrameworkVersion="0"
 	>
