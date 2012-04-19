@@ -1,7 +1,7 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
 // (C) Copyright 1998 by Autodesk, Inc.
-// Used by compoly.rc
+// Used by COMRebarPos.rc
 //
 #define IDS_PROJNAME                    100
 #define IDR_COMREBARPOS                  101

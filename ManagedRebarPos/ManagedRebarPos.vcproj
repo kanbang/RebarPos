@@ -361,10 +361,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
 			<File
-				RelativePath="_vcclrit.h"
-				>
-			</File>
-			<File
 				RelativePath=".\MgRebarPos.h"
 				>
 			</File>
@@ -378,10 +374,6 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;r"
 			>
 		</Filter>
-		<File
-			RelativePath="ReadMe.txt"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

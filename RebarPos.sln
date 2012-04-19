@@ -3,10 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NativeRebarPos", "NativeRebarPos\NativeRebarPos.vcproj", "{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RebarPosUI", "RebarPosUI\RebarPosUI.vcproj", "{AD76FB2C-856B-4ACD-9A34-5BB7B5FDE659}"
+	ProjectSection(ProjectDependencies) = postProject
+		{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046} = {473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ManagedRebarPos", "ManagedRebarPos\ManagedRebarPos.vcproj", "{D26DC853-A22B-4C5B-810F-F76D1247FA93}"
+	ProjectSection(ProjectDependencies) = postProject
+		{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046} = {473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "COMRebarPos", "COMRebarPos\COMRebarPos.vcproj", "{06B9D355-F6F9-4029-A614-834774D248C0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046} = {473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}
+	EndProjectSection
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ManagedTest", "ManagedTest\ManagedTest.vbproj", "{0E4664CE-BF26-4BD6-89F1-EB20BFA28DF3}"
 EndProject

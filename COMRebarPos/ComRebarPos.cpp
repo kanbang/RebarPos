@@ -1,24 +1,3 @@
-//
-// (C) Copyright 1998-2007 by Autodesk, Inc. 
-//
-// Permission to use, copy, modify, and distribute this software in
-// object code form for any purpose and without fee is hereby granted, 
-// provided that the above copyright notice appears in all copies and 
-// that both that copyright notice and the limited warranty and
-// restricted rights notice below appear in all supporting 
-// documentation.
-//
-// AUTODESK PROVIDES THIS PROGRAM "AS IS" AND WITH ALL FAULTS. 
-// AUTODESK SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTY OF
-// MERCHANTABILITY OR FITNESS FOR A PARTICULAR USE.  AUTODESK, INC. 
-// DOES NOT WARRANT THAT THE OPERATION OF THE PROGRAM WILL BE
-// UNINTERRUPTED OR ERROR FREE.
-//
-// Use, duplication, or disclosure by the U.S. Government is subject to 
-// restrictions set forth in FAR 52.227-19 (Commercial Computer
-// Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
-// (Rights in Technical Data and Computer Software), as applicable.
-//
 #include "StdAfx.h"
 // ComRebarPos.cpp : Implementation of CComRebarPos
 #if defined(_DEBUG) && !defined(AC_FULL_DEBUG)
@@ -82,30 +61,30 @@ STDMETHODIMP CComRebarPos::Editable(
 		try
 		{
 			Acad::ErrorStatus es;
-			AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef, AcDb::kForRead, Adesk::kTrue);
-			if((es = pPoly.openStatus()) != Acad::eOk)
+			AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef, AcDb::kForRead, Adesk::kTrue);
+			if((es = pRebarPos.openStatus()) != Acad::eOk)
 				throw es;
 
 			ACHAR* len = NULL;
 			switch(dispID)
 			{
 			case DISPID_A:
-		        acutUpdString(pPoly->A(), len);
+		        acutUpdString(pRebarPos->A(), len);
 				break;
 			case DISPID_B:
-		        acutUpdString(pPoly->B(), len);
+		        acutUpdString(pRebarPos->B(), len);
 				break;
 			case DISPID_C:
-		        acutUpdString(pPoly->C(), len);
+		        acutUpdString(pRebarPos->C(), len);
 				break;
 			case DISPID_D:
-		        acutUpdString(pPoly->D(), len);
+		        acutUpdString(pRebarPos->D(), len);
 				break;
 			case DISPID_E:
-		        acutUpdString(pPoly->E(), len);
+		        acutUpdString(pRebarPos->E(), len);
 				break;
 			case DISPID_F:
-		        acutUpdString(pPoly->F(), len);
+		        acutUpdString(pRebarPos->F(), len);
 				break;
 			default:
 				;
@@ -144,8 +123,8 @@ STDMETHODIMP CComRebarPos::GetElementValue(
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef, AcDb::kForRead, Adesk::kTrue);
-        if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef, AcDb::kForRead, Adesk::kTrue);
+        if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
 
 		AcGePoint3d pt;
@@ -155,9 +134,9 @@ STDMETHODIMP CComRebarPos::GetElementValue(
 			if (dwCookie > 2)
 				throw Acad::eInvalidInput;
 
-		    pt = pPoly->BasePoint();
+		    pt = pRebarPos->BasePoint();
             // TODO: translate from wcs to ucs
-            //acdbEcs2Ucs(asDblArray(pt), asDblArray(pt), asDblArray(pPoly->normal()), Adesk::kFalse);
+            //acdbEcs2Ucs(asDblArray(pt), asDblArray(pt), asDblArray(pRebarPos->normal()), Adesk::kFalse);
             ::VariantCopy(pVarOut, &CComVariant(pt[dwCookie]));
 
 			return S_OK;
@@ -166,9 +145,9 @@ STDMETHODIMP CComRebarPos::GetElementValue(
 			if (dwCookie > 2)
 				throw Acad::eInvalidInput;
 
-			pt = pPoly->NoteGrip();
+			pt = pRebarPos->NoteGrip();
             // TODO: translate from wcs to ucs
-            //acdbEcs2Ucs(asDblArray(pt), asDblArray(pt), asDblArray(pPoly->normal()), Adesk::kFalse);
+            //acdbEcs2Ucs(asDblArray(pt), asDblArray(pt), asDblArray(pRebarPos->normal()), Adesk::kFalse);
             ::VariantCopy(pVarOut, &CComVariant(pt[dwCookie]));
 
 			return S_OK;
@@ -199,8 +178,8 @@ STDMETHODIMP CComRebarPos::SetElementValue(
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef, AcDb::kForWrite, Adesk::kTrue);
-        if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef, AcDb::kForWrite, Adesk::kTrue);
+        if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
 
 		AcGePoint3d pt;
@@ -210,13 +189,13 @@ STDMETHODIMP CComRebarPos::SetElementValue(
 			if (dwCookie > 2)
 				throw Acad::eInvalidInput;
 
-			pt = pPoly->BasePoint();
+			pt = pRebarPos->BasePoint();
 
             //TODO: translate from wcs to ucs
-            //acdbEcs2Ucs(asDblArray(pt),asDblArray(pt),asDblArray(pPoly->normal()),Adesk::kFalse);
+            //acdbEcs2Ucs(asDblArray(pt),asDblArray(pt),asDblArray(pRebarPos->normal()),Adesk::kFalse);
 	        pt[dwCookie] = V_R8(&VarIn);
 
-		    if ((es = pPoly->setBasePoint(pt)) != Acad::eOk)
+		    if ((es = pRebarPos->setBasePoint(pt)) != Acad::eOk)
 			    throw es;
 
 			Fire_Notification(dispID);
@@ -227,13 +206,13 @@ STDMETHODIMP CComRebarPos::SetElementValue(
 			if (dwCookie > 2)
 				throw Acad::eInvalidInput;
 
-			pt = pPoly->NoteGrip();
+			pt = pRebarPos->NoteGrip();
 
             //TODO: translate from wcs to ucs
-            //acdbEcs2Ucs(asDblArray(pt),asDblArray(pt),asDblArray(pPoly->normal()),Adesk::kFalse);
+            //acdbEcs2Ucs(asDblArray(pt),asDblArray(pt),asDblArray(pRebarPos->normal()),Adesk::kFalse);
 	        pt[dwCookie] = V_R8(&VarIn);
 
-		    if ((es = pPoly->setNoteGrip(pt)) != Acad::eOk)
+		    if ((es = pRebarPos->setNoteGrip(pt)) != Acad::eOk)
 			    throw es;
 
 			Fire_Notification(dispID);
@@ -485,13 +464,13 @@ STDMETHODIMP CComRebarPos::CreateObject(AcDbObjectId ownerId, TCHAR *keyName)
     try 
     {
         Acad::ErrorStatus es;
-        AcDbObjectPointer<CRebarPos> pPoly;
-        if((es = pPoly.create()) != Acad::eOk)
+        AcDbObjectPointer<CRebarPos> pRebarPos;
+        if((es = pRebarPos.create()) != Acad::eOk)
             throw es;
 
-        pPoly->setDatabaseDefaults(ownerId.database());
+        pRebarPos->setDatabaseDefaults(ownerId.database());
         CRebarPos *pTmp = NULL;
-        pPoly.release(pTmp);
+        pRebarPos.release(pTmp);
         
         SetObject((AcDbObject*&)pTmp);
     }
@@ -510,13 +489,13 @@ STDMETHODIMP CComRebarPos::AddToDb(AcDbObjectId& objId, AcDbObjectId ownerId, TC
         AXEntityDocLock(ownerId);
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef, AcDb::kForRead);
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef, AcDb::kForRead);
 
         AcDbBlockTableRecordPointer pBlockTableRecord(ownerId, AcDb::kForWrite);
         if((es = pBlockTableRecord.openStatus()) != Acad::eOk)
             throw es;
 
-        if((es = pBlockTableRecord->appendAcDbEntity(objId, pPoly.object())) != Acad::eOk)
+        if((es = pBlockTableRecord->appendAcDbEntity(objId, pRebarPos.object())) != Acad::eOk)
             throw es;
 
     }
@@ -538,11 +517,11 @@ STDMETHODIMP CComRebarPos::get_BasePoint(VARIANT * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef, AcDb::kForRead, Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef, AcDb::kForRead, Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         AcAxPoint3d pt;
-		pt = pPoly->BasePoint();
+		pt = pRebarPos->BasePoint();
         pt.setVariant(pVal);
     }
     catch(const Acad::ErrorStatus)
@@ -564,11 +543,11 @@ STDMETHODIMP CComRebarPos::put_BasePoint(VARIANT newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef, AcDb::kForWrite, Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef, AcDb::kForWrite, Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
-        if ((es = pPoly->setBasePoint(pt)) != Acad::eOk)
+        if ((es = pRebarPos->setBasePoint(pt)) != Acad::eOk)
             throw es;
         else
             Fire_Notification(DISPID_BASEPOINT);
@@ -590,11 +569,11 @@ STDMETHODIMP CComRebarPos::get_NoteGrip(VARIANT * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef, AcDb::kForRead, Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef, AcDb::kForRead, Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         AcAxPoint3d pt;
-		pt = pPoly->NoteGrip();
+		pt = pRebarPos->NoteGrip();
         pt.setVariant(pVal);
     }
     catch(const Acad::ErrorStatus)
@@ -616,11 +595,11 @@ STDMETHODIMP CComRebarPos::put_NoteGrip(VARIANT newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef, AcDb::kForWrite, Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef, AcDb::kForWrite, Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
-        if ((es = pPoly->setNoteGrip(pt)) != Acad::eOk)
+        if ((es = pRebarPos->setNoteGrip(pt)) != Acad::eOk)
             throw es;
         else
             Fire_Notification(DISPID_NOTEGRIP);
@@ -642,12 +621,12 @@ STDMETHODIMP CComRebarPos::get_Pos(BSTR * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        *pVal = SysAllocString(CT2W(pPoly->Pos()));
+        *pVal = SysAllocString(CT2W(pRebarPos->Pos()));
     }
     catch(const Acad::ErrorStatus)
     {
@@ -663,12 +642,12 @@ STDMETHODIMP CComRebarPos::put_Pos(BSTR newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        if ((es = pPoly->setPos(W2T(newVal))) != Acad::eOk)
+        if ((es = pRebarPos->setPos(W2T(newVal))) != Acad::eOk)
             throw es;
         else 
             Fire_Notification(DISPID_POS);
@@ -686,12 +665,12 @@ STDMETHODIMP CComRebarPos::get_Count(BSTR * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        *pVal = SysAllocString(CT2W(pPoly->Count()));
+        *pVal = SysAllocString(CT2W(pRebarPos->Count()));
     }
     catch(const Acad::ErrorStatus)
     {
@@ -707,12 +686,12 @@ STDMETHODIMP CComRebarPos::put_Count(BSTR newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        if ((es = pPoly->setCount(W2T(newVal))) != Acad::eOk)
+        if ((es = pRebarPos->setCount(W2T(newVal))) != Acad::eOk)
             throw es;
         else 
             Fire_Notification(DISPID_COUNT);
@@ -730,12 +709,12 @@ STDMETHODIMP CComRebarPos::get_Diameter(BSTR * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        *pVal = SysAllocString(CT2W(pPoly->Diameter()));
+        *pVal = SysAllocString(CT2W(pRebarPos->Diameter()));
     }
     catch(const Acad::ErrorStatus)
     {
@@ -751,12 +730,12 @@ STDMETHODIMP CComRebarPos::put_Diameter(BSTR newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        if ((es = pPoly->setDiameter(W2T(newVal))) != Acad::eOk)
+        if ((es = pRebarPos->setDiameter(W2T(newVal))) != Acad::eOk)
             throw es;
         else 
             Fire_Notification(DISPID_DIAMETER);
@@ -774,12 +753,12 @@ STDMETHODIMP CComRebarPos::get_Spacing(BSTR * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        *pVal = SysAllocString(CT2W(pPoly->Spacing()));
+        *pVal = SysAllocString(CT2W(pRebarPos->Spacing()));
     }
     catch(const Acad::ErrorStatus)
     {
@@ -795,12 +774,12 @@ STDMETHODIMP CComRebarPos::put_Spacing(BSTR newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        if ((es = pPoly->setSpacing(W2T(newVal))) != Acad::eOk)
+        if ((es = pRebarPos->setSpacing(W2T(newVal))) != Acad::eOk)
             throw es;
         else 
             Fire_Notification(DISPID_SPACING);
@@ -818,11 +797,11 @@ STDMETHODIMP CComRebarPos::get_Multiplier(long * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
 
-        *pVal = pPoly->Multiplier();
+        *pVal = pRebarPos->Multiplier();
     }
     catch(const Acad::ErrorStatus)
     {
@@ -838,12 +817,12 @@ STDMETHODIMP CComRebarPos::put_Multiplier(long newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        if ((es = pPoly->setMultiplier(newVal)) != Acad::eOk)
+        if ((es = pRebarPos->setMultiplier(newVal)) != Acad::eOk)
             throw es;
         else 
             Fire_Notification(DISPID_MULTIPLIER);
@@ -861,11 +840,11 @@ STDMETHODIMP CComRebarPos::get_ShowLength(VARIANT_BOOL * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
 
-		*pVal = (pPoly->ShowLength() == Adesk::kTrue ? VARIANT_TRUE : VARIANT_FALSE);
+		*pVal = (pRebarPos->ShowLength() == Adesk::kTrue ? VARIANT_TRUE : VARIANT_FALSE);
     }
     catch(const Acad::ErrorStatus)
     {
@@ -881,12 +860,12 @@ STDMETHODIMP CComRebarPos::put_ShowLength(VARIANT_BOOL newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-		if ((es = pPoly->setShowLength(newVal == VARIANT_TRUE ? Adesk::kTrue : Adesk::kFalse)) != Acad::eOk)
+		if ((es = pRebarPos->setShowLength(newVal == VARIANT_TRUE ? Adesk::kTrue : Adesk::kFalse)) != Acad::eOk)
             throw es;
         else 
             Fire_Notification(DISPID_SHOWLENGTH);
@@ -904,11 +883,11 @@ STDMETHODIMP CComRebarPos::get_ShowMarkerOnly(VARIANT_BOOL * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
 
-		*pVal = (pPoly->ShowMarkerOnly() == Adesk::kTrue ? VARIANT_TRUE : VARIANT_FALSE);
+		*pVal = (pRebarPos->ShowMarkerOnly() == Adesk::kTrue ? VARIANT_TRUE : VARIANT_FALSE);
     }
     catch(const Acad::ErrorStatus)
     {
@@ -924,12 +903,12 @@ STDMETHODIMP CComRebarPos::put_ShowMarkerOnly(VARIANT_BOOL newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-		if ((es = pPoly->setShowMarkerOnly(newVal == VARIANT_TRUE ? Adesk::kTrue : Adesk::kFalse)) != Acad::eOk)
+		if ((es = pRebarPos->setShowMarkerOnly(newVal == VARIANT_TRUE ? Adesk::kTrue : Adesk::kFalse)) != Acad::eOk)
             throw es;
         else 
             Fire_Notification(DISPID_SHOWMARKERONLY);
@@ -947,12 +926,12 @@ STDMETHODIMP CComRebarPos::get_Note(BSTR * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        *pVal = SysAllocString(CT2W(pPoly->Note()));
+        *pVal = SysAllocString(CT2W(pRebarPos->Note()));
     }
     catch(const Acad::ErrorStatus)
     {
@@ -968,12 +947,12 @@ STDMETHODIMP CComRebarPos::put_Note(BSTR newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        if ((es = pPoly->setNote(W2T(newVal))) != Acad::eOk)
+        if ((es = pRebarPos->setNote(W2T(newVal))) != Acad::eOk)
             throw es;
         else 
             Fire_Notification(DISPID_NOTE);
@@ -991,12 +970,12 @@ STDMETHODIMP CComRebarPos::get_A(BSTR * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        *pVal = SysAllocString(CT2W(pPoly->A()));
+        *pVal = SysAllocString(CT2W(pRebarPos->A()));
     }
     catch(const Acad::ErrorStatus)
     {
@@ -1012,12 +991,12 @@ STDMETHODIMP CComRebarPos::put_A(BSTR newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        if ((es = pPoly->setA(W2T(newVal))) != Acad::eOk)
+        if ((es = pRebarPos->setA(W2T(newVal))) != Acad::eOk)
             throw es;
         else 
             Fire_Notification(DISPID_A);
@@ -1035,12 +1014,12 @@ STDMETHODIMP CComRebarPos::get_B(BSTR * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        *pVal = SysAllocString(CT2W(pPoly->B()));
+        *pVal = SysAllocString(CT2W(pRebarPos->B()));
     }
     catch(const Acad::ErrorStatus)
     {
@@ -1056,12 +1035,12 @@ STDMETHODIMP CComRebarPos::put_B(BSTR newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        if ((es = pPoly->setB(W2T(newVal))) != Acad::eOk)
+        if ((es = pRebarPos->setB(W2T(newVal))) != Acad::eOk)
             throw es;
         else 
             Fire_Notification(DISPID_B);
@@ -1079,12 +1058,12 @@ STDMETHODIMP CComRebarPos::get_C(BSTR * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        *pVal = SysAllocString(CT2W(pPoly->C()));
+        *pVal = SysAllocString(CT2W(pRebarPos->C()));
     }
     catch(const Acad::ErrorStatus)
     {
@@ -1100,12 +1079,12 @@ STDMETHODIMP CComRebarPos::put_C(BSTR newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        if ((es = pPoly->setC(W2T(newVal))) != Acad::eOk)
+        if ((es = pRebarPos->setC(W2T(newVal))) != Acad::eOk)
             throw es;
         else 
             Fire_Notification(DISPID_C);
@@ -1123,12 +1102,12 @@ STDMETHODIMP CComRebarPos::get_D(BSTR * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        *pVal = SysAllocString(CT2W(pPoly->D()));
+        *pVal = SysAllocString(CT2W(pRebarPos->D()));
     }
     catch(const Acad::ErrorStatus)
     {
@@ -1144,12 +1123,12 @@ STDMETHODIMP CComRebarPos::put_D(BSTR newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        if ((es = pPoly->setD(W2T(newVal))) != Acad::eOk)
+        if ((es = pRebarPos->setD(W2T(newVal))) != Acad::eOk)
             throw es;
         else 
             Fire_Notification(DISPID_D);
@@ -1167,12 +1146,12 @@ STDMETHODIMP CComRebarPos::get_E(BSTR * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        *pVal = SysAllocString(CT2W(pPoly->E()));
+        *pVal = SysAllocString(CT2W(pRebarPos->E()));
     }
     catch(const Acad::ErrorStatus)
     {
@@ -1188,12 +1167,12 @@ STDMETHODIMP CComRebarPos::put_E(BSTR newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        if ((es = pPoly->setE(W2T(newVal))) != Acad::eOk)
+        if ((es = pRebarPos->setE(W2T(newVal))) != Acad::eOk)
             throw es;
         else 
             Fire_Notification(DISPID_E);
@@ -1211,12 +1190,12 @@ STDMETHODIMP CComRebarPos::get_F(BSTR * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        *pVal = SysAllocString(CT2W(pPoly->F()));
+        *pVal = SysAllocString(CT2W(pRebarPos->F()));
     }
     catch(const Acad::ErrorStatus)
     {
@@ -1232,12 +1211,12 @@ STDMETHODIMP CComRebarPos::put_F(BSTR newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        if ((es = pPoly->setF(W2T(newVal))) != Acad::eOk)
+        if ((es = pRebarPos->setF(W2T(newVal))) != Acad::eOk)
             throw es;
         else 
             Fire_Notification(DISPID_F);
@@ -1255,12 +1234,12 @@ STDMETHODIMP CComRebarPos::get_Length(BSTR * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead,Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
         
         USES_CONVERSION;
-        *pVal = SysAllocString(CT2W(pPoly->Length()));
+        *pVal = SysAllocString(CT2W(pRebarPos->Length()));
     }
     catch(const Acad::ErrorStatus)
     {
@@ -1275,8 +1254,8 @@ STDMETHODIMP CComRebarPos::get_Shape(BSTR * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef, AcDb::kForRead, Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef, AcDb::kForRead, Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
 
 		AcDbDictionary* pDict = CPosShape::GetDictionary();
@@ -1284,7 +1263,7 @@ STDMETHODIMP CComRebarPos::get_Shape(BSTR * pVal)
 
 		for( ; !it->done(); it->next())
 		{
-			if(it->objectId() == pPoly->ShapeId())
+			if(it->objectId() == pRebarPos->ShapeId())
 			{
 		        USES_CONVERSION;
 				*pVal = SysAllocString(CT2W(it->name()));
@@ -1313,14 +1292,14 @@ STDMETHODIMP CComRebarPos::put_Shape(BSTR newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef, AcDb::kForWrite, Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef, AcDb::kForWrite, Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
 
 		AcDbObjectId id = CPosShape::GetByName(W2T(newVal));
 		if(id != AcDbObjectId::kNull)
 		{
-	        if ((es = pPoly->setShapeId(id)) != Acad::eOk)
+	        if ((es = pRebarPos->setShapeId(id)) != Acad::eOk)
 		        throw es;
 			else
 				Fire_Notification(DISPID_SHAPE);
@@ -1343,8 +1322,8 @@ STDMETHODIMP CComRebarPos::get_Group(BSTR * pVal)
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef, AcDb::kForRead, Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef, AcDb::kForRead, Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
 
 		AcDbDictionary* pDict = CPosGroup::GetDictionary();
@@ -1352,7 +1331,7 @@ STDMETHODIMP CComRebarPos::get_Group(BSTR * pVal)
 
 		for( ; !it->done(); it->next())
 		{
-			if(it->objectId() == pPoly->GroupId())
+			if(it->objectId() == pRebarPos->GroupId())
 			{
 		        USES_CONVERSION;
 				*pVal = SysAllocString(CT2W(it->name()));
@@ -1381,14 +1360,14 @@ STDMETHODIMP CComRebarPos::put_Group(BSTR newVal)
         AXEntityDocLockNoDbOk(m_objRef.objectId());
 
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef, AcDb::kForWrite, Adesk::kTrue);
-	    if((es = pPoly.openStatus()) != Acad::eOk)
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef, AcDb::kForWrite, Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
 
 		AcDbObjectId id = CPosGroup::GetByName(W2T(newVal));
 		if(id != AcDbObjectId::kNull)
 		{
-	        if ((es = pPoly->setGroupId(id)) != Acad::eOk)
+	        if ((es = pRebarPos->setGroupId(id)) != Acad::eOk)
 		        throw es;
 			else
 				Fire_Notification(DISPID_GROUP);

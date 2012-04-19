@@ -46,7 +46,7 @@ extern CComModule _Module;
 
 
 
-HRESULT CComPolyCmd::OnChanged(DISPID dispId)
+HRESULT CComRebarPosCmd::OnChanged(DISPID dispId)
 {
     switch(dispId) {
         case DISPID_POS:
@@ -62,12 +62,12 @@ HRESULT CComPolyCmd::OnChanged(DISPID dispId)
     return S_OK;
 }
 
-HRESULT CComPolyCmd::OnRequestEdit(DISPID dispId)
+HRESULT CComRebarPosCmd::OnRequestEdit(DISPID dispId)
 {
     return S_OK;
 }
 
-void CComPolyCmd::InterruptPrompt()
+void CComRebarPosCmd::InterruptPrompt()
 {
     if (NULL != m_pDoc)
     {

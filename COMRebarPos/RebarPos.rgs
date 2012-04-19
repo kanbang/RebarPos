@@ -24,7 +24,7 @@ HKLM
 				{
 					NoRemove ActiveXCLSID
 					{
-						val AsdkPoly = s '{6421F67D-6A0A-4CA4-85BA-F11A0852A656}'
+						val RebarPos = s '{6421F67D-6A0A-4CA4-85BA-F11A0852A656}'
 					}
 				}			
 			}

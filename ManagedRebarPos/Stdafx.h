@@ -45,7 +45,7 @@
 #include "rxdefs.h"
 #include "dbmain.h"
 
-// poly includes
+// includes
 #include "..\NativeRebarPos\RebarPos.h"
 #include "MgRebarPos.h"
 

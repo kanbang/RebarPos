@@ -74,7 +74,7 @@ CComModule _Module;
 
 #include "RebarPosCmd.h"
 
-// Invoked by the command - POLY
+// Invoked by the command - POS
 //
 void polyCommand()
 {

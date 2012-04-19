@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0500 */
-/* at Thu Apr 19 12:41:37 2012
+/* at Thu Apr 19 13:04:05 2012
  */
 /* Compiler settings for .\COMRebarPos.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -65,14 +65,14 @@ extern "C"{
 
 
 
-#ifndef __COMPOLYLib_LIBRARY_DEFINED__
-#define __COMPOLYLib_LIBRARY_DEFINED__
+#ifndef __COMREBARPOSLib_LIBRARY_DEFINED__
+#define __COMREBARPOSLib_LIBRARY_DEFINED__
 
-/* library COMPOLYLib */
+/* library COMREBARPOSLib */
 /* [helpfile][helpstring][version][uuid] */ 
 
 
-EXTERN_C const IID LIBID_COMPOLYLib;
+EXTERN_C const IID LIBID_COMREBARPOSLib;
 
 #ifndef __IComRebarPos_INTERFACE_DEFINED__
 #define __IComRebarPos_INTERFACE_DEFINED__
@@ -960,7 +960,7 @@ EXTERN_C const CLSID CLSID_ComRebarPos;
 class DECLSPEC_UUID("6421F67D-6A0A-4CA4-85BA-F11A0852A656")
 ComRebarPos;
 #endif
-#endif /* __COMPOLYLib_LIBRARY_DEFINED__ */
+#endif /* __COMREBARPOSLib_LIBRARY_DEFINED__ */
 
 /* Additional Prototypes for ALL interfaces */
 
