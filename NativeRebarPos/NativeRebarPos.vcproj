@@ -83,6 +83,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy /Y &quot;$(ProjectDir)$(IntDir)\$(TargetName).lib&quot; &quot;$(OutDir)\$(TargetName).lib&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -151,6 +152,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy /Y &quot;$(ProjectDir)$(IntDir)\$(TargetName).lib&quot; &quot;$(OutDir)\$(TargetName).lib&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -216,6 +218,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy /Y &quot;$(ProjectDir)$(IntDir)\$(TargetName).lib&quot; &quot;$(OutDir)\$(TargetName).lib&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -280,6 +283,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy /Y &quot;$(ProjectDir)$(IntDir)\$(TargetName).lib&quot; &quot;$(OutDir)\$(TargetName).lib&quot;"
 			/>
 		</Configuration>
 	</Configurations>

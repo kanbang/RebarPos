@@ -1,3 +1,7 @@
+//-----------------------------------------------------------------------------
+//----- RebarPos.h : Declaration of RebarPos
+//-----------------------------------------------------------------------------
+
 #pragma once
 
 #include <tchar.h>
@@ -23,11 +27,50 @@ namespace OZOZ
                 return static_cast<CRebarPos*>(UnmanagedObject.ToPointer());
             }
 
+		public:
+			enum class HitTestResult
+			{ 
+				None = 0,
+				Pos = 1,
+				Count = 2,
+				Diameter = 3,
+				Spacing = 4,
+				Group = 5,
+				Multiplier = 6,
+				Length = 7,
+				Note = 8
+			};
+
         public:
 			property Point3d BasePoint { Point3d get(); void set(Point3d value); }
-			property String^ Pos   { String^ get(); void set(String^ value); }
+			property Point3d NoteGrip  { Point3d get(); void set(Point3d value); }
+
+			property String^ Pos      { String^ get(); void set(String^ value); }
+			property String^ Note     { String^ get(); void set(String^ value); }
+			property String^ Count    { String^ get(); void set(String^ value); }
+			property String^ Diameter { String^ get(); void set(String^ value); }
+			property String^ Spacing  { String^ get(); void set(String^ value); }
+			property int Multiplier   { int get(); void set(int value); }
+
+			property bool ShowLength     { bool get(); void set(bool value); }
+			property bool ShowMarkerOnly { bool get(); void set(bool value); }
+
+			property String^ A { String^ get(); void set(String^ value); }
+			property String^ B { String^ get(); void set(String^ value); }
+			property String^ C { String^ get(); void set(String^ value); }
+			property String^ D { String^ get(); void set(String^ value); }
+			property String^ E { String^ get(); void set(String^ value); }
+			property String^ F { String^ get(); void set(String^ value); }
+
+			property String^ Length { String^ get(); }
+
+			property String^ PosKey { String^ get(); }
 
 			property Autodesk::AutoCAD::DatabaseServices::ObjectId ShapeId { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
+			property Autodesk::AutoCAD::DatabaseServices::ObjectId GroupId { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
+
+		public:
+			HitTestResult HitTest(Point3d pt);
         };
     }
 

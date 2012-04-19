@@ -6,7 +6,7 @@
 	ProjectGUID="{D26DC853-A22B-4C5B-810F-F76D1247FA93}"
 	RootNamespace="ManagedRebarPos"
 	Keyword="ManagedCProj"
-	TargetFrameworkVersion="0"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform

@@ -239,7 +239,7 @@
                                                         {
                                                             "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_CDDD7C36DE194C3288572D3C919C4C30"
                                                             {
-                                                            "Name" = "8:AsdkPolyObj2.0"
+                                                            "Name" = "8:RebarPos"
                                                             "Condition" = "8:"
                                                             "AlwaysCreate" = "11:FALSE"
                                                             "DeleteAtUninstall" = "11:FALSE"

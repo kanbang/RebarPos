@@ -54,8 +54,11 @@
 #endif
 
 //- This line allows us to get rid of the .def file in ARX projects
+#ifndef NO_ARX_DEF
+#define NO_ARX_DEF
 #ifndef _WIN64
 #pragma comment(linker, "/export:_acrxGetApiVersion,PRIVATE")
 #else
 #pragma comment(linker, "/export:acrxGetApiVersion,PRIVATE")
+#endif
 #endif

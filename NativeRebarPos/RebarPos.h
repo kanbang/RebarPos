@@ -63,7 +63,6 @@ private:
 	AcGePoint3d m_BasePoint;
 	AcGePoint3d m_NoteGrip;
 	mutable ACHAR* m_Key;
-	mutable ACHAR* m_Text;
 	mutable ACHAR* m_Length;
 	ACHAR* m_Pos;
 	ACHAR* m_Count;
@@ -159,6 +158,9 @@ public:
 	const ACHAR* F(void) const;
 	Acad::ErrorStatus setF(const ACHAR* newVal);
 
+	/// Gets the total length
+	const ACHAR* Length(void) const;
+
 	/// Gets or sets the shape style
 	const AcDbObjectId& ShapeId(void) const;
 	Acad::ErrorStatus setShapeId(const AcDbObjectId& newVal);
@@ -169,15 +171,6 @@ public:
 
 
 public:
-	/// Gets the pos text
-	const ACHAR* Text(void) const;
-
-	/// Gets length text
-	const ACHAR* Length(void) const;
-
-	/// Gets the height of the drawing object
-	const double Height(void) const;
-
 	/// Gets a string key identifying a pos with a certain diameter,
 	/// shape and piece lengths
 	const ACHAR* PosKey() const;

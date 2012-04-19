@@ -62,7 +62,7 @@ ACRX_DXF_DEFINE_MEMBERS(CRebarPos, AcDbEntity,
 
 CRebarPos::CRebarPos() :
 	m_BasePoint(0, 0, 0), direction(1, 0, 0), up(0, 1, 0), norm(0, 0, 1), m_NoteGrip(-4.2133, 0.75 * -1.075, 0),
-	m_ShowLength(Adesk::kTrue), m_ShowMarkerOnly(Adesk::kFalse), isModified(true), m_Text(NULL), m_Length(NULL), m_Key(NULL),
+	m_ShowLength(Adesk::kTrue), m_ShowMarkerOnly(Adesk::kFalse), isModified(true), m_Length(NULL), m_Key(NULL),
 	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), m_Multiplier(1), 
 	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL),
 	m_ShapeID(AcDbObjectId::kNull), m_GroupID(AcDbObjectId::kNull)
@@ -72,7 +72,6 @@ CRebarPos::CRebarPos() :
 CRebarPos::~CRebarPos()
 {
     acutDelString(m_Key);
-    acutDelString(m_Text);
     acutDelString(m_Length);
     acutDelString(m_Pos);
     acutDelString(m_Count);
@@ -115,18 +114,6 @@ Acad::ErrorStatus CRebarPos::setNoteGrip(const AcGePoint3d newVal)
 	assertWriteEnabled();
 	m_NoteGrip = newVal;
 	return Acad::eOk;
-}
-
-const ACHAR* CRebarPos::Text(void) const
-{
-	Calculate();
-	return m_Text;
-}
-
-const ACHAR* CRebarPos::Length(void) const
-{
-	Calculate();
-	return m_Length;
 }
 
 const ACHAR* CRebarPos::Pos(void) const
@@ -384,6 +371,12 @@ Acad::ErrorStatus CRebarPos::setF(const ACHAR* newVal)
 	return Acad::eOk;
 }
 
+const ACHAR* CRebarPos::Length(void) const
+{
+	assertReadEnabled();
+	return m_Length;
+}
+
 const AcDbObjectId& CRebarPos::ShapeId(void) const
 {
 	assertReadEnabled();
@@ -416,6 +409,17 @@ const ACHAR* CRebarPos::PosKey() const
 {
 	Calculate();
 	return m_Key;
+}
+
+//*************************************************************************
+// Methods
+//*************************************************************************
+
+/// Determines which part is under the given point
+const CRebarPos::PosHitTest CRebarPos::HitTest(const AcGePoint3d pt0) const
+{
+	// TODO: Fix this
+	return CRebarPos::NONE;
 }
 
 //*************************************************************************

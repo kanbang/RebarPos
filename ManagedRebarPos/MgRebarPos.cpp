@@ -1,24 +1,7 @@
-// (C) Copyright 2004-2006 by Autodesk, Inc. 
-//
-// Permission to use, copy, modify, and distribute this software in
-// object code form for any purpose and without fee is hereby granted, 
-// provided that the above copyright notice appears in all copies and 
-// that both that copyright notice and the limited warranty and
-// restricted rights notice below appear in all supporting 
-// documentation.
-//
-// AUTODESK PROVIDES THIS PROGRAM "AS IS" AND WITH ALL FAULTS. 
-// AUTODESK SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTY OF
-// MERCHANTABILITY OR FITNESS FOR A PARTICULAR USE.  AUTODESK, INC. 
-// DOES NOT WARRANT THAT THE OPERATION OF THE PROGRAM WILL BE
-// UNINTERRUPTED OR ERROR FREE.
-//
-// Use, duplication, or disclosure by the U.S. Government is subject to 
-// restrictions set forth in FAR 52.227-19 (Commercial Computer
-// Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
-// (Rights in Technical Data and Computer Software), as applicable.
-//
-// This is the main DLL file.
+//-----------------------------------------------------------------------------
+//----- RebarPos.cpp : Implementation of RebarPos
+//-----------------------------------------------------------------------------
+
 #include "StdAfx.h"
 
 #if defined(_DEBUG) && !defined(AC_FULL_DEBUG)
@@ -33,27 +16,38 @@
 
 using namespace OZOZ::RebarPosWrapper;
 
-//////////////////////////////////////////////////////////////////////////
-// constructor
+//*************************************************************************
+// Constructors and destructors 
+//*************************************************************************
 RebarPos::RebarPos() 
 :Autodesk::AutoCAD::DatabaseServices::Entity(IntPtr(new CRebarPos()), true)
 {
-	acutPrintf(_T("\n*********************Constructor"));
 }
 
-//////////////////////////////////////////////////////////////////////////
 RebarPos::RebarPos(System::IntPtr unmanagedPointer, bool autoDelete)
 : Autodesk::AutoCAD::DatabaseServices::Entity(unmanagedPointer,autoDelete)
 {
 }
 
+//*************************************************************************
+// Properties
+//*************************************************************************
 void RebarPos::BasePoint::set(Point3d point)
 {
-  Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setBasePoint(GETPOINT3D(point)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setBasePoint(GETPOINT3D(point)));
 }
 Point3d RebarPos::BasePoint::get()
 {
     return ToPoint3d (GetImpObj()->BasePoint());
+}
+
+void RebarPos::NoteGrip::set(Point3d point)
+{
+  Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setNoteGrip(GETPOINT3D(point)));
+}
+Point3d RebarPos::NoteGrip::get()
+{
+    return ToPoint3d (GetImpObj()->NoteGrip());
 }
 
 void RebarPos::Pos::set(String^ value)
@@ -65,6 +59,133 @@ String^ RebarPos::Pos::get()
     return WcharToString(GetImpObj()->Pos());
 }
 
+void RebarPos::Note::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setNote(StringToWchar(value)));
+}
+String^ RebarPos::Note::get()
+{
+    return WcharToString(GetImpObj()->Note());
+}
+
+void RebarPos::Count::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setCount(StringToWchar(value)));
+}
+String^ RebarPos::Count::get()
+{
+    return WcharToString(GetImpObj()->Count());
+}
+
+void RebarPos::Diameter::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setDiameter(StringToWchar(value)));
+}
+String^ RebarPos::Diameter::get()
+{
+    return WcharToString(GetImpObj()->Diameter());
+}
+
+void RebarPos::Spacing::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setSpacing(StringToWchar(value)));
+}
+String^ RebarPos::Spacing::get()
+{
+    return WcharToString(GetImpObj()->Spacing());
+}
+
+void RebarPos::Multiplier::set(int value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setMultiplier(value));
+}
+int RebarPos::Multiplier::get()
+{
+    return GetImpObj()->Multiplier();
+}
+
+void RebarPos::ShowLength::set(bool value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setShowLength(value ? Adesk::kTrue : Adesk::kFalse));
+}
+bool RebarPos::ShowLength::get()
+{
+	return (GetImpObj()->ShowLength() == Adesk::kTrue ? true : false);
+}
+
+void RebarPos::ShowMarkerOnly::set(bool value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setShowMarkerOnly(value ? Adesk::kTrue : Adesk::kFalse));
+}
+bool RebarPos::ShowMarkerOnly::get()
+{
+	return (GetImpObj()->ShowMarkerOnly() == Adesk::kTrue ? true : false);
+}
+
+void RebarPos::A::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setA(StringToWchar(value)));
+}
+String^ RebarPos::A::get()
+{
+    return WcharToString(GetImpObj()->A());
+}
+
+void RebarPos::B::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setB(StringToWchar(value)));
+}
+String^ RebarPos::B::get()
+{
+    return WcharToString(GetImpObj()->B());
+}
+
+void RebarPos::C::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setC(StringToWchar(value)));
+}
+String^ RebarPos::C::get()
+{
+    return WcharToString(GetImpObj()->C());
+}
+
+void RebarPos::D::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setD(StringToWchar(value)));
+}
+String^ RebarPos::D::get()
+{
+    return WcharToString(GetImpObj()->D());
+}
+
+void RebarPos::E::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setE(StringToWchar(value)));
+}
+String^ RebarPos::E::get()
+{
+    return WcharToString(GetImpObj()->E());
+}
+
+void RebarPos::F::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setF(StringToWchar(value)));
+}
+String^ RebarPos::F::get()
+{
+    return WcharToString(GetImpObj()->F());
+}
+
+String^ RebarPos::Length::get()
+{
+    return WcharToString(GetImpObj()->Length());
+}
+
+String^ RebarPos::PosKey::get()
+{
+    return WcharToString(GetImpObj()->PosKey());
+}
+
 void RebarPos::ShapeId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
 {
     Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setShapeId(GETOBJECTID(value)));
@@ -72,4 +193,21 @@ void RebarPos::ShapeId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
 Autodesk::AutoCAD::DatabaseServices::ObjectId RebarPos::ShapeId::get()
 {
 	return ToObjectId(GetImpObj()->ShapeId());
+}
+
+void RebarPos::GroupId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setGroupId(GETOBJECTID(value)));
+}
+Autodesk::AutoCAD::DatabaseServices::ObjectId RebarPos::GroupId::get()
+{
+	return ToObjectId(GetImpObj()->GroupId());
+}
+
+//*************************************************************************
+// Methods
+//*************************************************************************
+RebarPos::HitTestResult RebarPos::HitTest(Point3d pt)
+{
+	return (HitTestResult)GetImpObj()->HitTest(GETPOINT3D(pt));
 }
