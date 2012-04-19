@@ -30,6 +30,7 @@
 #include "dbsymtb.h"
 #include "../NativeRebarPos/RebarPos.h"
 #include "../NativeRebarPos/PosShape.h"
+#include "../NativeRebarPos/PosGroup.h"
 #include "axpnt3d.h"
 #include "axpnt2d.h"
 #include "dbxutil.h"
@@ -358,8 +359,32 @@ STDMETHODIMP CComRebarPos::GetPredefinedStrings(DISPID dispID, CALPOLESTR *pCaSt
 
 		return S_OK;
 		break;
+	case DISPID_GROUP:
+		size = CPosGroup::Count();
+		pCaStringsOut->pElems = (LPOLESTR *)::CoTaskMemAlloc(sizeof(LPOLESTR) * size);
+		pCaCookiesOut->pElems = (DWORD *)::CoTaskMemAlloc(sizeof(DWORD) * size);
+
+		mGroupIdArray.removeAll();
+
+		pDict = CPosGroup::GetDictionary();
+		it = pDict->newIterator();
+		i = 0;
+		for( ; !it->done(); it->next())
+		{
+			pCaStringsOut->pElems[i] = ::SysAllocString(CT2W(it->name()));
+			pCaCookiesOut->pElems[i] = mGroupIdArray.append(it->objectId());
+			i++;
+		}
+		pCaStringsOut->cElems = i;
+		pCaCookiesOut->cElems = i;
+
+		delete it;
+		pDict->close();
+
+		return S_OK;
+		break;
 	default:
-        return  IOPMPropertyExtensionImpl<CComRebarPos>::GetPredefinedStrings(dispID,pCaStringsOut,pCaCookiesOut);
+        return IOPMPropertyExtensionImpl<CComRebarPos>::GetPredefinedStrings(dispID, pCaStringsOut, pCaCookiesOut);
 	}
 }
 
@@ -399,8 +424,29 @@ STDMETHODIMP CComRebarPos::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VAR
 
 		return hr;
 		break;
+	case DISPID_GROUP:
+	    assert((INT_PTR)dwCookie >= 0);
+		assert((INT_PTR)dwCookie < mGroupIdArray.length());
+	    id = mGroupIdArray[dwCookie];
+
+		pDict = CPosGroup::GetDictionary();
+		it = pDict->newIterator();
+		for( ; !it->done(); it->next())
+		{
+			if(it->objectId() == id)
+			{
+				hr = S_OK;
+				VariantCopy(pVarOut, &CComVariant(CT2W(it->name())));
+				break;
+			}
+		}
+		delete it;
+		pDict->close();
+
+		return hr;
+		break;
 	default:
-		return  IOPMPropertyExtensionImpl<CComRebarPos>::GetPredefinedValue(dispID,dwCookie, pVarOut);
+		return IOPMPropertyExtensionImpl<CComRebarPos>::GetPredefinedValue(dispID, dwCookie, pVarOut);
 	}
 }
 
@@ -1301,16 +1347,21 @@ STDMETHODIMP CComRebarPos::get_Group(BSTR * pVal)
 	    if((es = pPoly.openStatus()) != Acad::eOk)
             throw es;
 
-        AcDbTextStyleTableRecordPointer pTextStyleRecord(pPoly->GroupId(), AcDb::kForRead);
-        if((es = pTextStyleRecord.openStatus()) != Acad::eOk)
-            throw es;
+		AcDbDictionary* pDict = CPosGroup::GetDictionary();
+		AcDbDictionaryIterator* it = pDict->newIterator();
 
-        const TCHAR* pName;
-        if ((es = pTextStyleRecord->getName(pName)) != Acad::eOk)
-            throw es;
+		for( ; !it->done(); it->next())
+		{
+			if(it->objectId() == pPoly->GroupId())
+			{
+		        USES_CONVERSION;
+				*pVal = SysAllocString(CT2W(it->name()));
+				break;
+			}
+		}
 
-        USES_CONVERSION;
-        *pVal = SysAllocString(CT2W(pName));
+		delete it;
+		pDict->close();
     }
     catch(const Acad::ErrorStatus)
     {
@@ -1334,19 +1385,14 @@ STDMETHODIMP CComRebarPos::put_Group(BSTR newVal)
 	    if((es = pPoly.openStatus()) != Acad::eOk)
             throw es;
 
-        USES_CONVERSION;
-        AcDbDatabase* pDb = m_objRef.objectId().database();
-        if (NULL == pDb)
-            pDb = acdbHostApplicationServices()->workingDatabase();
-        
-        AcDbTextStyleTableRecordPointer pTextStyleRecord(W2T(newVal), pDb, AcDb::kForRead);
-        if((es = pTextStyleRecord.openStatus()) != Acad::eOk)
-            throw es;
-
-        if ((es = pPoly->setGroupId(pTextStyleRecord->objectId())) != Acad::eOk)
-            throw es;
-        else
-            Fire_Notification(DISPID_GROUP);
+		AcDbObjectId id = CPosGroup::GetByName(W2T(newVal));
+		if(id != AcDbObjectId::kNull)
+		{
+	        if ((es = pPoly->setGroupId(id)) != Acad::eOk)
+		        throw es;
+			else
+				Fire_Notification(DISPID_GROUP);
+		}
     }
     catch(const Acad::ErrorStatus)
     {

@@ -227,5 +227,6 @@ END_OPMPROP_MAP()
 
     protected:
         AcDbObjectIdArray mShapeIdArray;
+		AcDbObjectIdArray mGroupIdArray;
 };
 
