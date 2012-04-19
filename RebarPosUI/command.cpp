@@ -55,6 +55,7 @@ CComModule _Module;
 #include "../NativeRebarPos/RebarPos.h"
 #include "../NativeRebarPos/PosShape.h"
 #include "../NativeRebarPos/PosStyle.h"
+#include "../NativeRebarPos/PosGroup.h"
 #include "../NativeRebarPos/Utility.h"
 #include "dbxutil.h"
 #include "dbapserv.h"
@@ -90,15 +91,24 @@ void polyCommand()
 
 	AcDbObjectId shapeId = CPosShape::CreateDefault();
 	AcDbObjectId styleId = CPosStyle::CreateDefault();
+	AcDbObjectId groupId = CPosGroup::CreateDefault();
 
-    CRebarPos* poly = new CRebarPos;
+	Acad::ErrorStatus es;
+	CPosGroup* pGroup;
+	if((es = acdbOpenAcDbObject((AcDbObject*&)pGroup, groupId, AcDb::kForWrite, false)) == Acad::eOk)
+	{
+		pGroup->setStyleId(styleId);
+		pGroup->close();
+	}
+    CRebarPos* pPos = new CRebarPos;
     
-	poly->setBasePoint(asPnt3d(center));
-	poly->setPos(nameBuf);
-	poly->setA(_T("100"));
-	poly->setB(_T("20"));
-	poly->setShapeId(shapeId);
+	pPos->setBasePoint(asPnt3d(center));
+	pPos->setPos(nameBuf);
+	pPos->setA(_T("100"));
+	pPos->setB(_T("20"));
+	pPos->setShapeId(shapeId);
+	pPos->setGroupId(groupId);
     
-    poly->setDatabaseDefaults(acdbHostApplicationServices()->workingDatabase());
-    postToDb(poly);
+    pPos->setDatabaseDefaults(acdbHostApplicationServices()->workingDatabase());
+    postToDb(pPos);
 }

@@ -818,10 +818,10 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
             break;
 
         case AcDb::kDxfBool:
-			t_ShowLength = rb.resval.rint == 0 ? Adesk::kFalse : Adesk::kTrue;
+			t_ShowLength = (rb.resval.rint == 0) ? Adesk::kFalse : Adesk::kTrue;
             break;
         case AcDb::kDxfBool + 1:
-			t_ShowMarkerOnly = rb.resval.rint == 0 ? Adesk::kFalse : Adesk::kTrue;
+			t_ShowMarkerOnly = (rb.resval.rint == 0) ? Adesk::kFalse : Adesk::kTrue;
             break;
 
         case AcDb::kDxfXTextString + 5:

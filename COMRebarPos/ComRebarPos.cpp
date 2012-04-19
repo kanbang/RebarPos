@@ -81,7 +81,7 @@ STDMETHODIMP CComRebarPos::Editable(
 		try
 		{
 			Acad::ErrorStatus es;
-			AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead, Adesk::kTrue);
+			AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef, AcDb::kForRead, Adesk::kTrue);
 			if((es = pPoly.openStatus()) != Acad::eOk)
 				throw es;
 
@@ -143,7 +143,7 @@ STDMETHODIMP CComRebarPos::GetElementValue(
     try
     {
         Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef,AcDb::kForRead, Adesk::kTrue);
+        AcAxObjectRefPtr<CRebarPos> pPoly(&m_objRef, AcDb::kForRead, Adesk::kTrue);
         if((es = pPoly.openStatus()) != Acad::eOk)
             throw es;
 

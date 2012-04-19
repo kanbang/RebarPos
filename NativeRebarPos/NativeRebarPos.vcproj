@@ -295,6 +295,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PosGroup.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\PosShape.cpp"
 				>
 			</File>
@@ -321,6 +325,10 @@
 			>
 			<File
 				RelativePath="..\COMRebarPos\COMRebarPos_i.c"
+				>
+			</File>
+			<File
+				RelativePath=".\PosGroup.h"
 				>
 			</File>
 			<File

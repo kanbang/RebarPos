@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-//----- PosStyle.h : Declaration of the CPosStyle
+//----- PosGroup.h : Declaration of the CPosGroup
 //-----------------------------------------------------------------------------
 #pragma once
 
@@ -25,22 +25,30 @@
 #endif
 
 /// ---------------------------------------------------------------------------
-/// The CPosStyle represents the style settings of rebar markers.
+/// The CPosGroup represents the settings for groups of rebar markers.
 /// ---------------------------------------------------------------------------
-class DLLIMPEXP CPosStyle : public AcDbObject
+class DLLIMPEXP CPosGroup : public AcDbObject
 {
-
 public:
 	/// Define additional RTT information for AcRxObject base type.
-	ACRX_DECLARE_MEMBERS(CPosStyle);
+	ACRX_DECLARE_MEMBERS(CPosGroup);
 
 protected:
 	/// Object version number serialized in the drawing database.
 	static Adesk::UInt32 kCurrentVersionNumber;
 
 public:
-	CPosStyle ();
-	virtual ~CPosStyle ();
+	CPosGroup ();
+	virtual ~CPosGroup ();
+
+public:
+	enum DrawingUnits
+	{ 
+		MM = 0,
+		CM = 1,
+		DM = 2,
+		M = 3,
+	};
 
 public:
 	/// AcDbEntity overrides: database
@@ -50,75 +58,40 @@ public:
 	virtual Acad::ErrorStatus dxfOutFields(AcDbDxfFiler *pFiler) const;
 	virtual Acad::ErrorStatus dxfInFields(AcDbDxfFiler *pFiler);
 
-protected:
-	/// Property backing fields
-	ACHAR* m_Formula;
-
-	Adesk::UInt16 m_TextColor;
-	Adesk::UInt16 m_PosColor;
-	Adesk::UInt16 m_CircleColor;
-	Adesk::UInt16 m_MultiplierColor;
-	Adesk::UInt16 m_GroupColor;
-	Adesk::UInt16 m_NoteColor;
-	Adesk::UInt16 m_CurrentGroupHighlightColor;
-
-    double m_NoteScale;
-
-    AcDbHardPointerId m_TextStyleID;
-    AcDbHardPointerId m_NoteStyleID;
-
-protected:
-	/// Creates a text style
-	static AcDbObjectId CreateTextStyle(const ACHAR* name, const ACHAR* filename, const double scale);
-
 public:
 	/// Creates a default entry or returns the first entry in the table.
 	static AcDbObjectId CreateDefault(void);
 
+protected:
+	/// Property backing fields
+	Adesk::Boolean m_Bending;
+	double m_MaxBarLength;
+
+	DrawingUnits m_DrawingUnit;
+	DrawingUnits m_DisplayUnit;
+
+    AcDbHardPointerId m_StyleID;
+
 public:
-	/// Gets or sets the formula text.
-    const ACHAR* Formula(void) const;
-	Acad::ErrorStatus setFormula(const ACHAR* newVal);
+	/// Gets or sets the bending option.
+    const Adesk::Boolean Bending(void) const;
+	Acad::ErrorStatus setBending(const Adesk::Boolean newVal);
 
-	/// Gets or sets the text color.
-	const Adesk::UInt16 TextColor(void) const;
-	Acad::ErrorStatus setTextColor(const Adesk::UInt16 newVal);
+	/// Gets or sets the maximum bar length
+    const double MaxBarLength(void) const;
+	Acad::ErrorStatus setMaxBarLength(const double newVal);
 
-	/// Gets or sets the pos text color.
-	const Adesk::UInt16 PosColor(void) const;
-	Acad::ErrorStatus setPosColor(const Adesk::UInt16 newVal);
+	/// Gets or sets the drawing unit
+    const DrawingUnits DrawingUnit(void) const;
+	Acad::ErrorStatus setDrawingUnit(const DrawingUnits newVal);
 
-	/// Gets or sets the pos circle color.
-	const Adesk::UInt16 CircleColor(void) const;
-	Acad::ErrorStatus setCircleColor(const Adesk::UInt16 newVal);
+	/// Gets or sets the display unit
+    const DrawingUnits DisplayUnit(void) const;
+	Acad::ErrorStatus setDisplayUnit(const DrawingUnits newVal);
 
-	/// Gets or sets the multiplier text color.
-	const Adesk::UInt16 MultiplierColor(void) const;
-	Acad::ErrorStatus setMultiplierColor(const Adesk::UInt16 newVal);
-
-	/// Gets or sets the group text color.
-	const Adesk::UInt16 GroupColor(void) const;
-	Acad::ErrorStatus setGroupColor(const Adesk::UInt16 newVal);
-
-	/// Gets or sets the note text color.
-	const Adesk::UInt16 NoteColor(void) const;
-	Acad::ErrorStatus setNoteColor(const Adesk::UInt16 newVal);
-
-	/// Gets or sets the highlight color of the pos objects in the current group.
-	const Adesk::UInt16 CurrentGroupHighlightColor(void) const;
-	Acad::ErrorStatus setCurrentGroupHighlightColor(const Adesk::UInt16 newVal);
-
-	/// Gets or sets the note height relative to text height.
-	const double NoteScale(void) const;
-	Acad::ErrorStatus setNoteScale(const double newVal);
-
-	/// Gets or sets pointer to the text style.
-	const AcDbObjectId& TextStyleId(void) const;
-	Acad::ErrorStatus setTextStyleId(const AcDbObjectId& newVal);
-
-	/// Gets or sets pointer to the note style.
-	const AcDbObjectId& NoteStyleId(void) const;
-	Acad::ErrorStatus setNoteStyleId(const AcDbObjectId& newVal);
+	/// Gets or sets pointer to the style.
+	const AcDbObjectId& StyleId(void) const;
+	Acad::ErrorStatus setStyleId(const AcDbObjectId& newVal);
 
 // Common static dictionary methods
 public:
@@ -128,7 +101,7 @@ public:
 	static AcDbDictionary* GetDictionary();
 
 	/// Saves the current entry in the table.
-	static AcDbObjectId Save(const ACHAR* name, CPosStyle* pEntry);
+	static AcDbObjectId Save(const ACHAR* name, CPosGroup* pEntry);
 
 	/// Renames an entry in the table.
 	static bool Rename(const ACHAR* oldName, const ACHAR* newName);
