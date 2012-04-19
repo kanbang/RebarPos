@@ -314,10 +314,6 @@
 				RelativePath=".\RebarPosApp.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\Utility.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -345,10 +341,6 @@
 			</File>
 			<File
 				RelativePath=".\Shape.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Utility.h"
 				>
 			</File>
 		</Filter>

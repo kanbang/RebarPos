@@ -407,10 +407,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\NativeRebarPos\RebarPos.h"
-				>
-			</File>
-			<File
 				RelativePath=".\RebarPos.hm"
 				>
 			</File>

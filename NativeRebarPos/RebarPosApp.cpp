@@ -24,7 +24,6 @@
 #include "dbxutil.h"
 #include "acutmem.h"
 
-#include "Utility.h"
 #include "RebarPos.h"
 #include "PosShape.h"
 #include "PosStyle.h"

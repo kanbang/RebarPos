@@ -310,10 +310,6 @@
 				RelativePath=".\RebarPosMenu.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\UtilUI.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -328,15 +324,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\NativeRebarPos\RebarPos.h"
-				>
-			</File>
-			<File
 				RelativePath=".\RebarPosCmd.h"
-				>
-			</File>
-			<File
-				RelativePath="..\NativeRebarPos\Utility.h"
 				>
 			</File>
 		</Filter>

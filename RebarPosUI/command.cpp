@@ -56,7 +56,7 @@ CComModule _Module;
 #include "../NativeRebarPos/PosShape.h"
 #include "../NativeRebarPos/PosStyle.h"
 #include "../NativeRebarPos/PosGroup.h"
-#include "../NativeRebarPos/Utility.h"
+
 #include "dbxutil.h"
 #include "dbapserv.h"
 
@@ -110,5 +110,14 @@ void polyCommand()
 	pPos->setGroupId(groupId);
     
     pPos->setDatabaseDefaults(acdbHostApplicationServices()->workingDatabase());
-    postToDb(pPos);
+
+	AcDbObjectId objId;
+    AcDbBlockTable*        pBlockTable;
+    AcDbBlockTableRecord*  pSpaceRecord;
+    acdbHostApplicationServices()->workingDatabase()->getSymbolTable(pBlockTable, AcDb::kForRead);
+	pBlockTable->getAt(ACDB_MODEL_SPACE, pSpaceRecord, AcDb::kForWrite);
+	pBlockTable->close();
+	pSpaceRecord->appendAcDbEntity(objId, pPos);
+	pSpaceRecord->close();
+    pPos->close();
 }
