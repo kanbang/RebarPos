@@ -89,7 +89,7 @@ void polyCommand()
     AcGePoint3d cen = asPnt3d(center);
 
 	AcDbObjectId shapeId = CPosShape::CreateDefault();
-	//AcDbObjectId styleId = CPosStyle::CreateDefault();
+	AcDbObjectId styleId = CPosStyle::CreateDefault();
 
     CRebarPos* poly = new CRebarPos;
     
