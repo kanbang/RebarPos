@@ -316,6 +316,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MgPosStyle.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MgRebarPos.cpp"
 				>
 			</File>
@@ -366,6 +370,10 @@
 			>
 			<File
 				RelativePath=".\MgPosShape.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MgPosStyle.h"
 				>
 			</File>
 			<File

@@ -8,10 +8,7 @@
 #error _DEBUG should not be defined except in internal Adesk debug builds
 #endif
 
-
-//////////////////////////////////////////////////////////////////////////
 #include <gcroot.h>
-#include <dbdate.h>
 #include "mgdinterop.h"
 
 using namespace OZOZ::RebarPosWrapper;

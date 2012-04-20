@@ -8,10 +8,7 @@
 #error _DEBUG should not be defined except in internal Adesk debug builds
 #endif
 
-
-//////////////////////////////////////////////////////////////////////////
 #include <gcroot.h>
-#include <dbdate.h>
 #include "mgdinterop.h"
 
 using namespace OZOZ::RebarPosWrapper;
@@ -171,7 +168,44 @@ PosShape::Shape^ PosShape::ShapeCollection::default::get(int index)
 
 void PosShape::ShapeCollection::default::set(int index, PosShape::Shape^ value)
 {
-	m_Parent->GetImpObj()->SetShape(index, value->ToCShape());
+	if(value->GetType() == ShapeLine::typeid)
+	{
+		ShapeLine^ rshape = static_cast<ShapeLine^>(value);
+		CShapeLine* line = new CShapeLine();
+		line->color = rshape->Color->ColorIndex;
+		line->x1 = rshape->X1;
+		line->y1 = rshape->Y1;
+		line->x2 = rshape->X2;
+		line->y2 = rshape->Y1;
+		m_Parent->GetImpObj()->SetShape(index, line);
+	}
+	else if(value->GetType() == ShapeArc::typeid)
+	{
+		ShapeArc^ rshape = static_cast<ShapeArc^>(value);
+		CShapeArc* arc = new CShapeArc();
+		arc->color = rshape->Color->ColorIndex;
+		arc->x = rshape->X;
+		arc->y = rshape->Y;
+		arc->r = rshape->R;
+		arc->startAngle = rshape->StartAngle;
+		arc->endAngle = rshape->EndAngle;
+		m_Parent->GetImpObj()->SetShape(index, arc);
+	}
+	else if(value->GetType() == ShapeText::typeid)
+	{
+		ShapeText^ rshape = static_cast<ShapeText^>(value);
+		CShapeText* text = new CShapeText();
+		text->color = rshape->Color->ColorIndex;
+		text->x = rshape->X;
+		text->y = rshape->Y;
+		text->height = rshape->Height;
+		acutUpdString(StringToWchar(rshape->Text), text->text);
+		m_Parent->GetImpObj()->SetShape(index, text);
+	}
+	else
+	{
+		throw gcnew Exception("Unknown shape type");
+	}
 }
 
 //*************************************************************************

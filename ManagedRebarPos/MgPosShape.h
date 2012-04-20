@@ -4,10 +4,6 @@
 
 #pragma once
 
-#include <tchar.h>
-#include <gcroot.h>
-#include "mgdinterop.h"
-
 using namespace System;
 using namespace Autodesk::AutoCAD::Geometry;
 using namespace Autodesk::AutoCAD::DatabaseServices;
@@ -29,49 +25,6 @@ namespace OZOZ
 				Shape(void)
 				{
 					Color = Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, 0);
-				}
-
-			internal:
-				CShape* ToCShape(void)
-				{
-					if(this->GetType() == ShapeLine::typeid)
-					{
-						ShapeLine^ rshape = static_cast<ShapeLine^>(this);
-						CShapeLine* line = new CShapeLine();
-						line->color = rshape->Color->ColorIndex;
-						line->x1 = rshape->X1;
-						line->y1 = rshape->Y1;
-						line->x2 = rshape->X2;
-						line->y2 = rshape->Y1;
-						return line;
-					}
-					else if(this->GetType() == ShapeArc::typeid)
-					{
-						ShapeArc^ rshape = static_cast<ShapeArc^>(this);
-						CShapeArc* arc = new CShapeArc();
-						arc->color = rshape->Color->ColorIndex;
-						arc->x = rshape->X;
-						arc->y = rshape->Y;
-						arc->r = rshape->R;
-						arc->startAngle = rshape->StartAngle;
-						arc->endAngle = rshape->EndAngle;
-						return arc;
-					}
-					else if(this->GetType() == ShapeText::typeid)
-					{
-						ShapeText^ rshape = static_cast<ShapeText^>(this);
-						CShapeText* text = new CShapeText();
-						text->color = rshape->Color->ColorIndex;
-						text->x = rshape->X;
-						text->y = rshape->Y;
-						text->height = rshape->Height;
-						acutUpdString(StringToWchar(rshape->Text), text->text);
-						return text;
-					}
-					else
-					{
-						throw gcnew Exception("Unknown shape type");
-					}
 				}
 			};
 

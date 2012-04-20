@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <tchar.h>
 using namespace System;
 using namespace Autodesk::AutoCAD::Geometry;
 using namespace Autodesk::AutoCAD::DatabaseServices;
