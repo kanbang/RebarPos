@@ -9,6 +9,11 @@
 #include <vcclr.h>
 #include "mgdinterop.h" 
 
+#include "MgPosShape.h"
+#include "MgPosStyle.h"
+#include "MgPosGroup.h"
+#include "MgRebarPos.h"
+
 static AcMgObjectFactoryBase **g_PEs = NULL;
 
 extern "C" AcRx::AppRetCode __declspec(dllexport)
@@ -24,8 +29,10 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 			// create a new object factory array
 			static AcMgObjectFactoryBase* PEs[] = 
 			{
-				new AcMgObjectFactory<OZOZ::RebarPosWrapper::RebarPos, CRebarPos>(), 
 				new AcMgObjectFactory<OZOZ::RebarPosWrapper::PosShape, CPosShape>(), 
+				new AcMgObjectFactory<OZOZ::RebarPosWrapper::PosStyle, CPosStyle>(), 
+				new AcMgObjectFactory<OZOZ::RebarPosWrapper::PosGroup, CPosGroup>(), 
+				new AcMgObjectFactory<OZOZ::RebarPosWrapper::RebarPos, CRebarPos>(), 
 				// end the array with a NULL
 				NULL
 			};

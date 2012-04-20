@@ -45,12 +45,6 @@
 #include "rxdefs.h"
 #include "dbmain.h"
 
-// includes
-#include "..\NativeRebarPos\RebarPos.h"
-#include "..\NativeRebarPos\PosShape.h"
-#include "MgRebarPos.h"
-#include "MgPosShape.h"
-
 #ifndef WINVER
 #define WINVER 0x500
 #endif

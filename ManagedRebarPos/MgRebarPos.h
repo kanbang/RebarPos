@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "..\NativeRebarPos\RebarPos.h"
+
 using namespace System;
 using namespace Autodesk::AutoCAD::Geometry;
 using namespace Autodesk::AutoCAD::DatabaseServices;

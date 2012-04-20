@@ -11,6 +11,8 @@
 #include <gcroot.h>
 #include "mgdinterop.h"
 
+#include "MgPosShape.h"
+
 using namespace OZOZ::RebarPosWrapper;
 
 //*************************************************************************
@@ -214,38 +216,4 @@ void PosShape::ShapeCollection::default::set(int index, PosShape::Shape^ value)
 String^ PosShape::TableName::get()
 {
 	return WcharToString(CPosShape::GetTableName());
-}
-
-Autodesk::AutoCAD::DatabaseServices::ObjectId PosShape::Dictionary::get()
-{
-	Autodesk::AutoCAD::DatabaseServices::ObjectId id = Autodesk::AutoCAD::DatabaseServices::ObjectId::Null;
-
-	Autodesk::AutoCAD::DatabaseServices::Database^ db = Autodesk::AutoCAD::DatabaseServices::HostApplicationServices::WorkingDatabase;
-	Autodesk::AutoCAD::DatabaseServices::Transaction^ tr = db->TransactionManager->StartTransaction();
-
-	DBDictionary^ nod = (DBDictionary^)tr->GetObject(db->NamedObjectsDictionaryId, Autodesk::AutoCAD::DatabaseServices::OpenMode::ForRead);
-	if(!nod->Contains(TableName))
-	{
-		DBDictionary^ pDict = gcnew DBDictionary();
-		nod->UpgradeOpen();
-		nod->SetAt(TableName, pDict);
-		tr->AddNewlyCreatedDBObject(pDict, true);
-		nod->DowngradeOpen();
-		id = pDict->Id;
-	}
-	else
-	{
-		id = nod->GetAt(TableName);
-	}
-	tr->Commit();
-
-	return id;
-}
-
-//*************************************************************************
-// Static Methods
-//*************************************************************************
-Autodesk::AutoCAD::DatabaseServices::ObjectId PosShape::CreateDefault()
-{
-	return ToObjectId(CPosShape::CreateDefault());
 }

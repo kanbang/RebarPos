@@ -28,7 +28,6 @@ namespace RebarPosCommands
                         pos.Pos = "Test";
                         pos.A = "100";
                         pos.B = "20";
-                        pos.ShapeId = PosShape.CreateDefault();
 
                         pos.SetDatabaseDefaults(db);
 

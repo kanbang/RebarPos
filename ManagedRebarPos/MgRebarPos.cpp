@@ -11,6 +11,8 @@
 #include <gcroot.h>
 #include "mgdinterop.h"
 
+#include "MgRebarPos.h"
+
 using namespace OZOZ::RebarPosWrapper;
 
 //*************************************************************************

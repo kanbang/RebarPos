@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "..\NativeRebarPos\PosShape.h"
+
 using namespace System;
 using namespace Autodesk::AutoCAD::Geometry;
 using namespace Autodesk::AutoCAD::DatabaseServices;
@@ -116,10 +118,6 @@ namespace OZOZ
 
 		public:
 			property static String^ TableName        { String^ get(); }
-			property static Autodesk::AutoCAD::DatabaseServices::ObjectId Dictionary { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); }
-
-		public:
-			static Autodesk::AutoCAD::DatabaseServices::ObjectId CreateDefault();
         };
     }
 
