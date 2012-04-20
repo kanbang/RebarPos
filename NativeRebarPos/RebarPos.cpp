@@ -90,26 +90,26 @@ CRebarPos::~CRebarPos()
 //*************************************************************************
 // Properties
 //*************************************************************************
-const AcGePoint3d CRebarPos::BasePoint(void) const
+const AcGePoint3d& CRebarPos::BasePoint(void) const
 {
 	assertReadEnabled();
 	return m_BasePoint;
 }
 
-Acad::ErrorStatus CRebarPos::setBasePoint(const AcGePoint3d newVal)
+Acad::ErrorStatus CRebarPos::setBasePoint(const AcGePoint3d& newVal)
 {
 	assertWriteEnabled();
 	m_BasePoint = newVal;
 	return Acad::eOk;
 }
 
-const AcGePoint3d CRebarPos::NoteGrip(void) const
+const AcGePoint3d& CRebarPos::NoteGrip(void) const
 {
 	assertReadEnabled();
 	return m_NoteGrip;
 }
 
-Acad::ErrorStatus CRebarPos::setNoteGrip(const AcGePoint3d newVal)
+Acad::ErrorStatus CRebarPos::setNoteGrip(const AcGePoint3d& newVal)
 {
 	assertWriteEnabled();
 	m_NoteGrip = newVal;
@@ -416,7 +416,7 @@ const ACHAR* CRebarPos::PosKey() const
 //*************************************************************************
 
 /// Determines which part is under the given point
-const CRebarPos::PosHitTest CRebarPos::HitTest(const AcGePoint3d pt0) const
+const CRebarPos::PosHitTest CRebarPos::HitTest(const AcGePoint3d& pt0) const
 {
 	// TODO: Fix this
 	return CRebarPos::NONE;

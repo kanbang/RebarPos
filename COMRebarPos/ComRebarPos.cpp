@@ -17,8 +17,6 @@
 
 #include "axlock.h"
 
-
-
 #define AXEntityDocLockNoDbOk(objId)                        \
     AcAxDocLock docLock(objId, AcAxDocLock::kNormal);       \
     if (docLock.lockStatus() != Acad::eNoDatabase && \
@@ -127,7 +125,7 @@ STDMETHODIMP CComRebarPos::GetElementValue(
         if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
 
-		AcGePoint3d pt;
+		AcAxPoint3d pt;
 		switch(dispID)
 		{
 		case DISPID_BASEPOINT:
@@ -182,7 +180,7 @@ STDMETHODIMP CComRebarPos::SetElementValue(
         if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
 
-		AcGePoint3d pt;
+		AcAxPoint3d pt;
 		switch(dispID)
 		{
 		case DISPID_BASEPOINT:

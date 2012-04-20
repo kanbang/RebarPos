@@ -92,15 +92,15 @@ protected:
 
 public:
 	/// Determines which part is under the given point
-	const CRebarPos::PosHitTest HitTest(const AcGePoint3d pt0) const;
+	const CRebarPos::PosHitTest HitTest(const AcGePoint3d& pt0) const;
 
 	/// Gets or sets the base grip point
-	const AcGePoint3d BasePoint(void) const;
-	Acad::ErrorStatus setBasePoint(const AcGePoint3d newVal);
+	const AcGePoint3d& BasePoint(void) const;
+	Acad::ErrorStatus setBasePoint(const AcGePoint3d& newVal);
 
 	/// Gets or sets the note grip point
-	const AcGePoint3d NoteGrip(void) const;
-	Acad::ErrorStatus setNoteGrip(const AcGePoint3d newVal);
+	const AcGePoint3d& NoteGrip(void) const;
+	Acad::ErrorStatus setNoteGrip(const AcGePoint3d& newVal);
 
 	/// Gets or sets pos marker number
 	const ACHAR* Pos(void) const;
