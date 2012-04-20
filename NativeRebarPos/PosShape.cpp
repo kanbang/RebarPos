@@ -123,29 +123,27 @@ Acad::ErrorStatus CPosShape::setFormulaBending(const ACHAR* newVal)
 //*************************************************************************
 // Methods
 //*************************************************************************
-void CPosShape::AddShape(CShape* shape)
+void CPosShape::AddShape(CShape* const shape)
 {
 	assertWriteEnabled();
 	m_List.push_back(shape);
 }
 
-CShape* CPosShape::GetShape(ShapeSize index)
+const CShape* CPosShape::GetShape(const ShapeSize index) const
 {
 	assertReadEnabled();
 	return m_List.at(index);
 }
 
-void CPosShape::SetShape(ShapeSize index, CShape* shape)
+void CPosShape::SetShape(const ShapeSize index, CShape* const shape)
 {
 	assertWriteEnabled();
 	m_List[index] = shape;
 }
 
-void CPosShape::RemoveShape(ShapeSize index)
+void CPosShape::RemoveShape(const ShapeSize index)
 {
 	assertWriteEnabled();
-	CShape* shape = m_List.at(index);
-	delete shape;
 	ShapeListIt it = m_List.begin();
 	m_List.erase(it + index);
 }
@@ -157,9 +155,10 @@ void CPosShape::ClearShapes()
 	{
 		delete *it;
 	}
+	m_List.clear();
 }
 
-ShapeSize CPosShape::GetShapeCount()
+const ShapeSize CPosShape::GetShapeCount() const
 {
 	assertReadEnabled();
 	return m_List.size();
@@ -718,7 +717,7 @@ AcDbDictionary* CPosShape::GetDictionary()
 }
 
 /// Saves the current entry in the table.
-AcDbObjectId CPosShape::Save(const ACHAR* name, CPosShape* pEntry)
+AcDbObjectId CPosShape::Save(const ACHAR* name, CPosShape* const pEntry)
 {
 	AcDbDictionary* pDict = GetDictionary();
 

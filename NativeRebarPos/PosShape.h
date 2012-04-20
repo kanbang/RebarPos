@@ -87,19 +87,19 @@ public:
 
 public:
 	/// Adds a shape.
-	void AddShape(CShape* shape);
+	void AddShape(CShape* const shape);
 
 	/// Gets the shape at the given index.
-	CShape* GetShape(ShapeSize index);
+	const CShape* GetShape(const ShapeSize index) const;
 
 	/// Sets the shape at the given index.
-	void SetShape(ShapeSize index, CShape* shape);
+	void SetShape(const ShapeSize index, CShape* const shape);
 
 	/// Gets the count of shapes.
-	ShapeSize GetShapeCount();
+	const ShapeSize GetShapeCount() const;
 
 	/// Removes the shape at the given index.
-	void RemoveShape(ShapeSize index);
+	void RemoveShape(const ShapeSize index);
 
 	/// Clears all shapes.
 	void ClearShapes();
@@ -112,7 +112,7 @@ public:
 	static AcDbDictionary* GetDictionary();
 
 	/// Saves the current entry in the table.
-	static AcDbObjectId Save(const ACHAR* name, CPosShape* pEntry);
+	static AcDbObjectId Save(const ACHAR* name, CPosShape* const pEntry);
 
 	/// Renames an entry in the table.
 	static bool Rename(const ACHAR* oldName, const ACHAR* newName);
