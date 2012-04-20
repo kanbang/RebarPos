@@ -25,11 +25,14 @@ namespace RebarPosCommands
                         Point3d pt = result.Value;
                         RebarPos pos = new RebarPos();
                         pos.BasePoint = pt;
-                        pos.Pos = "Test";
-                        pos.A = "100";
-                        pos.B = "20";
-                        pos.ShapeId = CreateDefaultShapes();
-                        pos.GroupId = CreateDefaultGroups();
+                        pos.Pos = "X";
+                        pos.Count = "XX";
+                        pos.Diameter = "XX";
+                        pos.Spacing = "XXX";
+                        pos.A = "XXXX";
+                        pos.Note = "XXXXXXXX";
+                        pos.ShapeId = DWGUtility.CreateDefaultShapes();
+                        pos.GroupId = DWGUtility.CreateDefaultGroups();
 
                         pos.SetDatabaseDefaults(db);
 

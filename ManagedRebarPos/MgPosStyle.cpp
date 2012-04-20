@@ -40,6 +40,24 @@ void PosStyle::Formula::set(String^ value)
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormula(StringToWchar(value)));
 }
 
+String^ PosStyle::FormulaWithoutLength::get()
+{
+	return WcharToString(GetImpObj()->FormulaWithoutLength());
+}
+void PosStyle::FormulaWithoutLength::set(String^ value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormulaWithoutLength(StringToWchar(value)));
+}
+
+String^ PosStyle::FormulaPosOnly::get()
+{
+	return WcharToString(GetImpObj()->FormulaPosOnly());
+}
+void PosStyle::FormulaPosOnly::set(String^ value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormulaPosOnly(StringToWchar(value)));
+}
+
 Autodesk::AutoCAD::Colors::Color^ PosStyle::TextColor::get()
 {
 	return Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, GetImpObj()->TextColor());

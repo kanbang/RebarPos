@@ -53,6 +53,8 @@ public:
 protected:
 	/// Property backing fields
 	ACHAR* m_Formula;
+	ACHAR* m_FormulaWithoutLength;
+	ACHAR* m_FormulaPosOnly;
 
 	Adesk::UInt16 m_TextColor;
 	Adesk::UInt16 m_PosColor;
@@ -75,6 +77,14 @@ public:
 	/// Gets or sets the formula text.
     const ACHAR* Formula(void) const;
 	Acad::ErrorStatus setFormula(const ACHAR* newVal);
+
+	/// Gets or sets the formula text without length displayed.
+    const ACHAR* FormulaWithoutLength(void) const;
+	Acad::ErrorStatus setFormulaWithoutLength(const ACHAR* newVal);
+
+	/// Gets or sets the formula text with only pos marker displayed.
+    const ACHAR* FormulaPosOnly(void) const;
+	Acad::ErrorStatus setFormulaPosOnly(const ACHAR* newVal);
 
 	/// Gets or sets the text color.
 	const Adesk::UInt16 TextColor(void) const;

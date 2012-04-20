@@ -29,6 +29,8 @@ namespace OZOZ
 
 		public:
 			property String^ Formula { String^ get(); void set(String^ value); }
+			property String^ FormulaWithoutLength { String^ get(); void set(String^ value); }
+			property String^ FormulaPosOnly { String^ get(); void set(String^ value); }
 			
 			property Autodesk::AutoCAD::Colors::Color^ TextColor       { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }
 			property Autodesk::AutoCAD::Colors::Color^ PosColor        { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }
