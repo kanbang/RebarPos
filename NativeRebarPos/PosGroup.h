@@ -96,12 +96,6 @@ public:
 	/// Gets the table name
 	static ACHAR* GetTableName();
 
-	/// Gets the underlying dictionary
-	static AcDbDictionary* GetDictionary();
-
-	/// Creates a default entry or returns the first entry in the table.
-	static AcDbObjectId CreateDefault(void);
-
 private:
     // These are here because otherwise dllexport tries to export the
     // private methods of AcDbObject.  They're private in AcDbObject
