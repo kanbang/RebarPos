@@ -109,42 +109,6 @@ AcDbObjectId CPosStyle::CreateTextStyle(const ACHAR* name, const ACHAR* filename
 }
 
 //*************************************************************************
-// Static methods
-//*************************************************************************
-AcDbObjectId CPosStyle::CreateDefault(void)
-{
-	AcDbObjectId textStyleId = CPosStyle::CreateTextStyle(_T("Rebar Text Style"), _T("leroy.shx"), 0.7);
-	AcDbObjectId noteStyleId = CPosStyle::CreateTextStyle(_T("Rebar Note Style"), _T("simplxtw.shx"), 0.9);
-
-	AcDbDictionary* pDict = GetDictionary();
-
-	AcDbObjectId id;
-	// Create a new entry if not present
-	if(pDict->numEntries() == 0)
-	{
-		CPosStyle *pObject = new CPosStyle();
-		pObject->setFormula(_T("[MC][N][DT][D][DS][S:0] L=[L:0]"));
-		pObject->setTextStyleId(textStyleId);
-		pObject->setNoteStyleId(noteStyleId);
-		pObject->setNoteScale(0.75);
-		pDict->upgradeOpen();
-		pDict->setAt(_T("Default"), pObject, id);
-		pDict->downgradeOpen();
-		pObject->close();
-	}
-	else
-	{
-		AcDbDictionaryIterator* it = pDict->newIterator();
-		it->next();
-		id = it->objectId();
-		delete it;
-	}
-	pDict->close();
-
-	return id;
-}
-
-//*************************************************************************
 // Properties
 //*************************************************************************
 const ACHAR* CPosStyle::Formula(void) const
@@ -534,6 +498,11 @@ Acad::ErrorStatus CPosStyle::dxfInFields(AcDbDxfFiler *pFiler)
 // Common static dictionary methods
 //*************************************************************************
 
+ACHAR* CPosStyle::GetTableName()
+{
+	return Table_Name;
+}
+
 AcDbDictionary* CPosStyle::GetDictionary()
 {
 	assert(Table_Name != NULL);
@@ -551,84 +520,42 @@ AcDbDictionary* CPosStyle::GetDictionary()
 		pNamedobj->upgradeOpen();
 		pNamedobj->setAt(Table_Name, pDict, DictId);
 		pNamedobj->downgradeOpen();
+		pDict->downgradeOpen();
 	}
 	pNamedobj->close();
 
 	return pDict;
 }
 
-/// Saves the current entry in the table.
-AcDbObjectId CPosStyle::Save(const ACHAR* name, CPosStyle* pEntry)
+AcDbObjectId CPosStyle::CreateDefault(void)
 {
-	AcDbDictionary* pDict = GetDictionary();
+	AcDbObjectId textStyleId = CPosStyle::CreateTextStyle(_T("Rebar Text Style"), _T("leroy.shx"), 0.7);
+	AcDbObjectId noteStyleId = CPosStyle::CreateTextStyle(_T("Rebar Note Style"), _T("simplxtw.shx"), 0.9);
 
-	pDict->upgradeOpen();
-	AcDbObjectId id;
-	pEntry->upgradeOpen();
-	pDict->setAt(name, pEntry, id);
-	pDict->downgradeOpen();
-	pDict->close();
-
-	return id;
-}
-
-/// Renames an entry in the table.
-bool CPosStyle::Rename(const ACHAR* oldName, const ACHAR* newName)
-{
-	AcDbDictionary* pDict = GetDictionary();
-
-	pDict->upgradeOpen();
-	bool ret = pDict->setName(oldName, newName);
-	pDict->downgradeOpen();
-	pDict->close();
-
-	return ret;
-}
-
-void CPosStyle::Remove(const ACHAR* name)
-{
-	AcDbDictionary* pDict = GetDictionary();
-
-	pDict->upgradeOpen();
-	pDict->remove(name);
-	pDict->downgradeOpen();
-
-	pDict->close();
-}
-
-/// Gets the entry with the given name.
-AcDbObjectId CPosStyle::GetByName(const ACHAR* name)
-{
 	AcDbDictionary* pDict = GetDictionary();
 
 	AcDbObjectId id;
-	if(pDict->getAt(name, id) == Acad::eKeyNotFound)
+	// Create a new entry if not present
+	if(pDict->numEntries() == 0)
 	{
-		id = AcDbObjectId::kNull;
+		CPosStyle *pObject = new CPosStyle();
+		pObject->setFormula(_T("[MC][N][DT][D][DS][S:0] L=[L:0]"));
+		pObject->setTextStyleId(textStyleId);
+		pObject->setNoteStyleId(noteStyleId);
+		pObject->setNoteScale(0.75);
+		pDict->upgradeOpen();
+		pDict->setAt(_T("Default"), pObject, id);
+		pDict->downgradeOpen();
+		pObject->close();
+	}
+	else
+	{
+		AcDbDictionaryIterator* it = pDict->newIterator();
+		it->next();
+		id = it->objectId();
+		delete it;
 	}
 	pDict->close();
 
 	return id;
-}
-
-/// Determines whether the entry specified by entryName is contained in the dictionary.
-bool CPosStyle::Contains(const ACHAR* name)
-{
-	AcDbDictionary* pDict = GetDictionary();
-
-	bool ret = pDict->has(name);
-	pDict->close();
-
-	return ret;
-}
-
-/// Gets the count of entries in the dictionary.
-Adesk::UInt32 CPosStyle::Count()
-{
-	AcDbDictionary* pDict = GetDictionary();
-
-	Adesk::UInt32 ret = pDict->numEntries();
-	pDict->close();
-
-	return ret;
 }

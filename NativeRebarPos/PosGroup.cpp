@@ -58,35 +58,6 @@ CPosGroup::CPosGroup () : m_Bending(Adesk::kFalse), m_MaxBarLength(12),
 CPosGroup::~CPosGroup () { }
 
 //*************************************************************************
-// Static methods
-//*************************************************************************
-AcDbObjectId CPosGroup::CreateDefault(void)
-{
-	AcDbDictionary* pDict = GetDictionary();
-
-	AcDbObjectId id;
-	// Create a new entry if not present
-	if(pDict->numEntries() == 0)
-	{
-		CPosGroup *pObject = new CPosGroup();
-		pDict->upgradeOpen();
-		pDict->setAt(_T("0"), pObject, id);
-		pDict->downgradeOpen();
-		pObject->close();
-	}
-	else
-	{
-		AcDbDictionaryIterator* it = pDict->newIterator();
-		it->next();
-		id = it->objectId();
-		delete it;
-	}
-	pDict->close();
-
-	return id;
-}
-
-//*************************************************************************
 // Properties
 //*************************************************************************
 const Adesk::Boolean CPosGroup::Bending(void) const
@@ -332,6 +303,11 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
 // Common static dictionary methods
 //*************************************************************************
 
+ACHAR* CPosGroup::GetTableName()
+{
+	return Table_Name;
+}
+
 AcDbDictionary* CPosGroup::GetDictionary()
 {
 	assert(Table_Name != NULL);
@@ -349,85 +325,35 @@ AcDbDictionary* CPosGroup::GetDictionary()
 		pNamedobj->upgradeOpen();
 		pNamedobj->setAt(Table_Name, pDict, DictId);
 		pNamedobj->downgradeOpen();
+		pDict->downgradeOpen();
 	}
 	pNamedobj->close();
 
 	return pDict;
 }
 
-/// Saves the current entry in the table.
-AcDbObjectId CPosGroup::Save(const ACHAR* name, CPosGroup* pEntry)
-{
-	AcDbDictionary* pDict = GetDictionary();
-
-	pDict->upgradeOpen();
-	AcDbObjectId id;
-	pEntry->upgradeOpen();
-	pDict->setAt(name, pEntry, id);
-	pDict->downgradeOpen();
-	pDict->close();
-
-	return id;
-}
-
-/// Renames an entry in the table.
-bool CPosGroup::Rename(const ACHAR* oldName, const ACHAR* newName)
-{
-	AcDbDictionary* pDict = GetDictionary();
-
-	pDict->upgradeOpen();
-	bool ret = pDict->setName(oldName, newName);
-	pDict->downgradeOpen();
-	pDict->close();
-
-	return ret;
-}
-
-void CPosGroup::Remove(const ACHAR* name)
-{
-	AcDbDictionary* pDict = GetDictionary();
-
-	pDict->upgradeOpen();
-	pDict->remove(name);
-	pDict->downgradeOpen();
-
-	pDict->close();
-}
-
-/// Gets the entry with the given name.
-AcDbObjectId CPosGroup::GetByName(const ACHAR* name)
+AcDbObjectId CPosGroup::CreateDefault(void)
 {
 	AcDbDictionary* pDict = GetDictionary();
 
 	AcDbObjectId id;
-	if(pDict->getAt(name, id) == Acad::eKeyNotFound)
+	// Create a new entry if not present
+	if(pDict->numEntries() == 0)
 	{
-		id = AcDbObjectId::kNull;
+		CPosGroup *pObject = new CPosGroup();
+		pDict->upgradeOpen();
+		pDict->setAt(_T("0"), pObject, id);
+		pDict->downgradeOpen();
+		pObject->close();
+	}
+	else
+	{
+		AcDbDictionaryIterator* it = pDict->newIterator();
+		it->next();
+		id = it->objectId();
+		delete it;
 	}
 	pDict->close();
 
 	return id;
 }
-
-/// Determines whether the entry specified by entryName is contained in the dictionary.
-bool CPosGroup::Contains(const ACHAR* name)
-{
-	AcDbDictionary* pDict = GetDictionary();
-
-	bool ret = pDict->has(name);
-	pDict->close();
-
-	return ret;
-}
-
-/// Gets the count of entries in the dictionary.
-Adesk::UInt32 CPosGroup::Count()
-{
-	AcDbDictionary* pDict = GetDictionary();
-
-	Adesk::UInt32 ret = pDict->numEntries();
-	pDict->close();
-
-	return ret;
-}
-

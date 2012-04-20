@@ -22,7 +22,7 @@ namespace OZOZ
 
         internal:
             RebarPos(System::IntPtr unmanagedPointer, bool autoDelete);
-            inline CRebarPos*  GetImpObj()
+            inline CRebarPos* GetImpObj()
             {
                 return static_cast<CRebarPos*>(UnmanagedObject.ToPointer());
             }

@@ -313,49 +313,56 @@ STDMETHODIMP CComRebarPos::GetPredefinedStrings(DISPID dispID, CALPOLESTR *pCaSt
 	switch(dispID)
 	{
 	case DISPID_SHAPE:
-		size = CPosShape::Count();
-		pCaStringsOut->pElems = (LPOLESTR *)::CoTaskMemAlloc(sizeof(LPOLESTR) * size);
-		pCaCookiesOut->pElems = (DWORD *)::CoTaskMemAlloc(sizeof(DWORD) * size);
-
-		mShapeIdArray.removeAll();
-
 		pDict = CPosShape::GetDictionary();
-		it = pDict->newIterator();
-		i = 0;
-		for( ; !it->done(); it->next())
+		size = pDict->numEntries();
+		if(size != 0)
 		{
-			pCaStringsOut->pElems[i] = ::SysAllocString(CT2W(it->name()));
-			pCaCookiesOut->pElems[i] = mShapeIdArray.append(it->objectId());
-			i++;
-		}
-		pCaStringsOut->cElems = i;
-		pCaCookiesOut->cElems = i;
+			pCaStringsOut->pElems = (LPOLESTR *)::CoTaskMemAlloc(sizeof(LPOLESTR) * size);
+			pCaCookiesOut->pElems = (DWORD *)::CoTaskMemAlloc(sizeof(DWORD) * size);
 
-		delete it;
+			mShapeIdArray.removeAll();
+
+			it = pDict->newIterator();
+			i = 0;
+			for( ; !it->done(); it->next())
+			{
+				pCaStringsOut->pElems[i] = ::SysAllocString(CT2W(it->name()));
+				pCaCookiesOut->pElems[i] = mShapeIdArray.append(it->objectId());
+				i++;
+			}
+			pCaStringsOut->cElems = i;
+			pCaCookiesOut->cElems = i;
+
+			delete it;
+		}
 		pDict->close();
 
 		return S_OK;
 		break;
 	case DISPID_GROUP:
-		size = CPosGroup::Count();
-		pCaStringsOut->pElems = (LPOLESTR *)::CoTaskMemAlloc(sizeof(LPOLESTR) * size);
-		pCaCookiesOut->pElems = (DWORD *)::CoTaskMemAlloc(sizeof(DWORD) * size);
-
-		mGroupIdArray.removeAll();
-
 		pDict = CPosGroup::GetDictionary();
-		it = pDict->newIterator();
-		i = 0;
-		for( ; !it->done(); it->next())
+		size = pDict->numEntries();
+		if(size != 0)
 		{
-			pCaStringsOut->pElems[i] = ::SysAllocString(CT2W(it->name()));
-			pCaCookiesOut->pElems[i] = mGroupIdArray.append(it->objectId());
-			i++;
-		}
-		pCaStringsOut->cElems = i;
-		pCaCookiesOut->cElems = i;
+			pCaStringsOut->pElems = (LPOLESTR *)::CoTaskMemAlloc(sizeof(LPOLESTR) * size);
+			pCaCookiesOut->pElems = (DWORD *)::CoTaskMemAlloc(sizeof(DWORD) * size);
 
-		delete it;
+			mGroupIdArray.removeAll();
+
+			
+			it = pDict->newIterator();
+			i = 0;
+			for( ; !it->done(); it->next())
+			{
+				pCaStringsOut->pElems[i] = ::SysAllocString(CT2W(it->name()));
+				pCaCookiesOut->pElems[i] = mGroupIdArray.append(it->objectId());
+				i++;
+			}
+			pCaStringsOut->cElems = i;
+			pCaCookiesOut->cElems = i;
+
+			delete it;
+		}
 		pDict->close();
 
 		return S_OK;
@@ -375,8 +382,8 @@ STDMETHODIMP CComRebarPos::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VAR
 
 	AcDbObjectId id;
 	AcDbDictionary* pDict = NULL;
-	AcDbDictionaryIterator* it = NULL;
 	HRESULT hr = E_FAIL;
+	ACHAR* name = NULL;
 
 	switch(dispID)
 	{
@@ -386,17 +393,12 @@ STDMETHODIMP CComRebarPos::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VAR
 	    id = mShapeIdArray[dwCookie];
 
 		pDict = CPosShape::GetDictionary();
-		it = pDict->newIterator();
-		for( ; !it->done(); it->next())
+		if(pDict->nameAt(id, name) == Acad::eOk)
 		{
-			if(it->objectId() == id)
-			{
-				hr = S_OK;
-				VariantCopy(pVarOut, &CComVariant(CT2W(it->name())));
-				break;
-			}
+			hr = S_OK;
+			VariantCopy(pVarOut, &CComVariant(CT2W(name)));
 		}
-		delete it;
+		acutDelString(name);
 		pDict->close();
 
 		return hr;
@@ -407,17 +409,12 @@ STDMETHODIMP CComRebarPos::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VAR
 	    id = mGroupIdArray[dwCookie];
 
 		pDict = CPosGroup::GetDictionary();
-		it = pDict->newIterator();
-		for( ; !it->done(); it->next())
+		if(pDict->nameAt(id, name) == Acad::eOk)
 		{
-			if(it->objectId() == id)
-			{
-				hr = S_OK;
-				VariantCopy(pVarOut, &CComVariant(CT2W(it->name())));
-				break;
-			}
+			hr = S_OK;
+			VariantCopy(pVarOut, &CComVariant(CT2W(name)));
 		}
-		delete it;
+		acutDelString(name);
 		pDict->close();
 
 		return hr;
@@ -1257,19 +1254,13 @@ STDMETHODIMP CComRebarPos::get_Shape(BSTR * pVal)
             throw es;
 
 		AcDbDictionary* pDict = CPosShape::GetDictionary();
-		AcDbDictionaryIterator* it = pDict->newIterator();
-
-		for( ; !it->done(); it->next())
+		ACHAR* name = NULL;
+		if((es = pDict->nameAt(pRebarPos->ShapeId(), name)) == Acad::eOk)
 		{
-			if(it->objectId() == pRebarPos->ShapeId())
-			{
-		        USES_CONVERSION;
-				*pVal = SysAllocString(CT2W(it->name()));
-				break;
-			}
+			USES_CONVERSION;
+			*pVal = SysAllocString(CT2W(name));
 		}
-
-		delete it;
+		acutDelString(name);
 		pDict->close();
     }
     catch(const Acad::ErrorStatus)
@@ -1294,14 +1285,16 @@ STDMETHODIMP CComRebarPos::put_Shape(BSTR newVal)
 	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
 
-		AcDbObjectId id = CPosShape::GetByName(W2T(newVal));
-		if(id != AcDbObjectId::kNull)
+		AcDbDictionary* pDict = CPosShape::GetDictionary();
+		AcDbObjectId id;
+		if((es = pDict->getAt(W2T(newVal), id)) == Acad::eOk)
 		{
 	        if ((es = pRebarPos->setShapeId(id)) != Acad::eOk)
 		        throw es;
 			else
 				Fire_Notification(DISPID_SHAPE);
 		}
+		pDict->close();
     }
     catch(const Acad::ErrorStatus)
     {
@@ -1325,19 +1318,13 @@ STDMETHODIMP CComRebarPos::get_Group(BSTR * pVal)
             throw es;
 
 		AcDbDictionary* pDict = CPosGroup::GetDictionary();
-		AcDbDictionaryIterator* it = pDict->newIterator();
-
-		for( ; !it->done(); it->next())
+		ACHAR* name = NULL;
+		if((es = pDict->nameAt(pRebarPos->GroupId(), name)) == Acad::eOk)
 		{
-			if(it->objectId() == pRebarPos->GroupId())
-			{
-		        USES_CONVERSION;
-				*pVal = SysAllocString(CT2W(it->name()));
-				break;
-			}
+			USES_CONVERSION;
+			*pVal = SysAllocString(CT2W(name));
 		}
-
-		delete it;
+		acutDelString(name);
 		pDict->close();
     }
     catch(const Acad::ErrorStatus)
@@ -1362,14 +1349,16 @@ STDMETHODIMP CComRebarPos::put_Group(BSTR newVal)
 	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
 
-		AcDbObjectId id = CPosGroup::GetByName(W2T(newVal));
-		if(id != AcDbObjectId::kNull)
+		AcDbDictionary* pDict = CPosGroup::GetDictionary();
+		AcDbObjectId id;
+		if((es = pDict->getAt(W2T(newVal), id)) == Acad::eOk)
 		{
 	        if ((es = pRebarPos->setGroupId(id)) != Acad::eOk)
 		        throw es;
 			else
 				Fire_Notification(DISPID_GROUP);
 		}
+		pDict->close();
     }
     catch(const Acad::ErrorStatus)
     {

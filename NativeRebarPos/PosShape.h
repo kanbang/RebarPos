@@ -60,7 +60,7 @@ public:
 
 protected:
 	/// Property backing fields
-	Adesk::UInt16 m_Fields;
+	Adesk::Int32 m_Fields;
 
 	ACHAR* m_Formula;
 	ACHAR* m_FormulaBending;
@@ -68,13 +68,9 @@ protected:
 	ShapeList m_List;
 
 public:
-	/// Creates a default entry or returns the first entry in the table.
-	static AcDbObjectId CreateDefault(void);
-
-public:
 	/// Gets or sets the field count.
-    const Adesk::UInt16 Fields(void) const;
-	Acad::ErrorStatus setFields(const Adesk::UInt16 newVal);
+    const Adesk::Int32 Fields(void) const;
+	Acad::ErrorStatus setFields(const Adesk::Int32 newVal);
 
 	/// Gets or sets the formula used to calculate the total length from piece lengths.
 	const ACHAR* Formula(void) const;
@@ -104,29 +100,18 @@ public:
 	/// Clears all shapes.
 	void ClearShapes();
 
-// Common static dictionary methods
-public:
+private:
 	static ACHAR* Table_Name;
+
+public:
+	/// Gets the table name
+	static ACHAR* GetTableName();
 
 	/// Gets the underlying dictionary
 	static AcDbDictionary* GetDictionary();
 
-	/// Saves the current entry in the table.
-	static AcDbObjectId Save(const ACHAR* name, CPosShape* const pEntry);
-
-	/// Renames an entry in the table.
-	static bool Rename(const ACHAR* oldName, const ACHAR* newName);
-
-	static void Remove(const ACHAR* name);
-
-	/// Gets the entry with the given name.
-	static AcDbObjectId GetByName(const ACHAR* name);
-	
-	/// Determines whether the entry specified by entryName is contained in the dictionary.
-	static bool Contains(const ACHAR* name);
-
-	/// Gets the count of entries in the dictionary.
-	static Adesk::UInt32 Count();
+	/// Creates a default entry or returns the first entry in the table.
+	static AcDbObjectId CreateDefault();
 
 private:
     // These are here because otherwise dllexport tries to export the

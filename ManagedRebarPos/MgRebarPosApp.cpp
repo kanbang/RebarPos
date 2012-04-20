@@ -25,6 +25,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 			static AcMgObjectFactoryBase* PEs[] = 
 			{
 				new AcMgObjectFactory<OZOZ::RebarPosWrapper::RebarPos, CRebarPos>(), 
+				new AcMgObjectFactory<OZOZ::RebarPosWrapper::PosShape, CPosShape>(), 
 				// end the array with a NULL
 				NULL
 			};

@@ -67,13 +67,13 @@ CPosShape::~CPosShape ()
 // Properties
 //*************************************************************************
 
-const Adesk::UInt16 CPosShape::Fields(void) const
+const Adesk::Int32 CPosShape::Fields(void) const
 {
 	assertReadEnabled();
 	return m_Fields;
 }
 
-Acad::ErrorStatus CPosShape::setFields(const Adesk::UInt16 newVal)
+Acad::ErrorStatus CPosShape::setFields(const Adesk::Int32 newVal)
 {
 	assertWriteEnabled();
 	m_Fields = newVal;
@@ -165,44 +165,6 @@ const ShapeSize CPosShape::GetShapeCount() const
 }
 
 //*************************************************************************
-// Static methods
-//*************************************************************************
-AcDbObjectId CPosShape::CreateDefault(void)
-{
-	AcDbDictionary* pDict = GetDictionary();
-
-	AcDbObjectId id;
-	// Create a new entry if not present
-	if(pDict->numEntries() == 0)
-	{
-		CPosShape *pObject = new CPosShape();
-		pObject->setFields(1);
-		pObject->setFormula(_T("A"));
-		pObject->setFormulaBending(_T("A"));
-		CShapeLine* line = new CShapeLine();
-		line->x1 = 0;
-		line->y1 = 0;
-		line->x2 = 100;
-		line->y2 = 0;
-		pObject->AddShape(line);
-		pDict->upgradeOpen();
-		pDict->setAt(_T("Duz Demir"), pObject, id);
-		pDict->downgradeOpen();
-		pObject->close();
-	}
-	else
-	{
-		AcDbDictionaryIterator* it = pDict->newIterator();
-		it->next();
-		id = it->objectId();
-		delete it;
-	}
-	pDict->close();
-
-	return id;
-}
-
-//*************************************************************************
 // Overrides
 //*************************************************************************
 //- Dwg Filing protocol
@@ -219,7 +181,7 @@ Acad::ErrorStatus CPosShape::dwgOutFields(AcDbDwgFiler *pFiler) const
 	pFiler->writeItem(CPosShape::kCurrentVersionNumber);
 
 	// Properties
-	pFiler->writeUInt16(m_Fields);
+	pFiler->writeInt32(m_Fields);
 	if (m_Formula)
 		pFiler->writeString(m_Formula);
 	else
@@ -294,7 +256,7 @@ Acad::ErrorStatus CPosShape::dwgInFields(AcDbDwgFiler *pFiler)
 		acutDelString(m_FormulaBending);
 
 		// Properties
-        pFiler->readUInt16(&m_Fields);
+        pFiler->readInt32(&m_Fields);
 		pFiler->readString(&m_Formula);
 		pFiler->readString(&m_FormulaBending);
 
@@ -369,7 +331,7 @@ Acad::ErrorStatus CPosShape::dxfOutFields(AcDbDxfFiler *pFiler) const
 	pFiler->writeItem(AcDb::kDxfInt32, CPosShape::kCurrentVersionNumber);
 
 	// Properties
-	pFiler->writeUInt16(AcDb::kDxfXInt16, m_Fields);
+	pFiler->writeInt32(AcDb::kDxfInt32 + 1, m_Fields);
 	if(m_Formula)
 		pFiler->writeString(AcDb::kDxfXTextString, m_Formula);
 	else
@@ -447,14 +409,14 @@ Acad::ErrorStatus CPosShape::dxfInFields(AcDbDxfFiler *pFiler)
 
 	// Read params
 	// Properties
-	Adesk::UInt16 t_Fields;
+	Adesk::Int32 t_Fields;
 	ACHAR* t_Formula = NULL;
 	ACHAR* t_FormulaBending = NULL;
 	ShapeList t_List;
 
-	if ((es = pFiler->readItem(&rb)) == Acad::eOk && rb.restype == AcDb::kDxfXInt16) 
+	if ((es = pFiler->readItem(&rb)) == Acad::eOk && rb.restype == AcDb::kDxfInt32 + 1) 
 	{
-		t_Fields = rb.resval.rint;
+		t_Fields = rb.resval.rlong;
 	}
 	else
 	{
@@ -678,7 +640,7 @@ Acad::ErrorStatus CPosShape::dxfInFields(AcDbDxfFiler *pFiler)
 		}
 	}
 
-	setFields(t_Fields);
+	m_Fields = t_Fields;
 	setFormula(t_Formula);
 	setFormulaBending(t_FormulaBending);
 	m_List = t_List;
@@ -692,6 +654,11 @@ Acad::ErrorStatus CPosShape::dxfInFields(AcDbDxfFiler *pFiler)
 //*************************************************************************
 // Common static dictionary methods
 //*************************************************************************
+
+ACHAR* CPosShape::GetTableName()
+{
+	return Table_Name;
+}
 
 AcDbDictionary* CPosShape::GetDictionary()
 {
@@ -710,84 +677,45 @@ AcDbDictionary* CPosShape::GetDictionary()
 		pNamedobj->upgradeOpen();
 		pNamedobj->setAt(Table_Name, pDict, DictId);
 		pNamedobj->downgradeOpen();
+		pDict->downgradeOpen();
 	}
 	pNamedobj->close();
 
 	return pDict;
 }
 
-/// Saves the current entry in the table.
-AcDbObjectId CPosShape::Save(const ACHAR* name, CPosShape* const pEntry)
-{
-	AcDbDictionary* pDict = GetDictionary();
-
-	pDict->upgradeOpen();
-	AcDbObjectId id;
-	pEntry->upgradeOpen();
-	pDict->setAt(name, pEntry, id);
-	pDict->downgradeOpen();
-	pDict->close();
-
-	return id;
-}
-
-/// Renames an entry in the table.
-bool CPosShape::Rename(const ACHAR* oldName, const ACHAR* newName)
-{
-	AcDbDictionary* pDict = GetDictionary();
-
-	pDict->upgradeOpen();
-	bool ret = pDict->setName(oldName, newName);
-	pDict->downgradeOpen();
-	pDict->close();
-
-	return ret;
-}
-
-void CPosShape::Remove(const ACHAR* name)
-{
-	AcDbDictionary* pDict = GetDictionary();
-
-	pDict->upgradeOpen();
-	pDict->remove(name);
-	pDict->downgradeOpen();
-
-	pDict->close();
-}
-
-/// Gets the entry with the given name.
-AcDbObjectId CPosShape::GetByName(const ACHAR* name)
+AcDbObjectId CPosShape::CreateDefault()
 {
 	AcDbDictionary* pDict = GetDictionary();
 
 	AcDbObjectId id;
-	if(pDict->getAt(name, id) == Acad::eKeyNotFound)
+	// Create a new entry if not present
+	if(pDict->numEntries() == 0)
 	{
-		id = AcDbObjectId::kNull;
+		CPosShape *pObject = new CPosShape();
+		pObject->setFields(1);
+		pObject->setFormula(_T("A"));
+		pObject->setFormulaBending(_T("A"));
+		CShapeLine* line = new CShapeLine();
+		line->x1 = 0;
+		line->y1 = 0;
+		line->x2 = 100;
+		line->y2 = 0;
+		pObject->AddShape(line);
+		pDict->upgradeOpen();
+		pDict->setAt(_T("Duz Demir"), pObject, id);
+		pDict->downgradeOpen();
+		pObject->close();
+	}
+	else
+	{
+		AcDbDictionaryIterator* it = pDict->newIterator();
+		it->next();
+		id = it->objectId();
+		delete it;
 	}
 	pDict->close();
 
 	return id;
 }
 
-/// Determines whether the entry specified by entryName is contained in the dictionary.
-bool CPosShape::Contains(const ACHAR* name)
-{
-	AcDbDictionary* pDict = GetDictionary();
-
-	bool ret = pDict->has(name);
-	pDict->close();
-
-	return ret;
-}
-
-/// Gets the count of entries in the dictionary.
-Adesk::UInt32 CPosShape::Count()
-{
-	AcDbDictionary* pDict = GetDictionary();
-
-	Adesk::UInt32 ret = pDict->numEntries();
-	pDict->close();
-
-	return ret;
-}

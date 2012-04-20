@@ -312,6 +312,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MgPosShape.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MgRebarPos.cpp"
 				>
 			</File>
@@ -360,6 +364,10 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
+			<File
+				RelativePath=".\MgPosShape.h"
+				>
+			</File>
 			<File
 				RelativePath=".\MgRebarPos.h"
 				>

@@ -72,10 +72,6 @@ protected:
 	static AcDbObjectId CreateTextStyle(const ACHAR* name, const ACHAR* filename, const double scale);
 
 public:
-	/// Creates a default entry or returns the first entry in the table.
-	static AcDbObjectId CreateDefault(void);
-
-public:
 	/// Gets or sets the formula text.
     const ACHAR* Formula(void) const;
 	Acad::ErrorStatus setFormula(const ACHAR* newVal);
@@ -120,29 +116,18 @@ public:
 	const AcDbObjectId& NoteStyleId(void) const;
 	Acad::ErrorStatus setNoteStyleId(const AcDbObjectId& newVal);
 
-// Common static dictionary methods
-public:
+private:
 	static ACHAR* Table_Name;
+
+public:
+	/// Gets the table name
+	static ACHAR* GetTableName();
 
 	/// Gets the underlying dictionary
 	static AcDbDictionary* GetDictionary();
 
-	/// Saves the current entry in the table.
-	static AcDbObjectId Save(const ACHAR* name, CPosStyle* pEntry);
-
-	/// Renames an entry in the table.
-	static bool Rename(const ACHAR* oldName, const ACHAR* newName);
-
-	static void Remove(const ACHAR* name);
-
-	/// Gets the entry with the given name.
-	static AcDbObjectId GetByName(const ACHAR* name);
-	
-	/// Determines whether the entry specified by entryName is contained in the dictionary.
-	static bool Contains(const ACHAR* name);
-
-	/// Gets the count of entries in the dictionary.
-	static Adesk::UInt32 Count();
+	/// Creates a default entry or returns the first entry in the table.
+	static AcDbObjectId CreateDefault(void);
 
 private:
     // These are here because otherwise dllexport tries to export the

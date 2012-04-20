@@ -82,13 +82,7 @@ void polyCommand()
     
     if (acedGetPoint(NULL, _T("\nInsertion point: "), center) != RTNORM)
         return;
-      
-    TCHAR nameBuf[133];
-    if (acedGetString(Adesk::kTrue, _T("\nText: "), nameBuf) != RTNORM)
-        return;   
-    
-    AcGePoint3d cen = asPnt3d(center);
-
+          
 	AcDbObjectId shapeId = CPosShape::CreateDefault();
 	AcDbObjectId styleId = CPosStyle::CreateDefault();
 	AcDbObjectId groupId = CPosGroup::CreateDefault();
@@ -103,11 +97,11 @@ void polyCommand()
     CRebarPos* pPos = new CRebarPos;
     
 	pPos->setBasePoint(asPnt3d(center));
-	pPos->setPos(nameBuf);
+	pPos->setPos(_T("Q"));
 	pPos->setA(_T("100"));
 	pPos->setB(_T("20"));
 	pPos->setShapeId(shapeId);
-	pPos->setGroupId(groupId);
+	//pPos->setGroupId(groupId);
     
     pPos->setDatabaseDefaults(acdbHostApplicationServices()->workingDatabase());
 

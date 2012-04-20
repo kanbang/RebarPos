@@ -2,11 +2,6 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NativeRebarPos", "NativeRebarPos\NativeRebarPos.vcproj", "{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RebarPosUI", "RebarPosUI\RebarPosUI.vcproj", "{AD76FB2C-856B-4ACD-9A34-5BB7B5FDE659}"
-	ProjectSection(ProjectDependencies) = postProject
-		{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046} = {473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ManagedRebarPos", "ManagedRebarPos\ManagedRebarPos.vcproj", "{D26DC853-A22B-4C5B-810F-F76D1247FA93}"
 	ProjectSection(ProjectDependencies) = postProject
 		{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046} = {473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}
@@ -49,20 +44,6 @@ Global
 		{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}.Release|Win32.Build.0 = Release|Win32
 		{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}.Release|x64.ActiveCfg = Release|x64
 		{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}.Release|x64.Build.0 = Release|x64
-		{AD76FB2C-856B-4ACD-9A34-5BB7B5FDE659}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{AD76FB2C-856B-4ACD-9A34-5BB7B5FDE659}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
-		{AD76FB2C-856B-4ACD-9A34-5BB7B5FDE659}.Debug|Mixed Platforms.Build.0 = Debug|x64
-		{AD76FB2C-856B-4ACD-9A34-5BB7B5FDE659}.Debug|Win32.ActiveCfg = Debug|Win32
-		{AD76FB2C-856B-4ACD-9A34-5BB7B5FDE659}.Debug|Win32.Build.0 = Debug|Win32
-		{AD76FB2C-856B-4ACD-9A34-5BB7B5FDE659}.Debug|x64.ActiveCfg = Debug|x64
-		{AD76FB2C-856B-4ACD-9A34-5BB7B5FDE659}.Debug|x64.Build.0 = Debug|x64
-		{AD76FB2C-856B-4ACD-9A34-5BB7B5FDE659}.Release|Any CPU.ActiveCfg = Release|x64
-		{AD76FB2C-856B-4ACD-9A34-5BB7B5FDE659}.Release|Mixed Platforms.ActiveCfg = Release|x64
-		{AD76FB2C-856B-4ACD-9A34-5BB7B5FDE659}.Release|Mixed Platforms.Build.0 = Release|x64
-		{AD76FB2C-856B-4ACD-9A34-5BB7B5FDE659}.Release|Win32.ActiveCfg = Release|Win32
-		{AD76FB2C-856B-4ACD-9A34-5BB7B5FDE659}.Release|Win32.Build.0 = Release|Win32
-		{AD76FB2C-856B-4ACD-9A34-5BB7B5FDE659}.Release|x64.ActiveCfg = Release|x64
-		{AD76FB2C-856B-4ACD-9A34-5BB7B5FDE659}.Release|x64.Build.0 = Release|x64
 		{D26DC853-A22B-4C5B-810F-F76D1247FA93}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{D26DC853-A22B-4C5B-810F-F76D1247FA93}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
 		{D26DC853-A22B-4C5B-810F-F76D1247FA93}.Debug|Mixed Platforms.Build.0 = Debug|x64
