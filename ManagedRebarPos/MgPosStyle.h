@@ -37,8 +37,8 @@ namespace OZOZ
 			property Autodesk::AutoCAD::Colors::Color^ GroupColor      { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }
 			property Autodesk::AutoCAD::Colors::Color^ CurrentGroupHighlightColor { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }
 
-			property Autodesk::AutoCAD::DatabaseServices::ObjectId^ TextStyle { Autodesk::AutoCAD::DatabaseServices::ObjectId^ get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId^ value); }
-			property Autodesk::AutoCAD::DatabaseServices::ObjectId^ NoteStyle { Autodesk::AutoCAD::DatabaseServices::ObjectId^ get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId^ value); }
+			property Autodesk::AutoCAD::DatabaseServices::ObjectId TextStyleId { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
+			property Autodesk::AutoCAD::DatabaseServices::ObjectId NoteStyleId { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
 
 			property double NoteScale { double get(); void set(double value); }
 

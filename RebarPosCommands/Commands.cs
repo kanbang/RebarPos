@@ -2,6 +2,8 @@
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.EditorInput;
+using Autodesk.AutoCAD.DatabaseServices;
+using OZOZ.RebarPosWrapper;
 
 
 // This line is not mandatory, but improves loading performances
@@ -26,8 +28,12 @@ namespace RebarPosCommands
         // context menu.
         public RebarPosCommands()
         {
-            
+            CreateDefaultShapes();
+            CreateDefaultStyles();
+            CreateDefaultGroups();
         }
+
+        private string CurrentGroup { get; set; }
 
         [CommandMethod("RebarPos", "POS", "POS_Local", CommandFlags.Modal)]
         public void CMD_Pos()
@@ -36,8 +42,7 @@ namespace RebarPosCommands
             while (cont)
             {
                 // AcString group = DWGUtility::ReadSettings().CurrentGroup;
-                string group = "";
-                PromptEntityOptions opts = new PromptEntityOptions("Poz secin veya [Yeni/Numaralandir/Kopyala/Grup (" + group + ")/Metraj/bul Degistir/Balon sil/Cizim/Secenekler/Acilimlar/Poz stili]: ",
+                PromptEntityOptions opts = new PromptEntityOptions("Poz secin veya [Yeni/Numaralandir/Kopyala/Grup (" + CurrentGroup + ")/Metraj/bul Degistir/Balon sil/Cizim/Secenekler/Acilimlar/Poz stili]: ",
                     "New Numbering Copy Group BOM Find Empty Draw Options Shapes Pos");
                 PromptEntityResult result = Application.DocumentManager.MdiActiveDocument.Editor.GetEntity(opts);
 
@@ -114,6 +119,170 @@ namespace RebarPosCommands
         public void CMD_EmptyBalloons()
         {
             EmptyBalloons();
+        }
+
+        private ObjectId CreateDefaultShapes()
+        {
+            ObjectId id = ObjectId.Null;
+
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
+                    DBDictionary dict = null;
+                    if (!namedDict.Contains(PosShape.TableName))
+                    {
+                        dict = new DBDictionary();
+                        namedDict.UpgradeOpen();
+                        namedDict.SetAt(PosShape.TableName, dict);
+                        namedDict.DowngradeOpen();
+                        tr.AddNewlyCreatedDBObject(dict, true);
+                    }
+                    else
+                    {
+                        dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosShape.TableName), OpenMode.ForRead);
+                    }
+
+                    if (dict.Count == 0)
+                    {
+                        PosShape shape = new PosShape();
+                        shape.Fields = 1;
+                        shape.Formula = "A";
+                        shape.FormulaBending = "A";
+                        shape.Items.AddLine(0, 0, 100, 0, Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 1));
+                        dict.UpgradeOpen();
+                        id = dict.SetAt("Duz Demir", shape);
+                        dict.DowngradeOpen();
+                        tr.AddNewlyCreatedDBObject(shape, true);
+                    }
+                    else
+                    {
+                        foreach (DBDictionaryEntry entry in dict)
+                        {
+                            id = entry.Value;
+                            break;
+                        }
+                    }
+
+                    tr.Commit();
+                }
+                catch (System.Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos");
+                }
+
+                return id;
+            }
+        }
+
+        private ObjectId CreateDefaultStyles()
+        {
+            ObjectId id = ObjectId.Null;
+
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
+                    DBDictionary dict = null;
+                    if (!namedDict.Contains(PosStyle.TableName))
+                    {
+                        dict = new DBDictionary();
+                        namedDict.UpgradeOpen();
+                        namedDict.SetAt(PosStyle.TableName, dict);
+                        namedDict.DowngradeOpen();
+                        tr.AddNewlyCreatedDBObject(dict, true);
+                    }
+                    else
+                    {
+                        dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosStyle.TableName), OpenMode.ForRead);
+                    }
+
+                    if (dict.Count == 0)
+                    {
+                        PosStyle style = new PosStyle();
+                        style.Formula = "[MC][N][DT][D][DS][S:0] L=[L:0]";
+                        style.TextStyleId = DWGUtility.CreateTextStyle("Rebar Text Style", "leroy.shx", 0.7);
+                        style.NoteStyleId = DWGUtility.CreateTextStyle("Rebar Note Style", "simplxtw.shx", 0.9);
+                        dict.UpgradeOpen();
+                        id = dict.SetAt("Standard", style);
+                        dict.DowngradeOpen();
+                        tr.AddNewlyCreatedDBObject(style, true);
+                    }
+                    else
+                    {
+                        foreach (DBDictionaryEntry entry in dict)
+                        {
+                            id = entry.Value;
+                            break;
+                        }
+                    }
+
+                    tr.Commit();
+                }
+                catch (System.Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos");
+                }
+
+                return id;
+            }
+        }
+
+        private ObjectId CreateDefaultGroups()
+        {
+            ObjectId id = ObjectId.Null;
+
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
+                    DBDictionary dict = null;
+                    if (!namedDict.Contains(PosGroup.TableName))
+                    {
+                        dict = new DBDictionary();
+                        namedDict.UpgradeOpen();
+                        namedDict.SetAt(PosGroup.TableName, dict);
+                        namedDict.DowngradeOpen();
+                        tr.AddNewlyCreatedDBObject(dict, true);
+                    }
+                    else
+                    {
+                        dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosGroup.TableName), OpenMode.ForRead);
+                    }
+
+                    if (dict.Count == 0)
+                    {
+                        PosGroup group = new PosGroup();
+                        group.StyleId = CreateDefaultStyles();
+                        dict.UpgradeOpen();
+                        id = dict.SetAt("0", group);
+                        dict.DowngradeOpen();
+                        tr.AddNewlyCreatedDBObject(group, true);
+                    }
+                    else
+                    {
+                        foreach (DBDictionaryEntry entry in dict)
+                        {
+                            id = entry.Value;
+                            break;
+                        }
+                    }
+
+                    tr.Commit();
+                }
+                catch (System.Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos");
+                }
+
+                return id;
+            }
         }
     }
 }

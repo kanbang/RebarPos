@@ -21,11 +21,13 @@ using namespace OZOZ::RebarPosWrapper;
 PosShape::PosShape() 
 :Autodesk::AutoCAD::DatabaseServices::DBObject(IntPtr(new CPosShape()), true)
 {
+	m_Shapes = gcnew PosShape::ShapeCollection(this);
 }
 
 PosShape::PosShape(System::IntPtr unmanagedPointer, bool autoDelete)
 : Autodesk::AutoCAD::DatabaseServices::DBObject(unmanagedPointer,autoDelete)
 {
+	m_Shapes = gcnew PosShape::ShapeCollection(this);
 }
 
 //*************************************************************************

@@ -94,20 +94,20 @@ void PosStyle::CurrentGroupHighlightColor::set(Autodesk::AutoCAD::Colors::Color^
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setCurrentGroupHighlightColor(value->ColorIndex));
 }
 
-Autodesk::AutoCAD::DatabaseServices::ObjectId^ PosStyle::TextStyle::get()
+Autodesk::AutoCAD::DatabaseServices::ObjectId PosStyle::TextStyleId::get()
 {
 	return ToObjectId (GetImpObj()->TextStyleId());
 }
-void PosStyle::TextStyle::set(Autodesk::AutoCAD::DatabaseServices::ObjectId^ value)
+void PosStyle::TextStyleId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
 {
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setTextStyleId(GETOBJECTID(value)));
 }
 
-Autodesk::AutoCAD::DatabaseServices::ObjectId^ PosStyle::NoteStyle::get()
+Autodesk::AutoCAD::DatabaseServices::ObjectId PosStyle::NoteStyleId::get()
 {
 	return ToObjectId (GetImpObj()->NoteStyleId());
 }
-void PosStyle::NoteStyle::set(Autodesk::AutoCAD::DatabaseServices::ObjectId^ value)
+void PosStyle::NoteStyleId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
 {
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setNoteStyleId(GETOBJECTID(value)));
 }
