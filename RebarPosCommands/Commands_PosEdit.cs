@@ -19,7 +19,7 @@ namespace RebarPosCommands
                 }
                 catch (System.Exception ex)
                 {
-                    MessageBox.Show("Error: " + ex.Message, "RebarPos");
+                    MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 

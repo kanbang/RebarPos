@@ -10,6 +10,7 @@
 #include "../NativeRebarPos/RebarPos.h"
 #include "../NativeRebarPos/PosShape.h"
 #include "../NativeRebarPos/PosGroup.h"
+#include "../NativeRebarPos/PosStyle.h"
 #include "axpnt3d.h"
 #include "axpnt2d.h"
 #include "dbxutil.h"
@@ -391,6 +392,45 @@ STDMETHODIMP CComRebarPos::GetPredefinedStrings(DISPID dispID, CALPOLESTR *pCaSt
 
 		return S_OK;
 		break;
+	case DISPID_STYLE:
+		pDb = m_objRef.objectId().database();
+		if (NULL == pDb)
+			pDb = acdbHostApplicationServices()->workingDatabase();
+	    
+		if (pDb->getNamedObjectsDictionary(pNamedObj, AcDb::kForRead) == Acad::eOk)
+		{
+			if (pNamedObj->getAt(CPosStyle::GetTableName(), (AcDbObject*&)pDict, AcDb::kForRead) == Acad::eOk)
+			{
+				size = pDict->numEntries();
+				if(size > 0)
+				{
+					pIter = pDict->newIterator();
+
+					mStyleIdArray.removeAll();
+
+					pCaStringsOut->pElems = (LPOLESTR *)::CoTaskMemAlloc(sizeof(LPOLESTR) * size);
+					pCaCookiesOut->pElems = (DWORD *)::CoTaskMemAlloc(sizeof(DWORD) * size);
+
+					i = 0;
+					for( ; !pIter->done(); pIter->next())
+					{
+						pCaStringsOut->pElems[i] = ::SysAllocString(CT2W(pIter->name()));
+						pCaCookiesOut->pElems[i] = mStyleIdArray.append(pIter->objectId());
+						i++;
+					}
+					pCaStringsOut->cElems = i;
+					pCaCookiesOut->cElems = i;
+
+					if (pIter)
+						delete pIter;
+				}
+				pDict->close();
+			}
+			pNamedObj->close();
+		}
+
+		return S_OK;
+		break;
 	case DISPID_DISPLAY:
 		size = 3;
 
@@ -467,6 +507,30 @@ STDMETHODIMP CComRebarPos::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VAR
 		if (pDb->getNamedObjectsDictionary(pNamedObj, AcDb::kForRead) == Acad::eOk)
 		{
 			if (pNamedObj->getAt(CPosGroup::GetTableName(), (AcDbObject*&)pDict, AcDb::kForRead) == Acad::eOk)
+			{
+				if(pDict->nameAt(id, name) == Acad::eOk)
+				{
+					hr = S_OK;
+					VariantCopy(pVarOut, &CComVariant(CT2W(name)));
+				}
+				pDict->close();
+			}
+			pNamedObj->close();
+		}
+		return hr;
+		break;
+	case DISPID_STYLE:
+	    assert((INT_PTR)dwCookie >= 0);
+		assert((INT_PTR)dwCookie < mStyleIdArray.length());
+	    id = mStyleIdArray[dwCookie];
+
+		pDb = m_objRef.objectId().database();
+		if (NULL == pDb)
+			pDb = acdbHostApplicationServices()->workingDatabase();
+	    
+		if (pDb->getNamedObjectsDictionary(pNamedObj, AcDb::kForRead) == Acad::eOk)
+		{
+			if (pNamedObj->getAt(CPosStyle::GetTableName(), (AcDbObject*&)pDict, AcDb::kForRead) == Acad::eOk)
 			{
 				if(pDict->nameAt(id, name) == Acad::eOk)
 				{
@@ -1451,6 +1515,97 @@ STDMETHODIMP CComRebarPos::put_Group(BSTR newVal)
 						throw es;
 					else
 						Fire_Notification(DISPID_GROUP);
+				}
+				pDict->close();
+			}
+			pNamedObj->close();
+		}
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
+    }
+    catch(const HRESULT hr)
+    {
+        return Error(L"Invalid argument.", IID_IComRebarPos, hr);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComRebarPos::get_Style(BSTR * pVal)
+{
+	CHECKOUTPARAM(pVal);
+    try
+    {
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef, AcDb::kForRead, Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
+            throw es;
+
+		AcDbDatabase* pDb = NULL;
+		AcDbDictionary* pNamedObj = NULL;
+		AcDbDictionary* pDict = NULL;
+		ACHAR* name = NULL;
+
+		pDb = pRebarPos->database();
+		if (NULL == pDb)
+			pDb = acdbHostApplicationServices()->workingDatabase();
+	    
+		if (pDb->getNamedObjectsDictionary(pNamedObj, AcDb::kForRead) == Acad::eOk)
+		{
+			if (pNamedObj->getAt(CPosStyle::GetTableName(), (AcDbObject*&)pDict, AcDb::kForRead) == Acad::eOk)
+			{
+				if(pDict->nameAt(pRebarPos->StyleId(), name) == Acad::eOk)
+				{
+					USES_CONVERSION;
+					*pVal = SysAllocString(CT2W(name));
+				}
+				pDict->close();
+			}
+			pNamedObj->close();
+		}
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to open object.", IID_IComRebarPos, E_FAIL);
+    }
+    catch(const HRESULT hr)
+    {
+        return Error(L"Invalid argument.", IID_IComRebarPos, hr);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComRebarPos::put_Style(BSTR newVal)
+{
+	try
+    {
+        AXEntityDocLockNoDbOk(m_objRef.objectId());
+
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef, AcDb::kForWrite, Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
+            throw es;
+
+		AcDbDatabase* pDb = NULL;
+		AcDbDictionary* pNamedObj = NULL;
+		AcDbDictionary* pDict = NULL;
+		AcDbObjectId id;
+
+		pDb = pRebarPos->database();
+		if (NULL == pDb)
+			pDb = acdbHostApplicationServices()->workingDatabase();
+	    
+		if (pDb->getNamedObjectsDictionary(pNamedObj, AcDb::kForRead) == Acad::eOk)
+		{
+			if (pNamedObj->getAt(CPosStyle::GetTableName(), (AcDbObject*&)pDict, AcDb::kForRead) == Acad::eOk)
+			{
+				if((es = pDict->getAt(W2T(newVal), id)) == Acad::eOk)
+				{
+					if ((es = pRebarPos->setStyleId(id)) != Acad::eOk)
+						throw es;
+					else
+						Fire_Notification(DISPID_STYLE);
 				}
 				pDict->close();
 			}

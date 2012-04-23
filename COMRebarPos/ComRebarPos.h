@@ -26,6 +26,7 @@
 #define	DISPID_LENGTH		0x00000010
 #define	DISPID_SHAPE		0x00000011
 #define	DISPID_GROUP		0x00000012
+#define	DISPID_STYLE		0x00000013
 
 /////////////////////////////////////////////////////////////////////////////
 // CComRebarPos
@@ -118,6 +119,8 @@ public:
 	STDMETHOD(put_Shape)(/*[in]*/ BSTR newVal);
 	STDMETHOD(get_Group)(/*[out, retval]*/ BSTR *pVal);
 	STDMETHOD(put_Group)(/*[in]*/ BSTR newVal);
+	STDMETHOD(get_Style)(/*[out, retval]*/ BSTR *pVal);
+	STDMETHOD(put_Style)(/*[in]*/ BSTR newVal);
 //
 // OPM
 //
@@ -142,6 +145,7 @@ BEGIN_OPMPROP_MAP()
     OPMPROP_ENTRY(0, DISPID_LENGTH, PROPCAT_Data, 0, 0, 0, _T(""), 0, 0, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, DISPID_SHAPE, PROPCAT_Misc, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, DISPID_GROUP, PROPCAT_Misc, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_STYLE, PROPCAT_Misc, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
 END_OPMPROP_MAP()
 
 
@@ -203,5 +207,6 @@ END_OPMPROP_MAP()
     protected:
         AcDbObjectIdArray mShapeIdArray;
 		AcDbObjectIdArray mGroupIdArray;
+		AcDbObjectIdArray mStyleIdArray;
 };
 

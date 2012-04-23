@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0500 */
-/* at Mon Apr 23 00:57:11 2012
+/* at Mon Apr 23 19:57:15 2012
  */
 /* Compiler settings for .\COMRebarPos.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -192,6 +192,12 @@ EXTERN_C const IID IID_IComRebarPos;
             /* [retval][out] */ BSTR *pVal) = 0;
         
         virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_Group( 
+            /* [in] */ BSTR newVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Style( 
+            /* [retval][out] */ BSTR *pVal) = 0;
+        
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_Style( 
             /* [in] */ BSTR newVal) = 0;
         
     };
@@ -624,6 +630,14 @@ EXTERN_C const IID IID_IComRebarPos;
             IComRebarPos * This,
             /* [in] */ BSTR newVal);
         
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Style )( 
+            IComRebarPos * This,
+            /* [retval][out] */ BSTR *pVal);
+        
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Style )( 
+            IComRebarPos * This,
+            /* [in] */ BSTR newVal);
+        
         END_INTERFACE
     } IComRebarPosVtbl;
 
@@ -907,6 +921,12 @@ EXTERN_C const IID IID_IComRebarPos;
 
 #define IComRebarPos_put_Group(This,newVal)	\
     ( (This)->lpVtbl -> put_Group(This,newVal) ) 
+
+#define IComRebarPos_get_Style(This,pVal)	\
+    ( (This)->lpVtbl -> get_Style(This,pVal) ) 
+
+#define IComRebarPos_put_Style(This,newVal)	\
+    ( (This)->lpVtbl -> put_Style(This,newVal) ) 
 
 #endif /* COBJMACROS */
 

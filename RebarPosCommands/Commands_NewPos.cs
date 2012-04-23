@@ -33,6 +33,7 @@ namespace RebarPosCommands
                         pos.Note = "XXXXXXXX";
                         pos.ShapeId = DWGUtility.CreateDefaultShapes();
                         pos.GroupId = DWGUtility.CreateDefaultGroups();
+                        pos.StyleId = DWGUtility.CreateDefaultStyles();
 
                         pos.SetDatabaseDefaults(db);
 
@@ -43,7 +44,7 @@ namespace RebarPosCommands
                     }
                     catch (System.Exception ex)
                     {
-                        MessageBox.Show("Error: " + ex.Message, "RebarPos");
+                        MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }

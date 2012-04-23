@@ -66,8 +66,6 @@ protected:
 	DrawingUnits m_DrawingUnit;
 	DrawingUnits m_DisplayUnit;
 
-    AcDbHardPointerId m_StyleID;
-
 public:
 	/// Gets or sets the bending option.
     const Adesk::Boolean Bending(void) const;
@@ -84,10 +82,6 @@ public:
 	/// Gets or sets the display unit
     const DrawingUnits DisplayUnit(void) const;
 	Acad::ErrorStatus setDisplayUnit(const DrawingUnits newVal);
-
-	/// Gets or sets pointer to the style.
-	const AcDbObjectId& StyleId(void) const;
-	Acad::ErrorStatus setStyleId(const AcDbObjectId& newVal);
 
 private:
 	static ACHAR* Table_Name;

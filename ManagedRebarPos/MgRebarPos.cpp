@@ -194,6 +194,15 @@ Autodesk::AutoCAD::DatabaseServices::ObjectId RebarPos::GroupId::get()
 	return ToObjectId(GetImpObj()->GroupId());
 }
 
+Autodesk::AutoCAD::DatabaseServices::ObjectId RebarPos::StyleId::get()
+{
+	return ToObjectId (GetImpObj()->StyleId());
+}
+void RebarPos::StyleId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setStyleId(GETOBJECTID(value)));
+}
+
 //*************************************************************************
 // Methods
 //*************************************************************************

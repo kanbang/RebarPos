@@ -68,7 +68,7 @@ CRebarPos::CRebarPos() :
 	m_DisplayStyle(CRebarPos::ALL), isModified(true), m_Length(NULL), m_Key(NULL),
 	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), m_Multiplier(1), 
 	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL),
-	m_ShapeID(AcDbObjectId::kNull), m_GroupID(AcDbObjectId::kNull)
+	m_ShapeID(AcDbObjectId::kNull), m_GroupID(AcDbObjectId::kNull), m_StyleID(AcDbObjectId::kNull)
 {
 }
 
@@ -397,18 +397,15 @@ Acad::ErrorStatus CRebarPos::setGroupId(const AcDbObjectId& newVal)
 const AcDbObjectId& CRebarPos::StyleId(void) const
 {
 	assertReadEnabled();
+	return m_StyleID;
+}
 
-	Acad::ErrorStatus es;
-	if(m_GroupID != AcDbObjectId::kNull)
-	{
-		AcDbObjectPointer<CPosGroup> pGroup (m_GroupID, AcDb::kForRead);
-		if((es = pGroup.openStatus()) == Acad::eOk)
-		{
-			return pGroup->StyleId();
-		}
-	}
-
-	return AcDbObjectId::kNull;
+Acad::ErrorStatus CRebarPos::setStyleId(const AcDbObjectId& newVal)
+{
+	assertWriteEnabled();
+	m_StyleID = newVal;
+	isModified = true;
+	return Acad::eOk;
 }
 
 const ACHAR* CRebarPos::PosKey() const
@@ -578,31 +575,38 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
         return Adesk::kTrue;
     }
 
-	Acad::ErrorStatus es;
 
+	Acad::ErrorStatus es;
+	ACHAR* groupName = NULL;
 	ACHAR* formula = NULL;
 	acutUpdString(_T("[MC]"), formula);
-	AcDbObjectId styleId = AcDbObjectId::kNull;
 
 	if(!m_GroupID.isNull())
 	{
-		AcDbObjectPointer<CPosGroup> pGroup (m_GroupID, AcDb::kForRead);
-		if((es = pGroup.openStatus()) == Acad::eOk)
+		AcDbObjectPointer<AcDbDictionary> pNamedObj (database()->namedObjectsDictionaryId(), AcDb::kForRead);
+		if(pNamedObj->has(CPosGroup::GetTableName()))
 		{
-			styleId = pGroup->StyleId();
-			if(!styleId.isNull())
+			AcDbDictionary* pDict;
+			if((es = pNamedObj->getAt(CPosGroup::GetTableName(), (AcDbObject *&)pDict, AcDb::kForRead)) == Acad::eOk)
 			{
-				AcDbObjectPointer<CPosStyle> pStyle (styleId, AcDb::kForRead);
-				if((es = pStyle.openStatus()) == Acad::eOk)
-				{
-					acutPrintf(_T("Max Length = %-9.16q0\n"), pStyle->NoteScale());
-					if(pStyle->Formula() != NULL)
-					{
-						acutUpdString(pStyle->Formula(), formula);
-					}
-				}
+				pDict->nameAt(m_GroupID, groupName);
+				pDict->close();
 			}
 		}
+	}
+
+	if(!m_StyleID.isNull())
+	{
+		AcDbObjectPointer<CPosStyle> pStyle (m_StyleID, AcDb::kForRead);
+		if((es = pStyle.openStatus()) == Acad::eOk)
+		{
+			acutPrintf(_T("Max Length = %-9.16q0\n"), pStyle->NoteScale());
+			if(pStyle->Formula() != NULL)
+			{
+				acutUpdString(pStyle->Formula(), formula);
+			}
+		}
+		pStyle.close();
 	}
 	acutDelString(formula);
 
@@ -699,6 +703,7 @@ Acad::ErrorStatus CRebarPos::dwgInFields(AcDbDwgFiler* pFiler)
 		// Styles
 		pFiler->readHardPointerId(&m_ShapeID);
 		pFiler->readHardPointerId(&m_GroupID);
+		pFiler->readHardPointerId(&m_StyleID);
 	}
 
 	return pFiler->filerStatus();
@@ -771,6 +776,7 @@ Acad::ErrorStatus CRebarPos::dwgOutFields(AcDbDwgFiler* pFiler) const
 	// Style
 	pFiler->writeHardPointerId(m_ShapeID);
 	pFiler->writeHardPointerId(m_GroupID);
+    pFiler->writeHardPointerId(m_StyleID);
 
 	return pFiler->filerStatus();
 }
@@ -814,7 +820,7 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	ACHAR* t_D = NULL;
 	ACHAR* t_E = NULL;
 	ACHAR* t_F = NULL;
-	AcDbObjectId t_ShapeID, t_GroupID;
+	AcDbObjectId t_ShapeID, t_GroupID, t_StyleID;
 
     while ((es == Acad::eOk) && ((es = pFiler->readResBuf(&rb)) == Acad::eOk))
     {
@@ -882,6 +888,9 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
         case AcDb::kDxfHardPointerId + 1:
             acdbGetObjectId(t_GroupID, rb.resval.rlname);
             break;
+        case AcDb::kDxfHardPointerId + 2:
+            acdbGetObjectId(t_StyleID, rb.resval.rlname);
+            break;
 
         default:
             // An unrecognized group. Push it back so that
@@ -920,6 +929,7 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	setF(t_F);
 	m_ShapeID = t_ShapeID;
 	m_GroupID = t_GroupID;
+    m_StyleID = t_StyleID;
 
 	acutDelString(t_Pos);
 	acutDelString(t_Note);
@@ -1009,6 +1019,7 @@ Acad::ErrorStatus CRebarPos::dxfOutFields(AcDbDxfFiler* pFiler) const
     // Styles
 	pFiler->writeItem(AcDb::kDxfHardPointerId, m_ShapeID);
     pFiler->writeItem(AcDb::kDxfHardPointerId + 1, m_GroupID);
+    pFiler->writeItem(AcDb::kDxfHardPointerId + 2, m_StyleID);
 
 	return pFiler->filerStatus();
 }

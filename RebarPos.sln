@@ -18,7 +18,7 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RebarPosMSI", "Setup\RebarP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RebarPosCommands", "RebarPosCommands\RebarPosCommands.csproj", "{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}"
 EndProject
-Project("{8BC9CEB9-8B4A-11D0-8D11-00A0C91BC942}") = "acad.exe", "..\..\..\..\Program Files\Autodesk\AutoCAD Civil 3D 2012\acad.exe", "{E6DB88EF-C517-420F-AFD6-F41032CDAD73}"
+Project("{8BC9CEB9-8B4A-11D0-8D11-00A0C91BC942}") = "acad.exe", "..\..\..\..\Program Files\AutoCAD Civil 3D 2010\acad.exe", "{A1BED23E-664A-4326-803E-65863901048C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -118,14 +118,14 @@ Global
 		{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}.Release|Win32.ActiveCfg = Release|Any CPU
 		{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}.Release|x64.ActiveCfg = Release|Any CPU
-		{E6DB88EF-C517-420F-AFD6-F41032CDAD73}.Debug|Any CPU.ActiveCfg = Debug
-		{E6DB88EF-C517-420F-AFD6-F41032CDAD73}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{E6DB88EF-C517-420F-AFD6-F41032CDAD73}.Debug|Win32.ActiveCfg = Debug
-		{E6DB88EF-C517-420F-AFD6-F41032CDAD73}.Debug|x64.ActiveCfg = Debug
-		{E6DB88EF-C517-420F-AFD6-F41032CDAD73}.Release|Any CPU.ActiveCfg = Debug
-		{E6DB88EF-C517-420F-AFD6-F41032CDAD73}.Release|Mixed Platforms.ActiveCfg = Debug
-		{E6DB88EF-C517-420F-AFD6-F41032CDAD73}.Release|Win32.ActiveCfg = Debug
-		{E6DB88EF-C517-420F-AFD6-F41032CDAD73}.Release|x64.ActiveCfg = Debug
+		{A1BED23E-664A-4326-803E-65863901048C}.Debug|Any CPU.ActiveCfg = Debug
+		{A1BED23E-664A-4326-803E-65863901048C}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{A1BED23E-664A-4326-803E-65863901048C}.Debug|Win32.ActiveCfg = Debug
+		{A1BED23E-664A-4326-803E-65863901048C}.Debug|x64.ActiveCfg = Debug
+		{A1BED23E-664A-4326-803E-65863901048C}.Release|Any CPU.ActiveCfg = Debug
+		{A1BED23E-664A-4326-803E-65863901048C}.Release|Mixed Platforms.ActiveCfg = Debug
+		{A1BED23E-664A-4326-803E-65863901048C}.Release|Win32.ActiveCfg = Debug
+		{A1BED23E-664A-4326-803E-65863901048C}.Release|x64.ActiveCfg = Debug
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
