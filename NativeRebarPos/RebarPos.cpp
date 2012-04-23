@@ -38,6 +38,7 @@
 #include "tchar.h"
 
 #include "RebarPos.h"
+#include "PosShape.h"
 #include "PosGroup.h"
 #include "PosStyle.h"
 
@@ -518,13 +519,49 @@ void CRebarPos::subList() const
     acdbEcs2Ucs(asDblArray(pt), asDblArray(pt), asDblArray(norm), Adesk::kFalse);
     acutPrintf(_T("X = %-9.16q0, Y = %-9.16q0, Z = %-9.16q0\n"), pt.x, pt.y, pt.z);
 
-	// TODO: List all properties
-	// Pos
-	if ((m_Pos != NULL) && (m_Pos[0] != _T('\0')))
+	// List all properties
+	if (m_Pos != NULL)
+		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Pos Marker:"), m_Pos);
+	if (m_Count != NULL)
+		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Count:"), m_Count);
+	if (m_Diameter != NULL)
+		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Diameter:"), m_Diameter);
+	if (m_Spacing != NULL)
+		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Spacing:"), m_Spacing);
+	acutPrintf(_T("%18s%16s %i\n"), _T(/*MSG0*/""), _T("Multiplier:"), m_Multiplier);
+
+	if(!m_ShapeID.isNull())
 	{
-		acutPrintf(_T("%18s%16s "), _T(/*MSG0*/""), _T("Pos Marker:"));
-		acutPrintf(_T("%18s%16s "), _T(/*MSG0*/""), m_Pos);
+		Acad::ErrorStatus es;
+		AcDbObjectPointer<AcDbDictionary> pNamedObj (database()->namedObjectsDictionaryId(), AcDb::kForRead);
+		if((es = pNamedObj.openStatus()) == Acad::eOk)
+		{
+			AcDbDictionary* pDict = NULL;
+			if((es = pNamedObj->getAt(CPosShape::GetTableName(), (AcDbObject *&)pDict, AcDb::kForRead)) == Acad::eOk)
+			{
+				ACHAR* shapeName = NULL;
+				pDict->nameAt(m_ShapeID, shapeName);
+				if (shapeName != NULL)
+					acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Shape:"), shapeName);
+				acutDelString(shapeName);
+				pDict->close();
+			}
+			pNamedObj->close();
+		}
 	}
+
+	if ((m_A != NULL) && (m_A[0] != _T('\0')))
+		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("A Length:"), m_A);
+	if ((m_B != NULL) && (m_B[0] != _T('\0')))
+		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("B Length:"), m_B);
+	if ((m_C != NULL) && (m_C[0] != _T('\0')))
+		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("C Length:"), m_C);
+	if ((m_D != NULL) && (m_D[0] != _T('\0')))
+		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("D Length:"), m_D);
+	if ((m_E != NULL) && (m_E[0] != _T('\0')))
+		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("E Length:"), m_E);
+	if ((m_F != NULL) && (m_F[0] != _T('\0')))
+		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("F Length:"), m_F);
 }
 
 Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
