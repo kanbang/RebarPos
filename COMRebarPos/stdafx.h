@@ -33,7 +33,7 @@ extern CComModule _Module;
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Developer Studio will insert additional declarations immediately before the previous line.
-
+/*
 //- This line allows us to get rid of the .def file in ARX projects
 #ifndef NO_ARX_DEF
 #define NO_ARX_DEF
@@ -43,3 +43,4 @@ extern CComModule _Module;
 #pragma comment(linker, "/export:acrxGetApiVersion,PRIVATE")
 #endif
 #endif
+*/

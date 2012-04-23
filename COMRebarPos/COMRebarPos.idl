@@ -55,8 +55,8 @@ library COMREBARPOSLib
 		[propput, id(6), helpstring("property Spacing"),helpcontext(IDH_SPACING)] HRESULT Spacing([in] BSTR newVal);
 		[propget, id(7), helpstring("property Multiplier"),helpcontext(IDH_MULTIPLIER)] HRESULT Multiplier([out, retval] long *pVal);
 		[propput, id(7), helpstring("property Multiplier"),helpcontext(IDH_MULTIPLIER)] HRESULT Multiplier([in] long newVal);
-		[propget, id(8), helpstring("property ShowLength"),helpcontext(IDH_SHOWLENGTH)] HRESULT ShowLength([out, retval] VARIANT_BOOL *pVal);
-		[propput, id(8), helpstring("property ShowLength"),helpcontext(IDH_SHOWLENGTH)] HRESULT ShowLength([in] VARIANT_BOOL newVal);
+		[propget, id(8), helpstring("property DisplayStyle"),helpcontext(IDH_DISPLAYSTYLE)] HRESULT DisplayStyle([out, retval] BSTR *pVal);
+		[propput, id(8), helpstring("property DisplayStyle"),helpcontext(IDH_DISPLAYSTYLE)] HRESULT DisplayStyle([in] BSTR newVal);
 		[propget, id(9), helpstring("property Note"),helpcontext(IDH_NOTE)] HRESULT Note([out, retval] BSTR *pVal);
 		[propput, id(9), helpstring("property Note"),helpcontext(IDH_NOTE)] HRESULT Note([in] BSTR newVal);
 		[propget, id(10), helpstring("property A"),helpcontext(IDH_A)] HRESULT A([out, retval] BSTR *pVal);
@@ -76,8 +76,6 @@ library COMREBARPOSLib
 		[propput, id(17), helpstring("property Shape"),helpcontext(IDH_SHAPE)] HRESULT Shape([in] BSTR newVal);
 		[propget, id(18), helpstring("property Group"),helpcontext(IDH_GROUP)] HRESULT Group([out, retval] BSTR *pVal);
 		[propput, id(18), helpstring("property Group"),helpcontext(IDH_GROUP)] HRESULT Group([in] BSTR newVal);
-		[propget, id(19), helpstring("property ShowMarkerOnly"),helpcontext(IDH_SHOWMARKERONLY)] HRESULT ShowMarkerOnly([out, retval] VARIANT_BOOL *pVal);
-		[propput, id(19), helpstring("property ShowMarkerOnly"),helpcontext(IDH_SHOWMARKERONLY)] HRESULT ShowMarkerOnly([in] VARIANT_BOOL newVal);
 	};
 	//
 	// coclasses in type library

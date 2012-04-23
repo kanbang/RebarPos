@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0500 */
-/* at Thu Apr 19 14:41:16 2012
+/* at Mon Apr 23 00:57:11 2012
  */
 /* Compiler settings for .\COMRebarPos.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -131,11 +131,11 @@ EXTERN_C const IID IID_IComRebarPos;
         virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_Multiplier( 
             /* [in] */ long newVal) = 0;
         
-        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_ShowLength( 
-            /* [retval][out] */ VARIANT_BOOL *pVal) = 0;
+        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_DisplayStyle( 
+            /* [retval][out] */ BSTR *pVal) = 0;
         
-        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_ShowLength( 
-            /* [in] */ VARIANT_BOOL newVal) = 0;
+        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_DisplayStyle( 
+            /* [in] */ BSTR newVal) = 0;
         
         virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Note( 
             /* [retval][out] */ BSTR *pVal) = 0;
@@ -193,12 +193,6 @@ EXTERN_C const IID IID_IComRebarPos;
         
         virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_Group( 
             /* [in] */ BSTR newVal) = 0;
-        
-        virtual /* [helpcontext][helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_ShowMarkerOnly( 
-            /* [retval][out] */ VARIANT_BOOL *pVal) = 0;
-        
-        virtual /* [helpcontext][helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE put_ShowMarkerOnly( 
-            /* [in] */ VARIANT_BOOL newVal) = 0;
         
     };
     
@@ -311,14 +305,6 @@ EXTERN_C const IID IID_IComRebarPos;
         /* [id][hidden][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *Erase )( 
             IComRebarPos * This,
             /* [retval][out] */ void *retval);
-        
-        /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_ObjectID32 )( 
-            IComRebarPos * This,
-            /* [retval][out] */ signed long *retval);
-        
-        /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_OwnerID32 )( 
-            IComRebarPos * This,
-            /* [retval][out] */ signed long *retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_TrueColor )( 
             IComRebarPos * This,
@@ -554,13 +540,13 @@ EXTERN_C const IID IID_IComRebarPos;
             IComRebarPos * This,
             /* [in] */ long newVal);
         
-        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_ShowLength )( 
+        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayStyle )( 
             IComRebarPos * This,
-            /* [retval][out] */ VARIANT_BOOL *pVal);
+            /* [retval][out] */ BSTR *pVal);
         
-        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_ShowLength )( 
+        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_DisplayStyle )( 
             IComRebarPos * This,
-            /* [in] */ VARIANT_BOOL newVal);
+            /* [in] */ BSTR newVal);
         
         /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Note )( 
             IComRebarPos * This,
@@ -638,14 +624,6 @@ EXTERN_C const IID IID_IComRebarPos;
             IComRebarPos * This,
             /* [in] */ BSTR newVal);
         
-        /* [helpcontext][helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_ShowMarkerOnly )( 
-            IComRebarPos * This,
-            /* [retval][out] */ VARIANT_BOOL *pVal);
-        
-        /* [helpcontext][helpstring][id][propput] */ HRESULT ( STDMETHODCALLTYPE *put_ShowMarkerOnly )( 
-            IComRebarPos * This,
-            /* [in] */ VARIANT_BOOL newVal);
-        
         END_INTERFACE
     } IComRebarPosVtbl;
 
@@ -718,12 +696,6 @@ EXTERN_C const IID IID_IComRebarPos;
 
 #define IComRebarPos_Erase(This,retval)	\
     ( (This)->lpVtbl -> Erase(This,retval) ) 
-
-#define IComRebarPos_get_ObjectID32(This,retval)	\
-    ( (This)->lpVtbl -> get_ObjectID32(This,retval) ) 
-
-#define IComRebarPos_get_OwnerID32(This,retval)	\
-    ( (This)->lpVtbl -> get_OwnerID32(This,retval) ) 
 
 #define IComRebarPos_get_TrueColor(This,retval)	\
     ( (This)->lpVtbl -> get_TrueColor(This,retval) ) 
@@ -873,11 +845,11 @@ EXTERN_C const IID IID_IComRebarPos;
 #define IComRebarPos_put_Multiplier(This,newVal)	\
     ( (This)->lpVtbl -> put_Multiplier(This,newVal) ) 
 
-#define IComRebarPos_get_ShowLength(This,pVal)	\
-    ( (This)->lpVtbl -> get_ShowLength(This,pVal) ) 
+#define IComRebarPos_get_DisplayStyle(This,pVal)	\
+    ( (This)->lpVtbl -> get_DisplayStyle(This,pVal) ) 
 
-#define IComRebarPos_put_ShowLength(This,newVal)	\
-    ( (This)->lpVtbl -> put_ShowLength(This,newVal) ) 
+#define IComRebarPos_put_DisplayStyle(This,newVal)	\
+    ( (This)->lpVtbl -> put_DisplayStyle(This,newVal) ) 
 
 #define IComRebarPos_get_Note(This,pVal)	\
     ( (This)->lpVtbl -> get_Note(This,pVal) ) 
@@ -935,12 +907,6 @@ EXTERN_C const IID IID_IComRebarPos;
 
 #define IComRebarPos_put_Group(This,newVal)	\
     ( (This)->lpVtbl -> put_Group(This,newVal) ) 
-
-#define IComRebarPos_get_ShowMarkerOnly(This,pVal)	\
-    ( (This)->lpVtbl -> get_ShowMarkerOnly(This,pVal) ) 
-
-#define IComRebarPos_put_ShowMarkerOnly(This,newVal)	\
-    ( (This)->lpVtbl -> put_ShowMarkerOnly(This,newVal) ) 
 
 #endif /* COBJMACROS */
 

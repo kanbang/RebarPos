@@ -103,22 +103,13 @@ int RebarPos::Multiplier::get()
     return GetImpObj()->Multiplier();
 }
 
-void RebarPos::ShowLength::set(bool value)
+void RebarPos::Display::set(RebarPos::DisplayStyle value)
 {
-	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setShowLength(value ? Adesk::kTrue : Adesk::kFalse));
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setDisplay(static_cast<CRebarPos::DisplayStyle>(value)));
 }
-bool RebarPos::ShowLength::get()
+RebarPos::DisplayStyle RebarPos::Display::get()
 {
-	return (GetImpObj()->ShowLength() == Adesk::kTrue ? true : false);
-}
-
-void RebarPos::ShowMarkerOnly::set(bool value)
-{
-	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setShowMarkerOnly(value ? Adesk::kTrue : Adesk::kFalse));
-}
-bool RebarPos::ShowMarkerOnly::get()
-{
-	return (GetImpObj()->ShowMarkerOnly() == Adesk::kTrue ? true : false);
+	return static_cast<RebarPos::DisplayStyle>(GetImpObj()->Display());
 }
 
 void RebarPos::A::set(String^ value)

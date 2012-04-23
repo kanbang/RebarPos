@@ -15,7 +15,7 @@
 #define	DISPID_DIAMETER		0x00000005
 #define	DISPID_SPACING		0x00000006
 #define	DISPID_MULTIPLIER		0x00000007
-#define	DISPID_SHOWLENGTH		0x00000008
+#define	DISPID_DISPLAY		0x00000008
 #define	DISPID_NOTE		0x00000009
 #define	DISPID_A		0x0000000A
 #define	DISPID_B		0x0000000B
@@ -26,7 +26,6 @@
 #define	DISPID_LENGTH		0x00000010
 #define	DISPID_SHAPE		0x00000011
 #define	DISPID_GROUP		0x00000012
-#define	DISPID_SHOWMARKERONLY		0x00000013
 
 /////////////////////////////////////////////////////////////////////////////
 // CComRebarPos
@@ -98,8 +97,8 @@ public:
 	STDMETHOD(put_Spacing)(/*[in]*/ BSTR newVal);
 	STDMETHOD(get_Multiplier)(/*[out, retval]*/ long *pVal);
 	STDMETHOD(put_Multiplier)(/*[in]*/ long newVal);
-	STDMETHOD(get_ShowLength)(/*[out, retval]*/ VARIANT_BOOL *pVal);
-	STDMETHOD(put_ShowLength)(/*[in]*/ VARIANT_BOOL newVal);
+	STDMETHOD(get_DisplayStyle)(/*[out, retval]*/ BSTR *pVal);
+	STDMETHOD(put_DisplayStyle)(/*[in]*/ BSTR newVal);
 	STDMETHOD(get_Note)(/*[out, retval]*/ BSTR *pVal);
 	STDMETHOD(put_Note)(/*[in]*/ BSTR newVal);
 	STDMETHOD(get_A)(/*[out, retval]*/ BSTR *pVal);
@@ -119,8 +118,6 @@ public:
 	STDMETHOD(put_Shape)(/*[in]*/ BSTR newVal);
 	STDMETHOD(get_Group)(/*[out, retval]*/ BSTR *pVal);
 	STDMETHOD(put_Group)(/*[in]*/ BSTR newVal);
-	STDMETHOD(get_ShowMarkerOnly)(/*[out, retval]*/ VARIANT_BOOL *pVal);
-	STDMETHOD(put_ShowMarkerOnly)(/*[in]*/ VARIANT_BOOL newVal);
 //
 // OPM
 //
@@ -134,7 +131,7 @@ BEGIN_OPMPROP_MAP()
     OPMPROP_ENTRY(0, DISPID_DIAMETER, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, DISPID_SPACING, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, DISPID_MULTIPLIER, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_SHOWLENGTH, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_DISPLAY, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, DISPID_NOTE, PROPCAT_Text, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, DISPID_A, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, DISPID_B, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
@@ -145,7 +142,6 @@ BEGIN_OPMPROP_MAP()
     OPMPROP_ENTRY(0, DISPID_LENGTH, PROPCAT_Data, 0, 0, 0, _T(""), 0, 0, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, DISPID_SHAPE, PROPCAT_Misc, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, DISPID_GROUP, PROPCAT_Misc, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_SHOWMARKERONLY, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
 END_OPMPROP_MAP()
 
 

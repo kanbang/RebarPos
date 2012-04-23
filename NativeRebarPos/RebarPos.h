@@ -57,6 +57,12 @@ public:
 		LENGTH = 7,
 		NOTE = 8
 	};
+	enum DisplayStyle
+	{ 
+		ALL = 0,
+		WITHOUTLENGTH = 1,
+		MARKERONLY = 2,
+	};
 
 private:
 	/// Property backing fields
@@ -69,8 +75,6 @@ private:
 	ACHAR* m_Diameter;
 	ACHAR* m_Spacing;
 	Adesk::Int32 m_Multiplier;
-	Adesk::Boolean m_ShowLength;
-	Adesk::Boolean m_ShowMarkerOnly;
 	ACHAR* m_Note;
 	ACHAR* m_A;
 	ACHAR* m_B;
@@ -78,6 +82,8 @@ private:
 	ACHAR* m_D;
 	ACHAR* m_E;
 	ACHAR* m_F;
+
+	DisplayStyle m_DisplayStyle;
 
 	AcDbHardPointerId m_ShapeID;
 	AcDbHardPointerId m_GroupID;
@@ -127,12 +133,8 @@ public:
 	Acad::ErrorStatus setMultiplier(const Adesk::Int32 newVal);
 
 	/// Gets or sets whether length text is shown
-	const Adesk::Boolean ShowLength(void) const;
-	Acad::ErrorStatus setShowLength(const Adesk::Boolean newVal);
-
-	/// Gets or sets whether only the marker is shown
-	const Adesk::Boolean ShowMarkerOnly(void) const;
-	Acad::ErrorStatus setShowMarkerOnly(const Adesk::Boolean newVal);
+	const DisplayStyle Display(void) const;
+	Acad::ErrorStatus setDisplay(const DisplayStyle newVal);
 
 	/// Gets or sets the A piece length
 	const ACHAR* A(void) const;
@@ -161,7 +163,7 @@ public:
 	/// Gets the total length
 	const ACHAR* Length(void) const;
 
-	/// Gets or sets the shape style
+	/// Gets or sets the pos shape
 	const AcDbObjectId& ShapeId(void) const;
 	Acad::ErrorStatus setShapeId(const AcDbObjectId& newVal);
 
@@ -169,6 +171,8 @@ public:
 	const AcDbObjectId& GroupId(void) const;
 	Acad::ErrorStatus setGroupId(const AcDbObjectId& newVal);
 
+	/// Gets the style
+	const AcDbObjectId& StyleId(void) const;
 
 public:
 	/// Gets a string key identifying a pos with a certain diameter,

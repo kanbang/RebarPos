@@ -124,7 +124,8 @@ Acad::ErrorStatus CPosStyle::setFormula(const ACHAR* newVal)
 {
 	assertWriteEnabled();
 
-    acutDelString(m_Formula);
+	if(m_Formula != NULL)
+		acutDelString(m_Formula);
     m_Formula = NULL;
     if(newVal != NULL)
     {
@@ -144,7 +145,8 @@ Acad::ErrorStatus CPosStyle::setFormulaWithoutLength(const ACHAR* newVal)
 {
 	assertWriteEnabled();
 
-    acutDelString(m_FormulaWithoutLength);
+	if(m_FormulaWithoutLength != NULL)
+		acutDelString(m_FormulaWithoutLength);
     m_FormulaWithoutLength = NULL;
     if(newVal != NULL)
     {
@@ -164,7 +166,8 @@ Acad::ErrorStatus CPosStyle::setFormulaPosOnly(const ACHAR* newVal)
 {
 	assertWriteEnabled();
 
-    acutDelString(m_FormulaPosOnly);
+	if(m_FormulaPosOnly != NULL)
+		acutDelString(m_FormulaPosOnly);
     m_FormulaPosOnly = NULL;
     if(newVal != NULL)
     {
@@ -374,9 +377,12 @@ Acad::ErrorStatus CPosStyle::dwgInFields(AcDbDwgFiler *pFiler)
 	// Read params
 	if (version >= 1)
 	{
-		acutDelString(m_Formula);
-		acutDelString(m_FormulaWithoutLength);
-		acutDelString(m_FormulaPosOnly);
+		if(m_Formula)
+			acutDelString(m_Formula);
+		if(m_FormulaWithoutLength)
+			acutDelString(m_FormulaWithoutLength);
+		if(m_FormulaPosOnly)
+			acutDelString(m_FormulaPosOnly);
 
 		pFiler->readString(&m_Formula);
 		pFiler->readString(&m_FormulaWithoutLength);
@@ -562,9 +568,12 @@ Acad::ErrorStatus CPosStyle::dxfInFields(AcDbDxfFiler *pFiler)
 	m_TextStyleID = t_TextStyleID;
 	m_NoteStyleID = t_NoteStyleID;
 
-	acutDelString(t_Formula);
-	acutDelString(t_FormulaWithoutLength);
-	acutDelString(t_FormulaPosOnly);
+	if(t_Formula)
+		acutDelString(t_Formula);
+	if(t_FormulaWithoutLength)
+		acutDelString(t_FormulaWithoutLength);
+	if(t_FormulaPosOnly)
+		acutDelString(t_FormulaPosOnly);
 
 	return es;
 }

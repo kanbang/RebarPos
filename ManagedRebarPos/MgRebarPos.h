@@ -41,6 +41,12 @@ namespace OZOZ
 				Length = 7,
 				Note = 8
 			};
+			enum class DisplayStyle
+			{ 
+				All = 0,
+				WithoutLength = 1,
+				MarkerOnly = 2,
+			};
 
         public:
 			property Point3d BasePoint { Point3d get(); void set(Point3d value); }
@@ -53,8 +59,7 @@ namespace OZOZ
 			property String^ Spacing  { String^ get(); void set(String^ value); }
 			property int Multiplier   { int get(); void set(int value); }
 
-			property bool ShowLength     { bool get(); void set(bool value); }
-			property bool ShowMarkerOnly { bool get(); void set(bool value); }
+			property DisplayStyle Display { DisplayStyle get(); void set(DisplayStyle value); }
 
 			property String^ A { String^ get(); void set(String^ value); }
 			property String^ B { String^ get(); void set(String^ value); }
