@@ -598,47 +598,63 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
         return Adesk::kTrue;
     }
 
-
 	Acad::ErrorStatus es;
+
+	if(m_GroupID.isNull())
+	{
+		return Adesk::kTrue;
+	}
+
+	// Get group name
 	ACHAR* groupName = NULL;
-	ACHAR* formula = NULL;
-	acutUpdString(_T("[MC]"), formula);
+	acutUpdString(_T(""), groupName);
+	AcDbObjectPointer<AcDbDictionary> pNamedObj (database()->namedObjectsDictionaryId(), AcDb::kForRead);
+	if(pNamedObj->has(CPosGroup::GetTableName()))
+	{
+		AcDbDictionary* pDict;
+		if((es = pNamedObj->getAt(CPosGroup::GetTableName(), (AcDbObject *&)pDict, AcDb::kForRead)) == Acad::eOk)
+		{
+			pDict->nameAt(m_GroupID, groupName);
+			pDict->close();
+		}
+	}
+
+	// Open group and get style id
 	AcDbObjectId styleID = AcDbObjectId::kNull;
-
-	if(!m_GroupID.isNull())
+	AcDbObjectPointer<CPosGroup> pGroup (m_GroupID, AcDb::kForRead);
+	if((es = pGroup.openStatus()) != Acad::eOk)
 	{
-		AcDbObjectPointer<AcDbDictionary> pNamedObj (database()->namedObjectsDictionaryId(), AcDb::kForRead);
-		if(pNamedObj->has(CPosGroup::GetTableName()))
-		{
-			AcDbDictionary* pDict;
-			if((es = pNamedObj->getAt(CPosGroup::GetTableName(), (AcDbObject *&)pDict, AcDb::kForRead)) == Acad::eOk)
-			{
-				pDict->nameAt(m_GroupID, groupName);
-				pDict->close();
-			}
-		}
-		AcDbObjectPointer<CPosGroup> pGroup (m_GroupID, AcDb::kForRead);
-		if((es = pGroup.openStatus()) == Acad::eOk)
-		{
-			styleID = pGroup->StyleId();
-			pGroup.close();
-		}
+		return Adesk::kTrue;
+	}
+	styleID = pGroup->StyleId();
+	if(styleID.isNull())
+	{
+		return Adesk::kTrue;
 	}
 
-	if(!styleID.isNull())
+	// Open style and read formula string
+	ACHAR* formula = NULL;
+	AcDbObjectPointer<CPosStyle> pStyle (styleID, AcDb::kForRead);
+	if((es = pStyle.openStatus()) == Acad::eOk)
 	{
-		AcDbObjectPointer<CPosStyle> pStyle (styleID, AcDb::kForRead);
-		if((es = pStyle.openStatus()) == Acad::eOk)
+		if(m_DisplayStyle == CRebarPos::ALL && pStyle->Formula() != NULL)
 		{
-			acutPrintf(_T("Max Length = %-9.16q0\n"), pStyle->NoteScale());
-			if(pStyle->Formula() != NULL)
-			{
-				acutUpdString(pStyle->Formula(), formula);
-			}
+			acutUpdString(pStyle->Formula(), formula);
 		}
-		pStyle.close();
+		else if(m_DisplayStyle == CRebarPos::WITHOUTLENGTH && pStyle->FormulaWithoutLength() != NULL)
+		{
+			acutUpdString(pStyle->FormulaWithoutLength(), formula);
+		}
+		else if(m_DisplayStyle == CRebarPos::MARKERONLY && pStyle->FormulaPosOnly() != NULL)
+		{
+			acutUpdString(pStyle->FormulaPosOnly(), formula);
+		}
 	}
-	acutDelString(formula);
+	if(formula == NULL)
+	{
+		return Adesk::kTrue;
+	}
+
 
 	/*
     AcGiTextStyle textStyle;
