@@ -52,7 +52,7 @@ ACRX_DXF_DEFINE_MEMBERS(CPosGroup, AcDbObject,
 
 //-----------------------------------------------------------------------------
 CPosGroup::CPosGroup () : m_Bending(Adesk::kFalse), m_MaxBarLength(12),
-	m_DrawingUnit(CPosGroup::MM), m_DisplayUnit(CPosGroup::MM)
+	m_DrawingUnit(CPosGroup::MM), m_DisplayUnit(CPosGroup::MM), m_StyleID(AcDbObjectId::kNull)
 { }
 
 CPosGroup::~CPosGroup () { }
@@ -112,6 +112,19 @@ Acad::ErrorStatus CPosGroup::setDisplayUnit(const CPosGroup::DrawingUnits newVal
 	return Acad::eOk;
 }
 
+const AcDbObjectId& CPosGroup::StyleId(void) const
+{
+	assertReadEnabled();
+	return m_StyleID;
+}
+
+Acad::ErrorStatus CPosGroup::setStyleId(const AcDbObjectId& newVal)
+{
+	assertWriteEnabled();
+	m_StyleID = newVal;
+	return Acad::eOk;
+}
+
 //*************************************************************************
 // Overrides
 //*************************************************************************
@@ -136,6 +149,7 @@ Acad::ErrorStatus CPosGroup::dwgOutFields(AcDbDwgFiler *pFiler) const
 	pFiler->writeDouble(m_MaxBarLength);
 	pFiler->writeInt32(m_DrawingUnit);
 	pFiler->writeInt32(m_DisplayUnit);
+    pFiler->writeHardPointerId(m_StyleID);
 
 	return pFiler->filerStatus();
 }
@@ -167,6 +181,7 @@ Acad::ErrorStatus CPosGroup::dwgInFields(AcDbDwgFiler *pFiler)
 		int displayunit = 0;
 		pFiler->readItem(&displayunit);
 		m_DisplayUnit = (DrawingUnits)displayunit;
+		pFiler->readHardPointerId(&m_StyleID);
 	}
 
 	return pFiler->filerStatus();
@@ -195,6 +210,7 @@ Acad::ErrorStatus CPosGroup::dxfOutFields(AcDbDxfFiler *pFiler) const
 	pFiler->writeDouble(AcDb::kDxfXReal, m_MaxBarLength);
 	pFiler->writeInt32(AcDb::kDxfInt32 + 1, m_DrawingUnit);
 	pFiler->writeInt32(AcDb::kDxfInt32 + 2, m_DisplayUnit);
+    pFiler->writeItem(AcDb::kDxfHardPointerId, m_StyleID);
 
 	return pFiler->filerStatus();
 }
@@ -227,7 +243,8 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
 	double t_MaxBarLength;
 	int t_DrawingUnit;
 	int t_DisplayUnit;
-	
+	AcDbObjectId t_StyleID;
+
     while ((es == Acad::eOk) && ((es = pFiler->readResBuf(&rb)) == Acad::eOk))
     {
         switch (rb.restype) 
@@ -243,6 +260,9 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
             break;
         case AcDb::kDxfInt32 + 2:
             t_DisplayUnit = rb.resval.rlong;
+            break;
+        case AcDb::kDxfHardPointerId:
+            acdbGetObjectId(t_StyleID, rb.resval.rlname);
             break;
 
         default:
@@ -267,6 +287,7 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
     m_MaxBarLength = t_MaxBarLength;
     m_DrawingUnit = (DrawingUnits)t_DrawingUnit;
     m_DisplayUnit = (DrawingUnits)t_DisplayUnit;
+	m_StyleID = t_StyleID;
 
 	return es;
 }

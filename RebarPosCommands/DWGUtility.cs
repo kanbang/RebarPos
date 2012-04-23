@@ -165,6 +165,7 @@ namespace RebarPosCommands
                     if (dict.Count == 0)
                     {
                         PosGroup group = new PosGroup();
+                        group.StyleId = DWGUtility.CreateDefaultStyles();
                         dict.UpgradeOpen();
                         id = dict.SetAt("0", group);
                         dict.DowngradeOpen();

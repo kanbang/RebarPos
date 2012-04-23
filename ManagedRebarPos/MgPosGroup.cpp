@@ -67,6 +67,15 @@ void PosGroup::DisplayUnit::set(PosGroup::DrawingUnits value)
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setDisplayUnit(static_cast<CPosGroup::DrawingUnits>(value)));
 }
 
+Autodesk::AutoCAD::DatabaseServices::ObjectId PosGroup::StyleId::get()
+{
+	return ToObjectId (GetImpObj()->StyleId());
+}
+void PosGroup::StyleId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setStyleId(GETOBJECTID(value)));
+}
+
 //*************************************************************************
 // Static Properties
 //*************************************************************************

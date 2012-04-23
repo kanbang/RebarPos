@@ -87,7 +87,6 @@ private:
 
 	AcDbHardPointerId m_ShapeID;
 	AcDbHardPointerId m_GroupID;
-    AcDbHardPointerId m_StyleID;
 
 	/// Locals
 	AcGeVector3d direction, up, norm;
@@ -171,11 +170,6 @@ public:
 	/// Gets or sets the pos group
 	const AcDbObjectId& GroupId(void) const;
 	Acad::ErrorStatus setGroupId(const AcDbObjectId& newVal);
-
-	/// Gets the style
-	/// Gets or sets pointer to the style.
-	const AcDbObjectId& StyleId(void) const;
-	Acad::ErrorStatus setStyleId(const AcDbObjectId& newVal);
 
 public:
 	/// Gets a string key identifying a pos with a certain diameter,
