@@ -108,9 +108,9 @@ namespace RebarPosCommands
                     if (dict.Count == 0)
                     {
                         PosStyle style = new PosStyle();
-                        style.Formula = "[MC][N][DT][D][DS][S:.0] L=[L:.0]";
-                        style.FormulaWithoutLength = "[MC][N][DT][D][DS][S:.0]";
-                        style.FormulaPosOnly = "[MC]";
+                        style.Formula = "[M:C][N][\"T\":D][\"/\":S] [\"L=\":L]";
+                        style.FormulaWithoutLength = "[M:C][N][\"T\":D][\"/\":S]";
+                        style.FormulaPosOnly = "[M:C]";
                         style.TextStyleId = DWGUtility.CreateTextStyle("Rebar Text Style", "leroy.shx", 0.7);
                         style.NoteStyleId = DWGUtility.CreateTextStyle("Rebar Note Style", "simplxtw.shx", 0.9);
                         dict.UpgradeOpen();

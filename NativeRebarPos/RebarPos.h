@@ -63,9 +63,7 @@ public:
 		GROUP = 5,
 		MULTIPLIER = 6,
 		LENGTH = 7,
-		NOTE = 8,
-		DIAMETERSYMBOL = 101,
-		SPACINGSYMBOL = 102
+		NOTE = 8
 	};
 	enum DisplayStyle
 	{ 
@@ -75,8 +73,13 @@ public:
 	};
 
 private:
-	/// Used to keep track of sub items to draw
-	DrawList drawList;
+	/// Used to cache last draw params
+	AcString lastGroupName;
+	DrawList lastDrawList;
+	CDrawParams lastNoteDraw;
+    AcGiTextStyle lastTextStyle;
+    AcGiTextStyle lastNoteStyle;
+	Adesk::UInt16 lastCircleColor;
 
 private:
 	/// Property backing fields
@@ -111,7 +114,7 @@ protected:
 	const void Calculate(void) const;
 
 	/// Parses formula text and creates the draw list
-	void ParseFormula(const ACHAR* formula);
+	const DrawList ParseFormula(const ACHAR* formula) const;
 
 public:
 	/// Determines which part is under the given point

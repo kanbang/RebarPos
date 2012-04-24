@@ -43,25 +43,6 @@ Adesk::UInt32 CPosStyle::kCurrentVersionNumber = 1;
 
 ACHAR* CPosStyle::Table_Name = _T("OZOZ_REBAR_STYLES");
 
-// Formula text
-// [M] Pos marker
-// [MC] Pos marker with surrounding circle
-// [N] Bar count
-// [D] Bar diameter
-// [S] Spacing
-// [L] Total length
-// Number format is specified after semicolons:
-// [X:0] Prints the item rounding to zero decimal places (1 becomes 1, 20.3 becomes 20)
-// [X:00] Prints the item with double digits and rounds to zero decimal places (1 becomes 01, 20.3 becomes 20)
-// [X:000] Prints the item with triple digits (1 becomes 001, 20.3 becomes 020)
-// [X:0.0] Prints the item rounding to one decimal place (1 becomes 1.0, 20.3 becomes 20.3)
-// [X:00.0] Prints the item with double digits and rounds to one decimal place (1 becomes 01.0, 20.3 becomes 20.3)
-// Decorators are specifed before and after items:
-// [DT] Prints the diameter symbol (greek letter capital Phi)
-// [DS] Prints the spacing symbol (forward slah /)
-// Anything else is considered plain text and printed as-is
-// Multiple decorators can be combined: @[S:0.00]mm Prints @152.25mm
-
 //-----------------------------------------------------------------------------
 ACRX_DXF_DEFINE_MEMBERS(CPosStyle, AcDbObject,
 	AcDb::kDHL_CURRENT, AcDb::kMReleaseCurrent,

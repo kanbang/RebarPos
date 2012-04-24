@@ -596,114 +596,173 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 {
     assertReadEnabled();
 
-	// TODO: Fix this
-    if (worldDraw->regenAbort())
+    if(worldDraw->regenAbort())
 	{
         return Adesk::kTrue;
     }
-
-	Acad::ErrorStatus es;
 
 	if(m_GroupID.isNull())
 	{
 		return Adesk::kTrue;
 	}
 
-	// Get group name
-	ACHAR* groupName = NULL;
-	acutUpdString(_T(""), groupName);
-	AcDbObjectPointer<AcDbDictionary> pNamedObj (database()->namedObjectsDictionaryId(), AcDb::kForRead);
-	if(pNamedObj->has(CPosGroup::GetTableName()))
+	Acad::ErrorStatus es;
+
+	// Transformations
+	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
+	trans.setCoordSystem(m_BasePoint, direction, up, norm);
+	AcGeMatrix3d noteTrans = AcGeMatrix3d::kIdentity;
+	noteTrans.setCoordSystem(m_NoteGrip, direction, up, norm);
+
+
+	// Update if required
+	if(!worldDraw->isDragging())
 	{
-		AcDbDictionary* pDict;
-		if((es = pNamedObj->getAt(CPosGroup::GetTableName(), (AcDbObject *&)pDict, AcDb::kForRead)) == Acad::eOk)
+		// Get group name
+		lastGroupName.setEmpty();
+		AcDbObjectPointer<AcDbDictionary> pNamedObj (database()->namedObjectsDictionaryId(), AcDb::kForRead);
+		if(pNamedObj->has(CPosGroup::GetTableName()))
 		{
-			pDict->nameAt(m_GroupID, groupName);
-			pDict->close();
+			AcDbDictionary* pDict;
+			if((es = pNamedObj->getAt(CPosGroup::GetTableName(), (AcDbObject *&)pDict, AcDb::kForRead)) == Acad::eOk)
+			{
+				pDict->nameAt(m_GroupID, lastGroupName);
+				pDict->close();
+			}
 		}
-	}
 
-	// Open group and get style id
-	AcDbObjectId styleID = AcDbObjectId::kNull;
-	AcDbObjectPointer<CPosGroup> pGroup (m_GroupID, AcDb::kForRead);
-	if((es = pGroup.openStatus()) != Acad::eOk)
-	{
-		return Adesk::kTrue;
-	}
-	styleID = pGroup->StyleId();
-	if(styleID.isNull())
-	{
-		return Adesk::kTrue;
-	}
-
-	// Open style
-	AcDbObjectPointer<CPosStyle> pStyle (styleID, AcDb::kForRead);
-	if((es = pStyle.openStatus()) != Acad::eOk)
-	{
-		return Adesk::kTrue;
-	}
-
-	// Create text styles
-    AcGiTextStyle textStyle;
-    AcGiTextStyle noteStyle;
-	textStyle.setTextSize(1.0);
-	noteStyle.setTextSize(1.0 * pStyle->NoteScale());
-    if (pStyle->TextStyleId() != AcDbObjectId::kNull)
-		Utility::MakeGiTextStyle(textStyle, pStyle->TextStyleId());
-    if (pStyle->NoteStyleId() != AcDbObjectId::kNull)
-		Utility::MakeGiTextStyle(noteStyle, pStyle->NoteStyleId());
-
-	// Calculate lengths if modified
-	if(isModified)
-	{
-		Calculate();
-
-		// Rebuild draw list
-		drawList.clear();
-		if(m_DisplayStyle == CRebarPos::ALL && pStyle->Formula() != NULL)
+		// Open group and get style id
+		AcDbObjectId styleID = AcDbObjectId::kNull;
+		AcDbObjectPointer<CPosGroup> pGroup (m_GroupID, AcDb::kForRead);
+		if((es = pGroup.openStatus()) != Acad::eOk)
 		{
-			ParseFormula(pStyle->Formula());
+			return Adesk::kTrue;
 		}
-		else if(m_DisplayStyle == CRebarPos::WITHOUTLENGTH && pStyle->FormulaWithoutLength() != NULL)
+		styleID = pGroup->StyleId();
+		if(styleID.isNull())
 		{
-			ParseFormula(pStyle->FormulaWithoutLength());
+			return Adesk::kTrue;
 		}
-		else if(m_DisplayStyle == CRebarPos::MARKERONLY && pStyle->FormulaPosOnly() != NULL)
+
+		// Open style
+		AcDbObjectPointer<CPosStyle> pStyle (styleID, AcDb::kForRead);
+		if((es = pStyle.openStatus()) != Acad::eOk)
 		{
-			ParseFormula(pStyle->FormulaPosOnly());
+			return Adesk::kTrue;
 		}
+
+		// Create text styles
+		if (pStyle->TextStyleId() != AcDbObjectId::kNull)
+			Utility::MakeGiTextStyle(lastTextStyle, pStyle->TextStyleId());
+		if (pStyle->NoteStyleId() != AcDbObjectId::kNull)
+			Utility::MakeGiTextStyle(lastNoteStyle, pStyle->NoteStyleId());
+		lastTextStyle.setTextSize(1.0);
+		lastNoteStyle.setTextSize(1.0 * pStyle->NoteScale());
+		lastTextStyle.loadStyleRec(database());
+		lastNoteStyle.loadStyleRec(database());
+
+		// Calculate lengths if modified
+		if(isModified)
+		{
+			Calculate();
+
+			// Rebuild draw list
+			lastDrawList.clear();
+			if(m_DisplayStyle == CRebarPos::ALL && pStyle->Formula() != NULL)
+			{
+				lastDrawList = ParseFormula(pStyle->Formula());
+			}
+			else if(m_DisplayStyle == CRebarPos::WITHOUTLENGTH && pStyle->FormulaWithoutLength() != NULL)
+			{
+				lastDrawList = ParseFormula(pStyle->FormulaWithoutLength());
+			}
+			else if(m_DisplayStyle == CRebarPos::MARKERONLY && pStyle->FormulaPosOnly() != NULL)
+			{
+				lastDrawList = ParseFormula(pStyle->FormulaPosOnly());
+			}
+			lastNoteDraw.text = m_Note;
+		}
+
+		// Set colors
+		lastCircleColor = pStyle->CircleColor();
+		for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+		{
+			CDrawParams p = lastDrawList[i];
+			switch(p.type)
+			{
+			case CRebarPos::POS:
+				p.color = pStyle->PosColor();
+				break;
+			case CRebarPos::GROUP:
+				p.color = pStyle->GroupColor();
+				break;
+			case CRebarPos::MULTIPLIER:
+				p.color = pStyle->MultiplierColor();
+				break;
+			default:
+				p.color = pStyle->TextColor();
+			}
+		}
+		lastNoteDraw.color = pStyle->NoteColor();
+
+		// Transform to match object orientation
+		worldDraw->geometry().pushModelTransform(trans);
+		// Measure items
+		double x = 0;
+		double y = 0;
+		for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+		{
+			CDrawParams p = lastDrawList.at(i);
+			AcGePoint2d ext = lastTextStyle.extents(p.text, Adesk::kTrue, -1, Adesk::kFalse, worldDraw);
+			p.x = x;
+			p.y = y;
+			p.w = ext.x;
+			p.h = ext.y;
+			x += ext.x;
+		}
+		// Reset transform
+		worldDraw->geometry().popModelTransform();
+
+		// Transform to match note orientation
+		worldDraw->geometry().pushModelTransform(noteTrans);
+		// Measure note text
+		AcGePoint2d noteExt = lastNoteStyle.extents(lastNoteDraw.text, Adesk::kTrue, -1, Adesk::kFalse, worldDraw);
+		lastNoteDraw.x = 0;
+		lastNoteDraw.y = 0;
+		lastNoteDraw.w = noteExt.x;
+		lastNoteDraw.h = noteExt.y;
+		// Reset transform
+		worldDraw->geometry().popModelTransform();
 	}
 
 	// Nothing to draw
-	if(drawList.empty())
+	if(lastDrawList.empty())
 	{
 		return Adesk::kTrue;
 	}
 
 	// Transform to match object orientation
-	AcGeMatrix3d trans;
-	trans.alignCoordSys(AcGePoint3d::kOrigin, AcGeVector3d::kXAxis, AcGeVector3d::kYAxis, AcGeVector3d::kZAxis,
-		m_BasePoint, direction, up, norm);
 	worldDraw->geometry().pushModelTransform(trans);
-
 	// Draw items
-	double x = 0;
-	for(DrawListSize i = 0; i < drawList.size(); i++)
+	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
 	{
-		CDrawParams p = drawList.at(i);
-		AcGePoint2d ext = textStyle.extents(p.text, Adesk::kFalse, -1, 0);
-		worldDraw->geometry().text(AcGePoint3d(x, 0, 0), norm, direction, p.text, -1, 0, textStyle);
-		x += ext.x;
+		CDrawParams p = lastDrawList.at(i);
+		worldDraw->subEntityTraits().setColor(p.color);
+		worldDraw->geometry().text(AcGePoint3d(p.x, p.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, p.text, -1, Adesk::kFalse, lastTextStyle);
 	}
-	AcGePoint3d noteWcs = m_NoteGrip.transformBy(trans);
-	worldDraw->geometry().text(noteWcs, norm, direction, m_Note, -1, 0, noteStyle);
-
 	// Direction markers
 	worldDraw->subEntityTraits().setColor(6);
 	worldDraw->geometry().circle(AcGePoint3d::kOrigin, 0.2, AcGeVector3d::kZAxis);
 	worldDraw->geometry().circle(AcGePoint3d::kOrigin + direction, 0.2, AcGeVector3d::kZAxis);
 	worldDraw->geometry().circle(AcGePoint3d::kOrigin + up, 0.2, AcGeVector3d::kZAxis);
+	// Reset transform
+	worldDraw->geometry().popModelTransform();
 
+	// Transform to match note orientation
+	worldDraw->geometry().pushModelTransform(noteTrans);
+	// Draw note text
+	worldDraw->subEntityTraits().setColor(lastNoteDraw.color);
+	worldDraw->geometry().text(AcGePoint3d(lastNoteDraw.x, lastNoteDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, m_Note, -1, Adesk::kFalse, lastNoteStyle);
 	// Reset transform
 	worldDraw->geometry().popModelTransform();
 
@@ -1478,94 +1537,152 @@ const void CRebarPos::Calculate(void) const
 	}
 }
 
-void CRebarPos::ParseFormula(const ACHAR* formula)
+const DrawList CRebarPos::ParseFormula(const ACHAR* formula) const
 {
 	assertReadEnabled();
 
 	// Formula text
 	// [M] Pos marker
-	// [MC] Pos marker with surrounding circle
+	// [MM] Pos marker with double digits
 	// [N] Bar count
 	// [D] Bar diameter
 	// [S] Spacing
 	// [L] Total length
-	// Number format is specified after semicolons:
-	// [X:.0] Prints the item rounding to zero decimal places (1 becomes 1, 20.3 becomes 20)
-	// [X:.00] Prints the item with double digits
-	// [X:02.00] Left pads with zeroes
-	// [X:#.00] Always show decimal point
-	// [DT] Prints the diameter symbol (greek letter capital Phi)
-	// [DS] Prints the spacing symbol (forward slah /)
+	// [M:C] Draw a circle around the item
 	// Anything else is considered plain text and printed as-is
+	// ["T":D] Prints the letter T before the diameter
+	// e.g. [M:C][N]["T":D]["/":S] ["L=":L]
 
-	drawList.clear();
+	DrawList list;
+	list.clear();
 
+	// First pass: separate parts
 	AcString str(formula);
 	AcString part;
-	AcString format;
 	bool indeco = false;
-	bool informat = false;
 	for(unsigned int i = 0; i < str.length(); i++)
 	{
 		AcString c = str.substr(i, 1);
-		if((!indeco && c == _T("[")) || (indeco && (c == _T("]") || i == str.length() - 1)))
+		if((!indeco && c == _T('[')) || (indeco && (c == _T(']'))) || (i == str.length() - 1))
 		{
-			indeco = (c == _T("["));
-			informat = false;
-			if(part == _T("M"))
+			if(i == str.length() - 1)
 			{
-				CDrawParams p(CRebarPos::POS, m_Pos);
-				drawList.push_back(p);				
+				part += c;
 			}
-			else if(part == _T("MC"))
+			if(!indeco && !part.isEmpty())
 			{
-				CDrawParams p(CRebarPos::POS, m_Pos, true);
-				drawList.push_back(p);				
+				CDrawParams p(0, part);
+				list.push_back(p);
 			}
-			else if(part == _T("N") && m_Count != NULL && m_Count[0] != _T('\0'))
+			else if(indeco && !part.isEmpty())
 			{
-				CDrawParams p(CRebarPos::COUNT, m_Count);
-				drawList.push_back(p);				
+				CDrawParams p(1, part);
+				list.push_back(p);
 			}
-			else if(part == _T("D") && m_Diameter != NULL && m_Diameter[0] != _T('\0'))
-			{
-				if(!format.isEmpty())
-				{
-					std::stringstream ss;
-					ss << m_Diameter;
-					int intDia;
-					ss >> intDia;
-					part.setEmpty();
-					part.format(_T("%") + format + _T("i"), intDia);
-					CDrawParams p(CRebarPos::DIAMETER, part);
-					drawList.push_back(p);
-				}
-				else
-				{
-					CDrawParams p(CRebarPos::DIAMETER, m_Diameter);
-					drawList.push_back(p);
-				}
-			}
-			else if(!part.isEmpty())
-			{
-				CDrawParams p(CRebarPos::NONE, part);
-				drawList.push_back(p);
-			}
+			indeco = (c == _T('['));
 
 			part.setEmpty();
-			format.setEmpty();
-		}
-		else if(indeco && !informat && c == _T(":"))
-		{
-			informat = true;
-		}
-		else if(informat)
-		{
-			format += c;
 		}
 		else
 		{
 			part += c;
 		}
 	}
+
+	// Second pass: separate format strings and decorators
+	DrawList finallist;
+	finallist.clear();
+	for(DrawListSize j = 0; j < list.size(); j++)
+	{
+		CDrawParams p = list[j];
+		if(p.type == 0)
+		{
+			p.type = CRebarPos::NONE;
+			p.hasCircle = false;
+			finallist.push_back(p);
+		}
+		else if(p.type == 1)
+		{
+			p.type = CRebarPos::NONE;
+			part.setEmpty();
+			std::vector<AcString> parts;
+			bool inliteral = false;
+			for(unsigned int i = 0; i < p.text.length(); i++)
+			{
+				AcString c = p.text.substr(i, 1);
+				if(!inliteral && (c == _T('"')))
+				{
+					inliteral = true;
+				}
+				else if(inliteral && (c == _T('"')))
+				{
+					parts.push_back(part);
+					part.setEmpty();
+					inliteral = false;
+				}
+				else if(c == _T(':') || (i == p.text.length() - 1))
+				{
+					if(i == p.text.length() - 1)
+					{
+						part += c;
+					}
+					if(part == _T("M"))
+					{
+						p.type = CRebarPos::POS;
+						AcString pos(m_Pos);
+						if(pos.length() == 0) pos = _T(" ");
+						parts.push_back(pos);
+					}
+					else if(part == _T("MM"))
+					{
+						p.type = CRebarPos::POS;
+						AcString pos(m_Pos);
+						if(pos.length() == 0) pos = _T("  ");
+						if(pos.length() == 1) pos.precat(_T("0"));
+						parts.push_back(pos);
+					}
+					else if(part == _T("N") && m_Count != NULL && m_Count[0] != _T('\0'))
+					{
+						p.type = CRebarPos::COUNT;
+						parts.push_back(m_Count);
+					}
+					else if(part == _T("D") && m_Diameter != NULL && m_Diameter[0] != _T('\0'))
+					{
+						p.type = CRebarPos::DIAMETER;
+						parts.push_back(m_Diameter);
+					}
+					else if(part == _T("S") && m_Spacing != NULL && m_Spacing[0] != _T('\0'))
+					{
+						p.type = CRebarPos::SPACING;
+						parts.push_back(m_Spacing);
+					}
+					else if(part == _T("L") && m_Length != NULL && m_Length[0] != _T('\0'))
+					{
+						p.type = CRebarPos::LENGTH;
+						parts.push_back(m_Length);
+					}
+					else if(part == _T("C"))
+					{
+						p.hasCircle = true;
+					}
+					part.setEmpty();
+				}
+				else
+				{
+					part += c;
+				}
+			}
+			if(p.type != CRebarPos::NONE)
+			{
+				p.text.setEmpty();
+				for(std::vector<AcString>::size_type k = 0; k < parts.size(); k++)
+				{
+					p.text.append(parts[k]);
+				}
+				finallist.push_back(p);
+			}
+		}
+	}
+
+	return finallist;
 }

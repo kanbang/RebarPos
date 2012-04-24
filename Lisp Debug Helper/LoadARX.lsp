@@ -1,23 +1,11 @@
 (defun C:LL (/ path)
-  (setq path "C:/ObjectARX 2010/samples/entity/RebarPos/Win32/Debug")
+  (setq path "C:/Users/Ozgur/Documents/Visual Studio 2008/Projects/ObjectARX 2010/samples/entity/RebarPos/x64/Debug")
   (LoadArx path "NativeRebarPos.dbx")
   (LoadArx path "COMRebarPos.dbx")
 
   (LoadNet path "ManagedRebarPos.dll")
   
-  (setq path "C:/ObjectARX 2010/samples/entity/RebarPos/RebarPosCommands/bin/Debug")
-  (LoadNet path "RebarPos.dll")
-  
-  (princ)
-)
-
-(defun C:LLN (/ path)
-  (setq path "C:/ObjectARX 2010/samples/entity/RebarPos/Win32/Debug")
-  (LoadArx path "NativeRebarPos.dbx")
-
-  (LoadNet path "ManagedRebarPos.dll")
-  
-  (setq path "C:/ObjectARX 2010/samples/entity/RebarPos/RebarPosCommands/bin/Debug")
+  (setq path "C:/Users/Ozgur/Documents/Visual Studio 2008/Projects/ObjectARX 2010/samples/entity/RebarPos/RebarPosCommands/bin/Debug")
   (LoadNet path "RebarPos.dll")
   
   (princ)
@@ -35,5 +23,5 @@
   (command "netload" path)
 )
 
-(princ "/nLL to load libraries.")
+(princ "\nLL to load libraries.")
 (princ)
