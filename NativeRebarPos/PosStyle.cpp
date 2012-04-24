@@ -85,33 +85,6 @@ CPosStyle::~CPosStyle ()
 }
 
 //*************************************************************************
-// Methods
-//*************************************************************************
-// Creates a new text style and returns the ObjectId of the new style 
-AcDbObjectId CPosStyle::CreateTextStyle(const ACHAR* name, const ACHAR* filename, const double scale)
-{
-	AcDbObjectId id;
-
-	AcDbTextStyleTable *pStyleTbl = NULL;
-	AcDbDatabase *pDb = acdbHostApplicationServices()->workingDatabase();
-	pDb->getSymbolTable(pStyleTbl, AcDb::kForRead);
-	if (pStyleTbl->getAt(name, id, AcDb::kForRead) == Acad::eKeyNotFound)
-	{
-		pStyleTbl->upgradeOpen();
-		AcDbTextStyleTableRecord* pText = new AcDbTextStyleTableRecord();
-		pText->setName(name);
-		pText->setFileName(filename);
-		pText->setXScale(scale);
-		pStyleTbl->add(id, pText);
-		pText->close();
-		pStyleTbl->downgradeOpen();
-	}
-	pStyleTbl->close();
-
-	return id;
-}
-
-//*************************************************************************
 // Properties
 //*************************************************************************
 const ACHAR* CPosStyle::Formula(void) const

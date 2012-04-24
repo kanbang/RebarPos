@@ -36,7 +36,9 @@
 #include "dbapserv.h"
 #include "appinfo.h"
 #include "tchar.h"
+#include "AcString.h"
 
+#include "Utility.h"
 #include "RebarPos.h"
 #include "PosShape.h"
 #include "PosGroup.h"
@@ -46,6 +48,8 @@
 #include "..\COMRebarPos\COMRebarPos_i.c"
 #include <basetsd.h>
 #include "ac64bithelpers.h"
+
+#include <sstream>
 
 Adesk::UInt32 CRebarPos::kCurrentVersionNumber = 1;
 
@@ -406,7 +410,7 @@ const ACHAR* CRebarPos::PosKey() const
 //*************************************************************************
 
 /// Determines which part is under the given point
-const CRebarPos::PosHitTest CRebarPos::HitTest(const AcGePoint3d& pt0) const
+const CRebarPos::PosSubEntityType CRebarPos::HitTest(const AcGePoint3d& pt0) const
 {
 	// TODO: Fix this
 	return CRebarPos::NONE;
@@ -632,60 +636,76 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 		return Adesk::kTrue;
 	}
 
-	// Open style and read formula string
-	ACHAR* formula = NULL;
+	// Open style
 	AcDbObjectPointer<CPosStyle> pStyle (styleID, AcDb::kForRead);
-	if((es = pStyle.openStatus()) == Acad::eOk)
-	{
-		if(m_DisplayStyle == CRebarPos::ALL && pStyle->Formula() != NULL)
-		{
-			acutUpdString(pStyle->Formula(), formula);
-		}
-		else if(m_DisplayStyle == CRebarPos::WITHOUTLENGTH && pStyle->FormulaWithoutLength() != NULL)
-		{
-			acutUpdString(pStyle->FormulaWithoutLength(), formula);
-		}
-		else if(m_DisplayStyle == CRebarPos::MARKERONLY && pStyle->FormulaPosOnly() != NULL)
-		{
-			acutUpdString(pStyle->FormulaPosOnly(), formula);
-		}
-	}
-	if(formula == NULL)
+	if((es = pStyle.openStatus()) != Acad::eOk)
 	{
 		return Adesk::kTrue;
 	}
 
-
-	/*
+	// Create text styles
     AcGiTextStyle textStyle;
-    AcDbObjectId id = styleId();
+    AcGiTextStyle noteStyle;
+	textStyle.setTextSize(1.0);
+	noteStyle.setTextSize(1.0 * pStyle->NoteScale());
+    if (pStyle->TextStyleId() != AcDbObjectId::kNull)
+		Utility::MakeGiTextStyle(textStyle, pStyle->TextStyleId());
+    if (pStyle->NoteStyleId() != AcDbObjectId::kNull)
+		Utility::MakeGiTextStyle(noteStyle, pStyle->NoteStyleId());
 
-    if (id != AcDbObjectId::kNull)
-        if (rx_getTextStyle(textStyle, id) != Acad::eOk)
-            id = AcDbObjectId::kNull;
-
-    if ((pName != NULL) && (pName[0] != _T('\0')))
-    {
-        worldDraw->subEntityTraits().setSelectionMarker(1);
-        AcGeVector3d direction(1, 0, 0);
-        AcGeVector3d normal(0, 0, 1);
-
-        if (id != AcDbObjectId::kNull)
-            worldDraw->geometry().text(mCenter, normal, direction,
-                 pName, -1, 0, textStyle);
-        else
-            worldDraw->geometry().text(mCenter, normal, direction,
-                 direction.length() / 20, 1, 0, pName);
-    }
-	*/
-	if ((m_Pos != NULL) && (m_Pos[0] != _T('\0')))
+	// Calculate lengths if modified
+	if(isModified)
 	{
-		worldDraw->geometry().text(m_BasePoint, norm, direction, direction.length() / 20, 1, 0, m_Pos);
+		Calculate();
+
+		// Rebuild draw list
+		drawList.clear();
+		if(m_DisplayStyle == CRebarPos::ALL && pStyle->Formula() != NULL)
+		{
+			ParseFormula(pStyle->Formula());
+		}
+		else if(m_DisplayStyle == CRebarPos::WITHOUTLENGTH && pStyle->FormulaWithoutLength() != NULL)
+		{
+			ParseFormula(pStyle->FormulaWithoutLength());
+		}
+		else if(m_DisplayStyle == CRebarPos::MARKERONLY && pStyle->FormulaPosOnly() != NULL)
+		{
+			ParseFormula(pStyle->FormulaPosOnly());
+		}
 	}
+
+	// Nothing to draw
+	if(drawList.empty())
+	{
+		return Adesk::kTrue;
+	}
+
+	// Transform to match object orientation
+	AcGeMatrix3d trans;
+	trans.alignCoordSys(AcGePoint3d::kOrigin, AcGeVector3d::kXAxis, AcGeVector3d::kYAxis, AcGeVector3d::kZAxis,
+		m_BasePoint, direction, up, norm);
+	worldDraw->geometry().pushModelTransform(trans);
+
+	// Draw items
+	double x = 0;
+	for(DrawListSize i = 0; i < drawList.size(); i++)
+	{
+		CDrawParams p = drawList.at(i);
+		AcGePoint2d ext = textStyle.extents(p.text, Adesk::kFalse, -1, 0);
+		worldDraw->geometry().text(AcGePoint3d(x, 0, 0), norm, direction, p.text, -1, 0, textStyle);
+		x += ext.x;
+	}
+	AcGePoint3d noteWcs = m_NoteGrip.transformBy(trans);
+	worldDraw->geometry().text(noteWcs, norm, direction, m_Note, -1, 0, noteStyle);
 
 	// Direction markers
 	worldDraw->subEntityTraits().setColor(6);
-	worldDraw->geometry().circle(m_BasePoint, 0.2, AcGeVector3d::kZAxis);
+	worldDraw->geometry().circle(AcGePoint3d::kOrigin, 0.2, AcGeVector3d::kZAxis);
+	worldDraw->geometry().circle(AcGePoint3d::kOrigin + direction, 0.2, AcGeVector3d::kZAxis);
+	worldDraw->geometry().circle(AcGePoint3d::kOrigin + up, 0.2, AcGeVector3d::kZAxis);
+
+	// Reset transform
+	worldDraw->geometry().popModelTransform();
 
     return Adesk::kTrue; // Don't call viewportDraw().
 }
@@ -1417,6 +1437,10 @@ Acad::ErrorStatus   CRebarPos::subGetClassID(CLSID* pClsid) const
     return Acad::eOk;
 }
 
+//*************************************************************************
+// Helper methods
+//*************************************************************************
+
 const void CRebarPos::Calculate(void) const
 {
 	if(isModified)
@@ -1451,5 +1475,97 @@ const void CRebarPos::Calculate(void) const
 			(m_E.findOneOf(_T("-~")) != -1) || (m_F.findOneOf(_T("-~")) != -1);
 */
 		isModified = false;
+	}
+}
+
+void CRebarPos::ParseFormula(const ACHAR* formula)
+{
+	assertReadEnabled();
+
+	// Formula text
+	// [M] Pos marker
+	// [MC] Pos marker with surrounding circle
+	// [N] Bar count
+	// [D] Bar diameter
+	// [S] Spacing
+	// [L] Total length
+	// Number format is specified after semicolons:
+	// [X:.0] Prints the item rounding to zero decimal places (1 becomes 1, 20.3 becomes 20)
+	// [X:.00] Prints the item with double digits
+	// [X:02.00] Left pads with zeroes
+	// [X:#.00] Always show decimal point
+	// [DT] Prints the diameter symbol (greek letter capital Phi)
+	// [DS] Prints the spacing symbol (forward slah /)
+	// Anything else is considered plain text and printed as-is
+
+	drawList.clear();
+
+	AcString str(formula);
+	AcString part;
+	AcString format;
+	bool indeco = false;
+	bool informat = false;
+	for(unsigned int i = 0; i < str.length(); i++)
+	{
+		AcString c = str.substr(i, 1);
+		if((!indeco && c == _T("[")) || (indeco && (c == _T("]") || i == str.length() - 1)))
+		{
+			indeco = (c == _T("["));
+			informat = false;
+			if(part == _T("M"))
+			{
+				CDrawParams p(CRebarPos::POS, m_Pos);
+				drawList.push_back(p);				
+			}
+			else if(part == _T("MC"))
+			{
+				CDrawParams p(CRebarPos::POS, m_Pos, true);
+				drawList.push_back(p);				
+			}
+			else if(part == _T("N") && m_Count != NULL && m_Count[0] != _T('\0'))
+			{
+				CDrawParams p(CRebarPos::COUNT, m_Count);
+				drawList.push_back(p);				
+			}
+			else if(part == _T("D") && m_Diameter != NULL && m_Diameter[0] != _T('\0'))
+			{
+				if(!format.isEmpty())
+				{
+					std::stringstream ss;
+					ss << m_Diameter;
+					int intDia;
+					ss >> intDia;
+					part.setEmpty();
+					part.format(_T("%") + format + _T("i"), intDia);
+					CDrawParams p(CRebarPos::DIAMETER, part);
+					drawList.push_back(p);
+				}
+				else
+				{
+					CDrawParams p(CRebarPos::DIAMETER, m_Diameter);
+					drawList.push_back(p);
+				}
+			}
+			else if(!part.isEmpty())
+			{
+				CDrawParams p(CRebarPos::NONE, part);
+				drawList.push_back(p);
+			}
+
+			part.setEmpty();
+			format.setEmpty();
+		}
+		else if(indeco && !informat && c == _T(":"))
+		{
+			informat = true;
+		}
+		else if(informat)
+		{
+			format += c;
+		}
+		else
+		{
+			part += c;
+		}
 	}
 }

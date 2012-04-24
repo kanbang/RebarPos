@@ -14,6 +14,9 @@
 #include "windows.h"
 #include "dbxutil.h"
 
+#include "DrawParams.h"
+#include <vector>
+
 // The following is part of the code used to export an API
 // and/or use the exported API.
 //
@@ -24,12 +27,17 @@
 #define DLLIMPEXP
 #endif
 
+typedef std::vector<CDrawParams> DrawList;
+typedef std::vector<CDrawParams>::size_type DrawListSize;
+typedef std::vector<CDrawParams>::iterator DrawListIt;
+typedef std::vector<CDrawParams>::const_iterator DrawListConstIt;
+
 /// ---------------------------------------------------------------------------
 /// The CRebarPos represents a rebar marker in the drawing. It contains
 /// marker number, rebar shape, diameter, spacing, piece lengths and some
 /// metadata as well.
 /// ---------------------------------------------------------------------------
-class DLLIMPEXP CRebarPos: public  AcDbEntity
+class DLLIMPEXP CRebarPos : public  AcDbEntity
 {
 public:
 	/// Define additional RTT information for AcRxObject base type.
@@ -45,7 +53,7 @@ public:
     virtual ~CRebarPos();
        
 public:
-	enum PosHitTest
+	enum PosSubEntityType
 	{ 
 		NONE = 0,
 		POS = 1,
@@ -55,7 +63,9 @@ public:
 		GROUP = 5,
 		MULTIPLIER = 6,
 		LENGTH = 7,
-		NOTE = 8
+		NOTE = 8,
+		DIAMETERSYMBOL = 101,
+		SPACINGSYMBOL = 102
 	};
 	enum DisplayStyle
 	{ 
@@ -63,6 +73,10 @@ public:
 		WITHOUTLENGTH = 1,
 		MARKERONLY = 2,
 	};
+
+private:
+	/// Used to keep track of sub items to draw
+	DrawList drawList;
 
 private:
 	/// Property backing fields
@@ -96,9 +110,12 @@ protected:
 	/// Calculates pos text when the pos is modified.
 	const void Calculate(void) const;
 
+	/// Parses formula text and creates the draw list
+	void ParseFormula(const ACHAR* formula);
+
 public:
 	/// Determines which part is under the given point
-	const CRebarPos::PosHitTest HitTest(const AcGePoint3d& pt0) const;
+	const CRebarPos::PosSubEntityType HitTest(const AcGePoint3d& pt0) const;
 
 	/// Gets or sets the base grip point
 	const AcGePoint3d& BasePoint(void) const;

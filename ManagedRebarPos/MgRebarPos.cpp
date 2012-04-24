@@ -199,5 +199,5 @@ Autodesk::AutoCAD::DatabaseServices::ObjectId RebarPos::GroupId::get()
 //*************************************************************************
 RebarPos::HitTestResult RebarPos::HitTest(Point3d pt)
 {
-	return (HitTestResult)GetImpObj()->HitTest(GETPOINT3D(pt));
+	return static_cast<RebarPos::HitTestResult>(GetImpObj()->HitTest(GETPOINT3D(pt)));
 }

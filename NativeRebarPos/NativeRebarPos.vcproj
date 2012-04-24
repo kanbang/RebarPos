@@ -60,6 +60,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="/ignore:4099"
 				AdditionalLibraryDirectories="..\..\..\..\lib;..\..\..\lib"
 				ModuleDefinitionFile=""
 			/>
@@ -128,6 +129,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="/ignore:4099"
 				AdditionalLibraryDirectories="..\..\..\..\lib;..\..\..\lib"
 				ModuleDefinitionFile=""
 				TargetMachine="17"
@@ -195,6 +197,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="/ignore:4099"
 				AdditionalLibraryDirectories="..\..\..\..\lib;..\..\..\lib"
 				ModuleDefinitionFile=""
 			/>
@@ -261,6 +264,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="/ignore:4099"
 				AdditionalLibraryDirectories="..\..\..\..\lib;..\..\..\lib"
 				ModuleDefinitionFile=""
 				TargetMachine="17"
@@ -320,6 +324,10 @@
 				RelativePath=".\RebarPosApp.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\Utility.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -327,6 +335,10 @@
 			>
 			<File
 				RelativePath="..\COMRebarPos\COMRebarPos_i.c"
+				>
+			</File>
+			<File
+				RelativePath=".\DrawParams.h"
 				>
 			</File>
 			<File
@@ -347,6 +359,10 @@
 			</File>
 			<File
 				RelativePath=".\Shape.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Utility.h"
 				>
 			</File>
 		</Filter>

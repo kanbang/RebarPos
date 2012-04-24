@@ -69,10 +69,6 @@ protected:
     AcDbHardPointerId m_TextStyleID;
     AcDbHardPointerId m_NoteStyleID;
 
-protected:
-	/// Creates a text style
-	static AcDbObjectId CreateTextStyle(const ACHAR* name, const ACHAR* filename, const double scale);
-
 public:
 	/// Gets or sets the formula text.
     const ACHAR* Formula(void) const;

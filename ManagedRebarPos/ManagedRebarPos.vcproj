@@ -64,6 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="/ignore:4099"
 				AdditionalDependencies="acdbmgd.lib ..\NativeRebarPos\$(IntDir)\NativeRebarPos.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
@@ -136,6 +137,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="/ignore:4099"
 				AdditionalDependencies="acdbmgd.lib ..\NativeRebarPos\$(IntDir)\NativeRebarPos.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
@@ -206,6 +208,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="/ignore:4099"
 				AdditionalDependencies="acdbmgd.lib ..\NativeRebarPos\$(IntDir)\NativeRebarPos.lib"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\..\..\..\lib"
@@ -274,6 +277,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="/ignore:4099"
 				AdditionalDependencies="acdbmgd.lib ..\NativeRebarPos\$(IntDir)\NativeRebarPos.lib"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\..\..\..\lib"
