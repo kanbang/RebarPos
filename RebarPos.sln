@@ -18,7 +18,7 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RebarPosMSI", "Setup\RebarP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RebarPosCommands", "RebarPosCommands\RebarPosCommands.csproj", "{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}"
 EndProject
-Project("{8BC9CEB9-8B4A-11D0-8D11-00A0C91BC942}") = "acad.exe", "..\..\..\..\..\..\..\..\..\Program Files\Autodesk\AutoCAD 2012 - English\acad.exe", "{C09CE3A8-E9F2-4C92-BB64-F4CA0A1385C1}"
+Project("{8BC9CEB9-8B4A-11D0-8D11-00A0C91BC942}") = "acad.exe", "..\..\..\..\Program Files\AutoCAD Civil 3D 2010\acad.exe", "{5CBD2C96-241A-4BAB-BF76-6AD8B6996817}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -118,14 +118,14 @@ Global
 		{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}.Release|Win32.ActiveCfg = Release|Any CPU
 		{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}.Release|x64.ActiveCfg = Release|Any CPU
-		{C09CE3A8-E9F2-4C92-BB64-F4CA0A1385C1}.Debug|Any CPU.ActiveCfg = Debug
-		{C09CE3A8-E9F2-4C92-BB64-F4CA0A1385C1}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{C09CE3A8-E9F2-4C92-BB64-F4CA0A1385C1}.Debug|Win32.ActiveCfg = Debug
-		{C09CE3A8-E9F2-4C92-BB64-F4CA0A1385C1}.Debug|x64.ActiveCfg = Debug
-		{C09CE3A8-E9F2-4C92-BB64-F4CA0A1385C1}.Release|Any CPU.ActiveCfg = Debug
-		{C09CE3A8-E9F2-4C92-BB64-F4CA0A1385C1}.Release|Mixed Platforms.ActiveCfg = Debug
-		{C09CE3A8-E9F2-4C92-BB64-F4CA0A1385C1}.Release|Win32.ActiveCfg = Debug
-		{C09CE3A8-E9F2-4C92-BB64-F4CA0A1385C1}.Release|x64.ActiveCfg = Debug
+		{5CBD2C96-241A-4BAB-BF76-6AD8B6996817}.Debug|Any CPU.ActiveCfg = Debug
+		{5CBD2C96-241A-4BAB-BF76-6AD8B6996817}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{5CBD2C96-241A-4BAB-BF76-6AD8B6996817}.Debug|Win32.ActiveCfg = Debug
+		{5CBD2C96-241A-4BAB-BF76-6AD8B6996817}.Debug|x64.ActiveCfg = Debug
+		{5CBD2C96-241A-4BAB-BF76-6AD8B6996817}.Release|Any CPU.ActiveCfg = Debug
+		{5CBD2C96-241A-4BAB-BF76-6AD8B6996817}.Release|Mixed Platforms.ActiveCfg = Debug
+		{5CBD2C96-241A-4BAB-BF76-6AD8B6996817}.Release|Win32.ActiveCfg = Debug
+		{5CBD2C96-241A-4BAB-BF76-6AD8B6996817}.Release|x64.ActiveCfg = Debug
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

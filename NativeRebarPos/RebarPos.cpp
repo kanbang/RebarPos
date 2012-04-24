@@ -69,7 +69,7 @@ ACRX_DXF_DEFINE_MEMBERS(CRebarPos, AcDbEntity,
 //*************************************************************************
 
 CRebarPos::CRebarPos() :
-	m_BasePoint(0, 0, 0), direction(1, 0, 0), up(0, 1, 0), norm(0, 0, 1), m_NoteGrip(-4.2133, 0.75 * -1.075, 0),
+	m_BasePoint(0, 0, 0), direction(1, 0, 0), up(0, 1, 0), norm(0, 0, 1), m_NoteGrip(0, 0.75 * -1.2, 0),
 	m_DisplayStyle(CRebarPos::ALL), isModified(true), m_Length(NULL), m_Key(NULL),
 	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), m_Multiplier(1), 
 	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL),
@@ -614,7 +614,6 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	AcGeMatrix3d noteTrans = AcGeMatrix3d::kIdentity;
 	noteTrans.setCoordSystem(m_NoteGrip, direction, up, norm);
 
-
 	// Update if required
 	if(!worldDraw->isDragging())
 	{
@@ -702,38 +701,40 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 			default:
 				p.color = pStyle->TextColor();
 			}
+			lastDrawList[i] = p;
 		}
 		lastNoteDraw.color = pStyle->NoteColor();
-
-		// Transform to match object orientation
-		worldDraw->geometry().pushModelTransform(trans);
-		// Measure items
-		double x = 0;
-		double y = 0;
-		for(DrawListSize i = 0; i < lastDrawList.size(); i++)
-		{
-			CDrawParams p = lastDrawList.at(i);
-			AcGePoint2d ext = lastTextStyle.extents(p.text, Adesk::kTrue, -1, Adesk::kFalse, worldDraw);
-			p.x = x;
-			p.y = y;
-			p.w = ext.x;
-			p.h = ext.y;
-			x += ext.x;
-		}
-		// Reset transform
-		worldDraw->geometry().popModelTransform();
-
-		// Transform to match note orientation
-		worldDraw->geometry().pushModelTransform(noteTrans);
-		// Measure note text
-		AcGePoint2d noteExt = lastNoteStyle.extents(lastNoteDraw.text, Adesk::kTrue, -1, Adesk::kFalse, worldDraw);
-		lastNoteDraw.x = 0;
-		lastNoteDraw.y = 0;
-		lastNoteDraw.w = noteExt.x;
-		lastNoteDraw.h = noteExt.y;
-		// Reset transform
-		worldDraw->geometry().popModelTransform();
 	}
+
+	// Transform to match object orientation
+	worldDraw->geometry().pushModelTransform(trans);
+	// Measure items
+	double x = 0;
+	double y = 0;
+	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+	{
+		CDrawParams p = lastDrawList[i];
+		AcGePoint2d ext = lastTextStyle.extents(p.text, Adesk::kTrue, -1, Adesk::kFalse);
+		p.x = x;
+		p.y = y;
+		p.w = ext.x;
+		p.h = ext.y;
+		x += ext.x;
+		lastDrawList[i] = p;
+	}
+	// Reset transform
+	worldDraw->geometry().popModelTransform();
+
+	// Transform to match note orientation
+	worldDraw->geometry().pushModelTransform(noteTrans);
+	// Measure note text
+	AcGePoint2d noteExt = lastNoteStyle.extents(lastNoteDraw.text, Adesk::kTrue, -1, Adesk::kFalse);
+	lastNoteDraw.x = 0;
+	lastNoteDraw.y = 0;
+	lastNoteDraw.w = noteExt.x;
+	lastNoteDraw.h = noteExt.y;
+	// Reset transform
+	worldDraw->geometry().popModelTransform();
 
 	// Nothing to draw
 	if(lastDrawList.empty())
@@ -750,11 +751,6 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 		worldDraw->subEntityTraits().setColor(p.color);
 		worldDraw->geometry().text(AcGePoint3d(p.x, p.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, p.text, -1, Adesk::kFalse, lastTextStyle);
 	}
-	// Direction markers
-	worldDraw->subEntityTraits().setColor(6);
-	worldDraw->geometry().circle(AcGePoint3d::kOrigin, 0.2, AcGeVector3d::kZAxis);
-	worldDraw->geometry().circle(AcGePoint3d::kOrigin + direction, 0.2, AcGeVector3d::kZAxis);
-	worldDraw->geometry().circle(AcGePoint3d::kOrigin + up, 0.2, AcGeVector3d::kZAxis);
 	// Reset transform
 	worldDraw->geometry().popModelTransform();
 
@@ -765,6 +761,12 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	worldDraw->geometry().text(AcGePoint3d(lastNoteDraw.x, lastNoteDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, m_Note, -1, Adesk::kFalse, lastNoteStyle);
 	// Reset transform
 	worldDraw->geometry().popModelTransform();
+
+	// Direction markers
+	worldDraw->subEntityTraits().setColor(6);
+	worldDraw->geometry().circle(m_BasePoint, 0.2, AcGeVector3d::kZAxis);
+	worldDraw->geometry().circle(m_BasePoint + direction, 0.2, AcGeVector3d::kZAxis);
+	worldDraw->geometry().circle(m_BasePoint + up, 0.2, AcGeVector3d::kZAxis);
 
     return Adesk::kTrue; // Don't call viewportDraw().
 }

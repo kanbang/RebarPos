@@ -24,7 +24,7 @@ namespace RebarPosCommands
 
                         Point3d pt = result.Value;
                         RebarPos pos = new RebarPos();
-                        pos.BasePoint = pt;
+                        pos.TransformBy(Matrix3d.Displacement(pt.GetAsVector()));
                         pos.Pos = "X";
                         pos.Count = "XX";
                         pos.Diameter = "XX";
