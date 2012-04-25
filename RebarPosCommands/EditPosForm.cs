@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using OZOZ.RebarPosWrapper;
+using Autodesk.AutoCAD.EditorInput;
 
 namespace RebarPosCommands
 {
@@ -105,6 +106,14 @@ namespace RebarPosCommands
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void btnSelectA_Click(object sender, EventArgs e)
+        {
+            Hide();
+            Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+            PromptEntityResult per = ed.GetEntity("\nSelect entity: ");
+            Show();
         }
     }
 }

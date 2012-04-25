@@ -63,10 +63,19 @@ namespace RebarPosCommands
         public PosShapeView()
         {
             InitializeComponent();
+
             lines = new List<DrawLine>();
             arcs = new List<DrawArc>();
             texts = new List<DrawText>();
+
+            Selected = false;
+            SelectionColor = SystemColors.Highlight;
         }
+
+        [Browsable(true), Category("Appearance"), DefaultValue(false)]
+        public bool Selected { get; set; }
+        [Browsable(true), Category("Appearance"), DefaultValue(typeof(Color), "Highlight")]
+        public Color SelectionColor { get; set; }
 
         public void Reset()
         {
@@ -95,6 +104,15 @@ namespace RebarPosCommands
         {
             Graphics g = e.Graphics;
             g.Clear(BackColor);
+
+            // Selection mark
+            if (Selected)
+            {
+                using (HatchBrush brush = new HatchBrush(HatchStyle.DarkDownwardDiagonal, SelectionColor, BackColor))
+                {
+                    g.FillRectangle(brush, ClientRectangle);
+                }
+            }
 
             // Calculate extents
             float xmin = float.MaxValue, xmax = float.MinValue, ymin = float.MaxValue, ymax = float.MinValue;
