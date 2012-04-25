@@ -15,6 +15,7 @@
 #include "dbxutil.h"
 
 #include "DrawParams.h"
+#include "PosShape.h"
 #include <vector>
 
 // The following is part of the code used to export an API
@@ -93,6 +94,7 @@ private:
 	AcGePoint3d m_NoteGrip;
 	mutable ACHAR* m_Key;
 	mutable ACHAR* m_Length;
+	mutable bool m_IsVarLength;
 	ACHAR* m_Pos;
 	ACHAR* m_Count;
 	ACHAR* m_Diameter;
@@ -121,6 +123,13 @@ protected:
 
 	/// Parses formula text and creates the draw list
 	const DrawList ParseFormula(const ACHAR* formula) const;
+
+	/// Calculates lengths
+	void CalcLength(const ACHAR* str, double scale, double& minLength, double& maxLength, bool& isVar) const;
+	void CalcTotalLength(const ACHAR* str, int fieldCount, double scale, double& minLength, double& maxLength, bool& isVar) const;
+
+	/// Gets bending radius
+	const double BendingRadius(const double d) const;
 
 public:
 	/// Determines which part is under the given point
@@ -188,6 +197,9 @@ public:
 
 	/// Gets the total length
 	const ACHAR* Length(void) const;
+
+	/// Gets if the lengths are variable
+	const bool IsVarLength(void) const;
 
 	/// Gets or sets the pos shape
 	const AcDbObjectId& ShapeId(void) const;

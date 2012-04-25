@@ -68,6 +68,7 @@ namespace OZOZ
 			property String^ E { String^ get(); void set(String^ value); }
 			property String^ F { String^ get(); void set(String^ value); }
 
+			property bool IsVarLength { bool get(); }
 			property String^ Length { String^ get(); }
 
 			property String^ PosKey { String^ get(); }

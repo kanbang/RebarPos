@@ -39,6 +39,7 @@
 #include "AcString.h"
 
 #include "Utility.h"
+#include "Calculator.h"
 #include "RebarPos.h"
 #include "PosShape.h"
 #include "PosGroup.h"
@@ -72,7 +73,7 @@ CRebarPos::CRebarPos() :
 	m_BasePoint(0, 0, 0), direction(1, 0, 0), up(0, 1, 0), norm(0, 0, 1), m_NoteGrip(0, -1.6, 0),
 	m_DisplayStyle(CRebarPos::ALL), isModified(true), m_Length(NULL), m_Key(NULL),
 	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), m_Multiplier(1), 
-	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL),
+	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), m_IsVarLength(false),
 	m_ShapeID(AcDbObjectId::kNull), m_GroupID(AcDbObjectId::kNull), 
 	circleRadius(1.125), partSpacing(0.15)
 {
@@ -402,8 +403,15 @@ Acad::ErrorStatus CRebarPos::setGroupId(const AcDbObjectId& newVal)
 
 const ACHAR* CRebarPos::PosKey() const
 {
+	assertReadEnabled();
 	Calculate();
 	return m_Key;
+}
+
+const bool CRebarPos::IsVarLength(void) const
+{
+	assertReadEnabled();
+	return m_IsVarLength;
 }
 
 //*************************************************************************
@@ -1623,39 +1631,218 @@ Acad::ErrorStatus   CRebarPos::subGetClassID(CLSID* pClsid) const
 
 const void CRebarPos::Calculate(void) const
 {
-	if(isModified)
+	if(!isModified)
+		return;
+
+	assertReadEnabled();
+
+	// Open group and shape
+	Acad::ErrorStatus es;
+	AcDbObjectPointer<CPosGroup> pGroup (m_GroupID, AcDb::kForRead);
+	if((es = pGroup.openStatus()) != Acad::eOk)
 	{
-		assertReadEnabled();
-/*
-		// TODO: Fix this
-		m_Length = "1200";
-
-		AcDbObjectPointer<CPosGroup> group(m_GroupID, AcDb::kForRead);
-		AcDbObjectPointer<CPosStyle> pstyle(group->Style(), AcDb::kForRead);
-		m_Text = m_Pos + m_Count + "T" + m_Diameter;
-		if(!m_Spacing.isEmpty())
-			m_Text += "/" + m_Spacing;
-		if(m_ShowLength && !m_Length.isEmpty())
-			m_Text += " L=" + m_Length;
-		pstyle->close();
-		group->close();
-
-		// Shape code
-		AcString shape;
-		shape.format(_T("_%i_%i_"), m_ShapeID.handle().low(), m_ShapeID.handle().high());
-
-		m_Key = _T("");
-		m_Key = m_Key.concat(m_Diameter);
-		m_Key = m_Key.concat(shape);
-		m_Key = m_Key.concat(m_A).concat(m_B).concat(m_C).concat(m_D).concat(m_E).concat(m_F);
-
-		// Check if variable length
-		m_IsVarLength = (m_A.findOneOf(_T("-~")) != -1) || (m_B.findOneOf(_T("-~")) != -1) ||
-			(m_C.findOneOf(_T("-~")) != -1) || (m_D.findOneOf(_T("-~")) != -1) ||
-			(m_E.findOneOf(_T("-~")) != -1) || (m_F.findOneOf(_T("-~")) != -1);
-*/
-		isModified = false;
+		return;
 	}
+	bool bending = (pGroup->Bending() == Adesk::kTrue);
+	CPosGroup::DrawingUnits drawingUnits = pGroup->DrawingUnit();
+	CPosGroup::DrawingUnits displayUnits = pGroup->DisplayUnit();
+	AcDbObjectPointer<CPosShape> pShape (m_ShapeID, AcDb::kForRead);
+	const ACHAR* formula;
+	if((es = pShape.openStatus()) != Acad::eOk)
+	{
+		return;
+	}
+	if(bending)
+	{
+		formula = pShape->FormulaBending();
+	}
+	else
+	{
+		formula = pShape->Formula();
+	}
+	int fieldCount = pShape->Fields();
+
+	// Scale from drawing units to MM
+	double scale = 1.0;
+	switch(drawingUnits)
+	{
+	case CPosGroup::MM:
+		scale *= 1.0;
+		break;
+	case CPosGroup::CM:
+		scale *= 10.0;
+		break;
+	}
+
+	// Calculate length
+	double L1 = 0.0, L2 = 0.0;
+	bool var = false;
+	CalcTotalLength(formula, fieldCount, scale, L1, L2, var);
+
+	// Scale from MM to display units
+	scale = 1.0;
+	switch(displayUnits)
+	{
+	case CPosGroup::MM:
+		scale /= 1.0;
+		break;
+	case CPosGroup::CM:
+		scale /= 10.0;
+		break;
+	}
+	L1 *= scale;
+	L2 *= scale;
+
+	// Set text
+	std::wstringstream s;
+	s << L1;
+	std::wstring strL1(s.str());
+	s.clear();
+	s << L2;
+	std::wstring strL2(s.str());
+	std::wstring strL;
+	if(var)
+	{
+		strL = strL1 + L"~" + strL2;
+	}
+	else
+	{
+		strL = strL1;
+	}
+	acutUpdString(strL.c_str(), m_Length);
+	m_IsVarLength = var;	
+
+	// Shape code
+	AcString shape;
+	shape.format(_T("_%i_%i_"), m_ShapeID.handle().low(), m_ShapeID.handle().high());
+
+	AcString key(_T(""));
+	key = key.concat(m_Diameter);
+	key = key.concat(shape);
+	key = key.concat(m_A).concat(m_B).concat(m_C).concat(m_D).concat(m_E).concat(m_F);
+	acutUpdString(key, m_Key);
+
+	isModified = false;
+}
+
+void CRebarPos::CalcTotalLength(const ACHAR* str, int fieldCount, double scale, double& minLength, double& maxLength, bool& isVar) const
+{
+	AcString length(str);
+	std::wstring length1(length);
+	std::wstring length2(length);
+
+	// Calculate piece lengths
+	double A1 = 0.0, A2 = 0.0, B1 = 0.0, B2 = 0.0, C1 = 0.0, C2 = 0.0, D1 = 0.0, D2 = 0.0, E1 = 0.0, E2 = 0.0, F1 = 0.0, F2 = 0.0;
+	bool Avar = false, Bvar = false, Cvar = false, Dvar = false, Evar = false, Fvar = false;
+	if(fieldCount >= 1)
+		CalcLength(m_A, scale, A1, A2, Avar);
+	if(fieldCount >= 2)
+		CalcLength(m_B, scale, B1, B2, Bvar);
+	if(fieldCount >= 3)
+		CalcLength(m_C, scale, C1, C2, Cvar);
+	if(fieldCount >= 4)
+		CalcLength(m_D, scale, D1, D2, Dvar);
+	if(fieldCount >= 5)
+		CalcLength(m_E, scale, E1, E2, Evar);
+	if(fieldCount >= 6)
+		CalcLength(m_F, scale, F1, F2, Fvar);
+
+	isVar = Avar || Bvar || Cvar || Dvar || Evar || Fvar;
+
+	std::wstringstream s;
+
+	// Replace lengths
+	s << A1; std::wstring strA1(s.str()); s.clear();
+	s << A2; std::wstring strA2(s.str()); s.clear();
+	s << B1; std::wstring strB1(s.str()); s.clear();
+	s << B2; std::wstring strB2(s.str()); s.clear();
+	s << C1; std::wstring strC1(s.str()); s.clear();
+	s << C2; std::wstring strC2(s.str()); s.clear();
+	s << D1; std::wstring strD1(s.str()); s.clear();
+	s << D2; std::wstring strD2(s.str()); s.clear();
+	s << E1; std::wstring strE1(s.str()); s.clear();
+	s << E2; std::wstring strE2(s.str()); s.clear();
+	s << F1; std::wstring strF1(s.str()); s.clear();
+	s << F2; std::wstring strF2(s.str()); s.clear();
+	Utility::ReplaceString(length1, L"A", strA1);
+	Utility::ReplaceString(length2, L"A", strA2);
+	Utility::ReplaceString(length1, L"B", strB1);
+	Utility::ReplaceString(length2, L"B", strB2);
+	Utility::ReplaceString(length1, L"C", strC1);
+	Utility::ReplaceString(length2, L"C", strC2);
+	Utility::ReplaceString(length1, L"D", strD1);
+	Utility::ReplaceString(length2, L"D", strD2);
+	Utility::ReplaceString(length1, L"E", strE1);
+	Utility::ReplaceString(length2, L"E", strE2);
+	Utility::ReplaceString(length1, L"F", strF1);
+	Utility::ReplaceString(length2, L"F", strF2);
+
+	// Replace diameter and radius
+	double d = 0.0;
+	if(m_Diameter != NULL && m_Diameter[0] == _T('\0'))
+		d = _wtof(m_Diameter);
+	double r = BendingRadius(d);
+	s << d;	std::wstring strd(s.str());	s.clear();
+	s << r;	std::wstring strr(s.str());	s.clear();
+	Utility::ReplaceString(length1, L"d", strd);
+	Utility::ReplaceString(length2, L"d", strd);
+	Utility::ReplaceString(length1, L"r", strr);
+	Utility::ReplaceString(length2, L"r", strr);
+
+	// Calculate lengths
+	minLength = CCalculator::evaluate(length1);
+	maxLength = CCalculator::evaluate(length2);
+}
+
+void CRebarPos::CalcLength(const ACHAR* str, double scale, double& minLength, double& maxLength, bool& isVar) const
+{
+	AcString length(str);
+	std::wstring length1, length2;
+
+	// Get variable lengths
+	int i = length.find(_T("~"));
+	if(i != -1)
+	{
+		length1 = length.substr(0, i);
+		length2 = length.substr(i + 1, length.length() - i - 1);
+		isVar = true;
+	}
+	else
+	{
+		length1 = length;
+		length2 = length;
+		isVar = false;
+	}
+	// Replace diameter and radius
+	double d = 0.0;
+	if(m_Diameter != NULL && m_Diameter[0] == _T('\0'))
+		d = _wtof(m_Diameter);
+	double r = BendingRadius(d);
+	// Convert units
+	d /= scale;
+	r /= scale;
+	std::wstringstream s;
+	s << d;
+	std::wstring strd(s.str());
+	s.clear();
+	s << r;
+	std::wstring strr(s.str());
+	Utility::ReplaceString(length1, L"d", strd);
+	Utility::ReplaceString(length1, L"r", strr);
+	Utility::ReplaceString(length2, L"d", strd);
+	Utility::ReplaceString(length2, L"r", strr);
+	
+	// Calculate lengths
+	minLength = CCalculator::evaluate(length1) * scale;
+	maxLength = CCalculator::evaluate(length2) * scale;
+}
+
+const double CRebarPos::BendingRadius(const double d) const
+{
+	if(d <= 16.0)
+		return (2.0 * d);
+	else
+		return (3.5 * d);
 }
 
 const DrawList CRebarPos::ParseFormula(const ACHAR* formula) const
@@ -1686,7 +1873,7 @@ const DrawList CRebarPos::ParseFormula(const ACHAR* formula) const
 		AcString c = str.substr(i, 1);
 		if((!indeco && c == _T('[')) || (indeco && (c == _T(']'))) || (i == str.length() - 1))
 		{
-			if(i == str.length() - 1)
+			if((i == str.length() - 1) && (c != _T('[')) && (c != _T(']')))
 			{
 				part += c;
 			}

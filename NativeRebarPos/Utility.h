@@ -4,6 +4,7 @@
 #pragma once
 
 #include "acgi.h"
+#include <string>
 
 namespace Utility
 {
@@ -18,4 +19,7 @@ namespace Utility
 
 	/// Gets the "Defpoints" layer
 	const AcDbObjectId GetDefpointsLayer(void);
+
+	/// Replace all occurences of string
+	const void ReplaceString(std::wstring& str, const std::wstring& oldStr, const std::wstring& newStr);
 }

@@ -166,6 +166,11 @@ String^ RebarPos::F::get()
     return WcharToString(GetImpObj()->F());
 }
 
+bool RebarPos::IsVarLength::get()
+{
+	return GetImpObj()->IsVarLength();
+}
+
 String^ RebarPos::Length::get()
 {
     return WcharToString(GetImpObj()->Length());

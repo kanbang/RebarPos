@@ -124,3 +124,13 @@ const AcDbObjectId Utility::GetDefpointsLayer(void)
 	}
 	return entId;
 }
+
+const void Utility::ReplaceString(std::wstring& str, const std::wstring& oldStr, const std::wstring& newStr)
+{
+	size_t pos = 0;
+	while((pos = str.find(oldStr, pos)) != std::string::npos)
+	{
+		str.replace(pos, oldStr.length(), newStr);
+		pos += newStr.length();
+	}
+}
