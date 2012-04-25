@@ -412,7 +412,38 @@ const ACHAR* CRebarPos::PosKey() const
 /// Determines which part is under the given point
 const CRebarPos::PosSubEntityType CRebarPos::HitTest(const AcGePoint3d& pt0) const
 {
-	// TODO: Fix this
+	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
+	trans.setCoordSystem(m_BasePoint, direction, up, norm);
+	if(trans.isSingular())
+	{
+		return CRebarPos::NONE;
+	}
+	trans.invert();
+	AcGePoint3d pt(pt0);
+	pt.transformBy(trans);
+		
+	if(lastDrawList.size() == 0)
+	{
+		return CRebarPos::NONE;
+	}
+	else
+	{
+		CDrawParams p;
+		for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+		{
+			p = lastDrawList[i];
+			if(pt.x > p.x && pt.x <= p.x + p.w && pt.y > p.y && pt.y < p.y + p.h)
+			{
+				return (CRebarPos::PosSubEntityType)p.type;
+			}
+		}
+		p = lastNoteDraw;
+		if(pt.x > p.x && pt.x <= p.x + p.w && pt.y > p.y && pt.y < p.y + p.h)
+		{
+			return CRebarPos::NOTE;
+		}
+	}
+
 	return CRebarPos::NONE;
 }
 
