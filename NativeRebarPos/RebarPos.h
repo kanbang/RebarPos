@@ -80,6 +80,8 @@ private:
     AcGiTextStyle lastTextStyle;
     AcGiTextStyle lastNoteStyle;
 	Adesk::UInt16 lastCircleColor;
+	Adesk::UInt16 lastGroupColor;
+	Adesk::UInt16 lastMultiplierColor;
 
 private:
 	/// Property backing fields
