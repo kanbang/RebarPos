@@ -43,6 +43,8 @@ namespace OZOZ
 
 			property Autodesk::AutoCAD::DatabaseServices::ObjectId StyleId { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
 
+			property bool Current { bool get(); void set(bool value); }
+
 		public:
 			property static String^ TableName        { String^ get(); }
 		};

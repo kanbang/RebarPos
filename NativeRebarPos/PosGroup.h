@@ -68,6 +68,8 @@ protected:
 
     AcDbHardPointerId m_StyleID;
 
+	Adesk::Boolean m_Current;
+
 public:
 	/// Gets or sets the bending option.
     const Adesk::Boolean Bending(void) const;
@@ -88,6 +90,10 @@ public:
 	/// Gets or sets pointer to the style.
 	const AcDbObjectId& StyleId(void) const;
 	Acad::ErrorStatus setStyleId(const AcDbObjectId& newVal);
+
+	/// Gets or sets whether this is the current style.
+    const Adesk::Boolean Current(void) const;
+	Acad::ErrorStatus setCurrent(const Adesk::Boolean newVal);
 
 private:
 	static ACHAR* Table_Name;

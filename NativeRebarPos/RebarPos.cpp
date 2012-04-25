@@ -642,6 +642,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 			return Adesk::kTrue;
 		}
 		styleID = pGroup->StyleId();
+		lastCurrentGroup = pGroup->Current();
 		if(styleID.isNull())
 		{
 			return Adesk::kTrue;
@@ -690,6 +691,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 		lastCircleColor = pStyle->CircleColor();
 		lastGroupColor = pStyle->GroupColor();
 		lastMultiplierColor = pStyle->MultiplierColor();
+		lastGroupHighlightColor = pStyle->CurrentGroupHighlightColor();
 		for(DrawListSize i = 0; i < lastDrawList.size(); i++)
 		{
 			CDrawParams p = lastDrawList[i];
@@ -766,6 +768,22 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 
 	// Transform to match object orientation
 	worldDraw->geometry().pushModelTransform(trans);
+	// Highlight current group
+	if(lastCurrentGroup == Adesk::kTrue)
+	{
+		AcGiFillType filltype = worldDraw->subEntityTraits().fillType();
+		worldDraw->subEntityTraits().setFillType(kAcGiFillAlways);
+		worldDraw->subEntityTraits().setLayer(defpoints);
+		worldDraw->subEntityTraits().setColor(lastGroupHighlightColor);
+		AcGePoint3d rec[4];
+		CDrawParams p = lastDrawList.at(lastDrawList.size() - 1);
+		rec[0].set(-partSpacing, -partSpacing, 0);
+		rec[1].set(p.x + p.w + partSpacing, -partSpacing, 0);
+		rec[2].set(p.x + p.w + partSpacing, 1.0 + partSpacing, 0);
+		rec[3].set(-partSpacing, 1.0 + partSpacing, 0);
+		worldDraw->geometry().polygon(4, rec);
+		worldDraw->subEntityTraits().setFillType(filltype);
+	}
 	// Draw items
 	worldDraw->subEntityTraits().setLayer(zero);
 	for(DrawListSize i = 0; i < lastDrawList.size(); i++)

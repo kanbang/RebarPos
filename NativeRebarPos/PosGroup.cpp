@@ -52,7 +52,7 @@ ACRX_DXF_DEFINE_MEMBERS(CPosGroup, AcDbObject,
 
 //-----------------------------------------------------------------------------
 CPosGroup::CPosGroup () : m_Bending(Adesk::kFalse), m_MaxBarLength(12),
-	m_DrawingUnit(CPosGroup::MM), m_DisplayUnit(CPosGroup::MM), m_StyleID(AcDbObjectId::kNull)
+m_DrawingUnit(CPosGroup::MM), m_DisplayUnit(CPosGroup::MM), m_StyleID(AcDbObjectId::kNull), m_Current(Adesk::kFalse)
 { }
 
 CPosGroup::~CPosGroup () { }
@@ -122,6 +122,19 @@ Acad::ErrorStatus CPosGroup::setStyleId(const AcDbObjectId& newVal)
 {
 	assertWriteEnabled();
 	m_StyleID = newVal;
+	return Acad::eOk;
+}
+
+const Adesk::Boolean CPosGroup::Current(void) const
+{
+	assertReadEnabled();
+	return m_Current;
+}
+
+Acad::ErrorStatus CPosGroup::setCurrent(const Adesk::Boolean newVal)
+{
+	assertWriteEnabled();
+	m_Current = newVal;
 	return Acad::eOk;
 }
 

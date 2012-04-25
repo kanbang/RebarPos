@@ -76,6 +76,15 @@ void PosGroup::StyleId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setStyleId(GETOBJECTID(value)));
 }
 
+bool PosGroup::Current::get()
+{
+	return (GetImpObj()->Current() == Adesk::kTrue);
+}
+void PosGroup::Current::set(bool value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setCurrent(value ? Adesk::kTrue : Adesk::kFalse));
+}
+
 //*************************************************************************
 // Static Properties
 //*************************************************************************

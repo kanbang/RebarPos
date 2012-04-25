@@ -108,7 +108,7 @@ namespace RebarPosCommands
                     if (dict.Count == 0)
                     {
                         PosStyle style = new PosStyle();
-                        style.Formula = "[M:C][N][\"T\":D][\"/\":S] [\"L=\":L]";
+                        style.Formula = "[M:C][N][\"T\":D][\"/\":S][\" L=\":L]";
                         style.FormulaWithoutLength = "[M:C][N][\"T\":D][\"/\":S]";
                         style.FormulaPosOnly = "[M:C]";
                         style.TextStyleId = DWGUtility.CreateTextStyle("Rebar Text Style", "leroy.shx", 0.7);
@@ -166,6 +166,7 @@ namespace RebarPosCommands
                     {
                         PosGroup group = new PosGroup();
                         group.StyleId = DWGUtility.CreateDefaultStyles();
+                        group.Current = true;
                         dict.UpgradeOpen();
                         id = dict.SetAt("0", group);
                         dict.DowngradeOpen();
