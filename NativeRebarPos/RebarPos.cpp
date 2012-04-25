@@ -100,6 +100,24 @@ CRebarPos::~CRebarPos()
 //*************************************************************************
 // Properties
 //*************************************************************************
+const AcGeVector3d& CRebarPos::DirectionVector(void) const
+{
+	assertReadEnabled();
+	return direction;
+}
+
+const AcGeVector3d& CRebarPos::UpVector(void) const
+{
+	assertReadEnabled();
+	return up;
+}
+
+const AcGeVector3d& CRebarPos::NormalVector(void) const
+{
+	assertReadEnabled();
+	return norm;
+}
+
 const AcGePoint3d& CRebarPos::BasePoint(void) const
 {
 	assertReadEnabled();

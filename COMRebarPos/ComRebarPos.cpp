@@ -133,8 +133,7 @@ STDMETHODIMP CComRebarPos::GetElementValue(
 				throw Acad::eInvalidInput;
 
 		    pt = pRebarPos->BasePoint();
-            // TODO: translate from wcs to ucs
-            //acdbEcs2Ucs(asDblArray(pt), asDblArray(pt), asDblArray(pRebarPos->normal()), Adesk::kFalse);
+			acdbWcs2Ucs(asDblArray(pt), asDblArray(pt), false);
             ::VariantCopy(pVarOut, &CComVariant(pt[dwCookie]));
 
 			return S_OK;
@@ -144,8 +143,7 @@ STDMETHODIMP CComRebarPos::GetElementValue(
 				throw Acad::eInvalidInput;
 
 			pt = pRebarPos->NoteGrip();
-            // TODO: translate from wcs to ucs
-            //acdbEcs2Ucs(asDblArray(pt), asDblArray(pt), asDblArray(pRebarPos->normal()), Adesk::kFalse);
+			acdbWcs2Ucs(asDblArray(pt), asDblArray(pt), false);
             ::VariantCopy(pVarOut, &CComVariant(pt[dwCookie]));
 
 			return S_OK;
@@ -188,9 +186,7 @@ STDMETHODIMP CComRebarPos::SetElementValue(
 				throw Acad::eInvalidInput;
 
 			pt = pRebarPos->BasePoint();
-
-            //TODO: translate from wcs to ucs
-            //acdbEcs2Ucs(asDblArray(pt),asDblArray(pt),asDblArray(pRebarPos->normal()),Adesk::kFalse);
+			acdbUcs2Wcs(asDblArray(pt), asDblArray(pt), false);
 	        pt[dwCookie] = V_R8(&VarIn);
 
 		    if ((es = pRebarPos->setBasePoint(pt)) != Acad::eOk)
@@ -205,9 +201,7 @@ STDMETHODIMP CComRebarPos::SetElementValue(
 				throw Acad::eInvalidInput;
 
 			pt = pRebarPos->NoteGrip();
-
-            //TODO: translate from wcs to ucs
-            //acdbEcs2Ucs(asDblArray(pt),asDblArray(pt),asDblArray(pRebarPos->normal()),Adesk::kFalse);
+			acdbUcs2Wcs(asDblArray(pt), asDblArray(pt), false);
 	        pt[dwCookie] = V_R8(&VarIn);
 
 		    if ((es = pRebarPos->setNoteGrip(pt)) != Acad::eOk)

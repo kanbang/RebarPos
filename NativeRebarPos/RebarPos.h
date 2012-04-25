@@ -132,6 +132,13 @@ protected:
 	const double BendingRadius(const double d) const;
 
 public:
+	/// Get direction vector
+	const AcGeVector3d& DirectionVector(void) const;
+	/// Get up vector
+	const AcGeVector3d& UpVector(void) const;
+	/// Get normal vector
+	const AcGeVector3d& NormalVector(void) const;
+
 	/// Determines which part is under the given point
 	const CRebarPos::PosSubEntityType HitTest(const AcGePoint3d& pt0) const;
 
