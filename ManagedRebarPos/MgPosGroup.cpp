@@ -49,6 +49,15 @@ void PosGroup::MaxBarLength::set(double value)
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setMaxBarLength(value));
 }
 
+int PosGroup::Precision::get()
+{
+	return GetImpObj()->Precision();
+}
+void PosGroup::Precision::set(int value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setPrecision(value));
+}
+
 PosGroup::DrawingUnits PosGroup::DrawingUnit::get()
 {
 	return static_cast<PosGroup::DrawingUnits>(GetImpObj()->DrawingUnit());

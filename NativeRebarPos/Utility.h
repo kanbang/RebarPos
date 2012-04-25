@@ -22,4 +22,12 @@ namespace Utility
 
 	/// Replace all occurences of string
 	const void ReplaceString(std::wstring& str, const std::wstring& oldStr, const std::wstring& newStr);
+
+	/// Convert double to string
+	const void DoubleToStr(const double val, const int digits, std::wstring& str);
+	const void DoubleToStr(const double val, std::wstring& str);
+
+	/// Convert string to double
+	const double StrToDouble(const std::wstring& str);
+	const double StrToDouble(const wchar_t* str);
 }

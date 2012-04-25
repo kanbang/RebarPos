@@ -525,7 +525,7 @@ Acad::ErrorStatus CRebarPos::subMoveGripPointsAt(
     const AcDbIntArray& indices,
     const AcGeVector3d& offset)
 {
-    if(indices.length()== 0 || offset.isZeroLength())
+    if(indices.length() == 0 || offset.isZeroLength())
         return Acad::eOk;
 
 	assertWriteEnabled();
@@ -550,6 +550,8 @@ Acad::ErrorStatus CRebarPos::subTransformBy(const AcGeMatrix3d& xform)
 	direction.transformBy(xform);
 	up.transformBy(xform);
 
+	// TODO: Fix mirroring around midpoint
+	// TODO: Correction should be based on UCS
 	// Text always left to right
 	if(direction.x < 0)
 	{
@@ -636,6 +638,8 @@ void CRebarPos::subList() const
 		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("E Length:"), m_E);
 	if ((m_F != NULL) && (m_F[0] != _T('\0')))
 		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("F Length:"), m_F);
+	if ((m_Length != NULL) && (m_Length[0] != _T('\0')))
+		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Total Length:"), m_Length);
 }
 
 Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
@@ -1674,6 +1678,7 @@ const void CRebarPos::Calculate(void) const
 		return;
 	}
 	bool bending = (pGroup->Bending() == Adesk::kTrue);
+	int precision = pGroup->Precision();
 	CPosGroup::DrawingUnits drawingUnits = pGroup->DrawingUnit();
 	CPosGroup::DrawingUnits displayUnits = pGroup->DisplayUnit();
 	AcDbObjectPointer<CPosShape> pShape (m_ShapeID, AcDb::kForRead);
@@ -1705,7 +1710,7 @@ const void CRebarPos::Calculate(void) const
 	}
 
 	// Calculate length
-	CalcTotalLength(formula, fieldCount, scale, m_MinLength, m_MaxLength, m_IsVarLength);
+	CalcTotalLength(formula, fieldCount, scale, precision, m_MinLength, m_MaxLength, m_IsVarLength);
 
 	// Scale from MM to display units
 	scale = 1.0;
@@ -1722,12 +1727,10 @@ const void CRebarPos::Calculate(void) const
 	m_MaxLength *= scale;
 
 	// Set text
-	std::wstringstream s;
-	s << m_MinLength;
-	std::wstring strL1(s.str());
-	s.clear();
-	s << m_MaxLength;
-	std::wstring strL2(s.str());
+	std::wstring strL1;
+	Utility::DoubleToStr(m_MinLength, precision, strL1);
+	std::wstring strL2;
+	Utility::DoubleToStr(m_MaxLength, precision, strL2);
 	std::wstring strL;
 	if(m_IsVarLength)
 	{
@@ -1752,7 +1755,7 @@ const void CRebarPos::Calculate(void) const
 	isModified = false;
 }
 
-void CRebarPos::CalcTotalLength(const ACHAR* str, int fieldCount, double scale, double& minLength, double& maxLength, bool& isVar) const
+void CRebarPos::CalcTotalLength(const ACHAR* str, int fieldCount, double scale, int precision, double& minLength, double& maxLength, bool& isVar) const
 {
 	AcString length(str);
 	std::wstring length1(length);
@@ -1776,21 +1779,21 @@ void CRebarPos::CalcTotalLength(const ACHAR* str, int fieldCount, double scale, 
 
 	isVar = Avar || Bvar || Cvar || Dvar || Evar || Fvar;
 
-	std::wstringstream s;
-
 	// Replace lengths
-	s << A1; std::wstring strA1(s.str()); s.clear();
-	s << A2; std::wstring strA2(s.str()); s.clear();
-	s << B1; std::wstring strB1(s.str()); s.clear();
-	s << B2; std::wstring strB2(s.str()); s.clear();
-	s << C1; std::wstring strC1(s.str()); s.clear();
-	s << C2; std::wstring strC2(s.str()); s.clear();
-	s << D1; std::wstring strD1(s.str()); s.clear();
-	s << D2; std::wstring strD2(s.str()); s.clear();
-	s << E1; std::wstring strE1(s.str()); s.clear();
-	s << E2; std::wstring strE2(s.str()); s.clear();
-	s << F1; std::wstring strF1(s.str()); s.clear();
-	s << F2; std::wstring strF2(s.str()); s.clear();
+	std::wstring strA1, strA2, strB1, strB2, strC1, strC2;
+	std::wstring strD1, strD2, strE1, strE2, strF1, strF2;
+	Utility::DoubleToStr(A1, precision, strA1);
+	Utility::DoubleToStr(A2, precision, strA2);
+	Utility::DoubleToStr(B1, precision, strB1);
+	Utility::DoubleToStr(C2, precision, strB2);
+	Utility::DoubleToStr(C1, precision, strC1);
+	Utility::DoubleToStr(A2, precision, strC2);
+	Utility::DoubleToStr(D1, precision, strD1);
+	Utility::DoubleToStr(D2, precision, strD2);
+	Utility::DoubleToStr(E1, precision, strE1);
+	Utility::DoubleToStr(E2, precision, strE2);
+	Utility::DoubleToStr(F1, precision, strF1);
+	Utility::DoubleToStr(F2, precision, strF2);
 	Utility::ReplaceString(length1, L"A", strA1);
 	Utility::ReplaceString(length2, L"A", strA2);
 	Utility::ReplaceString(length1, L"B", strB1);
@@ -1807,14 +1810,15 @@ void CRebarPos::CalcTotalLength(const ACHAR* str, int fieldCount, double scale, 
 	// Replace diameter and radius
 	double d = 0.0;
 	if(m_Diameter != NULL && m_Diameter[0] == _T('\0'))
-		d = _wtof(m_Diameter);
+		d = Utility::StrToDouble(m_Diameter);
 	double r = BendingRadius(d);
-	s << d;	std::wstring strd(s.str());	s.clear();
-	s << r;	std::wstring strr(s.str());	s.clear();
-	Utility::ReplaceString(length1, L"d", strd);
-	Utility::ReplaceString(length2, L"d", strd);
-	Utility::ReplaceString(length1, L"r", strr);
-	Utility::ReplaceString(length2, L"r", strr);
+	std::wstring strD, strR;
+	Utility::DoubleToStr(d, precision, strD);
+	Utility::DoubleToStr(r, precision, strR);
+	Utility::ReplaceString(length1, L"d", strD);
+	Utility::ReplaceString(length2, L"d", strD);
+	Utility::ReplaceString(length1, L"r", strR);
+	Utility::ReplaceString(length2, L"r", strR);
 
 	// Calculate lengths
 	minLength = CCalculator::evaluate(length1);
@@ -1840,30 +1844,33 @@ void CRebarPos::CalcLength(const ACHAR* str, double scale, double& minLength, do
 		length2 = length;
 		isVar = false;
 	}
+	
+	// Calculate lengths
+	minLength = CalcConsLength(length1.c_str(), scale);
+	maxLength = CalcConsLength(length2.c_str(), scale);
+}
+
+double CRebarPos::CalcConsLength(const ACHAR* str, double scale) const
+{
+	std::wstring length(str);
+
 	// Replace diameter and radius
 	double d = 0.0;
 	if(m_Diameter != NULL && m_Diameter[0] == _T('\0'))
-		d = _wtof(m_Diameter);
+		d = Utility::StrToDouble(m_Diameter);
 	double r = BendingRadius(d);
 	// Convert units
+	std::wstring strD, strR;
 	d /= scale;
 	r /= scale;
-	std::wstringstream s;
-	s << d;
-	std::wstring strd(s.str());
-	s.clear();
-	s << r;
-	std::wstring strr(s.str());
-	Utility::ReplaceString(length1, L"d", strd);
-	Utility::ReplaceString(length1, L"r", strr);
-	Utility::ReplaceString(length2, L"d", strd);
-	Utility::ReplaceString(length2, L"r", strr);
+	Utility::DoubleToStr(d, strD);
+	Utility::DoubleToStr(r, strR);
+	Utility::ReplaceString(length, L"d", strD);
+	Utility::ReplaceString(length, L"r", strR);
 	
-	// Calculate lengths
-	minLength = CCalculator::evaluate(length1) * scale;
-	maxLength = CCalculator::evaluate(length2) * scale;
+	// Calculate length
+	return CCalculator::evaluate(length) * scale;
 }
-
 const double CRebarPos::BendingRadius(const double d) const
 {
 	if(d <= 16.0)

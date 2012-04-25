@@ -126,8 +126,9 @@ protected:
 	const DrawList ParseFormula(const ACHAR* formula) const;
 
 	/// Calculates lengths
+	double CalcConsLength(const ACHAR* str, double scale) const;
 	void CalcLength(const ACHAR* str, double scale, double& minLength, double& maxLength, bool& isVar) const;
-	void CalcTotalLength(const ACHAR* str, int fieldCount, double scale, double& minLength, double& maxLength, bool& isVar) const;
+	void CalcTotalLength(const ACHAR* str, int fieldCount, double scale, int precision, double& minLength, double& maxLength, bool& isVar) const;
 
 	/// Gets bending radius
 	const double BendingRadius(const double d) const;

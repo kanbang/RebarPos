@@ -38,6 +38,8 @@ namespace OZOZ
 		public:
 			property bool Bending { bool get(); void set(bool value); }
 			property double MaxBarLength { double get(); void set(double value); }
+			property int Precision { int get(); void set(int value); }
+
 			property PosGroup::DrawingUnits DrawingUnit { PosGroup::DrawingUnits get(); void set(PosGroup::DrawingUnits value); }
 			property PosGroup::DrawingUnits DisplayUnit { PosGroup::DrawingUnits get(); void set(PosGroup::DrawingUnits value); }
 

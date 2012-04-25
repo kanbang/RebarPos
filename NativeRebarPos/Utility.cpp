@@ -23,6 +23,9 @@
 
 #include "Utility.h"
 
+#include <sstream>
+#include <iomanip>
+
 AcDbObjectId Utility::CreateTextStyle(const ACHAR* name, const ACHAR* filename, const double scale)
 {
 	AcDbObjectId id;
@@ -134,3 +137,28 @@ const void Utility::ReplaceString(std::wstring& str, const std::wstring& oldStr,
 		pos += newStr.length();
 	}
 }
+
+const void Utility::DoubleToStr(const double val, const int digits, std::wstring& str)
+{
+	std::wstringstream s;
+	s << std::fixed << std::setprecision(digits) << val;
+	str = s.str();
+}
+
+const void Utility::DoubleToStr(const double val, std::wstring& str)
+{
+	std::wstringstream s;
+	s << val;
+	str = s.str();
+}
+
+const double Utility::StrToDouble(const std::wstring& str)
+{
+	return Utility::StrToDouble(str.c_str());
+}
+
+const double Utility::StrToDouble(const wchar_t* str)
+{
+	return _wtof(str);
+}
+

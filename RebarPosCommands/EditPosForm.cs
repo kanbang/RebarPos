@@ -38,11 +38,12 @@ namespace RebarPosCommands
             {
                 cbGroup.Items.Add(name);
             }
+            int precision = group.Precision;
             m_Shapes = shapes;
             string shapename = "";
             foreach (KeyValuePair<string, Autodesk.AutoCAD.DatabaseServices.ObjectId> pair in m_Shapes)
             {
-                if (pair.Value  == pos.ShapeId)
+                if (pair.Value == pos.ShapeId)
                 {
                     shapename = pair.Key;
                     break;
@@ -68,11 +69,11 @@ namespace RebarPosCommands
             txtF.Enabled = btnSelectF.Enabled = btnMeasureF.Enabled = (shape.Fields >= 6);
 
             lblPosShape.Text = shapename;
-            lblAverageLength.Text = ((pos.MinLength + pos.MaxLength) / 2.0).ToString("0.00");
+            lblAverageLength.Text = ((pos.MinLength + pos.MaxLength) / 2.0).ToString("F" + precision.ToString());
             if (pos.IsVarLength)
-                lblTotalLength.Text = pos.MinLength.ToString("0.00") + "~" + pos.MaxLength.ToString("0.00");
+                lblTotalLength.Text = pos.MinLength.ToString("F" + precision.ToString()) + "~" + pos.MaxLength.ToString("F" + precision.ToString());
             else
-                lblTotalLength.Text = pos.MinLength.ToString("0.00");
+                lblTotalLength.Text = pos.MinLength.ToString("F" + precision.ToString());
 
             for (int i = 0; i < shape.Items.Count; i++)
             {

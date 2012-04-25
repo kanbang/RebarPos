@@ -62,6 +62,7 @@ protected:
 	/// Property backing fields
 	Adesk::Boolean m_Bending;
 	double m_MaxBarLength;
+	int m_Precision;
 
 	DrawingUnits m_DrawingUnit;
 	DrawingUnits m_DisplayUnit;
@@ -78,6 +79,10 @@ public:
 	/// Gets or sets the maximum bar length
     const double MaxBarLength(void) const;
 	Acad::ErrorStatus setMaxBarLength(const double newVal);
+
+	/// Gets or sets the display precision
+    const int Precision(void) const;
+	Acad::ErrorStatus setPrecision(const int newVal);
 
 	/// Gets or sets the drawing unit
     const DrawingUnits DrawingUnit(void) const;
