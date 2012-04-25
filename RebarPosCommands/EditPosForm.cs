@@ -11,12 +11,18 @@ namespace RebarPosCommands
 {
     public partial class EditPosForm : Form
     {
+        Dictionary<string, Autodesk.AutoCAD.DatabaseServices.ObjectId> m_Groups;
+        Dictionary<string, Autodesk.AutoCAD.DatabaseServices.ObjectId> m_Shapes;
+
         public EditPosForm()
         {
             InitializeComponent();
+
+            m_Groups = new Dictionary<string, Autodesk.AutoCAD.DatabaseServices.ObjectId>();
+            m_Shapes = new Dictionary<string, Autodesk.AutoCAD.DatabaseServices.ObjectId>();
         }
 
-        public void SetPos(RebarPos pos, PosShape shape)
+        public void SetPos(RebarPos pos, PosGroup group, Dictionary<string, Autodesk.AutoCAD.DatabaseServices.ObjectId> groups, PosShape shape, Dictionary<string, Autodesk.AutoCAD.DatabaseServices.ObjectId> shapes)
         {
             txtPosMarker.Text = pos.Pos;
             txtPosCount.Text = pos.Count;
@@ -26,6 +32,22 @@ namespace RebarPosCommands
             chkIncludePos.Checked = (pos.Multiplier > 0);
             txtPosMultiplier.Enabled = (pos.Multiplier > 0);
             txtPosNote.Text = pos.Note;
+
+            m_Groups = groups;
+            foreach (string name in m_Groups.Keys)
+            {
+                cbGroup.Items.Add(name);
+            }
+            m_Shapes = shapes;
+            string shapename = "";
+            foreach (KeyValuePair<string, Autodesk.AutoCAD.DatabaseServices.ObjectId> pair in m_Shapes)
+            {
+                if (pair.Value  == pos.ShapeId)
+                {
+                    shapename = pair.Key;
+                    break;
+                }
+            }
 
             rbShowAll.Checked = (pos.Display == RebarPos.DisplayStyle.All);
             rbWithoutLength.Checked = (pos.Display == RebarPos.DisplayStyle.WithoutLength);
@@ -44,6 +66,13 @@ namespace RebarPosCommands
             txtD.Enabled = btnSelectD.Enabled = btnMeasureD.Enabled = (shape.Fields >= 4);
             txtE.Enabled = btnSelectE.Enabled = btnMeasureE.Enabled = (shape.Fields >= 5);
             txtF.Enabled = btnSelectF.Enabled = btnMeasureF.Enabled = (shape.Fields >= 6);
+
+            lblPosShape.Text = shapename;
+            lblAverageLength.Text = ((pos.MinLength + pos.MaxLength) / 2.0).ToString("0.00");
+            if (pos.IsVarLength)
+                lblTotalLength.Text = pos.MinLength.ToString("0.00") + "~" + pos.MaxLength.ToString("0.00");
+            else
+                lblTotalLength.Text = pos.MinLength.ToString("0.00");
 
             for (int i = 0; i < shape.Items.Count; i++)
             {

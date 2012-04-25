@@ -95,6 +95,7 @@ private:
 	mutable ACHAR* m_Key;
 	mutable ACHAR* m_Length;
 	mutable bool m_IsVarLength;
+	mutable double m_MinLength, m_MaxLength;
 	ACHAR* m_Pos;
 	ACHAR* m_Count;
 	ACHAR* m_Diameter;
@@ -207,6 +208,10 @@ public:
 
 	/// Gets if the lengths are variable
 	const bool IsVarLength(void) const;
+
+	/// Gets lengths
+	const double MinLength(void) const;
+	const double MaxLength(void) const;
 
 	/// Gets or sets the pos shape
 	const AcDbObjectId& ShapeId(void) const;

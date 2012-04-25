@@ -70,6 +70,8 @@ namespace OZOZ
 
 			property bool IsVarLength { bool get(); }
 			property String^ Length { String^ get(); }
+			property double MinLength { double get(); }
+			property double MaxLength { double get(); }
 
 			property String^ PosKey { String^ get(); }
 

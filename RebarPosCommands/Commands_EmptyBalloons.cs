@@ -5,7 +5,7 @@ using OZOZ.RebarPosWrapper;
 
 namespace RebarPosCommands
 {
-    public partial class RebarPosCommands
+    public partial class MyCommands
     {
         private void EmptyBalloons()
         {

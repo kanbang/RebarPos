@@ -75,7 +75,7 @@ CRebarPos::CRebarPos() :
 	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), m_Multiplier(1), 
 	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), m_IsVarLength(false),
 	m_ShapeID(AcDbObjectId::kNull), m_GroupID(AcDbObjectId::kNull), 
-	circleRadius(1.125), partSpacing(0.15)
+	circleRadius(1.125), partSpacing(0.15), m_MinLength(0), m_MaxLength(0)
 {
 }
 
@@ -430,6 +430,18 @@ const bool CRebarPos::IsVarLength(void) const
 {
 	assertReadEnabled();
 	return m_IsVarLength;
+}
+
+const double CRebarPos::MinLength(void) const
+{
+	assertReadEnabled();
+	return m_MinLength;
+}
+
+const double CRebarPos::MaxLength(void) const
+{
+	assertReadEnabled();
+	return m_MaxLength;
 }
 
 //*************************************************************************
@@ -1693,9 +1705,7 @@ const void CRebarPos::Calculate(void) const
 	}
 
 	// Calculate length
-	double L1 = 0.0, L2 = 0.0;
-	bool var = false;
-	CalcTotalLength(formula, fieldCount, scale, L1, L2, var);
+	CalcTotalLength(formula, fieldCount, scale, m_MinLength, m_MaxLength, m_IsVarLength);
 
 	// Scale from MM to display units
 	scale = 1.0;
@@ -1708,18 +1718,18 @@ const void CRebarPos::Calculate(void) const
 		scale /= 10.0;
 		break;
 	}
-	L1 *= scale;
-	L2 *= scale;
+	m_MinLength *= scale;
+	m_MaxLength *= scale;
 
 	// Set text
 	std::wstringstream s;
-	s << L1;
+	s << m_MinLength;
 	std::wstring strL1(s.str());
 	s.clear();
-	s << L2;
+	s << m_MaxLength;
 	std::wstring strL2(s.str());
 	std::wstring strL;
-	if(var)
+	if(m_IsVarLength)
 	{
 		strL = strL1 + L"~" + strL2;
 	}
@@ -1728,7 +1738,6 @@ const void CRebarPos::Calculate(void) const
 		strL = strL1;
 	}
 	acutUpdString(strL.c_str(), m_Length);
-	m_IsVarLength = var;	
 
 	// Shape code
 	AcString shape;

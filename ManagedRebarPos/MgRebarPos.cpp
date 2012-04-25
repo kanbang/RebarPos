@@ -176,6 +176,16 @@ String^ RebarPos::Length::get()
     return WcharToString(GetImpObj()->Length());
 }
 
+double RebarPos::MinLength::get()
+{
+	return GetImpObj()->MinLength();
+}
+
+double RebarPos::MaxLength::get()
+{
+	return GetImpObj()->MaxLength();
+}
+
 String^ RebarPos::PosKey::get()
 {
     return WcharToString(GetImpObj()->PosKey());

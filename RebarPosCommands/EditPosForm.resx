@@ -117,4 +117,59 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnMeasureF.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAHhJREFUOE9j/P//
+        PwNFAGQAJZgizWDXU2I73AA7Jw8gmzSvwPSAXWDr6A43AJ9hyHIwPSgGgBTYOLjhdA1IE0wjhgG2trb/
+        bWxswBjExoaR5WEWobgAZCohF8DksXoBPTzQAxY5rHAaQGxsoBhArCZs6qiTkIa2CwB13KEm3DCk5wAA
+        AABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="btnMeasureE.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAHhJREFUOE9j/P//
+        PwNFAGQAJZgizWDXU2I73AA7Jw8gmzSvwPSAXWDr6A43AJ9hyHIwPSgGgBTYOLjhdA1IE0wjhgG2trb/
+        bWxswBjExoaR5WEWobgAZCohF8DksXoBPTzQAxY5rHAaQGxsoBhArCZs6qiTkIa2CwB13KEm3DCk5wAA
+        AABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="btnMeasureD.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAHhJREFUOE9j/P//
+        PwNFAGQAJZgizWDXU2I73AA7Jw8gmzSvwPSAXWDr6A43AJ9hyHIwPSgGgBTYOLjhdA1IE0wjhgG2trb/
+        bWxswBjExoaR5WEWobgAZCohF8DksXoBPTzQAxY5rHAaQGxsoBhArCZs6qiTkIa2CwB13KEm3DCk5wAA
+        AABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="btnMeasureC.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAHhJREFUOE9j/P//
+        PwNFAGQAJZgizWDXU2I73AA7Jw8gmzSvwPSAXWDr6A43AJ9hyHIwPSgGgBTYOLjhdA1IE0wjhgG2trb/
+        bWxswBjExoaR5WEWobgAZCohF8DksXoBPTzQAxY5rHAaQGxsoBhArCZs6qiTkIa2CwB13KEm3DCk5wAA
+        AABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="btnMeasureB.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAHhJREFUOE9j/P//
+        PwNFAGQAJZgizWDXU2I73AA7Jw8gmzSvwPSAXWDr6A43AJ9hyHIwPSgGgBTYOLjhdA1IE0wjhgG2trb/
+        bWxswBjExoaR5WEWobgAZCohF8DksXoBPTzQAxY5rHAaQGxsoBhArCZs6qiTkIa2CwB13KEm3DCk5wAA
+        AABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="btnMeasureA.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAHhJREFUOE9j/P//
+        PwNFAGQAJZgizWDXU2I73AA7Jw8gmzSvwPSAXWDr6A43AJ9hyHIwPSgGgBTYOLjhdA1IE0wjhgG2trb/
+        bWxswBjExoaR5WEWobgAZCohF8DksXoBPTzQAxY5rHAaQGxsoBhArCZs6qiTkIa2CwB13KEm3DCk5wAA
+        AABJRU5ErkJggg==
+</value>
+  </data>
 </root>
