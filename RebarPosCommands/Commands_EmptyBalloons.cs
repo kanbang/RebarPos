@@ -23,7 +23,6 @@ namespace RebarPosCommands
                             if (pos != null)
                             {
                                 pos.Pos = "";
-                                pos.BasePoint = new Autodesk.AutoCAD.Geometry.Point3d(100, 100, 100);
                             }
                         }
                         tr.Commit();

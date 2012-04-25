@@ -90,6 +90,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy /Y &quot;$(OutDir)\$(ProjectName).dll&quot; &quot;$(SolutionDir)RebarPosCommands\bin\$(ConfigurationName)\$(ProjectName).dll&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -164,6 +165,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy /Y &quot;$(OutDir)\$(ProjectName).dll&quot; &quot;$(SolutionDir)RebarPosCommands\bin\$(ConfigurationName)\$(ProjectName).dll&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -233,6 +235,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy /Y &quot;$(OutDir)\$(ProjectName).dll&quot; &quot;$(SolutionDir)RebarPosCommands\bin\$(ConfigurationName)\$(ProjectName).dll&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -303,6 +306,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy /Y &quot;$(OutDir)\$(ProjectName).dll&quot; &quot;$(SolutionDir)RebarPosCommands\bin\$(ConfigurationName)\$(ProjectName).dll&quot;"
 			/>
 		</Configuration>
 	</Configurations>

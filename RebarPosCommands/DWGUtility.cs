@@ -56,6 +56,7 @@ namespace RebarPosCommands
                         shape.Formula = "A";
                         shape.FormulaBending = "A";
                         shape.Items.AddLine(0, 0, 100, 0, Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 1));
+                        shape.Items.AddText(50, 5, 10, "A", Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 2));
                         dict.UpgradeOpen();
                         id = dict.SetAt("Duz Demir", shape);
                         dict.DowngradeOpen();

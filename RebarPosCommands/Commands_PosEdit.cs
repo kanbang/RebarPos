@@ -16,6 +16,15 @@ namespace RebarPosCommands
                 {
                     RebarPos pos = tr.GetObject(id, OpenMode.ForRead) as RebarPos;
                     if (pos == null) return false;
+                    PosShape shape = tr.GetObject(pos.ShapeId, OpenMode.ForRead) as PosShape;
+                    if (shape == null) return false;
+
+                    EditPosForm form = new EditPosForm();
+                    form.SetPos(pos, shape);
+                    if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
+                    {
+                        ;
+                    }
                 }
                 catch (System.Exception ex)
                 {
