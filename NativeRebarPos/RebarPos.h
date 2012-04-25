@@ -84,6 +84,8 @@ private:
 	Adesk::UInt16 lastGroupColor;
 	Adesk::UInt16 lastMultiplierColor;
 	Adesk::Boolean lastCurrentGroup;
+	double circleRadius;
+	double partSpacing;
 
 private:
 	/// Property backing fields

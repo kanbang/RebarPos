@@ -73,7 +73,8 @@ CRebarPos::CRebarPos() :
 	m_DisplayStyle(CRebarPos::ALL), isModified(true), m_Length(NULL), m_Key(NULL),
 	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), m_Multiplier(1), 
 	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL),
-	m_ShapeID(AcDbObjectId::kNull), m_GroupID(AcDbObjectId::kNull)
+	m_ShapeID(AcDbObjectId::kNull), m_GroupID(AcDbObjectId::kNull), 
+	circleRadius(1.125), partSpacing(0.15)
 {
 }
 
@@ -603,24 +604,58 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 {
     assertReadEnabled();
 
-	// TODO: Fix this
-    Acad::ErrorStatus es = Acad::eOk;
+	if(lastDrawList.size() == 0)
+	{
+		return Acad::eInvalidInput;
+	}
 
-    AcDbText *text ;
+	Acad::ErrorStatus es;
 
-    if ((m_Pos != NULL) && (m_Pos[0] != _T('\0')))
-    {
-		/*
-        if (mTextStyle != AcDbObjectId::kNull)
-            text = new AcDbText(m_BasePoint, m_Pos, mTextStyle, 0, direction.angleTo (AcGeVector3d (1, 0, 0)));
-        else
-            text = new AcDbText(m_BasePoint, m_Pos, mTextStyle, direction.length() / 20, direction.angleTo (AcGeVector3d (1, 0, 0)));
-		*/
-		text = new AcDbText(m_BasePoint, m_Pos, AcDbObjectId::kNull, direction.length() / 20, direction.angleTo(AcGeVector3d(1, 0, 0)));
-        entitySet.append(text) ;
-    }
+	// Open group and style
+	AcDbObjectPointer<CPosGroup> pGroup (m_GroupID, AcDb::kForRead);
+	if((es = pGroup.openStatus()) != Acad::eOk)
+	{
+		return es;
+	}
+	AcDbObjectPointer<CPosStyle> pStyle (pGroup->StyleId(), AcDb::kForRead);
+	if((es = pStyle.openStatus()) != Acad::eOk)
+	{
+		return es;
+	}
+	AcDbObjectId textStyle = pStyle->TextStyleId();
+	AcDbObjectId noteStyle = pStyle->NoteStyleId();
 
-    return es;
+	// Transformations
+	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
+	trans.setCoordSystem(m_BasePoint, direction, up, norm);
+	AcGeMatrix3d noteTrans = AcGeMatrix3d::kIdentity;
+	noteTrans.setCoordSystem(m_NoteGrip, direction, up, norm);
+
+    AcDbText* text;
+	CDrawParams p;
+	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+	{
+		p = lastDrawList[i];
+		text = new AcDbText(AcGePoint3d(p.x, p.y, 0), p.text, textStyle, 1.0);
+		text->setColorIndex(p.color);
+		text->transformBy(trans);
+		entitySet.append(text);
+		if(p.hasCircle)
+		{
+			AcDbCircle* circle;
+			circle = new AcDbCircle(AcGePoint3d(p.x + p.w / 2, p.y + p.h / 2, 0), AcGeVector3d::kZAxis, circleRadius);
+			circle->setColorIndex(lastCircleColor);
+			circle->transformBy(trans);
+			entitySet.append(circle);
+		}
+	}
+	p = lastNoteDraw;
+	text = new AcDbText(AcGePoint3d(p.x, p.y, 0), p.text, noteStyle, 1.0 * pStyle->NoteScale());
+	text->setColorIndex(p.color);
+	text->transformBy(noteTrans);
+	entitySet.append(text);
+
+    return Acad::eOk;
 }
 
 Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
@@ -670,7 +705,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 		AcDbObjectPointer<CPosGroup> pGroup (m_GroupID, AcDb::kForRead);
 		if((es = pGroup.openStatus()) != Acad::eOk)
 		{
-			return Adesk::kTrue;
+			return es;
 		}
 		styleID = pGroup->StyleId();
 		lastCurrentGroup = pGroup->Current();
@@ -683,7 +718,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 		AcDbObjectPointer<CPosStyle> pStyle (styleID, AcDb::kForRead);
 		if((es = pStyle.openStatus()) != Acad::eOk)
 		{
-			return Adesk::kTrue;
+			return es;
 		}
 
 		// Create text styles
@@ -693,8 +728,8 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 			Utility::MakeGiTextStyle(lastNoteStyle, pStyle->NoteStyleId());
 		lastTextStyle.setTextSize(1.0);
 		lastNoteStyle.setTextSize(1.0 * pStyle->NoteScale());
-		lastTextStyle.loadStyleRec(database());
-		lastNoteStyle.loadStyleRec(database());
+		lastTextStyle.loadStyleRec();
+		lastNoteStyle.loadStyleRec();
 
 		// Calculate lengths if modified
 		if(isModified)
@@ -745,8 +780,6 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 		lastNoteDraw.color = pStyle->NoteColor();
 	}
 
-	double circleRadius = 1.125;
-	double partSpacing = 0.15;
 	// Transform to match object orientation
 	worldDraw->geometry().pushModelTransform(trans);
 	// Measure items
