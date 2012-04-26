@@ -68,14 +68,25 @@ namespace RebarPosCommands
             arcs = new List<DrawArc>();
             texts = new List<DrawText>();
 
-            Selected = false;
-            SelectionColor = SystemColors.Highlight;
+            m_Name = "";
+            m_ShowName = false;
+            m_Selected = false;
+            m_SelectionColor = SystemColors.Highlight;
         }
 
+        private string m_Name;
+        private bool m_ShowName;
+        private bool m_Selected;
+        private Color m_SelectionColor;
+
+        [Browsable(true), Category("Appearance"), DefaultValue("")]
+        public string ShapeName { get { return m_Name; } set { m_Name = value; Refresh(); } }
         [Browsable(true), Category("Appearance"), DefaultValue(false)]
-        public bool Selected { get; set; }
+        public bool ShowName { get { return m_ShowName; } set { m_ShowName = value; Refresh(); } }
+        [Browsable(true), Category("Appearance"), DefaultValue(false)]
+        public bool Selected { get { return m_Selected; } set { m_Selected = value; Refresh(); } }
         [Browsable(true), Category("Appearance"), DefaultValue(typeof(Color), "Highlight")]
-        public Color SelectionColor { get; set; }
+        public Color SelectionColor { get { return m_SelectionColor; } set { m_SelectionColor = value; Refresh(); } }
 
         public void Reset()
         {
@@ -93,11 +104,13 @@ namespace RebarPosCommands
         public void AddArc(Color color, float x, float y, float r, float startAngle, float endAngle)
         {
             arcs.Add(new DrawArc(color, x, y, r, startAngle, endAngle));
+            Refresh();
         }
 
         public void AddText(Color color, float x, float y, float height, string text)
         {
             texts.Add(new DrawText(color, x, y, height, text));
+            Refresh();
         }
 
         private void PosShapeView_Paint(object sender, PaintEventArgs e)
@@ -106,9 +119,9 @@ namespace RebarPosCommands
             g.Clear(BackColor);
 
             // Selection mark
-            if (Selected)
+            if (m_Selected)
             {
-                using (HatchBrush brush = new HatchBrush(HatchStyle.DarkDownwardDiagonal, SelectionColor, BackColor))
+                using (HatchBrush brush = new HatchBrush(HatchStyle.DarkDownwardDiagonal, m_SelectionColor, BackColor))
                 {
                     g.FillRectangle(brush, ClientRectangle);
                 }

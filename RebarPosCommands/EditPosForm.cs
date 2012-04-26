@@ -7,11 +7,14 @@ using System.Text;
 using System.Windows.Forms;
 using OZOZ.RebarPosWrapper;
 using Autodesk.AutoCAD.EditorInput;
+using Autodesk.AutoCAD.DatabaseServices;
 
 namespace RebarPosCommands
 {
     public partial class EditPosForm : Form
     {
+        Autodesk.AutoCAD.DatabaseServices.ObjectId m_Group;
+        Autodesk.AutoCAD.DatabaseServices.ObjectId m_Shape;
         Dictionary<string, Autodesk.AutoCAD.DatabaseServices.ObjectId> m_Groups;
         Dictionary<string, Autodesk.AutoCAD.DatabaseServices.ObjectId> m_Shapes;
 
@@ -35,12 +38,14 @@ namespace RebarPosCommands
             txtPosNote.Text = pos.Note;
 
             m_Groups = groups;
+            m_Group = pos.GroupId;
             foreach (string name in m_Groups.Keys)
             {
                 cbGroup.Items.Add(name);
             }
             int precision = group.Precision;
             m_Shapes = shapes;
+            m_Shape = pos.ShapeId;
             string shapename = "";
             foreach (KeyValuePair<string, Autodesk.AutoCAD.DatabaseServices.ObjectId> pair in m_Shapes)
             {
@@ -76,26 +81,7 @@ namespace RebarPosCommands
             else
                 lblTotalLength.Text = pos.MinLength.ToString("F" + precision.ToString());
 
-            for (int i = 0; i < shape.Items.Count; i++)
-            {
-                PosShape.Shape sh = shape.Items[i];
-                Color color = sh.Color.ColorValue;
-                if (sh is PosShape.ShapeLine)
-                {
-                    PosShape.ShapeLine line = sh as PosShape.ShapeLine;
-                    posShapeView.AddLine(color, (float)line.X1, (float)line.Y1, (float)line.X2, (float)line.Y2);
-                }
-                else if (sh is PosShape.ShapeArc)
-                {
-                    PosShape.ShapeArc arc = sh as PosShape.ShapeArc;
-                    posShapeView.AddArc(color, (float)arc.X, (float)arc.Y, (float)arc.R, (float)arc.StartAngle, (float)arc.EndAngle);
-                }
-                else if (sh is PosShape.ShapeText)
-                {
-                    PosShape.ShapeText text = sh as PosShape.ShapeText;
-                    posShapeView.AddText(color, (float)text.X, (float)text.Y, (float)text.Height, text.Text);
-                }
-            }
+            UpdateShapeView();
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -114,6 +100,57 @@ namespace RebarPosCommands
             Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
             PromptEntityResult per = ed.GetEntity("\nSelect entity: ");
             Show();
+        }
+
+        private void posShapeView_Click(object sender, EventArgs e)
+        {
+            SelectShapeForm form = new SelectShapeForm();
+            form.SetShapes(m_Shape);
+            if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
+            {
+                m_Shape = form.Current;
+                UpdateShapeView();
+            }
+        }
+
+        private void UpdateShapeView()
+        {
+            posShapeView.Reset();
+
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    PosShape shape = tr.GetObject(m_Shape, OpenMode.ForRead) as PosShape;
+                    if (shape == null)
+                        return;
+                    for (int i = 0; i < shape.Items.Count; i++)
+                    {
+                        PosShape.Shape sh = shape.Items[i];
+                        Color color = sh.Color.ColorValue;
+                        if (sh is PosShape.ShapeLine)
+                        {
+                            PosShape.ShapeLine line = sh as PosShape.ShapeLine;
+                            posShapeView.AddLine(color, (float)line.X1, (float)line.Y1, (float)line.X2, (float)line.Y2);
+                        }
+                        else if (sh is PosShape.ShapeArc)
+                        {
+                            PosShape.ShapeArc arc = sh as PosShape.ShapeArc;
+                            posShapeView.AddArc(color, (float)arc.X, (float)arc.Y, (float)arc.R, (float)arc.StartAngle, (float)arc.EndAngle);
+                        }
+                        else if (sh is PosShape.ShapeText)
+                        {
+                            PosShape.ShapeText text = sh as PosShape.ShapeText;
+                            posShapeView.AddText(color, (float)text.X, (float)text.Y, (float)text.Height, text.Text);
+                        }
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
     }
 }
