@@ -12,7 +12,7 @@ namespace RebarPosCommands
         {
             EditPosForm form = new EditPosForm();
 
-            if (form.SetPos(id, pt))
+            if (form.Init(id, pt))
             {
                 if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
                 {

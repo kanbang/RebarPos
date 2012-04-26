@@ -30,10 +30,31 @@ namespace RebarPosCommands
         {
             DWGUtility.CreateDefaultShapes();
             DWGUtility.CreateDefaultStyles();
-            DWGUtility.CreateDefaultGroups();
+            CurrentGroupId = DWGUtility.CreateDefaultGroups();
+
+            CurrentGroupName = "";
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
+                    if (namedDict.Contains(PosGroup.TableName))
+                    {
+                        DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosGroup.TableName), OpenMode.ForRead);
+                        if (dict.Contains(CurrentGroupId))
+                            CurrentGroupName = dict.NameAt(CurrentGroupId);
+                    }
+                }
+                catch
+                {
+                    ;
+                }
+            }
         }
 
-        private string CurrentGroup { get; set; }
+        private string CurrentGroupName { get; set; }
+        private ObjectId CurrentGroupId { get; set; }
 
         [CommandMethod("RebarPos", "POS", "POS_Local", CommandFlags.Modal)]
         public void CMD_Pos()
@@ -41,8 +62,7 @@ namespace RebarPosCommands
             bool cont = true;
             while (cont)
             {
-                // AcString group = DWGUtility::ReadSettings().CurrentGroup;
-                PromptEntityOptions opts = new PromptEntityOptions("Poz secin veya [Yeni/Numaralandir/Kopyala/Grup (" + CurrentGroup + ")/Metraj/bul Degistir/Balon sil/Cizim/Secenekler/Acilimlar/Poz stili]: ",
+                PromptEntityOptions opts = new PromptEntityOptions("Poz secin veya [Yeni/Numaralandir/Kopyala/Grup/Metraj/bul Degistir/Balon sil/Cizim/Secenekler/Acilimlar/Poz stili]: ",
                     "New Numbering Copy Group BOM Find Empty Draw Options Shapes Pos");
                 PromptEntityResult result = Application.DocumentManager.MdiActiveDocument.Editor.GetEntity(opts);
 
@@ -60,7 +80,7 @@ namespace RebarPosCommands
                             // CopyPos();
                             break;
                         case "Group":
-                            // PosGroup();
+                            PosGroups();
                             break;
                         case "BOM":
                             // DrawBOM();
@@ -112,6 +132,12 @@ namespace RebarPosCommands
         public void CMD_NewPos()
         {
             NewPos();
+        }
+
+        [CommandMethod("RebarPos", "POSGROUP", "POSGROUP_Local", CommandFlags.Modal)]
+        public void CMD_PosGroups()
+        {
+            PosGroups();
         }
 
         [CommandMethod("RebarPos", "EMPTYPOS", "EMPTYPOS_Local", CommandFlags.Modal)]

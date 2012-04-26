@@ -244,11 +244,13 @@ namespace RebarPosCommands
                     DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
                     if (namedDict.Contains(dictName))
                     {
-                        DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosGroup.TableName), OpenMode.ForRead);
-                        DbDictionaryEnumerator it = dict.GetEnumerator();
-                        while (it.MoveNext())
+                        DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(dictName), OpenMode.ForRead);
+                        using (DbDictionaryEnumerator it = dict.GetEnumerator())
                         {
-                            list.Add(it.Key, it.Value);
+                            while (it.MoveNext())
+                            {
+                                list.Add(it.Key, it.Value);
+                            }
                         }
                     }
                 }

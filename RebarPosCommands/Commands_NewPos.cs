@@ -19,7 +19,6 @@ namespace RebarPosCommands
                 {
                     try
                     {
-                        //Open the block table record model space for write
                         BlockTableRecord btr = (BlockTableRecord)tr.GetObject(db.CurrentSpaceId, OpenMode.ForWrite);
 
                         Point3d pt = result.Value;

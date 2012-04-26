@@ -31,7 +31,7 @@ namespace RebarPosCommands
             m_Shapes = new Dictionary<string, ObjectId>();
         }
 
-        public bool SetPos(ObjectId id, Point3d pt)
+        public bool Init(ObjectId id, Point3d pt)
         {
             Database db = HostApplicationServices.WorkingDatabase;
             using (Transaction tr = db.TransactionManager.StartTransaction())

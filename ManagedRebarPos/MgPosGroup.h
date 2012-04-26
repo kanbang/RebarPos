@@ -29,7 +29,7 @@ namespace OZOZ
 		public:
 			enum class DrawingUnits
 			{ 
-				Milimeter = 0,
+				Millimeter = 0,
 				Centimeter = 1,
 				Decimeter = 2,
 				Meter = 3,
