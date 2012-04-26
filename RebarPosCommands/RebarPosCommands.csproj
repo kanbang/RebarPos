@@ -41,6 +41,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AcCui, Version=18.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\inc-win32\AcCui.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="AcDbMgd, Version=18.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\inc-x64\AcDbMgd.dll</HintPath>
@@ -81,6 +86,7 @@
     <Compile Include="GroupForm.Designer.cs">
       <DependentUpon>GroupForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="myPlugin.cs" />
     <Compile Include="PosShapeView.cs">
       <SubType>UserControl</SubType>
     </Compile>
