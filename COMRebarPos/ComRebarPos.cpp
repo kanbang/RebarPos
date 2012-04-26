@@ -451,7 +451,7 @@ STDMETHODIMP CComRebarPos::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VAR
 		break;
 	case DISPID_GROUP:
 	    assert((INT_PTR)dwCookie >= 0);
-		assert((INT_PTR)dwCookie < mShapeIdArray.length());
+		assert((INT_PTR)dwCookie < mGroupIdArray.length());
 	    id = mGroupIdArray[dwCookie];
 
 		pDb = m_objRef.objectId().database();
@@ -933,9 +933,9 @@ STDMETHODIMP CComRebarPos::put_DisplayStyle(BSTR pVal)
             throw es;
         
         USES_CONVERSION;
-		if(pVal == L"Normal")
+		if(wcscmp(pVal, L"Normal") == 0)
 			es = pRebarPos->setDisplay(CRebarPos::ALL);
-		else if(pVal == L"Toplam Boyu Gösterme")
+		else if(wcscmp(pVal, L"Toplam Boyu Gösterme") == 0)
 			es = pRebarPos->setDisplay(CRebarPos::WITHOUTLENGTH);
 		else
 			es = pRebarPos->setDisplay(CRebarPos::MARKERONLY);
