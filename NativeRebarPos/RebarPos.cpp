@@ -451,6 +451,7 @@ const double CRebarPos::MaxLength(void) const
 /// Determines which part is under the given point
 const CRebarPos::PosSubEntityType CRebarPos::HitTest(const AcGePoint3d& pt0) const
 {
+	// Transform to text coordinate system
 	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
 	trans.setCoordSystem(m_BasePoint, direction, up, norm);
 	if(trans.isSingular())
@@ -461,13 +462,9 @@ const CRebarPos::PosSubEntityType CRebarPos::HitTest(const AcGePoint3d& pt0) con
 	AcGePoint3d pt(pt0);
 	pt.transformBy(trans);
 		
-	if(lastDrawList.size() == 0)
+	CDrawParams p;
+	if(lastDrawList.size() != 0)
 	{
-		return CRebarPos::NONE;
-	}
-	else
-	{
-		CDrawParams p;
 		for(DrawListSize i = 0; i < lastDrawList.size(); i++)
 		{
 			p = lastDrawList[i];
@@ -476,11 +473,34 @@ const CRebarPos::PosSubEntityType CRebarPos::HitTest(const AcGePoint3d& pt0) con
 				return (CRebarPos::PosSubEntityType)p.type;
 			}
 		}
-		p = lastNoteDraw;
-		if(pt.x > p.x && pt.x <= p.x + p.w && pt.y > p.y && pt.y < p.y + p.h)
-		{
-			return CRebarPos::NOTE;
-		}
+	}
+	// Check group text
+	p = lastGroupDraw;
+	if(pt.x > p.x && pt.x <= p.x + p.w && pt.y > p.y && pt.y < p.y + p.h)
+	{
+		return CRebarPos::GROUP;
+	}
+	// Check multiplier text
+	p = lastMultiplierDraw;
+	if(pt.x > p.x && pt.x <= p.x + p.w && pt.y > p.y && pt.y < p.y + p.h)
+	{
+		return CRebarPos::MULTIPLIER;
+	}
+
+	// Transform to note coordinate system
+	trans = AcGeMatrix3d::kIdentity;
+	trans.setCoordSystem(m_NoteGrip, direction, up, norm);
+	if(trans.isSingular())
+	{
+		return CRebarPos::NONE;
+	}
+	trans.invert();
+	pt = pt0;
+	pt.transformBy(trans);
+	p = lastNoteDraw;
+	if(pt.x > p.x && pt.x <= p.x + p.w && pt.y > p.y && pt.y < p.y + p.h)
+	{
+		return CRebarPos::NOTE;
 	}
 
 	return CRebarPos::NONE;
@@ -730,14 +750,14 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	if(!worldDraw->isDragging())
 	{
 		// Get group name
-		lastGroupName.setEmpty();
+		lastGroupDraw.text.setEmpty();
 		AcDbObjectPointer<AcDbDictionary> pNamedObj (database()->namedObjectsDictionaryId(), AcDb::kForRead);
 		if(pNamedObj->has(CPosGroup::GetTableName()))
 		{
 			AcDbDictionary* pDict;
 			if((es = pNamedObj->getAt(CPosGroup::GetTableName(), (AcDbObject *&)pDict, AcDb::kForRead)) == Acad::eOk)
 			{
-				pDict->nameAt(m_GroupID, lastGroupName);
+				pDict->nameAt(m_GroupID, lastGroupDraw.text);
 				pDict->close();
 			}
 		}
@@ -793,12 +813,17 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 				lastDrawList = ParseFormula(pStyle->FormulaPosOnly());
 			}
 			lastNoteDraw.text = m_Note;
+
+			if(m_Multiplier == 0)
+				lastMultiplierDraw.text = _T("-");
+			else
+				lastMultiplierDraw.text.format(_T("%dx"), m_Multiplier);
 		}
 
 		// Set colors
 		lastCircleColor = pStyle->CircleColor();
-		lastGroupColor = pStyle->GroupColor();
-		lastMultiplierColor = pStyle->MultiplierColor();
+		lastGroupDraw.color = pStyle->GroupColor();
+		lastMultiplierDraw.color = pStyle->MultiplierColor();
 		lastGroupHighlightColor = pStyle->CurrentGroupHighlightColor();
 		for(DrawListSize i = 0; i < lastDrawList.size(); i++)
 		{
@@ -852,6 +877,21 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 		}
 		lastDrawList[i] = p;
 	}
+	// Measure group text
+	lastTextStyle.setTextSize(0.4);
+	lastTextStyle.loadStyleRec();
+	AcGePoint2d gext = lastTextStyle.extents(lastGroupDraw.text, Adesk::kTrue, -1, Adesk::kFalse);
+	lastGroupDraw.x = 0;
+	lastGroupDraw.y = -0.8;
+	lastGroupDraw.w = gext.x;
+	lastGroupDraw.h = gext.y;
+    // Measure multiplier text
+	AcGePoint2d mext = lastTextStyle.extents(lastMultiplierDraw.text, Adesk::kTrue, -1, Adesk::kFalse);
+	lastMultiplierDraw.x = 0;
+	lastMultiplierDraw.y = 1.4;
+	lastMultiplierDraw.w = gext.x;
+	lastMultiplierDraw.h = gext.y;
+
 	// Reset transform
 	worldDraw->geometry().popModelTransform();
 
@@ -863,6 +903,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	lastNoteDraw.y = 0;
 	lastNoteDraw.w = noteExt.x;
 	lastNoteDraw.h = noteExt.y;
+
 	// Reset transform
 	worldDraw->geometry().popModelTransform();
 
@@ -892,6 +933,8 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	}
 	// Draw items
 	worldDraw->subEntityTraits().setLayer(zero);
+	lastTextStyle.setTextSize(1.0);
+	lastTextStyle.loadStyleRec();
 	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
 	{
 		CDrawParams p = lastDrawList.at(i);
@@ -907,16 +950,11 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	worldDraw->subEntityTraits().setLayer(defpoints);
 	lastTextStyle.setTextSize(0.4);
 	lastTextStyle.loadStyleRec();
-	worldDraw->subEntityTraits().setColor(lastGroupColor);
-	worldDraw->geometry().text(AcGePoint3d(0, -0.8, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastGroupName, -1, Adesk::kFalse, lastTextStyle);
+	worldDraw->subEntityTraits().setColor(lastGroupDraw.color);
+	worldDraw->geometry().text(AcGePoint3d(lastGroupDraw.x, lastGroupDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastGroupDraw.text, -1, Adesk::kFalse, lastTextStyle);
 	// Multiplier
-    worldDraw->subEntityTraits().setColor(lastMultiplierColor);
-	AcString text;
-	if(m_Multiplier == 0)
-		text = _T("-");
-	else
-		text.format(_T("%dx"), m_Multiplier);
-	worldDraw->geometry().text(AcGePoint3d(0, 1.4, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, text, text.length(), Adesk::kFalse, lastTextStyle);
+	worldDraw->subEntityTraits().setColor(lastMultiplierDraw.color);
+	worldDraw->geometry().text(AcGePoint3d(lastMultiplierDraw.x, lastMultiplierDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastMultiplierDraw.text, -1, Adesk::kFalse, lastTextStyle);
 	// Reset transform
 	worldDraw->geometry().popModelTransform();
 

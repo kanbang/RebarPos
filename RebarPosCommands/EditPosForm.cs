@@ -19,6 +19,7 @@ namespace RebarPosCommands
         ObjectId m_Shape;
         Dictionary<string, ObjectId> m_Groups;
         Dictionary<string, ObjectId> m_Shapes;
+        RebarPos.HitTestResult hit;
 
         public EditPosForm()
         {
@@ -121,6 +122,8 @@ namespace RebarPosCommands
                         lblTotalLength.Text = pos.MinLength.ToString("F" + precision.ToString()) + "~" + pos.MaxLength.ToString("F" + precision.ToString());
                     else
                         lblTotalLength.Text = pos.MinLength.ToString("F" + precision.ToString());
+
+                    hit = pos.HitTest(pt);
                 }
                 catch (System.Exception ex)
                 {
@@ -284,6 +287,44 @@ namespace RebarPosCommands
             {
                 chkIncludePos.Checked = false;
                 txtPosMultiplier.Enabled = false;
+            }
+        }
+
+        private void EditPosForm_Activated(object sender, EventArgs e)
+        {
+            switch (hit)
+            {
+                case RebarPos.HitTestResult.Count:
+                    txtPosCount.SelectAll();
+                    txtPosCount.Focus();
+                    break;
+                case RebarPos.HitTestResult.Diameter:
+                    txtPosDiameter.SelectAll();
+                    txtPosDiameter.Focus();
+                    break;
+                case RebarPos.HitTestResult.Length:
+                    txtA.SelectAll();
+                    txtA.Focus();
+                    break;
+                case RebarPos.HitTestResult.Group:
+                    cbGroup.Focus();
+                    break;
+                case RebarPos.HitTestResult.Multiplier:
+                    txtPosMultiplier.SelectAll();
+                    txtPosMultiplier.Focus();
+                    break;
+                case RebarPos.HitTestResult.Note:
+                    txtPosNote.SelectAll();
+                    txtPosNote.Focus();
+                    break;
+                case RebarPos.HitTestResult.Pos:
+                    txtPosMarker.SelectAll();
+                    txtPosMarker.Focus();
+                    break;
+                case RebarPos.HitTestResult.Spacing:
+                    txtPosSpacing.SelectAll();
+                    txtPosSpacing.Focus();
+                    break;
             }
         }
     }

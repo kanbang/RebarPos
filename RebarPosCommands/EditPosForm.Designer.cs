@@ -701,6 +701,7 @@
             this.Name = "EditPosForm";
             this.ShowInTaskbar = false;
             this.Text = "Poz Edit";
+            this.Activated += new System.EventHandler(this.EditPosForm_Activated);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);

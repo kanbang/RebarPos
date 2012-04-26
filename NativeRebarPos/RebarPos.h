@@ -75,15 +75,14 @@ public:
 
 private:
 	/// Used to cache last draw params
-	AcString lastGroupName;
 	DrawList lastDrawList;
 	CDrawParams lastNoteDraw;
+	CDrawParams lastGroupDraw;
+	CDrawParams lastMultiplierDraw;
     AcGiTextStyle lastTextStyle;
     AcGiTextStyle lastNoteStyle;
 	Adesk::UInt16 lastCircleColor;
 	Adesk::UInt16 lastGroupHighlightColor;
-	Adesk::UInt16 lastGroupColor;
-	Adesk::UInt16 lastMultiplierColor;
 	Adesk::Boolean lastCurrentGroup;
 	double circleRadius;
 	double partSpacing;
