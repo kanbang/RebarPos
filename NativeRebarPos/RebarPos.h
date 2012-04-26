@@ -75,15 +75,18 @@ public:
 
 private:
 	/// Used to cache last draw params
-	DrawList lastDrawList;
-	CDrawParams lastNoteDraw;
-	CDrawParams lastGroupDraw;
-	CDrawParams lastMultiplierDraw;
-    AcGiTextStyle lastTextStyle;
-    AcGiTextStyle lastNoteStyle;
-	Adesk::UInt16 lastCircleColor;
-	Adesk::UInt16 lastGroupHighlightColor;
-	Adesk::Boolean lastCurrentGroup;
+	mutable DrawList lastDrawList;
+	mutable CDrawParams lastNoteDraw;
+	mutable CDrawParams lastGroupDraw;
+	mutable CDrawParams lastMultiplierDraw;
+    mutable AcGiTextStyle lastTextStyle;
+    mutable AcGiTextStyle lastNoteStyle;
+	mutable Adesk::UInt16 lastCircleColor;
+	mutable Adesk::UInt16 lastGroupHighlightColor;
+	mutable Adesk::Boolean lastCurrentGroup;
+	mutable AcDbObjectId zeroLayer;
+	mutable AcDbObjectId defpointsLayer;
+	mutable double lastNoteScale;
 	double circleRadius;
 	double partSpacing;
 

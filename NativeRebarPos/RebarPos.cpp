@@ -75,7 +75,8 @@ CRebarPos::CRebarPos() :
 	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), m_Multiplier(1), 
 	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), m_IsVarLength(false),
 	m_ShapeID(AcDbObjectId::kNull), m_GroupID(AcDbObjectId::kNull), 
-	circleRadius(1.125), partSpacing(0.15), m_MinLength(0), m_MaxLength(0)
+	circleRadius(1.125), partSpacing(0.15), m_MinLength(0), m_MaxLength(0),
+	zeroLayer(AcDbObjectId::kNull), defpointsLayer(AcDbObjectId::kNull)
 {
 }
 
@@ -429,18 +430,21 @@ const ACHAR* CRebarPos::PosKey() const
 const bool CRebarPos::IsVarLength(void) const
 {
 	assertReadEnabled();
+	Calculate();
 	return m_IsVarLength;
 }
 
 const double CRebarPos::MinLength(void) const
 {
 	assertReadEnabled();
+	Calculate();
 	return m_MinLength;
 }
 
 const double CRebarPos::MaxLength(void) const
 {
 	assertReadEnabled();
+	Calculate();
 	return m_MaxLength;
 }
 
@@ -629,7 +633,7 @@ void CRebarPos::subList() const
 	if(!m_ShapeID.isNull())
 	{
 		Acad::ErrorStatus es;
-		AcDbObjectPointer<AcDbDictionary> pNamedObj (database()->namedObjectsDictionaryId(), AcDb::kForRead);
+		AcDbObjectPointer<AcDbDictionary> pNamedObj (acdbHostApplicationServices()->workingDatabase()->namedObjectsDictionaryId(), AcDb::kForRead);
 		if((es = pNamedObj.openStatus()) == Acad::eOk)
 		{
 			AcDbDictionary* pDict = NULL;
@@ -729,123 +733,22 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
         return Adesk::kTrue;
     }
 
-	if(m_GroupID.isNull())
-	{
-		return Adesk::kTrue;
-	}
-
-	Acad::ErrorStatus es;
-
-	// Get layers
-	AcDbObjectId zero = Utility::GetZeroLayer();
-	AcDbObjectId defpoints = Utility::GetDefpointsLayer();
-
 	// Transformations
 	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
 	trans.setCoordSystem(m_BasePoint, direction, up, norm);
 	AcGeMatrix3d noteTrans = AcGeMatrix3d::kIdentity;
 	noteTrans.setCoordSystem(m_NoteGrip, direction, up, norm);
-
+	worldDraw->geometry().circle(AcGePoint3d(0,0,0),1,AcGeVector3d::kZAxis);
 	// Update if required
-	if(!worldDraw->isDragging())
+	if(isModified)
 	{
-		// Get group name
-		lastGroupDraw.text.setEmpty();
-		AcDbObjectPointer<AcDbDictionary> pNamedObj (database()->namedObjectsDictionaryId(), AcDb::kForRead);
-		if(pNamedObj->has(CPosGroup::GetTableName()))
-		{
-			AcDbDictionary* pDict;
-			if((es = pNamedObj->getAt(CPosGroup::GetTableName(), (AcDbObject *&)pDict, AcDb::kForRead)) == Acad::eOk)
-			{
-				pDict->nameAt(m_GroupID, lastGroupDraw.text);
-				pDict->close();
-			}
-		}
-
-		// Open group and get style id
-		AcDbObjectId styleID = AcDbObjectId::kNull;
-		AcDbObjectPointer<CPosGroup> pGroup (m_GroupID, AcDb::kForRead);
-		if((es = pGroup.openStatus()) != Acad::eOk)
-		{
-			return es;
-		}
-		styleID = pGroup->StyleId();
-		lastCurrentGroup = pGroup->Current();
-		if(styleID.isNull())
-		{
-			return Adesk::kTrue;
-		}
-
-		// Open style
-		AcDbObjectPointer<CPosStyle> pStyle (styleID, AcDb::kForRead);
-		if((es = pStyle.openStatus()) != Acad::eOk)
-		{
-			return es;
-		}
-
-		// Create text styles
-		if (pStyle->TextStyleId() != AcDbObjectId::kNull)
-			Utility::MakeGiTextStyle(lastTextStyle, pStyle->TextStyleId());
-		if (pStyle->NoteStyleId() != AcDbObjectId::kNull)
-			Utility::MakeGiTextStyle(lastNoteStyle, pStyle->NoteStyleId());
-		lastTextStyle.setTextSize(1.0);
-		lastNoteStyle.setTextSize(1.0 * pStyle->NoteScale());
-		lastTextStyle.loadStyleRec();
-		lastNoteStyle.loadStyleRec();
-
-		// Calculate lengths if modified
-		if(isModified)
-		{
-			Calculate();
-
-			// Rebuild draw list
-			lastDrawList.clear();
-			if(m_DisplayStyle == CRebarPos::ALL && pStyle->Formula() != NULL)
-			{
-				lastDrawList = ParseFormula(pStyle->Formula());
-			}
-			else if(m_DisplayStyle == CRebarPos::WITHOUTLENGTH && pStyle->FormulaWithoutLength() != NULL)
-			{
-				lastDrawList = ParseFormula(pStyle->FormulaWithoutLength());
-			}
-			else if(m_DisplayStyle == CRebarPos::MARKERONLY && pStyle->FormulaPosOnly() != NULL)
-			{
-				lastDrawList = ParseFormula(pStyle->FormulaPosOnly());
-			}
-			lastNoteDraw.text = m_Note;
-
-			if(m_Multiplier == 0)
-				lastMultiplierDraw.text = _T("-");
-			else
-				lastMultiplierDraw.text.format(_T("%dx"), m_Multiplier);
-		}
-
-		// Set colors
-		lastCircleColor = pStyle->CircleColor();
-		lastGroupDraw.color = pStyle->GroupColor();
-		lastMultiplierDraw.color = pStyle->MultiplierColor();
-		lastGroupHighlightColor = pStyle->CurrentGroupHighlightColor();
-		for(DrawListSize i = 0; i < lastDrawList.size(); i++)
-		{
-			CDrawParams p = lastDrawList[i];
-			switch(p.type)
-			{
-			case CRebarPos::POS:
-				p.color = pStyle->PosColor();
-				break;
-			case CRebarPos::GROUP:
-				p.color = pStyle->GroupColor();
-				break;
-			case CRebarPos::MULTIPLIER:
-				p.color = pStyle->MultiplierColor();
-				break;
-			default:
-				p.color = pStyle->TextColor();
-			}
-			lastDrawList[i] = p;
-		}
-		lastNoteDraw.color = pStyle->NoteColor();
+		Calculate();
 	}
+
+	lastTextStyle.setTextSize(1.0);
+	lastNoteStyle.setTextSize(1.0 * lastNoteScale);
+	lastTextStyle.loadStyleRec();
+	lastNoteStyle.loadStyleRec();
 
 	// Transform to match object orientation
 	worldDraw->geometry().pushModelTransform(trans);
@@ -907,20 +810,20 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	// Reset transform
 	worldDraw->geometry().popModelTransform();
 
-	// Nothing to draw
+	// Quit if there is nothing to draw
 	if(lastDrawList.empty())
 	{
 		return Adesk::kTrue;
 	}
 
-	// Transform to match object orientation
+	// Transform to match text orientation
 	worldDraw->geometry().pushModelTransform(trans);
 	// Highlight current group
 	if(lastCurrentGroup == Adesk::kTrue)
 	{
 		AcGiFillType filltype = worldDraw->subEntityTraits().fillType();
 		worldDraw->subEntityTraits().setFillType(kAcGiFillAlways);
-		worldDraw->subEntityTraits().setLayer(defpoints);
+		worldDraw->subEntityTraits().setLayer(defpointsLayer);
 		worldDraw->subEntityTraits().setColor(lastGroupHighlightColor);
 		AcGePoint3d rec[4];
 		CDrawParams p = lastDrawList.at(lastDrawList.size() - 1);
@@ -932,7 +835,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 		worldDraw->subEntityTraits().setFillType(filltype);
 	}
 	// Draw items
-	worldDraw->subEntityTraits().setLayer(zero);
+	worldDraw->subEntityTraits().setLayer(zeroLayer);
 	lastTextStyle.setTextSize(1.0);
 	lastTextStyle.loadStyleRec();
 	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
@@ -947,7 +850,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 		}
 	}
 	// Group name
-	worldDraw->subEntityTraits().setLayer(defpoints);
+	worldDraw->subEntityTraits().setLayer(defpointsLayer);
 	lastTextStyle.setTextSize(0.4);
 	lastTextStyle.loadStyleRec();
 	worldDraw->subEntityTraits().setColor(lastGroupDraw.color);
@@ -962,7 +865,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	worldDraw->geometry().pushModelTransform(noteTrans);
 	// Draw note text
 	worldDraw->subEntityTraits().setColor(lastNoteDraw.color);
-	worldDraw->subEntityTraits().setLayer(zero);
+	worldDraw->subEntityTraits().setLayer(zeroLayer);
 	worldDraw->geometry().text(AcGePoint3d(lastNoteDraw.x, lastNoteDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, m_Note, -1, Adesk::kFalse, lastNoteStyle);
 	// Reset transform
 	worldDraw->geometry().popModelTransform();
@@ -1708,6 +1611,10 @@ const void CRebarPos::Calculate(void) const
 
 	assertReadEnabled();
 
+	// Layers
+	zeroLayer = Utility::GetZeroLayer();
+	defpointsLayer = Utility::GetDefpointsLayer();
+
 	// Open group and shape
 	Acad::ErrorStatus es;
 	AcDbObjectPointer<CPosGroup> pGroup (m_GroupID, AcDb::kForRead);
@@ -1715,6 +1622,7 @@ const void CRebarPos::Calculate(void) const
 	{
 		return;
 	}
+	lastCurrentGroup = pGroup->Current();
 	bool bending = (pGroup->Bending() == Adesk::kTrue);
 	int precision = pGroup->Precision();
 	CPosGroup::DrawingUnits drawingUnits = pGroup->DrawingUnit();
@@ -1734,6 +1642,42 @@ const void CRebarPos::Calculate(void) const
 		formula = pShape->Formula();
 	}
 	int fieldCount = pShape->Fields();
+
+	// Get group name
+	lastGroupDraw.text.setEmpty();
+	AcDbObjectPointer<AcDbDictionary> pNamedObj (acdbHostApplicationServices()->workingDatabase()->namedObjectsDictionaryId(), AcDb::kForRead);
+	if((es = pNamedObj.openStatus()) != Acad::eOk)
+	{
+		return;
+	}
+	AcDbObjectId dictId;
+	if((es = pNamedObj->getAt(CPosGroup::GetTableName(), dictId)) == Acad::eOk)
+	{
+		AcDbObjectPointer<AcDbDictionary> pDict(dictId, AcDb::kForRead);
+		if((es = pDict.openStatus()) == Acad::eOk)
+		{
+			pDict->nameAt(m_GroupID, lastGroupDraw.text);
+		}
+	}
+
+	// Open style
+	AcDbObjectId styleID = pGroup->StyleId();
+	if(styleID.isNull())
+	{
+		return;
+	}
+	AcDbObjectPointer<CPosStyle> pStyle (styleID, AcDb::kForRead);
+	if((es = pStyle.openStatus()) != Acad::eOk)
+	{
+		return;
+	}
+	lastNoteScale = pStyle->NoteScale();
+
+	// Create text styles
+	if (pStyle->TextStyleId() != AcDbObjectId::kNull)
+		Utility::MakeGiTextStyle(lastTextStyle, pStyle->TextStyleId());
+	if (pStyle->NoteStyleId() != AcDbObjectId::kNull)
+		Utility::MakeGiTextStyle(lastNoteStyle, pStyle->NoteStyleId());
 
 	// Scale from drawing units to MM
 	double scale = 1.0;
@@ -1790,6 +1734,54 @@ const void CRebarPos::Calculate(void) const
 	key = key.concat(m_A).concat(m_B).concat(m_C).concat(m_D).concat(m_E).concat(m_F);
 	acutUpdString(key, m_Key);
 
+	// Rebuild draw lists
+	lastDrawList.clear();
+	if(m_DisplayStyle == CRebarPos::ALL && pStyle->Formula() != NULL)
+	{
+		lastDrawList = ParseFormula(pStyle->Formula());
+	}
+	else if(m_DisplayStyle == CRebarPos::WITHOUTLENGTH && pStyle->FormulaWithoutLength() != NULL)
+	{
+		lastDrawList = ParseFormula(pStyle->FormulaWithoutLength());
+	}
+	else if(m_DisplayStyle == CRebarPos::MARKERONLY && pStyle->FormulaPosOnly() != NULL)
+	{
+		lastDrawList = ParseFormula(pStyle->FormulaPosOnly());
+	}
+	lastNoteDraw.text = m_Note;
+
+	if(m_Multiplier == 0)
+		lastMultiplierDraw.text = _T("-");
+	else
+		lastMultiplierDraw.text.format(_T("%dx"), m_Multiplier);
+
+	// Set colors
+	lastCircleColor = pStyle->CircleColor();
+	lastGroupDraw.color = pStyle->GroupColor();
+	lastMultiplierDraw.color = pStyle->MultiplierColor();
+	lastGroupHighlightColor = pStyle->CurrentGroupHighlightColor();
+	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+	{
+		CDrawParams p = lastDrawList[i];
+		switch(p.type)
+		{
+		case CRebarPos::POS:
+			p.color = pStyle->PosColor();
+			break;
+		case CRebarPos::GROUP:
+			p.color = pStyle->GroupColor();
+			break;
+		case CRebarPos::MULTIPLIER:
+			p.color = pStyle->MultiplierColor();
+			break;
+		default:
+			p.color = pStyle->TextColor();
+		}
+		lastDrawList[i] = p;
+	}
+	lastNoteDraw.color = pStyle->NoteColor();
+
+	// Done update
 	isModified = false;
 }
 
