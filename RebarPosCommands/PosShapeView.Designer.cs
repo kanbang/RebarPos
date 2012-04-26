@@ -36,7 +36,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.DoubleBuffered = true;
-            this.ShapeName = "PosShapeView";
+            this.ForeColor = System.Drawing.Color.White;
+            this.Name = "PosShapeView";
             this.Size = new System.Drawing.Size(298, 133);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.PosShapeView_Paint);
             this.ResumeLayout(false);

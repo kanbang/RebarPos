@@ -87,8 +87,7 @@ namespace RebarPosCommands
                 }
                 else if (result.Status == PromptStatus.OK)
                 {
-                    bool success = PosEdit(result.ObjectId, result.PickedPoint);
-                    cont = !success;
+                    PosEdit(result.ObjectId, result.PickedPoint);
                 }
                 else
                 {

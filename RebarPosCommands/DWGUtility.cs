@@ -2,6 +2,7 @@
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using OZOZ.RebarPosWrapper;
+using System.Collections.Generic;
 
 namespace RebarPosCommands
 {
@@ -229,6 +230,34 @@ namespace RebarPosCommands
             }
 
             return id;
+        }
+
+        // Returns all items in the dictionary.
+        public static Dictionary<string, ObjectId> GetDictionaryItems(string dictName)
+        {
+            Dictionary<string, ObjectId> list = new Dictionary<string, ObjectId>();
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
+                    if (namedDict.Contains(dictName))
+                    {
+                        DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosGroup.TableName), OpenMode.ForRead);
+                        DbDictionaryEnumerator it = dict.GetEnumerator();
+                        while (it.MoveNext())
+                        {
+                            list.Add(it.Key, it.Value);
+                        }
+                    }
+                }
+                catch
+                {
+                    ;
+                }
+            }
+            return list;
         }
     }
 }

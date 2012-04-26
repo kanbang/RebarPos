@@ -51,7 +51,7 @@ ACRX_DXF_DEFINE_MEMBERS(CPosGroup, AcDbObject,
 	|Company:          OZOZ");
 
 //-----------------------------------------------------------------------------
-CPosGroup::CPosGroup () : m_Bending(Adesk::kFalse), m_MaxBarLength(12),
+CPosGroup::CPosGroup () : m_Bending(Adesk::kFalse), m_MaxBarLength(12), m_Precision(2),
 m_DrawingUnit(CPosGroup::MM), m_DisplayUnit(CPosGroup::MM), m_StyleID(AcDbObjectId::kNull), m_Current(Adesk::kFalse)
 { }
 

@@ -121,16 +121,29 @@ namespace RebarPosCommands
             // Selection mark
             if (m_Selected)
             {
-                using (HatchBrush brush = new HatchBrush(HatchStyle.DarkDownwardDiagonal, m_SelectionColor, BackColor))
+                using (Pen pen = new Pen(m_SelectionColor, 2.0f))
                 {
-                    g.FillRectangle(brush, ClientRectangle);
+                    Rectangle rec = ClientRectangle;
+                    rec.Inflate(-2, -2);
+                    g.DrawRectangle(pen, rec);
                 }
             }
 
+            // Shape name
+            if (m_ShowName)
+            {
+                using (Brush brush = new SolidBrush(ForeColor))
+                {
+                    g.DrawString(m_Name, Font, brush, 5, 8);
+                }
+            }
+
+            bool hasEnt = false;
             // Calculate extents
             float xmin = float.MaxValue, xmax = float.MinValue, ymin = float.MaxValue, ymax = float.MinValue;
             foreach (DrawLine line in lines)
             {
+                hasEnt = true;
                 xmin = Math.Min(xmin, Math.Min(line.X1, line.X2));
                 xmax = Math.Max(xmax, Math.Max(line.X1, line.X2));
                 ymin = Math.Min(ymin, Math.Min(line.Y1, line.Y2));
@@ -138,6 +151,7 @@ namespace RebarPosCommands
             }
             foreach (DrawArc arc in arcs)
             {
+                hasEnt = true;
                 xmin = Math.Min(xmin, arc.X - arc.R);
                 xmax = Math.Max(xmax, arc.X + arc.R);
                 ymin = Math.Min(ymin, arc.Y - arc.R);
@@ -145,32 +159,36 @@ namespace RebarPosCommands
             }
             foreach (DrawText text in texts)
             {
+                hasEnt = true;
                 xmin = Math.Min(xmin, text.X - text.Height);
                 xmax = Math.Max(xmax, text.X + text.Height);
                 ymin = Math.Min(ymin, text.Y - text.Height);
                 ymax = Math.Max(ymax, text.Y + text.Height);
             }
+            if (!hasEnt)
+                return;
 
             // Calculate scale
-            float xscale = 0.9f * (float)ClientRectangle.Width / (xmax - xmin);
-            float yscale = 0.9f * (float)ClientRectangle.Height / (ymax - ymin);
+            float w = (float)ClientRectangle.Width;
+            float h = (float)ClientRectangle.Height;
+            if (m_ShowName)
+            {
+                h -= 15.0f;
+            }
+            float xscale = 0.9f * w / (xmax - xmin);
+            float yscale = 0.9f * h / (ymax - ymin);
             float scale = Math.Min(xscale, yscale);
             // Client offsets
-            float xoff = ((float)ClientRectangle.Width - scale * (xmax - xmin)) / 2.0f;
-            float yoff = ((float)ClientRectangle.Height - scale * (ymax - ymin)) / 2.0f;
-
-            /*
-            // Transform graphics
-            Rectangle rec = new Rectangle((int)xmin, (int)ymin, (int)(xmax - xmin), (int)(ymax - ymin));
-            rec.Inflate(rec.Width / 20, rec.Height / 20);
-            Point[] mappedPoints = new Point[] { new Point(ClientRectangle.Left, ClientRectangle.Top),
-                    new Point(ClientRectangle.Right, ClientRectangle.Top),
-                    new Point(ClientRectangle.Left, ClientRectangle.Bottom) };
-            g.Transform = new System.Drawing.Drawing2D.Matrix(rec, mappedPoints);
-*/
+            float xoff = (w - scale * (xmax - xmin)) / 2.0f;
+            float yoff = (h - scale * (ymax - ymin)) / 2.0f;
+            if (m_ShowName)
+            {
+                yoff -= 15.0f / 2.0f;
+            }
+            // Transform
             g.ResetTransform();
             g.ScaleTransform(scale, -scale, System.Drawing.Drawing2D.MatrixOrder.Append);
-            g.TranslateTransform(xoff, ClientRectangle.Height - yoff, System.Drawing.Drawing2D.MatrixOrder.Append);
+            g.TranslateTransform(xoff, h - yoff, System.Drawing.Drawing2D.MatrixOrder.Append);
 
             // Draw shapes
             foreach (DrawLine line in lines)
@@ -204,10 +222,11 @@ namespace RebarPosCommands
 
                     // Draw
                     g.ResetTransform();
+                    g.ScaleTransform(1.0f / scale, 1.0f / scale, MatrixOrder.Append);
                     g.RotateTransform(180, MatrixOrder.Append);
                     g.TranslateTransform((float)text.X, (float)text.Y, MatrixOrder.Append);
                     g.ScaleTransform(scale, -scale, System.Drawing.Drawing2D.MatrixOrder.Append);
-                    g.TranslateTransform(xoff, ClientRectangle.Height - yoff, System.Drawing.Drawing2D.MatrixOrder.Append);
+                    g.TranslateTransform(xoff, h - yoff, System.Drawing.Drawing2D.MatrixOrder.Append);
                     g.DrawString(text.Text, Font, brush, 0.0f, 0.0f, format);
 
                     // Restore state
