@@ -42,6 +42,8 @@
             this.chE = new System.Windows.Forms.ColumnHeader();
             this.chF = new System.Windows.Forms.ColumnHeader();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.rbNumberAll = new System.Windows.Forms.RadioButton();
+            this.rbKeepExisting = new System.Windows.Forms.RadioButton();
             this.cbOrder5 = new System.Windows.Forms.ComboBox();
             this.cbOrder4 = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -73,7 +75,8 @@
             // 
             // lbItems
             // 
-            this.lbItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.lbItems.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.lbItems.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chMarker,
@@ -91,7 +94,7 @@
             this.lbItems.Location = new System.Drawing.Point(13, 57);
             this.lbItems.MultiSelect = false;
             this.lbItems.Name = "lbItems";
-            this.lbItems.Size = new System.Drawing.Size(559, 382);
+            this.lbItems.Size = new System.Drawing.Size(571, 443);
             this.lbItems.TabIndex = 2;
             this.lbItems.UseCompatibleStateImageBehavior = false;
             this.lbItems.View = System.Windows.Forms.View.Details;
@@ -126,36 +129,38 @@
             // chA
             // 
             this.chA.Text = "A";
-            this.chA.Width = 25;
+            this.chA.Width = 30;
             // 
             // chB
             // 
             this.chB.Text = "B";
-            this.chB.Width = 25;
+            this.chB.Width = 30;
             // 
             // chC
             // 
             this.chC.Text = "C";
-            this.chC.Width = 25;
+            this.chC.Width = 30;
             // 
             // chD
             // 
             this.chD.Text = "D";
-            this.chD.Width = 25;
+            this.chD.Width = 30;
             // 
             // chE
             // 
             this.chE.Text = "E";
-            this.chE.Width = 25;
+            this.chE.Width = 30;
             // 
             // chF
             // 
             this.chF.Text = "F";
-            this.chF.Width = 25;
+            this.chF.Width = 30;
             // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.rbNumberAll);
+            this.groupBox1.Controls.Add(this.rbKeepExisting);
             this.groupBox1.Controls.Add(this.cbOrder5);
             this.groupBox1.Controls.Add(this.cbOrder4);
             this.groupBox1.Controls.Add(this.label6);
@@ -169,12 +174,34 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.txtStartNum);
-            this.groupBox1.Location = new System.Drawing.Point(590, 13);
+            this.groupBox1.Location = new System.Drawing.Point(602, 13);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(262, 270);
+            this.groupBox1.Size = new System.Drawing.Size(262, 332);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "&Otomatik Numaralandırma";
+            // 
+            // rbNumberAll
+            // 
+            this.rbNumberAll.AutoSize = true;
+            this.rbNumberAll.Location = new System.Drawing.Point(25, 247);
+            this.rbNumberAll.Name = "rbNumberAll";
+            this.rbNumberAll.Size = new System.Drawing.Size(187, 17);
+            this.rbNumberAll.TabIndex = 13;
+            this.rbNumberAll.TabStop = true;
+            this.rbNumberAll.Text = "&Tüm Pozları Yeniden Numaralandır";
+            this.rbNumberAll.UseVisualStyleBackColor = true;
+            // 
+            // rbKeepExisting
+            // 
+            this.rbKeepExisting.AutoSize = true;
+            this.rbKeepExisting.Location = new System.Drawing.Point(25, 224);
+            this.rbKeepExisting.Name = "rbKeepExisting";
+            this.rbKeepExisting.Size = new System.Drawing.Size(139, 17);
+            this.rbKeepExisting.TabIndex = 12;
+            this.rbKeepExisting.TabStop = true;
+            this.rbKeepExisting.Text = "&Mevcut Numaraları Koru";
+            this.rbKeepExisting.UseVisualStyleBackColor = true;
             // 
             // cbOrder5
             // 
@@ -294,10 +321,10 @@
             // 
             // btnAutoNumber
             // 
-            this.btnAutoNumber.Location = new System.Drawing.Point(24, 230);
+            this.btnAutoNumber.Location = new System.Drawing.Point(25, 287);
             this.btnAutoNumber.Name = "btnAutoNumber";
             this.btnAutoNumber.Size = new System.Drawing.Size(211, 23);
-            this.btnAutoNumber.TabIndex = 12;
+            this.btnAutoNumber.TabIndex = 14;
             this.btnAutoNumber.Text = "Otomatik &Numaralandır";
             this.btnAutoNumber.UseVisualStyleBackColor = true;
             // 
@@ -337,7 +364,7 @@
             this.groupBox2.Controls.Add(this.btnDecrementNumber);
             this.groupBox2.Controls.Add(this.txtNumber);
             this.groupBox2.Controls.Add(this.label7);
-            this.groupBox2.Location = new System.Drawing.Point(590, 290);
+            this.groupBox2.Location = new System.Drawing.Point(603, 351);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(262, 149);
             this.groupBox2.TabIndex = 4;
@@ -416,9 +443,9 @@
             // 
             // btnOK
             // 
-            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(696, 458);
+            this.btnOK.Location = new System.Drawing.Point(709, 522);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 5;
@@ -427,9 +454,9 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(777, 458);
+            this.btnCancel.Location = new System.Drawing.Point(790, 522);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 6;
@@ -460,7 +487,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(865, 496);
+            this.ClientSize = new System.Drawing.Size(877, 557);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.groupBox2);
@@ -468,6 +495,7 @@
             this.Controls.Add(this.lbItems);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.cbGroup);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "NumberingForm";
@@ -523,5 +551,7 @@
         private System.Windows.Forms.ColumnHeader chLength;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox cbGroup;
+        private System.Windows.Forms.RadioButton rbNumberAll;
+        private System.Windows.Forms.RadioButton rbKeepExisting;
     }
 }
