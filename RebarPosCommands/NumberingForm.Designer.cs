@@ -449,13 +449,6 @@
             // 
             this.cbGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbGroup.FormattingEnabled = true;
-            this.cbGroup.Items.AddRange(new object[] {
-            "Çizimdeki Yer",
-            "Öncelik",
-            "Şekil",
-            "Çap",
-            "Toplam Boy",
-            ""});
             this.cbGroup.Location = new System.Drawing.Point(168, 19);
             this.cbGroup.Name = "cbGroup";
             this.cbGroup.Size = new System.Drawing.Size(100, 21);
