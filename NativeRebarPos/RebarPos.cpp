@@ -641,12 +641,10 @@ void CRebarPos::subList() const
 	// Call parent first
     AcDbEntity::subList();
 
-    AcGePoint3d pt;
-
-	// Base point
+	// Base point in UCS
     acutPrintf(_T("%18s%16s "), _T(/*MSG0*/""), _T("Base Point:"));
-	pt = m_BasePoint;
-    acdbEcs2Ucs(asDblArray(pt), asDblArray(pt), asDblArray(norm), Adesk::kFalse);
+    AcGePoint3d pt(m_BasePoint);
+    acdbWcs2Ucs(asDblArray(pt), asDblArray(pt), false);
     acutPrintf(_T("X = %-9.16q0, Y = %-9.16q0, Z = %-9.16q0\n"), pt.x, pt.y, pt.z);
 
 	// List all properties
