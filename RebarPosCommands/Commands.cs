@@ -62,8 +62,8 @@ namespace RebarPosCommands
             bool cont = true;
             while (cont)
             {
-                PromptEntityOptions opts = new PromptEntityOptions("Poz secin veya [Yeni/Numaralandir/Kopyala/Grup/kOntrol/Metraj/bul Degistir/Balon sil/Cizim/Secenekler/Acilimlar/Poz stili]: ",
-                    "New Numbering Copy Check Group BOM Find Empty Draw Options Shapes Pos");
+                PromptEntityOptions opts = new PromptEntityOptions("Poz secin veya [Yeni/Numaralandir/Kopyala/Grup/kOntrol/Metraj/bul Degistir/numara Sil/Acilimlar/Poz stili]: ",
+                    "New Numbering Copy Check Group BOM Find Empty Shapes Pos");
                 PromptEntityResult result = Application.DocumentManager.MdiActiveDocument.Editor.GetEntity(opts);
 
                 if (result.Status == PromptStatus.Keyword)
@@ -93,12 +93,6 @@ namespace RebarPosCommands
                             break;
                         case "Find":
                             // FindPos();
-                            break;
-                        case "Draw":
-                            // DrawPos();
-                            break;
-                        case "Options":
-                            // PosOptions();
                             break;
                         case "Shapes":
                             // PosShapes();

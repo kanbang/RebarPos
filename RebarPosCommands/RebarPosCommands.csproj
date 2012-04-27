@@ -88,6 +88,12 @@
       <DependentUpon>GroupForm.cs</DependentUpon>
     </Compile>
     <Compile Include="myPlugin.cs" />
+    <Compile Include="NumberingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NumberingForm.Designer.cs">
+      <DependentUpon>NumberingForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="PosShapeView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -118,6 +124,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GroupForm.resx">
       <DependentUpon>GroupForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NumberingForm.resx">
+      <DependentUpon>NumberingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PosShapeView.resx">
       <DependentUpon>PosShapeView.cs</DependentUpon>
@@ -159,6 +168,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\tick.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow_down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow_up.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
