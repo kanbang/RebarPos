@@ -31,6 +31,15 @@ PosStyle::PosStyle(System::IntPtr unmanagedPointer, bool autoDelete)
 //*************************************************************************
 // Properties
 //*************************************************************************
+String^ PosStyle::Name::get()
+{
+    return WcharToString(GetImpObj()->Name());
+}
+void PosStyle::Name::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setName(StringToWchar(value)));
+}
+
 String^ PosStyle::Formula::get()
 {
 	return WcharToString(GetImpObj()->Formula());

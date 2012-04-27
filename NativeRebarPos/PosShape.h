@@ -60,6 +60,8 @@ public:
 
 protected:
 	/// Property backing fields
+	ACHAR* m_Name;
+
 	Adesk::Int32 m_Fields;
 
 	ACHAR* m_Formula;
@@ -70,6 +72,10 @@ protected:
 	ShapeList m_List;
 
 public:
+	/// Gets or sets item name
+	const ACHAR* Name(void) const;
+	Acad::ErrorStatus setName(const ACHAR* newVal);
+
 	/// Gets or sets the field count.
     const Adesk::Int32 Fields(void) const;
 	Acad::ErrorStatus setFields(const Adesk::Int32 newVal);

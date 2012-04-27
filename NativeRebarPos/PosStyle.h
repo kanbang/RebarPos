@@ -52,6 +52,8 @@ public:
 
 protected:
 	/// Property backing fields
+	ACHAR* m_Name;
+
 	ACHAR* m_Formula;
 	ACHAR* m_FormulaWithoutLength;
 	ACHAR* m_FormulaPosOnly;
@@ -70,6 +72,10 @@ protected:
     AcDbHardPointerId m_NoteStyleID;
 
 public:
+	/// Gets or sets item name
+	const ACHAR* Name(void) const;
+	Acad::ErrorStatus setName(const ACHAR* newVal);
+
 	/// Gets or sets the formula text.
     const ACHAR* Formula(void) const;
 	Acad::ErrorStatus setFormula(const ACHAR* newVal);

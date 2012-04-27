@@ -52,7 +52,7 @@ ACRX_DXF_DEFINE_MEMBERS(CPosStyle, AcDbObject,
 	|Company:          OZOZ");
 
 //-----------------------------------------------------------------------------
-CPosStyle::CPosStyle () : m_Formula(NULL), m_FormulaWithoutLength(NULL), m_FormulaPosOnly(NULL),
+CPosStyle::CPosStyle () : m_Name(NULL), m_Formula(NULL), m_FormulaWithoutLength(NULL), m_FormulaPosOnly(NULL),
 	m_TextColor(2), m_PosColor(4), m_CircleColor(1), m_MultiplierColor(33), m_GroupColor(9), 
 	m_NoteColor(30), m_CurrentGroupHighlightColor(8), m_NoteScale(0.75), 
 	m_TextStyleID(AcDbObjectId::kNull), m_NoteStyleID(AcDbObjectId::kNull)
@@ -60,6 +60,7 @@ CPosStyle::CPosStyle () : m_Formula(NULL), m_FormulaWithoutLength(NULL), m_Formu
 
 CPosStyle::~CPosStyle () 
 { 
+	acutDelString(m_Name);
 	acutDelString(m_Formula);
 	acutDelString(m_FormulaWithoutLength);
 	acutDelString(m_FormulaPosOnly);
@@ -68,6 +69,23 @@ CPosStyle::~CPosStyle ()
 //*************************************************************************
 // Properties
 //*************************************************************************
+const ACHAR* CPosStyle::Name(void) const
+{
+	assertReadEnabled();
+	return m_Name;
+}
+Acad::ErrorStatus CPosStyle::setName(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+    acutDelString(m_Name);
+    m_Name = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_Name);
+    }
+	return Acad::eOk;
+}
+
 const ACHAR* CPosStyle::Formula(void) const
 {
 	assertReadEnabled();
@@ -281,6 +299,8 @@ Acad::ErrorStatus CPosStyle::dwgOutFields(AcDbDwgFiler *pFiler) const
 	pFiler->writeItem(CPosStyle::kCurrentVersionNumber);
 
 	// Properties
+	if(m_Name)
+		pFiler->writeItem(m_Name);
 	if (m_Formula)
 		pFiler->writeString(m_Formula);
 	else
@@ -331,13 +351,12 @@ Acad::ErrorStatus CPosStyle::dwgInFields(AcDbDwgFiler *pFiler)
 	// Read params
 	if (version >= 1)
 	{
-		if(m_Formula)
-			acutDelString(m_Formula);
-		if(m_FormulaWithoutLength)
-			acutDelString(m_FormulaWithoutLength);
-		if(m_FormulaPosOnly)
-			acutDelString(m_FormulaPosOnly);
+		acutDelString(m_Name);
+		acutDelString(m_Formula);
+		acutDelString(m_FormulaWithoutLength);
+		acutDelString(m_FormulaPosOnly);
 
+		pFiler->readItem(&m_Name);
 		pFiler->readString(&m_Formula);
 		pFiler->readString(&m_FormulaWithoutLength);
 		pFiler->readString(&m_FormulaPosOnly);
@@ -378,18 +397,22 @@ Acad::ErrorStatus CPosStyle::dxfOutFields(AcDbDxfFiler *pFiler) const
 	pFiler->writeItem(AcDb::kDxfInt32, CPosStyle::kCurrentVersionNumber);
 
 	// Properties
-	if(m_Formula)
-		pFiler->writeString(AcDb::kDxfXTextString, m_Formula);
+	if(m_Name)
+		pFiler->writeString(AcDb::kDxfXTextString, m_Name);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString, _T(""));
-	if(m_FormulaWithoutLength)
-		pFiler->writeString(AcDb::kDxfXTextString + 1, m_FormulaWithoutLength);
+	if(m_Formula)
+		pFiler->writeString(AcDb::kDxfXTextString + 1, m_Formula);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString + 1, _T(""));
-	if(m_FormulaPosOnly)
-		pFiler->writeString(AcDb::kDxfXTextString + 2, m_FormulaPosOnly);
+	if(m_FormulaWithoutLength)
+		pFiler->writeString(AcDb::kDxfXTextString + 2, m_FormulaWithoutLength);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString + 2, _T(""));
+	if(m_FormulaPosOnly)
+		pFiler->writeString(AcDb::kDxfXTextString + 3, m_FormulaPosOnly);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 3, _T(""));
 
     // Colors
     pFiler->writeUInt16(AcDb::kDxfXInt16, m_TextColor);
@@ -434,6 +457,7 @@ Acad::ErrorStatus CPosStyle::dxfInFields(AcDbDxfFiler *pFiler)
 		return Acad::eMakeMeProxy;
 
 	// Properties
+	ACHAR* t_Name = NULL;
 	ACHAR* t_Formula = NULL;
 	ACHAR* t_FormulaWithoutLength = NULL;
 	ACHAR* t_FormulaPosOnly = NULL;
@@ -452,12 +476,15 @@ Acad::ErrorStatus CPosStyle::dxfInFields(AcDbDxfFiler *pFiler)
         switch (rb.restype) 
 		{
         case AcDb::kDxfXTextString:
-			acutUpdString(rb.resval.rstring, t_Formula);
+			acutUpdString(rb.resval.rstring, t_Name);
 			break;
         case AcDb::kDxfXTextString + 1:
-			acutUpdString(rb.resval.rstring, t_FormulaWithoutLength);
+			acutUpdString(rb.resval.rstring, t_Formula);
 			break;
         case AcDb::kDxfXTextString + 2:
+			acutUpdString(rb.resval.rstring, t_FormulaWithoutLength);
+			break;
+        case AcDb::kDxfXTextString + 3:
 			acutUpdString(rb.resval.rstring, t_FormulaPosOnly);
 			break;
 		case AcDb::kDxfXInt16:
@@ -508,6 +535,7 @@ Acad::ErrorStatus CPosStyle::dxfInFields(AcDbDxfFiler *pFiler)
         return Acad::eInvalidResBuf;
 
 	// Successfully read DXF codes; set object properties.
+	setName(t_Name);
 	setFormula(t_Formula);
 	setFormulaWithoutLength(t_FormulaWithoutLength);
 	setFormulaPosOnly(t_FormulaPosOnly);
@@ -522,12 +550,10 @@ Acad::ErrorStatus CPosStyle::dxfInFields(AcDbDxfFiler *pFiler)
 	m_TextStyleID = t_TextStyleID;
 	m_NoteStyleID = t_NoteStyleID;
 
-	if(t_Formula)
-		acutDelString(t_Formula);
-	if(t_FormulaWithoutLength)
-		acutDelString(t_FormulaWithoutLength);
-	if(t_FormulaPosOnly)
-		acutDelString(t_FormulaPosOnly);
+	acutDelString(t_Name);
+	acutDelString(t_Formula);
+	acutDelString(t_FormulaWithoutLength);
+	acutDelString(t_FormulaPosOnly);
 
 	return es;
 }

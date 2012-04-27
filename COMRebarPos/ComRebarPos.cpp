@@ -330,7 +330,11 @@ STDMETHODIMP CComRebarPos::GetPredefinedStrings(DISPID dispID, CALPOLESTR *pCaSt
 					i = 0;
 					for( ; !pIter->done(); pIter->next())
 					{
-						pCaStringsOut->pElems[i] = ::SysAllocString(CT2W(pIter->name()));
+						AcDbObjectPointer<CPosShape> pShape (pIter->objectId(), AcDb::kForRead);
+						if(pShape.openStatus() == Acad::eOk)
+						{
+							pCaStringsOut->pElems[i] = ::SysAllocString(CT2W(pShape->Name()));
+						}
 						pCaCookiesOut->pElems[i] = mShapeIdArray.append(pIter->objectId());
 						i++;
 					}
@@ -368,7 +372,11 @@ STDMETHODIMP CComRebarPos::GetPredefinedStrings(DISPID dispID, CALPOLESTR *pCaSt
 					i = 0;
 					for( ; !pIter->done(); pIter->next())
 					{
-						pCaStringsOut->pElems[i] = ::SysAllocString(CT2W(pIter->name()));
+						AcDbObjectPointer<CPosGroup> pGroup (pIter->objectId(), AcDb::kForRead);
+						if(pGroup.openStatus() == Acad::eOk)
+						{
+							pCaStringsOut->pElems[i] = ::SysAllocString(CT2W(pGroup->Name()));
+						}
 						pCaCookiesOut->pElems[i] = mGroupIdArray.append(pIter->objectId());
 						i++;
 					}
@@ -417,61 +425,39 @@ STDMETHODIMP CComRebarPos::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VAR
 	USES_CONVERSION;
 
 	AcDbObjectId id = AcDbObjectId::kNull;
-	AcDbDatabase* pDb = NULL;
-	AcDbDictionary* pNamedObj = NULL;
-	AcDbDictionary* pDict = NULL;
 	HRESULT hr = E_FAIL;
-	ACHAR* name = NULL;
 
 	switch(dispID)
 	{
 	case DISPID_SHAPE:
-	    assert((INT_PTR)dwCookie >= 0);
-		assert((INT_PTR)dwCookie < mShapeIdArray.length());
-	    id = mShapeIdArray[dwCookie];
-
-		pDb = m_objRef.objectId().database();
-		if (NULL == pDb)
-			pDb = acdbHostApplicationServices()->workingDatabase();
-	    
-		if (pDb->getNamedObjectsDictionary(pNamedObj, AcDb::kForRead) == Acad::eOk)
 		{
-			if (pNamedObj->getAt(CPosShape::GetTableName(), (AcDbObject*&)pDict, AcDb::kForRead) == Acad::eOk)
+			assert((INT_PTR)dwCookie >= 0);
+			assert((INT_PTR)dwCookie < mShapeIdArray.length());
+			id = mShapeIdArray[dwCookie];
+
+			AcDbObjectPointer<CPosShape> pShape (id, AcDb::kForRead);
+			if(pShape.openStatus() == Acad::eOk)
 			{
-				if(pDict->nameAt(id, name) == Acad::eOk)
-				{
-					hr = S_OK;
-					VariantCopy(pVarOut, &CComVariant(CT2W(name)));
-				}
-				pDict->close();
-			}
-			pNamedObj->close();
+				hr = S_OK;
+				VariantCopy(pVarOut, &CComVariant(CT2W(pShape->Name())));
+			}	    
+			return hr;
 		}
-		return hr;
 		break;
 	case DISPID_GROUP:
-	    assert((INT_PTR)dwCookie >= 0);
-		assert((INT_PTR)dwCookie < mGroupIdArray.length());
-	    id = mGroupIdArray[dwCookie];
-
-		pDb = m_objRef.objectId().database();
-		if (NULL == pDb)
-			pDb = acdbHostApplicationServices()->workingDatabase();
-	    
-		if (pDb->getNamedObjectsDictionary(pNamedObj, AcDb::kForRead) == Acad::eOk)
 		{
-			if (pNamedObj->getAt(CPosGroup::GetTableName(), (AcDbObject*&)pDict, AcDb::kForRead) == Acad::eOk)
+			assert((INT_PTR)dwCookie >= 0);
+			assert((INT_PTR)dwCookie < mGroupIdArray.length());
+			id = mGroupIdArray[dwCookie];
+
+			AcDbObjectPointer<CPosGroup> pGroup (id, AcDb::kForRead);
+			if(pGroup.openStatus() == Acad::eOk)
 			{
-				if(pDict->nameAt(id, name) == Acad::eOk)
-				{
-					hr = S_OK;
-					VariantCopy(pVarOut, &CComVariant(CT2W(name)));
-				}
-				pDict->close();
+				hr = S_OK;
+				VariantCopy(pVarOut, &CComVariant(CT2W(pGroup->Name())));
 			}
-			pNamedObj->close();
+			return hr;
 		}
-		return hr;
 		break;
 	case DISPID_DISPLAY:
 	    assert((INT_PTR)dwCookie >= 0);
@@ -1290,28 +1276,12 @@ STDMETHODIMP CComRebarPos::get_Shape(BSTR * pVal)
 	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
 
-		AcDbDatabase* pDb = NULL;
-		AcDbDictionary* pNamedObj = NULL;
-		AcDbDictionary* pDict = NULL;
-		ACHAR* name = NULL;
+		AcDbObjectPointer<CPosShape> pShape (pRebarPos->ShapeId(), AcDb::kForRead);
+		if((es = pShape.openStatus()) != Acad::eOk)
+            throw es;
 
-		pDb = pRebarPos->database();
-		if (NULL == pDb)
-			pDb = acdbHostApplicationServices()->workingDatabase();
-	    
-		if (pDb->getNamedObjectsDictionary(pNamedObj, AcDb::kForRead) == Acad::eOk)
-		{
-			if (pNamedObj->getAt(CPosShape::GetTableName(), (AcDbObject*&)pDict, AcDb::kForRead) == Acad::eOk)
-			{
-				if(pDict->nameAt(pRebarPos->ShapeId(), name) == Acad::eOk)
-				{
-					USES_CONVERSION;
-					*pVal = SysAllocString(CT2W(name));
-				}
-				pDict->close();
-			}
-			pNamedObj->close();
-		}
+		USES_CONVERSION;
+		*pVal = SysAllocString(CT2W(pShape->Name()));
     }
     catch(const Acad::ErrorStatus)
     {
@@ -1338,6 +1308,7 @@ STDMETHODIMP CComRebarPos::put_Shape(BSTR newVal)
 		AcDbDatabase* pDb = NULL;
 		AcDbDictionary* pNamedObj = NULL;
 		AcDbDictionary* pDict = NULL;
+		AcDbDictionaryIterator* it = NULL;
 		AcDbObjectId id;
 
 		pDb = pRebarPos->database();
@@ -1348,13 +1319,23 @@ STDMETHODIMP CComRebarPos::put_Shape(BSTR newVal)
 		{
 			if (pNamedObj->getAt(CPosShape::GetTableName(), (AcDbObject*&)pDict, AcDb::kForRead) == Acad::eOk)
 			{
-				if((es = pDict->getAt(W2T(newVal), id)) == Acad::eOk)
+				it = pDict->newIterator();
+				while(it->next())
 				{
-					if ((es = pRebarPos->setShapeId(id)) != Acad::eOk)
+					AcDbObjectPointer<CPosShape> pShape (it->objectId(), AcDb::kForRead);
+					if((es = pShape.openStatus()) != Acad::eOk)
 						throw es;
-					else
-						Fire_Notification(DISPID_SHAPE);
+					if(wcscmp(W2T(newVal), pShape->Name()) == 0)
+					{
+						if ((es = pRebarPos->setShapeId(it->objectId())) != Acad::eOk)
+							throw es;
+						else
+							Fire_Notification(DISPID_SHAPE);
+						break;
+					}
 				}
+				if(it)
+					delete it;
 				pDict->close();
 			}
 			pNamedObj->close();
@@ -1381,28 +1362,12 @@ STDMETHODIMP CComRebarPos::get_Group(BSTR * pVal)
 	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
 
-		AcDbDatabase* pDb = NULL;
-		AcDbDictionary* pNamedObj = NULL;
-		AcDbDictionary* pDict = NULL;
-		ACHAR* name = NULL;
+		AcDbObjectPointer<CPosGroup> pGroup (pRebarPos->GroupId(), AcDb::kForRead);
+		if((es = pGroup.openStatus()) != Acad::eOk)
+            throw es;
 
-		pDb = pRebarPos->database();
-		if (NULL == pDb)
-			pDb = acdbHostApplicationServices()->workingDatabase();
-	    
-		if (pDb->getNamedObjectsDictionary(pNamedObj, AcDb::kForRead) == Acad::eOk)
-		{
-			if (pNamedObj->getAt(CPosGroup::GetTableName(), (AcDbObject*&)pDict, AcDb::kForRead) == Acad::eOk)
-			{
-				if(pDict->nameAt(pRebarPos->GroupId(), name) == Acad::eOk)
-				{
-					USES_CONVERSION;
-					*pVal = SysAllocString(CT2W(name));
-				}
-				pDict->close();
-			}
-			pNamedObj->close();
-		}
+		USES_CONVERSION;
+		*pVal = SysAllocString(CT2W(pGroup->Name()));
     }
     catch(const Acad::ErrorStatus)
     {
@@ -1429,6 +1394,7 @@ STDMETHODIMP CComRebarPos::put_Group(BSTR newVal)
 		AcDbDatabase* pDb = NULL;
 		AcDbDictionary* pNamedObj = NULL;
 		AcDbDictionary* pDict = NULL;
+		AcDbDictionaryIterator* it = NULL;
 		AcDbObjectId id;
 
 		pDb = pRebarPos->database();
@@ -1439,13 +1405,23 @@ STDMETHODIMP CComRebarPos::put_Group(BSTR newVal)
 		{
 			if (pNamedObj->getAt(CPosGroup::GetTableName(), (AcDbObject*&)pDict, AcDb::kForRead) == Acad::eOk)
 			{
-				if((es = pDict->getAt(W2T(newVal), id)) == Acad::eOk)
+				it = pDict->newIterator();
+				while(it->next())
 				{
-					if ((es = pRebarPos->setGroupId(id)) != Acad::eOk)
+					AcDbObjectPointer<CPosGroup> pGroup (it->objectId(), AcDb::kForRead);
+					if((es = pGroup.openStatus()) != Acad::eOk)
 						throw es;
-					else
-						Fire_Notification(DISPID_GROUP);
+					if(wcscmp(W2T(newVal), pGroup->Name()) == 0)
+					{
+						if ((es = pRebarPos->setGroupId(it->objectId())) != Acad::eOk)
+							throw es;
+						else
+							Fire_Notification(DISPID_GROUP);
+						break;
+					}
 				}
+				if(it)
+					delete it;
 				pDict->close();
 			}
 			pNamedObj->close();

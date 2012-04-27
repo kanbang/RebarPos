@@ -38,13 +38,8 @@ namespace RebarPosCommands
             {
                 try
                 {
-                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
-                    if (namedDict.Contains(PosGroup.TableName))
-                    {
-                        DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosGroup.TableName), OpenMode.ForRead);
-                        if (dict.Contains(CurrentGroupId))
-                            CurrentGroupName = dict.NameAt(CurrentGroupId);
-                    }
+                    PosGroup group = (PosGroup)tr.GetObject(CurrentGroupId, OpenMode.ForRead);
+                    CurrentGroupName = group.Name;
                 }
                 catch
                 {

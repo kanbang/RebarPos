@@ -31,6 +31,15 @@ PosGroup::PosGroup(System::IntPtr unmanagedPointer, bool autoDelete)
 //*************************************************************************
 // Properties
 //*************************************************************************
+String^ PosGroup::Name::get()
+{
+    return WcharToString(GetImpObj()->Name());
+}
+void PosGroup::Name::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setName(StringToWchar(value)));
+}
+
 bool PosGroup::Bending::get()
 {
 	return (GetImpObj()->Bending() == Adesk::kTrue);

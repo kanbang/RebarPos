@@ -40,13 +40,12 @@ namespace RebarPosCommands
                     DbDictionaryEnumerator it = dict.GetEnumerator();
                     while (it.MoveNext())
                     {
-                        string name = it.Key;
                         Autodesk.AutoCAD.DatabaseServices.ObjectId id = it.Value;
                         PosShape shape = tr.GetObject(id, OpenMode.ForRead) as PosShape;
                         if (shape != null)
                         {
                             PosShapeView posShapeView = new PosShapeView();
-                            posShapeView.ShapeName = name;
+                            posShapeView.ShapeName = shape.Name;
                             posShapeView.ShowName = true;
                             posShapeView.Selected = (id == m_Current);
                             posShapeView.Visible = true;

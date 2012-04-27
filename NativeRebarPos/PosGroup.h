@@ -60,6 +60,8 @@ public:
 
 protected:
 	/// Property backing fields
+	ACHAR* m_Name;
+
 	Adesk::Boolean m_Bending;
 	double m_MaxBarLength;
 	int m_Precision;
@@ -72,6 +74,10 @@ protected:
 	Adesk::Boolean m_Current;
 
 public:
+	/// Gets or sets item name
+	const ACHAR* Name(void) const;
+	Acad::ErrorStatus setName(const ACHAR* newVal);
+
 	/// Gets or sets the bending option.
     const Adesk::Boolean Bending(void) const;
 	Acad::ErrorStatus setBending(const Adesk::Boolean newVal);

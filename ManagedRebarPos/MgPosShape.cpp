@@ -33,6 +33,15 @@ PosShape::PosShape(System::IntPtr unmanagedPointer, bool autoDelete)
 //*************************************************************************
 // Properties
 //*************************************************************************
+String^ PosShape::Name::get()
+{
+    return WcharToString(GetImpObj()->Name());
+}
+void PosShape::Name::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setName(StringToWchar(value)));
+}
+
 void PosShape::Fields::set(int value)
 {
     Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFields(value));

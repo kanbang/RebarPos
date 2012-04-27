@@ -53,13 +53,14 @@ namespace RebarPosCommands
                     if (dict.Count == 0)
                     {
                         PosShape shape = new PosShape();
+                        shape.Name = "Duz Demir";
                         shape.Fields = 1;
                         shape.Formula = "A";
                         shape.FormulaBending = "A";
                         shape.Items.AddLine(0, 0, 100, 0, Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 1));
                         shape.Items.AddText(50, 5, 10, "A", Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 2));
                         dict.UpgradeOpen();
-                        id = dict.SetAt("Duz Demir", shape);
+                        id = dict.SetAt("*", shape);
                         dict.DowngradeOpen();
                         tr.AddNewlyCreatedDBObject(shape, true);
                     }
@@ -110,13 +111,14 @@ namespace RebarPosCommands
                     if (dict.Count == 0)
                     {
                         PosStyle style = new PosStyle();
+                        style.Name = "Standard";
                         style.Formula = "[M:C][N][\"T\":D][\"/\":S][\" L=\":L]";
                         style.FormulaWithoutLength = "[M:C][N][\"T\":D][\"/\":S]";
                         style.FormulaPosOnly = "[M:C]";
                         style.TextStyleId = DWGUtility.CreateTextStyle("Rebar Text Style", "leroy.shx", 0.7);
                         style.NoteStyleId = DWGUtility.CreateTextStyle("Rebar Note Style", "simplxtw.shx", 0.9);
                         dict.UpgradeOpen();
-                        id = dict.SetAt("Standard", style);
+                        id = dict.SetAt("*", style);
                         dict.DowngradeOpen();
                         tr.AddNewlyCreatedDBObject(style, true);
                     }
@@ -167,10 +169,11 @@ namespace RebarPosCommands
                     if (dict.Count == 0)
                     {
                         PosGroup group = new PosGroup();
+                        group.Name = "0";
                         group.StyleId = DWGUtility.CreateDefaultStyles();
                         group.Current = true;
                         dict.UpgradeOpen();
-                        id = dict.SetAt("0", group);
+                        id = dict.SetAt("*", group);
                         dict.DowngradeOpen();
                         tr.AddNewlyCreatedDBObject(group, true);
                     }
@@ -233,7 +236,7 @@ namespace RebarPosCommands
         }
 
         // Returns all items in the dictionary.
-        public static Dictionary<string, ObjectId> GetDictionaryItems(string dictName)
+        public static Dictionary<string, ObjectId> GetGroups()
         {
             Dictionary<string, ObjectId> list = new Dictionary<string, ObjectId>();
             Database db = HostApplicationServices.WorkingDatabase;
@@ -242,14 +245,77 @@ namespace RebarPosCommands
                 try
                 {
                     DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
-                    if (namedDict.Contains(dictName))
+                    if (namedDict.Contains(PosGroup.TableName))
                     {
-                        DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(dictName), OpenMode.ForRead);
+                        DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosGroup.TableName), OpenMode.ForRead);
                         using (DbDictionaryEnumerator it = dict.GetEnumerator())
                         {
                             while (it.MoveNext())
                             {
-                                list.Add(it.Key, it.Value);
+                                PosGroup item = (PosGroup)tr.GetObject(it.Value, OpenMode.ForRead);
+                                list.Add(item.Name, it.Value);
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    ;
+                }
+            }
+            return list;
+        }
+
+        // Returns all items in the dictionary.
+        public static Dictionary<string, ObjectId> GetShapes()
+        {
+            Dictionary<string, ObjectId> list = new Dictionary<string, ObjectId>();
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
+                    if (namedDict.Contains(PosShape.TableName))
+                    {
+                        DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosShape.TableName), OpenMode.ForRead);
+                        using (DbDictionaryEnumerator it = dict.GetEnumerator())
+                        {
+                            while (it.MoveNext())
+                            {
+                                PosShape item = (PosShape)tr.GetObject(it.Value, OpenMode.ForRead);
+                                list.Add(item.Name, it.Value);
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    ;
+                }
+            }
+            return list;
+        }
+
+        // Returns all items in the dictionary.
+        public static Dictionary<string, ObjectId> GetStyles()
+        {
+            Dictionary<string, ObjectId> list = new Dictionary<string, ObjectId>();
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
+                    if (namedDict.Contains(PosStyle.TableName))
+                    {
+                        DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosStyle.TableName), OpenMode.ForRead);
+                        using (DbDictionaryEnumerator it = dict.GetEnumerator())
+                        {
+                            while (it.MoveNext())
+                            {
+                                PosStyle item = (PosStyle)tr.GetObject(it.Value, OpenMode.ForRead);
+                                list.Add(item.Name, it.Value);
                             }
                         }
                     }

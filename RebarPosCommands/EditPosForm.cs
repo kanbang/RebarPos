@@ -52,13 +52,13 @@ namespace RebarPosCommands
                     PosGroup group = tr.GetObject(m_Group, OpenMode.ForRead) as PosGroup;
                     if (group == null) return false;
 
-                    m_Groups = DWGUtility.GetDictionaryItems(PosGroup.TableName);
+                    m_Groups = DWGUtility.GetGroups();
                     if (m_Groups.Count == 0)
                     {
                         return false;
                     }
 
-                    m_Shapes = DWGUtility.GetDictionaryItems(PosShape.TableName);
+                    m_Shapes = DWGUtility.GetShapes();
                     if (m_Shapes.Count == 0)
                     {
                         return false;

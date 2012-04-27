@@ -49,8 +49,8 @@ namespace RebarPosCommands
 
         public bool Init(ObjectId currentId)
         {
-            m_Groups = DWGUtility.GetDictionaryItems(PosGroup.TableName);
-            m_Styles = DWGUtility.GetDictionaryItems(PosStyle.TableName);
+            m_Groups = DWGUtility.GetGroups();
+            m_Styles = DWGUtility.GetStyles();
 
             if (m_Groups.Count == 0 || m_Styles.Count == 0)
             {
@@ -364,21 +364,24 @@ namespace RebarPosCommands
                         else if (copy.isNew)
                         {
                             PosGroup group = new PosGroup();
+                            group.Name = copy.name;
                             group.DrawingUnit = copy.drawingUnits;
                             group.DisplayUnit = copy.displayUnits;
                             group.Precision = copy.precision;
                             group.MaxBarLength = copy.maxLength;
                             group.Bending = copy.bending;
                             group.StyleId = copy.styleId;
-                            copy.id = dict.SetAt(copy.name, group);
+                            copy.id = dict.SetAt("*", group);
                             tr.AddNewlyCreatedDBObject(group, true);
                         }
                         else
                         {
-                            string oldName = dict.NameAt(copy.id);
-                            if (oldName != copy.name)
+                            PosGroup group= (PosGroup)tr.GetObject(copy.id, OpenMode.ForRead);
+                            if (group.Name != copy.name)
                             {
-                                dict.SetName(oldName, copy.name);
+                                group.UpgradeOpen();
+                                group.Name = copy.name;
+                                group.DowngradeOpen();
                             }
                         }
 

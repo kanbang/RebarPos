@@ -51,15 +51,35 @@ ACRX_DXF_DEFINE_MEMBERS(CPosGroup, AcDbObject,
 	|Company:          OZOZ");
 
 //-----------------------------------------------------------------------------
-CPosGroup::CPosGroup () : m_Bending(Adesk::kFalse), m_MaxBarLength(12), m_Precision(0),
+CPosGroup::CPosGroup () : m_Name(NULL), m_Bending(Adesk::kFalse), m_MaxBarLength(12), m_Precision(0),
 m_DrawingUnit(CPosGroup::MM), m_DisplayUnit(CPosGroup::MM), m_StyleID(AcDbObjectId::kNull), m_Current(Adesk::kFalse)
 { }
 
-CPosGroup::~CPosGroup () { }
+CPosGroup::~CPosGroup () 
+{ 
+	acutDelString(m_Name);
+}
 
 //*************************************************************************
 // Properties
 //*************************************************************************
+const ACHAR* CPosGroup::Name(void) const
+{
+	assertReadEnabled();
+	return m_Name;
+}
+Acad::ErrorStatus CPosGroup::setName(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+    acutDelString(m_Name);
+    m_Name = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_Name);
+    }
+	return Acad::eOk;
+}
+
 const Adesk::Boolean CPosGroup::Bending(void) const
 {
 	assertReadEnabled();
@@ -164,6 +184,8 @@ Acad::ErrorStatus CPosGroup::dwgOutFields(AcDbDwgFiler *pFiler) const
 	pFiler->writeItem(CPosGroup::kCurrentVersionNumber);
 
 	// Properties
+	if(m_Name)
+		pFiler->writeItem(m_Name);
 	pFiler->writeItem(m_Bending);
 	pFiler->writeDouble(m_MaxBarLength);
 	pFiler->writeInt32(m_Precision);
@@ -192,7 +214,10 @@ Acad::ErrorStatus CPosGroup::dwgInFields(AcDbDwgFiler *pFiler)
 	// Read params
 	if (version >= 1)
 	{
+		acutDelString(m_Name);
+
 		// Properties
+		pFiler->readItem(&m_Name);
 		pFiler->readItem(&m_Bending);
 		pFiler->readItem(&m_MaxBarLength);
 		pFiler->readItem(&m_Precision);
@@ -227,6 +252,10 @@ Acad::ErrorStatus CPosGroup::dxfOutFields(AcDbDxfFiler *pFiler) const
 	pFiler->writeItem(AcDb::kDxfInt32, CPosGroup::kCurrentVersionNumber);
 
 	// Properties
+	if(m_Name)
+		pFiler->writeString(AcDb::kDxfXTextString, m_Name);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString, _T(""));
 	pFiler->writeItem(AcDb::kDxfBool, m_Bending);
 	pFiler->writeDouble(AcDb::kDxfXReal, m_MaxBarLength);
 	pFiler->writeInt32(AcDb::kDxfInt32 + 1, m_Precision);
@@ -261,6 +290,7 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
 		return Acad::eMakeMeProxy;
 
 	// Properties
+	ACHAR* t_Name = NULL;
 	Adesk::Boolean t_Bending;
 	double t_MaxBarLength;
 	int t_Precision;
@@ -272,6 +302,9 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
     {
         switch (rb.restype) 
 		{
+        case AcDb::kDxfXTextString:
+            acutUpdString(rb.resval.rstring, t_Name);
+            break;
         case AcDb::kDxfBool:
 			t_Bending = (rb.resval.rint == 0) ? Adesk::kFalse : Adesk::kTrue;
             break;
@@ -309,12 +342,15 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
         return Acad::eInvalidResBuf;
 
 	// Successfully read DXF codes; set object properties.
+	setName(t_Name);
     m_Bending = t_Bending;
     m_MaxBarLength = t_MaxBarLength;
 	m_Precision = t_Precision;
     m_DrawingUnit = (DrawingUnits)t_DrawingUnit;
     m_DisplayUnit = (DrawingUnits)t_DisplayUnit;
 	m_StyleID = t_StyleID;
+
+	acutDelString(t_Name);
 
 	return es;
 }

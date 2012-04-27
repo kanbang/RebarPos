@@ -111,8 +111,8 @@ namespace OZOZ
         public:
 			property ShapeCollection^ Items { ShapeCollection^ get(); }
 
-			property int Fields { int get(); void set(int value); }
-
+			property String^ Name           { String^ get(); void set(String^ value); }
+			property int Fields             { int get(); void set(int value); }
 			property String^ Formula        { String^ get(); void set(String^ value); }
 			property String^ FormulaBending { String^ get(); void set(String^ value); }
 
