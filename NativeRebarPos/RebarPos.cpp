@@ -787,7 +787,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	// Transform to match text orientation
 	worldDraw->geometry().pushModelTransform(trans);
 	// Highlight current group
-	if(lastCurrentGroup == Adesk::kTrue)
+	if(!worldDraw->isDragging() && lastCurrentGroup == Adesk::kTrue)
 	{
 		AcGiFillType filltype = worldDraw->subEntityTraits().fillType();
 		worldDraw->subEntityTraits().setFillType(kAcGiFillAlways);
@@ -814,7 +814,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 		if(p.hasCircle)
 		{
 			worldDraw->subEntityTraits().setColor(lastCircleColor);
-			worldDraw->geometry().circle(AcGePoint3d(p.x + p.w / 2, p.y + p.h / 2, 0), circleRadius, AcGeVector3d::kZAxis);
+			worldDraw->geometry().circle(AcGePoint3d(p.x + p.w / 2.0, p.y + p.h / 2.0, 0), circleRadius, AcGeVector3d::kZAxis);
 		}
 	}
 	// Group name
@@ -1825,7 +1825,7 @@ const void CRebarPos::Calculate(void) const
 		}
 		p.y = y;
 		p.w = ext.x;
-		p.h = ext.y;
+		p.h = lastTextStyle.textSize();
 		if(p.hasCircle)
 		{
 			x += 2.0 * circleRadius + partSpacing;
@@ -1843,20 +1843,20 @@ const void CRebarPos::Calculate(void) const
 	lastGroupDraw.x = 0;
 	lastGroupDraw.y = -0.8;
 	lastGroupDraw.w = gext.x;
-	lastGroupDraw.h = gext.y;
+	lastGroupDraw.h = lastTextStyle.textSize();
     // Measure multiplier text
 	AcGePoint2d mext = lastTextStyle.extents(lastMultiplierDraw.text, Adesk::kTrue, -1, Adesk::kFalse);
 	lastMultiplierDraw.x = 0;
 	lastMultiplierDraw.y = 1.4;
 	lastMultiplierDraw.w = gext.x;
-	lastMultiplierDraw.h = gext.y;
+	lastMultiplierDraw.h = lastTextStyle.textSize();
 
 	// Measure note text
 	AcGePoint2d noteExt = lastNoteStyle.extents(lastNoteDraw.text, Adesk::kTrue, -1, Adesk::kFalse);
 	lastNoteDraw.x = 0;
 	lastNoteDraw.y = 0;
 	lastNoteDraw.w = noteExt.x;
-	lastNoteDraw.h = noteExt.y;
+	lastNoteDraw.h = lastNoteStyle.textSize();
 
 	// Done update
 	isModified = false;
