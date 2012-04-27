@@ -290,40 +290,44 @@ namespace RebarPosCommands
             }
         }
 
-        private void EditPosForm_Activated(object sender, EventArgs e)
+        private void EditPosForm_Shown(object sender, EventArgs e)
         {
             switch (hit)
             {
                 case RebarPos.HitTestResult.Count:
+                    txtPosCount.Select();
                     txtPosCount.SelectAll();
-                    txtPosCount.Focus();
                     break;
                 case RebarPos.HitTestResult.Diameter:
+                    txtPosDiameter.Select();
                     txtPosDiameter.SelectAll();
-                    txtPosDiameter.Focus();
                     break;
                 case RebarPos.HitTestResult.Length:
+                    txtA.Select();
                     txtA.SelectAll();
-                    txtA.Focus();
                     break;
                 case RebarPos.HitTestResult.Group:
-                    cbGroup.Focus();
+                    cbGroup.SelectAll();
                     break;
                 case RebarPos.HitTestResult.Multiplier:
+                    txtPosMultiplier.Select();
                     txtPosMultiplier.SelectAll();
-                    txtPosMultiplier.Focus();
                     break;
                 case RebarPos.HitTestResult.Note:
+                    txtPosNote.Select();
                     txtPosNote.SelectAll();
-                    txtPosNote.Focus();
                     break;
                 case RebarPos.HitTestResult.Pos:
+                    txtPosMarker.Select();
                     txtPosMarker.SelectAll();
-                    txtPosMarker.Focus();
                     break;
                 case RebarPos.HitTestResult.Spacing:
+                    txtPosSpacing.Select();
                     txtPosSpacing.SelectAll();
-                    txtPosSpacing.Focus();
+                    break;
+                default:
+                    txtPosMarker.Select();
+                    txtPosMarker.SelectAll();
                     break;
             }
         }
