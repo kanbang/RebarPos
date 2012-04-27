@@ -1668,20 +1668,7 @@ const void CRebarPos::Calculate(void) const
 
 	// Get group name
 	lastGroupDraw.text.setEmpty();
-	AcDbObjectPointer<AcDbDictionary> pNamedObj (acdbHostApplicationServices()->workingDatabase()->namedObjectsDictionaryId(), AcDb::kForRead);
-	if((es = pNamedObj.openStatus()) != Acad::eOk)
-	{
-		return;
-	}
-	AcDbObjectId dictId;
-	if((es = pNamedObj->getAt(CPosGroup::GetTableName(), dictId)) == Acad::eOk)
-	{
-		AcDbObjectPointer<AcDbDictionary> pDict(dictId, AcDb::kForRead);
-		if((es = pDict.openStatus()) == Acad::eOk)
-		{
-			pDict->nameAt(m_GroupID, lastGroupDraw.text);
-		}
-	}
+	lastGroupDraw.text = pGroup->Name();
 
 	// Open style
 	AcDbObjectId styleID = pGroup->StyleId();
