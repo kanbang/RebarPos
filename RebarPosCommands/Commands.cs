@@ -58,7 +58,7 @@ namespace RebarPosCommands
             while (cont)
             {
                 PromptEntityOptions opts = new PromptEntityOptions("Poz secin veya [Yeni/Numaralandir/Kopyala/Grup/kOntrol/Metraj/bul Degistir/numara Sil/Acilimlar/Poz stili]: ",
-                    "New Numbering Copy Check Group BOM Find Empty Shapes Pos");
+                    "New Numbering Copy Group Check BOM Find Empty Shapes Pos");
                 PromptEntityResult result = Application.DocumentManager.MdiActiveDocument.Editor.GetEntity(opts);
 
                 if (result.Status == PromptStatus.Keyword)
@@ -69,7 +69,7 @@ namespace RebarPosCommands
                             NewPos();
                             break;
                         case "Numbering":
-                            // NumberPos();
+                            NumberPos();
                             break;
                         case "Empty":
                             EmptyBalloons();
@@ -124,6 +124,12 @@ namespace RebarPosCommands
         public void CMD_NewPos()
         {
             NewPos();
+        }
+
+        [CommandMethod("RebarPos", "NUMBEROS", "NUMBERPOS_Local", CommandFlags.Modal)]
+        public void CMD_NumberPos()
+        {
+            NumberPos();
         }
 
         [CommandMethod("RebarPos", "EMPTYPOS", "EMPTYPOS_Local", CommandFlags.Modal)]

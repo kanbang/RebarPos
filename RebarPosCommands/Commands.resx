@@ -126,6 +126,9 @@
   <data name="NEWPOS_Local" xml:space="preserve">
     <value>POZEKLE</value>
   </data>
+  <data name="NUMBERPOS_Local" xml:space="preserve">
+    <value>POZNUM</value>
+  </data>
   <data name="POSEDIT_Local" xml:space="preserve">
     <value>POZEDIT</value>
   </data>

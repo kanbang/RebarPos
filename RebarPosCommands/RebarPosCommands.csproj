@@ -73,6 +73,7 @@
     <Compile Include="Commands_EmptyBalloons.cs" />
     <Compile Include="Commands_PosGroup.cs" />
     <Compile Include="Commands_CopyPos.cs" />
+    <Compile Include="Commands_NumberPos.cs" />
     <Compile Include="DWGUtility.cs" />
     <Compile Include="Commands.cs" />
     <Compile Include="EditPosForm.cs">

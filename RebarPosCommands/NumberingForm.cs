@@ -14,7 +14,7 @@ namespace RebarPosCommands
     {
         private class PosCopy
         {
-            public ObjectId id;
+            public List<ObjectId> list;
             public string key;
             public string pos;
             public int priority;
@@ -30,16 +30,23 @@ namespace RebarPosCommands
             public string shapename;
             public double x;
             public double y;
+
+            public PosCopy()
+            {
+                list = new List<ObjectId>();
+                x = double.MaxValue;
+                y = double.MaxValue;
+            }
         }
 
-        List<PosCopy> m_PosList;
+        Dictionary<string, PosCopy> m_PosList;
         Dictionary<string, ObjectId> m_Groups;
 
         public NumberingForm()
         {
             InitializeComponent();
 
-            m_PosList = new List<PosCopy>();
+            m_PosList = new Dictionary<string, PosCopy>();
             m_Groups = new Dictionary<string, ObjectId>();
         }
 
@@ -69,7 +76,7 @@ namespace RebarPosCommands
             {
                 return false;
             }
-            foreach (PosCopy copy in m_PosList)
+            foreach (PosCopy copy in m_PosList.Values)
             {
                 ListViewItem item = new ListViewItem(copy.pos);
                 item.SubItems.Add(copy.pos);
@@ -90,7 +97,7 @@ namespace RebarPosCommands
 
         public void ReadPos(ObjectId groupId)
         {
-            m_PosList = new List<PosCopy>();
+            m_PosList = new Dictionary<string, PosCopy>();
 
             Database db = HostApplicationServices.WorkingDatabase;
             using (Transaction tr = db.TransactionManager.StartTransaction())
@@ -105,26 +112,37 @@ namespace RebarPosCommands
                             RebarPos pos = tr.GetObject(it.Current, OpenMode.ForRead) as RebarPos;
                             if (pos != null && pos.GroupId == groupId)
                             {
-                                PosCopy copy = new PosCopy();
-                                copy.key = pos.PosKey;
-                                copy.id = it.Current;
-                                copy.pos = pos.Pos;
-                                copy.diameter = pos.Diameter;
-                                copy.length = pos.Length;
-                                copy.a = pos.A;
-                                copy.b = pos.B;
-                                copy.c = pos.C;
-                                copy.d = pos.D;
-                                copy.e = pos.E;
-                                copy.f = pos.F;
-                                copy.x = pos.BasePoint.X;
-                                copy.y = pos.BasePoint.Y;
-                                copy.shapeId = pos.ShapeId;
-                                PosShape shape = tr.GetObject(copy.shapeId, OpenMode.ForRead) as PosShape;
-                                if (shape != null)
+                                PosCopy copy = null;
+                                if (m_PosList.TryGetValue(pos.PosKey, out copy))
                                 {
-                                    copy.priority = shape.Priority;
-                                    copy.shapename = shape.Name;
+                                    copy.list.Add(it.Current);
+                                    copy.x = Math.Min(copy.x, pos.BasePoint.X);
+                                    copy.y = Math.Min(copy.y, pos.BasePoint.Y);
+                                }
+                                else
+                                {
+                                    copy = new PosCopy();
+                                    copy.key = pos.PosKey;
+                                    copy.list.Add(it.Current);
+                                    copy.pos = pos.Pos;
+                                    copy.diameter = pos.Diameter;
+                                    copy.length = pos.Length;
+                                    copy.a = pos.A;
+                                    copy.b = pos.B;
+                                    copy.c = pos.C;
+                                    copy.d = pos.D;
+                                    copy.e = pos.E;
+                                    copy.f = pos.F;
+                                    copy.x = pos.BasePoint.X;
+                                    copy.y = pos.BasePoint.Y;
+                                    copy.shapeId = pos.ShapeId;
+                                    PosShape shape = tr.GetObject(copy.shapeId, OpenMode.ForRead) as PosShape;
+                                    if (shape != null)
+                                    {
+                                        copy.priority = shape.Priority;
+                                        copy.shapename = shape.Name;
+                                    }
+                                    m_PosList.Add(copy.key, copy);
                                 }
                             }
                         }
