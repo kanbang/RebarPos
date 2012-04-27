@@ -263,6 +263,8 @@ protected:
 
     virtual Adesk::Boolean      subWorldDraw(AcGiWorldDraw*	mode);
     
+	virtual Acad::ErrorStatus   subGetGeomExtents(AcDbExtents& extents) const;
+
     /// Overridden methods from AcDbObject    
     virtual Acad::ErrorStatus subDeepClone(AcDbObject* pOwnerObject,
         AcDbObject*& pClonedObject,

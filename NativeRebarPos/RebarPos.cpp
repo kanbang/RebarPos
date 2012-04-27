@@ -129,6 +129,7 @@ Acad::ErrorStatus CRebarPos::setBasePoint(const AcGePoint3d& newVal)
 {
 	assertWriteEnabled();
 	m_BasePoint = newVal;
+	isModified = true;
 	return Acad::eOk;
 }
 
@@ -142,6 +143,7 @@ Acad::ErrorStatus CRebarPos::setNoteGrip(const AcGePoint3d& newVal)
 {
 	assertWriteEnabled();
 	m_NoteGrip = newVal;
+	isModified = true;
 	return Acad::eOk;
 }
 
@@ -569,37 +571,65 @@ Acad::ErrorStatus CRebarPos::subTransformBy(const AcGeMatrix3d& xform)
 {
 	assertWriteEnabled();
 	
+	if(isModified)
+	{
+		Calculate();
+	}
+
 	m_BasePoint.transformBy(xform);
 	m_NoteGrip.transformBy(xform);
 	direction.transformBy(xform);
 	up.transformBy(xform);
+	norm = direction.crossProduct(up);
 
-	// TODO: Fix mirroring around midpoint
-	// TODO: Correction should be based on UCS
-	// Text always left to right
-	if(direction.x < 0)
+	// Get UCS vectors
+	AcGeMatrix3d ucs;
+	acdbUcsMatrix(ucs);
+	AcGeVector3d ucsdir(direction);
+	ucsdir.transformBy(ucs);
+	AcGeVector3d ucsup(up);
+	ucsup.transformBy(ucs);
+
+	// Set mirror base point to middle of entity
+	AcGePoint3d pt;
+	if(lastDrawList.size() != 0)
 	{
+		CDrawParams p = lastDrawList.at(lastDrawList.size() - 1);
+		pt.x = (p.x + p.w) / 2.0;
+		pt.y = (p.y + p.h) / 2.0;
+		// Transform to WCS
+		AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
+		trans.setCoordSystem(m_BasePoint, direction, up, norm);
+		pt.transformBy(trans);
+	}
+
+	// Text always left to right
+	if(ucsdir.x < 0)
+	{
+		// Mirror around vertical axis
 		AcGeMatrix3d mirror = AcGeMatrix3d::kIdentity;
-		mirror.setToMirroring(AcGeLine3d(m_BasePoint, up));
+		mirror.setToMirroring(AcGeLine3d(pt, up));
 		m_BasePoint.transformBy(mirror);
 		m_NoteGrip.transformBy(mirror);
 		direction.transformBy(mirror);
 		up.transformBy(mirror);
+		norm = direction.crossProduct(up);
 	}
 
 	// Text always upright
-	if(up.y < 0)
+	if(ucsup.y < 0)
 	{
+		// Mirror around horizontal axis
 		AcGeMatrix3d mirror = AcGeMatrix3d::kIdentity;
-		mirror.setToMirroring(AcGeLine3d(m_BasePoint, direction));
+		mirror.setToMirroring(AcGeLine3d(pt, direction));
 		m_BasePoint.transformBy(mirror);
 		m_NoteGrip.transformBy(mirror);
 		direction.transformBy(mirror);
 		up.transformBy(mirror);
-	}
+		norm = direction.crossProduct(up);
+	}	
 
-	// Calculate normal
-	norm = direction.crossProduct(up);
+	isModified = true;
 
 	return Acad::eOk;
 }
@@ -670,6 +700,11 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 {
     assertReadEnabled();
 
+	if(isModified)
+	{
+		Calculate();
+	}
+
 	if(lastDrawList.size() == 0)
 	{
 		return Acad::eInvalidInput;
@@ -733,88 +768,23 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
         return Adesk::kTrue;
     }
 
-	// Transformations
-	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
-	trans.setCoordSystem(m_BasePoint, direction, up, norm);
-	AcGeMatrix3d noteTrans = AcGeMatrix3d::kIdentity;
-	noteTrans.setCoordSystem(m_NoteGrip, direction, up, norm);
-	worldDraw->geometry().circle(AcGePoint3d(0,0,0),1,AcGeVector3d::kZAxis);
 	// Update if required
 	if(isModified)
 	{
 		Calculate();
 	}
 
-	lastTextStyle.setTextSize(1.0);
-	lastNoteStyle.setTextSize(1.0 * lastNoteScale);
-	lastTextStyle.loadStyleRec();
-	lastNoteStyle.loadStyleRec();
-
-	// Transform to match object orientation
-	worldDraw->geometry().pushModelTransform(trans);
-	// Measure items
-	double x = 0;
-	double y = 0;
-	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
-	{
-		CDrawParams p = lastDrawList[i];
-		AcGePoint2d ext = lastTextStyle.extents(p.text, Adesk::kTrue, -1, Adesk::kFalse);
-		if(p.hasCircle)
-		{
-			p.x = x + (2.0 * circleRadius - ext.x ) / 2.0;
-		}
-		else
-		{
-			p.x = x;
-		}
-		p.y = y;
-		p.w = ext.x;
-		p.h = ext.y;
-		if(p.hasCircle)
-		{
-			x += 2.0 * circleRadius + partSpacing;
-		}
-		else
-		{
-			x += ext.x + partSpacing;
-		}
-		lastDrawList[i] = p;
-	}
-	// Measure group text
-	lastTextStyle.setTextSize(0.4);
-	lastTextStyle.loadStyleRec();
-	AcGePoint2d gext = lastTextStyle.extents(lastGroupDraw.text, Adesk::kTrue, -1, Adesk::kFalse);
-	lastGroupDraw.x = 0;
-	lastGroupDraw.y = -0.8;
-	lastGroupDraw.w = gext.x;
-	lastGroupDraw.h = gext.y;
-    // Measure multiplier text
-	AcGePoint2d mext = lastTextStyle.extents(lastMultiplierDraw.text, Adesk::kTrue, -1, Adesk::kFalse);
-	lastMultiplierDraw.x = 0;
-	lastMultiplierDraw.y = 1.4;
-	lastMultiplierDraw.w = gext.x;
-	lastMultiplierDraw.h = gext.y;
-
-	// Reset transform
-	worldDraw->geometry().popModelTransform();
-
-	// Transform to match note orientation
-	worldDraw->geometry().pushModelTransform(noteTrans);
-	// Measure note text
-	AcGePoint2d noteExt = lastNoteStyle.extents(lastNoteDraw.text, Adesk::kTrue, -1, Adesk::kFalse);
-	lastNoteDraw.x = 0;
-	lastNoteDraw.y = 0;
-	lastNoteDraw.w = noteExt.x;
-	lastNoteDraw.h = noteExt.y;
-
-	// Reset transform
-	worldDraw->geometry().popModelTransform();
-
 	// Quit if there is nothing to draw
 	if(lastDrawList.empty())
 	{
 		return Adesk::kTrue;
 	}
+
+	// Transformations
+	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
+	trans.setCoordSystem(m_BasePoint, direction, up, norm);
+	AcGeMatrix3d noteTrans = AcGeMatrix3d::kIdentity;
+	noteTrans.setCoordSystem(m_NoteGrip, direction, up, norm);
 
 	// Transform to match text orientation
 	worldDraw->geometry().pushModelTransform(trans);
@@ -871,6 +841,61 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	worldDraw->geometry().popModelTransform();
 
     return Adesk::kTrue; // Don't call viewportDraw().
+}
+
+Acad::ErrorStatus CRebarPos::subGetGeomExtents(AcDbExtents& extents) const
+{
+    assertReadEnabled();
+
+	if(isModified)
+	{
+		Calculate();
+	}
+
+	if(lastDrawList.empty())
+	{
+		return Acad::eOk;
+	}
+
+	// Get ECS extents
+	CDrawParams p;
+	p = lastDrawList.at(lastDrawList.size() - 1);
+	AcGePoint3d pt1(0, 0, 0);
+	AcGePoint3d pt2(p.x + p.w, 0, 0);
+	AcGePoint3d pt3(p.x + p.w, p.y + p.h, 0);
+	AcGePoint3d pt4(0, p.y + p.h, 0);
+	p = lastNoteDraw;
+	AcGePoint3d pt5(0, 0, 0);
+	AcGePoint3d pt6(p.x + p.w, 0, 0);
+	AcGePoint3d pt7(p.x + p.w, p.y + p.h, 0);
+	AcGePoint3d pt8(0, p.y + p.h, 0);
+
+	// Transform to WCS
+	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
+	trans.setCoordSystem(m_BasePoint, direction, up, norm);
+	pt1.transformBy(trans);
+	pt2.transformBy(trans);
+	pt3.transformBy(trans);
+	pt4.transformBy(trans);
+	AcGeMatrix3d noteTrans = AcGeMatrix3d::kIdentity;
+	noteTrans.setCoordSystem(m_NoteGrip, direction, up, norm);
+	pt5.transformBy(noteTrans);
+	pt6.transformBy(noteTrans);
+	pt7.transformBy(noteTrans);
+	pt8.transformBy(noteTrans);
+
+	extents.addPoint(pt1);
+	extents.addPoint(pt2);
+	extents.addPoint(pt3);
+	extents.addPoint(pt4);
+	extents.addPoint(pt5);
+	extents.addPoint(pt6);
+	extents.addPoint(pt7);
+	extents.addPoint(pt8);
+	
+	acutPrintf(_T("xMin: %f"), extents.minPoint().x);
+
+	return Acad::eOk;
 }
 
 //*************************************************************************
@@ -1780,6 +1805,60 @@ const void CRebarPos::Calculate(void) const
 		lastDrawList[i] = p;
 	}
 	lastNoteDraw.color = pStyle->NoteColor();
+
+	// Measure items
+	lastTextStyle.setTextSize(1.0);
+	lastNoteStyle.setTextSize(1.0 * lastNoteScale);
+	lastTextStyle.loadStyleRec();
+	lastNoteStyle.loadStyleRec();
+	double x = 0;
+	double y = 0;
+	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+	{
+		CDrawParams p = lastDrawList[i];
+		AcGePoint2d ext = lastTextStyle.extents(p.text, Adesk::kTrue, -1, Adesk::kFalse);
+		if(p.hasCircle)
+		{
+			p.x = x + (2.0 * circleRadius - ext.x ) / 2.0;
+		}
+		else
+		{
+			p.x = x;
+		}
+		p.y = y;
+		p.w = ext.x;
+		p.h = ext.y;
+		if(p.hasCircle)
+		{
+			x += 2.0 * circleRadius + partSpacing;
+		}
+		else
+		{
+			x += ext.x + partSpacing;
+		}
+		lastDrawList[i] = p;
+	}
+	// Measure group text
+	lastTextStyle.setTextSize(0.4);
+	lastTextStyle.loadStyleRec();
+	AcGePoint2d gext = lastTextStyle.extents(lastGroupDraw.text, Adesk::kTrue, -1, Adesk::kFalse);
+	lastGroupDraw.x = 0;
+	lastGroupDraw.y = -0.8;
+	lastGroupDraw.w = gext.x;
+	lastGroupDraw.h = gext.y;
+    // Measure multiplier text
+	AcGePoint2d mext = lastTextStyle.extents(lastMultiplierDraw.text, Adesk::kTrue, -1, Adesk::kFalse);
+	lastMultiplierDraw.x = 0;
+	lastMultiplierDraw.y = 1.4;
+	lastMultiplierDraw.w = gext.x;
+	lastMultiplierDraw.h = gext.y;
+
+	// Measure note text
+	AcGePoint2d noteExt = lastNoteStyle.extents(lastNoteDraw.text, Adesk::kTrue, -1, Adesk::kFalse);
+	lastNoteDraw.x = 0;
+	lastNoteDraw.y = 0;
+	lastNoteDraw.w = noteExt.x;
+	lastNoteDraw.h = noteExt.y;
 
 	// Done update
 	isModified = false;
