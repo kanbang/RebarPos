@@ -65,6 +65,8 @@ protected:
 	ACHAR* m_Formula;
 	ACHAR* m_FormulaBending;
 
+	Adesk::Int32 m_Priority;
+
 	ShapeList m_List;
 
 public:
@@ -80,6 +82,10 @@ public:
 	/// including bending allowance.
 	const ACHAR* FormulaBending(void) const;
 	Acad::ErrorStatus setFormulaBending(const ACHAR* newVal);
+
+	/// Gets or sets the priority of the shape in BOM table.
+	const Adesk::Int32 Priority(void) const;
+	Acad::ErrorStatus setPriority(const Adesk::Int32 newVal);
 
 public:
 	/// Adds a shape.

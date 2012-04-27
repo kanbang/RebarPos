@@ -65,6 +65,15 @@ PosShape::ShapeCollection^ PosShape::Items::get()
 	return m_Shapes;
 }
 
+void PosShape::Priority::set(int value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setPriority(value));
+}
+int PosShape::Priority::get()
+{
+    return GetImpObj()->Priority();
+}
+
 //*************************************************************************
 // Shape Collection
 //*************************************************************************

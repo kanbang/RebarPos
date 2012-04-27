@@ -116,6 +116,8 @@ namespace OZOZ
 			property String^ Formula        { String^ get(); void set(String^ value); }
 			property String^ FormulaBending { String^ get(); void set(String^ value); }
 
+			property int Priority { int get(); void set(int value); }
+
 		public:
 			property static String^ TableName        { String^ get(); }
         };

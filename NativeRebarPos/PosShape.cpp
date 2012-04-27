@@ -52,7 +52,7 @@ ACRX_DXF_DEFINE_MEMBERS(CPosShape, AcDbObject,
 	|Company:          OZOZ");
 
 //-----------------------------------------------------------------------------
-CPosShape::CPosShape () : m_Fields(1), m_Formula(NULL), m_FormulaBending(NULL)
+CPosShape::CPosShape () : m_Fields(1), m_Formula(NULL), m_FormulaBending(NULL), m_Priority(0)
 { }
 
 CPosShape::~CPosShape () 
@@ -117,6 +117,19 @@ Acad::ErrorStatus CPosShape::setFormulaBending(const ACHAR* newVal)
         acutUpdString(newVal, m_FormulaBending);
     }
 
+	return Acad::eOk;
+}
+
+const Adesk::Int32 CPosShape::Priority(void) const
+{
+	assertReadEnabled();
+	return m_Priority;
+}
+
+Acad::ErrorStatus CPosShape::setPriority(const Adesk::Int32 newVal)
+{
+	assertWriteEnabled();
+    m_Priority = newVal;
 	return Acad::eOk;
 }
 
@@ -190,6 +203,7 @@ Acad::ErrorStatus CPosShape::dwgOutFields(AcDbDwgFiler *pFiler) const
 		pFiler->writeString(m_FormulaBending);
 	else
 		pFiler->writeString(_T(""));
+	pFiler->writeInt32(m_Priority);
 
     // Segments
 	pFiler->writeInt32((int)m_List.size());
@@ -259,6 +273,7 @@ Acad::ErrorStatus CPosShape::dwgInFields(AcDbDwgFiler *pFiler)
         pFiler->readInt32(&m_Fields);
 		pFiler->readString(&m_Formula);
 		pFiler->readString(&m_FormulaBending);
+        pFiler->readInt32(&m_Priority);
 
 		// Segments
 		long count;
@@ -340,6 +355,7 @@ Acad::ErrorStatus CPosShape::dxfOutFields(AcDbDxfFiler *pFiler) const
 		pFiler->writeString(AcDb::kDxfXTextString, m_FormulaBending);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString, _T(""));
+	pFiler->writeInt32(AcDb::kDxfInt32 + 2, m_Priority);
 
     // Segments
 	pFiler->writeInt32(AcDb::kDxfInt32, (int)m_List.size());
@@ -413,6 +429,7 @@ Acad::ErrorStatus CPosShape::dxfInFields(AcDbDxfFiler *pFiler)
 	ACHAR* t_Formula = NULL;
 	ACHAR* t_FormulaBending = NULL;
 	ShapeList t_List;
+	Adesk::Int32 t_Priority;
 
 	if ((es = pFiler->readItem(&rb)) == Acad::eOk && rb.restype == AcDb::kDxfInt32 + 1) 
 	{
@@ -443,6 +460,10 @@ Acad::ErrorStatus CPosShape::dxfInFields(AcDbDxfFiler *pFiler)
         pFiler->pushBackItem();
         pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: expected group code %d (formula bending)"), AcDb::kDxfXTextString + 1);
         return pFiler->filerStatus();
+	}
+	if ((es = pFiler->readItem(&rb)) == Acad::eOk && rb.restype == AcDb::kDxfInt32 + 2) 
+	{
+		t_Priority = rb.resval.rlong;
 	}
 
 	// Segments
@@ -644,6 +665,7 @@ Acad::ErrorStatus CPosShape::dxfInFields(AcDbDxfFiler *pFiler)
 	setFormula(t_Formula);
 	setFormulaBending(t_FormulaBending);
 	m_List = t_List;
+	m_Priority = t_Priority;
 
 	acutDelString(t_Formula);
 	acutDelString(t_FormulaBending);
