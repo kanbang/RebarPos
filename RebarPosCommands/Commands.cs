@@ -62,8 +62,8 @@ namespace RebarPosCommands
             bool cont = true;
             while (cont)
             {
-                PromptEntityOptions opts = new PromptEntityOptions("Poz secin veya [Yeni/Numaralandir/Kopyala/Grup/Metraj/bul Degistir/Balon sil/Cizim/Secenekler/Acilimlar/Poz stili]: ",
-                    "New Numbering Copy Group BOM Find Empty Draw Options Shapes Pos");
+                PromptEntityOptions opts = new PromptEntityOptions("Poz secin veya [Yeni/Numaralandir/Kopyala/Grup/kOntrol/Metraj/bul Degistir/Balon sil/Cizim/Secenekler/Acilimlar/Poz stili]: ",
+                    "New Numbering Copy Check Group BOM Find Empty Draw Options Shapes Pos");
                 PromptEntityResult result = Application.DocumentManager.MdiActiveDocument.Editor.GetEntity(opts);
 
                 if (result.Status == PromptStatus.Keyword)
@@ -76,20 +76,23 @@ namespace RebarPosCommands
                         case "Numbering":
                             // NumberPos();
                             break;
+                        case "Empty":
+                            EmptyBalloons();
+                            break;
                         case "Copy":
-                            // CopyPos();
+                            CopyPos();
                             break;
                         case "Group":
                             PosGroups();
+                            break;
+                        case "Check":
+                            // CheckPos();
                             break;
                         case "BOM":
                             // DrawBOM();
                             break;
                         case "Find":
                             // FindPos();
-                            break;
-                        case "Empty":
-                            EmptyBalloons();
                             break;
                         case "Draw":
                             // DrawPos();
@@ -134,16 +137,22 @@ namespace RebarPosCommands
             NewPos();
         }
 
+        [CommandMethod("RebarPos", "EMPTYPOS", "EMPTYPOS_Local", CommandFlags.Modal)]
+        public void CMD_EmptyBalloons()
+        {
+            EmptyBalloons();
+        }
+
         [CommandMethod("RebarPos", "POSGROUP", "POSGROUP_Local", CommandFlags.Modal)]
         public void CMD_PosGroups()
         {
             PosGroups();
         }
 
-        [CommandMethod("RebarPos", "EMPTYPOS", "EMPTYPOS_Local", CommandFlags.Modal)]
-        public void CMD_EmptyBalloons()
+        [CommandMethod("RebarPos", "COPYPOS", "COPYPOS_Local", CommandFlags.Modal)]
+        public void CMD_CopyPos()
         {
-            EmptyBalloons();
+            CopyPos();
         }
     }
 }

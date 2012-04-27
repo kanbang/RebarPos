@@ -61,6 +61,15 @@ namespace RebarPosCommands {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to POZKOPYALA.
+        /// </summary>
+        internal static string COPYPOS_Local {
+            get {
+                return ResourceManager.GetString("COPYPOS_Local", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to NUMARASIL.
         /// </summary>
         internal static string EMPTYPOS_Local {
