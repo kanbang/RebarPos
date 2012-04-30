@@ -117,6 +117,8 @@ private:
 	AcDbHardPointerId m_GroupID;
 
 	/// Locals
+	mutable bool geomInit;
+	mutable AcGeMatrix3d ucs;
 	AcGeVector3d direction, up, norm;
 	mutable bool isModified;
 

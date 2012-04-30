@@ -70,7 +70,7 @@ ACRX_DXF_DEFINE_MEMBERS(CRebarPos, AcDbEntity,
 //*************************************************************************
 
 CRebarPos::CRebarPos() :
-	m_BasePoint(0, 0, 0), direction(1, 0, 0), up(0, 1, 0), norm(0, 0, 1), m_NoteGrip(0, -1.6, 0),
+	m_BasePoint(0, 0, 0), geomInit(false), ucs(AcGeMatrix3d::kIdentity), direction(1, 0, 0), up(0, 1, 0), norm(0, 0, 1), m_NoteGrip(0, -1.6, 0),
 	m_DisplayStyle(CRebarPos::ALL), isModified(true), m_Length(NULL), m_Key(NULL),
 	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), m_Multiplier(1), 
 	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), m_IsVarLength(false),
@@ -583,8 +583,6 @@ Acad::ErrorStatus CRebarPos::subTransformBy(const AcGeMatrix3d& xform)
 	norm = direction.crossProduct(up);
 
 	// Get UCS vectors
-	AcGeMatrix3d ucs;
-	acdbUcsMatrix(ucs);
 	AcGeVector3d ucsdir(direction);
 	ucsdir.transformBy(ucs);
 	AcGeVector3d ucsup(up);
@@ -783,7 +781,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	trans.setCoordSystem(m_BasePoint, direction, up, norm);
 	AcGeMatrix3d noteTrans = AcGeMatrix3d::kIdentity;
 	noteTrans.setCoordSystem(m_NoteGrip, direction, up, norm);
-
+	
 	// Transform to match text orientation
 	worldDraw->geometry().pushModelTransform(trans);
 	// Highlight current group
@@ -809,14 +807,32 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
 	{
 		CDrawParams p = lastDrawList.at(i);
-		worldDraw->subEntityTraits().setColor(p.color);
-		worldDraw->geometry().text(AcGePoint3d(p.x, p.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, p.text, -1, Adesk::kFalse, lastTextStyle);
+
+		// Circle
 		if(p.hasCircle)
 		{
+			AcGePoint3d circle(p.x + p.w / 2.0, p.y + p.h / 2.0, 0);
+
+			// Highlight
+			if(!worldDraw->isDragging() && lastCurrentGroup == Adesk::kTrue)
+			{
+				AcGiFillType filltype = worldDraw->subEntityTraits().fillType();
+				worldDraw->subEntityTraits().setFillType(kAcGiFillAlways);
+				worldDraw->subEntityTraits().setLayer(defpointsLayer);
+				worldDraw->subEntityTraits().setColor(lastGroupHighlightColor);
+				worldDraw->geometry().circle(circle, circleRadius, AcGeVector3d::kZAxis);
+				worldDraw->subEntityTraits().setFillType(filltype);
+			}
+
 			worldDraw->subEntityTraits().setColor(lastCircleColor);
-			worldDraw->geometry().circle(AcGePoint3d(p.x + p.w / 2.0, p.y + p.h / 2.0, 0), circleRadius, AcGeVector3d::kZAxis);
+			worldDraw->geometry().circle(circle, circleRadius, AcGeVector3d::kZAxis);
 		}
+
+		// Text
+		worldDraw->subEntityTraits().setColor(p.color);
+		worldDraw->geometry().text(AcGePoint3d(p.x, p.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, p.text, -1, Adesk::kFalse, lastTextStyle);
 	}
+
 	// Group name
 	worldDraw->subEntityTraits().setLayer(defpointsLayer);
 	lastTextStyle.setTextSize(0.4);
@@ -1633,6 +1649,13 @@ const void CRebarPos::Calculate(void) const
 		return;
 
 	assertReadEnabled();
+
+	// Current UCS
+	if(!geomInit)
+	{
+		acdbUcsMatrix(ucs);
+		geomInit = true;
+	}
 
 	// Layers
 	zeroLayer = Utility::GetZeroLayer();
