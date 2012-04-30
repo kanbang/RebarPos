@@ -934,10 +934,10 @@ Acad::ErrorStatus CRebarPos::dwgInFields(AcDbDwgFiler* pFiler)
 	// Read params
 	if (version >= 1)
 	{
-		pFiler->readItem(&m_BasePoint);
-		pFiler->readItem(&m_NoteGrip);
-		pFiler->readItem(&direction);
-		pFiler->readItem(&up);
+		pFiler->readPoint3d(&m_BasePoint);
+		pFiler->readPoint3d(&m_NoteGrip);
+		pFiler->readVector3d(&direction);
+		pFiler->readVector3d(&up);
 		norm = direction.crossProduct(up);
 		
 		acutDelString(m_Pos);
@@ -957,9 +957,9 @@ Acad::ErrorStatus CRebarPos::dwgInFields(AcDbDwgFiler* pFiler)
 		pFiler->readString(&m_Count);
 		pFiler->readString(&m_Diameter);
 		pFiler->readString(&m_Spacing);
-		pFiler->readItem(&m_Multiplier);
-		int display = 0;
-		pFiler->readItem(&display);
+		pFiler->readInt32(&m_Multiplier);
+		Adesk::Int32 display = 0;
+		pFiler->readInt32(&display);
 		m_DisplayStyle = (CRebarPos::DisplayStyle)display;
 		pFiler->readString(&m_A);
 		pFiler->readString(&m_B);
@@ -988,10 +988,10 @@ Acad::ErrorStatus CRebarPos::dwgOutFields(AcDbDwgFiler* pFiler) const
 	// Object version number
 	pFiler->writeItem(CRebarPos::kCurrentVersionNumber);
 
-	pFiler->writeItem(m_BasePoint);
-	pFiler->writeItem(m_NoteGrip);
-	pFiler->writeItem(direction);
-	pFiler->writeItem(up);
+	pFiler->writePoint3d(m_BasePoint);
+	pFiler->writePoint3d(m_NoteGrip);
+	pFiler->writeVector3d(direction);
+	pFiler->writeVector3d(up);
 
 	if (m_Pos)
 		pFiler->writeString(m_Pos);
@@ -1013,7 +1013,7 @@ Acad::ErrorStatus CRebarPos::dwgOutFields(AcDbDwgFiler* pFiler) const
 		pFiler->writeString(m_Spacing);
 	else
 		pFiler->writeString(_T(""));
-	pFiler->writeItem(m_Multiplier);
+	pFiler->writeInt32(m_Multiplier);
 	pFiler->writeInt32(m_DisplayStyle);
 	if(m_A)
 		pFiler->writeString(m_A);
