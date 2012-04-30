@@ -163,37 +163,140 @@ const double Utility::StrToDouble(const wchar_t* str)
 	return _wtof(str);
 }
 
+const Acad::ErrorStatus Utility::ReadDXFItem(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, resbuf* rb)
+{
+	Acad::ErrorStatus es;
+	if ((es = pFiler->readItem(rb)) != Acad::eOk)
+	{
+		pFiler->pushBackItem();
+		pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: unable to read group code %d for %s"), code, name);
+		return pFiler->filerStatus();
+	}
+	else if(rb->restype != code)
+	{
+		pFiler->pushBackItem();
+		pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: expected group code %d for %s, but got %d"), code, name, rb->restype);
+		return Acad::eMissingDxfField;
+	}
+
+	return pFiler->filerStatus();
+}
+
+const Acad::ErrorStatus Utility::ReadDXFInt(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, short& val)
+{
+	Acad::ErrorStatus es;
+	resbuf rb;
+	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	{
+		val = rb.resval.rint;
+	}
+	return es;
+}
+
+const Acad::ErrorStatus Utility::ReadDXFUInt(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, unsigned short& val)
+{
+	Acad::ErrorStatus es;
+	resbuf rb;
+	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	{
+		val = rb.resval.rint;
+	}
+	return es;
+}
+
+const Acad::ErrorStatus Utility::ReadDXFLong(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, int& val)
+{
+	Acad::ErrorStatus es;
+	resbuf rb;
+	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	{
+		val = rb.resval.rlong;
+	}
+	return es;
+}
+
+const Acad::ErrorStatus Utility::ReadDXFULong(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, unsigned int& val)
+{
+	Acad::ErrorStatus es;
+	resbuf rb;
+	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	{
+		val = rb.resval.rlong;
+	}
+	return es;
+}
+
+const Acad::ErrorStatus Utility::ReadDXFLong(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, long& val)
+{
+	Acad::ErrorStatus es;
+	resbuf rb;
+	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	{
+		val = rb.resval.rlong;
+	}
+	return es;
+}
+
+const Acad::ErrorStatus Utility::ReadDXFULong(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, unsigned long& val)
+{
+	Acad::ErrorStatus es;
+	resbuf rb;
+	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	{
+		val = rb.resval.rlong;
+	}
+	return es;
+}
+
 const Acad::ErrorStatus Utility::ReadDXFReal(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, double& val)
 {
 	Acad::ErrorStatus es;
 	resbuf rb;
-	if ((es = pFiler->readItem(&rb)) == Acad::eOk && rb.restype == code) 
+	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
 	{
 		val = rb.resval.rreal;
 	}
-	else
-	{
-		pFiler->pushBackItem();
-		pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: expected group code %d for %s, but got %d"), code, name, rb.restype);
-		val = 0;
-	}
-
-	return pFiler->filerStatus();
+	return es;
 }
 
-const Acad::ErrorStatus Utility::ReadDXFString(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, ACHAR* val)
+const Acad::ErrorStatus Utility::ReadDXFString(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, ACHAR*& val)
 {
 	Acad::ErrorStatus es;
 	resbuf rb;
-	if ((es = pFiler->readItem(&rb)) == Acad::eOk && rb.restype == code) 
+	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
 	{
-		acutUpdString(rb.resval.rstring, val);
+		acutDelString(val);
+		val = NULL;
+		if(rb.resval.rstring != NULL)
+		{
+			acutUpdString(rb.resval.rstring, val);
+		}
 	}
-	else
-	{
-		pFiler->pushBackItem();
-		pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: expected group code %d for %s, but got %d"), code, name, rb.restype);
-	}
-
-	return pFiler->filerStatus();
+	return es;
 }
+
+const Acad::ErrorStatus Utility::ReadDXFPoint(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, AcGePoint2d& val)
+{
+	Acad::ErrorStatus es;
+	resbuf rb;
+	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	{
+		val.x = rb.resval.rpoint[0];
+		val.y = rb.resval.rpoint[1];
+	}
+	return es;
+}
+
+const Acad::ErrorStatus Utility::ReadDXFPoint(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, AcGePoint3d& val)
+{
+	Acad::ErrorStatus es;
+	resbuf rb;
+	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	{
+		val.x = rb.resval.rpoint[0];
+		val.y = rb.resval.rpoint[1];
+		val.z = rb.resval.rpoint[2];
+	}
+	return es;
+}
+

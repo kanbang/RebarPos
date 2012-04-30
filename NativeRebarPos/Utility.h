@@ -32,6 +32,15 @@ namespace Utility
 	const double StrToDouble(const wchar_t* str);
 
 	// Read DXF vals
+	const Acad::ErrorStatus ReadDXFItem(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, resbuf* val);
+	const Acad::ErrorStatus ReadDXFInt(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, short& val);
+	const Acad::ErrorStatus ReadDXFUInt(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, unsigned short& val);
+	const Acad::ErrorStatus ReadDXFLong(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, int& val);
+	const Acad::ErrorStatus ReadDXFULong(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, unsigned int& val);
+	const Acad::ErrorStatus ReadDXFLong(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, long& val);
+	const Acad::ErrorStatus ReadDXFULong(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, unsigned long& val);
 	const Acad::ErrorStatus ReadDXFReal(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, double& val);
-	const Acad::ErrorStatus ReadDXFString(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, ACHAR* val);
+	const Acad::ErrorStatus ReadDXFString(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, ACHAR*& val);
+	const Acad::ErrorStatus ReadDXFPoint(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, AcGePoint2d& val);
+	const Acad::ErrorStatus ReadDXFPoint(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, AcGePoint3d& val);
 }

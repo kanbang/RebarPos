@@ -47,7 +47,7 @@ ACRX_DXF_DEFINE_MEMBERS(CPosGroup, AcDbObject,
 	AcDb::kDHL_CURRENT, AcDb::kMReleaseCurrent,
 	AcDbProxyEntity::kAllAllowedBits, POSGROUP,
 	"RebarPos2.0\
-	|Product Desc:     PosStyle Entity\
+	|Product Desc:     PosGroup Entity\
 	|Company:          OZOZ");
 
 //-----------------------------------------------------------------------------

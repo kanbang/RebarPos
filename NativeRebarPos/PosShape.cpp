@@ -437,21 +437,12 @@ Acad::ErrorStatus CPosShape::dxfInFields(AcDbDxfFiler *pFiler)
 	if(((es = AcDbObject::dxfInFields(pFiler)) != Acad::eOk) || !pFiler->atSubclassData(_T("PosShape")))
 		return es;
 
-	resbuf rb;
 	// Object version number
     Adesk::UInt32 version;
-    pFiler->readItem(&rb);
-    if (rb.restype != AcDb::kDxfInt32) 
-    {
-        pFiler->pushBackItem();
-        pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: expected group code %d (version)"), AcDb::kDxfInt32);
-        return pFiler->filerStatus();
-    }
-    version = rb.resval.rlong;
+	if((es = Utility::ReadDXFULong(pFiler, AcDb::kDxfInt32, _T("version"), version)) != Acad::eOk) return es;
 	if (version > CPosShape::kCurrentVersionNumber)
 		return Acad::eMakeMeProxy;
 
-	// Read params
 	// Properties
 	ACHAR* t_Name = NULL;
 	Adesk::Int32 t_Fields;
@@ -460,94 +451,21 @@ Acad::ErrorStatus CPosShape::dxfInFields(AcDbDxfFiler *pFiler)
 	ShapeList t_List;
 	Adesk::Int32 t_Priority;
 
-	if ((es = pFiler->readItem(&rb)) == Acad::eOk && rb.restype == AcDb::kDxfXTextString) 
-	{
-		acutUpdString(rb.resval.rstring, t_Name);
-	}
-	else
-	{
-        pFiler->pushBackItem();
-        pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: expected group code %d (formula)"), AcDb::kDxfXTextString);
-        return pFiler->filerStatus();
-	}
-	if ((es = pFiler->readItem(&rb)) == Acad::eOk && rb.restype == AcDb::kDxfInt32 + 1) 
-	{
-		t_Fields = rb.resval.rlong;
-	}
-	else
-	{
-        pFiler->pushBackItem();
-        pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: expected group code %d (fields)"), AcDb::kDxfInt32 + 1);
-        return pFiler->filerStatus();
-	}
-	if ((es = pFiler->readItem(&rb)) == Acad::eOk && rb.restype == AcDb::kDxfXTextString + 1) 
-	{
-		acutUpdString(rb.resval.rstring, t_Formula);
-	}
-	else
-	{
-        pFiler->pushBackItem();
-        pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: expected group code %d (formula)"), AcDb::kDxfXTextString + 1);
-        return pFiler->filerStatus();
-	}
-	if ((es = pFiler->readItem(&rb)) == Acad::eOk && rb.restype == AcDb::kDxfXTextString + 2) 
-	{
-		acutUpdString(rb.resval.rstring, t_FormulaBending);
-	}
-	else
-	{
-        pFiler->pushBackItem();
-        pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: expected group code %d (formula bending)"), AcDb::kDxfXTextString + 2);
-        return pFiler->filerStatus();
-	}
-	if ((es = pFiler->readItem(&rb)) == Acad::eOk && rb.restype == AcDb::kDxfInt32 + 2) 
-	{
-		t_Priority = rb.resval.rlong;
-	}
-	else
-	{
-        pFiler->pushBackItem();
-        pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: expected group code %d (priority)"), AcDb::kDxfInt32 + 2);
-        return pFiler->filerStatus();
-	}
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("name"), t_Name)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32 + 1, _T("fields"), t_Fields)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString + 1, _T("formula"), t_Formula)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString + 2, _T("formula bending"), t_FormulaBending)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32 + 2, _T("priority"), t_Priority)) != Acad::eOk) return es;
 
 	// Segments
-	long count;
-	if ((es = pFiler->readItem(&rb)) == Acad::eOk && rb.restype == AcDb::kDxfInt32 + 3) 
-	{
-		count = rb.resval.rlong;
-	}
-	else
-	{
-        pFiler->pushBackItem();
-        pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: expected group code %d (count)"), AcDb::kDxfInt32 + 3);
-        return pFiler->filerStatus();
-	}
-	
-	for(long i = 0; i < count; i++)
+	int count;
+	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32 + 3, _T("segment count"), count)) != Acad::eOk) return es;
+	for(int i = 0; i < count; i++)
 	{
 		Adesk::Int32 type;
 		Adesk::UInt16 color;
-		if ((es = pFiler->readItem(&rb)) == Acad::eOk && rb.restype == AcDb::kDxfInt32) 
-		{
-			type = rb.resval.rlong;
-		}
-		else
-		{
-			pFiler->pushBackItem();
-			pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: expected group code %d (segment type code)"), AcDb::kDxfInt32);
-			return pFiler->filerStatus();
-		}
-		if ((es = pFiler->readItem(&rb)) == Acad::eOk && rb.restype == AcDb::kDxfColor) 
-		{
-			color = rb.resval.rint;
-		}
-		else
-		{
-			pFiler->pushBackItem();
-			pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: expected group code %d (segment color)"), AcDb::kDxfColor);
-			return pFiler->filerStatus();
-		}
+		if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("segment type code"), type)) != Acad::eOk) return es;
+		if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfColor, _T("segment color"), color)) != Acad::eOk) return es;
 
 		switch(type)
 		{
@@ -555,10 +473,11 @@ Acad::ErrorStatus CPosShape::dxfInFields(AcDbDxfFiler *pFiler)
 			{
 				CShapeLine* line = new CShapeLine();
 				line->color = color;
-				Utility::ReadDXFReal(pFiler, AcDb::kDxfXCoord, _T("segment x1"), line->x1);
-				Utility::ReadDXFReal(pFiler, AcDb::kDxfYCoord, _T("segment y1"), line->x1);
-				Utility::ReadDXFReal(pFiler, AcDb::kDxfXCoord + 1, _T("segment x2"), line->x1);
-				Utility::ReadDXFReal(pFiler, AcDb::kDxfYCoord + 1, _T("segment y2"), line->x1);
+				AcGePoint2d p1, p2;
+				if((es = Utility::ReadDXFPoint(pFiler, AcDb::kDxfXCoord, _T("segment x1"), p1)) != Acad::eOk) return es;
+				if((es = Utility::ReadDXFPoint(pFiler, AcDb::kDxfXCoord, _T("segment x2"), p2)) != Acad::eOk) return es;
+				line->x1 = p1.x; line->y1 = p1.y;
+				line->x2 = p2.x; line->y2 = p2.y;
 				t_List.push_back(line);
 			}
 			break;
@@ -566,11 +485,12 @@ Acad::ErrorStatus CPosShape::dxfInFields(AcDbDxfFiler *pFiler)
 			{
 				CShapeArc* arc = new CShapeArc();
 				arc->color = color;
-				Utility::ReadDXFReal(pFiler, AcDb::kDxfXCoord, _T("arc x"), arc->x);
-				Utility::ReadDXFReal(pFiler, AcDb::kDxfYCoord, _T("arc y"), arc->y);
-				Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("arc r"), arc->r);
-				Utility::ReadDXFReal(pFiler, AcDb::kDxfAngle, _T("arc start angle"), arc->startAngle);
-				Utility::ReadDXFReal(pFiler, AcDb::kDxfAngle + 1, _T("arc end angle"), arc->endAngle);
+				AcGePoint2d p;
+				if((es = Utility::ReadDXFPoint(pFiler, AcDb::kDxfXCoord, _T("arc x"), p)) != Acad::eOk) return es;
+				arc->x = p.x; arc->y = p.y;
+				if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("arc r"), arc->r)) != Acad::eOk) return es;
+				if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfAngle, _T("arc start angle"), arc->startAngle)) != Acad::eOk) return es;
+				if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfAngle + 1, _T("arc end angle"), arc->endAngle)) != Acad::eOk) return es;
 				t_List.push_back(arc);
 			}
 			break;
@@ -578,20 +498,11 @@ Acad::ErrorStatus CPosShape::dxfInFields(AcDbDxfFiler *pFiler)
 			{
 				CShapeText* text = new CShapeText();
 				text->color = color;
-				Utility::ReadDXFReal(pFiler, AcDb::kDxfXCoord, _T("text x"), text->x);
-				Utility::ReadDXFReal(pFiler, AcDb::kDxfYCoord, _T("text y"), text->y);
-				Utility::ReadDXFReal(pFiler, AcDb::kDxfTxtSize, _T("text height"), text->height);
-				if ((es = pFiler->readItem(&rb)) == Acad::eOk && rb.restype == AcDb::kDxfText) 
-				{
-					acutUpdString(rb.resval.rstring, text->text);
-				}
-				else
-				{
-					pFiler->pushBackItem();
-					pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: expected group code %d (text contents)"), AcDb::kDxfText);
-					return pFiler->filerStatus();
-				}
-				
+				AcGePoint2d p;
+				if((es = Utility::ReadDXFPoint(pFiler, AcDb::kDxfXCoord, _T("text x"), p)) != Acad::eOk) return es;
+				text->x = p.x; text->y = p.y;
+				if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfTxtSize, _T("text height"), text->height)) != Acad::eOk) return es;
+				if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("text contents"), text->text)) != Acad::eOk) return es;
 				t_List.push_back(text);
 			}
 			break;
