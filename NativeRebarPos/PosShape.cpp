@@ -475,7 +475,7 @@ Acad::ErrorStatus CPosShape::dxfInFields(AcDbDxfFiler *pFiler)
 				line->color = color;
 				AcGePoint2d p1, p2;
 				if((es = Utility::ReadDXFPoint(pFiler, AcDb::kDxfXCoord, _T("segment x1"), p1)) != Acad::eOk) return es;
-				if((es = Utility::ReadDXFPoint(pFiler, AcDb::kDxfXCoord, _T("segment x2"), p2)) != Acad::eOk) return es;
+				if((es = Utility::ReadDXFPoint(pFiler, AcDb::kDxfXCoord + 1, _T("segment x2"), p2)) != Acad::eOk) return es;
 				line->x1 = p1.x; line->y1 = p1.y;
 				line->x2 = p2.x; line->y2 = p2.y;
 				t_List.push_back(line);

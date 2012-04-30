@@ -31,7 +31,7 @@ namespace RebarPosCommands
             DWGUtility.CreateDefaultShapes();
             DWGUtility.CreateDefaultStyles();
             CurrentGroupId = DWGUtility.CreateDefaultGroups();
-
+            return;
             CurrentGroupName = "";
             Database db = HostApplicationServices.WorkingDatabase;
             using (Transaction tr = db.TransactionManager.StartTransaction())

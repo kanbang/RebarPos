@@ -301,6 +301,8 @@ Acad::ErrorStatus CPosStyle::dwgOutFields(AcDbDwgFiler *pFiler) const
 	// Properties
 	if(m_Name)
 		pFiler->writeItem(m_Name);
+	else
+		pFiler->writeString(_T(""));
 	if (m_Formula)
 		pFiler->writeString(m_Formula);
 	else

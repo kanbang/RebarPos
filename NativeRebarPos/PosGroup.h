@@ -64,7 +64,7 @@ protected:
 
 	Adesk::Boolean m_Bending;
 	double m_MaxBarLength;
-	int m_Precision;
+	Adesk::Int32 m_Precision;
 
 	DrawingUnits m_DrawingUnit;
 	DrawingUnits m_DisplayUnit;
@@ -87,8 +87,8 @@ public:
 	Acad::ErrorStatus setMaxBarLength(const double newVal);
 
 	/// Gets or sets the display precision
-    const int Precision(void) const;
-	Acad::ErrorStatus setPrecision(const int newVal);
+    const Adesk::Int32 Precision(void) const;
+	Acad::ErrorStatus setPrecision(const Adesk::Int32 newVal);
 
 	/// Gets or sets the drawing unit
     const DrawingUnits DrawingUnit(void) const;

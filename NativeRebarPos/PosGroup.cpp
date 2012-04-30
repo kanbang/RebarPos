@@ -104,12 +104,12 @@ Acad::ErrorStatus CPosGroup::setMaxBarLength(const double newVal)
 	return Acad::eOk;
 }
 
-const int CPosGroup::Precision(void) const
+const Adesk::Int32 CPosGroup::Precision(void) const
 {
 	assertReadEnabled();
 	return m_Precision;
 }
-Acad::ErrorStatus CPosGroup::setPrecision(const int newVal)
+Acad::ErrorStatus CPosGroup::setPrecision(const Adesk::Int32 newVal)
 {
 	assertWriteEnabled();
 	m_Precision = newVal;
@@ -186,11 +186,15 @@ Acad::ErrorStatus CPosGroup::dwgOutFields(AcDbDwgFiler *pFiler) const
 	// Properties
 	if(m_Name)
 		pFiler->writeItem(m_Name);
-	pFiler->writeItem(m_Bending);
+	else
+		pFiler->writeItem(_T(""));
+
+	pFiler->writeBoolean(m_Bending);
 	pFiler->writeDouble(m_MaxBarLength);
 	pFiler->writeInt32(m_Precision);
 	pFiler->writeInt32(m_DrawingUnit);
 	pFiler->writeInt32(m_DisplayUnit);
+
     pFiler->writeHardPointerId(m_StyleID);
 
 	return pFiler->filerStatus();
@@ -218,15 +222,17 @@ Acad::ErrorStatus CPosGroup::dwgInFields(AcDbDwgFiler *pFiler)
 
 		// Properties
 		pFiler->readItem(&m_Name);
-		pFiler->readItem(&m_Bending);
-		pFiler->readItem(&m_MaxBarLength);
-		pFiler->readItem(&m_Precision);
-		int drawingunit = 0;
-		pFiler->readItem(&drawingunit);
+
+		pFiler->readBoolean(&m_Bending);
+		pFiler->readDouble(&m_MaxBarLength);
+		pFiler->readInt32(&m_Precision);
+		Adesk::Int32 drawingunit = 0;
+		pFiler->readInt32(&drawingunit);
 		m_DrawingUnit = (DrawingUnits)drawingunit;
-		int displayunit = 0;
-		pFiler->readItem(&displayunit);
+		Adesk::Int32 displayunit = 0;
+		pFiler->readInt32(&displayunit);
 		m_DisplayUnit = (DrawingUnits)displayunit;
+
 		pFiler->readHardPointerId(&m_StyleID);
 	}
 
