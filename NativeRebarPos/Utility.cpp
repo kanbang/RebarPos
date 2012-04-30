@@ -17,6 +17,7 @@
 #include "dbspline.h"
 #include "dbents.h"
 #include "dbsymtb.h"
+#include "acutmem.h"
 
 #include "dbapserv.h"
 #include "tchar.h"
@@ -162,3 +163,37 @@ const double Utility::StrToDouble(const wchar_t* str)
 	return _wtof(str);
 }
 
+const Acad::ErrorStatus Utility::ReadDXFReal(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, double& val)
+{
+	Acad::ErrorStatus es;
+	resbuf rb;
+	if ((es = pFiler->readItem(&rb)) == Acad::eOk && rb.restype == code) 
+	{
+		val = rb.resval.rreal;
+	}
+	else
+	{
+		pFiler->pushBackItem();
+		pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: expected group code %d for %s, but got %d"), code, name, rb.restype);
+		val = 0;
+	}
+
+	return pFiler->filerStatus();
+}
+
+const Acad::ErrorStatus Utility::ReadDXFString(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, ACHAR* val)
+{
+	Acad::ErrorStatus es;
+	resbuf rb;
+	if ((es = pFiler->readItem(&rb)) == Acad::eOk && rb.restype == code) 
+	{
+		acutUpdString(rb.resval.rstring, val);
+	}
+	else
+	{
+		pFiler->pushBackItem();
+		pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: expected group code %d for %s, but got %d"), code, name, rb.restype);
+	}
+
+	return pFiler->filerStatus();
+}

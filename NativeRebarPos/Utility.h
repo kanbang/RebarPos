@@ -30,4 +30,8 @@ namespace Utility
 	/// Convert string to double
 	const double StrToDouble(const std::wstring& str);
 	const double StrToDouble(const wchar_t* str);
+
+	// Read DXF vals
+	const Acad::ErrorStatus ReadDXFReal(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, double& val);
+	const Acad::ErrorStatus ReadDXFString(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, ACHAR* val);
 }
