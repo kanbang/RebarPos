@@ -79,6 +79,7 @@ namespace OZOZ
 			property Autodesk::AutoCAD::DatabaseServices::ObjectId GroupId { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
 
 		public:
+			void Update();
 			HitTestResult HitTest(Point3d pt);
         };
     }

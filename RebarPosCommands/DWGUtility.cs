@@ -327,5 +327,34 @@ namespace RebarPosCommands
             }
             return list;
         }
+
+        // Refreshes all items in group
+        public static void RefreshPosInGroup(ObjectId id)
+        {
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    BlockTableRecord btr = (BlockTableRecord)tr.GetObject(db.CurrentSpaceId, OpenMode.ForRead);
+                    using (BlockTableRecordEnumerator it = btr.GetEnumerator())
+                    {
+                        while (it.MoveNext())
+                        {
+                            RebarPos pos = tr.GetObject(it.Current, OpenMode.ForWrite) as RebarPos;
+                            if (pos != null && pos.GroupId == id)
+                            {
+                                pos.Update();
+                            }
+                        }
+                    }
+                    tr.Commit();
+                }
+                catch
+                {
+                    ;
+                }
+            }
+        }
     }
 }

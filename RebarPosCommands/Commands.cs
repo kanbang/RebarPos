@@ -30,22 +30,8 @@ namespace RebarPosCommands
         {
             DWGUtility.CreateDefaultShapes();
             DWGUtility.CreateDefaultStyles();
-            CurrentGroupId = DWGUtility.CreateDefaultGroups();
-            return;
-            CurrentGroupName = "";
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
-            {
-                try
-                {
-                    PosGroup group = (PosGroup)tr.GetObject(CurrentGroupId, OpenMode.ForRead);
-                    CurrentGroupName = group.Name;
-                }
-                catch
-                {
-                    ;
-                }
-            }
+            ObjectId id = DWGUtility.CreateDefaultGroups();
+            SetCurrentGroup(id);
         }
 
         private string CurrentGroupName { get; set; }

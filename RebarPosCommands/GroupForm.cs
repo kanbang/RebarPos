@@ -35,7 +35,6 @@ namespace RebarPosCommands
         Dictionary<string, ObjectId> m_Styles;
 
         public ObjectId CurrentId { get; private set; }
-        public string CurrentName { get; private set; }
 
         public GroupForm()
         {
@@ -259,6 +258,7 @@ namespace RebarPosCommands
                 btnRemove.Enabled = false;
                 btnRename.Enabled = false;
                 gbOptions.Enabled = false;
+                btnSetCurrent.Enabled = false;
                 return;
             }
             else
@@ -266,6 +266,7 @@ namespace RebarPosCommands
                 btnRemove.Enabled = true;
                 btnRename.Enabled = true;
                 gbOptions.Enabled = true;
+                btnSetCurrent.Enabled = true;
                 SetGroup();
             }
         }
@@ -394,7 +395,6 @@ namespace RebarPosCommands
                                 if (it.Value == copy.id)
                                 {
                                     CurrentId = it.Value;
-                                    CurrentName = it.Key;
                                     group.Current = true;
                                 }
                                 else

@@ -232,6 +232,10 @@ public:
 	const ACHAR* PosKey() const;
  
 public:
+	/// Forces a view update.
+	const void Update(void);
+
+public:
 	/// AcDbEntity overrides: database    
     virtual Acad::ErrorStatus	dwgInFields(AcDbDwgFiler* filer);
     virtual Acad::ErrorStatus	dwgOutFields(AcDbDwgFiler* filer) const;
