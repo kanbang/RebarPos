@@ -52,12 +52,19 @@ ACRX_DXF_DEFINE_MEMBERS(CPosGroup, AcDbObject,
 
 //-----------------------------------------------------------------------------
 CPosGroup::CPosGroup () : m_Name(NULL), m_Bending(Adesk::kFalse), m_MaxBarLength(12), m_Precision(0),
-m_DrawingUnit(CPosGroup::MM), m_DisplayUnit(CPosGroup::MM), m_StyleID(AcDbObjectId::kNull), m_Current(Adesk::kFalse)
+	m_DrawingUnit(CPosGroup::MM), m_DisplayUnit(CPosGroup::MM), m_Current(Adesk::kFalse), 
+	m_Formula(NULL), m_FormulaWithoutLength(NULL), m_FormulaPosOnly(NULL),
+	m_TextColor(2), m_PosColor(4), m_CircleColor(1), m_MultiplierColor(33), m_GroupColor(9), 
+	m_NoteColor(30), m_CurrentGroupHighlightColor(8), m_NoteScale(0.75), 
+	m_TextStyleID(AcDbObjectId::kNull), m_NoteStyleID(AcDbObjectId::kNull)
 { }
 
 CPosGroup::~CPosGroup () 
 { 
 	acutDelString(m_Name);
+	acutDelString(m_Formula);
+	acutDelString(m_FormulaWithoutLength);
+	acutDelString(m_FormulaPosOnly);
 }
 
 //*************************************************************************
@@ -140,15 +147,196 @@ Acad::ErrorStatus CPosGroup::setDisplayUnit(const CPosGroup::DrawingUnits newVal
 	return Acad::eOk;
 }
 
-const AcDbObjectId& CPosGroup::StyleId(void) const
+const ACHAR* CPosGroup::Formula(void) const
 {
 	assertReadEnabled();
-	return m_StyleID;
+	return m_Formula;
 }
-Acad::ErrorStatus CPosGroup::setStyleId(const AcDbObjectId& newVal)
+
+Acad::ErrorStatus CPosGroup::setFormula(const ACHAR* newVal)
 {
 	assertWriteEnabled();
-	m_StyleID = newVal;
+
+	if(m_Formula != NULL)
+		acutDelString(m_Formula);
+    m_Formula = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_Formula);
+    }
+
+	return Acad::eOk;
+}
+
+const ACHAR* CPosGroup::FormulaWithoutLength(void) const
+{
+	assertReadEnabled();
+	return m_FormulaWithoutLength;
+}
+
+Acad::ErrorStatus CPosGroup::setFormulaWithoutLength(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+
+	if(m_FormulaWithoutLength != NULL)
+		acutDelString(m_FormulaWithoutLength);
+    m_FormulaWithoutLength = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_FormulaWithoutLength);
+    }
+
+	return Acad::eOk;
+}
+
+const ACHAR* CPosGroup::FormulaPosOnly(void) const
+{
+	assertReadEnabled();
+	return m_FormulaPosOnly;
+}
+
+Acad::ErrorStatus CPosGroup::setFormulaPosOnly(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+
+	if(m_FormulaPosOnly != NULL)
+		acutDelString(m_FormulaPosOnly);
+    m_FormulaPosOnly = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_FormulaPosOnly);
+    }
+
+	return Acad::eOk;
+}
+
+const Adesk::UInt16 CPosGroup::TextColor(void) const
+{
+	assertReadEnabled();
+	return m_TextColor;
+}
+
+Acad::ErrorStatus CPosGroup::setTextColor(const Adesk::UInt16 newVal)
+{
+	assertWriteEnabled();
+	m_TextColor = newVal;
+	return Acad::eOk;
+}
+
+const Adesk::UInt16 CPosGroup::PosColor(void) const
+{
+	assertReadEnabled();
+	return m_PosColor;
+}
+
+Acad::ErrorStatus CPosGroup::setPosColor(const Adesk::UInt16 newVal)
+{
+	assertWriteEnabled();
+	m_PosColor = newVal;
+	return Acad::eOk;
+}
+
+const Adesk::UInt16 CPosGroup::CircleColor(void) const
+{
+	assertReadEnabled();
+	return m_CircleColor;
+}
+
+Acad::ErrorStatus CPosGroup::setCircleColor(const Adesk::UInt16 newVal)
+{
+	assertWriteEnabled();
+	m_CircleColor = newVal;
+	return Acad::eOk;
+}
+
+const Adesk::UInt16 CPosGroup::MultiplierColor(void) const
+{
+	assertReadEnabled();
+	return m_MultiplierColor;
+}
+
+Acad::ErrorStatus CPosGroup::setMultiplierColor(const Adesk::UInt16 newVal)
+{
+	assertWriteEnabled();
+	m_MultiplierColor = newVal;
+	return Acad::eOk;
+}
+
+const Adesk::UInt16 CPosGroup::GroupColor(void) const
+{
+	assertReadEnabled();
+	return m_GroupColor;
+}
+
+Acad::ErrorStatus CPosGroup::setGroupColor(const Adesk::UInt16 newVal)
+{
+	assertWriteEnabled();
+	m_GroupColor = newVal;
+	return Acad::eOk;
+}
+
+const Adesk::UInt16 CPosGroup::NoteColor(void) const
+{
+	assertReadEnabled();
+	return m_NoteColor;
+}
+
+Acad::ErrorStatus CPosGroup::setNoteColor(const Adesk::UInt16 newVal)
+{
+	assertWriteEnabled();
+	m_NoteColor = newVal;
+	return Acad::eOk;
+}
+
+const Adesk::UInt16 CPosGroup::CurrentGroupHighlightColor(void) const
+{
+	assertReadEnabled();
+	return m_CurrentGroupHighlightColor;
+}
+
+Acad::ErrorStatus CPosGroup::setCurrentGroupHighlightColor(const Adesk::UInt16 newVal)
+{
+	assertWriteEnabled();
+	m_CurrentGroupHighlightColor = newVal;
+	return Acad::eOk;
+}
+
+const AcDbObjectId& CPosGroup::TextStyleId(void) const
+{
+	assertReadEnabled();
+	return m_TextStyleID;
+}
+
+Acad::ErrorStatus CPosGroup::setTextStyleId(const AcDbObjectId& newVal)
+{
+	assertWriteEnabled();
+	m_TextStyleID = newVal;
+	return Acad::eOk;
+}
+
+const AcDbObjectId& CPosGroup::NoteStyleId(void) const
+{
+	assertReadEnabled();
+	return m_NoteStyleID;
+}
+
+Acad::ErrorStatus CPosGroup::setNoteStyleId(const AcDbObjectId& newVal)
+{
+	assertWriteEnabled();
+	m_NoteStyleID = newVal;
+	return Acad::eOk;
+}
+
+const double CPosGroup::NoteScale(void) const
+{
+	assertReadEnabled();
+	return m_NoteScale;
+}
+
+Acad::ErrorStatus CPosGroup::setNoteScale(const double newVal)
+{
+	assertWriteEnabled();
+	m_NoteScale = newVal;
 	return Acad::eOk;
 }
 
@@ -195,7 +383,35 @@ Acad::ErrorStatus CPosGroup::dwgOutFields(AcDbDwgFiler *pFiler) const
 	pFiler->writeInt32(m_DrawingUnit);
 	pFiler->writeInt32(m_DisplayUnit);
 
-    pFiler->writeHardPointerId(m_StyleID);
+	// Formula
+	if (m_Formula)
+		pFiler->writeString(m_Formula);
+	else
+		pFiler->writeString(_T(""));
+	if (m_FormulaWithoutLength)
+		pFiler->writeString(m_FormulaWithoutLength);
+	else
+		pFiler->writeString(_T(""));
+	if (m_FormulaPosOnly)
+		pFiler->writeString(m_FormulaPosOnly);
+	else
+		pFiler->writeString(_T(""));
+
+    // Colors
+    pFiler->writeUInt16(m_TextColor);
+    pFiler->writeUInt16(m_PosColor);
+    pFiler->writeUInt16(m_CircleColor);
+    pFiler->writeUInt16(m_MultiplierColor);
+    pFiler->writeUInt16(m_GroupColor);
+    pFiler->writeUInt16(m_NoteColor);
+	pFiler->writeUInt16(m_CurrentGroupHighlightColor);
+
+    // Note scale
+    pFiler->writeDouble(m_NoteScale);
+
+    // Styles
+    pFiler->writeHardPointerId(m_TextStyleID);
+    pFiler->writeHardPointerId(m_NoteStyleID);
 
 	return pFiler->filerStatus();
 }
@@ -219,6 +435,9 @@ Acad::ErrorStatus CPosGroup::dwgInFields(AcDbDwgFiler *pFiler)
 	if (version >= 1)
 	{
 		acutDelString(m_Name);
+		acutDelString(m_Formula);
+		acutDelString(m_FormulaWithoutLength);
+		acutDelString(m_FormulaPosOnly);
 
 		// Properties
 		pFiler->readItem(&m_Name);
@@ -233,7 +452,22 @@ Acad::ErrorStatus CPosGroup::dwgInFields(AcDbDwgFiler *pFiler)
 		pFiler->readInt32(&displayunit);
 		m_DisplayUnit = (DrawingUnits)displayunit;
 
-		pFiler->readHardPointerId(&m_StyleID);
+		pFiler->readString(&m_Formula);
+		pFiler->readString(&m_FormulaWithoutLength);
+		pFiler->readString(&m_FormulaPosOnly);
+
+        pFiler->readUInt16(&m_TextColor);
+        pFiler->readUInt16(&m_PosColor);
+        pFiler->readUInt16(&m_CircleColor);
+        pFiler->readUInt16(&m_MultiplierColor);
+        pFiler->readUInt16(&m_GroupColor);
+        pFiler->readUInt16(&m_NoteColor);
+		pFiler->readUInt16(&m_CurrentGroupHighlightColor);
+
+        pFiler->readDouble(&m_NoteScale);
+
+		pFiler->readHardPointerId(&m_TextStyleID);
+		pFiler->readHardPointerId(&m_NoteStyleID);
 	}
 
 	return pFiler->filerStatus();
@@ -267,7 +501,35 @@ Acad::ErrorStatus CPosGroup::dxfOutFields(AcDbDxfFiler *pFiler) const
 	pFiler->writeInt32(AcDb::kDxfInt32 + 1, m_Precision);
 	pFiler->writeInt32(AcDb::kDxfInt32 + 2, m_DrawingUnit);
 	pFiler->writeInt32(AcDb::kDxfInt32 + 3, m_DisplayUnit);
-    pFiler->writeItem(AcDb::kDxfHardPointerId, m_StyleID);
+
+	if(m_Formula)
+		pFiler->writeString(AcDb::kDxfXTextString + 1, m_Formula);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 1, _T(""));
+	if(m_FormulaWithoutLength)
+		pFiler->writeString(AcDb::kDxfXTextString + 2, m_FormulaWithoutLength);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 2, _T(""));
+	if(m_FormulaPosOnly)
+		pFiler->writeString(AcDb::kDxfXTextString + 3, m_FormulaPosOnly);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 3, _T(""));
+
+    // Colors
+    pFiler->writeUInt16(AcDb::kDxfXInt16, m_TextColor);
+    pFiler->writeUInt16(AcDb::kDxfXInt16 + 1, m_PosColor);
+    pFiler->writeUInt16(AcDb::kDxfXInt16 + 2, m_CircleColor);
+    pFiler->writeUInt16(AcDb::kDxfXInt16 + 3, m_MultiplierColor);
+    pFiler->writeUInt16(AcDb::kDxfXInt16 + 4, m_GroupColor);
+    pFiler->writeUInt16(AcDb::kDxfXInt16 + 5, m_NoteColor);
+	pFiler->writeUInt16(AcDb::kDxfXInt16 + 6, m_CurrentGroupHighlightColor);
+
+    // Note scale
+    pFiler->writeDouble(AcDb::kDxfXReal + 1, m_NoteScale);
+
+    // Styles
+    pFiler->writeItem(AcDb::kDxfHardPointerId, m_TextStyleID);
+    pFiler->writeItem(AcDb::kDxfHardPointerId + 1, m_NoteStyleID);
 
 	return pFiler->filerStatus();
 }
@@ -302,7 +564,18 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
 	int t_Precision;
 	int t_DrawingUnit;
 	int t_DisplayUnit;
-	AcDbObjectId t_StyleID;
+	ACHAR* t_Formula = NULL;
+	ACHAR* t_FormulaWithoutLength = NULL;
+	ACHAR* t_FormulaPosOnly = NULL;
+	Adesk::UInt16 t_TextColor;
+	Adesk::UInt16 t_PosColor;
+	Adesk::UInt16 t_CircleColor;
+	Adesk::UInt16 t_MultiplierColor;
+	Adesk::UInt16 t_GroupColor;
+	Adesk::UInt16 t_NoteColor;
+	Adesk::UInt16 t_CurrentGroupHighlightColor;
+	double t_NoteScale;
+	AcDbObjectId t_TextStyleID, t_NoteStyleID;
 
     while ((es == Acad::eOk) && ((es = pFiler->readResBuf(&rb)) == Acad::eOk))
     {
@@ -326,9 +599,45 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
         case AcDb::kDxfInt32 + 3:
             t_DisplayUnit = rb.resval.rlong;
             break;
+        case AcDb::kDxfXTextString + 1:
+			acutUpdString(rb.resval.rstring, t_Formula);
+			break;
+        case AcDb::kDxfXTextString + 2:
+			acutUpdString(rb.resval.rstring, t_FormulaWithoutLength);
+			break;
+        case AcDb::kDxfXTextString + 3:
+			acutUpdString(rb.resval.rstring, t_FormulaPosOnly);
+			break;
+		case AcDb::kDxfXInt16:
+			t_TextColor = rb.resval.rint;
+			break;
+        case AcDb::kDxfXInt16 + 1:
+			t_PosColor = rb.resval.rint;
+			break;
+        case AcDb::kDxfXInt16 + 2:
+			t_CircleColor = rb.resval.rint;
+			break;
+        case AcDb::kDxfXInt16 + 3:
+			t_MultiplierColor = rb.resval.rint;
+			break;
+        case AcDb::kDxfXInt16 + 4:
+			t_GroupColor = rb.resval.rint;
+			break;
+        case AcDb::kDxfXInt16 + 5:
+			t_NoteColor = rb.resval.rint;
+			break;
+        case AcDb::kDxfXInt16 + 6:
+			t_CurrentGroupHighlightColor = rb.resval.rint;
+			break;
+        case AcDb::kDxfXReal + 1:
+			t_NoteScale = rb.resval.rreal;
+			break;
         case AcDb::kDxfHardPointerId:
-            acdbGetObjectId(t_StyleID, rb.resval.rlname);
-            break;
+			acdbGetObjectId(t_TextStyleID, rb.resval.rlname);
+			break;
+        case AcDb::kDxfHardPointerId + 1:
+			acdbGetObjectId(t_NoteStyleID, rb.resval.rlname);
+			break;
 
         default:
             // An unrecognized group. Push it back so that
@@ -354,9 +663,24 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
 	m_Precision = t_Precision;
     m_DrawingUnit = (DrawingUnits)t_DrawingUnit;
     m_DisplayUnit = (DrawingUnits)t_DisplayUnit;
-	m_StyleID = t_StyleID;
+	setFormula(t_Formula);
+	setFormulaWithoutLength(t_FormulaWithoutLength);
+	setFormulaPosOnly(t_FormulaPosOnly);
+	m_TextColor = t_TextColor;
+	m_PosColor = t_PosColor;
+	m_CircleColor = t_CircleColor;
+	m_MultiplierColor = t_MultiplierColor;
+	m_GroupColor = t_GroupColor;
+	m_NoteColor = t_NoteColor;
+	m_CurrentGroupHighlightColor = t_CurrentGroupHighlightColor;
+	m_NoteScale = t_NoteScale;
+	m_TextStyleID = t_TextStyleID;
+	m_NoteStyleID = t_NoteStyleID;
 
 	acutDelString(t_Name);
+	acutDelString(t_Formula);
+	acutDelString(t_FormulaWithoutLength);
+	acutDelString(t_FormulaPosOnly);
 
 	return es;
 }

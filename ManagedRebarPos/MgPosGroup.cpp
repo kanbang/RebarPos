@@ -85,13 +85,112 @@ void PosGroup::DisplayUnit::set(PosGroup::DrawingUnits value)
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setDisplayUnit(static_cast<CPosGroup::DrawingUnits>(value)));
 }
 
-Autodesk::AutoCAD::DatabaseServices::ObjectId PosGroup::StyleId::get()
+String^ PosGroup::Formula::get()
 {
-	return ToObjectId (GetImpObj()->StyleId());
+	return WcharToString(GetImpObj()->Formula());
 }
-void PosGroup::StyleId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
+void PosGroup::Formula::set(String^ value)
 {
-	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setStyleId(GETOBJECTID(value)));
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormula(StringToWchar(value)));
+}
+
+String^ PosGroup::FormulaWithoutLength::get()
+{
+	return WcharToString(GetImpObj()->FormulaWithoutLength());
+}
+void PosGroup::FormulaWithoutLength::set(String^ value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormulaWithoutLength(StringToWchar(value)));
+}
+
+String^ PosGroup::FormulaPosOnly::get()
+{
+	return WcharToString(GetImpObj()->FormulaPosOnly());
+}
+void PosGroup::FormulaPosOnly::set(String^ value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormulaPosOnly(StringToWchar(value)));
+}
+
+Autodesk::AutoCAD::Colors::Color^ PosGroup::TextColor::get()
+{
+	return Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, GetImpObj()->TextColor());
+}
+void PosGroup::TextColor::set(Autodesk::AutoCAD::Colors::Color^ value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setTextColor(value->ColorIndex));
+}
+
+Autodesk::AutoCAD::Colors::Color^ PosGroup::PosColor::get()
+{
+	return Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, GetImpObj()->PosColor());
+}
+void PosGroup::PosColor::set(Autodesk::AutoCAD::Colors::Color^ value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setPosColor(value->ColorIndex));
+}
+
+Autodesk::AutoCAD::Colors::Color^ PosGroup::CircleColor::get()
+{
+	return Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, GetImpObj()->CircleColor());
+}
+void PosGroup::CircleColor::set(Autodesk::AutoCAD::Colors::Color^ value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setCircleColor(value->ColorIndex));
+}
+
+Autodesk::AutoCAD::Colors::Color^ PosGroup::MultiplierColor::get()
+{
+	return Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, GetImpObj()->MultiplierColor());
+}
+void PosGroup::MultiplierColor::set(Autodesk::AutoCAD::Colors::Color^ value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setMultiplierColor(value->ColorIndex));
+}
+
+Autodesk::AutoCAD::Colors::Color^ PosGroup::GroupColor::get()
+{
+	return Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, GetImpObj()->GroupColor());
+}
+void PosGroup::GroupColor::set(Autodesk::AutoCAD::Colors::Color^ value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setGroupColor(value->ColorIndex));
+}
+
+Autodesk::AutoCAD::Colors::Color^ PosGroup::CurrentGroupHighlightColor::get()
+{
+	return Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, GetImpObj()->CurrentGroupHighlightColor());
+}
+void PosGroup::CurrentGroupHighlightColor::set(Autodesk::AutoCAD::Colors::Color^ value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setCurrentGroupHighlightColor(value->ColorIndex));
+}
+
+Autodesk::AutoCAD::DatabaseServices::ObjectId PosGroup::TextStyleId::get()
+{
+	return ToObjectId (GetImpObj()->TextStyleId());
+}
+void PosGroup::TextStyleId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setTextStyleId(GETOBJECTID(value)));
+}
+
+Autodesk::AutoCAD::DatabaseServices::ObjectId PosGroup::NoteStyleId::get()
+{
+	return ToObjectId (GetImpObj()->NoteStyleId());
+}
+void PosGroup::NoteStyleId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setNoteStyleId(GETOBJECTID(value)));
+}
+
+double PosGroup::NoteScale::get()
+{
+	return GetImpObj()->NoteScale();
+}
+void PosGroup::NoteScale::set(double value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setNoteScale(value));
 }
 
 bool PosGroup::Current::get()

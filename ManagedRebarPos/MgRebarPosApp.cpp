@@ -10,7 +10,6 @@
 #include "mgdinterop.h" 
 
 #include "MgPosShape.h"
-#include "MgPosStyle.h"
 #include "MgPosGroup.h"
 #include "MgRebarPos.h"
 
@@ -30,7 +29,6 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 			static AcMgObjectFactoryBase* PEs[] = 
 			{
 				new AcMgObjectFactory<OZOZ::RebarPosWrapper::PosShape, CPosShape>(), 
-				new AcMgObjectFactory<OZOZ::RebarPosWrapper::PosStyle, CPosStyle>(), 
 				new AcMgObjectFactory<OZOZ::RebarPosWrapper::PosGroup, CPosGroup>(), 
 				new AcMgObjectFactory<OZOZ::RebarPosWrapper::RebarPos, CRebarPos>(), 
 				// end the array with a NULL

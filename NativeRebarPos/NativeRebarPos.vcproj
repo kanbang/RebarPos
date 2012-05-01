@@ -317,10 +317,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\PosStyle.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\RebarPos.cpp"
 				>
 			</File>
@@ -355,10 +351,6 @@
 			</File>
 			<File
 				RelativePath=".\PosShape.h"
-				>
-			</File>
-			<File
-				RelativePath=".\PosStyle.h"
 				>
 			</File>
 			<File

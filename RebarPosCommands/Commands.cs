@@ -29,7 +29,6 @@ namespace RebarPosCommands
         public MyCommands()
         {
             DWGUtility.CreateDefaultShapes();
-            DWGUtility.CreateDefaultStyles();
             ObjectId id = DWGUtility.CreateDefaultGroups();
             SetCurrentGroup(id);
         }

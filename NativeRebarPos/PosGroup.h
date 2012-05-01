@@ -69,7 +69,22 @@ protected:
 	DrawingUnits m_DrawingUnit;
 	DrawingUnits m_DisplayUnit;
 
-    AcDbHardPointerId m_StyleID;
+	ACHAR* m_Formula;
+	ACHAR* m_FormulaWithoutLength;
+	ACHAR* m_FormulaPosOnly;
+
+	Adesk::UInt16 m_TextColor;
+	Adesk::UInt16 m_PosColor;
+	Adesk::UInt16 m_CircleColor;
+	Adesk::UInt16 m_MultiplierColor;
+	Adesk::UInt16 m_GroupColor;
+	Adesk::UInt16 m_NoteColor;
+	Adesk::UInt16 m_CurrentGroupHighlightColor;
+
+    double m_NoteScale;
+
+    AcDbHardPointerId m_TextStyleID;
+    AcDbHardPointerId m_NoteStyleID;
 
 	Adesk::Boolean m_Current;
 
@@ -98,9 +113,57 @@ public:
     const DrawingUnits DisplayUnit(void) const;
 	Acad::ErrorStatus setDisplayUnit(const DrawingUnits newVal);
 
-	/// Gets or sets pointer to the style.
-	const AcDbObjectId& StyleId(void) const;
-	Acad::ErrorStatus setStyleId(const AcDbObjectId& newVal);
+	/// Gets or sets the formula text.
+    const ACHAR* Formula(void) const;
+	Acad::ErrorStatus setFormula(const ACHAR* newVal);
+
+	/// Gets or sets the formula text without length displayed.
+    const ACHAR* FormulaWithoutLength(void) const;
+	Acad::ErrorStatus setFormulaWithoutLength(const ACHAR* newVal);
+
+	/// Gets or sets the formula text with only pos marker displayed.
+    const ACHAR* FormulaPosOnly(void) const;
+	Acad::ErrorStatus setFormulaPosOnly(const ACHAR* newVal);
+
+	/// Gets or sets the text color.
+	const Adesk::UInt16 TextColor(void) const;
+	Acad::ErrorStatus setTextColor(const Adesk::UInt16 newVal);
+
+	/// Gets or sets the pos text color.
+	const Adesk::UInt16 PosColor(void) const;
+	Acad::ErrorStatus setPosColor(const Adesk::UInt16 newVal);
+
+	/// Gets or sets the pos circle color.
+	const Adesk::UInt16 CircleColor(void) const;
+	Acad::ErrorStatus setCircleColor(const Adesk::UInt16 newVal);
+
+	/// Gets or sets the multiplier text color.
+	const Adesk::UInt16 MultiplierColor(void) const;
+	Acad::ErrorStatus setMultiplierColor(const Adesk::UInt16 newVal);
+
+	/// Gets or sets the group text color.
+	const Adesk::UInt16 GroupColor(void) const;
+	Acad::ErrorStatus setGroupColor(const Adesk::UInt16 newVal);
+
+	/// Gets or sets the note text color.
+	const Adesk::UInt16 NoteColor(void) const;
+	Acad::ErrorStatus setNoteColor(const Adesk::UInt16 newVal);
+
+	/// Gets or sets the highlight color of the pos objects in the current group.
+	const Adesk::UInt16 CurrentGroupHighlightColor(void) const;
+	Acad::ErrorStatus setCurrentGroupHighlightColor(const Adesk::UInt16 newVal);
+
+	/// Gets or sets the note height relative to text height.
+	const double NoteScale(void) const;
+	Acad::ErrorStatus setNoteScale(const double newVal);
+
+	/// Gets or sets pointer to the text style.
+	const AcDbObjectId& TextStyleId(void) const;
+	Acad::ErrorStatus setTextStyleId(const AcDbObjectId& newVal);
+
+	/// Gets or sets pointer to the note style.
+	const AcDbObjectId& NoteStyleId(void) const;
+	Acad::ErrorStatus setNoteStyleId(const AcDbObjectId& newVal);
 
 	/// Gets or sets whether this is the current style.
     const Adesk::Boolean Current(void) const;

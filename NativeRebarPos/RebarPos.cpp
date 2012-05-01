@@ -43,7 +43,6 @@
 #include "RebarPos.h"
 #include "PosShape.h"
 #include "PosGroup.h"
-#include "PosStyle.h"
 
 #include <initguid.h>
 #include "..\COMRebarPos\COMRebarPos_i.c"
@@ -714,13 +713,8 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 	{
 		return es;
 	}
-	AcDbObjectPointer<CPosStyle> pStyle (pGroup->StyleId(), AcDb::kForRead);
-	if((es = pStyle.openStatus()) != Acad::eOk)
-	{
-		return es;
-	}
-	AcDbObjectId textStyle = pStyle->TextStyleId();
-	AcDbObjectId noteStyle = pStyle->NoteStyleId();
+	AcDbObjectId textStyle = pGroup->TextStyleId();
+	AcDbObjectId noteStyle = pGroup->NoteStyleId();
 
 	// Transformations
 	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
@@ -747,7 +741,7 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 		}
 	}
 	p = lastNoteDraw;
-	text = new AcDbText(AcGePoint3d(p.x, p.y, 0), p.text, noteStyle, 1.0 * pStyle->NoteScale());
+	text = new AcDbText(AcGePoint3d(p.x, p.y, 0), p.text, noteStyle, 1.0 * pGroup->NoteScale());
 	text->setColorIndex(p.color);
 	text->transformBy(noteTrans);
 	entitySet.append(text);
@@ -1705,24 +1699,13 @@ const void CRebarPos::Calculate(void) const
 	lastGroupDraw.text.setEmpty();
 	lastGroupDraw.text = pGroup->Name();
 
-	// Open style
-	AcDbObjectId styleID = pGroup->StyleId();
-	if(styleID.isNull())
-	{
-		return;
-	}
-	AcDbObjectPointer<CPosStyle> pStyle (styleID, AcDb::kForRead);
-	if((es = pStyle.openStatus()) != Acad::eOk)
-	{
-		return;
-	}
-	lastNoteScale = pStyle->NoteScale();
+	lastNoteScale = pGroup->NoteScale();
 
 	// Create text styles
-	if (pStyle->TextStyleId() != AcDbObjectId::kNull)
-		Utility::MakeGiTextStyle(lastTextStyle, pStyle->TextStyleId());
-	if (pStyle->NoteStyleId() != AcDbObjectId::kNull)
-		Utility::MakeGiTextStyle(lastNoteStyle, pStyle->NoteStyleId());
+	if (pGroup->TextStyleId() != AcDbObjectId::kNull)
+		Utility::MakeGiTextStyle(lastTextStyle, pGroup->TextStyleId());
+	if (pGroup->NoteStyleId() != AcDbObjectId::kNull)
+		Utility::MakeGiTextStyle(lastNoteStyle, pGroup->NoteStyleId());
 
 	// Scale from drawing units to MM
 	double scale = 1.0;
@@ -1781,17 +1764,17 @@ const void CRebarPos::Calculate(void) const
 
 	// Rebuild draw lists
 	lastDrawList.clear();
-	if(m_DisplayStyle == CRebarPos::ALL && pStyle->Formula() != NULL)
+	if(m_DisplayStyle == CRebarPos::ALL && pGroup->Formula() != NULL)
 	{
-		lastDrawList = ParseFormula(pStyle->Formula());
+		lastDrawList = ParseFormula(pGroup->Formula());
 	}
-	else if(m_DisplayStyle == CRebarPos::WITHOUTLENGTH && pStyle->FormulaWithoutLength() != NULL)
+	else if(m_DisplayStyle == CRebarPos::WITHOUTLENGTH && pGroup->FormulaWithoutLength() != NULL)
 	{
-		lastDrawList = ParseFormula(pStyle->FormulaWithoutLength());
+		lastDrawList = ParseFormula(pGroup->FormulaWithoutLength());
 	}
-	else if(m_DisplayStyle == CRebarPos::MARKERONLY && pStyle->FormulaPosOnly() != NULL)
+	else if(m_DisplayStyle == CRebarPos::MARKERONLY && pGroup->FormulaPosOnly() != NULL)
 	{
-		lastDrawList = ParseFormula(pStyle->FormulaPosOnly());
+		lastDrawList = ParseFormula(pGroup->FormulaPosOnly());
 	}
 	lastNoteDraw.text = m_Note;
 
@@ -1801,30 +1784,30 @@ const void CRebarPos::Calculate(void) const
 		lastMultiplierDraw.text.format(_T("%dx"), m_Multiplier);
 
 	// Set colors
-	lastCircleColor = pStyle->CircleColor();
-	lastGroupDraw.color = pStyle->GroupColor();
-	lastMultiplierDraw.color = pStyle->MultiplierColor();
-	lastGroupHighlightColor = pStyle->CurrentGroupHighlightColor();
+	lastCircleColor = pGroup->CircleColor();
+	lastGroupDraw.color = pGroup->GroupColor();
+	lastMultiplierDraw.color = pGroup->MultiplierColor();
+	lastGroupHighlightColor = pGroup->CurrentGroupHighlightColor();
 	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
 	{
 		CDrawParams p = lastDrawList[i];
 		switch(p.type)
 		{
 		case CRebarPos::POS:
-			p.color = pStyle->PosColor();
+			p.color = pGroup->PosColor();
 			break;
 		case CRebarPos::GROUP:
-			p.color = pStyle->GroupColor();
+			p.color = pGroup->GroupColor();
 			break;
 		case CRebarPos::MULTIPLIER:
-			p.color = pStyle->MultiplierColor();
+			p.color = pGroup->MultiplierColor();
 			break;
 		default:
-			p.color = pStyle->TextColor();
+			p.color = pGroup->TextColor();
 		}
 		lastDrawList[i] = p;
 	}
-	lastNoteDraw.color = pStyle->NoteColor();
+	lastNoteDraw.color = pGroup->NoteColor();
 
 	// Measure items
 	lastTextStyle.setTextSize(1.0);

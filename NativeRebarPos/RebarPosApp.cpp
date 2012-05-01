@@ -26,7 +26,6 @@
 
 #include "RebarPos.h"
 #include "PosShape.h"
-#include "PosStyle.h"
 #include "PosGroup.h"
 
 #include "acdb.h"
@@ -65,7 +64,6 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 
 		// Register custom classes
 		CPosShape::rxInit();
-		CPosStyle::rxInit();
 		CPosGroup::rxInit();
         CRebarPos::rxInit(changeAppNameCallback);
         
@@ -85,7 +83,6 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 		// Remove custom classes
         deleteAcRxClass(CRebarPos::desc());
 		deleteAcRxClass(CPosGroup::desc());
-        deleteAcRxClass(CPosStyle::desc());
         deleteAcRxClass(CPosShape::desc());
 
         break;

@@ -84,64 +84,6 @@ namespace RebarPosCommands
             }
         }
 
-        public static ObjectId CreateDefaultStyles()
-        {
-            ObjectId id = ObjectId.Null;
-
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
-            {
-                try
-                {
-                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
-                    DBDictionary dict = null;
-                    if (!namedDict.Contains(PosStyle.TableName))
-                    {
-                        dict = new DBDictionary();
-                        namedDict.UpgradeOpen();
-                        namedDict.SetAt(PosStyle.TableName, dict);
-                        namedDict.DowngradeOpen();
-                        tr.AddNewlyCreatedDBObject(dict, true);
-                    }
-                    else
-                    {
-                        dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosStyle.TableName), OpenMode.ForRead);
-                    }
-
-                    if (dict.Count == 0)
-                    {
-                        PosStyle style = new PosStyle();
-                        style.Name = "Standard";
-                        style.Formula = "[M:C][N][\"T\":D][\"/\":S][\" L=\":L]";
-                        style.FormulaWithoutLength = "[M:C][N][\"T\":D][\"/\":S]";
-                        style.FormulaPosOnly = "[M:C]";
-                        style.TextStyleId = DWGUtility.CreateTextStyle("Rebar Text Style", "leroy.shx", 0.7);
-                        style.NoteStyleId = DWGUtility.CreateTextStyle("Rebar Note Style", "simplxtw.shx", 0.9);
-                        dict.UpgradeOpen();
-                        id = dict.SetAt("*", style);
-                        dict.DowngradeOpen();
-                        tr.AddNewlyCreatedDBObject(style, true);
-                    }
-                    else
-                    {
-                        foreach (DBDictionaryEntry entry in dict)
-                        {
-                            id = entry.Value;
-                            break;
-                        }
-                    }
-
-                    tr.Commit();
-                }
-                catch (System.Exception ex)
-                {
-                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos");
-                }
-
-                return id;
-            }
-        }
-
         public static ObjectId CreateDefaultGroups()
         {
             ObjectId id = ObjectId.Null;
@@ -170,7 +112,11 @@ namespace RebarPosCommands
                     {
                         PosGroup group = new PosGroup();
                         group.Name = "0";
-                        group.StyleId = DWGUtility.CreateDefaultStyles();
+                        group.Formula = "[M:C][N][\"T\":D][\"/\":S][\" L=\":L]";
+                        group.FormulaWithoutLength = "[M:C][N][\"T\":D][\"/\":S]";
+                        group.FormulaPosOnly = "[M:C]";
+                        group.TextStyleId = DWGUtility.CreateTextStyle("Rebar Text Style", "leroy.shx", 0.7);
+                        group.NoteStyleId = DWGUtility.CreateTextStyle("Rebar Note Style", "simplxtw.shx", 0.9);
                         group.Current = true;
                         dict.UpgradeOpen();
                         id = dict.SetAt("*", group);
@@ -235,6 +181,34 @@ namespace RebarPosCommands
             return id;
         }
 
+        // Returns all text styles
+        public static Dictionary<string, ObjectId> GetTextStyles()
+        {
+            Dictionary<string, ObjectId> list=new Dictionary<string,ObjectId>();
+
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    TextStyleTable table = (TextStyleTable)tr.GetObject(db.TextStyleTableId, OpenMode.ForRead);
+                    SymbolTableEnumerator it = table.GetEnumerator();
+                    while(it.MoveNext())
+                    {
+                        ObjectId id= it.Current;
+                        TextStyleTableRecord style = (TextStyleTableRecord)tr.GetObject(id, OpenMode.ForRead);
+                        list.Add(style.Name,id);
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos");
+                }
+            }
+
+            return list;               
+        }
+
         // Returns all items in the dictionary.
         public static Dictionary<string, ObjectId> GetGroups()
         {
@@ -284,37 +258,6 @@ namespace RebarPosCommands
                             while (it.MoveNext())
                             {
                                 PosShape item = (PosShape)tr.GetObject(it.Value, OpenMode.ForRead);
-                                list.Add(item.Name, it.Value);
-                            }
-                        }
-                    }
-                }
-                catch
-                {
-                    ;
-                }
-            }
-            return list;
-        }
-
-        // Returns all items in the dictionary.
-        public static Dictionary<string, ObjectId> GetStyles()
-        {
-            Dictionary<string, ObjectId> list = new Dictionary<string, ObjectId>();
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
-            {
-                try
-                {
-                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
-                    if (namedDict.Contains(PosStyle.TableName))
-                    {
-                        DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosStyle.TableName), OpenMode.ForRead);
-                        using (DbDictionaryEnumerator it = dict.GetEnumerator())
-                        {
-                            while (it.MoveNext())
-                            {
-                                PosStyle item = (PosStyle)tr.GetObject(it.Value, OpenMode.ForRead);
                                 list.Add(item.Name, it.Value);
                             }
                         }
