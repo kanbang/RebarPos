@@ -938,66 +938,6 @@ Acad::ErrorStatus CRebarPos::subGetGeomExtents(AcDbExtents& extents) const
 // Overridden methods from AcDbObject
 //*************************************************************************
 
-Acad::ErrorStatus CRebarPos::dwgInFields(AcDbDwgFiler* pFiler)
-{
-	assertWriteEnabled();
-
-	// Read parent class information first.
-	Acad::ErrorStatus es;
-	if((es = AcDbEntity::dwgInFields(pFiler)) != Acad::eOk)
-		return es;
-
-	// Object version number needs to be read first
-	Adesk::UInt32 version = 0;
-	pFiler->readItem(&version);
-	if (version > CRebarPos::kCurrentVersionNumber)
-		return Acad::eMakeMeProxy;
-
-	// Read params
-	if (version >= 1)
-	{
-		pFiler->readPoint3d(&m_BasePoint);
-		pFiler->readPoint3d(&m_NoteGrip);
-		pFiler->readVector3d(&direction);
-		pFiler->readVector3d(&up);
-		norm = direction.crossProduct(up);
-		
-		acutDelString(m_Pos);
-		acutDelString(m_Note);
-		acutDelString(m_Count);
-		acutDelString(m_Diameter);
-		acutDelString(m_Spacing);
-		acutDelString(m_A);
-		acutDelString(m_B);
-		acutDelString(m_C);
-		acutDelString(m_D);
-		acutDelString(m_E);
-		acutDelString(m_F);
-
-		pFiler->readString(&m_Pos);
-		pFiler->readString(&m_Note);
-		pFiler->readString(&m_Count);
-		pFiler->readString(&m_Diameter);
-		pFiler->readString(&m_Spacing);
-		pFiler->readInt32(&m_Multiplier);
-		Adesk::Int32 display = 0;
-		pFiler->readInt32(&display);
-		m_DisplayStyle = (CRebarPos::DisplayStyle)display;
-		pFiler->readString(&m_A);
-		pFiler->readString(&m_B);
-		pFiler->readString(&m_C);
-		pFiler->readString(&m_D);
-		pFiler->readString(&m_E);
-		pFiler->readString(&m_F);
-
-		// Styles
-		pFiler->readHardPointerId(&m_ShapeID);
-		pFiler->readHardPointerId(&m_GroupID);
-	}
-
-	return pFiler->filerStatus();
-}
-
 Acad::ErrorStatus CRebarPos::dwgOutFields(AcDbDwgFiler* pFiler) const
 {
 	assertReadEnabled();
@@ -1069,6 +1009,143 @@ Acad::ErrorStatus CRebarPos::dwgOutFields(AcDbDwgFiler* pFiler) const
 	return pFiler->filerStatus();
 }
 
+Acad::ErrorStatus CRebarPos::dwgInFields(AcDbDwgFiler* pFiler)
+{
+	assertWriteEnabled();
+
+	// Read parent class information first.
+	Acad::ErrorStatus es;
+	if((es = AcDbEntity::dwgInFields(pFiler)) != Acad::eOk)
+		return es;
+
+	// Object version number needs to be read first
+	Adesk::UInt32 version = 0;
+	pFiler->readItem(&version);
+	if (version > CRebarPos::kCurrentVersionNumber)
+		return Acad::eMakeMeProxy;
+
+	// Read params
+	if (version >= 1)
+	{
+		pFiler->readPoint3d(&m_BasePoint);
+		pFiler->readPoint3d(&m_NoteGrip);
+		pFiler->readVector3d(&direction);
+		pFiler->readVector3d(&up);
+		norm = direction.crossProduct(up);
+		
+		acutDelString(m_Pos);
+		acutDelString(m_Note);
+		acutDelString(m_Count);
+		acutDelString(m_Diameter);
+		acutDelString(m_Spacing);
+		acutDelString(m_A);
+		acutDelString(m_B);
+		acutDelString(m_C);
+		acutDelString(m_D);
+		acutDelString(m_E);
+		acutDelString(m_F);
+
+		pFiler->readString(&m_Pos);
+		pFiler->readString(&m_Note);
+		pFiler->readString(&m_Count);
+		pFiler->readString(&m_Diameter);
+		pFiler->readString(&m_Spacing);
+		pFiler->readInt32(&m_Multiplier);
+		Adesk::Int32 display = 0;
+		pFiler->readInt32(&display);
+		m_DisplayStyle = (CRebarPos::DisplayStyle)display;
+		pFiler->readString(&m_A);
+		pFiler->readString(&m_B);
+		pFiler->readString(&m_C);
+		pFiler->readString(&m_D);
+		pFiler->readString(&m_E);
+		pFiler->readString(&m_F);
+
+		// Styles
+		pFiler->readHardPointerId(&m_ShapeID);
+		pFiler->readHardPointerId(&m_GroupID);
+	}
+
+	return pFiler->filerStatus();
+}
+
+Acad::ErrorStatus CRebarPos::dxfOutFields(AcDbDxfFiler* pFiler) const
+{
+	assertReadEnabled();
+
+	// Save parent class information first.
+	Acad::ErrorStatus es;
+	if((es = AcDbEntity::dxfOutFields(pFiler)) != Acad::eOk)
+		return es;
+
+	// Subclass
+	pFiler->writeItem(AcDb::kDxfSubclass, _T("RebarPos"));
+
+	// Object version number
+	pFiler->writeItem(AcDb::kDxfInt32, CRebarPos::kCurrentVersionNumber);
+
+	// Geometry
+	pFiler->writePoint3d(AcDb::kDxfXCoord, m_BasePoint);
+	pFiler->writePoint3d(AcDb::kDxfXCoord + 1, m_NoteGrip);
+	// Use max precision when writing out direction vectors
+	pFiler->writeVector3d(AcDb::kDxfXCoord + 2, direction, 16);
+	pFiler->writeVector3d(AcDb::kDxfXCoord + 3, up, 16);
+
+	// Properties
+	if(m_Pos)
+		pFiler->writeString(AcDb::kDxfText, m_Pos);
+	else
+		pFiler->writeString(AcDb::kDxfText, _T(""));
+	if(m_Note)
+		pFiler->writeString(AcDb::kDxfXTextString, m_Note);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString, _T(""));
+	if(m_Count)
+		pFiler->writeString(AcDb::kDxfXTextString + 1, m_Count);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 1, _T(""));
+	if(m_Diameter)
+		pFiler->writeString(AcDb::kDxfXTextString + 2, m_Diameter);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 2, _T(""));
+	if(m_Spacing)
+		pFiler->writeString(AcDb::kDxfXTextString + 3, m_Spacing);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 3, _T(""));
+	pFiler->writeInt32(AcDb::kDxfInt32 + 1, m_Multiplier);
+	pFiler->writeInt32(AcDb::kDxfInt32 + 2, m_DisplayStyle);
+	if(m_A)
+		pFiler->writeString(AcDb::kDxfXTextString + 4, m_A);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 4, _T(""));
+	if(m_B)
+		pFiler->writeString(AcDb::kDxfXTextString + 5, m_B);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 5, _T(""));
+	if(m_C)
+		pFiler->writeString(AcDb::kDxfXTextString + 6, m_C);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 6, _T(""));
+	if(m_D)
+		pFiler->writeString(AcDb::kDxfXTextString + 7, m_D);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 7, _T(""));
+	if(m_E)
+		pFiler->writeString(AcDb::kDxfXTextString + 8, m_E);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 8, _T(""));
+	if(m_F)
+		pFiler->writeString(AcDb::kDxfXTextString + 9, m_F);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 9, _T(""));
+	
+    // Styles
+	pFiler->writeItem(AcDb::kDxfHardPointerId, m_ShapeID);
+    pFiler->writeItem(AcDb::kDxfHardPointerId + 1, m_GroupID);
+
+	return pFiler->filerStatus();
+}
+
 Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 {
 	assertWriteEnabled();
@@ -1127,19 +1204,19 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
             t_Up = asVec3d(rb.resval.rpoint);
             break;
 
-        case AcDb::kDxfXTextString:
+        case AcDb::kDxfText:
             acutUpdString(rb.resval.rstring, t_Pos);
             break;
-        case AcDb::kDxfXTextString + 1:
+        case AcDb::kDxfXTextString:
             acutUpdString(rb.resval.rstring, t_Note);
             break;
-        case AcDb::kDxfXTextString + 2:
+        case AcDb::kDxfXTextString + 1:
             acutUpdString(rb.resval.rstring, t_Count);
             break;
-        case AcDb::kDxfXTextString + 3:
+        case AcDb::kDxfXTextString + 2:
             acutUpdString(rb.resval.rstring, t_Diameter);
             break;
-        case AcDb::kDxfXTextString + 4:
+        case AcDb::kDxfXTextString + 3:
             acutUpdString(rb.resval.rstring, t_Spacing);
             break;
 
@@ -1151,22 +1228,22 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
             t_Display = rb.resval.rlong;
             break;
 
-        case AcDb::kDxfXTextString + 5:
+        case AcDb::kDxfXTextString + 4:
             acutUpdString(rb.resval.rstring, t_A);
             break;
-        case AcDb::kDxfXTextString + 6:
+        case AcDb::kDxfXTextString + 5:
             acutUpdString(rb.resval.rstring, t_B);
             break;
-        case AcDb::kDxfXTextString + 7:
+        case AcDb::kDxfXTextString + 6:
             acutUpdString(rb.resval.rstring, t_C);
             break;
-        case AcDb::kDxfXTextString + 8:
+        case AcDb::kDxfXTextString + 7:
             acutUpdString(rb.resval.rstring, t_D);
             break;
-        case AcDb::kDxfXTextString + 9:
+        case AcDb::kDxfXTextString + 8:
             acutUpdString(rb.resval.rstring, t_E);
             break;
-        case AcDb::kDxfXTextString + 10:
+        case AcDb::kDxfXTextString + 9:
             acutUpdString(rb.resval.rstring, t_F);
             break;
 
@@ -1229,84 +1306,6 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 
     return es;
 }
-
-Acad::ErrorStatus CRebarPos::dxfOutFields(AcDbDxfFiler* pFiler) const
-{
-	assertReadEnabled();
-
-	// Save parent class information first.
-	Acad::ErrorStatus es;
-	if((es = AcDbEntity::dxfOutFields(pFiler)) != Acad::eOk)
-		return es;
-
-	// Subclass
-	pFiler->writeItem(AcDb::kDxfSubclass, _T("RebarPos"));
-
-	// Object version number
-	pFiler->writeItem(AcDb::kDxfInt32, CRebarPos::kCurrentVersionNumber);
-
-	// Geometry
-	pFiler->writePoint3d(AcDb::kDxfXCoord, m_BasePoint);
-	pFiler->writePoint3d(AcDb::kDxfXCoord + 1, m_NoteGrip);
-	// Use max precision when writing out direction vectors
-	pFiler->writeVector3d(AcDb::kDxfXCoord + 2, direction, 16);
-	pFiler->writeVector3d(AcDb::kDxfXCoord + 3, up, 16);
-
-	// Properties
-	if(m_Pos)
-		pFiler->writeString(AcDb::kDxfXTextString, m_Pos);
-	else
-		pFiler->writeString(AcDb::kDxfXTextString, _T(""));
-	if(m_Note)
-		pFiler->writeString(AcDb::kDxfXTextString + 1, m_Note);
-	else
-		pFiler->writeString(AcDb::kDxfXTextString + 1, _T(""));
-	if(m_Count)
-		pFiler->writeString(AcDb::kDxfXTextString + 2, m_Count);
-	else
-		pFiler->writeString(AcDb::kDxfXTextString + 2, _T(""));
-	if(m_Diameter)
-		pFiler->writeString(AcDb::kDxfXTextString + 3, m_Diameter);
-	else
-		pFiler->writeString(AcDb::kDxfXTextString + 3, _T(""));
-	if(m_Spacing)
-		pFiler->writeString(AcDb::kDxfXTextString + 4, m_Spacing);
-	else
-		pFiler->writeString(AcDb::kDxfXTextString + 4, _T(""));
-	pFiler->writeInt32(AcDb::kDxfInt32 + 1, m_Multiplier);
-	pFiler->writeInt32(AcDb::kDxfInt32 + 2, m_DisplayStyle);
-	if(m_A)
-		pFiler->writeString(AcDb::kDxfXTextString + 5, m_A);
-	else
-		pFiler->writeString(AcDb::kDxfXTextString + 5, _T(""));
-	if(m_B)
-		pFiler->writeString(AcDb::kDxfXTextString + 6, m_B);
-	else
-		pFiler->writeString(AcDb::kDxfXTextString + 6, _T(""));
-	if(m_C)
-		pFiler->writeString(AcDb::kDxfXTextString + 7, m_C);
-	else
-		pFiler->writeString(AcDb::kDxfXTextString + 7, _T(""));
-	if(m_D)
-		pFiler->writeString(AcDb::kDxfXTextString + 8, m_D);
-	else
-		pFiler->writeString(AcDb::kDxfXTextString + 8, _T(""));
-	if(m_E)
-		pFiler->writeString(AcDb::kDxfXTextString + 9, m_E);
-	else
-		pFiler->writeString(AcDb::kDxfXTextString + 9, _T(""));
-	if(m_F)
-		pFiler->writeString(AcDb::kDxfXTextString + 10, m_F);
-	else
-		pFiler->writeString(AcDb::kDxfXTextString + 10, _T(""));
-	
-    // Styles
-	pFiler->writeItem(AcDb::kDxfHardPointerId, m_ShapeID);
-    pFiler->writeItem(AcDb::kDxfHardPointerId + 1, m_GroupID);
-
-	return pFiler->filerStatus();
-}
-
 
 Acad::ErrorStatus CRebarPos::subDeepClone(AcDbObject*    pOwner,
                     AcDbObject*&   pClonedObject,
