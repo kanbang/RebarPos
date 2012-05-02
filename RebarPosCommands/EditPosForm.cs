@@ -336,5 +336,34 @@ namespace RebarPosCommands
                     break;
             }
         }
+
+        private void txtPosMarker_Validating(object sender, CancelEventArgs e)
+        {
+            int val = 0;
+            if (string.IsNullOrEmpty(txtPosMarker.Text) || int.TryParse(txtPosMarker.Text, out val))
+            {
+                errorProvider.SetError(txtPosMarker, "");
+            }
+            else
+            {
+                e.Cancel = true;
+                errorProvider.SetError(txtPosMarker, "Poz numarası tamsayı olmalıdır.");
+                errorProvider.SetIconAlignment(txtPosMarker, ErrorIconAlignment.MiddleLeft);
+            }
+        }
+
+        private void txtPosCount_Validating(object sender, CancelEventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtPosCount.Text) || Calculator.IsValid(txtPosCount.Text))
+            {
+                errorProvider.SetError(txtPosCount, "");
+            }
+            else
+            {
+                e.Cancel = true;
+                errorProvider.SetError(txtPosCount, "Poz adedi yalnız rakam ve aritmetik işlemler içerebilir.");
+                errorProvider.SetIconAlignment(txtPosCount, ErrorIconAlignment.MiddleLeft);
+            }
+        }
     }
 }

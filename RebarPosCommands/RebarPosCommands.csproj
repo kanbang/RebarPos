@@ -67,6 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Calculator.cs" />
     <Compile Include="Commands_NewPos.cs" />
     <Compile Include="Commands.Designer.cs">
       <AutoGen>True</AutoGen>

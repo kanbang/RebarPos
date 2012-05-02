@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditPosForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.cbGroup = new System.Windows.Forms.ComboBox();
@@ -85,9 +86,11 @@
             this.rbShowAll = new System.Windows.Forms.RadioButton();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -245,6 +248,7 @@
             this.txtPosCount.Name = "txtPosCount";
             this.txtPosCount.Size = new System.Drawing.Size(100, 20);
             this.txtPosCount.TabIndex = 3;
+            this.txtPosCount.Validating += new System.ComponentModel.CancelEventHandler(this.txtPosCount_Validating);
             // 
             // label2
             // 
@@ -263,6 +267,7 @@
             this.txtPosMarker.Name = "txtPosMarker";
             this.txtPosMarker.Size = new System.Drawing.Size(100, 20);
             this.txtPosMarker.TabIndex = 1;
+            this.txtPosMarker.Validating += new System.ComponentModel.CancelEventHandler(this.txtPosMarker_Validating);
             // 
             // label1
             // 
@@ -684,6 +689,10 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // errorProvider
+            // 
+            this.errorProvider.ContainerControl = this;
+            // 
             // EditPosForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -708,6 +717,7 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -770,5 +780,6 @@
         private System.Windows.Forms.Label lblPosShape;
         private System.Windows.Forms.ComboBox cbGroup;
         private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.ErrorProvider errorProvider;
     }
 }

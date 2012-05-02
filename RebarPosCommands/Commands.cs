@@ -44,6 +44,7 @@ namespace RebarPosCommands
             {
                 PromptEntityOptions opts = new PromptEntityOptions("Poz secin veya [Yeni/Numaralandir/Kopyala/Grup/kOntrol/Metraj/bul Degistir/numara Sil/Acilimlar]: ",
                     "New Numbering Copy Group Check BOM Find Empty Shapes");
+                opts.AllowNone = false;
                 PromptEntityResult result = Application.DocumentManager.MdiActiveDocument.Editor.GetEntity(opts);
 
                 if (result.Status == PromptStatus.Keyword)
@@ -93,12 +94,12 @@ namespace RebarPosCommands
         [CommandMethod("RebarPos", "POSEDIT", "POSEDIT_Local", CommandFlags.Modal | CommandFlags.UsePickSet)]
         public void CMD_PosEdit()
         {
-            PromptSelectionOptions opts = new PromptSelectionOptions();
-            opts.SingleOnly = true;
-            PromptSelectionResult result = Application.DocumentManager.MdiActiveDocument.Editor.GetSelection(opts);
-            if (result.Status == PromptStatus.OK && result.Value.Count == 1)
+            PromptEntityOptions opts = new PromptEntityOptions("Select entity: ");
+            opts.AllowNone = false;
+            PromptEntityResult result = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetEntity(opts);
+            if (result.Status == PromptStatus.OK)
             {
-                PosEdit(result.Value[0].ObjectId, Point3d.Origin);
+                PosEdit(result.ObjectId, Point3d.Origin);
             }
         }
 

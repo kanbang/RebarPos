@@ -30,7 +30,7 @@ namespace RebarPosCommands
 
             layoutPanel.Controls.Clear();
 
-            // AutoCad model background
+            // Get AutoCad model background color
             AcadPreferences pref = Autodesk.AutoCAD.ApplicationServices.Application.Preferences as AcadPreferences;
             uint indexColor = pref.Display.GraphicsWinModelBackgrndColor;
             Color backColor = ColorTranslator.FromOle((int)indexColor);
