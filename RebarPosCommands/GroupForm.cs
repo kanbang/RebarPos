@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using Autodesk.AutoCAD.DatabaseServices;
 using OZOZ.RebarPosWrapper;
+using Autodesk.AutoCAD.Interop;
 
 namespace RebarPosCommands
 {
@@ -59,6 +60,10 @@ namespace RebarPosCommands
             m_Copies = new List<GroupCopy>();
             m_Groups = new Dictionary<string, ObjectId>();
             m_TextStyles = new Dictionary<string, ObjectId>();
+
+            AcadPreferences pref = Autodesk.AutoCAD.ApplicationServices.Application.Preferences as AcadPreferences;
+            uint indexColor = pref.Display.GraphicsWinModelBackgrndColor;
+            posStylePreview.BackColor = ColorTranslator.FromOle((int)indexColor);
         }
 
         public bool Init(ObjectId currentId)
@@ -81,12 +86,15 @@ namespace RebarPosCommands
                         if (group == null) continue;
 
                         GroupCopy copy = new GroupCopy();
+
                         copy.name = item.Key;
+
                         copy.id = item.Value;
                         copy.isNew = false;
                         copy.isDeleted = false;
                         copy.isUsed = false;
                         copy.isCurrent = (copy.id == currentId);
+
                         copy.drawingUnits = group.DrawingUnit;
                         copy.displayUnits = group.DisplayUnit;
                         copy.precision = group.Precision;
@@ -96,12 +104,14 @@ namespace RebarPosCommands
                         copy.formula = group.Formula;
                         copy.formulaWithoutLength = group.FormulaWithoutLength;
                         copy.formulaPosOnly = group.FormulaPosOnly;
+
                         copy.textColor = group.TextColor;
                         copy.posColor = group.PosColor;
                         copy.circleColor = group.CircleColor;
                         copy.multiplierColor = group.MultiplierColor;
                         copy.groupColor = group.GroupColor;
                         copy.currentGroupHighlightColor = group.CurrentGroupHighlightColor;
+
                         copy.textStyleId = group.TextStyleId;
                         copy.noteStyleId = group.NoteStyleId;
                         copy.noteScale = group.NoteScale;
@@ -187,6 +197,13 @@ namespace RebarPosCommands
             btnPickGroupColor.BackColor = copy.groupColor.ColorValue;
             btnPickCurrentGroupColor.BackColor = copy.currentGroupHighlightColor.ColorValue;
 
+            posStylePreview.TextColor = copy.textColor.ColorValue;
+            posStylePreview.PosColor = copy.posColor.ColorValue;
+            posStylePreview.CircleColor = copy.circleColor.ColorValue;
+            posStylePreview.MultiplierColor = copy.multiplierColor.ColorValue;
+            posStylePreview.GroupColor = copy.groupColor.ColorValue;
+            posStylePreview.CurrentGroupHighlightColor = copy.currentGroupHighlightColor.ColorValue;
+
             if (copy.displayUnits == PosGroup.DrawingUnits.Millimeter)
                 posStylePreview.SetPos("1", "2x4", "16", "200", "2400");
             else
@@ -205,6 +222,8 @@ namespace RebarPosCommands
                 }
                 i++;
             }
+
+            txtNoteScale.Text = copy.noteScale.ToString();
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -220,12 +239,15 @@ namespace RebarPosCommands
             }
 
             GroupCopy copy = new GroupCopy();
+
             copy.name = "Group" + i.ToString();
+
             copy.id = ObjectId.Null;
             copy.isNew = true;
             copy.isDeleted = false;
             copy.isUsed = false;
             copy.isCurrent = false;
+
             copy.drawingUnits = org.drawingUnits;
             copy.displayUnits = org.displayUnits;
             copy.precision = org.precision;
@@ -235,12 +257,14 @@ namespace RebarPosCommands
             copy.formula = org.formula;
             copy.formulaWithoutLength = org.formulaWithoutLength;
             copy.formulaPosOnly = org.formulaPosOnly;
+
             copy.textColor = org.textColor;
             copy.posColor = org.posColor;
             copy.circleColor = org.circleColor;
             copy.multiplierColor = org.multiplierColor;
             copy.groupColor = org.groupColor;
             copy.currentGroupHighlightColor = org.currentGroupHighlightColor;
+
             copy.textStyleId = org.textStyleId;
             copy.noteStyleId = org.noteStyleId;
             copy.noteScale = org.noteScale;
@@ -412,7 +436,9 @@ namespace RebarPosCommands
                         else if (copy.isNew)
                         {
                             PosGroup group = new PosGroup();
+
                             group.Name = copy.name;
+
                             group.DrawingUnit = copy.drawingUnits;
                             group.DisplayUnit = copy.displayUnits;
                             group.Precision = copy.precision;
@@ -422,12 +448,14 @@ namespace RebarPosCommands
                             group.Formula = copy.formula;
                             group.FormulaWithoutLength = copy.formulaWithoutLength;
                             group.FormulaPosOnly = copy.formulaPosOnly;
+
                             group.TextColor = copy.textColor;
                             group.PosColor = copy.posColor;
                             group.CircleColor = copy.circleColor;
                             group.MultiplierColor = copy.multiplierColor;
                             group.GroupColor = copy.groupColor;
                             group.CurrentGroupHighlightColor = copy.currentGroupHighlightColor;
+
                             group.TextStyleId = copy.textStyleId;
                             group.NoteStyleId = copy.noteStyleId;
                             group.NoteScale = copy.noteScale;
@@ -437,13 +465,30 @@ namespace RebarPosCommands
                         }
                         else
                         {
-                            PosGroup group = (PosGroup)tr.GetObject(copy.id, OpenMode.ForRead);
-                            if (group.Name != copy.name)
-                            {
-                                group.UpgradeOpen();
-                                group.Name = copy.name;
-                                group.DowngradeOpen();
-                            }
+                            PosGroup group = (PosGroup)tr.GetObject(copy.id, OpenMode.ForWrite);
+
+                            group.Name = copy.name;
+
+                            group.DrawingUnit = copy.drawingUnits;
+                            group.DisplayUnit = copy.displayUnits;
+                            group.Precision = copy.precision;
+                            group.MaxBarLength = copy.maxLength;
+                            group.Bending = copy.bending;
+
+                            group.Formula = copy.formula;
+                            group.FormulaWithoutLength = copy.formulaWithoutLength;
+                            group.FormulaPosOnly = copy.formulaPosOnly;
+
+                            group.TextColor = copy.textColor;
+                            group.PosColor = copy.posColor;
+                            group.CircleColor = copy.circleColor;
+                            group.MultiplierColor = copy.multiplierColor;
+                            group.GroupColor = copy.groupColor;
+                            group.CurrentGroupHighlightColor = copy.currentGroupHighlightColor;
+
+                            group.TextStyleId = copy.textStyleId;
+                            group.NoteStyleId = copy.noteStyleId;
+                            group.NoteScale = copy.noteScale;
                         }
 
                         if (!copy.isDeleted && copy.isCurrent)
@@ -486,7 +531,10 @@ namespace RebarPosCommands
             if (!double.TryParse(txtMaxLength.Text, out val))
             {
                 e.Cancel = true;
+                errorProvider.SetError(txtMaxLength, "Lütfen bir reel sayı girin.");
             }
+            else
+                errorProvider.SetError(txtMaxLength, "");
         }
 
         private void txtMaxLength_Validated(object sender, EventArgs e)
@@ -505,8 +553,11 @@ namespace RebarPosCommands
             double val;
             if (!double.TryParse(txtNoteScale.Text, out val))
             {
+                errorProvider.SetError(txtNoteScale, "Lütfen bir reel sayı girin.");
                 e.Cancel = true;
             }
+            else
+                errorProvider.SetError(txtNoteScale, "");
         }
 
         private void txtNoteScale_Validated(object sender, EventArgs e)
@@ -570,11 +621,13 @@ namespace RebarPosCommands
             Button btn = (Button)sender;
             Autodesk.AutoCAD.Windows.ColorDialog cd = new Autodesk.AutoCAD.Windows.ColorDialog();
             cd.SetDialogTabs(Autodesk.AutoCAD.Windows.ColorDialog.ColorTabs.ACITab);
+            cd.Color = Autodesk.AutoCAD.Colors.Color.FromColor(btn.BackColor);
             cd.IncludeByBlockByLayer = false;
             if (cd.ShowDialog() == DialogResult.OK)
             {
                 copy.textColor = cd.Color;
                 btn.BackColor = cd.Color.ColorValue;
+                posStylePreview.TextColor = copy.textColor.ColorValue;
             }
         }
 
@@ -585,11 +638,13 @@ namespace RebarPosCommands
             Button btn = (Button)sender;
             Autodesk.AutoCAD.Windows.ColorDialog cd = new Autodesk.AutoCAD.Windows.ColorDialog();
             cd.SetDialogTabs(Autodesk.AutoCAD.Windows.ColorDialog.ColorTabs.ACITab);
+            cd.Color = Autodesk.AutoCAD.Colors.Color.FromColor(btn.BackColor);
             cd.IncludeByBlockByLayer = false;
             if (cd.ShowDialog() == DialogResult.OK)
             {
                 copy.posColor = cd.Color;
                 btn.BackColor = cd.Color.ColorValue;
+                posStylePreview.PosColor = copy.posColor.ColorValue;
             }
         }
 
@@ -600,11 +655,13 @@ namespace RebarPosCommands
             Button btn = (Button)sender;
             Autodesk.AutoCAD.Windows.ColorDialog cd = new Autodesk.AutoCAD.Windows.ColorDialog();
             cd.SetDialogTabs(Autodesk.AutoCAD.Windows.ColorDialog.ColorTabs.ACITab);
+            cd.Color = Autodesk.AutoCAD.Colors.Color.FromColor(btn.BackColor);
             cd.IncludeByBlockByLayer = false;
             if (cd.ShowDialog() == DialogResult.OK)
             {
                 copy.circleColor = cd.Color;
                 btn.BackColor = cd.Color.ColorValue;
+                posStylePreview.CircleColor = copy.circleColor.ColorValue;
             }
         }
 
@@ -615,11 +672,13 @@ namespace RebarPosCommands
             Button btn = (Button)sender;
             Autodesk.AutoCAD.Windows.ColorDialog cd = new Autodesk.AutoCAD.Windows.ColorDialog();
             cd.SetDialogTabs(Autodesk.AutoCAD.Windows.ColorDialog.ColorTabs.ACITab);
+            cd.Color = Autodesk.AutoCAD.Colors.Color.FromColor(btn.BackColor);
             cd.IncludeByBlockByLayer = false;
             if (cd.ShowDialog() == DialogResult.OK)
             {
                 copy.multiplierColor = cd.Color;
                 btn.BackColor = cd.Color.ColorValue;
+                posStylePreview.MultiplierColor = copy.multiplierColor.ColorValue;
             }
         }
 
@@ -630,11 +689,13 @@ namespace RebarPosCommands
             Button btn = (Button)sender;
             Autodesk.AutoCAD.Windows.ColorDialog cd = new Autodesk.AutoCAD.Windows.ColorDialog();
             cd.SetDialogTabs(Autodesk.AutoCAD.Windows.ColorDialog.ColorTabs.ACITab);
+            cd.Color = Autodesk.AutoCAD.Colors.Color.FromColor(btn.BackColor);
             cd.IncludeByBlockByLayer = false;
             if (cd.ShowDialog() == DialogResult.OK)
             {
                 copy.groupColor = cd.Color;
                 btn.BackColor = cd.Color.ColorValue;
+                posStylePreview.GroupColor = copy.groupColor.ColorValue;
             }
         }
 
@@ -645,11 +706,13 @@ namespace RebarPosCommands
             Button btn = (Button)sender;
             Autodesk.AutoCAD.Windows.ColorDialog cd = new Autodesk.AutoCAD.Windows.ColorDialog();
             cd.SetDialogTabs(Autodesk.AutoCAD.Windows.ColorDialog.ColorTabs.ACITab);
+            cd.Color = Autodesk.AutoCAD.Colors.Color.FromColor(btn.BackColor);
             cd.IncludeByBlockByLayer = false;
             if (cd.ShowDialog() == DialogResult.OK)
             {
                 copy.currentGroupHighlightColor = cd.Color;
                 btn.BackColor = cd.Color.ColorValue;
+                posStylePreview.CurrentGroupHighlightColor = copy.currentGroupHighlightColor.ColorValue;
             }
         }
     }

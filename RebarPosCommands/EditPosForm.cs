@@ -9,6 +9,7 @@ using OZOZ.RebarPosWrapper;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
+using Autodesk.AutoCAD.Interop;
 
 namespace RebarPosCommands
 {
@@ -30,6 +31,10 @@ namespace RebarPosCommands
             m_Shape = ObjectId.Null;
             m_Groups = new Dictionary<string, ObjectId>();
             m_Shapes = new Dictionary<string, ObjectId>();
+
+            AcadPreferences pref = Autodesk.AutoCAD.ApplicationServices.Application.Preferences as AcadPreferences;
+            uint indexColor = pref.Display.GraphicsWinModelBackgrndColor;
+            posShapeView.BackColor = ColorTranslator.FromOle((int)indexColor);
         }
 
         public bool Init(ObjectId id, Point3d pt)

@@ -56,6 +56,10 @@
       <HintPath>..\..\..\..\inc-x64\AcMgd.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Autodesk.AutoCAD.Interop, Version=18.0.0.0, Culture=neutral, PublicKeyToken=eed84259d7cbf30b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\inc-x64\Autodesk.AutoCAD.Interop.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />

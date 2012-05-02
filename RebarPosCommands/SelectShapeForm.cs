@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using Autodesk.AutoCAD.DatabaseServices;
 using OZOZ.RebarPosWrapper;
+using Autodesk.AutoCAD.Interop;
 
 namespace RebarPosCommands
 {
@@ -28,6 +29,12 @@ namespace RebarPosCommands
             m_Current = current;
 
             layoutPanel.Controls.Clear();
+
+            // AutoCad model background
+            AcadPreferences pref = Autodesk.AutoCAD.ApplicationServices.Application.Preferences as AcadPreferences;
+            uint indexColor = pref.Display.GraphicsWinModelBackgrndColor;
+            Color backColor = ColorTranslator.FromOle((int)indexColor);
+
             Database db = HostApplicationServices.WorkingDatabase;
             using (Transaction tr = db.TransactionManager.StartTransaction())
             {
@@ -51,6 +58,8 @@ namespace RebarPosCommands
                             posShapeView.Visible = true;
                             posShapeView.Size = new Size(200, 100);
                             posShapeView.Tag = id;
+                            posShapeView.BackColor = backColor;
+
                             posShapeView.Click += new EventHandler(posShapeView_Click);
 
                             for (int i = 0; i < shape.Items.Count; i++)

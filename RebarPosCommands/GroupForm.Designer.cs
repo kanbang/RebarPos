@@ -51,6 +51,7 @@
             this.btnRemove = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
             this.gbDisplay = new System.Windows.Forms.GroupBox();
+            this.posStylePreview = new RebarPosCommands.PosStylePreview();
             this.btnPickCurrentGroupColor = new System.Windows.Forms.Button();
             this.btnPickGroupColor = new System.Windows.Forms.Button();
             this.cbNoteStyle = new System.Windows.Forms.ComboBox();
@@ -75,11 +76,12 @@
             this.label6 = new System.Windows.Forms.Label();
             this.txtFormula = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.posStylePreview = new RebarPosCommands.PosStylePreview();
+            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.gbOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udPrecision)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.gbDisplay.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // gbOptions
@@ -200,7 +202,7 @@
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(461, 545);
+            this.btnOK.Location = new System.Drawing.Point(461, 589);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 3;
@@ -212,7 +214,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(542, 545);
+            this.btnCancel.Location = new System.Drawing.Point(542, 589);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 4;
@@ -349,10 +351,30 @@
             this.gbDisplay.Controls.Add(this.label5);
             this.gbDisplay.Location = new System.Drawing.Point(12, 233);
             this.gbDisplay.Name = "gbDisplay";
-            this.gbDisplay.Size = new System.Drawing.Size(605, 295);
+            this.gbDisplay.Size = new System.Drawing.Size(605, 339);
             this.gbDisplay.TabIndex = 2;
             this.gbDisplay.TabStop = false;
             this.gbDisplay.Text = "Görünüm &Ayarları";
+            // 
+            // posStylePreview
+            // 
+            this.posStylePreview.BackColor = System.Drawing.Color.Black;
+            this.posStylePreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.posStylePreview.CircleColor = System.Drawing.Color.Yellow;
+            this.posStylePreview.CurrentGroupHighlightColor = System.Drawing.Color.Silver;
+            this.posStylePreview.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.posStylePreview.Formula1 = "[M:C][N][\"T\":D][\"/\":S][\" L=\":L]";
+            this.posStylePreview.Formula2 = "[M:C][N][\"T\":D][\"/\":S]";
+            this.posStylePreview.Formula3 = "[M:C]";
+            this.posStylePreview.GroupColor = System.Drawing.Color.Gray;
+            this.posStylePreview.Location = new System.Drawing.Point(314, 207);
+            this.posStylePreview.MultiplierColor = System.Drawing.Color.Gray;
+            this.posStylePreview.Name = "posStylePreview";
+            this.posStylePreview.NoteColor = System.Drawing.Color.Orange;
+            this.posStylePreview.PosColor = System.Drawing.Color.Red;
+            this.posStylePreview.Size = new System.Drawing.Size(268, 114);
+            this.posStylePreview.TabIndex = 24;
+            this.posStylePreview.TextColor = System.Drawing.Color.Red;
             // 
             // btnPickCurrentGroupColor
             // 
@@ -380,9 +402,6 @@
             // 
             this.cbNoteStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbNoteStyle.FormattingEnabled = true;
-            this.cbNoteStyle.Items.AddRange(new object[] {
-            "Milimetre",
-            "Santimetre"});
             this.cbNoteStyle.Location = new System.Drawing.Point(187, 233);
             this.cbNoteStyle.Name = "cbNoteStyle";
             this.cbNoteStyle.Size = new System.Drawing.Size(100, 21);
@@ -393,9 +412,6 @@
             // 
             this.cbTextStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbTextStyle.FormattingEnabled = true;
-            this.cbTextStyle.Items.AddRange(new object[] {
-            "Milimetre",
-            "Santimetre"});
             this.cbTextStyle.Location = new System.Drawing.Point(187, 207);
             this.cbTextStyle.Name = "cbTextStyle";
             this.cbTextStyle.Size = new System.Drawing.Size(100, 21);
@@ -587,22 +603,13 @@
             this.label5.TabIndex = 0;
             this.label5.Text = "&Formül";
             // 
-            // posStylePreview
-            // 
-            this.posStylePreview.BackColor = System.Drawing.Color.Black;
-            this.posStylePreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.posStylePreview.Location = new System.Drawing.Point(314, 207);
-            this.posStylePreview.Name = "posStylePreview";
-            this.posStylePreview.Size = new System.Drawing.Size(268, 72);
-            this.posStylePreview.TabIndex = 24;
-            // 
             // GroupForm
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(629, 583);
+            this.ClientSize = new System.Drawing.Size(629, 627);
             this.Controls.Add(this.gbDisplay);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.btnCancel);
@@ -620,6 +627,7 @@
             this.groupBox2.ResumeLayout(false);
             this.gbDisplay.ResumeLayout(false);
             this.gbDisplay.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -672,5 +680,6 @@
         private System.Windows.Forms.TextBox txtNoteScale;
         private System.Windows.Forms.Label label16;
         private PosStylePreview posStylePreview;
+        private System.Windows.Forms.ErrorProvider errorProvider;
     }
 }

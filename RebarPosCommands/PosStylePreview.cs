@@ -10,13 +10,35 @@ namespace RebarPosCommands
 {
     public partial class PosStylePreview : UserControl
     {
-        public Color TextColor { get; set; }
-        public Color PosColor { get; set; }
-        public Color CircleColor { get; set; }
-        public Color MultiplierColor { get; set; }
-        public Color GroupColor { get; set; }
-        public Color NoteColor { get; set; }
-        public Color CurrentGroupHighlightColor { get; set; }
+        private Color mTextColor;
+        private Color mPosColor;
+        private Color mCircleColor;
+        private Color mMultiplierColor;
+        private Color mGroupColor;
+        private Color mNoteColor;
+        private Color mCurrentGroupHighlightColor;
+
+        [Browsable(true)]
+        public Color TextColor { get { return mTextColor; } set { mTextColor = value; Refresh(); } }
+        [Browsable(true)]
+        public Color PosColor { get { return mPosColor; } set { mPosColor = value; Refresh(); } }
+        [Browsable(true)]
+        public Color CircleColor { get { return mCircleColor; } set { mCircleColor = value; Refresh(); } }
+        [Browsable(true)]
+        public Color MultiplierColor { get { return mMultiplierColor; } set { mMultiplierColor = value; Refresh(); } }
+        [Browsable(true)]
+        public Color GroupColor { get { return mGroupColor; } set { mGroupColor = value; Refresh(); } }
+        [Browsable(true)]
+        public Color NoteColor { get { return mNoteColor; } set { mNoteColor = value; Refresh(); } }
+        [Browsable(true)]
+        public Color CurrentGroupHighlightColor { get { return mCurrentGroupHighlightColor; } set { mCurrentGroupHighlightColor = value; Refresh(); } }
+
+        [Browsable(true)]
+        public string Formula1 { get { return mFormula1; } set { mFormula1 = value; Refresh(); } }
+        [Browsable(true)]
+        public string Formula2 { get { return mFormula2; } set { mFormula2 = value; Refresh(); } }
+        [Browsable(true)]
+        public string Formula3 { get { return mFormula3; } set { mFormula3 = value; Refresh(); } }
 
         private enum PartType
         {
@@ -65,13 +87,13 @@ namespace RebarPosCommands
             mFormula2 = "[M:C][N][\"T\":D][\"/\":S]";
             mFormula3 = "[M:C]";
 
-            TextColor = Color.Red;
-            PosColor = Color.Red;
-            CircleColor = Color.Yellow;
-            MultiplierColor = Color.Gray;
-            GroupColor = Color.Gray;
-            NoteColor = Color.Orange;
-            CurrentGroupHighlightColor = Color.Silver;
+            mTextColor = Color.Red;
+            mPosColor = Color.Red;
+            mCircleColor = Color.Yellow;
+            mMultiplierColor = Color.Gray;
+            mGroupColor = Color.Gray;
+            mNoteColor = Color.Orange;
+            mCurrentGroupHighlightColor = Color.Silver;
         }
 
         public void SetPos(string pos, string count, string diameter, string spacing, string length)
@@ -111,9 +133,11 @@ namespace RebarPosCommands
             float partSpacing = 0.15f;
             float x = 0;
             float y = 0;
+            bool hascircle;
             // Measure
             using (Font font = new Font(Font.FontFamily, 1.0f, GraphicsUnit.World))
             {
+                hascircle = false;
                 x = 0;
                 for (int i = 0; i < list1.Count; i++)
                 {
@@ -121,6 +145,7 @@ namespace RebarPosCommands
                     SizeF ext;
                     if (p.hasCircle)
                     {
+                        hascircle = true;
                         ext = g.MeasureString(p.text, font);
                         p.x = x + (2.0f * circleRadius - ext.Width) / 2.0f;
                     }
@@ -140,11 +165,17 @@ namespace RebarPosCommands
                     {
                         x += ext.Width + partSpacing;
                     }
-                    if (i == 0)
-                        y += ext.Height + 2.0f * partSpacing;
+                    if (i == list1.Count - 1)
+                    {
+                        if (hascircle)
+                            y += 2.0f * circleRadius + 2.0f * partSpacing;
+                        else
+                            y += ext.Height + 2.0f * partSpacing;
+                    }
                     xmax = Math.Max(p.x + p.w, xmax);
                     ymax = Math.Max(p.y + p.h, ymax);
                 }
+                hascircle = false;
                 x = 0;
                 for (int i = 0; i < list2.Count; i++)
                 {
@@ -152,6 +183,7 @@ namespace RebarPosCommands
                     SizeF ext;
                     if (p.hasCircle)
                     {
+                        hascircle = true;
                         ext = g.MeasureString(p.text, font);
                         p.x = x + (2.0f * circleRadius - ext.Width) / 2.0f;
                     }
@@ -171,11 +203,17 @@ namespace RebarPosCommands
                     {
                         x += ext.Width + partSpacing;
                     }
-                    if (i == 0)
-                        y += ext.Height + 2.0f * partSpacing;
+                    if (i == list2.Count - 1)
+                    {
+                        if (hascircle)
+                            y += 2.0f * circleRadius + 2.0f * partSpacing;
+                        else
+                            y += ext.Height + 2.0f * partSpacing;
+                    }
                     xmax = Math.Max(p.x + p.w, xmax);
                     ymax = Math.Max(p.y + p.h, ymax);
                 }
+                hascircle = false;
                 x = 0;
                 for (int i = 0; i < list3.Count; i++)
                 {
@@ -183,6 +221,7 @@ namespace RebarPosCommands
                     SizeF ext;
                     if (p.hasCircle)
                     {
+                        hascircle = true;
                         ext = g.MeasureString(p.text, font);
                         p.x = x + (2.0f * circleRadius - ext.Width) / 2.0f;
                     }
@@ -202,12 +241,21 @@ namespace RebarPosCommands
                     {
                         x += ext.Width + partSpacing;
                     }
-                    if (i == 0)
-                        y += ext.Height + 2.0f * partSpacing;
+                    if (i == list3.Count - 1)
+                    {
+                        if (hascircle)
+                            y += 2.0f * circleRadius + 2.0f * partSpacing;
+                        else
+                            y += ext.Height + 2.0f * partSpacing;
+                    }
                     xmax = Math.Max(p.x + p.w, xmax);
                     ymax = Math.Max(p.y + p.h, ymax);
                 }
             }
+            xmin -= circleRadius;
+            xmax += circleRadius;
+            ymin -= circleRadius;
+            ymax += circleRadius;
 
             // Calculate scale
             float w = (float)ClientRectangle.Width;
@@ -223,6 +271,7 @@ namespace RebarPosCommands
 
             // Transform
             g.ResetTransform();
+            g.TranslateTransform(-xmin, -ymin, System.Drawing.Drawing2D.MatrixOrder.Append);
             g.ScaleTransform(scale, scale, System.Drawing.Drawing2D.MatrixOrder.Append);
             g.TranslateTransform(xoff, yoff, System.Drawing.Drawing2D.MatrixOrder.Append);
 
@@ -250,15 +299,15 @@ namespace RebarPosCommands
                         break;
                 }
                 using (Brush brush = new SolidBrush(col))
-                using (Font font = new Font(Font.FontFamily, scale, GraphicsUnit.World))
+                using (Font font = new Font(Font.FontFamily, 1.0f, GraphicsUnit.World))
                 {
-                    g.DrawString(p.text, Font, brush, p.x, p.y);
+                    g.DrawString(p.text, font, brush, p.x, p.y);
                 }
                 if (p.hasCircle)
                 {
                     using (Pen pen = new Pen(CircleColor, 0.0f))
                     {
-                        g.DrawArc(pen, p.x + p.w / 2.0f - circleRadius, p.y + p.h / 2.0f + circleRadius, circleRadius * 2.0f, circleRadius * 2.0f, 0.0f, 360.0f);
+                        g.DrawArc(pen, p.x + p.w / 2.0f - circleRadius, p.y + p.h / 2.0f - circleRadius, circleRadius * 2.0f, circleRadius * 2.0f, 0.0f, 360.0f);
                     }
                 }
             }
