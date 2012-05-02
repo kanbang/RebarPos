@@ -626,6 +626,12 @@ Acad::ErrorStatus CRebarPos::subTransformBy(const AcGeMatrix3d& xform)
 		norm = direction.crossProduct(up);
 	}	
 
+	// Correct direction vectors
+	double scale = direction.length();
+	direction = direction.normal() * scale;
+	up = up.normal() * scale;
+	norm = norm.normal() * scale;
+
 	isModified = true;
 
 	return Acad::eOk;
@@ -707,21 +713,32 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 
 	Acad::ErrorStatus es;
 
-	// Open group and style
+	// Open group
 	AcDbObjectPointer<CPosGroup> pGroup (m_GroupID, AcDb::kForRead);
 	if((es = pGroup.openStatus()) != Acad::eOk)
 	{
 		return es;
 	}
+	// Open text styles
 	AcDbObjectId textStyle = pGroup->TextStyleId();
 	AcDbObjectId noteStyle = pGroup->NoteStyleId();
+	AcDbObjectPointer<AcDbTextStyleTableRecord> pTextStyle (textStyle, AcDb::kForRead);
+	if((es = pTextStyle.openStatus()) != Acad::eOk)
+	{
+		return es;
+	}
+	AcDbObjectPointer<AcDbTextStyleTableRecord> pNoteStyle (noteStyle, AcDb::kForRead);
+	if((es = pNoteStyle.openStatus()) != Acad::eOk)
+	{
+		return es;
+	}
 
 	// Transformations
 	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
 	trans.setCoordSystem(m_BasePoint, direction, up, norm);
 	AcGeMatrix3d noteTrans = AcGeMatrix3d::kIdentity;
 	noteTrans.setCoordSystem(m_NoteGrip, direction, up, norm);
-
+	
     AcDbText* text;
 	CDrawParams p;
 	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
@@ -729,21 +746,32 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 		p = lastDrawList[i];
 		text = new AcDbText(AcGePoint3d(p.x, p.y, 0), p.text, textStyle, 1.0);
 		text->setColorIndex(p.color);
-		text->transformBy(trans);
+		text->setWidthFactor(pTextStyle->xScale());
+		if((es = text->transformBy(trans)) != Acad::eOk)
+		{
+			return es;
+		}
 		entitySet.append(text);
 		if(p.hasCircle)
 		{
 			AcDbCircle* circle;
 			circle = new AcDbCircle(AcGePoint3d(p.x + p.w / 2, p.y + p.h / 2, 0), AcGeVector3d::kZAxis, circleRadius);
 			circle->setColorIndex(lastCircleColor);
-			circle->transformBy(trans);
+			if((es = circle->transformBy(trans)) != Acad::eOk)
+			{
+				return es;
+			}
 			entitySet.append(circle);
 		}
 	}
 	p = lastNoteDraw;
 	text = new AcDbText(AcGePoint3d(p.x, p.y, 0), p.text, noteStyle, 1.0 * pGroup->NoteScale());
 	text->setColorIndex(p.color);
-	text->transformBy(noteTrans);
+	text->setWidthFactor(pNoteStyle->xScale());
+	if((es = text->transformBy(noteTrans)) != Acad::eOk)
+	{
+		return es;
+	}
 	entitySet.append(text);
 
     return Acad::eOk;
