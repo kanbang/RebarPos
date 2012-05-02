@@ -870,6 +870,8 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	// Transform to match note orientation
 	worldDraw->geometry().pushModelTransform(noteTrans);
 	// Draw note text
+	lastNoteStyle.setTextSize(lastNoteScale);
+	lastNoteStyle.loadStyleRec();
 	worldDraw->subEntityTraits().setColor(lastNoteDraw.color);
 	worldDraw->subEntityTraits().setLayer(zeroLayer);
 	worldDraw->geometry().text(AcGePoint3d(lastNoteDraw.x, lastNoteDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, m_Note, -1, Adesk::kFalse, lastNoteStyle);
@@ -877,6 +879,70 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	worldDraw->geometry().popModelTransform();
 
     return Adesk::kTrue; // Don't call viewportDraw().
+}
+
+void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
+{
+    assertReadEnabled();
+
+    if(worldDraw->regenAbort())
+	{
+        return;
+    }
+
+	// Update if required
+	if(isModified)
+	{
+		Calculate();
+	}
+
+	// Quit if there is nothing to draw
+	if(lastDrawList.empty())
+	{
+		return;
+	}
+
+	// Transformations
+	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
+	trans.setCoordSystem(m_BasePoint, direction, up, norm);
+	AcGeMatrix3d noteTrans = AcGeMatrix3d::kIdentity;
+	noteTrans.setCoordSystem(m_NoteGrip, direction, up, norm);
+	double scale = direction.length();
+
+	// Draw items
+	worldDraw->subEntityTraits().setLayer(zeroLayer);
+	lastTextStyle.setTextSize(1.0 * scale);
+	lastTextStyle.loadStyleRec();
+	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+	{
+		CDrawParams p = lastDrawList.at(i);
+
+		// Circle
+		if(p.hasCircle)
+		{
+			AcGePoint3d circlept(p.x + p.w / 2.0, p.y + p.h / 2.0, 0);
+			circlept.transformBy(trans);
+
+			worldDraw->subEntityTraits().setColor(lastCircleColor);
+			worldDraw->geometry().circle(circlept, circleRadius * scale, norm);
+		}
+
+		// Text
+		AcGePoint3d textpt(p.x, p.y, 0);
+		textpt.transformBy(trans);
+
+		worldDraw->subEntityTraits().setColor(p.color);
+		worldDraw->geometry().text(textpt, norm, direction, p.text, -1, Adesk::kFalse, lastTextStyle);
+	}
+
+	// Draw note text
+	lastNoteStyle.setTextSize(lastNoteScale * scale);
+	lastNoteStyle.loadStyleRec();
+	AcGePoint3d notept(lastNoteDraw.x, lastNoteDraw.y, 0);
+	notept.transformBy(noteTrans);
+	worldDraw->subEntityTraits().setColor(lastNoteDraw.color);
+	worldDraw->subEntityTraits().setLayer(zeroLayer);
+	worldDraw->geometry().text(notept, norm, direction, m_Note, -1, Adesk::kFalse, lastNoteStyle);
 }
 
 Acad::ErrorStatus CRebarPos::subGetGeomExtents(AcDbExtents& extents) const
