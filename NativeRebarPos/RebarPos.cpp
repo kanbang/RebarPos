@@ -650,6 +650,17 @@ void CRebarPos::subList() const
     acdbWcs2Ucs(asDblArray(pt), asDblArray(pt), false);
     acutPrintf(_T("X = %-9.16q0, Y = %-9.16q0, Z = %-9.16q0\n"), pt.x, pt.y, pt.z);
 
+	// Group
+	if(!m_GroupID.isNull())
+	{
+		Acad::ErrorStatus es;
+		AcDbObjectPointer<CPosGroup> pGroup (m_GroupID, AcDb::kForRead);
+		if((es = pGroup.openStatus()) == Acad::eOk)
+		{
+			acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Group:"), pGroup->Name());
+		}
+	}
+
 	// List all properties
 	if (m_Pos != NULL)
 		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Pos Marker:"), m_Pos);
@@ -661,26 +672,18 @@ void CRebarPos::subList() const
 		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Spacing:"), m_Spacing);
 	acutPrintf(_T("%18s%16s %i\n"), _T(/*MSG0*/""), _T("Multiplier:"), m_Multiplier);
 
+	// Shape
 	if(!m_ShapeID.isNull())
 	{
 		Acad::ErrorStatus es;
-		AcDbObjectPointer<AcDbDictionary> pNamedObj (acdbHostApplicationServices()->workingDatabase()->namedObjectsDictionaryId(), AcDb::kForRead);
-		if((es = pNamedObj.openStatus()) == Acad::eOk)
+		AcDbObjectPointer<CPosShape> pShape (m_ShapeID, AcDb::kForRead);
+		if((es = pShape.openStatus()) == Acad::eOk)
 		{
-			AcDbDictionary* pDict = NULL;
-			if((es = pNamedObj->getAt(CPosShape::GetTableName(), (AcDbObject *&)pDict, AcDb::kForRead)) == Acad::eOk)
-			{
-				ACHAR* shapeName = NULL;
-				pDict->nameAt(m_ShapeID, shapeName);
-				if (shapeName != NULL)
-					acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Shape:"), shapeName);
-				acutDelString(shapeName);
-				pDict->close();
-			}
-			pNamedObj->close();
+			acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Shape:"), pShape->Name());
 		}
 	}
 
+	// Lengths
 	if ((m_A != NULL) && (m_A[0] != _T('\0')))
 		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("A Length:"), m_A);
 	if ((m_B != NULL) && (m_B[0] != _T('\0')))
