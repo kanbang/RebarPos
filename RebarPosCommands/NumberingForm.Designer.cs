@@ -481,6 +481,7 @@
             this.MinimizeBox = false;
             this.Name = "NumberingForm";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Numaralandırma";
             this.gbAutoNumber.ResumeLayout(false);
             this.gbAutoNumber.PerformLayout();

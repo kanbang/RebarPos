@@ -76,12 +76,10 @@
             this.label6 = new System.Windows.Forms.Label();
             this.txtFormula = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.gbOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udPrecision)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.gbDisplay.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // gbOptions
@@ -620,6 +618,7 @@
             this.MinimizeBox = false;
             this.Name = "GroupForm";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Poz Grupları";
             this.gbOptions.ResumeLayout(false);
             this.gbOptions.PerformLayout();
@@ -627,7 +626,6 @@
             this.groupBox2.ResumeLayout(false);
             this.gbDisplay.ResumeLayout(false);
             this.gbDisplay.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -680,6 +678,5 @@
         private System.Windows.Forms.TextBox txtNoteScale;
         private System.Windows.Forms.Label label16;
         private PosStylePreview posStylePreview;
-        private System.Windows.Forms.ErrorProvider errorProvider;
     }
 }
