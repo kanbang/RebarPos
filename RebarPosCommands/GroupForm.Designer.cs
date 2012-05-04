@@ -76,27 +76,34 @@
             this.label6 = new System.Windows.Forms.Label();
             this.txtFormula = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.label17 = new System.Windows.Forms.Label();
+            this.txtDiameterList = new System.Windows.Forms.TextBox();
             this.gbOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udPrecision)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.gbDisplay.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // gbOptions
             // 
-            this.gbOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.gbOptions.Controls.Add(this.udPrecision);
             this.gbOptions.Controls.Add(this.cbDisplayUnit);
             this.gbOptions.Controls.Add(this.cbDrawingUnit);
             this.gbOptions.Controls.Add(this.label4);
             this.gbOptions.Controls.Add(this.label3);
+            this.gbOptions.Controls.Add(this.txtDiameterList);
             this.gbOptions.Controls.Add(this.txtMaxLength);
             this.gbOptions.Controls.Add(this.label2);
+            this.gbOptions.Controls.Add(this.label17);
             this.gbOptions.Controls.Add(this.label1);
             this.gbOptions.Controls.Add(this.chkBending);
             this.gbOptions.Location = new System.Drawing.Point(306, 12);
             this.gbOptions.Name = "gbOptions";
-            this.gbOptions.Size = new System.Drawing.Size(311, 214);
+            this.gbOptions.Size = new System.Drawing.Size(311, 246);
             this.gbOptions.TabIndex = 1;
             this.gbOptions.TabStop = false;
             this.gbOptions.Text = "Grup S&eçenekleri";
@@ -160,7 +167,7 @@
             // 
             // txtMaxLength
             // 
-            this.txtMaxLength.Location = new System.Drawing.Point(188, 126);
+            this.txtMaxLength.Location = new System.Drawing.Point(188, 115);
             this.txtMaxLength.Name = "txtMaxLength";
             this.txtMaxLength.Size = new System.Drawing.Size(100, 20);
             this.txtMaxLength.TabIndex = 7;
@@ -179,7 +186,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(17, 129);
+            this.label1.Location = new System.Drawing.Point(17, 118);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(131, 13);
             this.label1.TabIndex = 6;
@@ -188,7 +195,7 @@
             // chkBending
             // 
             this.chkBending.AutoSize = true;
-            this.chkBending.Location = new System.Drawing.Point(20, 178);
+            this.chkBending.Location = new System.Drawing.Point(20, 141);
             this.chkBending.Name = "chkBending";
             this.chkBending.Size = new System.Drawing.Size(209, 17);
             this.chkBending.TabIndex = 8;
@@ -200,7 +207,7 @@
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(461, 589);
+            this.btnOK.Location = new System.Drawing.Point(461, 621);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 3;
@@ -212,7 +219,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(542, 589);
+            this.btnCancel.Location = new System.Drawing.Point(542, 621);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 4;
@@ -222,7 +229,8 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.lbGroups);
             this.groupBox2.Controls.Add(this.btnSetCurrent);
@@ -231,7 +239,7 @@
             this.groupBox2.Controls.Add(this.btnAdd);
             this.groupBox2.Location = new System.Drawing.Point(12, 12);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(288, 214);
+            this.groupBox2.Size = new System.Drawing.Size(288, 246);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "&Poz Grupları";
@@ -250,7 +258,7 @@
             this.lbGroups.Location = new System.Drawing.Point(15, 23);
             this.lbGroups.MultiSelect = false;
             this.lbGroups.Name = "lbGroups";
-            this.lbGroups.Size = new System.Drawing.Size(227, 172);
+            this.lbGroups.Size = new System.Drawing.Size(227, 204);
             this.lbGroups.SmallImageList = this.lGroups;
             this.lbGroups.TabIndex = 0;
             this.lbGroups.UseCompatibleStateImageBehavior = false;
@@ -319,8 +327,7 @@
             // 
             // gbDisplay
             // 
-            this.gbDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
+            this.gbDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.gbDisplay.Controls.Add(this.posStylePreview);
             this.gbDisplay.Controls.Add(this.btnPickCurrentGroupColor);
@@ -347,7 +354,7 @@
             this.gbDisplay.Controls.Add(this.label6);
             this.gbDisplay.Controls.Add(this.txtFormula);
             this.gbDisplay.Controls.Add(this.label5);
-            this.gbDisplay.Location = new System.Drawing.Point(12, 233);
+            this.gbDisplay.Location = new System.Drawing.Point(12, 265);
             this.gbDisplay.Name = "gbDisplay";
             this.gbDisplay.Size = new System.Drawing.Size(605, 339);
             this.gbDisplay.TabIndex = 2;
@@ -601,13 +608,36 @@
             this.label5.TabIndex = 0;
             this.label5.Text = "&Formül";
             // 
+            // errorProvider
+            // 
+            this.errorProvider.ContainerControl = this;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(17, 178);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(104, 13);
+            this.label17.TabIndex = 9;
+            this.label17.Text = "&Standart Çap Listesi:";
+            // 
+            // txtDiameterList
+            // 
+            this.txtDiameterList.Location = new System.Drawing.Point(20, 194);
+            this.txtDiameterList.Multiline = true;
+            this.txtDiameterList.Name = "txtDiameterList";
+            this.txtDiameterList.Size = new System.Drawing.Size(268, 33);
+            this.txtDiameterList.TabIndex = 10;
+            this.txtDiameterList.Validated += new System.EventHandler(this.txtDiameterList_Validated);
+            this.txtDiameterList.Validating += new System.ComponentModel.CancelEventHandler(this.txtDiameterList_Validating);
+            // 
             // GroupForm
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(629, 627);
+            this.ClientSize = new System.Drawing.Size(629, 659);
             this.Controls.Add(this.gbDisplay);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.btnCancel);
@@ -626,6 +656,7 @@
             this.groupBox2.ResumeLayout(false);
             this.gbDisplay.ResumeLayout(false);
             this.gbDisplay.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -678,5 +709,8 @@
         private System.Windows.Forms.TextBox txtNoteScale;
         private System.Windows.Forms.Label label16;
         private PosStylePreview posStylePreview;
+        private System.Windows.Forms.ErrorProvider errorProvider;
+        private System.Windows.Forms.TextBox txtDiameterList;
+        private System.Windows.Forms.Label label17;
     }
 }

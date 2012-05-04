@@ -33,6 +33,8 @@ namespace RebarPosCommands
             public string formulaWithoutLength;
             public string formulaPosOnly;
 
+            public string standardDiameters;
+
             public Autodesk.AutoCAD.Colors.Color textColor;
             public Autodesk.AutoCAD.Colors.Color posColor;
             public Autodesk.AutoCAD.Colors.Color circleColor;
@@ -104,6 +106,8 @@ namespace RebarPosCommands
                         copy.formula = group.Formula;
                         copy.formulaWithoutLength = group.FormulaWithoutLength;
                         copy.formulaPosOnly = group.FormulaPosOnly;
+
+                        copy.standardDiameters = group.StandardDiameters;
 
                         copy.textColor = group.TextColor;
                         copy.posColor = group.PosColor;
@@ -190,6 +194,8 @@ namespace RebarPosCommands
             txtFormulaPosOnly.Text = copy.formulaPosOnly;
             posStylePreview.SetFormula(copy.formula, copy.formulaWithoutLength, copy.formulaPosOnly);
 
+            txtDiameterList.Text = copy.standardDiameters;
+
             btnPickTextColor.BackColor = copy.textColor.ColorValue;
             btnPickPosColor.BackColor = copy.posColor.ColorValue;
             btnPickCircleColor.BackColor = copy.circleColor.ColorValue;
@@ -257,6 +263,8 @@ namespace RebarPosCommands
             copy.formula = org.formula;
             copy.formulaWithoutLength = org.formulaWithoutLength;
             copy.formulaPosOnly = org.formulaPosOnly;
+
+            copy.standardDiameters = "8 10 12 14 16 18 20 22 25 26 32 36";
 
             copy.textColor = org.textColor;
             copy.posColor = org.posColor;
@@ -449,6 +457,8 @@ namespace RebarPosCommands
                             group.FormulaWithoutLength = copy.formulaWithoutLength;
                             group.FormulaPosOnly = copy.formulaPosOnly;
 
+                            group.StandardDiameters = copy.standardDiameters;
+
                             group.TextColor = copy.textColor;
                             group.PosColor = copy.posColor;
                             group.CircleColor = copy.circleColor;
@@ -478,6 +488,8 @@ namespace RebarPosCommands
                             group.Formula = copy.formula;
                             group.FormulaWithoutLength = copy.formulaWithoutLength;
                             group.FormulaPosOnly = copy.formulaPosOnly;
+
+                            group.StandardDiameters = copy.standardDiameters;
 
                             group.TextColor = copy.textColor;
                             group.PosColor = copy.posColor;
@@ -546,6 +558,35 @@ namespace RebarPosCommands
             {
                 copy.maxLength = val;
             }
+        }
+
+        private void txtDiameterList_Validating(object sender, CancelEventArgs e)
+        {
+            foreach (string ds in txtDiameterList.Text.Split(new char[] { ' ', ',', ';', ':', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                int d = 0;
+                if (!int.TryParse(ds, out d))
+                {
+                    errorProvider.SetError(txtDiameterList, "Çaplar tam sayı olarak girilip boşluk karakteri ile ayrılmalıdır.");
+                    e.Cancel = true;
+                }
+            }
+        }
+
+        private void txtDiameterList_Validated(object sender, EventArgs e)
+        {
+            GroupCopy copy = GetSelected();
+            if (copy == null) return;
+            List<int> diameters = new List<int>();
+            foreach (string ds in txtDiameterList.Text.Split(new char[] { ' ', ',', ';', ':', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                int d = 0;
+                if (int.TryParse(ds, out d) && d != 0)
+                {
+                    diameters.Add(d);
+                }
+            }
+            copy.standardDiameters = string.Join(" ", diameters.ConvertAll<string>(p => p.ToString()).ToArray());
         }
 
         private void txtNoteScale_Validating(object sender, CancelEventArgs e)
