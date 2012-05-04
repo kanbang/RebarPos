@@ -72,6 +72,7 @@ protected:
 	ACHAR* m_Formula;
 	ACHAR* m_FormulaWithoutLength;
 	ACHAR* m_FormulaPosOnly;
+	ACHAR* m_StandardDiameters;
 
 	Adesk::UInt16 m_TextColor;
 	Adesk::UInt16 m_PosColor;
@@ -124,6 +125,10 @@ public:
 	/// Gets or sets the formula text with only pos marker displayed.
     const ACHAR* FormulaPosOnly(void) const;
 	Acad::ErrorStatus setFormulaPosOnly(const ACHAR* newVal);
+
+	/// Gets or sets the list of standard diameters separated with spaces.
+    const ACHAR* StandardDiameters(void) const;
+	Acad::ErrorStatus setStandardDiameters(const ACHAR* newVal);
 
 	/// Gets or sets the text color.
 	const Adesk::UInt16 TextColor(void) const;

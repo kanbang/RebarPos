@@ -112,6 +112,15 @@ void PosGroup::FormulaPosOnly::set(String^ value)
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormulaPosOnly(StringToWchar(value)));
 }
 
+String^ PosGroup::StandardDiameters::get()
+{
+	return WcharToString(GetImpObj()->StandardDiameters());
+}
+void PosGroup::StandardDiameters::set(String^ value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setStandardDiameters(StringToWchar(value)));
+}
+
 Autodesk::AutoCAD::Colors::Color^ PosGroup::TextColor::get()
 {
 	return Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, GetImpObj()->TextColor());
