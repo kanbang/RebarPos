@@ -13,11 +13,42 @@ namespace RebarPosCommands
     {
         public static bool IsValid(string str)
         {
-            string ops = "(*/-+";
-            string nums = "1234567890.";
-            str = str.Trim(ops.ToCharArray());
-            str.Trim(nums.ToCharArray());
-            return (str.Length == 0);
+            char[] ops = "()*/-+.".ToCharArray();
+            char[] nums = "1234567890".ToCharArray();
+
+            // Should have at least one number
+            if (str.IndexOfAny(nums) == -1)
+                return false;
+            
+            foreach (char c in str)
+            {
+                bool found = false;
+                foreach (char co in ops)
+                {
+                    if (co == c)
+                    {
+                        found= true;
+                        break;
+                    }
+                }
+                if (found)
+                    continue;
+
+                foreach (char cn in nums)
+                {
+                    if (cn == c)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found)
+                    continue;
+
+                return false;
+            }
+
+            return true;
         }
 
         private static bool IsGreaterPrecedence(char a, char b)
@@ -31,7 +62,6 @@ namespace RebarPosCommands
             string ops = "(*/-+";
             return (ops.IndexOf(op) != -1);
         }
-
 
         public static double Evaluate(string expression)
         {
