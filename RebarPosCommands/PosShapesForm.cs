@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Autodesk.AutoCAD.DatabaseServices;
 using OZOZ.RebarPosWrapper;
 using Autodesk.AutoCAD.Interop;
+using Autodesk.AutoCAD.EditorInput;
 
 namespace RebarPosCommands
 {
@@ -362,6 +363,61 @@ namespace RebarPosCommands
             ShapeCopy copy = GetSelected();
             if (copy == null) return;
             copy.priority = (int)udPriority.Value;
+        }
+
+        private void btnSelectShape_Click(object sender, EventArgs e)
+        {
+            ShapeCopy copy = GetSelected();
+            if (copy == null) return;
+
+            // Select shapes
+            Hide();
+            TypedValue[] tvs = new TypedValue[] {
+                new TypedValue((int)DxfCode.Operator, "<OR"),
+                new TypedValue((int)DxfCode.Start, "LINE"),
+                new TypedValue((int)DxfCode.Start, "ARC"),
+                new TypedValue((int)DxfCode.Start, "TEXT"),
+                new TypedValue((int)DxfCode.Operator, "OR>")
+            };
+            SelectionFilter filter = new SelectionFilter(tvs);
+            PromptSelectionResult result = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetSelection(filter);
+            Show();
+            if (result.Status != PromptStatus.OK || result.Value.Count == 0) return;
+
+            copy.shapes.Clear();
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    foreach (SelectedObject sel in result.Value)
+                    {
+                        DBObject obj = tr.GetObject(sel.ObjectId, OpenMode.ForRead);
+
+                        if (obj is Line)
+                        {
+                            Line line = obj as Line;
+                            copy.AddLine(line.Color.ColorValue, line.StartPoint.X, line.StartPoint.Y, line.EndPoint.X, line.EndPoint.Y);
+                        }
+                        else if (obj is Arc)
+                        {
+                            Arc arc = obj as Arc;
+                            copy.AddArc(arc.Color.ColorValue, arc.Center.X, arc.Center.Y, arc.Radius, arc.StartAngle, arc.EndAngle);
+                        }
+                        else if (obj is DBText)
+                        {
+                            DBText text = obj as DBText;
+                            copy.AddText(text.Color.ColorValue, text.Position.X, text.Position.Y, text.Height, text.TextString);
+                        }
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos");
+                }
+            }
+
+            SetShape();
         }
 
         private void btnOK_Click(object sender, EventArgs e)

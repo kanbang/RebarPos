@@ -301,6 +301,7 @@
             this.btnSelectShape.TabIndex = 1;
             this.btnSelectShape.Text = "Çizimden &Al";
             this.btnSelectShape.UseVisualStyleBackColor = true;
+            this.btnSelectShape.Click += new System.EventHandler(this.btnSelectShape_Click);
             // 
             // errorProvider
             // 
