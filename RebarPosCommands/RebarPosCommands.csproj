@@ -79,6 +79,13 @@
     <Compile Include="Commands_PosGroup.cs" />
     <Compile Include="Commands_CopyPos.cs" />
     <Compile Include="Commands_NumberPos.cs" />
+    <Compile Include="Commands_PosShapes.cs" />
+    <Compile Include="PosShapesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PosShapesForm.Designer.cs">
+      <DependentUpon>PosShapesForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DWGUtility.cs" />
     <Compile Include="Commands.cs" />
     <Compile Include="EditPosForm.cs">
@@ -130,6 +137,9 @@
       <DependentUpon>Commands.cs</DependentUpon>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Commands.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PosShapesForm.resx">
+      <DependentUpon>PosShapesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EditPosForm.resx">
       <DependentUpon>EditPosForm.cs</DependentUpon>

@@ -76,7 +76,7 @@ namespace RebarPosCommands
                             // FindPos();
                             break;
                         case "Shapes":
-                            // PosShapes();
+                            PosShapes();
                             break;
                     }
                 }
@@ -131,6 +131,12 @@ namespace RebarPosCommands
         public void CMD_CopyPos()
         {
             CopyPos();
+        }
+
+        [CommandMethod("RebarPos", "POSSHAPES", "POSSHAPES_Local", CommandFlags.Modal)]
+        public void CMD_PosShapes()
+        {
+            PosShapes();
         }
     }
 }
