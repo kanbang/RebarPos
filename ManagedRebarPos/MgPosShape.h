@@ -28,6 +28,10 @@ namespace OZOZ
 				{
 					Color = Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, 0);
 				}
+				Shape(Autodesk::AutoCAD::Colors::Color^ color)
+				{
+					Color = color;
+				}
 			};
 
 			ref struct ShapeLine : Shape
@@ -43,6 +47,15 @@ namespace OZOZ
 				{
 					;
 				}
+
+				ShapeLine(Autodesk::AutoCAD::Colors::Color^ color, double x1, double y1, double x2, double y2) : Shape(color)
+				{
+					X1 = x1;
+					Y1 = y1;
+					X2 = x2;
+					Y2 = y2;
+				}
+
 			};
 
 			ref struct ShapeArc : Shape
@@ -59,6 +72,15 @@ namespace OZOZ
 				{
 					;
 				}
+
+				ShapeArc(Autodesk::AutoCAD::Colors::Color^ color, double x, double y, double r, double startAngle, double endAngle) : Shape(color)
+				{
+					X = x;
+					Y = y;
+					R = r;
+					StartAngle=startAngle;
+					EndAngle=endAngle;
+				}
 			};
 
 			ref struct ShapeText : Shape
@@ -73,6 +95,13 @@ namespace OZOZ
 				ShapeText(void) : Shape()
 				{
 					;
+				}
+				ShapeText(Autodesk::AutoCAD::Colors::Color^ color, double x, double y, double height, String^ text) : Shape(color)
+				{
+					X = x;
+					Y = y;
+					Height = height;
+					Text = text;
 				}
 			};
 
