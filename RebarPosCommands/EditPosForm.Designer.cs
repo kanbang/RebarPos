@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditPosForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cbPosDiameter = new System.Windows.Forms.ComboBox();
             this.cbGroup = new System.Windows.Forms.ComboBox();
             this.chkIncludePos = new System.Windows.Forms.CheckBox();
             this.btnPickSpacing = new System.Windows.Forms.Button();
@@ -42,14 +43,12 @@
             this.label16 = new System.Windows.Forms.Label();
             this.txtPosSpacing = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.txtPosDiameter = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.txtPosCount = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.txtPosMarker = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.posShapeView = new RebarPosCommands.PosShapeView();
             this.btnMeasureF = new System.Windows.Forms.Button();
             this.btnMeasureE = new System.Windows.Forms.Button();
             this.btnMeasureD = new System.Windows.Forms.Button();
@@ -87,6 +86,7 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.posShapeView = new RebarPosCommands.PosShapeView();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -95,6 +95,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cbPosDiameter);
             this.groupBox1.Controls.Add(this.cbGroup);
             this.groupBox1.Controls.Add(this.chkIncludePos);
             this.groupBox1.Controls.Add(this.btnPickSpacing);
@@ -106,7 +107,6 @@
             this.groupBox1.Controls.Add(this.label16);
             this.groupBox1.Controls.Add(this.txtPosSpacing);
             this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.txtPosDiameter);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.txtPosCount);
             this.groupBox1.Controls.Add(this.label2);
@@ -117,6 +117,15 @@
             this.groupBox1.Size = new System.Drawing.Size(242, 235);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
+            // 
+            // cbPosDiameter
+            // 
+            this.cbPosDiameter.FormattingEnabled = true;
+            this.cbPosDiameter.Location = new System.Drawing.Point(97, 71);
+            this.cbPosDiameter.Name = "cbPosDiameter";
+            this.cbPosDiameter.Size = new System.Drawing.Size(100, 21);
+            this.cbPosDiameter.TabIndex = 6;
+            this.cbPosDiameter.Validating += new System.ComponentModel.CancelEventHandler(this.cbPosDiameter_Validating);
             // 
             // cbGroup
             // 
@@ -166,7 +175,7 @@
             this.txtPosMultiplier.Name = "txtPosMultiplier";
             this.txtPosMultiplier.Size = new System.Drawing.Size(100, 20);
             this.txtPosMultiplier.TabIndex = 12;
-            this.txtPosMultiplier.TextChanged += new System.EventHandler(this.txtPosMultiplier_TextChanged);
+            this.txtPosMultiplier.Validating += new System.ComponentModel.CancelEventHandler(this.txtPosMultiplier_Validating);
             // 
             // label14
             // 
@@ -212,6 +221,7 @@
             this.txtPosSpacing.Name = "txtPosSpacing";
             this.txtPosSpacing.Size = new System.Drawing.Size(100, 20);
             this.txtPosSpacing.TabIndex = 8;
+            this.txtPosSpacing.Validating += new System.ComponentModel.CancelEventHandler(this.txtPosSpacing_Validating);
             // 
             // label4
             // 
@@ -221,15 +231,6 @@
             this.label4.Size = new System.Drawing.Size(33, 13);
             this.label4.TabIndex = 7;
             this.label4.Text = "A&ralık";
-            // 
-            // txtPosDiameter
-            // 
-            this.txtPosDiameter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPosDiameter.Location = new System.Drawing.Point(97, 72);
-            this.txtPosDiameter.Name = "txtPosDiameter";
-            this.txtPosDiameter.Size = new System.Drawing.Size(100, 20);
-            this.txtPosDiameter.TabIndex = 6;
             // 
             // label3
             // 
@@ -316,23 +317,6 @@
             this.groupBox2.Size = new System.Drawing.Size(379, 339);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
-            // 
-            // posShapeView
-            // 
-            this.posShapeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.posShapeView.BackColor = System.Drawing.Color.Black;
-            this.posShapeView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.posShapeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.posShapeView.ForeColor = System.Drawing.Color.White;
-            this.posShapeView.Location = new System.Drawing.Point(22, 19);
-            this.posShapeView.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.posShapeView.Name = "posShapeView";
-            this.posShapeView.ShapeName = "posShapeView";
-            this.posShapeView.Size = new System.Drawing.Size(340, 133);
-            this.posShapeView.TabIndex = 0;
-            this.posShapeView.Click += new System.EventHandler(this.posShapeView_Click);
             // 
             // btnMeasureF
             // 
@@ -458,10 +442,11 @@
             // txtF
             // 
             this.txtF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtF.Location = new System.Drawing.Point(219, 220);
+            this.txtF.Location = new System.Drawing.Point(232, 220);
             this.txtF.Name = "txtF";
-            this.txtF.Size = new System.Drawing.Size(83, 20);
+            this.txtF.Size = new System.Drawing.Size(70, 20);
             this.txtF.TabIndex = 22;
+            this.txtF.Validating += new System.ComponentModel.CancelEventHandler(this.txtLength_Validating);
             // 
             // label10
             // 
@@ -476,10 +461,11 @@
             // txtE
             // 
             this.txtE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtE.Location = new System.Drawing.Point(219, 194);
+            this.txtE.Location = new System.Drawing.Point(232, 194);
             this.txtE.Name = "txtE";
-            this.txtE.Size = new System.Drawing.Size(83, 20);
+            this.txtE.Size = new System.Drawing.Size(70, 20);
             this.txtE.TabIndex = 18;
+            this.txtE.Validating += new System.ComponentModel.CancelEventHandler(this.txtLength_Validating);
             // 
             // label9
             // 
@@ -494,10 +480,11 @@
             // txtD
             // 
             this.txtD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtD.Location = new System.Drawing.Point(219, 168);
+            this.txtD.Location = new System.Drawing.Point(232, 168);
             this.txtD.Name = "txtD";
-            this.txtD.Size = new System.Drawing.Size(83, 20);
+            this.txtD.Size = new System.Drawing.Size(70, 20);
             this.txtD.TabIndex = 14;
+            this.txtD.Validating += new System.ComponentModel.CancelEventHandler(this.txtLength_Validating);
             // 
             // label8
             // 
@@ -512,10 +499,11 @@
             // txtC
             // 
             this.txtC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtC.Location = new System.Drawing.Point(39, 220);
+            this.txtC.Location = new System.Drawing.Point(52, 220);
             this.txtC.Name = "txtC";
-            this.txtC.Size = new System.Drawing.Size(83, 20);
+            this.txtC.Size = new System.Drawing.Size(70, 20);
             this.txtC.TabIndex = 10;
+            this.txtC.Validating += new System.ComponentModel.CancelEventHandler(this.txtLength_Validating);
             // 
             // label13
             // 
@@ -590,10 +578,11 @@
             // txtB
             // 
             this.txtB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtB.Location = new System.Drawing.Point(39, 194);
+            this.txtB.Location = new System.Drawing.Point(52, 194);
             this.txtB.Name = "txtB";
-            this.txtB.Size = new System.Drawing.Size(83, 20);
+            this.txtB.Size = new System.Drawing.Size(70, 20);
             this.txtB.TabIndex = 6;
+            this.txtB.Validating += new System.ComponentModel.CancelEventHandler(this.txtLength_Validating);
             // 
             // label6
             // 
@@ -608,10 +597,11 @@
             // txtA
             // 
             this.txtA.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtA.Location = new System.Drawing.Point(39, 168);
+            this.txtA.Location = new System.Drawing.Point(52, 168);
             this.txtA.Name = "txtA";
-            this.txtA.Size = new System.Drawing.Size(83, 20);
+            this.txtA.Size = new System.Drawing.Size(70, 20);
             this.txtA.TabIndex = 2;
+            this.txtA.Validating += new System.ComponentModel.CancelEventHandler(this.txtLength_Validating);
             // 
             // label5
             // 
@@ -669,7 +659,6 @@
             // 
             // btnOK
             // 
-            this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOK.Location = new System.Drawing.Point(483, 371);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
@@ -693,6 +682,23 @@
             // 
             this.errorProvider.ContainerControl = this;
             // 
+            // posShapeView
+            // 
+            this.posShapeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.posShapeView.BackColor = System.Drawing.Color.Black;
+            this.posShapeView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.posShapeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.posShapeView.ForeColor = System.Drawing.Color.White;
+            this.posShapeView.Location = new System.Drawing.Point(22, 19);
+            this.posShapeView.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.posShapeView.Name = "posShapeView";
+            this.posShapeView.ShapeName = "posShapeView";
+            this.posShapeView.Size = new System.Drawing.Size(340, 133);
+            this.posShapeView.TabIndex = 0;
+            this.posShapeView.Click += new System.EventHandler(this.posShapeView_Click);
+            // 
             // EditPosForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -709,6 +715,7 @@
             this.MinimizeBox = false;
             this.Name = "EditPosForm";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Poz Edit";
             this.Shown += new System.EventHandler(this.EditPosForm_Shown);
             this.groupBox1.ResumeLayout(false);
@@ -728,7 +735,6 @@
         private System.Windows.Forms.Button btnPickNumber;
         private System.Windows.Forms.TextBox txtPosSpacing;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox txtPosDiameter;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtPosCount;
         private System.Windows.Forms.Label label2;
@@ -781,5 +787,6 @@
         private System.Windows.Forms.ComboBox cbGroup;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.ErrorProvider errorProvider;
+        private System.Windows.Forms.ComboBox cbPosDiameter;
     }
 }

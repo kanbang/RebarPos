@@ -18,6 +18,7 @@ namespace RebarPosCommands
         ObjectId m_Pos;
         ObjectId m_Group;
         ObjectId m_Shape;
+        List<int> m_StandardDiameters;
         Dictionary<string, ObjectId> m_Groups;
         Dictionary<string, ObjectId> m_Shapes;
         RebarPos.HitTestResult hit;
@@ -29,6 +30,7 @@ namespace RebarPosCommands
             m_Pos = ObjectId.Null;
             m_Group = ObjectId.Null;
             m_Shape = ObjectId.Null;
+            m_StandardDiameters = new List<int>();
             m_Groups = new Dictionary<string, ObjectId>();
             m_Shapes = new Dictionary<string, ObjectId>();
 
@@ -57,6 +59,17 @@ namespace RebarPosCommands
                     PosGroup group = tr.GetObject(m_Group, OpenMode.ForRead) as PosGroup;
                     if (group == null) return false;
 
+                    m_StandardDiameters = new List<int>();
+                    string stdd = group.StandardDiameters;
+                    foreach (string ds in stdd.Split(new char[] { ' ', ',', ';', ':', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        int d;
+                        if (int.TryParse(ds, out d))
+                        {
+                            m_StandardDiameters.Add(d);
+                        }
+                    }
+
                     m_Groups = DWGUtility.GetGroups();
                     if (m_Groups.Count == 0)
                     {
@@ -71,7 +84,12 @@ namespace RebarPosCommands
 
                     txtPosMarker.Text = pos.Pos;
                     txtPosCount.Text = pos.Count;
-                    txtPosDiameter.Text = pos.Diameter;
+                    cbPosDiameter.Items.Clear();
+                    foreach (int d in m_StandardDiameters)
+                    {
+                        cbPosDiameter.Items.Add(d.ToString());
+                    }
+                    cbPosDiameter.Text = pos.Diameter;
                     txtPosSpacing.Text = pos.Spacing;
                     txtPosMultiplier.Text = pos.Multiplier.ToString();
                     chkIncludePos.Checked = (pos.Multiplier > 0);
@@ -143,6 +161,25 @@ namespace RebarPosCommands
 
         private void btnOK_Click(object sender, EventArgs e)
         {
+            bool haserror = true;
+            if (!CheckPosMarker()) haserror = true;
+            if (!CheckPosCount()) haserror = true;
+            if (!CheckPosDiameter()) haserror = true;
+            if (!CheckPosSpacing()) haserror = true;
+            if (!CheckPosMultiplier()) haserror = true;
+            if (!CheckPosLength(txtA)) haserror = true;
+            if (!CheckPosLength(txtB)) haserror = true;
+            if (!CheckPosLength(txtC)) haserror = true;
+            if (!CheckPosLength(txtD)) haserror = true;
+            if (!CheckPosLength(txtE)) haserror = true;
+            if (!CheckPosLength(txtF)) haserror = true;
+
+            if (haserror)
+            {
+                MessageBox.Show("Lütfen hatalı değerleri düzeltin.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             Database db = HostApplicationServices.WorkingDatabase;
             using (Transaction tr = db.TransactionManager.StartTransaction())
             {
@@ -153,7 +190,7 @@ namespace RebarPosCommands
 
                     pos.Pos = txtPosMarker.Text;
                     pos.Count = txtPosCount.Text;
-                    pos.Diameter = txtPosDiameter.Text;
+                    pos.Diameter = cbPosDiameter.Text;
                     pos.Spacing = txtPosSpacing.Text;
                     pos.Multiplier = int.Parse(txtPosMultiplier.Text);
                     if (!chkIncludePos.Checked) pos.Multiplier = 0;
@@ -177,6 +214,7 @@ namespace RebarPosCommands
 
                     tr.Commit();
 
+                    DialogResult = DialogResult.OK;
                     Close();
                 }
                 catch (System.Exception ex)
@@ -283,18 +321,6 @@ namespace RebarPosCommands
             }
         }
 
-        private void txtPosMultiplier_TextChanged(object sender, EventArgs e)
-        {
-            int mult = 0;
-            if (!int.TryParse(txtPosMultiplier.Text, out mult))
-                mult = 0;
-            if (mult == 0)
-            {
-                chkIncludePos.Checked = false;
-                txtPosMultiplier.Enabled = false;
-            }
-        }
-
         private void EditPosForm_Shown(object sender, EventArgs e)
         {
             switch (hit)
@@ -304,8 +330,8 @@ namespace RebarPosCommands
                     txtPosCount.SelectAll();
                     break;
                 case RebarPos.HitTestResult.Diameter:
-                    txtPosDiameter.Select();
-                    txtPosDiameter.SelectAll();
+                    cbPosDiameter.Select();
+                    cbPosDiameter.SelectAll();
                     break;
                 case RebarPos.HitTestResult.Length:
                     txtA.Select();
@@ -339,30 +365,168 @@ namespace RebarPosCommands
 
         private void txtPosMarker_Validating(object sender, CancelEventArgs e)
         {
-            int val = 0;
-            if (string.IsNullOrEmpty(txtPosMarker.Text) || int.TryParse(txtPosMarker.Text, out val))
-            {
-                errorProvider.SetError(txtPosMarker, "");
-            }
-            else
-            {
-                e.Cancel = true;
-                errorProvider.SetError(txtPosMarker, "Poz numarası tamsayı olmalıdır.");
-                errorProvider.SetIconAlignment(txtPosMarker, ErrorIconAlignment.MiddleLeft);
-            }
+            CheckPosMarker();
         }
 
         private void txtPosCount_Validating(object sender, CancelEventArgs e)
         {
-            if (string.IsNullOrEmpty(txtPosCount.Text) || Calculator.IsValid(txtPosCount.Text))
+            CheckPosCount();
+        }
+
+        private void cbPosDiameter_Validating(object sender, CancelEventArgs e)
+        {
+            CheckPosDiameter();
+        }
+
+        private void txtPosSpacing_Validating(object sender, CancelEventArgs e)
+        {
+            CheckPosSpacing();
+        }
+
+        private void txtPosMultiplier_Validating(object sender, CancelEventArgs e)
+        {
+            if (CheckPosMultiplier())
             {
-                errorProvider.SetError(txtPosCount, "");
+                int mult = 0;
+                int.TryParse(txtPosMultiplier.Text, out mult);
+
+                if (mult == 0)
+                {
+                    chkIncludePos.Checked = false;
+                    txtPosMultiplier.Enabled = false;
+                }
+            }
+        }
+
+        private void txtLength_Validating(object sender, CancelEventArgs e)
+        {
+            CheckPosLength((TextBox)sender);
+        }
+
+        private bool CheckPosMarker()
+        {
+            int val = 0;
+            if (string.IsNullOrEmpty(txtPosMarker.Text) || int.TryParse(txtPosMarker.Text, out val))
+            {
+                errorProvider.SetError(txtPosMarker, "");
+                return true;
             }
             else
             {
-                e.Cancel = true;
+                errorProvider.SetError(txtPosMarker, "Poz numarası tamsayı olmalıdır.");
+                errorProvider.SetIconAlignment(txtPosMarker, ErrorIconAlignment.MiddleLeft);
+                return false;
+            }
+        }
+
+        private bool CheckPosCount()
+        {
+            string str = txtPosCount.Text;
+            str = str.Replace('x', '*');
+            str = str.Replace('X', '*');
+
+            if (string.IsNullOrEmpty(str) || Calculator.IsValid(str))
+            {
+                errorProvider.SetError(txtPosCount, "");
+                return true;
+            }
+            else
+            {
                 errorProvider.SetError(txtPosCount, "Poz adedi yalnız rakam ve aritmetik işlemler içerebilir.");
                 errorProvider.SetIconAlignment(txtPosCount, ErrorIconAlignment.MiddleLeft);
+                return false;
+            }
+        }
+
+        private bool CheckPosDiameter()
+        {
+            if (string.IsNullOrEmpty(cbPosDiameter.Text) || cbPosDiameter.Items.Contains(cbPosDiameter.Text))
+            {
+                errorProvider.SetError(cbPosDiameter, "");
+                return true;
+            }
+            else
+            {
+                errorProvider.SetError(cbPosDiameter, "Poz adedi standart çap listesi içinden seçilmelidir.");
+                errorProvider.SetIconAlignment(cbPosDiameter, ErrorIconAlignment.MiddleLeft);
+                return false;
+            }
+        }
+
+        private bool CheckPosSpacing()
+        {
+            if (string.IsNullOrEmpty(txtPosSpacing.Text) || txtPosSpacing.Text.Trim(new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.', '-', '~' }).Length == 0)
+            {
+                errorProvider.SetError(txtPosSpacing, "");
+                return true;
+            }
+            else
+            {
+                errorProvider.SetError(txtPosSpacing, "Poz aralığı yalnız rakam ve aralık işareti (~ veya -) içerebilir.");
+                errorProvider.SetIconAlignment(txtPosSpacing, ErrorIconAlignment.MiddleLeft);
+                return false;
+            }
+        }
+
+        private bool CheckPosMultiplier()
+        {
+            int mult = 0;
+            if (string.IsNullOrEmpty(txtPosMultiplier.Text) || int.TryParse(txtPosMultiplier.Text, out mult))
+            {
+                errorProvider.SetError(txtPosMultiplier, "");
+                return true;
+            }
+            else
+            {
+                errorProvider.SetError(txtPosMultiplier, "Poz çarpanı tamsayı olmalıdır.");
+                errorProvider.SetIconAlignment(txtPosMultiplier, ErrorIconAlignment.MiddleLeft);
+                return false;
+            }
+        }
+
+        private bool CheckPosLength(TextBox source)
+        {
+            // Split var lengths
+            string[] strparts = source.Text.Split(new char[] { '~' }, StringSplitOptions.RemoveEmptyEntries);
+
+            bool isempty = false;
+            bool haserror = false;
+            foreach (string str in strparts)
+            {
+                string oldstr = str;
+                oldstr = oldstr.Replace('d', '0');
+                oldstr = oldstr.Replace('r', '0');
+                oldstr = oldstr.Replace('x', '*');
+                oldstr = oldstr.Replace('X', '*');
+
+                if (string.IsNullOrEmpty(oldstr))
+                {
+                    isempty = true;
+                    break;
+                }
+                else if (!Calculator.IsValid(oldstr))
+                {
+                    haserror = true;
+                    break;
+                }
+            }
+
+            if (isempty)
+            {
+                errorProvider.SetError(source, "Lütfen parça boyunu girin.");
+                errorProvider.SetIconAlignment(source, ErrorIconAlignment.MiddleLeft);
+                return false;
+            }
+            else if (haserror)
+            {
+                errorProvider.SetError(source, "Parça boyu yalnız rakam ve aritmetik işlemler içerebilir.");
+                errorProvider.SetIconAlignment(source, ErrorIconAlignment.MiddleLeft);
+                return false;
+            }
+            else
+            {
+                errorProvider.SetError(source, "");
+                return true;
             }
         }
     }
