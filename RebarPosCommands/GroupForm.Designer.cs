@@ -51,7 +51,6 @@
             this.btnRemove = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
             this.gbDisplay = new System.Windows.Forms.GroupBox();
-            this.posStylePreview = new RebarPosCommands.PosStylePreview();
             this.btnPickCurrentGroupColor = new System.Windows.Forms.Button();
             this.btnPickGroupColor = new System.Windows.Forms.Button();
             this.cbNoteStyle = new System.Windows.Forms.ComboBox();
@@ -79,6 +78,7 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.label17 = new System.Windows.Forms.Label();
             this.txtDiameterList = new System.Windows.Forms.TextBox();
+            this.posStylePreview = new RebarPosCommands.PosStylePreview();
             this.gbOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udPrecision)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -361,26 +361,6 @@
             this.gbDisplay.TabStop = false;
             this.gbDisplay.Text = "Görünüm &Ayarları";
             // 
-            // posStylePreview
-            // 
-            this.posStylePreview.BackColor = System.Drawing.Color.Black;
-            this.posStylePreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.posStylePreview.CircleColor = System.Drawing.Color.Yellow;
-            this.posStylePreview.CurrentGroupHighlightColor = System.Drawing.Color.Silver;
-            this.posStylePreview.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.posStylePreview.Formula1 = "[M:C][N][\"T\":D][\"/\":S][\" L=\":L]";
-            this.posStylePreview.Formula2 = "[M:C][N][\"T\":D][\"/\":S]";
-            this.posStylePreview.Formula3 = "[M:C]";
-            this.posStylePreview.GroupColor = System.Drawing.Color.Gray;
-            this.posStylePreview.Location = new System.Drawing.Point(314, 207);
-            this.posStylePreview.MultiplierColor = System.Drawing.Color.Gray;
-            this.posStylePreview.Name = "posStylePreview";
-            this.posStylePreview.NoteColor = System.Drawing.Color.Orange;
-            this.posStylePreview.PosColor = System.Drawing.Color.Red;
-            this.posStylePreview.Size = new System.Drawing.Size(268, 114);
-            this.posStylePreview.TabIndex = 24;
-            this.posStylePreview.TextColor = System.Drawing.Color.Red;
-            // 
             // btnPickCurrentGroupColor
             // 
             this.btnPickCurrentGroupColor.BackColor = System.Drawing.Color.White;
@@ -611,6 +591,7 @@
             // errorProvider
             // 
             this.errorProvider.ContainerControl = this;
+            this.errorProvider.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProvider.Icon")));
             // 
             // label17
             // 
@@ -630,6 +611,26 @@
             this.txtDiameterList.TabIndex = 10;
             this.txtDiameterList.Validated += new System.EventHandler(this.txtDiameterList_Validated);
             this.txtDiameterList.Validating += new System.ComponentModel.CancelEventHandler(this.txtDiameterList_Validating);
+            // 
+            // posStylePreview
+            // 
+            this.posStylePreview.BackColor = System.Drawing.Color.Black;
+            this.posStylePreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.posStylePreview.CircleColor = System.Drawing.Color.Yellow;
+            this.posStylePreview.CurrentGroupHighlightColor = System.Drawing.Color.Silver;
+            this.posStylePreview.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.posStylePreview.Formula1 = "[M:C][N][\"T\":D][\"/\":S][\" L=\":L]";
+            this.posStylePreview.Formula2 = "[M:C][N][\"T\":D][\"/\":S]";
+            this.posStylePreview.Formula3 = "[M:C]";
+            this.posStylePreview.GroupColor = System.Drawing.Color.Gray;
+            this.posStylePreview.Location = new System.Drawing.Point(314, 207);
+            this.posStylePreview.MultiplierColor = System.Drawing.Color.Gray;
+            this.posStylePreview.Name = "posStylePreview";
+            this.posStylePreview.NoteColor = System.Drawing.Color.Orange;
+            this.posStylePreview.PosColor = System.Drawing.Color.Red;
+            this.posStylePreview.Size = new System.Drawing.Size(268, 114);
+            this.posStylePreview.TabIndex = 24;
+            this.posStylePreview.TextColor = System.Drawing.Color.Red;
             // 
             // GroupForm
             // 
