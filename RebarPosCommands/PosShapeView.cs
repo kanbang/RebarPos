@@ -187,6 +187,7 @@ namespace RebarPosCommands
             }
             // Transform
             g.ResetTransform();
+            g.TranslateTransform(-xmin, -ymin, System.Drawing.Drawing2D.MatrixOrder.Append);
             g.ScaleTransform(scale, -scale, System.Drawing.Drawing2D.MatrixOrder.Append);
             g.TranslateTransform(xoff, h - yoff, System.Drawing.Drawing2D.MatrixOrder.Append);
 
@@ -225,6 +226,7 @@ namespace RebarPosCommands
                     g.ScaleTransform(1.0f / scale, 1.0f / scale, MatrixOrder.Append);
                     g.RotateTransform(180, MatrixOrder.Append);
                     g.TranslateTransform((float)text.X, (float)text.Y, MatrixOrder.Append);
+                    g.TranslateTransform(-xmin, -ymin, System.Drawing.Drawing2D.MatrixOrder.Append);
                     g.ScaleTransform(scale, -scale, System.Drawing.Drawing2D.MatrixOrder.Append);
                     g.TranslateTransform(xoff, h - yoff, System.Drawing.Drawing2D.MatrixOrder.Append);
                     g.DrawString(text.Text, Font, brush, 0.0f, 0.0f, format);
