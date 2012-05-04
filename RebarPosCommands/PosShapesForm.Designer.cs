@@ -44,7 +44,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lbShapes = new System.Windows.Forms.ListView();
             this.chName = new System.Windows.Forms.ColumnHeader();
-            this.lGroups = new System.Windows.Forms.ImageList(this.components);
+            this.lShapes = new System.Windows.Forms.ImageList(this.components);
             this.btnRename = new System.Windows.Forms.Button();
             this.btnRemove = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
@@ -218,12 +218,12 @@
             this.lbShapes.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lbShapes.LabelEdit = true;
             this.lbShapes.LabelWrap = false;
-            this.lbShapes.LargeImageList = this.lGroups;
+            this.lbShapes.LargeImageList = this.lShapes;
             this.lbShapes.Location = new System.Drawing.Point(15, 23);
             this.lbShapes.MultiSelect = false;
             this.lbShapes.Name = "lbShapes";
             this.lbShapes.Size = new System.Drawing.Size(227, 363);
-            this.lbShapes.SmallImageList = this.lGroups;
+            this.lbShapes.SmallImageList = this.lShapes;
             this.lbShapes.TabIndex = 0;
             this.lbShapes.UseCompatibleStateImageBehavior = false;
             this.lbShapes.View = System.Windows.Forms.View.Details;
@@ -235,15 +235,15 @@
             this.chName.Text = "Name";
             this.chName.Width = 130;
             // 
-            // lGroups
+            // lShapes
             // 
-            this.lGroups.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("lGroups.ImageStream")));
-            this.lGroups.TransparentColor = System.Drawing.Color.Transparent;
-            this.lGroups.Images.SetKeyName(0, "page.png");
-            this.lGroups.Images.SetKeyName(1, "page_white.png");
-            this.lGroups.Images.SetKeyName(2, "page_white_add.png");
-            this.lGroups.Images.SetKeyName(3, "page_white_delete.png");
-            this.lGroups.Images.SetKeyName(4, "page_go.png");
+            this.lShapes.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("lShapes.ImageStream")));
+            this.lShapes.TransparentColor = System.Drawing.Color.Transparent;
+            this.lShapes.Images.SetKeyName(0, "page.png");
+            this.lShapes.Images.SetKeyName(1, "page_white.png");
+            this.lShapes.Images.SetKeyName(2, "page_white_add.png");
+            this.lShapes.Images.SetKeyName(3, "page_white_delete.png");
+            this.lShapes.Images.SetKeyName(4, "page_go.png");
             // 
             // btnRename
             // 
@@ -365,7 +365,7 @@
         private System.Windows.Forms.Button btnRename;
         private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.ColumnHeader chName;
-        private System.Windows.Forms.ImageList lGroups;
+        private System.Windows.Forms.ImageList lShapes;
         private System.Windows.Forms.GroupBox gbDisplay;
         private System.Windows.Forms.ErrorProvider errorProvider;
         private System.Windows.Forms.NumericUpDown udPriority;
