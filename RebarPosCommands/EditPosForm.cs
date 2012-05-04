@@ -161,7 +161,7 @@ namespace RebarPosCommands
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            bool haserror = true;
+            bool haserror = false;
             if (!CheckPosMarker()) haserror = true;
             if (!CheckPosCount()) haserror = true;
             if (!CheckPosDiameter()) haserror = true;
