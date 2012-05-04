@@ -144,6 +144,7 @@ namespace RebarPosCommands
                 catch (System.Exception ex)
                 {
                     System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos");
+                    return false;
                 }
             }
 
@@ -439,7 +440,8 @@ namespace RebarPosCommands
                     {
                         if (copy.isDeleted)
                         {
-                            dict.Remove(copy.id);
+                            if (!copy.id.IsNull)
+                                dict.Remove(copy.id);
                         }
                         else if (copy.isNew)
                         {
@@ -475,7 +477,7 @@ namespace RebarPosCommands
                         }
                         else
                         {
-                            PosGroup group = (PosGroup)tr.GetObject(copy.id, OpenMode.ForWrite);
+                            PosGroup group = tr.GetObject(copy.id, OpenMode.ForWrite) as PosGroup;
 
                             group.Name = copy.name;
 
