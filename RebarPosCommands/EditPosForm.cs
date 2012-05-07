@@ -22,6 +22,7 @@ namespace RebarPosCommands
         Dictionary<string, ObjectId> m_Groups;
         Dictionary<string, ObjectId> m_Shapes;
         RebarPos.HitTestResult hit;
+        int fields;
 
         public EditPosForm()
         {
@@ -125,12 +126,13 @@ namespace RebarPosCommands
                     txtE.Text = pos.E;
                     txtF.Text = pos.F;
 
-                    txtA.Enabled = btnSelectA.Enabled = btnMeasureA.Enabled = (shape.Fields >= 1);
-                    txtB.Enabled = btnSelectB.Enabled = btnMeasureB.Enabled = (shape.Fields >= 2);
-                    txtC.Enabled = btnSelectC.Enabled = btnMeasureC.Enabled = (shape.Fields >= 3);
-                    txtD.Enabled = btnSelectD.Enabled = btnMeasureD.Enabled = (shape.Fields >= 4);
-                    txtE.Enabled = btnSelectE.Enabled = btnMeasureE.Enabled = (shape.Fields >= 5);
-                    txtF.Enabled = btnSelectF.Enabled = btnMeasureF.Enabled = (shape.Fields >= 6);
+                    fields = shape.Fields;
+                    txtA.Enabled = btnSelectA.Enabled = btnMeasureA.Enabled = (fields >= 1);
+                    txtB.Enabled = btnSelectB.Enabled = btnMeasureB.Enabled = (fields >= 2);
+                    txtC.Enabled = btnSelectC.Enabled = btnMeasureC.Enabled = (fields >= 3);
+                    txtD.Enabled = btnSelectD.Enabled = btnMeasureD.Enabled = (fields >= 4);
+                    txtE.Enabled = btnSelectE.Enabled = btnMeasureE.Enabled = (fields >= 5);
+                    txtF.Enabled = btnSelectF.Enabled = btnMeasureF.Enabled = (fields >= 6);
 
                     if (!txtA.Enabled) txtA.Text = "";
                     if (!txtB.Enabled) txtB.Text = "";
@@ -167,12 +169,18 @@ namespace RebarPosCommands
             if (!CheckPosDiameter()) haserror = true;
             if (!CheckPosSpacing()) haserror = true;
             if (!CheckPosMultiplier()) haserror = true;
-            if (!CheckPosLength(txtA)) haserror = true;
-            if (!CheckPosLength(txtB)) haserror = true;
-            if (!CheckPosLength(txtC)) haserror = true;
-            if (!CheckPosLength(txtD)) haserror = true;
-            if (!CheckPosLength(txtE)) haserror = true;
-            if (!CheckPosLength(txtF)) haserror = true;
+            if(fields >=1)
+                if (!CheckPosLength(txtA)) haserror = true;
+            if (fields >= 2)
+                if (!CheckPosLength(txtB)) haserror = true;
+            if (fields >= 3)
+                if (!CheckPosLength(txtC)) haserror = true;
+            if (fields >= 4)
+                if (!CheckPosLength(txtD)) haserror = true;
+            if (fields >= 5)
+                if (!CheckPosLength(txtE)) haserror = true;
+            if (fields >= 6)
+                if (!CheckPosLength(txtF)) haserror = true;
 
             if (haserror)
             {
@@ -261,12 +269,13 @@ namespace RebarPosCommands
                     if (shape == null)
                         return;
 
-                    txtA.Enabled = btnSelectA.Enabled = btnMeasureA.Enabled = (shape.Fields >= 1);
-                    txtB.Enabled = btnSelectB.Enabled = btnMeasureB.Enabled = (shape.Fields >= 2);
-                    txtC.Enabled = btnSelectC.Enabled = btnMeasureC.Enabled = (shape.Fields >= 3);
-                    txtD.Enabled = btnSelectD.Enabled = btnMeasureD.Enabled = (shape.Fields >= 4);
-                    txtE.Enabled = btnSelectE.Enabled = btnMeasureE.Enabled = (shape.Fields >= 5);
-                    txtF.Enabled = btnSelectF.Enabled = btnMeasureF.Enabled = (shape.Fields >= 6);
+                    fields = shape.Fields;
+                    txtA.Enabled = btnSelectA.Enabled = btnMeasureA.Enabled = (fields >= 1);
+                    txtB.Enabled = btnSelectB.Enabled = btnMeasureB.Enabled = (fields >= 2);
+                    txtC.Enabled = btnSelectC.Enabled = btnMeasureC.Enabled = (fields >= 3);
+                    txtD.Enabled = btnSelectD.Enabled = btnMeasureD.Enabled = (fields >= 4);
+                    txtE.Enabled = btnSelectE.Enabled = btnMeasureE.Enabled = (fields >= 5);
+                    txtF.Enabled = btnSelectF.Enabled = btnMeasureF.Enabled = (fields >= 6);
 
                     if (!txtA.Enabled) txtA.Text = "";
                     if (!txtB.Enabled) txtB.Text = "";
@@ -486,28 +495,36 @@ namespace RebarPosCommands
 
         private bool CheckPosLength(TextBox source)
         {
-            // Split var lengths
-            string[] strparts = source.Text.Split(new char[] { '~' }, StringSplitOptions.RemoveEmptyEntries);
-
             bool isempty = false;
             bool haserror = false;
-            foreach (string str in strparts)
-            {
-                string oldstr = str;
-                oldstr = oldstr.Replace('d', '0');
-                oldstr = oldstr.Replace('r', '0');
-                oldstr = oldstr.Replace('x', '*');
-                oldstr = oldstr.Replace('X', '*');
 
-                if (string.IsNullOrEmpty(oldstr))
+            // Split var lengths
+            if (string.IsNullOrEmpty(source.Text))
+            {
+                isempty = true;
+            }
+            else
+            {
+                string[] strparts = source.Text.Split(new char[] { '~' }, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (string str in strparts)
                 {
-                    isempty = true;
-                    break;
-                }
-                else if (!Calculator.IsValid(oldstr))
-                {
-                    haserror = true;
-                    break;
+                    string oldstr = str;
+                    oldstr = oldstr.Replace('d', '0');
+                    oldstr = oldstr.Replace('r', '0');
+                    oldstr = oldstr.Replace('x', '*');
+                    oldstr = oldstr.Replace('X', '*');
+
+                    if (string.IsNullOrEmpty(oldstr))
+                    {
+                        isempty = true;
+                        break;
+                    }
+                    else if (!Calculator.IsValid(oldstr))
+                    {
+                        haserror = true;
+                        break;
+                    }
                 }
             }
 
