@@ -49,6 +49,13 @@ namespace OZOZ
 			};
 
         public:
+			property Vector3d DirectionVector { Vector3d get(); }
+			property Vector3d UpVector        { Vector3d get(); }
+			property Vector3d NormalVector    { Vector3d get(); }
+
+			property double Width  { double get(); }
+			property double Height { double get(); }
+
 			property Point3d BasePoint { Point3d get(); void set(Point3d value); }
 			property Point3d NoteGrip  { Point3d get(); void set(Point3d value); }
 

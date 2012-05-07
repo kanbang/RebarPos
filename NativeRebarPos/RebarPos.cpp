@@ -118,6 +118,44 @@ const AcGeVector3d& CRebarPos::NormalVector(void) const
 	return norm;
 }
 
+const double CRebarPos::Width(void) const
+{
+    assertReadEnabled();
+
+	if(isModified)
+	{
+		Calculate();
+	}
+
+	if(lastDrawList.empty())
+	{
+		return 0.0;
+	}
+
+	CDrawParams p;
+	p = lastDrawList.at(lastDrawList.size() - 1);
+	return (p.x + p.w) * direction.length();
+}
+
+const double CRebarPos::Height(void) const
+{
+    assertReadEnabled();
+
+	if(isModified)
+	{
+		Calculate();
+	}
+
+	if(lastDrawList.empty())
+	{
+		return 0.0;
+	}
+
+	CDrawParams p;
+	p = lastDrawList.at(lastDrawList.size() - 1);
+	return (p.y + p.h) * direction.length();
+}
+
 const AcGePoint3d& CRebarPos::BasePoint(void) const
 {
 	assertReadEnabled();
@@ -809,22 +847,6 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	
 	// Transform to match text orientation
 	worldDraw->geometry().pushModelTransform(trans);
-	// Highlight current group
-	if(!worldDraw->isDragging() && lastCurrentGroup == Adesk::kTrue)
-	{
-		AcGiFillType filltype = worldDraw->subEntityTraits().fillType();
-		worldDraw->subEntityTraits().setFillType(kAcGiFillAlways);
-		worldDraw->subEntityTraits().setLayer(defpointsLayer);
-		worldDraw->subEntityTraits().setColor(lastGroupHighlightColor);
-		AcGePoint3d rec[4];
-		CDrawParams p = lastDrawList.at(lastDrawList.size() - 1);
-		rec[0].set(-partSpacing, -partSpacing, 0);
-		rec[1].set(p.x + p.w + partSpacing, -partSpacing, 0);
-		rec[2].set(p.x + p.w + partSpacing, 1.0 + partSpacing, 0);
-		rec[3].set(-partSpacing, 1.0 + partSpacing, 0);
-		worldDraw->geometry().polygon(4, rec);
-		worldDraw->subEntityTraits().setFillType(filltype);
-	}
 	// Draw items
 	worldDraw->subEntityTraits().setLayer(zeroLayer);
 	lastTextStyle.setTextSize(1.0);
@@ -837,18 +859,6 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 		if(p.hasCircle)
 		{
 			AcGePoint3d circle(p.x + p.w / 2.0, p.y + p.h / 2.0, 0);
-
-			// Highlight
-			if(!worldDraw->isDragging() && lastCurrentGroup == Adesk::kTrue)
-			{
-				AcGiFillType filltype = worldDraw->subEntityTraits().fillType();
-				worldDraw->subEntityTraits().setFillType(kAcGiFillAlways);
-				worldDraw->subEntityTraits().setLayer(defpointsLayer);
-				worldDraw->subEntityTraits().setColor(lastGroupHighlightColor);
-				worldDraw->geometry().circle(circle, circleRadius, AcGeVector3d::kZAxis);
-				worldDraw->subEntityTraits().setFillType(filltype);
-			}
-
 			worldDraw->subEntityTraits().setColor(lastCircleColor);
 			worldDraw->geometry().circle(circle, circleRadius, AcGeVector3d::kZAxis);
 		}
@@ -1770,7 +1780,6 @@ const void CRebarPos::Calculate(void) const
 	{
 		return;
 	}
-	lastCurrentGroup = pGroup->Current();
 	bool bending = (pGroup->Bending() == Adesk::kTrue);
 	int precision = pGroup->Precision();
 	CPosGroup::DrawingUnits drawingUnits = pGroup->DrawingUnit();
@@ -1851,11 +1860,23 @@ const void CRebarPos::Calculate(void) const
 	// Shape code
 	AcString shape;
 	shape.format(_T("_%i_%i_"), m_ShapeID.handle().low(), m_ShapeID.handle().high());
+	Adesk::Int32 fields = pShape->Fields();
 
 	AcString key(_T(""));
 	key = key.concat(m_Diameter);
 	key = key.concat(shape);
-	key = key.concat(m_A).concat(m_B).concat(m_C).concat(m_D).concat(m_E).concat(m_F);
+	if(fields >= 1)
+		key = key.concat(m_A);
+	if(fields >= 2)
+		key = key.concat(m_B);
+	if(fields >= 3)
+		key = key.concat(m_C);
+	if(fields >= 4)
+		key = key.concat(m_D);
+	if(fields >= 5)
+		key = key.concat(m_E);
+	if(fields >= 6)
+		key = key.concat(m_F);
 	acutUpdString(key, m_Key);
 
 	// Rebuild draw lists

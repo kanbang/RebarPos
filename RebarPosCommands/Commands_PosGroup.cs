@@ -23,8 +23,8 @@ namespace RebarPosCommands
 
         public void SetCurrentGroup(ObjectId id)
         {
-            ObjectId oldid = CurrentGroupId;
             string name = "";
+            Autodesk.AutoCAD.Colors.Color highlightColor = new Autodesk.AutoCAD.Colors.Color();
 
             Database db = HostApplicationServices.WorkingDatabase;
             using (Transaction tr = db.TransactionManager.StartTransaction())
@@ -39,11 +39,12 @@ namespace RebarPosCommands
                         {
                             while (it.MoveNext())
                             {
-                                if (it.Value == oldid || it.Value == id)
+                                if (it.Value == id)
                                 {
                                     PosGroup item = (PosGroup)tr.GetObject(it.Value, OpenMode.ForWrite);
-                                    item.Current = (it.Value == id);
-                                    if (it.Value == id) name = item.Name;
+                                    name = item.Name;
+                                    highlightColor = item.CurrentGroupHighlightColor;
+                                    break;
                                 }
                             }
                         }
@@ -57,9 +58,11 @@ namespace RebarPosCommands
 
             CurrentGroupId = id;
             CurrentGroupName = name;
+            Overrule.CurrentGroupId = id;
+            Overrule.CurrentGroupHightlightColor = highlightColor;
 
-            DWGUtility.RefreshPosInGroup(oldid);
-            DWGUtility.RefreshPosInGroup(id);
+            Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+            ed.Regen();
         }
     }
 }

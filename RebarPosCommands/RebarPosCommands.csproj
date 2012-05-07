@@ -80,6 +80,7 @@
     <Compile Include="Commands_CopyPos.cs" />
     <Compile Include="Commands_NumberPos.cs" />
     <Compile Include="Commands_PosShapes.cs" />
+    <Compile Include="DrawOverrule.cs" />
     <Compile Include="PosShapesForm.cs">
       <SubType>Form</SubType>
     </Compile>

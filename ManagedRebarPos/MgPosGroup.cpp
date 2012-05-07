@@ -202,15 +202,6 @@ void PosGroup::NoteScale::set(double value)
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setNoteScale(value));
 }
 
-bool PosGroup::Current::get()
-{
-	return (GetImpObj()->Current() == Adesk::kTrue);
-}
-void PosGroup::Current::set(bool value)
-{
-	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setCurrent(value ? Adesk::kTrue : Adesk::kFalse));
-}
-
 //*************************************************************************
 // Static Properties
 //*************************************************************************

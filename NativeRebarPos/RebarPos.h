@@ -83,7 +83,6 @@ private:
     mutable AcGiTextStyle lastNoteStyle;
 	mutable Adesk::UInt16 lastCircleColor;
 	mutable Adesk::UInt16 lastGroupHighlightColor;
-	mutable Adesk::Boolean lastCurrentGroup;
 	mutable AcDbObjectId zeroLayer;
 	mutable AcDbObjectId defpointsLayer;
 	mutable double lastNoteScale;
@@ -144,6 +143,10 @@ public:
 	const AcGeVector3d& UpVector(void) const;
 	/// Get normal vector
 	const AcGeVector3d& NormalVector(void) const;
+
+	/// Get extents
+	const double Width(void) const;
+	const double Height(void) const;
 
 	/// Determines which part is under the given point
 	const CRebarPos::PosSubEntityType HitTest(const AcGePoint3d& pt0) const;

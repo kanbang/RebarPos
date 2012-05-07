@@ -62,8 +62,6 @@ namespace OZOZ
 
 			property double NoteScale { double get(); void set(double value); }
 
-			property bool Current { bool get(); void set(bool value); }
-
 		public:
 			property static String^ TableName        { String^ get(); }
 		};

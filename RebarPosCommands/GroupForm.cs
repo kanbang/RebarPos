@@ -510,15 +510,10 @@ namespace RebarPosCommands
                             DbDictionaryEnumerator it = dict.GetEnumerator();
                             while (it.MoveNext())
                             {
-                                PosGroup group = tr.GetObject(it.Value, OpenMode.ForWrite) as PosGroup;
                                 if (it.Value == copy.id)
                                 {
                                     CurrentId = it.Value;
-                                    group.Current = true;
-                                }
-                                else
-                                {
-                                    group.Current = false;
+                                    break;
                                 }
                             }
                         }

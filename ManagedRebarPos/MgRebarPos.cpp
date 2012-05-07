@@ -31,6 +31,31 @@ RebarPos::RebarPos(System::IntPtr unmanagedPointer, bool autoDelete)
 //*************************************************************************
 // Properties
 //*************************************************************************
+Vector3d RebarPos::DirectionVector::get()
+{
+	return ToVector3d (GetImpObj()->DirectionVector());
+}
+
+Vector3d RebarPos::UpVector::get()
+{
+	return ToVector3d (GetImpObj()->UpVector());
+}
+
+Vector3d RebarPos::NormalVector::get()
+{
+	return ToVector3d (GetImpObj()->NormalVector());
+}
+
+double RebarPos::Width::get()
+{
+	return (GetImpObj()->Width());
+}
+
+double RebarPos::Height::get()
+{
+	return (GetImpObj()->Height());
+}
+
 void RebarPos::BasePoint::set(Point3d point)
 {
     Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setBasePoint(GETPOINT3D(point)));

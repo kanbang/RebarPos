@@ -52,7 +52,7 @@ ACRX_DXF_DEFINE_MEMBERS(CPosGroup, AcDbObject,
 
 //-----------------------------------------------------------------------------
 CPosGroup::CPosGroup () : m_Name(NULL), m_Bending(Adesk::kFalse), m_MaxBarLength(12), m_Precision(0),
-	m_DrawingUnit(CPosGroup::MM), m_DisplayUnit(CPosGroup::MM), m_Current(Adesk::kFalse), 
+	m_DrawingUnit(CPosGroup::MM), m_DisplayUnit(CPosGroup::MM), 
 	m_Formula(NULL), m_FormulaWithoutLength(NULL), m_FormulaPosOnly(NULL), m_StandardDiameters(NULL),
 	m_TextColor(2), m_PosColor(4), m_CircleColor(1), m_MultiplierColor(33), m_GroupColor(9), 
 	m_NoteColor(30), m_CurrentGroupHighlightColor(8), m_NoteScale(0.75), 
@@ -358,18 +358,6 @@ Acad::ErrorStatus CPosGroup::setNoteScale(const double newVal)
 {
 	assertWriteEnabled();
 	m_NoteScale = newVal;
-	return Acad::eOk;
-}
-
-const Adesk::Boolean CPosGroup::Current(void) const
-{
-	assertReadEnabled();
-	return m_Current;
-}
-Acad::ErrorStatus CPosGroup::setCurrent(const Adesk::Boolean newVal)
-{
-	assertWriteEnabled();
-	m_Current = newVal;
 	return Acad::eOk;
 }
 

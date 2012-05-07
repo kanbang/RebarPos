@@ -87,8 +87,6 @@ protected:
     AcDbHardPointerId m_TextStyleID;
     AcDbHardPointerId m_NoteStyleID;
 
-	Adesk::Boolean m_Current;
-
 public:
 	/// Gets or sets item name
 	const ACHAR* Name(void) const;
@@ -169,10 +167,6 @@ public:
 	/// Gets or sets pointer to the note style.
 	const AcDbObjectId& NoteStyleId(void) const;
 	Acad::ErrorStatus setNoteStyleId(const AcDbObjectId& newVal);
-
-	/// Gets or sets whether this is the current style.
-    const Adesk::Boolean Current(void) const;
-	Acad::ErrorStatus setCurrent(const Adesk::Boolean newVal);
 
 private:
 	static ACHAR* Table_Name;

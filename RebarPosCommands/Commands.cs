@@ -31,8 +31,12 @@ namespace RebarPosCommands
             DWGUtility.CreateDefaultShapes();
             ObjectId id = DWGUtility.CreateDefaultGroups();
             SetCurrentGroup(id);
+
+            // ObjectOverrule.RemoveOverrule(RXClass.GetClass(typeof(RebarPos)), Overrule);
+            ObjectOverrule.AddOverrule(RXClass.GetClass(typeof(RebarPos)), Overrule, true);
         }
 
+        private DrawOverrule Overrule { get { return DrawOverrule.Instance; } }
         private string CurrentGroupName { get; set; }
         private ObjectId CurrentGroupId { get; set; }
 
