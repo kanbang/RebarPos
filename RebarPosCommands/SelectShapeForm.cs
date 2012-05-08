@@ -26,6 +26,33 @@ namespace RebarPosCommands
 
         public void SetShapes(Autodesk.AutoCAD.DatabaseServices.ObjectId current)
         {
+            List<ObjectId> shapes = new List<ObjectId>();
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
+                    if (!namedDict.Contains(PosShape.TableName))
+                        return;
+                    DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosShape.TableName), OpenMode.ForRead);
+                    DbDictionaryEnumerator it = dict.GetEnumerator();
+                    while (it.MoveNext())
+                    {
+                        shapes.Add(it.Value);
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            SetShapes(current, shapes);
+        }
+
+        public void SetShapes(ObjectId current, IEnumerable<ObjectId> shapes)
+        {
             m_Current = current;
 
             layoutPanel.Controls.Clear();
@@ -40,14 +67,8 @@ namespace RebarPosCommands
             {
                 try
                 {
-                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
-                    if (!namedDict.Contains(PosShape.TableName))
-                        return;
-                    DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosShape.TableName), OpenMode.ForRead);
-                    DbDictionaryEnumerator it = dict.GetEnumerator();
-                    while (it.MoveNext())
+                    foreach (ObjectId id in shapes)
                     {
-                        Autodesk.AutoCAD.DatabaseServices.ObjectId id = it.Value;
                         PosShape shape = tr.GetObject(id, OpenMode.ForRead) as PosShape;
                         if (shape != null)
                         {

@@ -80,7 +80,14 @@
     <Compile Include="Commands_CopyPos.cs" />
     <Compile Include="Commands_NumberPos.cs" />
     <Compile Include="Commands_PosShapes.cs" />
+    <Compile Include="Commands_FindReplace.cs" />
     <Compile Include="DrawOverrule.cs" />
+    <Compile Include="FindReplaceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FindReplaceForm.Designer.cs">
+      <DependentUpon>FindReplaceForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="PosShapesForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -138,6 +145,9 @@
       <DependentUpon>Commands.cs</DependentUpon>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Commands.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FindReplaceForm.resx">
+      <DependentUpon>FindReplaceForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PosShapesForm.resx">
       <DependentUpon>PosShapesForm.cs</DependentUpon>
@@ -206,6 +216,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\table_row_insert.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\select.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

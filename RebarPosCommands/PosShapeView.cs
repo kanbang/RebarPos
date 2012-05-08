@@ -116,7 +116,10 @@ namespace RebarPosCommands
         private void PosShapeView_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            g.Clear(BackColor);
+            if (!Enabled)
+                g.Clear(SystemColors.Control);
+            else
+                g.Clear(BackColor);
 
             // Selection mark
             if (m_Selected)

@@ -16,7 +16,16 @@ namespace RebarPosCommands
             return new SelectionFilter(tvs);
         }
 
-        public static PromptSelectionResult SelectPosUser()
+        private static SelectionFilter SSPosGroupFilter(ObjectId groupId)
+        {
+            TypedValue[] tvs = new TypedValue[] {
+                new TypedValue((int)DxfCode.Start, "REBARPOS"),
+                new TypedValue((int)DxfCode.HardPointerId + 1, groupId.Handle)
+            };
+            return new SelectionFilter(tvs);
+        }
+
+        public static PromptSelectionResult SelectAllPosUser()
         {
             return Application.DocumentManager.MdiActiveDocument.Editor.GetSelection(SSPosFilter());
         }
@@ -24,6 +33,76 @@ namespace RebarPosCommands
         public static PromptSelectionResult SelectAllPos()
         {
             return Application.DocumentManager.MdiActiveDocument.Editor.SelectAll(SSPosFilter());
+        }
+
+        public static PromptSelectionResult SelectGroupUser(ObjectId groupid)
+        {
+            return Application.DocumentManager.MdiActiveDocument.Editor.GetSelection(SSPosGroupFilter(groupid));
+        }
+
+        public static PromptSelectionResult SelectGroup(ObjectId groupid)
+        {
+            return Application.DocumentManager.MdiActiveDocument.Editor.SelectAll(SSPosGroupFilter(groupid));
+        }
+
+        public static ObjectId[] GetAllPos()
+        {
+            List<ObjectId> list = new List<ObjectId>();
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    BlockTableRecord btr = (BlockTableRecord)tr.GetObject(db.CurrentSpaceId, OpenMode.ForRead);
+                    using (BlockTableRecordEnumerator it = btr.GetEnumerator())
+                    {
+                        while (it.MoveNext())
+                        {
+                            if(it.Current.ObjectClass ==Autodesk.AutoCAD.Runtime.RXObject.GetClass(typeof(RebarPos)))
+                            {
+                                list.Add(it.Current);
+                            }
+                        }
+                    }
+                }
+                catch (System.Exception)
+                {
+                    ;
+                }
+            }
+            return list.ToArray();
+        }
+
+        public static ObjectId[] GetPosInGroup(ObjectId groupId)
+        {
+            List<ObjectId> list = new List<ObjectId>();
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    BlockTableRecord btr = (BlockTableRecord)tr.GetObject(db.CurrentSpaceId, OpenMode.ForRead);
+                    using (BlockTableRecordEnumerator it = btr.GetEnumerator())
+                    {
+                        while (it.MoveNext())
+                        {
+                            RebarPos pos = tr.GetObject(it.Current, OpenMode.ForRead) as RebarPos;
+                            if (pos!=null)
+                            {
+                                if (pos.GroupId == groupId)
+                                {
+                                    list.Add(it.Current);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (System.Exception)
+                {
+                    ;
+                }
+            }
+            return list.ToArray();
         }
 
         public static ObjectId CreateDefaultShapes()
@@ -184,7 +263,7 @@ namespace RebarPosCommands
         // Returns all text styles
         public static Dictionary<string, ObjectId> GetTextStyles()
         {
-            Dictionary<string, ObjectId> list=new Dictionary<string,ObjectId>();
+            Dictionary<string, ObjectId> list = new Dictionary<string, ObjectId>();
 
             Database db = HostApplicationServices.WorkingDatabase;
             using (Transaction tr = db.TransactionManager.StartTransaction())
@@ -193,11 +272,11 @@ namespace RebarPosCommands
                 {
                     TextStyleTable table = (TextStyleTable)tr.GetObject(db.TextStyleTableId, OpenMode.ForRead);
                     SymbolTableEnumerator it = table.GetEnumerator();
-                    while(it.MoveNext())
+                    while (it.MoveNext())
                     {
-                        ObjectId id= it.Current;
+                        ObjectId id = it.Current;
                         TextStyleTableRecord style = (TextStyleTableRecord)tr.GetObject(id, OpenMode.ForRead);
-                        list.Add(style.Name,id);
+                        list.Add(style.Name, id);
                     }
                 }
                 catch (System.Exception ex)
@@ -206,7 +285,7 @@ namespace RebarPosCommands
                 }
             }
 
-            return list;               
+            return list;
         }
 
         // Returns all items in the dictionary.

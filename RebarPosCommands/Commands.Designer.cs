@@ -115,6 +115,15 @@ namespace RebarPosCommands {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to POZBUL.
+        /// </summary>
+        internal static string POSFIND_Local {
+            get {
+                return ResourceManager.GetString("POSFIND_Local", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to POZGRUP.
         /// </summary>
         internal static string POSGROUP_Local {

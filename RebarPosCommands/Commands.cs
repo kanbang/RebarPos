@@ -40,7 +40,7 @@ namespace RebarPosCommands
         private string CurrentGroupName { get; set; }
         private ObjectId CurrentGroupId { get; set; }
 
-        [CommandMethod("RebarPos", "POS", "POS_Local", CommandFlags.Modal)]
+        [CommandMethod("RebarPos", "POS", "POS_Local", CommandFlags.Modal | CommandFlags.UsePickSet)]
         public void CMD_Pos()
         {
             bool cont = true;
@@ -77,7 +77,7 @@ namespace RebarPosCommands
                             // DrawBOM();
                             break;
                         case "Find":
-                            // FindPos();
+                            FindReplace();
                             break;
                         case "Shapes":
                             PosShapes();
@@ -135,6 +135,12 @@ namespace RebarPosCommands
         public void CMD_CopyPos()
         {
             CopyPos();
+        }
+
+        [CommandMethod("RebarPos", "POSFIND", "POSFIND_Local", CommandFlags.Modal | CommandFlags.UsePickSet)]
+        public void CMD_FindReplace()
+        {
+            FindReplace();
         }
 
         [CommandMethod("RebarPos", "POSSHAPES", "POSSHAPES_Local", CommandFlags.Modal)]
