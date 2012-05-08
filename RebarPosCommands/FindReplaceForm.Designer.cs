@@ -145,6 +145,7 @@
             this.txtFindF.Name = "txtFindF";
             this.txtFindF.Size = new System.Drawing.Size(70, 20);
             this.txtFindF.TabIndex = 27;
+            this.txtFindF.Validating += new System.ComponentModel.CancelEventHandler(this.txtFindLength_Validating);
             // 
             // label10
             // 
@@ -161,6 +162,7 @@
             this.txtFindE.Name = "txtFindE";
             this.txtFindE.Size = new System.Drawing.Size(70, 20);
             this.txtFindE.TabIndex = 25;
+            this.txtFindE.Validating += new System.ComponentModel.CancelEventHandler(this.txtFindLength_Validating);
             // 
             // label9
             // 
@@ -177,6 +179,7 @@
             this.txtFindD.Name = "txtFindD";
             this.txtFindD.Size = new System.Drawing.Size(70, 20);
             this.txtFindD.TabIndex = 23;
+            this.txtFindD.Validating += new System.ComponentModel.CancelEventHandler(this.txtFindLength_Validating);
             // 
             // label8
             // 
@@ -193,6 +196,7 @@
             this.txtFindC.Name = "txtFindC";
             this.txtFindC.Size = new System.Drawing.Size(70, 20);
             this.txtFindC.TabIndex = 21;
+            this.txtFindC.Validating += new System.ComponentModel.CancelEventHandler(this.txtFindLength_Validating);
             // 
             // label7
             // 
@@ -209,6 +213,7 @@
             this.txtFindB.Name = "txtFindB";
             this.txtFindB.Size = new System.Drawing.Size(70, 20);
             this.txtFindB.TabIndex = 19;
+            this.txtFindB.Validating += new System.ComponentModel.CancelEventHandler(this.txtFindLength_Validating);
             // 
             // label6
             // 
@@ -225,6 +230,7 @@
             this.txtFindA.Name = "txtFindA";
             this.txtFindA.Size = new System.Drawing.Size(70, 20);
             this.txtFindA.TabIndex = 17;
+            this.txtFindA.Validating += new System.ComponentModel.CancelEventHandler(this.txtFindLength_Validating);
             // 
             // label5
             // 
@@ -251,10 +257,10 @@
             this.rbFindShape.AutoSize = true;
             this.rbFindShape.Location = new System.Drawing.Point(22, 210);
             this.rbFindShape.Name = "rbFindShape";
-            this.rbFindShape.Size = new System.Drawing.Size(57, 17);
+            this.rbFindShape.Size = new System.Drawing.Size(55, 17);
             this.rbFindShape.TabIndex = 14;
             this.rbFindShape.TabStop = true;
-            this.rbFindShape.Text = "Açı&lımı:";
+            this.rbFindShape.Text = "Açı&lım:";
             this.rbFindShape.UseVisualStyleBackColor = true;
             this.rbFindShape.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
             // 
@@ -547,6 +553,7 @@
             this.txtReplaceMultiplier.Name = "txtReplaceMultiplier";
             this.txtReplaceMultiplier.Size = new System.Drawing.Size(117, 20);
             this.txtReplaceMultiplier.TabIndex = 9;
+            this.txtReplaceMultiplier.Validating += new System.ComponentModel.CancelEventHandler(this.txtReplaceMultiplier_Validating);
             // 
             // txtReplaceNote
             // 
@@ -561,6 +568,7 @@
             this.txtReplaceSpacing.Name = "txtReplaceSpacing";
             this.txtReplaceSpacing.Size = new System.Drawing.Size(117, 20);
             this.txtReplaceSpacing.TabIndex = 5;
+            this.txtReplaceSpacing.Validating += new System.ComponentModel.CancelEventHandler(this.txtReplaceSpacing_Validating);
             // 
             // txtReplaceCount
             // 
@@ -568,6 +576,7 @@
             this.txtReplaceCount.Name = "txtReplaceCount";
             this.txtReplaceCount.Size = new System.Drawing.Size(117, 20);
             this.txtReplaceCount.TabIndex = 1;
+            this.txtReplaceCount.Validating += new System.ComponentModel.CancelEventHandler(this.txtReplaceCount_Validating);
             // 
             // txtReplaceF
             // 
@@ -575,6 +584,7 @@
             this.txtReplaceF.Name = "txtReplaceF";
             this.txtReplaceF.Size = new System.Drawing.Size(70, 20);
             this.txtReplaceF.TabIndex = 25;
+            this.txtReplaceF.Validating += new System.ComponentModel.CancelEventHandler(this.txtReplaceLength_Validating);
             // 
             // label1
             // 
@@ -591,6 +601,7 @@
             this.txtReplaceE.Name = "txtReplaceE";
             this.txtReplaceE.Size = new System.Drawing.Size(70, 20);
             this.txtReplaceE.TabIndex = 23;
+            this.txtReplaceE.Validating += new System.ComponentModel.CancelEventHandler(this.txtReplaceLength_Validating);
             // 
             // label2
             // 
@@ -607,6 +618,7 @@
             this.txtReplaceD.Name = "txtReplaceD";
             this.txtReplaceD.Size = new System.Drawing.Size(70, 20);
             this.txtReplaceD.TabIndex = 21;
+            this.txtReplaceD.Validating += new System.ComponentModel.CancelEventHandler(this.txtReplaceLength_Validating);
             // 
             // label3
             // 
@@ -623,6 +635,7 @@
             this.txtReplaceC.Name = "txtReplaceC";
             this.txtReplaceC.Size = new System.Drawing.Size(70, 20);
             this.txtReplaceC.TabIndex = 19;
+            this.txtReplaceC.Validating += new System.ComponentModel.CancelEventHandler(this.txtReplaceLength_Validating);
             // 
             // label4
             // 
@@ -639,6 +652,7 @@
             this.txtReplaceB.Name = "txtReplaceB";
             this.txtReplaceB.Size = new System.Drawing.Size(70, 20);
             this.txtReplaceB.TabIndex = 17;
+            this.txtReplaceB.Validating += new System.ComponentModel.CancelEventHandler(this.txtReplaceLength_Validating);
             // 
             // label11
             // 
@@ -655,6 +669,7 @@
             this.txtReplaceA.Name = "txtReplaceA";
             this.txtReplaceA.Size = new System.Drawing.Size(70, 20);
             this.txtReplaceA.TabIndex = 15;
+            this.txtReplaceA.Validating += new System.ComponentModel.CancelEventHandler(this.txtReplaceLength_Validating);
             // 
             // label12
             // 
@@ -681,10 +696,10 @@
             this.rbReplaceShape.AutoSize = true;
             this.rbReplaceShape.Location = new System.Drawing.Point(21, 210);
             this.rbReplaceShape.Name = "rbReplaceShape";
-            this.rbReplaceShape.Size = new System.Drawing.Size(57, 17);
+            this.rbReplaceShape.Size = new System.Drawing.Size(55, 17);
             this.rbReplaceShape.TabIndex = 12;
             this.rbReplaceShape.TabStop = true;
-            this.rbReplaceShape.Text = "Açı&lımı:";
+            this.rbReplaceShape.Text = "Açı&lım:";
             this.rbReplaceShape.UseVisualStyleBackColor = true;
             this.rbReplaceShape.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
             // 
@@ -766,6 +781,7 @@
             this.btnCancel.TabIndex = 4;
             this.btnCancel.Text = "İptal";
             this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnOK
             // 
@@ -776,6 +792,7 @@
             this.btnOK.TabIndex = 3;
             this.btnOK.Text = "Tamam";
             this.btnOK.UseVisualStyleBackColor = true;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // errorProvider
             // 

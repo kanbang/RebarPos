@@ -229,7 +229,7 @@ namespace RebarPosCommands
             foreach (string name in m_NoteList.Keys)
                 cbFindNote.Items.Add(name);
             foreach (int mult in m_MultiplierList.Keys)
-                cbFindMultiplier.Items.Add(mult);
+                cbFindMultiplier.Items.Add(mult.ToString());
             foreach (ObjectId id in m_GroupList.Keys)
             {
                 foreach (KeyValuePair<string, ObjectId> item in m_Groups)
@@ -262,12 +262,12 @@ namespace RebarPosCommands
                                         int d;
                                         if (int.TryParse(ds, out d))
                                         {
-                                            cbReplaceDiameter.Items.Add(d);
+                                            cbReplaceDiameter.Items.Add(d.ToString());
                                         }
                                     }
                                 }
                             }
-                            
+
                         }
                         catch (System.Exception)
                         {
@@ -279,7 +279,7 @@ namespace RebarPosCommands
             }
             if (cbReplaceDiameter.Items.Count > 0) cbReplaceDiameter.SelectedIndex = 0;
 
-            if (m_ShapeList.Count != 1)
+            if (m_ShapeList.Count > 0)
             {
                 foreach (ObjectId id in m_ShapeList.Keys)
                 {
@@ -545,6 +545,254 @@ namespace RebarPosCommands
             {
                 SetReplaceShape(form.Current);
             }
+        }
+
+        private bool CheckPosCount()
+        {
+            string str = txtReplaceCount.Text;
+            str = str.Replace('x', '*');
+            str = str.Replace('X', '*');
+
+            if (string.IsNullOrEmpty(str) || Calculator.IsValid(str))
+            {
+                errorProvider.SetError(txtReplaceCount, "");
+                return true;
+            }
+            else
+            {
+                errorProvider.SetError(txtReplaceCount, "Poz adedi yalnız rakam ve aritmetik işlemler içerebilir.");
+                errorProvider.SetIconAlignment(txtReplaceCount, ErrorIconAlignment.MiddleLeft);
+                return false;
+            }
+        }
+
+        private bool CheckPosSpacing()
+        {
+            if (string.IsNullOrEmpty(txtReplaceSpacing.Text) || txtReplaceSpacing.Text.Trim(new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.', '-', '~' }).Length == 0)
+            {
+                errorProvider.SetError(txtReplaceSpacing, "");
+                return true;
+            }
+            else
+            {
+                errorProvider.SetError(txtReplaceSpacing, "Poz aralığı yalnız rakam ve aralık işareti (~ veya -) içerebilir.");
+                errorProvider.SetIconAlignment(txtReplaceSpacing, ErrorIconAlignment.MiddleLeft);
+                return false;
+            }
+        }
+
+        private bool CheckPosMultiplier()
+        {
+            int mult = 0;
+            if (string.IsNullOrEmpty(txtReplaceMultiplier.Text) || int.TryParse(txtReplaceMultiplier.Text, out mult))
+            {
+                errorProvider.SetError(txtReplaceMultiplier, "");
+                return true;
+            }
+            else
+            {
+                errorProvider.SetError(txtReplaceMultiplier, "Poz çarpanı tamsayı olmalıdır.");
+                errorProvider.SetIconAlignment(txtReplaceMultiplier, ErrorIconAlignment.MiddleLeft);
+                return false;
+            }
+        }
+
+        private bool CheckPosLength(TextBox source)
+        {
+            bool haserror = false;
+
+            // Split var lengths
+            if (!string.IsNullOrEmpty(source.Text))
+            {
+                string[] strparts = source.Text.Split(new char[] { '~' }, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (string str in strparts)
+                {
+                    string oldstr = str;
+                    oldstr = oldstr.Replace('d', '0');
+                    oldstr = oldstr.Replace('r', '0');
+                    oldstr = oldstr.Replace('x', '*');
+                    oldstr = oldstr.Replace('X', '*');
+
+                    if (string.IsNullOrEmpty(oldstr))
+                    {
+                        haserror = true;
+                        break;
+                    }
+                    else if (!Calculator.IsValid(oldstr))
+                    {
+                        haserror = true;
+                        break;
+                    }
+                }
+            }
+
+            if (haserror)
+            {
+                errorProvider.SetError(source, "Parça boyu yalnız rakam ve aritmetik işlemler içerebilir.");
+                errorProvider.SetIconAlignment(source, ErrorIconAlignment.MiddleLeft);
+                return false;
+            }
+            else
+            {
+                errorProvider.SetError(source, "");
+                return true;
+            }
+        }
+
+        private void txtReplaceCount_Validating(object sender, CancelEventArgs e)
+        {
+            CheckPosCount();
+        }
+
+        private void txtReplaceSpacing_Validating(object sender, CancelEventArgs e)
+        {
+            CheckPosSpacing();
+        }
+
+        private void txtReplaceMultiplier_Validating(object sender, CancelEventArgs e)
+        {
+            CheckPosMultiplier();
+        }
+
+        private void txtFindLength_Validating(object sender, CancelEventArgs e)
+        {
+            CheckPosLength((TextBox)sender);
+        }
+
+        private void txtReplaceLength_Validating(object sender, CancelEventArgs e)
+        {
+            CheckPosLength((TextBox)sender);
+        }
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            if (m_Selection == null || m_Selection.Length == 0)
+            {
+                return;
+            }
+
+            bool haserror = false;
+            if (rbReplaceCount.Checked && !CheckPosCount()) haserror = true;
+            if (rbReplaceSpacing.Checked && !CheckPosSpacing()) haserror = true;
+            if (rbReplaceMultiplier.Checked && !CheckPosMultiplier()) haserror = true;
+            if (rbFindShape.Checked)
+            {
+                if (m_FindFields >= 1)
+                    if (!CheckPosLength(txtFindA)) haserror = true;
+                if (m_FindFields >= 2)
+                    if (!CheckPosLength(txtFindB)) haserror = true;
+                if (m_FindFields >= 3)
+                    if (!CheckPosLength(txtFindC)) haserror = true;
+                if (m_FindFields >= 4)
+                    if (!CheckPosLength(txtFindD)) haserror = true;
+                if (m_FindFields >= 5)
+                    if (!CheckPosLength(txtFindE)) haserror = true;
+                if (m_FindFields >= 6)
+                    if (!CheckPosLength(txtFindF)) haserror = true;
+            }
+            if (rbReplaceShape.Checked)
+            {
+                if (m_ReplaceFields >= 1)
+                    if (!CheckPosLength(txtReplaceA)) haserror = true;
+                if (m_ReplaceFields >= 2)
+                    if (!CheckPosLength(txtReplaceB)) haserror = true;
+                if (m_ReplaceFields >= 3)
+                    if (!CheckPosLength(txtReplaceC)) haserror = true;
+                if (m_ReplaceFields >= 4)
+                    if (!CheckPosLength(txtReplaceD)) haserror = true;
+                if (m_ReplaceFields >= 5)
+                    if (!CheckPosLength(txtReplaceE)) haserror = true;
+                if (m_ReplaceFields >= 6)
+                    if (!CheckPosLength(txtReplaceF)) haserror = true;
+            }
+
+            if (haserror)
+            {
+                MessageBox.Show("Lütfen hatalı değerleri düzeltin.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    // Filter selection
+                    List<ObjectId> list = new List<ObjectId>();
+                    foreach (ObjectId id in m_Selection)
+                    {
+                        RebarPos pos = tr.GetObject(id, OpenMode.ForRead) as RebarPos;
+                        if (pos == null) continue;
+
+                        if (rbFindPosNumber.Checked && cbFindPosNumber.SelectedIndex != -1 && (string)cbFindPosNumber.SelectedItem != pos.Pos)
+                            continue;
+                        if (rbFindCount.Checked && cbFindCount.SelectedIndex != -1 && (string)cbFindCount.SelectedItem != pos.Count)
+                            continue;
+                        if (rbFindDiameter.Checked && cbFindDiameter.SelectedIndex != -1 && (string)cbFindDiameter.SelectedItem != pos.Diameter)
+                            continue;
+                        if (rbFindSpacing.Checked && cbFindSpacing.SelectedIndex != -1 && (string)cbFindSpacing.SelectedItem != pos.Spacing)
+                            continue;
+                        if (rbFindNote.Checked && cbFindNote.SelectedIndex != -1 && (string)cbFindNote.SelectedItem != pos.Note)
+                            continue;
+                        if (rbFindMultiplier.Checked && cbFindMultiplier.SelectedIndex != -1 && (string)cbFindMultiplier.SelectedItem != pos.Multiplier.ToString())
+                            continue;
+                        if (rbFindGroup.Checked && cbFindGroup.SelectedIndex != -1 && m_Groups[(string)cbFindGroup.SelectedItem] != pos.GroupId)
+                            continue;
+                        if (rbFindShape.Checked && m_FindShape != pos.ShapeId)
+                            continue;
+                        if (rbFindShape.Checked && !string.IsNullOrEmpty(txtFindA.Text) && txtFindA.Text != pos.A)
+                            continue;
+                        if (rbFindShape.Checked && !string.IsNullOrEmpty(txtFindB.Text) && txtFindA.Text != pos.B)
+                            continue;
+                        if (rbFindShape.Checked && !string.IsNullOrEmpty(txtFindC.Text) && txtFindA.Text != pos.C)
+                            continue;
+                        if (rbFindShape.Checked && !string.IsNullOrEmpty(txtFindD.Text) && txtFindA.Text != pos.D)
+                            continue;
+                        if (rbFindShape.Checked && !string.IsNullOrEmpty(txtFindE.Text) && txtFindA.Text != pos.E)
+                            continue;
+                        if (rbFindShape.Checked && !string.IsNullOrEmpty(txtFindF.Text) && txtFindA.Text != pos.F)
+                            continue;
+
+                        list.Add(id);
+                    }
+
+                    // Apply changes
+                    foreach (ObjectId id in list)
+                    {
+                        RebarPos pos = tr.GetObject(id, OpenMode.ForWrite) as RebarPos;
+                        if (pos == null) continue;
+
+                        if (rbReplaceCount.Checked) pos.Count = txtReplaceCount.Text;
+                        if (rbReplaceDiameter.Checked) pos.Diameter = (string)cbReplaceDiameter.SelectedItem;
+                        if (rbReplaceSpacing.Checked) pos.Spacing = txtReplaceSpacing.Text;
+                        if (rbReplaceNote.Checked) pos.Note = txtReplaceNote.Text;
+                        if (rbReplaceMultiplier.Checked) pos.Multiplier = int.Parse(txtReplaceMultiplier.Text);
+                        if (rbReplaceGroup.Checked) pos.GroupId = m_Groups[(string)cbReplaceGroup.SelectedItem];
+                        if (rbReplaceShape.Checked && !m_ReplaceShape.IsNull) pos.ShapeId = m_ReplaceShape;
+                        if (rbReplaceShape.Checked && !string.IsNullOrEmpty(txtReplaceA.Text)) pos.A = txtReplaceA.Text;
+                        if (rbReplaceShape.Checked && !string.IsNullOrEmpty(txtReplaceB.Text)) pos.B = txtReplaceB.Text;
+                        if (rbReplaceShape.Checked && !string.IsNullOrEmpty(txtReplaceC.Text)) pos.C = txtReplaceC.Text;
+                        if (rbReplaceShape.Checked && !string.IsNullOrEmpty(txtReplaceD.Text)) pos.D = txtReplaceD.Text;
+                        if (rbReplaceShape.Checked && !string.IsNullOrEmpty(txtReplaceE.Text)) pos.E = txtReplaceE.Text;
+                        if (rbReplaceShape.Checked && !string.IsNullOrEmpty(txtReplaceF.Text)) pos.F = txtReplaceF.Text;
+                    }
+
+                    tr.Commit();
+
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }
