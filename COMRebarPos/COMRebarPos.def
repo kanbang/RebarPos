@@ -5,4 +5,4 @@ EXPORTS
 	DllGetClassObject   PRIVATE
 	DllRegisterServer   PRIVATE
 	DllUnregisterServer PRIVATE
-	acrxEntryPoint      PRIVATE
+
