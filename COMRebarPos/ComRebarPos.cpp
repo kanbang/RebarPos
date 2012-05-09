@@ -49,6 +49,21 @@ STDMETHODIMP CComRebarPos::InterfaceSupportsErrorInfo(REFIID riid)
 	return S_FALSE;
 }
 
+//Override return custom property names
+STDMETHODIMP CComRebarPos::GetDisplayName( 
+	/* [in] */ DISPID dispID,
+	/* [out] */ BSTR * propName)
+{
+	if(dispID == 0x401)
+	{
+		*propName = ::SysAllocString(L"RebarPos");
+
+		return S_OK;
+	}
+
+	return IOPMPropertyExtensionImpl<CComRebarPos>::GetDisplayName(dispID, propName);
+}
+
 //Override to make property read-only
 STDMETHODIMP CComRebarPos::Editable( 
 	/* [in] */ DISPID dispID,

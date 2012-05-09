@@ -144,6 +144,9 @@ BEGIN_OPMPROP_MAP()
     OPMPROP_ENTRY(0, DISPID_GROUP, PROPCAT_Misc, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
 END_OPMPROP_MAP()
 
+	STDMETHOD(GetDisplayName)(
+		/* [in] */ DISPID dispID, 
+		/* [out] */ BSTR * propName);
 
     STDMETHOD(GetCategoryName)(THIS_
                            /* [in]  */ PROPCAT propcat, 
