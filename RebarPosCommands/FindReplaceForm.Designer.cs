@@ -71,7 +71,7 @@
             this.cbReplaceGroup = new System.Windows.Forms.ComboBox();
             this.txtReplaceMultiplier = new System.Windows.Forms.TextBox();
             this.txtReplaceNote = new System.Windows.Forms.TextBox();
-            this.txtReplaceSpacing = new System.Windows.Forms.TextBox();
+            this.txtReplaceSpacing = new RebarPosCommands.SpacingTextBox();
             this.txtReplaceCount = new System.Windows.Forms.TextBox();
             this.txtReplaceF = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -94,8 +94,9 @@
             this.rbReplaceCount = new System.Windows.Forms.CheckBox();
             this.cbReplaceDiameter = new System.Windows.Forms.ComboBox();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.btnOK = new System.Windows.Forms.Button();
+            this.btnReplace = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.btnFind = new System.Windows.Forms.Button();
             this.gbFind.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.gbReplace.SuspendLayout();
@@ -135,7 +136,7 @@
             this.gbFind.Location = new System.Drawing.Point(12, 146);
             this.gbFind.Name = "gbFind";
             this.gbFind.Size = new System.Drawing.Size(264, 423);
-            this.gbFind.TabIndex = 0;
+            this.gbFind.TabIndex = 1;
             this.gbFind.TabStop = false;
             this.gbFind.Text = "&Bul";
             // 
@@ -257,9 +258,8 @@
             this.rbFindShape.AutoSize = true;
             this.rbFindShape.Location = new System.Drawing.Point(22, 210);
             this.rbFindShape.Name = "rbFindShape";
-            this.rbFindShape.Size = new System.Drawing.Size(55, 17);
+            this.rbFindShape.Size = new System.Drawing.Size(56, 17);
             this.rbFindShape.TabIndex = 14;
-            this.rbFindShape.TabStop = true;
             this.rbFindShape.Text = "Açı&lım:";
             this.rbFindShape.UseVisualStyleBackColor = true;
             this.rbFindShape.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
@@ -269,9 +269,8 @@
             this.rbFindGroup.AutoSize = true;
             this.rbFindGroup.Location = new System.Drawing.Point(22, 183);
             this.rbFindGroup.Name = "rbFindGroup";
-            this.rbFindGroup.Size = new System.Drawing.Size(75, 17);
+            this.rbFindGroup.Size = new System.Drawing.Size(76, 17);
             this.rbFindGroup.TabIndex = 12;
-            this.rbFindGroup.TabStop = true;
             this.rbFindGroup.Text = "Poz &Grubu";
             this.rbFindGroup.UseVisualStyleBackColor = true;
             this.rbFindGroup.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
@@ -281,9 +280,8 @@
             this.rbFindMultiplier.AutoSize = true;
             this.rbFindMultiplier.Location = new System.Drawing.Point(22, 155);
             this.rbFindMultiplier.Name = "rbFindMultiplier";
-            this.rbFindMultiplier.Size = new System.Drawing.Size(82, 17);
+            this.rbFindMultiplier.Size = new System.Drawing.Size(83, 17);
             this.rbFindMultiplier.TabIndex = 10;
-            this.rbFindMultiplier.TabStop = true;
             this.rbFindMultiplier.Text = "Po&z Çarpanı";
             this.rbFindMultiplier.UseVisualStyleBackColor = true;
             this.rbFindMultiplier.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
@@ -293,9 +291,8 @@
             this.rbFindNote.AutoSize = true;
             this.rbFindNote.Location = new System.Drawing.Point(22, 128);
             this.rbFindNote.Name = "rbFindNote";
-            this.rbFindNote.Size = new System.Drawing.Size(48, 17);
+            this.rbFindNote.Size = new System.Drawing.Size(49, 17);
             this.rbFindNote.TabIndex = 8;
-            this.rbFindNote.TabStop = true;
             this.rbFindNote.Text = "&Notu";
             this.rbFindNote.UseVisualStyleBackColor = true;
             this.rbFindNote.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
@@ -305,9 +302,8 @@
             this.rbFindSpacing.AutoSize = true;
             this.rbFindSpacing.Location = new System.Drawing.Point(22, 101);
             this.rbFindSpacing.Name = "rbFindSpacing";
-            this.rbFindSpacing.Size = new System.Drawing.Size(53, 17);
+            this.rbFindSpacing.Size = new System.Drawing.Size(54, 17);
             this.rbFindSpacing.TabIndex = 6;
-            this.rbFindSpacing.TabStop = true;
             this.rbFindSpacing.Text = "A&ralığı";
             this.rbFindSpacing.UseVisualStyleBackColor = true;
             this.rbFindSpacing.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
@@ -317,9 +313,8 @@
             this.rbFindDiameter.AutoSize = true;
             this.rbFindDiameter.Location = new System.Drawing.Point(22, 74);
             this.rbFindDiameter.Name = "rbFindDiameter";
-            this.rbFindDiameter.Size = new System.Drawing.Size(46, 17);
+            this.rbFindDiameter.Size = new System.Drawing.Size(47, 17);
             this.rbFindDiameter.TabIndex = 4;
-            this.rbFindDiameter.TabStop = true;
             this.rbFindDiameter.Text = "&Çapı";
             this.rbFindDiameter.UseVisualStyleBackColor = true;
             this.rbFindDiameter.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
@@ -329,9 +324,8 @@
             this.rbFindCount.AutoSize = true;
             this.rbFindCount.Location = new System.Drawing.Point(22, 47);
             this.rbFindCount.Name = "rbFindCount";
-            this.rbFindCount.Size = new System.Drawing.Size(52, 17);
+            this.rbFindCount.Size = new System.Drawing.Size(53, 17);
             this.rbFindCount.TabIndex = 2;
-            this.rbFindCount.TabStop = true;
             this.rbFindCount.Text = "&Adedi";
             this.rbFindCount.UseVisualStyleBackColor = true;
             this.rbFindCount.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
@@ -341,9 +335,8 @@
             this.rbFindPosNumber.AutoSize = true;
             this.rbFindPosNumber.Location = new System.Drawing.Point(22, 20);
             this.rbFindPosNumber.Name = "rbFindPosNumber";
-            this.rbFindPosNumber.Size = new System.Drawing.Size(90, 17);
+            this.rbFindPosNumber.Size = new System.Drawing.Size(91, 17);
             this.rbFindPosNumber.TabIndex = 0;
-            this.rbFindPosNumber.TabStop = true;
             this.rbFindPosNumber.Text = "&Poz Numarası";
             this.rbFindPosNumber.UseVisualStyleBackColor = true;
             this.rbFindPosNumber.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
@@ -531,9 +524,8 @@
             this.rbReplaceGroup.AutoSize = true;
             this.rbReplaceGroup.Location = new System.Drawing.Point(22, 184);
             this.rbReplaceGroup.Name = "rbReplaceGroup";
-            this.rbReplaceGroup.Size = new System.Drawing.Size(75, 17);
+            this.rbReplaceGroup.Size = new System.Drawing.Size(76, 17);
             this.rbReplaceGroup.TabIndex = 10;
-            this.rbReplaceGroup.TabStop = true;
             this.rbReplaceGroup.Text = "Poz &Grubu";
             this.rbReplaceGroup.UseVisualStyleBackColor = true;
             this.rbReplaceGroup.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
@@ -696,9 +688,8 @@
             this.rbReplaceShape.AutoSize = true;
             this.rbReplaceShape.Location = new System.Drawing.Point(21, 210);
             this.rbReplaceShape.Name = "rbReplaceShape";
-            this.rbReplaceShape.Size = new System.Drawing.Size(55, 17);
+            this.rbReplaceShape.Size = new System.Drawing.Size(56, 17);
             this.rbReplaceShape.TabIndex = 12;
-            this.rbReplaceShape.TabStop = true;
             this.rbReplaceShape.Text = "Açı&lım:";
             this.rbReplaceShape.UseVisualStyleBackColor = true;
             this.rbReplaceShape.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
@@ -708,9 +699,8 @@
             this.rbReplaceMultiplier.AutoSize = true;
             this.rbReplaceMultiplier.Location = new System.Drawing.Point(22, 155);
             this.rbReplaceMultiplier.Name = "rbReplaceMultiplier";
-            this.rbReplaceMultiplier.Size = new System.Drawing.Size(82, 17);
+            this.rbReplaceMultiplier.Size = new System.Drawing.Size(83, 17);
             this.rbReplaceMultiplier.TabIndex = 8;
-            this.rbReplaceMultiplier.TabStop = true;
             this.rbReplaceMultiplier.Text = "Po&z Çarpanı";
             this.rbReplaceMultiplier.UseVisualStyleBackColor = true;
             this.rbReplaceMultiplier.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
@@ -720,9 +710,8 @@
             this.rbReplaceNote.AutoSize = true;
             this.rbReplaceNote.Location = new System.Drawing.Point(22, 128);
             this.rbReplaceNote.Name = "rbReplaceNote";
-            this.rbReplaceNote.Size = new System.Drawing.Size(48, 17);
+            this.rbReplaceNote.Size = new System.Drawing.Size(49, 17);
             this.rbReplaceNote.TabIndex = 6;
-            this.rbReplaceNote.TabStop = true;
             this.rbReplaceNote.Text = "&Notu";
             this.rbReplaceNote.UseVisualStyleBackColor = true;
             this.rbReplaceNote.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
@@ -732,9 +721,8 @@
             this.rbReplaceSpacing.AutoSize = true;
             this.rbReplaceSpacing.Location = new System.Drawing.Point(22, 101);
             this.rbReplaceSpacing.Name = "rbReplaceSpacing";
-            this.rbReplaceSpacing.Size = new System.Drawing.Size(53, 17);
+            this.rbReplaceSpacing.Size = new System.Drawing.Size(54, 17);
             this.rbReplaceSpacing.TabIndex = 4;
-            this.rbReplaceSpacing.TabStop = true;
             this.rbReplaceSpacing.Text = "A&ralığı";
             this.rbReplaceSpacing.UseVisualStyleBackColor = true;
             this.rbReplaceSpacing.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
@@ -744,9 +732,8 @@
             this.rbReplaceDiameter.AutoSize = true;
             this.rbReplaceDiameter.Location = new System.Drawing.Point(22, 74);
             this.rbReplaceDiameter.Name = "rbReplaceDiameter";
-            this.rbReplaceDiameter.Size = new System.Drawing.Size(46, 17);
+            this.rbReplaceDiameter.Size = new System.Drawing.Size(47, 17);
             this.rbReplaceDiameter.TabIndex = 2;
-            this.rbReplaceDiameter.TabStop = true;
             this.rbReplaceDiameter.Text = "&Çapı";
             this.rbReplaceDiameter.UseVisualStyleBackColor = true;
             this.rbReplaceDiameter.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
@@ -756,9 +743,8 @@
             this.rbReplaceCount.AutoSize = true;
             this.rbReplaceCount.Location = new System.Drawing.Point(22, 47);
             this.rbReplaceCount.Name = "rbReplaceCount";
-            this.rbReplaceCount.Size = new System.Drawing.Size(52, 17);
+            this.rbReplaceCount.Size = new System.Drawing.Size(53, 17);
             this.rbReplaceCount.TabIndex = 0;
-            this.rbReplaceCount.TabStop = true;
             this.rbReplaceCount.Text = "&Adedi";
             this.rbReplaceCount.UseVisualStyleBackColor = true;
             this.rbReplaceCount.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
@@ -778,26 +764,35 @@
             this.btnCancel.Location = new System.Drawing.Point(473, 587);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 4;
+            this.btnCancel.TabIndex = 5;
             this.btnCancel.Text = "İptal";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // btnOK
+            // btnReplace
             // 
-            this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(392, 587);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 3;
-            this.btnOK.Text = "Tamam";
-            this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            this.btnReplace.Location = new System.Drawing.Point(392, 587);
+            this.btnReplace.Name = "btnReplace";
+            this.btnReplace.Size = new System.Drawing.Size(75, 23);
+            this.btnReplace.TabIndex = 4;
+            this.btnReplace.Text = "Değiştir";
+            this.btnReplace.UseVisualStyleBackColor = true;
+            this.btnReplace.Click += new System.EventHandler(this.btnReplace_Click);
             // 
             // errorProvider
             // 
             this.errorProvider.ContainerControl = this;
             this.errorProvider.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProvider.Icon")));
+            // 
+            // btnFind
+            // 
+            this.btnFind.Location = new System.Drawing.Point(312, 587);
+            this.btnFind.Name = "btnFind";
+            this.btnFind.Size = new System.Drawing.Size(75, 23);
+            this.btnFind.TabIndex = 3;
+            this.btnFind.Text = "Bul ve Seç";
+            this.btnFind.UseVisualStyleBackColor = true;
+            this.btnFind.Click += new System.EventHandler(this.btnFind_Click);
             // 
             // FindReplaceForm
             // 
@@ -806,7 +801,8 @@
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(560, 622);
             this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnOK);
+            this.Controls.Add(this.btnFind);
+            this.Controls.Add(this.btnReplace);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.gbReplace);
             this.Controls.Add(this.gbFind);
@@ -864,7 +860,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox gbReplace;
-        private System.Windows.Forms.TextBox txtReplaceSpacing;
+        private SpacingTextBox txtReplaceSpacing;
         private System.Windows.Forms.TextBox txtReplaceCount;
         private System.Windows.Forms.TextBox txtReplaceF;
         private System.Windows.Forms.Label label1;
@@ -889,12 +885,13 @@
         private System.Windows.Forms.TextBox txtReplaceMultiplier;
         private System.Windows.Forms.TextBox txtReplaceNote;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.Button btnReplace;
         private System.Windows.Forms.ErrorProvider errorProvider;
         private System.Windows.Forms.Label lblSelectStatus;
         private System.Windows.Forms.CheckBox rbFindGroup;
         private System.Windows.Forms.ComboBox cbFindGroup;
         private System.Windows.Forms.CheckBox rbReplaceGroup;
         private System.Windows.Forms.ComboBox cbReplaceGroup;
+        private System.Windows.Forms.Button btnFind;
     }
 }

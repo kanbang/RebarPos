@@ -40,7 +40,7 @@ namespace RebarPosCommands
         private string CurrentGroupName { get; set; }
         private ObjectId CurrentGroupId { get; set; }
 
-        [CommandMethod("RebarPos", "POS", "POS_Local", CommandFlags.Modal | CommandFlags.UsePickSet)]
+        [CommandMethod("RebarPos", "POS", "POS_Local", CommandFlags.Modal)]
         public void CMD_Pos()
         {
             bool cont = true;
@@ -77,7 +77,7 @@ namespace RebarPosCommands
                             // DrawBOM();
                             break;
                         case "Find":
-                            FindReplace();
+                            cont = !FindReplace(false);
                             break;
                         case "Shapes":
                             PosShapes();
@@ -95,7 +95,7 @@ namespace RebarPosCommands
             }
         }
 
-        [CommandMethod("RebarPos", "POSEDIT", "POSEDIT_Local", CommandFlags.Modal | CommandFlags.UsePickSet)]
+        [CommandMethod("RebarPos", "POSEDIT", "POSEDIT_Local", CommandFlags.Modal)]
         public void CMD_PosEdit()
         {
             PromptEntityOptions opts = new PromptEntityOptions("Select entity: ");
@@ -103,7 +103,7 @@ namespace RebarPosCommands
             PromptEntityResult result = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetEntity(opts);
             if (result.Status == PromptStatus.OK)
             {
-                PosEdit(result.ObjectId, Point3d.Origin);
+                PosEdit(result.ObjectId, result.PickedPoint);
             }
         }
 
@@ -137,10 +137,10 @@ namespace RebarPosCommands
             CopyPos();
         }
 
-        [CommandMethod("RebarPos", "POSFIND", "POSFIND_Local", CommandFlags.Modal | CommandFlags.UsePickSet)]
+        [CommandMethod("RebarPos", "POSFIND", "POSFIND_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_FindReplace()
         {
-            FindReplace();
+            FindReplace(true);
         }
 
         [CommandMethod("RebarPos", "POSSHAPES", "POSSHAPES_Local", CommandFlags.Modal)]

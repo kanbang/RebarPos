@@ -41,7 +41,7 @@
             this.txtPosNote = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
-            this.txtPosSpacing = new System.Windows.Forms.TextBox();
+            this.txtPosSpacing = new SpacingTextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.txtPosCount = new System.Windows.Forms.TextBox();
@@ -734,7 +734,7 @@
 
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnPickNumber;
-        private System.Windows.Forms.TextBox txtPosSpacing;
+        private SpacingTextBox txtPosSpacing;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtPosCount;

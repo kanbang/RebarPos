@@ -169,7 +169,7 @@ namespace RebarPosCommands
             if (!CheckPosDiameter()) haserror = true;
             if (!CheckPosSpacing()) haserror = true;
             if (!CheckPosMultiplier()) haserror = true;
-            if(fields >=1)
+            if (fields >= 1)
                 if (!CheckPosLength(txtA)) haserror = true;
             if (fields >= 2)
                 if (!CheckPosLength(txtB)) haserror = true;
@@ -464,7 +464,7 @@ namespace RebarPosCommands
 
         private bool CheckPosSpacing()
         {
-            if (string.IsNullOrEmpty(txtPosSpacing.Text) || txtPosSpacing.Text.Trim(new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.', '-', '~' }).Length == 0)
+            if (txtPosSpacing.IsValid)
             {
                 errorProvider.SetError(txtPosSpacing, "");
                 return true;

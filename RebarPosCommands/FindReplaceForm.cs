@@ -64,7 +64,7 @@ namespace RebarPosCommands
             init = false;
         }
 
-        public bool Init(ObjectId currentGroup)
+        public bool Init(ObjectId currentGroup, bool usePickSet)
         {
             init = true;
             m_GroupId = currentGroup;
@@ -84,19 +84,22 @@ namespace RebarPosCommands
             }
 
             // Get implied selection
-            PromptSelectionResult res = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.SelectImplied();
-            if (res.Status == PromptStatus.OK)
+            if (usePickSet)
             {
-                List<ObjectId> idlist = new List<ObjectId>();
-                foreach (SelectedObject sel in res.Value)
+                PromptSelectionResult res = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.SelectImplied();
+                if (res.Status == PromptStatus.OK)
                 {
-                    ObjectId id = sel.ObjectId;
-                    if (id.ObjectClass == Autodesk.AutoCAD.Runtime.RXObject.GetClass(typeof(RebarPos)))
-                        idlist.Add(id);
-                }
-                m_Selection = idlist.ToArray();
+                    List<ObjectId> idlist = new List<ObjectId>();
+                    foreach (SelectedObject sel in res.Value)
+                    {
+                        ObjectId id = sel.ObjectId;
+                        if (id.ObjectClass == Autodesk.AutoCAD.Runtime.RXObject.GetClass(typeof(RebarPos)))
+                            idlist.Add(id);
+                    }
+                    m_Selection = idlist.ToArray();
 
-                Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.SetImpliedSelection(new ObjectId[0]);
+                    Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.SetImpliedSelection(new ObjectId[0]);
+                }
             }
 
             if (m_Selection != null && m_Selection.Length != 0)
@@ -396,14 +399,16 @@ namespace RebarPosCommands
                 gbFind.Enabled = false;
                 gbReplace.Enabled = false;
                 lblSelectStatus.Text = "";
-                btnOK.Enabled = false;
+                btnFind.Enabled = false;
+                btnReplace.Enabled = false;
             }
             else
             {
                 gbFind.Enabled = true;
                 gbReplace.Enabled = true;
                 lblSelectStatus.Text = m_Selection.Length.ToString() + " adet poz seçildi.";
-                btnOK.Enabled = true;
+                btnFind.Enabled = true;
+                btnReplace.Enabled = true;
             }
 
             cbFindPosNumber.Enabled = rbFindPosNumber.Checked;
@@ -568,7 +573,7 @@ namespace RebarPosCommands
 
         private bool CheckPosSpacing()
         {
-            if (string.IsNullOrEmpty(txtReplaceSpacing.Text) || txtReplaceSpacing.Text.Trim(new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.', '-', '~' }).Length == 0)
+            if (txtReplaceSpacing.IsValid)
             {
                 errorProvider.SetError(txtReplaceSpacing, "");
                 return true;
@@ -665,7 +670,94 @@ namespace RebarPosCommands
             CheckPosLength((TextBox)sender);
         }
 
-        private void btnOK_Click(object sender, EventArgs e)
+        private void btnFind_Click(object sender, EventArgs e)
+        {
+            if (m_Selection == null || m_Selection.Length == 0)
+            {
+                return;
+            }
+
+            bool haserror = false;
+            if (rbFindShape.Checked)
+            {
+                if (m_FindFields >= 1)
+                    if (!CheckPosLength(txtFindA)) haserror = true;
+                if (m_FindFields >= 2)
+                    if (!CheckPosLength(txtFindB)) haserror = true;
+                if (m_FindFields >= 3)
+                    if (!CheckPosLength(txtFindC)) haserror = true;
+                if (m_FindFields >= 4)
+                    if (!CheckPosLength(txtFindD)) haserror = true;
+                if (m_FindFields >= 5)
+                    if (!CheckPosLength(txtFindE)) haserror = true;
+                if (m_FindFields >= 6)
+                    if (!CheckPosLength(txtFindF)) haserror = true;
+            }
+
+            if (haserror)
+            {
+                MessageBox.Show("Lütfen hatalı değerleri düzeltin.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    // Filter selection
+                    List<ObjectId> list = new List<ObjectId>();
+                    foreach (ObjectId id in m_Selection)
+                    {
+                        RebarPos pos = tr.GetObject(id, OpenMode.ForRead) as RebarPos;
+                        if (pos == null) continue;
+
+                        if (rbFindPosNumber.Checked && cbFindPosNumber.SelectedIndex != -1 && (string)cbFindPosNumber.SelectedItem != pos.Pos)
+                            continue;
+                        if (rbFindCount.Checked && cbFindCount.SelectedIndex != -1 && (string)cbFindCount.SelectedItem != pos.Count)
+                            continue;
+                        if (rbFindDiameter.Checked && cbFindDiameter.SelectedIndex != -1 && (string)cbFindDiameter.SelectedItem != pos.Diameter)
+                            continue;
+                        if (rbFindSpacing.Checked && cbFindSpacing.SelectedIndex != -1 && (string)cbFindSpacing.SelectedItem != pos.Spacing)
+                            continue;
+                        if (rbFindNote.Checked && cbFindNote.SelectedIndex != -1 && (string)cbFindNote.SelectedItem != pos.Note)
+                            continue;
+                        if (rbFindMultiplier.Checked && cbFindMultiplier.SelectedIndex != -1 && (string)cbFindMultiplier.SelectedItem != pos.Multiplier.ToString())
+                            continue;
+                        if (rbFindGroup.Checked && cbFindGroup.SelectedIndex != -1 && m_Groups[(string)cbFindGroup.SelectedItem] != pos.GroupId)
+                            continue;
+                        if (rbFindShape.Checked && m_FindShape != pos.ShapeId)
+                            continue;
+                        if (rbFindShape.Checked && !string.IsNullOrEmpty(txtFindA.Text) && txtFindA.Text != pos.A)
+                            continue;
+                        if (rbFindShape.Checked && !string.IsNullOrEmpty(txtFindB.Text) && txtFindA.Text != pos.B)
+                            continue;
+                        if (rbFindShape.Checked && !string.IsNullOrEmpty(txtFindC.Text) && txtFindA.Text != pos.C)
+                            continue;
+                        if (rbFindShape.Checked && !string.IsNullOrEmpty(txtFindD.Text) && txtFindA.Text != pos.D)
+                            continue;
+                        if (rbFindShape.Checked && !string.IsNullOrEmpty(txtFindE.Text) && txtFindA.Text != pos.E)
+                            continue;
+                        if (rbFindShape.Checked && !string.IsNullOrEmpty(txtFindF.Text) && txtFindA.Text != pos.F)
+                            continue;
+
+                        list.Add(id);
+                    }
+
+                    // Select
+                    Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.SetImpliedSelection(list.ToArray());
+
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void btnReplace_Click(object sender, EventArgs e)
         {
             if (m_Selection == null || m_Selection.Length == 0)
             {

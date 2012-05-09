@@ -139,6 +139,9 @@
     <Compile Include="SelectShapeForm.Designer.cs">
       <DependentUpon>SelectShapeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SpacingTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Commands.resx">
