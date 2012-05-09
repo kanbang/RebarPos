@@ -4,93 +4,208 @@
 
 #include "Calculator.h"
 
-// Example usage
-// std::string infix = "( ( ( -1 + 3 ) / 4 ) * -10 )";
-// double value = CCalculator::evaluate(infix);
-// std::string postfix = CCalculator::infixToPostfix(infix);
-// double value = CCalculator::postfixValue(postfix);
-
-bool CCalculator::isGreaterPrecedence(std::wstring a, std::wstring b) 
+// -------------------------------------------- 
+// Infix arithmetic calculator.                 
+// Supports +, -, *, / and paranthesis          
+//                                              
+// CalcInfix("1 + 3 * (4 + 3)")
+// returns 22.0                                 
+// -------------------------------------------- 
+double CCalculator::CalcInfix(std::wstring str)
 {
-	const std::wstring ops = L"(*/-+";
-	return wcschr(ops.c_str(), a[0]) <= wcschr(ops.c_str(), b[0]);
+	try
+	{
+		return CalcRPN(InfixToRPN(str));
+	}
+	catch(...)
+	{
+		return 0.0;
+	}
 }
 
-bool CCalculator::isOperator(std::wstring op) 
+// -------------------------------------------- 
+// Reverse polish notation arithmetic           
+// calculator.                                  
+//                                              
+// CalcRPN("1 3 4 3 + * +")                    
+// returns 22.0                                 
+// -------------------------------------------- 
+double CCalculator::CalcRPN(std::wstring str)
 {
-	return std::wstring(L"(*/+-").find(op) != std::wstring::npos;
-}
-
-double CCalculator::evaluate(std::wstring expression) 
-{
-	return postfixValue(infixToPostfix(expression));
-}
-
-std::wstring CCalculator::infixToPostfix(std::wstring infix) 
-{
-	std::wstring postfix;
-	std::stack<std::wstring> ops;
-	std::wstringstream ss(infix);
+	std::stack<std::wstring> stack;
 	std::wstring token;
-	while(ss >> token) { //loop through all operands and operators
-		if(token == L")") {
-			std::wstring val;
-			/* pop operator stack all the way back until we 
-			   find the corrisponding opening operator */
-			while((val = ops.top()) != L"(") { 
-				postfix.append(val + L" ");
-				ops.pop();
-			}
-			ops.pop(); //pop the opening operator off the stack
-		}
-		else if(isOperator(token)) {
-			/* While the operator is of lesser precedence 
-			   than the one beneath it, pop until it's not */
-			while(!ops.empty() &&
-				 isGreaterPrecedence(ops.top(), token) &&
-				 ops.top() != L"(") {
-					postfix.append(ops.top() + L" ");
-					ops.pop();
-			}
-			ops.push(token); //add the operator to the stack
-		}
-		else {
-			//if it's not an operator, then just append it to the output string
-			postfix.append(token + L" ");
-		}
-	}
 
-	// append everything else left on the stack
-	while(!ops.empty()) {
-		postfix.append(ops.top() + L" ");
-		ops.pop();
+	for(std::wstring::iterator it = str.begin(); it != str.end(); it++)
+	{
+		wchar_t c = *it;
+		if(IsNumericChar(c))
+		{
+			token = token + c;
+		}
+		else
+		{
+			if(token != L"")
+			{
+				stack.push(token);
+				token = L"";
+			}
+		}
+
+		if(IsOp(c))
+		{
+			double val = 0.0;
+			if(stack.size() >= 2)
+			{
+				double a = _wtof(stack.top().c_str()); stack.pop();
+				double b = _wtof(stack.top().c_str()); stack.pop();
+				switch(c) 
+				{
+					case '*': val = a * b; break;
+					case '/': val = a / b; break;
+					case '+': val = a + b; break;
+					case '-': val = a - b; break;
+				}
+			}
+			std::wstringstream sval;
+			sval << val;
+			str = sval.str();
+			stack.push(sval.str());
+		}
 	}
-	return postfix;
+	if(token != L"")
+	{
+		return _wtof(token.c_str());
+	}
+	else if(stack.empty())
+	{
+		return 0.0;
+	}
+	else
+	{
+		token = stack.top();
+		return _wtof(token.c_str());
+	}
 }
 
-double CCalculator::postfixValue(std::wstring postfix) 
+// -------------------------------------------- 
+// Converts infix expression to reverse polish  
+// notation.                                    
+//                                              
+// InfixToRPN ("1 + 3 * (4 + 3)")               
+// returns "1 3 4 3 + * +"                      
+// -------------------------------------------- 
+std::wstring CCalculator::InfixToRPN(std::wstring str)
 {
-	std::stack <double> vals;
+	std::stack<wchar_t> stack;
+	std::vector<std::wstring> output;
 	std::wstring token;
-	std::wstringstream ss(postfix);
-	while(ss >> token) {
-		// if it's an operator, then evaluate it with the two most 
-		// top operands on the stack and push the result on the stack
-		if(isOperator(token)) {
-			double b = vals.top(); vals.pop();
-			double a = vals.top(); vals.pop();
-			switch(token[0]) {
-				case '*': vals.push(a * b); break;
-				case '/': vals.push(a / b); break;
-				case '+': vals.push(a + b); break;
-				case '-': vals.push(a - b); break;
+
+	for(std::wstring::iterator it = str.begin(); it != str.end(); it++)
+	{
+		wchar_t c = *it;
+		if(IsNumericChar(c))
+		{
+			token = token + c;
+		}
+		else
+		{
+			if(token != L"")
+			{
+				output.push_back(token);
+				token = L"";
 			}
 		}
-		else {
-			vals.push(_wtof(token.c_str())); // push operand to top of stack
+
+		if(IsOp(c))
+		{
+			if(!stack.empty())
+			{
+				while(IsOp(stack.top()) && (OpPrecendence(c) <= OpPrecendence(stack.top())))
+				{
+					output.push_back(std::wstring(&stack.top()));
+					stack.pop();
+				}
+			}
+			stack.push(c);
+		}
+		if(IsLeftParen(c))
+		{
+			stack.push(c);
+		}
+	    if(IsRightParen(c))
+		{
+			if(!stack.empty())
+			{
+				while(!IsLeftParen(stack.top()))
+				{
+					output.push_back(std::wstring(&stack.top()));
+					stack.pop();
+				}
+			}
+			stack.pop();
 		}
 	}
 
-	// final value is the last value on the stack
-	return vals.top();
+	if(token != L"") output.push_back(token);
+	while(!stack.empty())
+	{
+		token = stack.top(); stack.pop();
+		output.push_back(token); // prepend?
+	}
+
+	std::wstring outstr;
+	for(std::vector<std::wstring>::iterator it = output.begin(); it != output.end(); it++)
+	{
+		token = *it;
+		outstr = outstr + token + L" ";
+	}
+	outstr = outstr.substr(0, outstr.length() - 1);
+	return outstr;
+}
+
+// -------------------------------------------- 
+// Determines precendence between operators.    
+// -------------------------------------------- 
+int CCalculator::OpPrecendence(wchar_t op)
+{
+	if(op == '+' || op == '-')
+		return 0;
+	else
+		return 1;
+}
+
+// -------------------------------------------- 
+// Determines if the given character is an      
+// operator.                                    
+// -------------------------------------------- 
+bool CCalculator::IsOp(wchar_t op)
+{
+	return std::wstring(L"+-*/").find(op) != std::wstring::npos;
+}
+
+// -------------------------------------------- 
+// Determines if the given character is an      
+// opening paranthesis.                         
+// -------------------------------------------- 
+bool CCalculator::IsLeftParen(wchar_t op)
+{
+	return op == '(';
+}
+
+// -------------------------------------------- 
+// Determines if the given character is a       
+// closing paranthesis.                         
+// -------------------------------------------- 
+bool CCalculator::IsRightParen(wchar_t op)
+{
+	return op == ')';
+}
+
+// -------------------------------------------- 
+// Determines if the given character is a       
+// number.                                      
+// -------------------------------------------- 
+bool CCalculator::IsNumericChar(wchar_t op)
+{
+	return std::wstring(L"1234567890.").find(op) != std::wstring::npos;
 }

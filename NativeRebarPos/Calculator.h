@@ -6,16 +6,20 @@
 #include <iostream>
 #include <string>
 #include <stack>
+#include <vector>
 #include <sstream>
 
 class CCalculator 
 {
 private:
-	static bool isGreaterPrecedence(std::wstring a, std::wstring b);
-	static bool isOperator(std::wstring op);
+	static int OpPrecendence(wchar_t op);
+	static bool IsOp(wchar_t op);
+	static bool IsLeftParen(wchar_t op);
+	static bool IsRightParen(wchar_t op);
+	static bool IsNumericChar(wchar_t op);
 
 public:
-	static double evaluate(std::wstring expression);
-	static std::wstring infixToPostfix(std::wstring infix);
-	static double postfixValue(std::wstring postfix);
+	static double CalcInfix(std::wstring str);
+	static double CalcRPN(std::wstring str);
+	static std::wstring InfixToRPN(std::wstring str);
 };
