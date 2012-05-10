@@ -9,7 +9,17 @@
 #include <queue>
 #include <math.h>
 
-class Calculator
+// The following is part of the code used to export an API
+// and/or use the exported API.
+//
+#pragma warning( disable: 4275 4251 )
+#ifdef REBARPOS_MODULE
+#define DLLIMPEXP __declspec( dllexport )
+#else
+#define DLLIMPEXP
+#endif
+
+class DLLIMPEXP Calculator
 {
 public:
 	enum Errors
@@ -123,13 +133,13 @@ private:
 	void operator=(Calculator const&) { }
 
 protected:
-	static bool IsOperator(wchar_t c);
-	static bool IsNumeric(wchar_t c);
+	static bool IsOperator(const wchar_t c);
+	static bool IsNumeric(const wchar_t c);
 
-	static std::queue<Token> Tokenize(std::wstring str);
+	static std::queue<Token> Tokenize(const std::wstring str);
 	static std::queue<Token> InfixToRPN(std::queue<Calculator::Token> tokens);
 
 public:
-	static double Evaluate(std::wstring formula);
-	static bool IsValid(std::wstring formula);
+	static double Evaluate(const std::wstring formula);
+	static bool IsValid(const std::wstring formula);
 };

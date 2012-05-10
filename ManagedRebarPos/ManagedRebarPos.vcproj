@@ -338,6 +338,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MgUtility.cpp"
+				>
+			</File>
+			<File
 				RelativePath="Stdafx.cpp"
 				>
 				<FileConfiguration
@@ -388,6 +392,10 @@
 			</File>
 			<File
 				RelativePath=".\MgRebarPos.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MgUtility.h"
 				>
 			</File>
 			<File

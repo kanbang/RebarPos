@@ -2052,8 +2052,16 @@ void CRebarPos::CalcTotalLength(const ACHAR* str, int fieldCount, double scale, 
 	Utility::ReplaceString(length2, L"r", strR);
 
 	// Calculate lengths
-	minLength = Calculator::Evaluate(length1);
-	maxLength = Calculator::Evaluate(length2);
+	try
+	{
+		minLength = Calculator::Evaluate(length1);
+		maxLength = Calculator::Evaluate(length2);
+	}
+	catch(...)
+	{
+		minLength = 0;
+		maxLength = 0;
+	}
 }
 
 void CRebarPos::CalcLength(const ACHAR* str, double scale, double& minLength, double& maxLength, bool& isVar) const
@@ -2100,7 +2108,14 @@ double CRebarPos::CalcConsLength(const ACHAR* str, double scale) const
 	Utility::ReplaceString(length, L"r", strR);
 	
 	// Calculate length
-	return Calculator::Evaluate(length) * scale;
+	try
+	{
+		return Calculator::Evaluate(length) * scale;
+	}
+	catch(...)
+	{
+		return 0.0;
+	}
 }
 const double CRebarPos::BendingRadius(const double d) const
 {

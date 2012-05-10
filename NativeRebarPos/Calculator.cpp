@@ -4,24 +4,24 @@
 
 #include "Calculator.h"
 
-bool Calculator::IsOperator(wchar_t c)
+bool Calculator::IsOperator(const wchar_t c)
 {
 	std::wstring ops = L"+-*/^()";
 	return ops.find(c) != std::wstring::npos;
 }
 
-bool Calculator::IsNumeric(wchar_t c)
+bool Calculator::IsNumeric(const wchar_t c)
 {
 	std::wstring nums = L"1234567890.";
 	return nums.find(c) != std::wstring::npos;
 }
 
-std::queue<Calculator::Token> Calculator::Tokenize(std::wstring str)
+std::queue<Calculator::Token> Calculator::Tokenize(const std::wstring str)
 {
 	std::queue<Calculator::Token> tokens;
 	std::wstring token;
 
-	for(std::wstring::iterator it = str.begin(); it != str.end(); it++)
+	for(std::wstring::const_iterator it = str.begin(); it != str.end(); it++)
 	{
 		wchar_t c = *it;
 		if(IsNumeric(c))
@@ -116,7 +116,7 @@ std::queue<Calculator::Token> Calculator::InfixToRPN(std::queue<Calculator::Toke
 	return output;
 }
 
-double Calculator::Evaluate(std::wstring formula)
+double Calculator::Evaluate(const std::wstring formula)
 {
 	std::queue<Calculator::Token> infixtokens = Tokenize(formula);
 	std::queue<Calculator::Token> rpntokens = InfixToRPN(infixtokens);
@@ -146,7 +146,7 @@ double Calculator::Evaluate(std::wstring formula)
 	return vals.top();
 }
 
-bool Calculator::IsValid(std::wstring formula)
+bool Calculator::IsValid(const std::wstring formula)
 {
 	try
 	{
