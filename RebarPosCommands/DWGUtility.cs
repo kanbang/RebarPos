@@ -105,6 +105,38 @@ namespace RebarPosCommands
             return list.ToArray();
         }
 
+        public static ObjectId[] GetPosWithShape(ObjectId shapeId)
+        {
+            List<ObjectId> list = new List<ObjectId>();
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    BlockTableRecord btr = (BlockTableRecord)tr.GetObject(db.CurrentSpaceId, OpenMode.ForRead);
+                    using (BlockTableRecordEnumerator it = btr.GetEnumerator())
+                    {
+                        while (it.MoveNext())
+                        {
+                            RebarPos pos = tr.GetObject(it.Current, OpenMode.ForRead) as RebarPos;
+                            if (pos != null)
+                            {
+                                if (pos.ShapeId == shapeId)
+                                {
+                                    list.Add(it.Current);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (System.Exception)
+                {
+                    ;
+                }
+            }
+            return list.ToArray();
+        }
+
         public static ObjectId CreateDefaultShapes()
         {
             ObjectId id = ObjectId.Null;
@@ -350,21 +382,18 @@ namespace RebarPosCommands
             return list;
         }
 
-        // Refreshes all items in group
-        public static void RefreshPosInGroup(ObjectId id)
+        // Refreshes given items
+        public static void RefreshPos(IEnumerable<ObjectId> ids)
         {
             Database db = HostApplicationServices.WorkingDatabase;
             using (Transaction tr = db.TransactionManager.StartTransaction())
             {
                 try
                 {
-                    foreach (ObjectId posid in GetPosInGroup(id))
+                    foreach (ObjectId posid in ids)
                     {
                         RebarPos pos = tr.GetObject(posid, OpenMode.ForWrite) as RebarPos;
-                        if (pos != null && pos.GroupId == id)
-                        {
-                            pos.Update();
-                        }
+                        pos.Update();
                     }
 
                     tr.Commit();
@@ -374,6 +403,18 @@ namespace RebarPosCommands
                     ;
                 }
             }
+        }
+
+        // Refreshes all items in group
+        public static void RefreshPosInGroup(ObjectId id)
+        {
+            RefreshPos(GetPosInGroup(id));
+        }
+
+        // Refreshes all items with the given shape
+        public static void RefreshPosWithShape(ObjectId id)
+        {
+            RefreshPos(GetPosWithShape(id));
         }
     }
 }

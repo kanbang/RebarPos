@@ -501,6 +501,8 @@ namespace RebarPosCommands
                                     shape.Items.AddText(text.X, text.Y, text.Height, text.Text, text.Color);
                                 }
                             }
+
+                            DWGUtility.RefreshPosWithShape(copy.id);
                         }
                     }
                     tr.Commit();
