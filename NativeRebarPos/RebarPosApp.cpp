@@ -36,24 +36,8 @@
 #include "appinfo.h"
 #include "tchar.h"
 
-
-extern "C" {
-
 // locally defined entry point invoked by Rx.
-
-AcRx::AppRetCode __declspec(dllexport) acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt);
-
-}
-
-void changeAppNameCallback(const AcRxClass* classObj, TCHAR*& newAppName, int saveVer)
-{
-    if (saveVer == AcDb::kDHL_1014 && classObj == CRebarPos::desc())
-        acutNewString(_T("RebarPos")
-        _T("|Product Desc:     RebarPos ARX App")
-        _T("|Company:          OZOZ"), newAppName);
-}
-
-AcRx::AppRetCode __declspec(dllexport)
+extern "C" AcRx::AppRetCode __declspec(dllexport)
 acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 {
     switch(msg) 
@@ -65,13 +49,13 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 		// Register custom classes
 		CPosShape::rxInit();
 		CPosGroup::rxInit();
-        CRebarPos::rxInit(changeAppNameCallback);
-        
+        CRebarPos::rxInit();
+        acrxBuildClassHierarchy();
+
         // Register a service using the class name.
         if (!acrxServiceIsRegistered(_T("CRebarPos")))
             acrxRegisterService(_T("CRebarPos"));
 
-        acrxBuildClassHierarchy();
         break;
 
     case AcRx::kUnloadAppMsg:
