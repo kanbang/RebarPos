@@ -2095,7 +2095,7 @@ double CRebarPos::CalcConsLength(const ACHAR* str, double scale) const
 
 	// Replace diameter and radius
 	double d = 0.0;
-	if(m_Diameter != NULL && m_Diameter[0] == _T('\0'))
+	if(m_Diameter != NULL && m_Diameter[0] != _T('\0'))
 		d = Utility::StrToDouble(m_Diameter);
 	double r = BendingRadius(d);
 	// Convert units
