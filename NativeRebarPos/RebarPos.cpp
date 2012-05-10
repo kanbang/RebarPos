@@ -60,7 +60,7 @@ Adesk::UInt32 CRebarPos::kCurrentVersionNumber = 1;
 ACRX_DXF_DEFINE_MEMBERS(CRebarPos, AcDbEntity,
 	AcDb::kDHL_CURRENT, AcDb::kMReleaseCurrent,
 	AcDbProxyEntity::kAllAllowedBits, REBARPOS,
-	"RebarPos2.0\
+	"OZOZRebarPos\
 	|Product Desc:     RebarPos Entity\
 	|Company:          OZOZ");
 

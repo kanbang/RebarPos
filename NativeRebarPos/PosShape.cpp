@@ -47,8 +47,8 @@ ACHAR* CPosShape::Table_Name = _T("OZOZ_REBAR_SHAPES");
 //-----------------------------------------------------------------------------
 ACRX_DXF_DEFINE_MEMBERS(CPosShape, AcDbObject,
 	AcDb::kDHL_CURRENT, AcDb::kMReleaseCurrent,
-	AcDbProxyEntity::kAllAllowedBits, POSSHAPE,
-	"RebarPos2.0\
+	AcDbProxyObject::kEraseAllowed, POSSHAPE,
+	"OZOZRebarPos\
 	|Product Desc:     PosShape Entity\
 	|Company:          OZOZ");
 
