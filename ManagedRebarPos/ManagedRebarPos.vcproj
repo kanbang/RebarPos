@@ -47,7 +47,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\..\..\inc"
 				AdditionalUsingDirectories="..\..\..\..\inc"
-				PreprocessorDefinitions=";VC7;"
+				PreprocessorDefinitions="VC7"
 				ExceptionHandling="2"
 				BasicRuntimeChecks="0"
 				SmallerTypeCheck="false"
@@ -121,7 +121,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\..\..\inc"
 				AdditionalUsingDirectories="..\..\..\..\inc"
-				PreprocessorDefinitions=";VC7;"
+				PreprocessorDefinitions="VC7"
 				ExceptionHandling="2"
 				BasicRuntimeChecks="0"
 				SmallerTypeCheck="false"
@@ -196,7 +196,7 @@
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\..\..\inc"
 				AdditionalUsingDirectories="..\..\..\..\inc"
-				PreprocessorDefinitions="VC7;"
+				PreprocessorDefinitions="VC7"
 				ExceptionHandling="2"
 			/>
 			<Tool
@@ -266,7 +266,7 @@
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\..\..\inc"
 				AdditionalUsingDirectories="..\..\..\..\inc"
-				PreprocessorDefinitions="VC7;"
+				PreprocessorDefinitions="VC7"
 				ExceptionHandling="2"
 			/>
 			<Tool

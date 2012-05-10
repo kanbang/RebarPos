@@ -305,10 +305,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\COMRebarPos\COMRebarPos.idl"
-				>
-			</File>
-			<File
 				RelativePath=".\PosGroup.cpp"
 				>
 			</File>
@@ -335,10 +331,6 @@
 			>
 			<File
 				RelativePath=".\Calculator.h"
-				>
-			</File>
-			<File
-				RelativePath="..\COMRebarPos\COMRebarPos_i.c"
 				>
 			</File>
 			<File

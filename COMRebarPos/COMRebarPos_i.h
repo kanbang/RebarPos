@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0500 */
-/* at Thu May 10 18:28:23 2012
+/* at Thu May 10 23:58:36 2012
  */
 /* Compiler settings for .\COMRebarPos.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -305,14 +305,6 @@ EXTERN_C const IID IID_IComRebarPos;
         /* [id][hidden][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *Erase )( 
             IComRebarPos * This,
             /* [retval][out] */ void *retval);
-        
-        /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_ObjectID32 )( 
-            IComRebarPos * This,
-            /* [retval][out] */ signed long *retval);
-        
-        /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_OwnerID32 )( 
-            IComRebarPos * This,
-            /* [retval][out] */ signed long *retval);
         
         /* [id][propget][funcdescattr] */ HRESULT ( STDMETHODCALLTYPE *get_TrueColor )( 
             IComRebarPos * This,
@@ -704,12 +696,6 @@ EXTERN_C const IID IID_IComRebarPos;
 
 #define IComRebarPos_Erase(This,retval)	\
     ( (This)->lpVtbl -> Erase(This,retval) ) 
-
-#define IComRebarPos_get_ObjectID32(This,retval)	\
-    ( (This)->lpVtbl -> get_ObjectID32(This,retval) ) 
-
-#define IComRebarPos_get_OwnerID32(This,retval)	\
-    ( (This)->lpVtbl -> get_OwnerID32(This,retval) ) 
 
 #define IComRebarPos_get_TrueColor(This,retval)	\
     ( (This)->lpVtbl -> get_TrueColor(This,retval) ) 

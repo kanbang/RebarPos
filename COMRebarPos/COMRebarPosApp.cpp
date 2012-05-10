@@ -33,17 +33,17 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpReserved*/)
     {
         _Module.Init(ObjectMap, hInstance);
         DisableThreadLibraryCalls(hInstance);
-       // check if the arx app is loaded or not.
+        // check if the arx app is loaded or not.
         // if not, load it as UI so that we won't have
         // proxy if this dll is unloaded by OS
         if (!::acrxAppIsLoaded(_T("NativeRebarPos.dbx")))
-       {
+        {
             if (!acrxLoadModule(_T("NativeRebarPos.dbx"), false, true))
                 return FALSE; //this will trigger a DLL_PROCESS_DETACH right away
-       }
-       //bump the reference count 
-       acrxLoadModule(_T("NativeRebarPos.dbx"), false, false);
-     }
+        }
+        //bump the reference count 
+        acrxLoadModule(_T("NativeRebarPos.dbx"), false, false);
+    }
     else if (dwReason == DLL_PROCESS_DETACH)
     {
         _Module.Term();
@@ -96,7 +96,8 @@ STDAPI DllUnregisterServer(void)
 extern "C" AcRx::AppRetCode __declspec(dllexport)
 acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt) 
 {
-    switch (msg) {
+    switch (msg) 
+	{
     case AcRx::kInitAppMsg:
         //unlock the application
         acrxDynamicLinker->unlockApplication(pkt);
