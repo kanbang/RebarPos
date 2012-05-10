@@ -503,6 +503,8 @@ namespace RebarPosCommands
                             group.TextStyleId = copy.textStyleId;
                             group.NoteStyleId = copy.noteStyleId;
                             group.NoteScale = copy.noteScale;
+
+                            DWGUtility.RefreshPosInGroup(copy.id);
                         }
 
                         if (!copy.isDeleted && copy.isCurrent)

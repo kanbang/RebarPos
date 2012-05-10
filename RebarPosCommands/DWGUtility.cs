@@ -58,7 +58,7 @@ namespace RebarPosCommands
                     {
                         while (it.MoveNext())
                         {
-                            if(it.Current.ObjectClass ==Autodesk.AutoCAD.Runtime.RXObject.GetClass(typeof(RebarPos)))
+                            if (it.Current.ObjectClass == Autodesk.AutoCAD.Runtime.RXObject.GetClass(typeof(RebarPos)))
                             {
                                 list.Add(it.Current);
                             }
@@ -87,7 +87,7 @@ namespace RebarPosCommands
                         while (it.MoveNext())
                         {
                             RebarPos pos = tr.GetObject(it.Current, OpenMode.ForRead) as RebarPos;
-                            if (pos!=null)
+                            if (pos != null)
                             {
                                 if (pos.GroupId == groupId)
                                 {
@@ -358,18 +358,15 @@ namespace RebarPosCommands
             {
                 try
                 {
-                    BlockTableRecord btr = (BlockTableRecord)tr.GetObject(db.CurrentSpaceId, OpenMode.ForRead);
-                    using (BlockTableRecordEnumerator it = btr.GetEnumerator())
+                    foreach (ObjectId posid in GetPosInGroup(id))
                     {
-                        while (it.MoveNext())
+                        RebarPos pos = tr.GetObject(posid, OpenMode.ForWrite) as RebarPos;
+                        if (pos != null && pos.GroupId == id)
                         {
-                            RebarPos pos = tr.GetObject(it.Current, OpenMode.ForWrite) as RebarPos;
-                            if (pos != null && pos.GroupId == id)
-                            {
-                                pos.Update();
-                            }
+                            pos.Update();
                         }
                     }
+
                     tr.Commit();
                 }
                 catch
