@@ -1,211 +1,160 @@
 //-----------------------------------------------------------------------------
-//----- Calculator.cpp : Implementation of CCalculator
+//----- Calculator.cpp : Implementation of Calculator
 //-----------------------------------------------------------------------------
 
 #include "Calculator.h"
 
-// -------------------------------------------- 
-// Infix arithmetic calculator.                 
-// Supports +, -, *, / and paranthesis          
-//                                              
-// CalcInfix("1 + 3 * (4 + 3)")
-// returns 22.0                                 
-// -------------------------------------------- 
-double CCalculator::CalcInfix(std::wstring str)
+bool Calculator::IsOperator(wchar_t c)
+{
+	std::wstring ops = L"+-*/^()";
+	return ops.find(c) != std::wstring::npos;
+}
+
+bool Calculator::IsNumeric(wchar_t c)
+{
+	std::wstring nums = L"1234567890.";
+	return nums.find(c) != std::wstring::npos;
+}
+
+std::queue<Calculator::Token> Calculator::Tokenize(std::wstring str)
+{
+	std::queue<Calculator::Token> tokens;
+	std::wstring token;
+
+	for(std::wstring::iterator it = str.begin(); it != str.end(); it++)
+	{
+		wchar_t c = *it;
+		if(IsNumeric(c))
+		{
+			token += c;
+		}
+		else if(IsOperator(c))
+		{
+			if(!token.empty())
+			{
+				tokens.push(Calculator::Token(token));
+				token.clear();
+			}
+			tokens.push(Calculator::Token(c));
+		}
+	}
+
+	if(!token.empty())
+	{
+		tokens.push(Calculator::Token(token));
+	}
+
+	return tokens;
+}
+
+std::queue<Calculator::Token> Calculator::InfixToRPN(std::queue<Calculator::Token> tokens)
+{
+	std::queue<Calculator::Token> output;
+	std::stack<Calculator::Token> stack;
+
+	while(!tokens.empty())
+	{
+		Calculator::Token token = tokens.front(); tokens.pop();
+
+		if(!token.IsOp)
+		{
+			// If the token is a number, then add it to the output queue.
+			output.push(token);
+		}
+		else if(token.Op == L'(')
+		{
+			// If the token is a left parenthesis, then push it onto the stack.
+			stack.push(token);
+		}
+		else if(token.Op == L')')
+		{
+			if(stack.empty())
+				throw eParenthesisMisMatch;
+
+			// Pop operators from the stack to the output queue until we find opening parenthesis
+			while(stack.top().Op != L'(')
+			{
+				output.push(stack.top()); stack.pop();
+			}
+
+			if(stack.empty() || stack.top().Op != L'(')
+				throw eParenthesisMisMatch;
+
+			// Pop left parenthesis
+			stack.pop();
+		}
+		else
+		{
+			Token o1 = token;
+			Token o2(L'*');
+			if(!stack.empty()) o2 = stack.top();
+			// Operator (o1)
+			// While there is an operator token, o2, at the top of the stack, and
+			//   either o1 is left-associative and its precedence is less than or equal to that of o2,
+			//   or o1 is right-associative and its precedence is less than that of o2,
+			//   pop o2 off the stack, onto the output queue;
+		    // push o1 onto the stack.
+			while(!stack.empty() && 
+				stack.top().Op != L'(' && stack.top().Op != L')' &&
+				((token.IsLeftAssoc && (token <= stack.top())) || (!token.IsLeftAssoc && (token < stack.top()))))
+				{
+					output.push(stack.top()); stack.pop();
+				}
+			stack.push(token);
+		}
+	}
+
+	// Pop remaining operators to the output queue.
+	while(!stack.empty())
+	{
+		if((stack.top().Op == L'(' || stack.top().Op == L')'))
+			throw eParenthesisMisMatch;
+
+		output.push(stack.top()); stack.pop();
+	}
+
+	return output;
+}
+
+double Calculator::Evaluate(std::wstring formula)
+{
+	std::queue<Calculator::Token> infixtokens = Tokenize(formula);
+	std::queue<Calculator::Token> rpntokens = InfixToRPN(infixtokens);
+	std::stack<double> vals;
+
+	while(!rpntokens.empty())
+	{
+		Calculator::Token token = rpntokens.front(); rpntokens.pop();
+		if(token.IsOp)
+		{
+			if(vals.size() < 2)
+				throw eInvalidFormula;
+			double op2 = vals.top(); vals.pop();
+			double op1 = vals.top(); vals.pop();
+			double res = token.Eval(op1, op2);
+			vals.push(res);
+		}
+		else
+		{
+			vals.push(token.Value);
+		}
+	}
+
+	if(vals.size() != 1)
+		throw eInvalidFormula;
+
+	return vals.top();
+}
+
+bool Calculator::IsValid(std::wstring formula)
 {
 	try
 	{
-		return CalcRPN(InfixToRPN(str));
+		Evaluate(formula);
+		return true;
 	}
 	catch(...)
 	{
-		return 0.0;
+		return false;
 	}
-}
-
-// -------------------------------------------- 
-// Reverse polish notation arithmetic           
-// calculator.                                  
-//                                              
-// CalcRPN("1 3 4 3 + * +")                    
-// returns 22.0                                 
-// -------------------------------------------- 
-double CCalculator::CalcRPN(std::wstring str)
-{
-	std::stack<std::wstring> stack;
-	std::wstring token;
-
-	for(std::wstring::iterator it = str.begin(); it != str.end(); it++)
-	{
-		wchar_t c = *it;
-		if(IsNumericChar(c))
-		{
-			token = token + c;
-		}
-		else
-		{
-			if(token != L"")
-			{
-				stack.push(token);
-				token = L"";
-			}
-		}
-
-		if(IsOp(c))
-		{
-			double val = 0.0;
-			if(stack.size() >= 2)
-			{
-				double a = _wtof(stack.top().c_str()); stack.pop();
-				double b = _wtof(stack.top().c_str()); stack.pop();
-				switch(c) 
-				{
-					case '*': val = a * b; break;
-					case '/': val = a / b; break;
-					case '+': val = a + b; break;
-					case '-': val = a - b; break;
-				}
-			}
-			std::wstringstream sval;
-			sval << val;
-			str = sval.str();
-			stack.push(sval.str());
-		}
-	}
-	if(token != L"")
-	{
-		return _wtof(token.c_str());
-	}
-	else if(stack.empty())
-	{
-		return 0.0;
-	}
-	else
-	{
-		token = stack.top();
-		return _wtof(token.c_str());
-	}
-}
-
-// -------------------------------------------- 
-// Converts infix expression to reverse polish  
-// notation.                                    
-//                                              
-// InfixToRPN ("1 + 3 * (4 + 3)")               
-// returns "1 3 4 3 + * +"                      
-// -------------------------------------------- 
-std::wstring CCalculator::InfixToRPN(std::wstring str)
-{
-	std::stack<wchar_t> stack;
-	std::vector<std::wstring> output;
-	std::wstring token;
-
-	for(std::wstring::iterator it = str.begin(); it != str.end(); it++)
-	{
-		wchar_t c = *it;
-		if(IsNumericChar(c))
-		{
-			token = token + c;
-		}
-		else
-		{
-			if(token != L"")
-			{
-				output.push_back(token);
-				token = L"";
-			}
-		}
-
-		if(IsOp(c))
-		{
-			if(!stack.empty())
-			{
-				while(IsOp(stack.top()) && (OpPrecendence(c) <= OpPrecendence(stack.top())))
-				{
-					output.push_back(std::wstring(&stack.top()));
-					stack.pop();
-				}
-			}
-			stack.push(c);
-		}
-		if(IsLeftParen(c))
-		{
-			stack.push(c);
-		}
-	    if(IsRightParen(c))
-		{
-			if(!stack.empty())
-			{
-				while(!IsLeftParen(stack.top()))
-				{
-					output.push_back(std::wstring(&stack.top()));
-					stack.pop();
-				}
-			}
-			stack.pop();
-		}
-	}
-
-	if(token != L"") output.push_back(token);
-	while(!stack.empty())
-	{
-		token = stack.top(); stack.pop();
-		output.push_back(token); // prepend?
-	}
-
-	std::wstring outstr;
-	for(std::vector<std::wstring>::iterator it = output.begin(); it != output.end(); it++)
-	{
-		token = *it;
-		outstr = outstr + token + L" ";
-	}
-	outstr = outstr.substr(0, outstr.length() - 1);
-	return outstr;
-}
-
-// -------------------------------------------- 
-// Determines precendence between operators.    
-// -------------------------------------------- 
-int CCalculator::OpPrecendence(wchar_t op)
-{
-	if(op == '+' || op == '-')
-		return 0;
-	else
-		return 1;
-}
-
-// -------------------------------------------- 
-// Determines if the given character is an      
-// operator.                                    
-// -------------------------------------------- 
-bool CCalculator::IsOp(wchar_t op)
-{
-	return std::wstring(L"+-*/").find(op) != std::wstring::npos;
-}
-
-// -------------------------------------------- 
-// Determines if the given character is an      
-// opening paranthesis.                         
-// -------------------------------------------- 
-bool CCalculator::IsLeftParen(wchar_t op)
-{
-	return op == '(';
-}
-
-// -------------------------------------------- 
-// Determines if the given character is a       
-// closing paranthesis.                         
-// -------------------------------------------- 
-bool CCalculator::IsRightParen(wchar_t op)
-{
-	return op == ')';
-}
-
-// -------------------------------------------- 
-// Determines if the given character is a       
-// number.                                      
-// -------------------------------------------- 
-bool CCalculator::IsNumericChar(wchar_t op)
-{
-	return std::wstring(L"1234567890.").find(op) != std::wstring::npos;
 }
