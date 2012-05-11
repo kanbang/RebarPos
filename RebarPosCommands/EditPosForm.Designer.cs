@@ -41,6 +41,7 @@
             this.txtPosNote = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
+            this.txtPosSpacing = new RebarPosCommands.SpacingTextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.txtPosCount = new System.Windows.Forms.TextBox();
@@ -48,6 +49,7 @@
             this.txtPosMarker = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.posShapeView = new RebarPosCommands.PosShapeView();
             this.btnMeasureF = new System.Windows.Forms.Button();
             this.btnMeasureE = new System.Windows.Forms.Button();
             this.btnMeasureD = new System.Windows.Forms.Button();
@@ -85,8 +87,6 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.posShapeView = new RebarPosCommands.PosShapeView();
-            this.txtPosSpacing = new RebarPosCommands.SpacingTextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -214,6 +214,16 @@
             this.label16.TabIndex = 13;
             this.label16.Text = "&Grup";
             // 
+            // txtPosSpacing
+            // 
+            this.txtPosSpacing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPosSpacing.Location = new System.Drawing.Point(97, 98);
+            this.txtPosSpacing.Name = "txtPosSpacing";
+            this.txtPosSpacing.Size = new System.Drawing.Size(100, 20);
+            this.txtPosSpacing.TabIndex = 8;
+            this.txtPosSpacing.Validating += new System.ComponentModel.CancelEventHandler(this.txtPosSpacing_Validating);
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -308,6 +318,23 @@
             this.groupBox2.Size = new System.Drawing.Size(379, 339);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
+            // 
+            // posShapeView
+            // 
+            this.posShapeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.posShapeView.BackColor = System.Drawing.Color.Black;
+            this.posShapeView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.posShapeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.posShapeView.ForeColor = System.Drawing.Color.White;
+            this.posShapeView.Location = new System.Drawing.Point(22, 19);
+            this.posShapeView.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.posShapeView.Name = "posShapeView";
+            this.posShapeView.ShapeName = "posShapeView";
+            this.posShapeView.Size = new System.Drawing.Size(340, 133);
+            this.posShapeView.TabIndex = 0;
+            this.posShapeView.Click += new System.EventHandler(this.posShapeView_Click);
             // 
             // btnMeasureF
             // 
@@ -674,35 +701,9 @@
             this.errorProvider.ContainerControl = this;
             this.errorProvider.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProvider.Icon")));
             // 
-            // posShapeView
-            // 
-            this.posShapeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.posShapeView.BackColor = System.Drawing.Color.Black;
-            this.posShapeView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.posShapeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.posShapeView.ForeColor = System.Drawing.Color.White;
-            this.posShapeView.Location = new System.Drawing.Point(22, 19);
-            this.posShapeView.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.posShapeView.Name = "posShapeView";
-            this.posShapeView.ShapeName = "posShapeView";
-            this.posShapeView.Size = new System.Drawing.Size(340, 133);
-            this.posShapeView.TabIndex = 0;
-            this.posShapeView.Click += new System.EventHandler(this.posShapeView_Click);
-            // 
-            // txtPosSpacing
-            // 
-            this.txtPosSpacing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPosSpacing.Location = new System.Drawing.Point(97, 98);
-            this.txtPosSpacing.Name = "txtPosSpacing";
-            this.txtPosSpacing.Size = new System.Drawing.Size(100, 20);
-            this.txtPosSpacing.TabIndex = 8;
-            this.txtPosSpacing.Validating += new System.ComponentModel.CancelEventHandler(this.txtPosSpacing_Validating);
-            // 
             // EditPosForm
             // 
+            this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;

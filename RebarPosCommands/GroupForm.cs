@@ -569,6 +569,8 @@ namespace RebarPosCommands
                     errorProvider.SetError(txtDiameterList, "Çaplar tam sayı olarak girilip boşluk karakteri ile ayrılmalıdır.");
                     e.Cancel = true;
                 }
+                else
+                    errorProvider.SetError(txtDiameterList, "");
             }
         }
 

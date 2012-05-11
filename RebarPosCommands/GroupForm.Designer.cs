@@ -36,8 +36,10 @@
             this.cbDrawingUnit = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.txtDiameterList = new System.Windows.Forms.TextBox();
             this.txtMaxLength = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.chkBending = new System.Windows.Forms.CheckBox();
             this.btnOK = new System.Windows.Forms.Button();
@@ -51,6 +53,7 @@
             this.btnRemove = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
             this.gbDisplay = new System.Windows.Forms.GroupBox();
+            this.posStylePreview = new RebarPosCommands.PosStylePreview();
             this.btnPickCurrentGroupColor = new System.Windows.Forms.Button();
             this.btnPickGroupColor = new System.Windows.Forms.Button();
             this.cbNoteStyle = new System.Windows.Forms.ComboBox();
@@ -76,9 +79,6 @@
             this.txtFormula = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.label17 = new System.Windows.Forms.Label();
-            this.txtDiameterList = new System.Windows.Forms.TextBox();
-            this.posStylePreview = new RebarPosCommands.PosStylePreview();
             this.gbOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udPrecision)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -165,6 +165,16 @@
             this.label3.TabIndex = 2;
             this.label3.Text = "&Görüntülenen Birim";
             // 
+            // txtDiameterList
+            // 
+            this.txtDiameterList.Location = new System.Drawing.Point(20, 194);
+            this.txtDiameterList.Multiline = true;
+            this.txtDiameterList.Name = "txtDiameterList";
+            this.txtDiameterList.Size = new System.Drawing.Size(268, 33);
+            this.txtDiameterList.TabIndex = 10;
+            this.txtDiameterList.Validated += new System.EventHandler(this.txtDiameterList_Validated);
+            this.txtDiameterList.Validating += new System.ComponentModel.CancelEventHandler(this.txtDiameterList_Validating);
+            // 
             // txtMaxLength
             // 
             this.txtMaxLength.Location = new System.Drawing.Point(188, 115);
@@ -182,6 +192,15 @@
             this.label2.Size = new System.Drawing.Size(58, 13);
             this.label2.TabIndex = 0;
             this.label2.Text = "Çizim &Birimi";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(17, 178);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(104, 13);
+            this.label17.TabIndex = 9;
+            this.label17.Text = "&Standart Çap Listesi:";
             // 
             // label1
             // 
@@ -360,6 +379,26 @@
             this.gbDisplay.TabIndex = 2;
             this.gbDisplay.TabStop = false;
             this.gbDisplay.Text = "Görünüm &Ayarları";
+            // 
+            // posStylePreview
+            // 
+            this.posStylePreview.BackColor = System.Drawing.Color.Black;
+            this.posStylePreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.posStylePreview.CircleColor = System.Drawing.Color.Yellow;
+            this.posStylePreview.CurrentGroupHighlightColor = System.Drawing.Color.Silver;
+            this.posStylePreview.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.posStylePreview.Formula1 = "[M:C][N][\"T\":D][\"/\":S][\" L=\":L]";
+            this.posStylePreview.Formula2 = "[M:C][N][\"T\":D][\"/\":S]";
+            this.posStylePreview.Formula3 = "[M:C]";
+            this.posStylePreview.GroupColor = System.Drawing.Color.Gray;
+            this.posStylePreview.Location = new System.Drawing.Point(314, 207);
+            this.posStylePreview.MultiplierColor = System.Drawing.Color.Gray;
+            this.posStylePreview.Name = "posStylePreview";
+            this.posStylePreview.NoteColor = System.Drawing.Color.Orange;
+            this.posStylePreview.PosColor = System.Drawing.Color.Red;
+            this.posStylePreview.Size = new System.Drawing.Size(268, 114);
+            this.posStylePreview.TabIndex = 24;
+            this.posStylePreview.TextColor = System.Drawing.Color.Red;
             // 
             // btnPickCurrentGroupColor
             // 
@@ -592,45 +631,6 @@
             // 
             this.errorProvider.ContainerControl = this;
             this.errorProvider.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProvider.Icon")));
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(17, 178);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(104, 13);
-            this.label17.TabIndex = 9;
-            this.label17.Text = "&Standart Çap Listesi:";
-            // 
-            // txtDiameterList
-            // 
-            this.txtDiameterList.Location = new System.Drawing.Point(20, 194);
-            this.txtDiameterList.Multiline = true;
-            this.txtDiameterList.Name = "txtDiameterList";
-            this.txtDiameterList.Size = new System.Drawing.Size(268, 33);
-            this.txtDiameterList.TabIndex = 10;
-            this.txtDiameterList.Validated += new System.EventHandler(this.txtDiameterList_Validated);
-            this.txtDiameterList.Validating += new System.ComponentModel.CancelEventHandler(this.txtDiameterList_Validating);
-            // 
-            // posStylePreview
-            // 
-            this.posStylePreview.BackColor = System.Drawing.Color.Black;
-            this.posStylePreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.posStylePreview.CircleColor = System.Drawing.Color.Yellow;
-            this.posStylePreview.CurrentGroupHighlightColor = System.Drawing.Color.Silver;
-            this.posStylePreview.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.posStylePreview.Formula1 = "[M:C][N][\"T\":D][\"/\":S][\" L=\":L]";
-            this.posStylePreview.Formula2 = "[M:C][N][\"T\":D][\"/\":S]";
-            this.posStylePreview.Formula3 = "[M:C]";
-            this.posStylePreview.GroupColor = System.Drawing.Color.Gray;
-            this.posStylePreview.Location = new System.Drawing.Point(314, 207);
-            this.posStylePreview.MultiplierColor = System.Drawing.Color.Gray;
-            this.posStylePreview.Name = "posStylePreview";
-            this.posStylePreview.NoteColor = System.Drawing.Color.Orange;
-            this.posStylePreview.PosColor = System.Drawing.Color.Red;
-            this.posStylePreview.Size = new System.Drawing.Size(268, 114);
-            this.posStylePreview.TabIndex = 24;
-            this.posStylePreview.TextColor = System.Drawing.Color.Red;
             // 
             // GroupForm
             // 
