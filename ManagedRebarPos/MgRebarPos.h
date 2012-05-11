@@ -7,6 +7,7 @@
 #include "..\NativeRebarPos\RebarPos.h"
 
 using namespace System;
+using namespace System::Runtime::InteropServices;
 using namespace Autodesk::AutoCAD::Geometry;
 using namespace Autodesk::AutoCAD::DatabaseServices;
 
@@ -88,6 +89,10 @@ namespace OZOZ
 		public:
 			void Update();
 			HitTestResult HitTest(Point3d pt);
+
+		public:
+			static bool GetTotalLengths(String^ formula, int fieldCount, double scale, String^ a, String^ b, String^ c, String^ d, String^ e, String^ f, String^ diameter, int precision, [Out] double% minLength, [Out] double% maxLength, [Out] bool% isVar);
+			static double BendingRadius(double d);
         };
     }
 

@@ -246,3 +246,26 @@ RebarPos::HitTestResult RebarPos::HitTest(Point3d pt)
 {
 	return static_cast<RebarPos::HitTestResult>(GetImpObj()->HitTest(GETPOINT3D(pt)));
 }
+
+//*************************************************************************
+// Static Methods
+//*************************************************************************
+bool RebarPos::GetTotalLengths(String^ formula, int fieldCount, double scale, String^ a, String^ b, String^ c, String^ d, String^ e, String^ f, String^ diameter, int precision, [Out] double% minLength, [Out] double% maxLength, [Out] bool% isVar)
+{
+	double len1;
+	double len2;
+	bool var;
+
+	bool check = CRebarPos::GetTotalLengths(StringToWchar(formula), fieldCount, scale, StringToWchar(a), StringToWchar(b), StringToWchar(c), StringToWchar(d), StringToWchar(e), StringToWchar(f), StringToWchar(diameter), precision, len1, len2, var);
+
+	minLength = len1;
+	maxLength = len2;
+	isVar = var;
+
+	return check;
+}
+
+double RebarPos::BendingRadius(double d)
+{
+	return CRebarPos::BendingRadius(d);
+}
