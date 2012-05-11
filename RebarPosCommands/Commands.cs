@@ -4,6 +4,7 @@ using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.DatabaseServices;
 using OZOZ.RebarPosWrapper;
+using System.Windows.Forms;
 
 
 // This line is not mandatory, but improves loading performances
@@ -49,7 +50,7 @@ namespace RebarPosCommands
                 PromptEntityOptions opts = new PromptEntityOptions("Poz secin veya [Yeni/Numaralandir/Kopyala/Grup/kOntrol/Metraj/bul Degistir/numara Sil/Acilimlar]: ",
                     "New Numbering Copy Group Check BOM Find Empty Shapes");
                 opts.AllowNone = false;
-                PromptEntityResult result = Application.DocumentManager.MdiActiveDocument.Editor.GetEntity(opts);
+                PromptEntityResult result = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetEntity(opts);
 
                 if (result.Status == PromptStatus.Keyword)
                 {
@@ -71,9 +72,11 @@ namespace RebarPosCommands
                             PosGroups();
                             break;
                         case "Check":
+                            MessageBox.Show("Bu komut henüz tamamlanmadı.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             // CheckPos();
                             break;
                         case "BOM":
+                            MessageBox.Show("Bu komut henüz tamamlanmadı.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             // DrawBOM();
                             break;
                         case "Find":
