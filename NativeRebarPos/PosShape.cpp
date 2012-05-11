@@ -238,7 +238,7 @@ Acad::ErrorStatus CPosShape::dwgOutFields(AcDbDwgFiler *pFiler) const
 		{
 		case CShape::Line:
 			{
-				CShapeLine* line = static_cast<CShapeLine*>(shape);
+				CShapeLine* line = dynamic_cast<CShapeLine*>(shape);
 				pFiler->writeDouble(line->x1);
 				pFiler->writeDouble(line->y1);
 				pFiler->writeDouble(line->x2);
@@ -247,7 +247,7 @@ Acad::ErrorStatus CPosShape::dwgOutFields(AcDbDwgFiler *pFiler) const
 			break;
 		case CShape::Arc:
 			{
-				CShapeArc* arc = (CShapeArc*)shape;
+				CShapeArc* arc = dynamic_cast<CShapeArc*>(shape);
 				pFiler->writeDouble(arc->x);
 				pFiler->writeDouble(arc->y);
 				pFiler->writeDouble(arc->r);
@@ -257,7 +257,7 @@ Acad::ErrorStatus CPosShape::dwgOutFields(AcDbDwgFiler *pFiler) const
 			break;
 		case CShape::Text:
 			{
-				CShapeText* text = (CShapeText*)shape;
+				CShapeText* text = dynamic_cast<CShapeText*>(shape);
 				pFiler->writeDouble(text->x);
 				pFiler->writeDouble(text->y);
 				pFiler->writeDouble(text->height);
@@ -396,7 +396,7 @@ Acad::ErrorStatus CPosShape::dxfOutFields(AcDbDxfFiler *pFiler) const
 		{
 		case CShape::Line:
 			{
-				CShapeLine* line = static_cast<CShapeLine*>(shape);
+				CShapeLine* line = dynamic_cast<CShapeLine*>(shape);
 				pFiler->writeDouble(AcDb::kDxfXCoord, line->x1);
 				pFiler->writeDouble(AcDb::kDxfYCoord, line->y1);
 				pFiler->writeDouble(AcDb::kDxfXCoord + 1, line->x2);
@@ -405,7 +405,7 @@ Acad::ErrorStatus CPosShape::dxfOutFields(AcDbDxfFiler *pFiler) const
 			break;
 		case CShape::Arc:
 			{
-				CShapeArc* arc = (CShapeArc*)shape;
+				CShapeArc* arc = dynamic_cast<CShapeArc*>(shape);
 				pFiler->writeDouble(AcDb::kDxfXCoord, arc->x);
 				pFiler->writeDouble(AcDb::kDxfYCoord, arc->y);
 				pFiler->writeDouble(AcDb::kDxfReal, arc->r);
@@ -415,7 +415,7 @@ Acad::ErrorStatus CPosShape::dxfOutFields(AcDbDxfFiler *pFiler) const
 			break;
 		case CShape::Text:
 			{
-				CShapeText* text = (CShapeText*)shape;
+				CShapeText* text = dynamic_cast<CShapeText*>(shape);
 				pFiler->writeDouble(AcDb::kDxfXCoord, text->x);
 				pFiler->writeDouble(AcDb::kDxfYCoord, text->y);
 				pFiler->writeDouble(AcDb::kDxfTxtSize, text->height);

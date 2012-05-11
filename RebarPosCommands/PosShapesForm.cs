@@ -55,6 +55,8 @@ namespace RebarPosCommands
         List<ShapeCopy> m_Copies;
         Dictionary<string, ObjectId> m_Shapes;
 
+        public bool ShowShapes { get { return chkShowShapes.Checked; } }
+
         public PosShapesForm()
         {
             InitializeComponent();
@@ -66,8 +68,10 @@ namespace RebarPosCommands
             posShapeView.BackColor = ColorTranslator.FromOle((int)indexColor);
         }
 
-        public bool Init()
+        public bool Init(bool showShapes)
         {
+            chkShowShapes.Checked = showShapes;
+
             m_Shapes = DWGUtility.GetShapes();
 
             if (m_Shapes.Count == 0)
@@ -127,7 +131,7 @@ namespace RebarPosCommands
                 }
                 catch (System.Exception ex)
                 {
-                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos");
+                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                     return false;
                 }
             }
@@ -413,7 +417,7 @@ namespace RebarPosCommands
                 }
                 catch (System.Exception ex)
                 {
-                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos");
+                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                 }
             }
 
@@ -509,7 +513,7 @@ namespace RebarPosCommands
                 }
                 catch (System.Exception ex)
                 {
-                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos");
+                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                 }
             }
 

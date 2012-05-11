@@ -8,10 +8,8 @@
 #error _DEBUG should not be defined except in internal Adesk debug builds
 #endif
 
-#include <gcroot.h>
-#include "mgdinterop.h"
-
 #include "MgPosShape.h"
+#include "Marshal.h"
 
 using namespace OZOZ::RebarPosWrapper;
 
@@ -35,11 +33,11 @@ PosShape::PosShape(System::IntPtr unmanagedPointer, bool autoDelete)
 //*************************************************************************
 String^ PosShape::Name::get()
 {
-    return WcharToString(GetImpObj()->Name());
+	return Marshal::WcharToString(GetImpObj()->Name());
 }
 void PosShape::Name::set(String^ value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setName(StringToWchar(value)));
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setName(Marshal::StringToWchar(value)));
 }
 
 void PosShape::Fields::set(int value)
@@ -53,20 +51,20 @@ int PosShape::Fields::get()
 
 void PosShape::Formula::set(String^ value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormula(StringToWchar(value)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormula(Marshal::StringToWchar(value)));
 }
 String^ PosShape::Formula::get()
 {
-    return WcharToString(GetImpObj()->Formula());
+    return Marshal::WcharToString(GetImpObj()->Formula());
 }
 
 void PosShape::FormulaBending::set(String^ value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormulaBending(StringToWchar(value)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormulaBending(Marshal::StringToWchar(value)));
 }
 String^ PosShape::FormulaBending::get()
 {
-    return WcharToString(GetImpObj()->FormulaBending());
+    return Marshal::WcharToString(GetImpObj()->FormulaBending());
 }
 
 PosShape::ShapeCollection^ PosShape::Items::get()
@@ -121,7 +119,7 @@ void PosShape::ShapeCollection::AddText(double x, double y, double height, Strin
 	text->x = x;
 	text->y = y;
 	text->height = height;
-	acutUpdString(StringToWchar(str), text->text);
+	acutUpdString(Marshal::StringToWchar(str), text->text);
 	m_Parent->GetImpObj()->AddShape(text);
 }
 
@@ -148,7 +146,7 @@ PosShape::Shape^ PosShape::ShapeCollection::default::get(int index)
 	{
 	case CShape::Line:
 		{
-			const CShapeLine* line = static_cast<const CShapeLine*>(shape);
+			const CShapeLine* line = dynamic_cast<const CShapeLine*>(shape);
 			ShapeLine^ rshape = gcnew ShapeLine();
 			rshape->Color = Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, shape->color);
 			rshape->X1 = line->x1;
@@ -160,7 +158,7 @@ PosShape::Shape^ PosShape::ShapeCollection::default::get(int index)
 		break;
 	case CShape::Arc:
 		{
-			const CShapeArc* arc = static_cast<const CShapeArc*>(shape);
+			const CShapeArc* arc = dynamic_cast<const CShapeArc*>(shape);
 			ShapeArc^ rshape = gcnew ShapeArc();
 			rshape->Color = Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, shape->color);
 			rshape->X = arc->x;
@@ -173,13 +171,13 @@ PosShape::Shape^ PosShape::ShapeCollection::default::get(int index)
 		break;
 	case CShape::Text:
 		{
-			const CShapeText* text = static_cast<const CShapeText*>(shape);
+			const CShapeText* text = dynamic_cast<const CShapeText*>(shape);
 			ShapeText^ rshape = gcnew ShapeText();
 			rshape->Color = Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, shape->color);
 			rshape->X = text->x;
 			rshape->Y = text->y;
 			rshape->Height = text->height;
-			rshape->Text = WcharToString(text->text);
+			rshape->Text = Marshal::WcharToString(text->text);
 			return rshape;
 		}
 		break;
@@ -192,7 +190,7 @@ void PosShape::ShapeCollection::default::set(int index, PosShape::Shape^ value)
 {
 	if(value->GetType() == ShapeLine::typeid)
 	{
-		ShapeLine^ rshape = static_cast<ShapeLine^>(value);
+		ShapeLine^ rshape = dynamic_cast<ShapeLine^>(value);
 		CShapeLine* line = new CShapeLine();
 		line->color = rshape->Color->ColorIndex;
 		line->x1 = rshape->X1;
@@ -203,7 +201,7 @@ void PosShape::ShapeCollection::default::set(int index, PosShape::Shape^ value)
 	}
 	else if(value->GetType() == ShapeArc::typeid)
 	{
-		ShapeArc^ rshape = static_cast<ShapeArc^>(value);
+		ShapeArc^ rshape = dynamic_cast<ShapeArc^>(value);
 		CShapeArc* arc = new CShapeArc();
 		arc->color = rshape->Color->ColorIndex;
 		arc->x = rshape->X;
@@ -215,13 +213,13 @@ void PosShape::ShapeCollection::default::set(int index, PosShape::Shape^ value)
 	}
 	else if(value->GetType() == ShapeText::typeid)
 	{
-		ShapeText^ rshape = static_cast<ShapeText^>(value);
+		ShapeText^ rshape = dynamic_cast<ShapeText^>(value);
 		CShapeText* text = new CShapeText();
 		text->color = rshape->Color->ColorIndex;
 		text->x = rshape->X;
 		text->y = rshape->Y;
 		text->height = rshape->Height;
-		acutUpdString(StringToWchar(rshape->Text), text->text);
+		acutUpdString(Marshal::StringToWchar(rshape->Text), text->text);
 		m_Parent->GetImpObj()->SetShape(index, text);
 	}
 	else
@@ -235,5 +233,5 @@ void PosShape::ShapeCollection::default::set(int index, PosShape::Shape^ value)
 //*************************************************************************
 String^ PosShape::TableName::get()
 {
-	return WcharToString(CPosShape::GetTableName());
+	return Marshal::WcharToString(CPosShape::GetTableName());
 }

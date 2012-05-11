@@ -5,8 +5,12 @@
 #pragma once
 
 #include "..\NativeRebarPos\RebarPos.h"
+#include "MgPosGroup.h"
+#include "MgPosShape.h"
 
 using namespace System;
+using namespace System::Collections;
+using namespace System::Runtime::InteropServices;
 using namespace Autodesk::AutoCAD::Geometry;
 using namespace Autodesk::AutoCAD::DatabaseServices;
 
@@ -88,6 +92,11 @@ namespace OZOZ
 		public:
 			void Update();
 			HitTestResult HitTest(Point3d pt);
+
+		public:
+			static bool GetTotalLengths(String^ formula, int fieldCount, PosGroup::DrawingUnits inputUnit, String^ a, String^ b, String^ c, String^ d, String^ e, String^ f, String^ diameter, int precision, [Out] double% minLength, [Out] double% maxLength, [Out] bool% isVar);
+			static double ConvertLength(double length, PosGroup::DrawingUnits fromUnit, PosGroup::DrawingUnits toUnit);
+			static double BendingRadius(double d);
         };
     }
 

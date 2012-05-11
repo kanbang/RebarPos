@@ -5,8 +5,6 @@
 #error _DEBUG should not be defined except in internal Adesk debug builds
 #endif
 
-#include <gcroot.h>
-#include <vcclr.h>
 #include "mgdinterop.h" 
 
 #include "MgPosShape.h"

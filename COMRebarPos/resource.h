@@ -1,11 +1,9 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
-// (C) Copyright 1998 by Autodesk, Inc.
+// Microsoft Visual C++ generated include file.
 // Used by COMRebarPos.rc
 //
 #define IDS_PROJNAME                    100
-#define IDR_COMREBARPOS                  101
-#define IDS_OPM_NORMALXYZ               102
+#define IDR_COMREBARPOS                 101
 
 // Next default values for new objects
 // 

@@ -8,10 +8,8 @@
 #error _DEBUG should not be defined except in internal Adesk debug builds
 #endif
 
-#include <gcroot.h>
-#include "mgdinterop.h"
-
 #include "MgRebarPos.h"
+#include "Marshal.h"
 
 using namespace OZOZ::RebarPosWrapper;
 
@@ -33,17 +31,17 @@ RebarPos::RebarPos(System::IntPtr unmanagedPointer, bool autoDelete)
 //*************************************************************************
 Vector3d RebarPos::DirectionVector::get()
 {
-	return ToVector3d (GetImpObj()->DirectionVector());
+	return Marshal::ToVector3d (GetImpObj()->DirectionVector());
 }
 
 Vector3d RebarPos::UpVector::get()
 {
-	return ToVector3d (GetImpObj()->UpVector());
+	return Marshal::ToVector3d (GetImpObj()->UpVector());
 }
 
 Vector3d RebarPos::NormalVector::get()
 {
-	return ToVector3d (GetImpObj()->NormalVector());
+	return Marshal::ToVector3d (GetImpObj()->NormalVector());
 }
 
 double RebarPos::Width::get()
@@ -58,65 +56,65 @@ double RebarPos::Height::get()
 
 void RebarPos::BasePoint::set(Point3d point)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setBasePoint(GETPOINT3D(point)));
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setBasePoint(Marshal::FromPoint3d(point)));
 }
 Point3d RebarPos::BasePoint::get()
 {
-    return ToPoint3d (GetImpObj()->BasePoint());
+    return Marshal::ToPoint3d (GetImpObj()->BasePoint());
 }
 
 void RebarPos::NoteGrip::set(Point3d point)
 {
-  Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setNoteGrip(GETPOINT3D(point)));
+  Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setNoteGrip(Marshal::FromPoint3d(point)));
 }
 Point3d RebarPos::NoteGrip::get()
 {
-    return ToPoint3d (GetImpObj()->NoteGrip());
+    return Marshal::ToPoint3d (GetImpObj()->NoteGrip());
 }
 
 void RebarPos::Pos::set(String^ value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setPos(StringToWchar(value)));
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setPos(Marshal::StringToWchar(value)));
 }
 String^ RebarPos::Pos::get()
 {
-    return WcharToString(GetImpObj()->Pos());
+    return Marshal::WcharToString(GetImpObj()->Pos());
 }
 
 void RebarPos::Note::set(String^ value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setNote(StringToWchar(value)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setNote(Marshal::StringToWchar(value)));
 }
 String^ RebarPos::Note::get()
 {
-    return WcharToString(GetImpObj()->Note());
+    return Marshal::WcharToString(GetImpObj()->Note());
 }
 
 void RebarPos::Count::set(String^ value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setCount(StringToWchar(value)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setCount(Marshal::StringToWchar(value)));
 }
 String^ RebarPos::Count::get()
 {
-    return WcharToString(GetImpObj()->Count());
+    return Marshal::WcharToString(GetImpObj()->Count());
 }
 
 void RebarPos::Diameter::set(String^ value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setDiameter(StringToWchar(value)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setDiameter(Marshal::StringToWchar(value)));
 }
 String^ RebarPos::Diameter::get()
 {
-    return WcharToString(GetImpObj()->Diameter());
+    return Marshal::WcharToString(GetImpObj()->Diameter());
 }
 
 void RebarPos::Spacing::set(String^ value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setSpacing(StringToWchar(value)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setSpacing(Marshal::StringToWchar(value)));
 }
 String^ RebarPos::Spacing::get()
 {
-    return WcharToString(GetImpObj()->Spacing());
+    return Marshal::WcharToString(GetImpObj()->Spacing());
 }
 
 void RebarPos::Multiplier::set(int value)
@@ -139,56 +137,56 @@ RebarPos::DisplayStyle RebarPos::Display::get()
 
 void RebarPos::A::set(String^ value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setA(StringToWchar(value)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setA(Marshal::StringToWchar(value)));
 }
 String^ RebarPos::A::get()
 {
-    return WcharToString(GetImpObj()->A());
+    return Marshal::WcharToString(GetImpObj()->A());
 }
 
 void RebarPos::B::set(String^ value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setB(StringToWchar(value)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setB(Marshal::StringToWchar(value)));
 }
 String^ RebarPos::B::get()
 {
-    return WcharToString(GetImpObj()->B());
+    return Marshal::WcharToString(GetImpObj()->B());
 }
 
 void RebarPos::C::set(String^ value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setC(StringToWchar(value)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setC(Marshal::StringToWchar(value)));
 }
 String^ RebarPos::C::get()
 {
-    return WcharToString(GetImpObj()->C());
+    return Marshal::WcharToString(GetImpObj()->C());
 }
 
 void RebarPos::D::set(String^ value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setD(StringToWchar(value)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setD(Marshal::StringToWchar(value)));
 }
 String^ RebarPos::D::get()
 {
-    return WcharToString(GetImpObj()->D());
+    return Marshal::WcharToString(GetImpObj()->D());
 }
 
 void RebarPos::E::set(String^ value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setE(StringToWchar(value)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setE(Marshal::StringToWchar(value)));
 }
 String^ RebarPos::E::get()
 {
-    return WcharToString(GetImpObj()->E());
+    return Marshal::WcharToString(GetImpObj()->E());
 }
 
 void RebarPos::F::set(String^ value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setF(StringToWchar(value)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setF(Marshal::StringToWchar(value)));
 }
 String^ RebarPos::F::get()
 {
-    return WcharToString(GetImpObj()->F());
+    return Marshal::WcharToString(GetImpObj()->F());
 }
 
 bool RebarPos::IsVarLength::get()
@@ -198,7 +196,7 @@ bool RebarPos::IsVarLength::get()
 
 String^ RebarPos::Length::get()
 {
-    return WcharToString(GetImpObj()->Length());
+    return Marshal::WcharToString(GetImpObj()->Length());
 }
 
 double RebarPos::MinLength::get()
@@ -213,25 +211,25 @@ double RebarPos::MaxLength::get()
 
 String^ RebarPos::PosKey::get()
 {
-    return WcharToString(GetImpObj()->PosKey());
+    return Marshal::WcharToString(GetImpObj()->PosKey());
 }
 
 void RebarPos::ShapeId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setShapeId(GETOBJECTID(value)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setShapeId(Marshal::FromObjectId(value)));
 }
 Autodesk::AutoCAD::DatabaseServices::ObjectId RebarPos::ShapeId::get()
 {
-	return ToObjectId(GetImpObj()->ShapeId());
+	return Marshal::ToObjectId(GetImpObj()->ShapeId());
 }
 
 void RebarPos::GroupId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setGroupId(GETOBJECTID(value)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setGroupId(Marshal::FromObjectId(value)));
 }
 Autodesk::AutoCAD::DatabaseServices::ObjectId RebarPos::GroupId::get()
 {
-	return ToObjectId(GetImpObj()->GroupId());
+	return Marshal::ToObjectId(GetImpObj()->GroupId());
 }
 
 //*************************************************************************
@@ -244,5 +242,33 @@ void RebarPos::Update()
 
 RebarPos::HitTestResult RebarPos::HitTest(Point3d pt)
 {
-	return static_cast<RebarPos::HitTestResult>(GetImpObj()->HitTest(GETPOINT3D(pt)));
+	return static_cast<RebarPos::HitTestResult>(GetImpObj()->HitTest(Marshal::FromPoint3d(pt)));
+}
+
+//*************************************************************************
+// Static Methods
+//*************************************************************************
+bool RebarPos::GetTotalLengths(String^ formula, int fieldCount, PosGroup::DrawingUnits inputUnit, String^ a, String^ b, String^ c, String^ d, String^ e, String^ f, String^ diameter, int precision, [Out] double% minLength, [Out] double% maxLength, [Out] bool% isVar)
+{
+	double len1;
+	double len2;
+	bool var;
+
+	bool check = CRebarPos::GetTotalLengths(Marshal::StringToWchar(formula), fieldCount, static_cast<CPosGroup::DrawingUnits>(inputUnit), Marshal::StringToWchar(a), Marshal::StringToWchar(b), Marshal::StringToWchar(c), Marshal::StringToWchar(d), Marshal::StringToWchar(e), Marshal::StringToWchar(f), Marshal::StringToWchar(diameter), precision, len1, len2, var);
+
+	minLength = len1;
+	maxLength = len2;
+	isVar = var;
+
+	return check;
+}
+
+double RebarPos::ConvertLength(double length, PosGroup::DrawingUnits fromUnit, PosGroup::DrawingUnits toUnit)
+{
+	return CRebarPos::ConvertLength(length, static_cast<CPosGroup::DrawingUnits>(fromUnit), static_cast<CPosGroup::DrawingUnits>(toUnit));
+}
+
+double RebarPos::BendingRadius(double d)
+{
+	return CRebarPos::BendingRadius(d);
 }

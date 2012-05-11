@@ -71,10 +71,11 @@ ACRX_DXF_DEFINE_MEMBERS(CRebarPos, AcDbEntity,
 CRebarPos::CRebarPos() :
 	m_BasePoint(0, 0, 0), geomInit(false), ucs(AcGeMatrix3d::kIdentity), direction(1, 0, 0), up(0, 1, 0), norm(0, 0, 1), m_NoteGrip(0, -1.6, 0),
 	m_DisplayStyle(CRebarPos::ALL), isModified(true), m_Length(NULL), m_Key(NULL),
-	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), m_Multiplier(1), 
+	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), m_Multiplier(1), m_ShowShape(Adesk::kFalse),
 	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), m_IsVarLength(false),
 	m_ShapeID(AcDbObjectId::kNull), m_GroupID(AcDbObjectId::kNull), 
 	circleRadius(1.125), partSpacing(0.15), m_MinLength(0), m_MaxLength(0),
+	m_IsVarSpacing(false), m_MinSpacing(0), m_MaxSpacing(0), m_DisplayedSpacing(NULL),
 	zeroLayer(AcDbObjectId::kNull), defpointsLayer(AcDbObjectId::kNull)
 {
 }
@@ -86,7 +87,8 @@ CRebarPos::~CRebarPos()
     acutDelString(m_Pos);
     acutDelString(m_Count);
     acutDelString(m_Diameter);
-    acutDelString(m_Spacing);
+    acutDelString(m_DisplayedSpacing);
+	acutDelString(m_F);
     acutDelString(m_Note);
     acutDelString(m_A);
     acutDelString(m_B);
@@ -94,12 +96,31 @@ CRebarPos::~CRebarPos()
     acutDelString(m_D);
     acutDelString(m_E);
     acutDelString(m_F);
+
+	for(ShapeListIt it = lastShapes.begin(); it != lastShapes.end(); it++)
+	{
+		delete *it;
+	}
+	lastShapes.clear();
 }
 
 
 //*************************************************************************
 // Properties
 //*************************************************************************
+const Adesk::Boolean CRebarPos::ShowShape(void) const
+{
+	assertReadEnabled();
+	return m_ShowShape;
+}
+Acad::ErrorStatus CRebarPos::setShowShape(const Adesk::Boolean newVal)
+{
+	assertWriteEnabled();
+	m_ShowShape = newVal;
+	isModified = true;
+	return Acad::eOk;
+}
+
 const AcGeVector3d& CRebarPos::DirectionVector(void) const
 {
 	assertReadEnabled();
@@ -734,8 +755,6 @@ void CRebarPos::subList() const
 		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("E Length:"), m_E);
 	if ((m_F != NULL) && (m_F[0] != _T('\0')))
 		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("F Length:"), m_F);
-	if ((m_Length != NULL) && (m_Length[0] != _T('\0')))
-		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Total Length:"), m_Length);
 }
 
 Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
@@ -1800,6 +1819,21 @@ const void CRebarPos::Calculate(void) const
 	}
 	int fieldCount = pShape->Fields();
 
+	// Copy shapes
+	lastShapes.clear();
+	for(ShapeListIt it = lastShapes.begin(); it != lastShapes.end(); it++)
+	{
+		delete *it;
+	}
+	lastShapes.clear();
+	if(m_ShowShape)
+	{
+		for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
+		{
+			lastShapes.push_back(pShape->GetShape(i)->clone());
+		}
+	}
+
 	// Get group name
 	lastGroupDraw.text.setEmpty();
 	lastGroupDraw.text = pGroup->Name();
@@ -1812,34 +1846,16 @@ const void CRebarPos::Calculate(void) const
 	if (pGroup->NoteStyleId() != AcDbObjectId::kNull)
 		Utility::MakeGiTextStyle(lastNoteStyle, pGroup->NoteStyleId());
 
-	// Scale from drawing units to MM
-	double scale = 1.0;
-	switch(drawingUnits)
-	{
-	case CPosGroup::MM:
-		scale *= 1.0;
-		break;
-	case CPosGroup::CM:
-		scale *= 10.0;
-		break;
-	}
-
 	// Calculate length
-	CalcTotalLength(formula, fieldCount, scale, precision, m_MinLength, m_MaxLength, m_IsVarLength);
+	GetTotalLengths(formula, fieldCount, drawingUnits, m_A, m_B, m_C, m_D, m_E, m_F, m_Diameter, precision, m_MinLength, m_MaxLength, m_IsVarLength);
+	GetSpacings(m_Spacing, drawingUnits, precision, m_MinSpacing, m_MaxSpacing, m_IsVarSpacing);
 
 	// Scale from MM to display units
-	scale = 1.0;
-	switch(displayUnits)
-	{
-	case CPosGroup::MM:
-		scale /= 1.0;
-		break;
-	case CPosGroup::CM:
-		scale /= 10.0;
-		break;
-	}
+	double scale = ConvertLength(1.0, CPosGroup::MM, displayUnits);
 	m_MinLength *= scale;
 	m_MaxLength *= scale;
+	m_MinSpacing *= scale;
+	m_MaxSpacing *= scale;
 
 	// Set text
 	std::wstring strL1;
@@ -1856,6 +1872,18 @@ const void CRebarPos::Calculate(void) const
 		strL = strL1;
 	}
 	acutUpdString(strL.c_str(), m_Length);
+
+	Utility::DoubleToStr(m_MinSpacing, precision, strL1);
+	Utility::DoubleToStr(m_MaxSpacing, precision, strL2);
+	if(m_IsVarSpacing)
+	{
+		strL = strL1 + L"~" + strL2;
+	}
+	else
+	{
+		strL = strL1;
+	}
+	acutUpdString(strL.c_str(), m_DisplayedSpacing);
 
 	// Shape code
 	AcString shape;
@@ -1986,27 +2014,82 @@ const void CRebarPos::Calculate(void) const
 	isModified = false;
 }
 
-void CRebarPos::CalcTotalLength(const ACHAR* str, int fieldCount, double scale, int precision, double& minLength, double& maxLength, bool& isVar) const
+void CRebarPos::CalcLength(const ACHAR* str, const ACHAR* diameter, const double scale, double& minLength, double& maxLength, bool& isVar)
 {
 	AcString length(str);
-	std::wstring length1(length);
-	std::wstring length2(length);
+	std::wstring length1, length2;
+
+	// Get variable lengths
+	int i = length.find(_T("~"));
+	if(i != -1)
+	{
+		length1 = length.substr(0, i);
+		length2 = length.substr(i + 1, length.length() - i - 1);
+		isVar = true;
+	}
+	else
+	{
+		length1 = length;
+		length2 = length;
+		isVar = false;
+	}
+	
+	// Calculate lengths
+	minLength = CalcConsLength(length1.c_str(), diameter, scale);
+	maxLength = CalcConsLength(length2.c_str(), diameter, scale);
+}
+
+double CRebarPos::CalcConsLength(const ACHAR* str, const ACHAR* diameter, const double scale)
+{
+	std::wstring length(str);
+
+	// Replace diameter and radius
+	double d = 0.0;
+	if(diameter != NULL && diameter[0] != _T('\0'))
+		d = Utility::StrToDouble(diameter);
+	double r = BendingRadius(d);
+	// Convert units
+	std::wstring strD, strR;
+	d /= scale;
+	r /= scale;
+	Utility::DoubleToStr(d, strD);
+	Utility::DoubleToStr(r, strR);
+	Utility::ReplaceString(length, L"d", strD);
+	Utility::ReplaceString(length, L"r", strR);
+	
+	// Calculate length
+	try
+	{
+		return Calculator::Evaluate(length) * scale;
+	}
+	catch(...)
+	{
+		return 0.0;
+	}
+}
+
+bool CRebarPos::GetTotalLengths(const ACHAR* formula, const int fieldCount, const CPosGroup::DrawingUnits inputUnit, const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f, const ACHAR* diameter, const int precision, double& minLength, double& maxLength, bool& isVar)
+{
+	std::wstring length1(formula);
+	std::wstring length2(formula);
+
+	double scale = ConvertLength(1.0, inputUnit, CPosGroup::MM);
 
 	// Calculate piece lengths
 	double A1 = 0.0, A2 = 0.0, B1 = 0.0, B2 = 0.0, C1 = 0.0, C2 = 0.0, D1 = 0.0, D2 = 0.0, E1 = 0.0, E2 = 0.0, F1 = 0.0, F2 = 0.0;
 	bool Avar = false, Bvar = false, Cvar = false, Dvar = false, Evar = false, Fvar = false;
 	if(fieldCount >= 1)
-		CalcLength(m_A, scale, A1, A2, Avar);
+		CalcLength(a, diameter, scale, A1, A2, Avar);
 	if(fieldCount >= 2)
-		CalcLength(m_B, scale, B1, B2, Bvar);
+		CalcLength(b, diameter, scale, B1, B2, Bvar);
 	if(fieldCount >= 3)
-		CalcLength(m_C, scale, C1, C2, Cvar);
+		CalcLength(c, diameter, scale, C1, C2, Cvar);
 	if(fieldCount >= 4)
-		CalcLength(m_D, scale, D1, D2, Dvar);
+		CalcLength(d, diameter, scale, D1, D2, Dvar);
 	if(fieldCount >= 5)
-		CalcLength(m_E, scale, E1, E2, Evar);
+		CalcLength(e, diameter, scale, E1, E2, Evar);
 	if(fieldCount >= 6)
-		CalcLength(m_F, scale, F1, F2, Fvar);
+		CalcLength(f, diameter, scale, F1, F2, Fvar);
 
 	isVar = Avar || Bvar || Cvar || Dvar || Evar || Fvar;
 
@@ -2039,13 +2122,13 @@ void CRebarPos::CalcTotalLength(const ACHAR* str, int fieldCount, double scale, 
 	Utility::ReplaceString(length2, L"F", strF2);
 
 	// Replace diameter and radius
-	double d = 0.0;
-	if(m_Diameter != NULL && m_Diameter[0] == _T('\0'))
-		d = Utility::StrToDouble(m_Diameter);
-	double r = BendingRadius(d);
+	double dia = 0.0;
+	if(diameter != NULL && diameter[0] == _T('\0'))
+		dia = Utility::StrToDouble(diameter);
+	double rad = BendingRadius(dia);
 	std::wstring strD, strR;
-	Utility::DoubleToStr(d, precision, strD);
-	Utility::DoubleToStr(r, precision, strR);
+	Utility::DoubleToStr(dia, precision, strD);
+	Utility::DoubleToStr(rad, precision, strR);
 	Utility::ReplaceString(length1, L"d", strD);
 	Utility::ReplaceString(length2, L"d", strD);
 	Utility::ReplaceString(length1, L"r", strR);
@@ -2056,68 +2139,60 @@ void CRebarPos::CalcTotalLength(const ACHAR* str, int fieldCount, double scale, 
 	{
 		minLength = Calculator::Evaluate(length1);
 		maxLength = Calculator::Evaluate(length2);
+		return true;
 	}
 	catch(...)
 	{
 		minLength = 0;
 		maxLength = 0;
+		return false;
 	}
 }
 
-void CRebarPos::CalcLength(const ACHAR* str, double scale, double& minLength, double& maxLength, bool& isVar) const
+bool CRebarPos::GetSpacings(const ACHAR* spacing, const CPosGroup::DrawingUnits inputUnit, const int precision, double& minLength, double& maxLength, bool& isVar)
 {
-	AcString length(str);
-	std::wstring length1, length2;
+	std::wstring length1(spacing);
+	std::wstring length2(spacing);
 
-	// Get variable lengths
-	int i = length.find(_T("~"));
-	if(i != -1)
-	{
-		length1 = length.substr(0, i);
-		length2 = length.substr(i + 1, length.length() - i - 1);
-		isVar = true;
-	}
-	else
-	{
-		length1 = length;
-		length2 = length;
-		isVar = false;
-	}
-	
-	// Calculate lengths
-	minLength = CalcConsLength(length1.c_str(), scale);
-	maxLength = CalcConsLength(length2.c_str(), scale);
+	double scale = ConvertLength(1.0, inputUnit, CPosGroup::MM);
+
+	CalcLength(spacing, _T("0"), scale, minLength, maxLength, isVar);
+
+	return true;
 }
 
-double CRebarPos::CalcConsLength(const ACHAR* str, double scale) const
+double CRebarPos::ConvertLength(const double length, const CPosGroup::DrawingUnits fromUnit, const CPosGroup::DrawingUnits toUnit)
 {
-	std::wstring length(str);
+	if(fromUnit == toUnit) return length;
 
-	// Replace diameter and radius
-	double d = 0.0;
-	if(m_Diameter != NULL && m_Diameter[0] != _T('\0'))
-		d = Utility::StrToDouble(m_Diameter);
-	double r = BendingRadius(d);
-	// Convert units
-	std::wstring strD, strR;
-	d /= scale;
-	r /= scale;
-	Utility::DoubleToStr(d, strD);
-	Utility::DoubleToStr(r, strR);
-	Utility::ReplaceString(length, L"d", strD);
-	Utility::ReplaceString(length, L"r", strR);
-	
-	// Calculate length
-	try
+	double scale = 1.0;
+
+	// Convert from fromUnit to MM
+	switch(fromUnit)
 	{
-		return Calculator::Evaluate(length) * scale;
+	case CPosGroup::MM:
+		scale *= 1.0;
+		break;
+	case CPosGroup::CM:
+		scale *= 10.0;
+		break;
 	}
-	catch(...)
+
+	// Convert from MM to toUnit
+	switch(toUnit)
 	{
-		return 0.0;
+	case CPosGroup::MM:
+		scale /= 1.0;
+		break;
+	case CPosGroup::CM:
+		scale /= 10.0;
+		break;
 	}
+
+	return length * scale;
 }
-const double CRebarPos::BendingRadius(const double d) const
+
+double CRebarPos::BendingRadius(const double d)
 {
 	if(d <= 16.0)
 		return (2.0 * d);
@@ -2239,12 +2314,12 @@ const DrawList CRebarPos::ParseFormula(const ACHAR* formula) const
 						p.type = CRebarPos::DIAMETER;
 						parts.push_back(m_Diameter);
 					}
-					else if(part == _T("S") && m_Spacing != NULL && m_Spacing[0] != _T('\0'))
+					else if(part == _T("S") && m_DisplayedSpacing != NULL && m_DisplayedSpacing[0] != _T('\0') && m_DisplayedSpacing[0] != _T('0'))
 					{
 						p.type = CRebarPos::SPACING;
-						parts.push_back(m_Spacing);
+						parts.push_back(m_DisplayedSpacing);
 					}
-					else if(part == _T("L") && m_Length != NULL && m_Length[0] != _T('\0'))
+					else if(part == _T("L") && m_Length != NULL && m_Length[0] != _T('\0') && m_Length[0] != _T('0'))
 					{
 						p.type = CRebarPos::LENGTH;
 						parts.push_back(m_Length);

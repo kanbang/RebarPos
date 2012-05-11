@@ -16,6 +16,8 @@
 
 #include "DrawParams.h"
 #include "PosShape.h"
+#include "PosGroup.h"
+#include "Shape.h"
 #include <vector>
 
 // The following is part of the code used to export an API
@@ -97,6 +99,9 @@ private:
 	mutable ACHAR* m_Length;
 	mutable bool m_IsVarLength;
 	mutable double m_MinLength, m_MaxLength;
+	mutable bool m_IsVarSpacing;
+	mutable double m_MinSpacing, m_MaxSpacing;
+	mutable ACHAR* m_DisplayedSpacing;
 	ACHAR* m_Pos;
 	ACHAR* m_Count;
 	ACHAR* m_Diameter;
@@ -109,6 +114,9 @@ private:
 	ACHAR* m_D;
 	ACHAR* m_E;
 	ACHAR* m_F;
+
+	Adesk::Boolean m_ShowShape;
+	mutable std::vector<CShape*> lastShapes;
 
 	DisplayStyle m_DisplayStyle;
 
@@ -128,15 +136,29 @@ protected:
 	/// Parses formula text and creates the draw list
 	const DrawList ParseFormula(const ACHAR* formula) const;
 
+protected:
 	/// Calculates lengths
-	double CalcConsLength(const ACHAR* str, double scale) const;
-	void CalcLength(const ACHAR* str, double scale, double& minLength, double& maxLength, bool& isVar) const;
-	void CalcTotalLength(const ACHAR* str, int fieldCount, double scale, int precision, double& minLength, double& maxLength, bool& isVar) const;
-
-	/// Gets bending radius
-	const double BendingRadius(const double d) const;
+	static double CalcConsLength(const ACHAR* str, const ACHAR* diameter, const double scale);
+	static void CalcLength(const ACHAR* str, const ACHAR* diameter, const double scale, double& minLength, double& maxLength, bool& isVar);
 
 public:
+	// Gets total lengths
+	static bool GetTotalLengths(const ACHAR* formula, const int fieldCount, const CPosGroup::DrawingUnits inputUnit, const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f, const ACHAR* diameter, const int precision, double& minLength, double& maxLength, bool& isVar);
+
+	// Calculates spacing
+	static bool GetSpacings(const ACHAR* spacing, const CPosGroup::DrawingUnits inputUnit, const int precision, double& minLength, double& maxLength, bool& isVar);
+
+	// Unit conversion
+	static double ConvertLength(const double length, const CPosGroup::DrawingUnits fromUnit, const CPosGroup::DrawingUnits toUnit);
+
+	/// Gets bending radius
+	static double BendingRadius(const double d);
+
+public:
+	/// Gets or sets whether pos shape is displayed
+    const Adesk::Boolean ShowShape(void) const;
+	Acad::ErrorStatus setShowShape(const Adesk::Boolean newVal);
+
 	/// Get direction vector
 	const AcGeVector3d& DirectionVector(void) const;
 	/// Get up vector
