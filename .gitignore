@@ -20,6 +20,7 @@ TestResults
 [Rr]elease/
 x64/
 *_i.c
+*_i.h
 *_p.c
 *.ilk
 *.meta
