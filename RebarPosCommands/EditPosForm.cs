@@ -22,7 +22,15 @@ namespace RebarPosCommands
         Dictionary<string, ObjectId> m_Groups;
         Dictionary<string, ObjectId> m_Shapes;
         RebarPos.HitTestResult hit;
-        int fields;
+        string m_Formula;
+        bool m_Bending;
+        int m_Fields;
+        int m_Precision;
+        PosGroup.DrawingUnits m_DisplayUnits;
+        PosGroup.DrawingUnits m_DrawingUnits;
+        double m_MaxLength;
+
+        bool init = false;
 
         public EditPosForm()
         {
@@ -42,6 +50,8 @@ namespace RebarPosCommands
 
         public bool Init(ObjectId id, Point3d pt)
         {
+            init = true;
+
             Database db = HostApplicationServices.WorkingDatabase;
             using (Transaction tr = db.TransactionManager.StartTransaction())
             {
@@ -50,52 +60,21 @@ namespace RebarPosCommands
                     m_Pos = id;
 
                     RebarPos pos = tr.GetObject(m_Pos, OpenMode.ForRead) as RebarPos;
-                    if (pos == null) return false;
+                    if (pos == null)
+                    {
+                        init = false;
+                        return false;
+                    }
 
                     m_Group = pos.GroupId;
                     m_Shape = pos.ShapeId;
 
-                    PosShape shape = tr.GetObject(m_Shape, OpenMode.ForRead) as PosShape;
-                    if (shape == null) return false;
-                    PosGroup group = tr.GetObject(m_Group, OpenMode.ForRead) as PosGroup;
-                    if (group == null) return false;
-
-                    m_StandardDiameters = new List<int>();
-                    string stdd = group.StandardDiameters;
-                    foreach (string ds in stdd.Split(new char[] { ' ', ',', ';', ':', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries))
-                    {
-                        int d;
-                        if (int.TryParse(ds, out d))
-                        {
-                            m_StandardDiameters.Add(d);
-                        }
-                    }
-
                     m_Groups = DWGUtility.GetGroups();
                     if (m_Groups.Count == 0)
                     {
+                        init = false;
                         return false;
                     }
-
-                    m_Shapes = DWGUtility.GetShapes();
-                    if (m_Shapes.Count == 0)
-                    {
-                        return false;
-                    }
-
-                    txtPosMarker.Text = pos.Pos;
-                    txtPosCount.Text = pos.Count;
-                    cbPosDiameter.Items.Clear();
-                    foreach (int d in m_StandardDiameters)
-                    {
-                        cbPosDiameter.Items.Add(d.ToString());
-                    }
-                    cbPosDiameter.Text = pos.Diameter;
-                    txtPosSpacing.Text = pos.Spacing;
-                    txtPosMultiplier.Text = pos.Multiplier.ToString();
-                    chkIncludePos.Checked = (pos.Multiplier > 0);
-                    txtPosMultiplier.Enabled = (pos.Multiplier > 0);
-                    txtPosNote.Text = pos.Note;
 
                     int i = 0;
                     foreach (KeyValuePair<string, ObjectId> pair in m_Groups)
@@ -104,20 +83,22 @@ namespace RebarPosCommands
                         if (pair.Value == pos.GroupId) cbGroup.SelectedIndex = i;
                         i++;
                     }
-                    int precision = group.Precision;
-                    string shapename = "";
-                    foreach (KeyValuePair<string, ObjectId> pair in m_Shapes)
+
+                    m_Shapes = DWGUtility.GetShapes();
+                    if (m_Shapes.Count == 0)
                     {
-                        if (pair.Value == pos.ShapeId)
-                        {
-                            shapename = pair.Key;
-                            break;
-                        }
+                        init = false;
+                        return false;
                     }
 
-                    rbShowAll.Checked = (pos.Display == RebarPos.DisplayStyle.All);
-                    rbWithoutLength.Checked = (pos.Display == RebarPos.DisplayStyle.WithoutLength);
-                    rbMarkerOnly.Checked = (pos.Display == RebarPos.DisplayStyle.MarkerOnly);
+                    txtPosMarker.Text = pos.Pos;
+                    txtPosCount.Text = pos.Count;
+                    cbPosDiameter.Text = pos.Diameter;
+                    txtPosSpacing.Text = pos.Spacing;
+                    txtPosMultiplier.Text = pos.Multiplier.ToString();
+                    chkIncludePos.Checked = (pos.Multiplier > 0);
+                    txtPosMultiplier.Enabled = (pos.Multiplier > 0);
+                    txtPosNote.Text = pos.Note;
 
                     txtA.Text = pos.A;
                     txtB.Text = pos.B;
@@ -126,38 +107,34 @@ namespace RebarPosCommands
                     txtE.Text = pos.E;
                     txtF.Text = pos.F;
 
-                    fields = shape.Fields;
-                    txtA.Enabled = btnSelectA.Enabled = btnMeasureA.Enabled = (fields >= 1);
-                    txtB.Enabled = btnSelectB.Enabled = btnMeasureB.Enabled = (fields >= 2);
-                    txtC.Enabled = btnSelectC.Enabled = btnMeasureC.Enabled = (fields >= 3);
-                    txtD.Enabled = btnSelectD.Enabled = btnMeasureD.Enabled = (fields >= 4);
-                    txtE.Enabled = btnSelectE.Enabled = btnMeasureE.Enabled = (fields >= 5);
-                    txtF.Enabled = btnSelectF.Enabled = btnMeasureF.Enabled = (fields >= 6);
+                    rbShowAll.Checked = (pos.Display == RebarPos.DisplayStyle.All);
+                    rbWithoutLength.Checked = (pos.Display == RebarPos.DisplayStyle.WithoutLength);
+                    rbMarkerOnly.Checked = (pos.Display == RebarPos.DisplayStyle.MarkerOnly);
 
-                    if (!txtA.Enabled) txtA.Text = "";
-                    if (!txtB.Enabled) txtB.Text = "";
-                    if (!txtC.Enabled) txtC.Text = "";
-                    if (!txtD.Enabled) txtD.Text = "";
-                    if (!txtE.Enabled) txtE.Text = "";
-                    if (!txtF.Enabled) txtF.Text = "";
+                    if (!SetGroup())
+                    {
+                        init = false;
+                        return false;
+                    }
+                    if (!SetShape())
+                    {
+                        init = false;
+                        return false;
+                    }
 
-                    lblPosShape.Text = shapename;
-                    lblAverageLength.Text = ((pos.MinLength + pos.MaxLength) / 2.0).ToString("F" + precision.ToString());
-                    if (pos.IsVarLength)
-                        lblTotalLength.Text = pos.MinLength.ToString("F" + precision.ToString()) + "~" + pos.MaxLength.ToString("F" + precision.ToString());
-                    else
-                        lblTotalLength.Text = pos.MinLength.ToString("F" + precision.ToString());
+                    UpdateLength();
 
                     hit = pos.HitTest(pt);
                 }
                 catch (System.Exception ex)
                 {
                     MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    init = false;
+                    return false;
                 }
             }
 
-            UpdateShapeView();
-
+            init = false;
             return true;
         }
 
@@ -169,17 +146,17 @@ namespace RebarPosCommands
             if (!CheckPosDiameter()) haserror = true;
             if (!CheckPosSpacing()) haserror = true;
             if (!CheckPosMultiplier()) haserror = true;
-            if (fields >= 1)
+            if (m_Fields >= 1)
                 if (!CheckPosLength(txtA)) haserror = true;
-            if (fields >= 2)
+            if (m_Fields >= 2)
                 if (!CheckPosLength(txtB)) haserror = true;
-            if (fields >= 3)
+            if (m_Fields >= 3)
                 if (!CheckPosLength(txtC)) haserror = true;
-            if (fields >= 4)
+            if (m_Fields >= 4)
                 if (!CheckPosLength(txtD)) haserror = true;
-            if (fields >= 5)
+            if (m_Fields >= 5)
                 if (!CheckPosLength(txtE)) haserror = true;
-            if (fields >= 6)
+            if (m_Fields >= 6)
                 if (!CheckPosLength(txtF)) haserror = true;
 
             if (haserror)
@@ -203,7 +180,7 @@ namespace RebarPosCommands
                     pos.Multiplier = int.Parse(txtPosMultiplier.Text);
                     if (!chkIncludePos.Checked) pos.Multiplier = 0;
                     pos.Note = txtPosNote.Text;
-                    pos.GroupId = m_Groups[(string)cbGroup.SelectedItem];
+                    pos.GroupId = m_Group;
                     pos.ShapeId = m_Shape;
 
                     if (rbShowAll.Checked)
@@ -252,11 +229,55 @@ namespace RebarPosCommands
             if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
             {
                 m_Shape = form.Current;
-                UpdateShapeView();
+                SetShape();
+                UpdateLength();
             }
         }
 
-        private void UpdateShapeView()
+        private bool SetGroup()
+        {
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    PosGroup group = tr.GetObject(m_Group, OpenMode.ForRead) as PosGroup;
+                    if (group == null) return false;
+
+                    m_StandardDiameters = new List<int>();
+                    string stdd = group.StandardDiameters;
+                    foreach (string ds in stdd.Split(new char[] { ' ', ',', ';', ':', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        int d;
+                        if (int.TryParse(ds, out d))
+                        {
+                            m_StandardDiameters.Add(d);
+                        }
+                    }
+
+                    m_DisplayUnits = group.DisplayUnit;
+                    m_DrawingUnits = group.DrawingUnit;
+                    m_Bending = group.Bending;
+                    m_Precision = group.Precision;
+                    m_MaxLength = group.MaxBarLength;
+
+                    cbPosDiameter.Items.Clear();
+                    foreach (int d in m_StandardDiameters)
+                    {
+                        cbPosDiameter.Items.Add(d.ToString());
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private bool SetShape()
         {
             posShapeView.Reset();
 
@@ -267,15 +288,20 @@ namespace RebarPosCommands
                 {
                     PosShape shape = tr.GetObject(m_Shape, OpenMode.ForRead) as PosShape;
                     if (shape == null)
-                        return;
+                        return false;
 
-                    fields = shape.Fields;
-                    txtA.Enabled = btnSelectA.Enabled = btnMeasureA.Enabled = (fields >= 1);
-                    txtB.Enabled = btnSelectB.Enabled = btnMeasureB.Enabled = (fields >= 2);
-                    txtC.Enabled = btnSelectC.Enabled = btnMeasureC.Enabled = (fields >= 3);
-                    txtD.Enabled = btnSelectD.Enabled = btnMeasureD.Enabled = (fields >= 4);
-                    txtE.Enabled = btnSelectE.Enabled = btnMeasureE.Enabled = (fields >= 5);
-                    txtF.Enabled = btnSelectF.Enabled = btnMeasureF.Enabled = (fields >= 6);
+                    if (m_Bending)
+                        m_Formula = shape.FormulaBending;
+                    else
+                        m_Formula = shape.Formula;
+
+                    m_Fields = shape.Fields;
+                    txtA.Enabled = btnSelectA.Enabled = btnMeasureA.Enabled = (m_Fields >= 1);
+                    txtB.Enabled = btnSelectB.Enabled = btnMeasureB.Enabled = (m_Fields >= 2);
+                    txtC.Enabled = btnSelectC.Enabled = btnMeasureC.Enabled = (m_Fields >= 3);
+                    txtD.Enabled = btnSelectD.Enabled = btnMeasureD.Enabled = (m_Fields >= 4);
+                    txtE.Enabled = btnSelectE.Enabled = btnMeasureE.Enabled = (m_Fields >= 5);
+                    txtF.Enabled = btnSelectF.Enabled = btnMeasureF.Enabled = (m_Fields >= 6);
 
                     if (!txtA.Enabled) txtA.Text = "";
                     if (!txtB.Enabled) txtB.Text = "";
@@ -304,11 +330,119 @@ namespace RebarPosCommands
                             posShapeView.AddText(color, (float)text.X, (float)text.Y, (float)text.Height, text.Text);
                         }
                     }
+
+                    string shapename = "";
+                    foreach (KeyValuePair<string, ObjectId> pair in m_Shapes)
+                    {
+                        if (pair.Value == m_Shape)
+                        {
+                            shapename = pair.Key;
+                            break;
+                        }
+                    }
+                    lblPosShape.Text = shapename;
                 }
                 catch (System.Exception ex)
                 {
                     MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
                 }
+            }
+
+            return true;
+        }
+
+        private bool UpdateLength()
+        {
+            // Scale from drawing units to MM
+            string unitPrefix = "mm";
+            double scale = 1.0;
+            switch (m_DrawingUnits)
+            {
+                case PosGroup.DrawingUnits.Millimeter:
+                    scale *= 1.0;
+                    unitPrefix = "mm";
+                    break;
+                case PosGroup.DrawingUnits.Centimeter:
+                    scale *= 10.0;
+                    unitPrefix = "cm";
+                    break;
+            }
+
+            // Get lengths
+            double minLengthMM = 0;
+            double maxLengthMM = 0;
+            bool isVarLength = false;
+            bool check = false;
+            try
+            {
+                check = RebarPos.GetTotalLengths(m_Formula, m_Fields, scale, txtA.Text, txtB.Text, txtC.Text, txtD.Text, txtE.Text, txtF.Text, cbPosDiameter.Text, m_Precision, out minLengthMM, out maxLengthMM, out isVarLength);
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            if (check && (minLengthMM > double.Epsilon) && (maxLengthMM > double.Epsilon))
+            {
+                // Scale from MM to display units
+                scale = 1.0;
+                switch (m_DisplayUnits)
+                {
+                    case PosGroup.DrawingUnits.Millimeter:
+                        scale /= 1.0;
+                        break;
+                    case PosGroup.DrawingUnits.Centimeter:
+                        scale /= 10.0;
+                        break;
+                }
+                double minLength = minLengthMM * scale;
+                double maxLength = maxLengthMM * scale;
+
+                if (isVarLength)
+                {
+                    lblTotalLength.Text = minLength.ToString("F" + m_Precision.ToString()) + "~" + maxLength.ToString("F" + m_Precision.ToString()) + " " + unitPrefix +
+                         " (" + (minLength / 1000.0).ToString("F2") + " m ~ " + (maxLength / 1000.0).ToString("F2") + " m)";
+                    lblAverageLength.Text = ((minLength + maxLength) / 2.0).ToString("F" + m_Precision.ToString()) + " " + unitPrefix +
+                        " (" + ((minLength + maxLength) / 2.0 / 1000.0).ToString("F2") + " m)";
+
+                    lblAverageLengthCaption.Visible = true;
+                    lblAverageLength.Visible = true;
+                }
+                else
+                {
+                    lblTotalLength.Text = minLength.ToString("F" + m_Precision.ToString()) + " " + unitPrefix +
+                        " (" + (minLength / 1000.0).ToString("F2") + " m)";
+
+                    lblAverageLengthCaption.Visible = false;
+                    lblAverageLength.Visible = false;
+                }
+
+                if (minLengthMM > m_MaxLength * 1000.0 || maxLengthMM > m_MaxLength * 1000.0)
+                {
+                    lblAverageLength.ForeColor = Color.Red;
+                    lblTotalLength.ForeColor = Color.Red;
+
+                    return false;
+                }
+                else
+                {
+                    lblAverageLength.ForeColor = SystemColors.ControlText;
+                    lblTotalLength.ForeColor = SystemColors.ControlText;
+
+                    return true;
+                }
+            }
+            else
+            {
+                lblTotalLength.Text = "Hatalı Boy!";
+                lblTotalLength.ForeColor = Color.Red;
+
+                lblAverageLengthCaption.Visible = false;
+                lblAverageLength.Visible = false;
+
+                return false;
             }
         }
 
@@ -452,6 +586,7 @@ namespace RebarPosCommands
             if (string.IsNullOrEmpty(cbPosDiameter.Text) || cbPosDiameter.Items.Contains(cbPosDiameter.Text))
             {
                 errorProvider.SetError(cbPosDiameter, "");
+                UpdateLength();
                 return true;
             }
             else
@@ -540,11 +675,47 @@ namespace RebarPosCommands
                 errorProvider.SetIconAlignment(source, ErrorIconAlignment.MiddleLeft);
                 return false;
             }
+            else if (!UpdateLength())
+            {
+                errorProvider.SetError(source, "Toplam boy maximum demir boyundan büyük olamaz.");
+                errorProvider.SetIconAlignment(source, ErrorIconAlignment.MiddleLeft);
+                return false;
+            }
             else
             {
+
                 errorProvider.SetError(source, "");
                 return true;
             }
+        }
+
+        private void cbGroup_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (init) return;
+
+            if (cbGroup.SelectedIndex == -1) return;
+            m_Group = m_Groups[(string)cbGroup.SelectedItem];
+
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    PosGroup group = tr.GetObject(m_Group, OpenMode.ForRead) as PosGroup;
+                    if (group == null)
+                        return;
+
+                    m_DisplayUnits = group.DisplayUnit;
+                    m_DrawingUnits = group.DrawingUnit;
+                    m_Bending = group.Bending;
+                }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            UpdateLength();
         }
     }
 }
