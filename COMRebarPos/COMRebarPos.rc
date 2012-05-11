@@ -1,4 +1,4 @@
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
@@ -27,27 +27,24 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE DISCARDABLE 
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE DISCARDABLE 
+2 TEXTINCLUDE 
 BEGIN
-    "#include ""winres.h""\r\n"
-    "\0"
+    "#include ""winres.h""\r\0"
 END
 
-3 TEXTINCLUDE DISCARDABLE 
+3 TEXTINCLUDE 
 BEGIN
-    "1 TYPELIB ""RebarPos.tlb""\r\n"
-    "\0"
+    "1 TYPELIB ""NativeRebarPos.tlb""\r\0"
 END
 
 #endif    // APSTUDIO_INVOKED
 
 
-#ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version
@@ -70,15 +67,13 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "CompanyName", "\0"
-            VALUE "FileDescription", "RebarPos Module\0"
-            VALUE "FileVersion", "1, 0, 0, 1\0"
-            VALUE "InternalName", "COMREBARPOS\0"
-            VALUE "LegalCopyright", "Copyright 2012\0"
-            VALUE "OriginalFilename", "COMREBARPOS.DLL\0"
-            VALUE "ProductName", "RebarPos Module\0"
-            VALUE "ProductVersion", "1, 0, 0, 1\0"
-            VALUE "OLESelfRegister", "\0"
+            VALUE "FileDescription", "RebarPos Module"
+            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "InternalName", "COMREBARPOS"
+            VALUE "LegalCopyright", "Copyright 2012"
+            VALUE "OriginalFilename", "COMREBARPOS.DLL"
+            VALUE "ProductName", "RebarPos Module"
+            VALUE "ProductVersion", "1, 0, 0, 1"
         END
     END
     BLOCK "VarFileInfo"
@@ -87,22 +82,20 @@ BEGIN
     END
 END
 
-#endif    // !_MAC
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // REGISTRY
 //
 
-IDR_COMREBARPOS          REGISTRY DISCARDABLE    "RebarPos.rgs"
+IDR_COMREBARPOS         REGISTRY                "RebarPos.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // String Table
 //
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     IDS_PROJNAME            "RebarPos"
 END
@@ -117,7 +110,7 @@ END
 //
 // Generated from the TEXTINCLUDE 3 resource.
 //
-1 TYPELIB "COMRebarPos.tlb"
+1 TYPELIB "NativeRebarPos.tlb"
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
