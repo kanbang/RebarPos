@@ -75,6 +75,7 @@ CRebarPos::CRebarPos() :
 	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), m_IsVarLength(false),
 	m_ShapeID(AcDbObjectId::kNull), m_GroupID(AcDbObjectId::kNull), 
 	circleRadius(1.125), partSpacing(0.15), m_MinLength(0), m_MaxLength(0),
+	m_IsVarSpacing(false), m_MinSpacing(0), m_MaxSpacing(0), m_DisplayedSpacing(NULL),
 	zeroLayer(AcDbObjectId::kNull), defpointsLayer(AcDbObjectId::kNull)
 {
 }
@@ -86,7 +87,8 @@ CRebarPos::~CRebarPos()
     acutDelString(m_Pos);
     acutDelString(m_Count);
     acutDelString(m_Diameter);
-    acutDelString(m_Spacing);
+    acutDelString(m_DisplayedSpacing);
+	acutDelString(m_F);
     acutDelString(m_Note);
     acutDelString(m_A);
     acutDelString(m_B);
@@ -734,8 +736,6 @@ void CRebarPos::subList() const
 		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("E Length:"), m_E);
 	if ((m_F != NULL) && (m_F[0] != _T('\0')))
 		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("F Length:"), m_F);
-	if ((m_Length != NULL) && (m_Length[0] != _T('\0')))
-		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Total Length:"), m_Length);
 }
 
 Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
@@ -1814,11 +1814,14 @@ const void CRebarPos::Calculate(void) const
 
 	// Calculate length
 	GetTotalLengths(formula, fieldCount, drawingUnits, m_A, m_B, m_C, m_D, m_E, m_F, m_Diameter, precision, m_MinLength, m_MaxLength, m_IsVarLength);
+	GetSpacings(m_Spacing, drawingUnits, precision, m_MinSpacing, m_MaxSpacing, m_IsVarSpacing);
 
 	// Scale from MM to display units
 	double scale = ConvertLength(1.0, CPosGroup::MM, displayUnits);
 	m_MinLength *= scale;
 	m_MaxLength *= scale;
+	m_MinSpacing *= scale;
+	m_MaxSpacing *= scale;
 
 	// Set text
 	std::wstring strL1;
@@ -1835,6 +1838,18 @@ const void CRebarPos::Calculate(void) const
 		strL = strL1;
 	}
 	acutUpdString(strL.c_str(), m_Length);
+
+	Utility::DoubleToStr(m_MinSpacing, precision, strL1);
+	Utility::DoubleToStr(m_MaxSpacing, precision, strL2);
+	if(m_IsVarSpacing)
+	{
+		strL = strL1 + L"~" + strL2;
+	}
+	else
+	{
+		strL = strL1;
+	}
+	acutUpdString(strL.c_str(), m_DisplayedSpacing);
 
 	// Shape code
 	AcString shape;
@@ -2100,6 +2115,18 @@ bool CRebarPos::GetTotalLengths(const ACHAR* formula, const int fieldCount, cons
 	}
 }
 
+bool CRebarPos::GetSpacings(const ACHAR* spacing, const CPosGroup::DrawingUnits inputUnit, const int precision, double& minLength, double& maxLength, bool& isVar)
+{
+	std::wstring length1(spacing);
+	std::wstring length2(spacing);
+
+	double scale = ConvertLength(1.0, inputUnit, CPosGroup::MM);
+
+	CalcLength(spacing, _T("0"), scale, minLength, maxLength, isVar);
+
+	return true;
+}
+
 double CRebarPos::ConvertLength(const double length, const CPosGroup::DrawingUnits fromUnit, const CPosGroup::DrawingUnits toUnit)
 {
 	if(fromUnit == toUnit) return length;
@@ -2253,12 +2280,12 @@ const DrawList CRebarPos::ParseFormula(const ACHAR* formula) const
 						p.type = CRebarPos::DIAMETER;
 						parts.push_back(m_Diameter);
 					}
-					else if(part == _T("S") && m_Spacing != NULL && m_Spacing[0] != _T('\0'))
+					else if(part == _T("S") && m_DisplayedSpacing != NULL && m_DisplayedSpacing[0] != _T('\0') && m_DisplayedSpacing[0] != _T('0'))
 					{
 						p.type = CRebarPos::SPACING;
-						parts.push_back(m_Spacing);
+						parts.push_back(m_DisplayedSpacing);
 					}
-					else if(part == _T("L") && m_Length != NULL && m_Length[0] != _T('\0'))
+					else if(part == _T("L") && m_Length != NULL && m_Length[0] != _T('\0') && m_Length[0] != _T('0'))
 					{
 						p.type = CRebarPos::LENGTH;
 						parts.push_back(m_Length);

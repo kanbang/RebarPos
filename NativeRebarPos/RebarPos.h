@@ -98,6 +98,9 @@ private:
 	mutable ACHAR* m_Length;
 	mutable bool m_IsVarLength;
 	mutable double m_MinLength, m_MaxLength;
+	mutable bool m_IsVarSpacing;
+	mutable double m_MinSpacing, m_MaxSpacing;
+	mutable ACHAR* m_DisplayedSpacing;
 	ACHAR* m_Pos;
 	ACHAR* m_Count;
 	ACHAR* m_Diameter;
@@ -137,6 +140,9 @@ protected:
 public:
 	// Gets total lengths
 	static bool GetTotalLengths(const ACHAR* formula, const int fieldCount, const CPosGroup::DrawingUnits inputUnit, const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f, const ACHAR* diameter, const int precision, double& minLength, double& maxLength, bool& isVar);
+
+	// Calculates spacing
+	static bool GetSpacings(const ACHAR* spacing, const CPosGroup::DrawingUnits inputUnit, const int precision, double& minLength, double& maxLength, bool& isVar);
 
 	// Unit conversion
 	static double ConvertLength(const double length, const CPosGroup::DrawingUnits fromUnit, const CPosGroup::DrawingUnits toUnit);
