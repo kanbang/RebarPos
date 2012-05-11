@@ -354,17 +354,6 @@ namespace RebarPosCommands
 
         private bool UpdateLength()
         {
-            string unitPrefix = "mm";
-            switch (m_DrawingUnits)
-            {
-                case PosGroup.DrawingUnits.Millimeter:
-                    unitPrefix = "mm";
-                    break;
-                case PosGroup.DrawingUnits.Centimeter:
-                    unitPrefix = "cm";
-                    break;
-            }
-
             // Get lengths
             double minLengthMM = 0;
             double maxLengthMM = 0;
@@ -382,8 +371,19 @@ namespace RebarPosCommands
 
             if (check && (minLengthMM > double.Epsilon) && (maxLengthMM > double.Epsilon))
             {
-                // Scale from MM to display units
-                double scale = RebarPos.ConvertLength(1.0, m_DrawingUnits, m_DisplayUnits);
+                string unitPrefix = "mm";
+                switch (m_DrawingUnits)
+                {
+                    case PosGroup.DrawingUnits.Millimeter:
+                        unitPrefix = "mm";
+                        break;
+                    case PosGroup.DrawingUnits.Centimeter:
+                        unitPrefix = "cm";
+                        break;
+                }
+
+                // Scale from MM to drawing units
+                double scale = RebarPos.ConvertLength(1.0, PosGroup.DrawingUnits.Millimeter, m_DrawingUnits);
                 double minLength = minLengthMM * scale;
                 double maxLength = maxLengthMM * scale;
 
