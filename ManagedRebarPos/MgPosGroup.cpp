@@ -8,10 +8,8 @@
 #error _DEBUG should not be defined except in internal Adesk debug builds
 #endif
 
-#include <gcroot.h>
-#include "mgdinterop.h"
-
 #include "MgPosGroup.h"
+#include "Marshal.h"
 
 using namespace OZOZ::RebarPosWrapper;
 
@@ -33,11 +31,11 @@ PosGroup::PosGroup(System::IntPtr unmanagedPointer, bool autoDelete)
 //*************************************************************************
 String^ PosGroup::Name::get()
 {
-    return WcharToString(GetImpObj()->Name());
+	return Marshal::WcharToString(GetImpObj()->Name());
 }
 void PosGroup::Name::set(String^ value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setName(StringToWchar(value)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setName(Marshal::StringToWchar(value)));
 }
 
 bool PosGroup::Bending::get()
@@ -87,38 +85,38 @@ void PosGroup::DisplayUnit::set(PosGroup::DrawingUnits value)
 
 String^ PosGroup::Formula::get()
 {
-	return WcharToString(GetImpObj()->Formula());
+	return Marshal::WcharToString(GetImpObj()->Formula());
 }
 void PosGroup::Formula::set(String^ value)
 {
-	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormula(StringToWchar(value)));
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormula(Marshal::StringToWchar(value)));
 }
 
 String^ PosGroup::FormulaWithoutLength::get()
 {
-	return WcharToString(GetImpObj()->FormulaWithoutLength());
+	return Marshal::WcharToString(GetImpObj()->FormulaWithoutLength());
 }
 void PosGroup::FormulaWithoutLength::set(String^ value)
 {
-	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormulaWithoutLength(StringToWchar(value)));
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormulaWithoutLength(Marshal::StringToWchar(value)));
 }
 
 String^ PosGroup::FormulaPosOnly::get()
 {
-	return WcharToString(GetImpObj()->FormulaPosOnly());
+	return Marshal::WcharToString(GetImpObj()->FormulaPosOnly());
 }
 void PosGroup::FormulaPosOnly::set(String^ value)
 {
-	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormulaPosOnly(StringToWchar(value)));
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormulaPosOnly(Marshal::StringToWchar(value)));
 }
 
 String^ PosGroup::StandardDiameters::get()
 {
-	return WcharToString(GetImpObj()->StandardDiameters());
+	return Marshal::WcharToString(GetImpObj()->StandardDiameters());
 }
 void PosGroup::StandardDiameters::set(String^ value)
 {
-	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setStandardDiameters(StringToWchar(value)));
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setStandardDiameters(Marshal::StringToWchar(value)));
 }
 
 Autodesk::AutoCAD::Colors::Color^ PosGroup::TextColor::get()
@@ -177,20 +175,20 @@ void PosGroup::CurrentGroupHighlightColor::set(Autodesk::AutoCAD::Colors::Color^
 
 Autodesk::AutoCAD::DatabaseServices::ObjectId PosGroup::TextStyleId::get()
 {
-	return ToObjectId (GetImpObj()->TextStyleId());
+	return Marshal::ToObjectId (GetImpObj()->TextStyleId());
 }
 void PosGroup::TextStyleId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
 {
-	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setTextStyleId(GETOBJECTID(value)));
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setTextStyleId(Marshal::FromObjectId(value)));
 }
 
 Autodesk::AutoCAD::DatabaseServices::ObjectId PosGroup::NoteStyleId::get()
 {
-	return ToObjectId (GetImpObj()->NoteStyleId());
+	return Marshal::ToObjectId (GetImpObj()->NoteStyleId());
 }
 void PosGroup::NoteStyleId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
 {
-	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setNoteStyleId(GETOBJECTID(value)));
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setNoteStyleId(Marshal::FromObjectId(value)));
 }
 
 double PosGroup::NoteScale::get()
@@ -207,5 +205,5 @@ void PosGroup::NoteScale::set(double value)
 //*************************************************************************
 String^ PosGroup::TableName::get()
 {
-	return WcharToString(CPosGroup::GetTableName());
+	return Marshal::WcharToString(CPosGroup::GetTableName());
 }

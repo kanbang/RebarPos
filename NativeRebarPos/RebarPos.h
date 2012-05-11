@@ -16,6 +16,7 @@
 
 #include "DrawParams.h"
 #include "PosShape.h"
+#include "PosGroup.h"
 #include <vector>
 
 // The following is part of the code used to export an API
@@ -135,7 +136,10 @@ protected:
 
 public:
 	// Gets total lengths
-	static bool GetTotalLengths(const ACHAR* formula, const int fieldCount, const double scale, const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f, const ACHAR* diameter, const int precision, double& minLength, double& maxLength, bool& isVar);
+	static bool GetTotalLengths(const ACHAR* formula, const int fieldCount, const CPosGroup::DrawingUnits inputUnit, const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f, const ACHAR* diameter, const int precision, double& minLength, double& maxLength, bool& isVar);
+
+	// Unit conversion
+	static double ConvertLength(const double length, const CPosGroup::DrawingUnits fromUnit, const CPosGroup::DrawingUnits toUnit);
 
 	/// Gets bending radius
 	static double BendingRadius(const double d);

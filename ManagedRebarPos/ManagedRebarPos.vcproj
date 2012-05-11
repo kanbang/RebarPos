@@ -383,6 +383,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
 			<File
+				RelativePath=".\Marshal.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MgPosGroup.h"
 				>
 			</File>

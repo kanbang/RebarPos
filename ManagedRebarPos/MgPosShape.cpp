@@ -8,10 +8,8 @@
 #error _DEBUG should not be defined except in internal Adesk debug builds
 #endif
 
-#include <gcroot.h>
-#include "mgdinterop.h"
-
 #include "MgPosShape.h"
+#include "Marshal.h"
 
 using namespace OZOZ::RebarPosWrapper;
 
@@ -35,11 +33,11 @@ PosShape::PosShape(System::IntPtr unmanagedPointer, bool autoDelete)
 //*************************************************************************
 String^ PosShape::Name::get()
 {
-    return WcharToString(GetImpObj()->Name());
+	return Marshal::WcharToString(GetImpObj()->Name());
 }
 void PosShape::Name::set(String^ value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setName(StringToWchar(value)));
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setName(Marshal::StringToWchar(value)));
 }
 
 void PosShape::Fields::set(int value)
@@ -53,20 +51,20 @@ int PosShape::Fields::get()
 
 void PosShape::Formula::set(String^ value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormula(StringToWchar(value)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormula(Marshal::StringToWchar(value)));
 }
 String^ PosShape::Formula::get()
 {
-    return WcharToString(GetImpObj()->Formula());
+    return Marshal::WcharToString(GetImpObj()->Formula());
 }
 
 void PosShape::FormulaBending::set(String^ value)
 {
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormulaBending(StringToWchar(value)));
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormulaBending(Marshal::StringToWchar(value)));
 }
 String^ PosShape::FormulaBending::get()
 {
-    return WcharToString(GetImpObj()->FormulaBending());
+    return Marshal::WcharToString(GetImpObj()->FormulaBending());
 }
 
 PosShape::ShapeCollection^ PosShape::Items::get()
@@ -121,7 +119,7 @@ void PosShape::ShapeCollection::AddText(double x, double y, double height, Strin
 	text->x = x;
 	text->y = y;
 	text->height = height;
-	acutUpdString(StringToWchar(str), text->text);
+	acutUpdString(Marshal::StringToWchar(str), text->text);
 	m_Parent->GetImpObj()->AddShape(text);
 }
 
@@ -179,7 +177,7 @@ PosShape::Shape^ PosShape::ShapeCollection::default::get(int index)
 			rshape->X = text->x;
 			rshape->Y = text->y;
 			rshape->Height = text->height;
-			rshape->Text = WcharToString(text->text);
+			rshape->Text = Marshal::WcharToString(text->text);
 			return rshape;
 		}
 		break;
@@ -221,7 +219,7 @@ void PosShape::ShapeCollection::default::set(int index, PosShape::Shape^ value)
 		text->x = rshape->X;
 		text->y = rshape->Y;
 		text->height = rshape->Height;
-		acutUpdString(StringToWchar(rshape->Text), text->text);
+		acutUpdString(Marshal::StringToWchar(rshape->Text), text->text);
 		m_Parent->GetImpObj()->SetShape(index, text);
 	}
 	else
@@ -235,5 +233,5 @@ void PosShape::ShapeCollection::default::set(int index, PosShape::Shape^ value)
 //*************************************************************************
 String^ PosShape::TableName::get()
 {
-	return WcharToString(CPosShape::GetTableName());
+	return Marshal::WcharToString(CPosShape::GetTableName());
 }

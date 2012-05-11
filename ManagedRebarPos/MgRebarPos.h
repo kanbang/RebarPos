@@ -5,6 +5,7 @@
 #pragma once
 
 #include "..\NativeRebarPos\RebarPos.h"
+#include "MgPosGroup.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -91,7 +92,8 @@ namespace OZOZ
 			HitTestResult HitTest(Point3d pt);
 
 		public:
-			static bool GetTotalLengths(String^ formula, int fieldCount, double scale, String^ a, String^ b, String^ c, String^ d, String^ e, String^ f, String^ diameter, int precision, [Out] double% minLength, [Out] double% maxLength, [Out] bool% isVar);
+			static bool GetTotalLengths(String^ formula, int fieldCount, PosGroup::DrawingUnits inputUnit, String^ a, String^ b, String^ c, String^ d, String^ e, String^ f, String^ diameter, int precision, [Out] double% minLength, [Out] double% maxLength, [Out] bool% isVar);
+			static double ConvertLength(double length, PosGroup::DrawingUnits fromUnit, PosGroup::DrawingUnits toUnit);
 			static double BendingRadius(double d);
         };
     }

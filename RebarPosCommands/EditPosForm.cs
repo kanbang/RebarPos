@@ -354,17 +354,13 @@ namespace RebarPosCommands
 
         private bool UpdateLength()
         {
-            // Scale from drawing units to MM
             string unitPrefix = "mm";
-            double scale = 1.0;
             switch (m_DrawingUnits)
             {
                 case PosGroup.DrawingUnits.Millimeter:
-                    scale *= 1.0;
                     unitPrefix = "mm";
                     break;
                 case PosGroup.DrawingUnits.Centimeter:
-                    scale *= 10.0;
                     unitPrefix = "cm";
                     break;
             }
@@ -376,7 +372,7 @@ namespace RebarPosCommands
             bool check = false;
             try
             {
-                check = RebarPos.GetTotalLengths(m_Formula, m_Fields, scale, txtA.Text, txtB.Text, txtC.Text, txtD.Text, txtE.Text, txtF.Text, cbPosDiameter.Text, m_Precision, out minLengthMM, out maxLengthMM, out isVarLength);
+                check = RebarPos.GetTotalLengths(m_Formula, m_Fields, m_DrawingUnits, txtA.Text, txtB.Text, txtC.Text, txtD.Text, txtE.Text, txtF.Text, cbPosDiameter.Text, m_Precision, out minLengthMM, out maxLengthMM, out isVarLength);
             }
             catch (System.Exception ex)
             {
@@ -387,25 +383,16 @@ namespace RebarPosCommands
             if (check && (minLengthMM > double.Epsilon) && (maxLengthMM > double.Epsilon))
             {
                 // Scale from MM to display units
-                scale = 1.0;
-                switch (m_DisplayUnits)
-                {
-                    case PosGroup.DrawingUnits.Millimeter:
-                        scale /= 1.0;
-                        break;
-                    case PosGroup.DrawingUnits.Centimeter:
-                        scale /= 10.0;
-                        break;
-                }
+                double scale = RebarPos.ConvertLength(1.0, m_DrawingUnits, m_DisplayUnits);
                 double minLength = minLengthMM * scale;
                 double maxLength = maxLengthMM * scale;
 
                 if (isVarLength)
                 {
                     lblTotalLength.Text = minLength.ToString("F" + m_Precision.ToString()) + "~" + maxLength.ToString("F" + m_Precision.ToString()) + " " + unitPrefix +
-                         " (" + (minLength / 1000.0).ToString("F2") + " m ~ " + (maxLength / 1000.0).ToString("F2") + " m)";
+                         " (" + (minLengthMM / 1000.0).ToString("F2") + " m ~ " + (maxLengthMM / 1000.0).ToString("F2") + " m)";
                     lblAverageLength.Text = ((minLength + maxLength) / 2.0).ToString("F" + m_Precision.ToString()) + " " + unitPrefix +
-                        " (" + ((minLength + maxLength) / 2.0 / 1000.0).ToString("F2") + " m)";
+                        " (" + ((minLengthMM + maxLengthMM) / 2.0 / 1000.0).ToString("F2") + " m)";
 
                     lblAverageLengthCaption.Visible = true;
                     lblAverageLength.Visible = true;
@@ -413,7 +400,7 @@ namespace RebarPosCommands
                 else
                 {
                     lblTotalLength.Text = minLength.ToString("F" + m_Precision.ToString()) + " " + unitPrefix +
-                        " (" + (minLength / 1000.0).ToString("F2") + " m)";
+                        " (" + (minLengthMM / 1000.0).ToString("F2") + " m)";
 
                     lblAverageLengthCaption.Visible = false;
                     lblAverageLength.Visible = false;

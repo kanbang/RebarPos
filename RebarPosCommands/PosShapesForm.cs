@@ -127,7 +127,7 @@ namespace RebarPosCommands
                 }
                 catch (System.Exception ex)
                 {
-                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos");
+                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                     return false;
                 }
             }
@@ -413,7 +413,7 @@ namespace RebarPosCommands
                 }
                 catch (System.Exception ex)
                 {
-                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos");
+                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                 }
             }
 
@@ -509,7 +509,7 @@ namespace RebarPosCommands
                 }
                 catch (System.Exception ex)
                 {
-                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos");
+                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                 }
             }
 

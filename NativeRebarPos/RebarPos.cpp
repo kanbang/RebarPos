@@ -1812,32 +1812,11 @@ const void CRebarPos::Calculate(void) const
 	if (pGroup->NoteStyleId() != AcDbObjectId::kNull)
 		Utility::MakeGiTextStyle(lastNoteStyle, pGroup->NoteStyleId());
 
-	// Scale from drawing units to MM
-	double scale = 1.0;
-	switch(drawingUnits)
-	{
-	case CPosGroup::MM:
-		scale *= 1.0;
-		break;
-	case CPosGroup::CM:
-		scale *= 10.0;
-		break;
-	}
-
 	// Calculate length
-	GetTotalLengths(formula, fieldCount, scale, m_A, m_B, m_C, m_D, m_E, m_F, m_Diameter, precision, m_MinLength, m_MaxLength, m_IsVarLength);
+	GetTotalLengths(formula, fieldCount, drawingUnits, m_A, m_B, m_C, m_D, m_E, m_F, m_Diameter, precision, m_MinLength, m_MaxLength, m_IsVarLength);
 
 	// Scale from MM to display units
-	scale = 1.0;
-	switch(displayUnits)
-	{
-	case CPosGroup::MM:
-		scale /= 1.0;
-		break;
-	case CPosGroup::CM:
-		scale /= 10.0;
-		break;
-	}
+	double scale = ConvertLength(1.0, CPosGroup::MM, displayUnits);
 	m_MinLength *= scale;
 	m_MaxLength *= scale;
 
@@ -2040,10 +2019,12 @@ double CRebarPos::CalcConsLength(const ACHAR* str, const ACHAR* diameter, const 
 	}
 }
 
-bool CRebarPos::GetTotalLengths(const ACHAR* formula, const int fieldCount, const double scale, const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f, const ACHAR* diameter, const int precision, double& minLength, double& maxLength, bool& isVar)
+bool CRebarPos::GetTotalLengths(const ACHAR* formula, const int fieldCount, const CPosGroup::DrawingUnits inputUnit, const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f, const ACHAR* diameter, const int precision, double& minLength, double& maxLength, bool& isVar)
 {
 	std::wstring length1(formula);
 	std::wstring length2(formula);
+
+	double scale = ConvertLength(1.0, inputUnit, CPosGroup::MM);
 
 	// Calculate piece lengths
 	double A1 = 0.0, A2 = 0.0, B1 = 0.0, B2 = 0.0, C1 = 0.0, C2 = 0.0, D1 = 0.0, D2 = 0.0, E1 = 0.0, E2 = 0.0, F1 = 0.0, F2 = 0.0;
@@ -2117,6 +2098,37 @@ bool CRebarPos::GetTotalLengths(const ACHAR* formula, const int fieldCount, cons
 		maxLength = 0;
 		return false;
 	}
+}
+
+double CRebarPos::ConvertLength(const double length, const CPosGroup::DrawingUnits fromUnit, const CPosGroup::DrawingUnits toUnit)
+{
+	if(fromUnit == toUnit) return length;
+
+	double scale = 1.0;
+
+	// Convert from fromUnit to MM
+	switch(fromUnit)
+	{
+	case CPosGroup::MM:
+		scale *= 1.0;
+		break;
+	case CPosGroup::CM:
+		scale *= 10.0;
+		break;
+	}
+
+	// Convert from MM to toUnit
+	switch(toUnit)
+	{
+	case CPosGroup::MM:
+		scale /= 1.0;
+		break;
+	case CPosGroup::CM:
+		scale /= 10.0;
+		break;
+	}
+
+	return length * scale;
 }
 
 double CRebarPos::BendingRadius(const double d)
