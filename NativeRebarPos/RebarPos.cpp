@@ -71,7 +71,7 @@ ACRX_DXF_DEFINE_MEMBERS(CRebarPos, AcDbEntity,
 CRebarPos::CRebarPos() :
 	m_BasePoint(0, 0, 0), geomInit(false), ucs(AcGeMatrix3d::kIdentity), direction(1, 0, 0), up(0, 1, 0), norm(0, 0, 1), m_NoteGrip(0, -1.6, 0),
 	m_DisplayStyle(CRebarPos::ALL), isModified(true), m_Length(NULL), m_Key(NULL),
-	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), m_Multiplier(1), 
+	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), m_Multiplier(1), m_ShowShape(Adesk::kFalse),
 	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), m_IsVarLength(false),
 	m_ShapeID(AcDbObjectId::kNull), m_GroupID(AcDbObjectId::kNull), 
 	circleRadius(1.125), partSpacing(0.15), m_MinLength(0), m_MaxLength(0),
@@ -96,12 +96,31 @@ CRebarPos::~CRebarPos()
     acutDelString(m_D);
     acutDelString(m_E);
     acutDelString(m_F);
+
+	for(ShapeListIt it = lastShapes.begin(); it != lastShapes.end(); it++)
+	{
+		delete *it;
+	}
+	lastShapes.clear();
 }
 
 
 //*************************************************************************
 // Properties
 //*************************************************************************
+const Adesk::Boolean CRebarPos::ShowShape(void) const
+{
+	assertReadEnabled();
+	return m_ShowShape;
+}
+Acad::ErrorStatus CRebarPos::setShowShape(const Adesk::Boolean newVal)
+{
+	assertWriteEnabled();
+	m_ShowShape = newVal;
+	isModified = true;
+	return Acad::eOk;
+}
+
 const AcGeVector3d& CRebarPos::DirectionVector(void) const
 {
 	assertReadEnabled();
@@ -1799,6 +1818,21 @@ const void CRebarPos::Calculate(void) const
 		formula = pShape->Formula();
 	}
 	int fieldCount = pShape->Fields();
+
+	// Copy shapes
+	lastShapes.clear();
+	for(ShapeListIt it = lastShapes.begin(); it != lastShapes.end(); it++)
+	{
+		delete *it;
+	}
+	lastShapes.clear();
+	if(m_ShowShape)
+	{
+		for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
+		{
+			lastShapes.push_back(pShape->GetShape(i)->clone());
+		}
+	}
 
 	// Get group name
 	lastGroupDraw.text.setEmpty();

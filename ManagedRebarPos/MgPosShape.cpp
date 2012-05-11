@@ -146,7 +146,7 @@ PosShape::Shape^ PosShape::ShapeCollection::default::get(int index)
 	{
 	case CShape::Line:
 		{
-			const CShapeLine* line = static_cast<const CShapeLine*>(shape);
+			const CShapeLine* line = dynamic_cast<const CShapeLine*>(shape);
 			ShapeLine^ rshape = gcnew ShapeLine();
 			rshape->Color = Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, shape->color);
 			rshape->X1 = line->x1;
@@ -158,7 +158,7 @@ PosShape::Shape^ PosShape::ShapeCollection::default::get(int index)
 		break;
 	case CShape::Arc:
 		{
-			const CShapeArc* arc = static_cast<const CShapeArc*>(shape);
+			const CShapeArc* arc = dynamic_cast<const CShapeArc*>(shape);
 			ShapeArc^ rshape = gcnew ShapeArc();
 			rshape->Color = Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, shape->color);
 			rshape->X = arc->x;
@@ -171,7 +171,7 @@ PosShape::Shape^ PosShape::ShapeCollection::default::get(int index)
 		break;
 	case CShape::Text:
 		{
-			const CShapeText* text = static_cast<const CShapeText*>(shape);
+			const CShapeText* text = dynamic_cast<const CShapeText*>(shape);
 			ShapeText^ rshape = gcnew ShapeText();
 			rshape->Color = Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, shape->color);
 			rshape->X = text->x;
@@ -190,7 +190,7 @@ void PosShape::ShapeCollection::default::set(int index, PosShape::Shape^ value)
 {
 	if(value->GetType() == ShapeLine::typeid)
 	{
-		ShapeLine^ rshape = static_cast<ShapeLine^>(value);
+		ShapeLine^ rshape = dynamic_cast<ShapeLine^>(value);
 		CShapeLine* line = new CShapeLine();
 		line->color = rshape->Color->ColorIndex;
 		line->x1 = rshape->X1;
@@ -201,7 +201,7 @@ void PosShape::ShapeCollection::default::set(int index, PosShape::Shape^ value)
 	}
 	else if(value->GetType() == ShapeArc::typeid)
 	{
-		ShapeArc^ rshape = static_cast<ShapeArc^>(value);
+		ShapeArc^ rshape = dynamic_cast<ShapeArc^>(value);
 		CShapeArc* arc = new CShapeArc();
 		arc->color = rshape->Color->ColorIndex;
 		arc->x = rshape->X;
@@ -213,7 +213,7 @@ void PosShape::ShapeCollection::default::set(int index, PosShape::Shape^ value)
 	}
 	else if(value->GetType() == ShapeText::typeid)
 	{
-		ShapeText^ rshape = static_cast<ShapeText^>(value);
+		ShapeText^ rshape = dynamic_cast<ShapeText^>(value);
 		CShapeText* text = new CShapeText();
 		text->color = rshape->Color->ColorIndex;
 		text->x = rshape->X;

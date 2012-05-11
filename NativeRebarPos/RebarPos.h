@@ -17,6 +17,7 @@
 #include "DrawParams.h"
 #include "PosShape.h"
 #include "PosGroup.h"
+#include "Shape.h"
 #include <vector>
 
 // The following is part of the code used to export an API
@@ -114,6 +115,9 @@ private:
 	ACHAR* m_E;
 	ACHAR* m_F;
 
+	Adesk::Boolean m_ShowShape;
+	mutable std::vector<CShape*> lastShapes;
+
 	DisplayStyle m_DisplayStyle;
 
 	AcDbHardPointerId m_ShapeID;
@@ -151,6 +155,10 @@ public:
 	static double BendingRadius(const double d);
 
 public:
+	/// Gets or sets whether pos shape is displayed
+    const Adesk::Boolean ShowShape(void) const;
+	Acad::ErrorStatus setShowShape(const Adesk::Boolean newVal);
+
 	/// Get direction vector
 	const AcGeVector3d& DirectionVector(void) const;
 	/// Get up vector

@@ -6,8 +6,10 @@
 
 #include "..\NativeRebarPos\RebarPos.h"
 #include "MgPosGroup.h"
+#include "MgPosShape.h"
 
 using namespace System;
+using namespace System::Collections;
 using namespace System::Runtime::InteropServices;
 using namespace Autodesk::AutoCAD::Geometry;
 using namespace Autodesk::AutoCAD::DatabaseServices;

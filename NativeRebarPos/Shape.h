@@ -14,6 +14,8 @@ struct CShape
 	CShape::ShapeType type;
 	Adesk::UInt16 color;
 
+	virtual CShape* clone() const = 0;
+
 protected:
 	CShape(const CShape::ShapeType Type, const Adesk::UInt16 Color = 0) : type(Type), color(Color)
 	{ }
@@ -29,6 +31,11 @@ struct CShapeLine : CShape
 	CShapeLine()
 		: CShape(CShape::Line), x1(0), y1(0), x2(0), y2(0) 
 	{ }
+
+	virtual CShapeLine* clone() const
+	{
+		return new CShapeLine(*this);
+	}
 };
 
 struct CShapeArc : CShape
@@ -42,6 +49,11 @@ struct CShapeArc : CShape
 	CShapeArc()
 		: CShape(CShape::Arc), x(0), y(0), r(0), startAngle(0), endAngle(0)
 	{ }
+
+	virtual CShapeArc* clone() const
+	{
+		return new CShapeArc(*this);
+	}
 };
 
 struct CShapeText : CShape
@@ -58,5 +70,10 @@ struct CShapeText : CShape
 	~CShapeText()
 	{
 		acutDelString(text);
+	}
+
+	virtual CShapeText* clone() const
+	{
+		return new CShapeText(*this);
 	}
 };

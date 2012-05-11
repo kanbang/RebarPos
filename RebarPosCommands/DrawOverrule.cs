@@ -15,6 +15,7 @@ namespace RebarPosCommands
         public static DrawOverrule Instance { get { return mInstance; } }
         public ObjectId CurrentGroupId { get; set; }
         public Autodesk.AutoCAD.Colors.Color CurrentGroupHightlightColor { get; set; }
+        public bool ShowShapes { get; set; }
 
         public override bool WorldDraw(Drawable drawable, WorldDraw wd)
         {
@@ -55,14 +56,10 @@ namespace RebarPosCommands
                     wd.Geometry.Polygon(rec);
                     wd.SubEntityTraits.FillType = filltype;
                     wd.Geometry.PopModelTransform();
-
-                    // Draw the entity over shading
-                    base.WorldDraw(drawable, wd);
-
-                    return true;
                 }
             }
 
+            // Draw the entity over shading
             return base.WorldDraw(drawable, wd);
         }
     }

@@ -50,8 +50,9 @@
             this.btnAdd = new System.Windows.Forms.Button();
             this.gbDisplay = new System.Windows.Forms.GroupBox();
             this.btnSelectShape = new System.Windows.Forms.Button();
-            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.posShapeView = new RebarPosCommands.PosShapeView();
+            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.chkShowShapes = new System.Windows.Forms.CheckBox();
             this.gbOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udPriority)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udFields)).BeginInit();
@@ -303,11 +304,6 @@
             this.btnSelectShape.UseVisualStyleBackColor = true;
             this.btnSelectShape.Click += new System.EventHandler(this.btnSelectShape_Click);
             // 
-            // errorProvider
-            // 
-            this.errorProvider.ContainerControl = this;
-            this.errorProvider.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProvider.Icon")));
-            // 
             // posShapeView
             // 
             this.posShapeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -321,6 +317,21 @@
             this.posShapeView.Size = new System.Drawing.Size(268, 121);
             this.posShapeView.TabIndex = 0;
             // 
+            // errorProvider
+            // 
+            this.errorProvider.ContainerControl = this;
+            this.errorProvider.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProvider.Icon")));
+            // 
+            // chkShowShapes
+            // 
+            this.chkShowShapes.AutoSize = true;
+            this.chkShowShapes.Location = new System.Drawing.Point(12, 441);
+            this.chkShowShapes.Name = "chkShowShapes";
+            this.chkShowShapes.Size = new System.Drawing.Size(172, 17);
+            this.chkShowShapes.TabIndex = 5;
+            this.chkShowShapes.Text = "Poz Açılımlarını Ekranda Göster";
+            this.chkShowShapes.UseVisualStyleBackColor = true;
+            // 
             // PosShapesForm
             // 
             this.AcceptButton = this.btnOK;
@@ -328,6 +339,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(629, 475);
+            this.Controls.Add(this.chkShowShapes);
             this.Controls.Add(this.gbDisplay);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.btnCancel);
@@ -348,6 +360,7 @@
             this.gbDisplay.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -375,5 +388,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnSelectShape;
         private PosShapeView posShapeView;
+        private System.Windows.Forms.CheckBox chkShowShapes;
     }
 }
