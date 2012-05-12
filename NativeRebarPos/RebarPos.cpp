@@ -69,9 +69,10 @@ ACRX_DXF_DEFINE_MEMBERS(CRebarPos, AcDbEntity,
 //*************************************************************************
 
 CRebarPos::CRebarPos() :
-	m_BasePoint(0, 0, 0), geomInit(false), ucs(AcGeMatrix3d::kIdentity), direction(1, 0, 0), up(0, 1, 0), norm(0, 0, 1), m_NoteGrip(0, -1.6, 0),
+	m_BasePoint(0, 0, 0), geomInit(false), ucs(AcGeMatrix3d::kIdentity), 
+	direction(1, 0, 0), up(0, 1, 0), norm(0, 0, 1), m_NoteGrip(0, -1.6, 0),
 	m_DisplayStyle(CRebarPos::ALL), isModified(true), m_Length(NULL), m_Key(NULL),
-	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), m_Multiplier(1), m_ShowShape(Adesk::kFalse),
+	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), m_Multiplier(1),
 	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), m_IsVarLength(false),
 	m_ShapeID(AcDbObjectId::kNull), m_GroupID(AcDbObjectId::kNull), 
 	circleRadius(1.125), partSpacing(0.15), m_MinLength(0), m_MaxLength(0),
@@ -108,19 +109,6 @@ CRebarPos::~CRebarPos()
 //*************************************************************************
 // Properties
 //*************************************************************************
-const Adesk::Boolean CRebarPos::ShowShape(void) const
-{
-	assertReadEnabled();
-	return m_ShowShape;
-}
-Acad::ErrorStatus CRebarPos::setShowShape(const Adesk::Boolean newVal)
-{
-	assertWriteEnabled();
-	m_ShowShape = newVal;
-	isModified = true;
-	return Acad::eOk;
-}
-
 const AcGeVector3d& CRebarPos::DirectionVector(void) const
 {
 	assertReadEnabled();
@@ -509,7 +497,7 @@ const double CRebarPos::MaxLength(void) const
 }
 
 //*************************************************************************
-// Methods
+// Class Methods
 //*************************************************************************
 
 /// Determines which part is under the given point
@@ -568,6 +556,19 @@ const CRebarPos::PosSubEntityType CRebarPos::HitTest(const AcGePoint3d& pt0) con
 	}
 
 	return CRebarPos::NONE;
+}
+
+const void CRebarPos::Update(void)
+{
+	assertWriteEnabled();
+
+	isModified = true;
+	return;
+}
+
+const std::vector<CShape*>& CRebarPos::GetShapes(void) const
+{
+	return lastShapes;
 }
 
 //*************************************************************************
@@ -1423,8 +1424,7 @@ Acad::ErrorStatus CRebarPos::subDeepClone(AcDbObject*    pOwner,
     bool isPrim = false;
     if (isPrimary)
         isPrim = true;
-    AcDbIdPair idPair(objectId(), (AcDbObjectId)NULL,
-                      false, isPrim);
+    AcDbIdPair idPair(objectId(), (AcDbObjectId)NULL, false, isPrim);
     if (idMap.compute(idPair) && (idPair.value() != NULL))
         return Acad::eOk;    
 
@@ -1444,8 +1444,7 @@ Acad::ErrorStatus CRebarPos::subDeepClone(AcDbObject*    pOwner,
     bool bOwnerXlated = false;
     if (isPrimary)
     {
-        AcDbBlockTableRecord *pBTR =
-            AcDbBlockTableRecord::cast(pOwner);
+        AcDbBlockTableRecord *pBTR = AcDbBlockTableRecord::cast(pOwner);
         if (pBTR != NULL)
         {
             pBTR->appendAcDbEntity(pClone);
@@ -1455,7 +1454,9 @@ Acad::ErrorStatus CRebarPos::subDeepClone(AcDbObject*    pOwner,
         {
             pOwner->database()->addAcDbObject(pClone);
         }
-    } else {
+    } 
+	else 
+	{
         pOwner->database()->addAcDbObject(pClone);
         pClone->setOwnerId(pOwner->objectId());
         bOwnerXlated = true;
@@ -1482,8 +1483,8 @@ Acad::ErrorStatus CRebarPos::subDeepClone(AcDbObject*    pOwner,
     // any owned objects.
     //
     AcDbObjectId id;
-    while (filer.getNextOwnedObject(id)) {
-
+    while (filer.getNextOwnedObject(id)) 
+	{
         AcDbObject *pSubObject;
         AcDbObject *pClonedSubObject;
 
@@ -1501,9 +1502,7 @@ Acad::ErrorStatus CRebarPos::subDeepClone(AcDbObject*    pOwner,
         //
         acdbOpenAcDbObject(pSubObject, id, AcDb::kForRead);
         pClonedSubObject = NULL;
-        pSubObject->deepClone(pClonedObject,
-                              pClonedSubObject,
-                              idMap, Adesk::kFalse);
+        pSubObject->deepClone(pClonedObject, pClonedSubObject, idMap, Adesk::kFalse);
 
         // If this is a kDcInsert context, the objects
         // may be "cheapCloned".  In this case, they are
@@ -1556,8 +1555,7 @@ Acad::ErrorStatus CRebarPos::subWblockClone(AcRxObject*    pOwner,
     idMap.destDb(pDest);
     idMap.origDb(pOrig);
     if (pDest == pOrig)
-        return AcDbEntity::subWblockClone(pOwner, pClonedObject,
-            idMap, isPrimary);
+        return AcDbEntity::subWblockClone(pOwner, pClonedObject, idMap, isPrimary);
 
     // If this is an Xref bind operation and this 
     // entity is in Paper Space,  then we don't want to
@@ -1571,8 +1569,7 @@ Acad::ErrorStatus CRebarPos::subWblockClone(AcRxObject*    pOwner,
     pTable->getAt(ACDB_PAPER_SPACE, pspace);
     pTable->close(); 
 
-    if (   idMap.deepCloneContext() == AcDb::kDcXrefBind
-        && ownerId() == pspace)
+    if (idMap.deepCloneContext() == AcDb::kDcXrefBind && ownerId() == pspace)
         return Acad::eOk;
     
     // If this object is in the idMap and is already
@@ -1582,8 +1579,7 @@ Acad::ErrorStatus CRebarPos::subWblockClone(AcRxObject*    pOwner,
     if (isPrimary)
         isPrim = true;
 
-    AcDbIdPair idPair(objectId(), (AcDbObjectId)NULL,
-                      false, isPrim);
+    AcDbIdPair idPair(objectId(), (AcDbObjectId)NULL, false, isPrim);
     if (idMap.compute(idPair) && (idPair.value() != NULL))
         return Acad::eOk;    
 
@@ -1642,9 +1638,12 @@ Acad::ErrorStatus CRebarPos::subWblockClone(AcRxObject*    pOwner,
     AcDbBlockTableRecord *pBTR = NULL;
     if (pOwn != NULL)
         pBTR = AcDbBlockTableRecord::cast(pOwn);
-    if (pBTR != NULL && isPrimary) {
+    if (pBTR != NULL && isPrimary) 
+	{
         pBTR->appendAcDbEntity(pClone);
-    } else {
+    } 
+	else 
+	{
         pDb->addAcDbObject(pClonedObject);
     }
 
@@ -1663,11 +1662,9 @@ Acad::ErrorStatus CRebarPos::subWblockClone(AcRxObject*    pOwner,
     filer.seek(0L, AcDb::kSeekFromStart);
     pClone->dwgIn(&filer);
 
-    idMap.assign(AcDbIdPair(objectId(), pClonedObject->objectId(), Adesk::kTrue,
-        isPrim, (Adesk::Boolean)(pOwn != NULL) ));
+    idMap.assign(AcDbIdPair(objectId(), pClonedObject->objectId(), Adesk::kTrue, isPrim, (Adesk::Boolean)(pOwn != NULL)));
 
-   pClonedObject->setOwnerId((pOwn != NULL) ?
-        pOwn->objectId() : ownerId());
+   pClonedObject->setOwnerId((pOwn != NULL) ? pOwn->objectId() : ownerId());
 
     // STEP 5:
     // This must be called for all newly created objects
@@ -1689,8 +1686,8 @@ Acad::ErrorStatus CRebarPos::subWblockClone(AcRxObject*    pOwner,
     // any hard references.
     //
     AcDbObjectId id;
-    while (filer.getNextHardObject(id)) {
-
+    while (filer.getNextHardObject(id)) 
+	{
         AcDbObject *pSubObject;
         AcDbObject *pClonedSubObject;
 
@@ -1704,7 +1701,8 @@ Acad::ErrorStatus CRebarPos::subWblockClone(AcRxObject*    pOwner,
         // database, such as an xref, do not clone it.
         //
         acdbOpenAcDbObject(pSubObject, id, AcDb::kForRead);
-        if (pSubObject->database() != database()) {
+        if (pSubObject->database() != database()) 
+		{
             pSubObject->close();
             continue;
         }
@@ -1723,14 +1721,13 @@ Acad::ErrorStatus CRebarPos::subWblockClone(AcRxObject*    pOwner,
         // something in the primary set.
         //
         pClonedSubObject = NULL;
-        if (pSubObject->ownerId() == objectId()) {
-            pSubObject->wblockClone(pClone,
-                                    pClonedSubObject,
-                                    idMap, Adesk::kFalse);
-        } else {
-            pSubObject->wblockClone(pClone->database(),
-                                    pClonedSubObject,
-                                    idMap, Adesk::kFalse);
+        if (pSubObject->ownerId() == objectId()) 
+		{
+            pSubObject->wblockClone(pClone, pClonedSubObject, idMap, Adesk::kFalse);
+        }
+		else 
+		{
+            pSubObject->wblockClone(pClone->database(), pClonedSubObject, idMap, Adesk::kFalse);
         }
         pSubObject->close();
         
@@ -1756,18 +1753,6 @@ Acad::ErrorStatus   CRebarPos::subGetClassID(CLSID* pClsid) const
     assertReadEnabled();
     *pClsid = CLSID_ComRebarPos;
     return Acad::eOk;
-}
-
-//*************************************************************************
-// Class methods
-//*************************************************************************
-
-const void CRebarPos::Update(void)
-{
-	assertWriteEnabled();
-
-	isModified = true;
-	return;
 }
 
 //*************************************************************************
@@ -1826,12 +1811,9 @@ const void CRebarPos::Calculate(void) const
 		delete *it;
 	}
 	lastShapes.clear();
-	if(m_ShowShape)
+	for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
 	{
-		for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
-		{
-			lastShapes.push_back(pShape->GetShape(i)->clone());
-		}
+		lastShapes.push_back(pShape->GetShape(i)->clone());
 	}
 
 	// Get group name

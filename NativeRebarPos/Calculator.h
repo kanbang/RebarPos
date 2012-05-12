@@ -24,6 +24,7 @@ class DLLIMPEXP Calculator
 public:
 	enum Errors
 	{
+		eOK = 0,
 		eParenthesisMisMatch = 1,
 		eNotAnOperator = 2,
 		eUnknownOperator = 3,

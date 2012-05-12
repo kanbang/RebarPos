@@ -23,6 +23,8 @@ namespace RebarPosCommands
 
         public void SetCurrentGroup(ObjectId id)
         {
+            HighlightGroupOverrule.Instance.RemoveGroup(CurrentGroupId);
+
             string name = "";
             Autodesk.AutoCAD.Colors.Color highlightColor = new Autodesk.AutoCAD.Colors.Color();
 
@@ -31,24 +33,10 @@ namespace RebarPosCommands
             {
                 try
                 {
-                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
-                    if (namedDict.Contains(PosGroup.TableName))
-                    {
-                        DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosGroup.TableName), OpenMode.ForRead);
-                        using (DbDictionaryEnumerator it = dict.GetEnumerator())
-                        {
-                            while (it.MoveNext())
-                            {
-                                if (it.Value == id)
-                                {
-                                    PosGroup item = (PosGroup)tr.GetObject(it.Value, OpenMode.ForWrite);
-                                    name = item.Name;
-                                    highlightColor = item.CurrentGroupHighlightColor;
-                                    break;
-                                }
-                            }
-                        }
-                    }
+                    PosGroup item = tr.GetObject(id, OpenMode.ForRead) as PosGroup;
+                    if (item == null) return;
+                    name = item.Name;
+                    highlightColor = item.CurrentGroupHighlightColor;
                 }
                 catch
                 {
@@ -58,11 +46,10 @@ namespace RebarPosCommands
 
             CurrentGroupId = id;
             CurrentGroupName = name;
-            Overrule.CurrentGroupId = id;
-            Overrule.CurrentGroupHightlightColor = highlightColor;
 
-            Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
-            ed.Regen();
+            HighlightGroupOverrule.Instance.AddGroup(id, highlightColor);
+
+            DWGUtility.RefreshAllPos();
         }
     }
 }

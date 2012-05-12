@@ -33,13 +33,25 @@ namespace RebarPosCommands
             ObjectId id = DWGUtility.CreateDefaultGroups();
             SetCurrentGroup(id);
 
-            // ObjectOverrule.RemoveOverrule(RXClass.GetClass(typeof(RebarPos)), Overrule);
-            ObjectOverrule.AddOverrule(RXClass.GetClass(typeof(RebarPos)), Overrule, true);
+            ShowShapes = false;
         }
 
-        private DrawOverrule Overrule { get { return DrawOverrule.Instance; } }
         private string CurrentGroupName { get; set; }
         private ObjectId CurrentGroupId { get; set; }
+        private bool ShowShapes 
+        {
+            get 
+            {
+                return ShowShapesOverrule.Instance.Has(); 
+            }
+            set 
+            {
+                if (value)
+                    ShowShapesOverrule.Instance.Add();
+                else
+                    ShowShapesOverrule.Instance.Remove();
+            }
+        }
 
         [CommandMethod("RebarPos", "POS", "POS_Local", CommandFlags.Modal)]
         public void CMD_Pos()
@@ -51,7 +63,7 @@ namespace RebarPosCommands
                     "New Numbering Copy Group Check BOM Find Empty Shapes");
                 opts.AllowNone = false;
                 PromptEntityResult result = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetEntity(opts);
-
+                
                 if (result.Status == PromptStatus.Keyword)
                 {
                     switch (result.StringResult)
@@ -150,6 +162,20 @@ namespace RebarPosCommands
         public void CMD_PosShapes()
         {
             PosShapes();
+        }
+
+        [CommandMethod("RebarPos", "SHOWSHAPES", "SHOWSHAPES_Local", CommandFlags.Modal)]
+        public void CMD_ShowShapes()
+        {
+            ShowShapes = true;
+            DWGUtility.RefreshAllPos();
+        }
+
+        [CommandMethod("RebarPos", "HIDESHAPES", "HIDESHAPES_Local", CommandFlags.Modal)]
+        public void CMD_HideShapes()
+        {
+            ShowShapes = false;
+            DWGUtility.RefreshAllPos();
         }
     }
 }

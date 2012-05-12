@@ -394,6 +394,7 @@ namespace RebarPosCommands
                     {
                         RebarPos pos = tr.GetObject(posid, OpenMode.ForWrite) as RebarPos;
                         pos.Update();
+                        pos.Draw();
                     }
 
                     tr.Commit();
@@ -415,6 +416,19 @@ namespace RebarPosCommands
         public static void RefreshPosWithShape(ObjectId id)
         {
             RefreshPos(GetPosWithShape(id));
+        }
+
+        // Refreshes all items
+        public static void RefreshAllPos()
+        {
+            RefreshPos(GetAllPos());
+        }
+
+        // Regenerates the drawing window
+        public static void Regen()
+        {
+            Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+            ed.Regen();
         }
     }
 }

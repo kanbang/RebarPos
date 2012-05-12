@@ -123,6 +123,9 @@
   <data name="EMPTYPOS_Local" xml:space="preserve">
     <value>NUMARASIL</value>
   </data>
+  <data name="HIDESHAPES_Local" xml:space="preserve">
+    <value>SEKILSIL</value>
+  </data>
   <data name="NEWPOS_Local" xml:space="preserve">
     <value>POZEKLE</value>
   </data>
@@ -143,5 +146,8 @@
   </data>
   <data name="POS_Local" xml:space="preserve">
     <value>POZ</value>
+  </data>
+  <data name="SHOWSHAPES_Local" xml:space="preserve">
+    <value>SEKILGOSTER</value>
   </data>
 </root>

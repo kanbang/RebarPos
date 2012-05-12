@@ -232,6 +232,21 @@ Autodesk::AutoCAD::DatabaseServices::ObjectId RebarPos::GroupId::get()
 	return Marshal::ToObjectId(GetImpObj()->GroupId());
 }
 
+array<PosShape::Shape^>^ RebarPos::Shapes::get()
+{
+	std::vector<CShape*> shapes = GetImpObj()->GetShapes();
+	array<PosShape::Shape^>^ list = gcnew array<PosShape::Shape^>((int)shapes.size());
+
+	int i = 0;
+	for(ShapeListIt it = shapes.begin(); it != shapes.end(); it++)
+	{
+		list[i] = PosShape::Shape::FromNative(*it);
+		i++;
+	}
+
+	return list;
+}
+
 //*************************************************************************
 // Methods
 //*************************************************************************

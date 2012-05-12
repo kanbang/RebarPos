@@ -115,7 +115,6 @@ private:
 	ACHAR* m_E;
 	ACHAR* m_F;
 
-	Adesk::Boolean m_ShowShape;
 	mutable std::vector<CShape*> lastShapes;
 
 	DisplayStyle m_DisplayStyle;
@@ -155,10 +154,6 @@ public:
 	static double BendingRadius(const double d);
 
 public:
-	/// Gets or sets whether pos shape is displayed
-    const Adesk::Boolean ShowShape(void) const;
-	Acad::ErrorStatus setShowShape(const Adesk::Boolean newVal);
-
 	/// Get direction vector
 	const AcGeVector3d& DirectionVector(void) const;
 	/// Get up vector
@@ -169,6 +164,9 @@ public:
 	/// Get extents
 	const double Width(void) const;
 	const double Height(void) const;
+
+	/// Get shapes
+	const std::vector<CShape*>& GetShapes(void) const;
 
 	/// Determines which part is under the given point
 	const CRebarPos::PosSubEntityType HitTest(const AcGePoint3d& pt0) const;

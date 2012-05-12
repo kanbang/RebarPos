@@ -5,6 +5,9 @@ using System.Reflection;
 using System.IO;
 using System.Collections.Generic;
 using System;
+using Autodesk.AutoCAD.DatabaseServices;
+using OZOZ.RebarPosWrapper;
+using Autodesk.AutoCAD.GraphicsInterface;
 
 // This line is not mandatory, but improves loading performances
 [assembly: ExtensionApplication(typeof(RebarPosCommands.RebarPosPlugin))]
@@ -18,12 +21,15 @@ namespace RebarPosCommands
     {
         void IExtensionApplication.Initialize()
         {
-            
+            DrawableOverrule.Overruling = true;
+            ObjectOverrule.AddOverrule(RXClass.GetClass(typeof(RebarPos)), HighlightGroupOverrule.Instance, true);
+            ObjectOverrule.AddOverrule(RXClass.GetClass(typeof(RebarPos)), ShowShapesOverrule.Instance, true);
         }
 
         void IExtensionApplication.Terminate()
         {
-            
+            ObjectOverrule.RemoveOverrule(RXClass.GetClass(typeof(RebarPos)), HighlightGroupOverrule.Instance);
+            ObjectOverrule.RemoveOverrule(RXClass.GetClass(typeof(RebarPos)), ShowShapesOverrule.Instance);
         }
     }
 }

@@ -32,6 +32,10 @@ struct CShapeLine : CShape
 		: CShape(CShape::Line), x1(0), y1(0), x2(0), y2(0) 
 	{ }
 
+	CShapeLine(const Adesk::UInt16 Color, ads_real X1, ads_real Y1, ads_real X2, ads_real Y2)
+		: CShape(CShape::Line, Color), x1(X1), y1(Y1), x2(X2), y2(Y2) 
+	{ }
+
 	virtual CShapeLine* clone() const
 	{
 		return new CShapeLine(*this);
@@ -50,6 +54,10 @@ struct CShapeArc : CShape
 		: CShape(CShape::Arc), x(0), y(0), r(0), startAngle(0), endAngle(0)
 	{ }
 
+	CShapeArc(const Adesk::UInt16 Color, ads_real X, ads_real Y, ads_real R, ads_real StartAngle, ads_real EndAngle)
+		: CShape(CShape::Arc, Color), x(X), y(Y), r(R), startAngle(StartAngle), endAngle(EndAngle)
+	{ }
+
 	virtual CShapeArc* clone() const
 	{
 		return new CShapeArc(*this);
@@ -66,6 +74,12 @@ struct CShapeText : CShape
 	CShapeText()
 		: CShape(CShape::Text), x(0), y(0), height(0), text(NULL)
 	{ }
+
+	CShapeText(const Adesk::UInt16 Color, ads_real X, ads_real Y, ads_real Height, ACHAR* Text)
+		: CShape(CShape::Text, Color), x(X), y(Y), height(Height), text(NULL)
+	{ 
+		acutUpdString(Text, text);
+	}
 
 	~CShapeText()
 	{

@@ -63,6 +63,7 @@
 				AdditionalOptions="/ignore:4099"
 				AdditionalLibraryDirectories="..\..\..\..\lib;..\..\..\lib"
 				ModuleDefinitionFile=""
+				TypeLibraryFile="$(OutDir)\$(TargetName).tlb"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -132,6 +133,7 @@
 				AdditionalOptions="/ignore:4099"
 				AdditionalLibraryDirectories="..\..\..\..\lib;..\..\..\lib"
 				ModuleDefinitionFile=""
+				TypeLibraryFile="$(OutDir)\$(TargetName).tlb"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -178,6 +180,8 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
+				PreprocessorDefinitions=";"
+				AdditionalIncludeDirectories="..\..\..\inc"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -200,6 +204,7 @@
 				AdditionalOptions="/ignore:4099"
 				AdditionalLibraryDirectories="..\..\..\..\lib;..\..\..\lib"
 				ModuleDefinitionFile=""
+				TypeLibraryFile="$(OutDir)\$(TargetName).tlb"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -245,6 +250,8 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
+				PreprocessorDefinitions=";"
+				AdditionalIncludeDirectories="..\..\..\inc"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -267,6 +274,7 @@
 				AdditionalOptions="/ignore:4099"
 				AdditionalLibraryDirectories="..\..\..\..\lib;..\..\..\lib"
 				ModuleDefinitionFile=""
+				TypeLibraryFile="$(OutDir)\$(TargetName).tlb"
 				TargetMachine="17"
 			/>
 			<Tool

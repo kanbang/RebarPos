@@ -5,6 +5,7 @@
 #pragma once
 
 #include "..\NativeRebarPos\PosShape.h"
+#include "Marshal.h"
 
 using namespace System;
 using namespace Autodesk::AutoCAD::Geometry;
@@ -18,19 +19,68 @@ namespace OZOZ
         public ref class PosShape :  public Autodesk::AutoCAD::DatabaseServices::DBObject
         {
 		public:
-			ref struct Shape
+			ref struct ShapeLine;
+			ref struct ShapeArc;
+			ref struct ShapeText;
+
+			ref struct Shape abstract
 			{
+
 			public:
 				property Autodesk::AutoCAD::Colors::Color^ Color;
 
 			protected:
-				Shape(void)
+				Shape()
 				{
 					Color = Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, 0);
 				}
 				Shape(Autodesk::AutoCAD::Colors::Color^ color)
 				{
 					Color = color;
+				}
+
+			private:
+				Shape(const Shape%) { }
+				void operator=(const Shape%) { }
+
+			internal:
+				virtual CShape* ToNative(void) = 0;
+
+			internal:
+				static Shape^ FromNative(const CShape* shape)
+				{
+					switch(shape->type)
+					{
+					case CShape::Line:
+						return FromNative(dynamic_cast<const CShapeLine*>(shape));
+						break;
+					case CShape::Arc:
+						return FromNative(dynamic_cast<const CShapeArc*>(shape));
+						break;
+					case CShape::Text:
+						return FromNative(dynamic_cast<const CShapeText*>(shape));
+						break;
+					default:
+						throw gcnew Exception("Unknown shape type");
+					}
+				}
+				static ShapeLine^ FromNative(const CShapeLine* line)
+				{
+					return gcnew ShapeLine(
+						Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, line->color),
+						line->x1, line->y1, line->x2, line->y2);
+				}
+				static ShapeArc^ FromNative(const CShapeArc* arc)
+				{
+					return gcnew ShapeArc(
+						Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, arc->color),
+						arc->x, arc->y, arc->r, arc->startAngle, arc->endAngle);
+				}
+				static ShapeText^ FromNative(const CShapeText* text)
+				{
+					return gcnew ShapeText(
+						Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, text->color),
+						text->x, text->y, text->height, Marshal::WcharToString(text->text));
 				}
 			};
 
@@ -43,7 +93,7 @@ namespace OZOZ
 				property double Y2;
 
 			public:
-				ShapeLine(void) : Shape()
+				ShapeLine() : Shape()
 				{
 					;
 				}
@@ -56,6 +106,11 @@ namespace OZOZ
 					Y2 = y2;
 				}
 
+			internal:
+				virtual CShape* ToNative(void) override
+				{
+					return new CShapeLine(Color->ColorIndex, X1, Y1, X2, Y2);
+				}
 			};
 
 			ref struct ShapeArc : Shape
@@ -68,7 +123,7 @@ namespace OZOZ
 				property double EndAngle;
 
 			public:
-				ShapeArc(void) : Shape()
+				ShapeArc() : Shape()
 				{
 					;
 				}
@@ -78,8 +133,14 @@ namespace OZOZ
 					X = x;
 					Y = y;
 					R = r;
-					StartAngle=startAngle;
-					EndAngle=endAngle;
+					StartAngle = startAngle;
+					EndAngle = endAngle;
+				}
+
+			internal:
+				virtual CShape* ToNative(void) override
+				{
+					return new CShapeArc(Color->ColorIndex, X, Y, R, StartAngle, EndAngle);
 				}
 			};
 
@@ -92,7 +153,7 @@ namespace OZOZ
 				property String^ Text;
 
 			public:
-				ShapeText(void) : Shape()
+				ShapeText() : Shape()
 				{
 					;
 				}
@@ -103,6 +164,12 @@ namespace OZOZ
 					Height = height;
 					Text = text;
 				}
+
+			internal:
+				virtual CShape* ToNative(void) override
+				{
+					return new CShapeText(Color->ColorIndex, X, Y, Height, (wchar_t*)Marshal::StringToWchar(Text));
+				}
 			};
 
 		public:
@@ -110,6 +177,11 @@ namespace OZOZ
 			{
 			private:
 				PosShape^ m_Parent;
+
+			private:
+				ShapeCollection() { }
+				ShapeCollection(const ShapeCollection%) { }
+				void operator=(const ShapeCollection%) { }
 
 			internal:
 				ShapeCollection(PosShape^ parent);
