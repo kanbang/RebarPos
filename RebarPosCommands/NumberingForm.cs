@@ -370,8 +370,8 @@ namespace RebarPosCommands
                                         copy.priority = shape.Priority;
                                         copy.shapename = shape.Name;
                                     }
-                                    copy.length1 = pos.MinLength;
-                                    copy.length2 = pos.MaxLength;
+                                    copy.length1 = pos.CalcProperties.MinLength;
+                                    copy.length2 = pos.CalcProperties.MaxLength;
                                     m_PosList.Add(copy);
                                 }
                             }

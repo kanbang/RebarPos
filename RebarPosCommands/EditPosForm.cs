@@ -15,6 +15,14 @@ namespace RebarPosCommands
 {
     public partial class EditPosForm : Form
     {
+        private enum UpdateLengthResult
+        {
+            OK = 1,
+            SystemError = 2,
+            ExceedsMaximum = 3,
+            InvalidLength = 4
+        }
+
         ObjectId m_Pos;
         ObjectId m_Group;
         ObjectId m_Shape;
@@ -352,7 +360,7 @@ namespace RebarPosCommands
             return true;
         }
 
-        private bool UpdateLength()
+        private UpdateLengthResult UpdateLength()
         {
             // Get lengths
             double minLengthMM = 0;
@@ -361,12 +369,12 @@ namespace RebarPosCommands
             bool check = false;
             try
             {
-                check = RebarPos.GetTotalLengths(m_Formula, m_Fields, m_DrawingUnits, txtA.Text, txtB.Text, txtC.Text, txtD.Text, txtE.Text, txtF.Text, cbPosDiameter.Text, m_Precision, out minLengthMM, out maxLengthMM, out isVarLength);
+                check = RebarPos.GetTotalLengths(m_Formula, m_Fields, m_DrawingUnits, txtA.Text, txtB.Text, txtC.Text, txtD.Text, txtE.Text, txtF.Text, cbPosDiameter.Text, out minLengthMM, out maxLengthMM, out isVarLength);
             }
             catch (System.Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
+                return UpdateLengthResult.SystemError;
             }
 
             if (check && (minLengthMM > double.Epsilon) && (maxLengthMM > double.Epsilon))
@@ -411,14 +419,14 @@ namespace RebarPosCommands
                     lblAverageLength.ForeColor = Color.Red;
                     lblTotalLength.ForeColor = Color.Red;
 
-                    return false;
+                    return UpdateLengthResult.ExceedsMaximum;
                 }
                 else
                 {
                     lblAverageLength.ForeColor = SystemColors.ControlText;
                     lblTotalLength.ForeColor = SystemColors.ControlText;
 
-                    return true;
+                    return UpdateLengthResult.OK;
                 }
             }
             else
@@ -429,7 +437,7 @@ namespace RebarPosCommands
                 lblAverageLengthCaption.Visible = false;
                 lblAverageLength.Visible = false;
 
-                return false;
+                return UpdateLengthResult.InvalidLength;
             }
         }
 
@@ -662,17 +670,24 @@ namespace RebarPosCommands
                 errorProvider.SetIconAlignment(source, ErrorIconAlignment.MiddleLeft);
                 return false;
             }
-            else if (!UpdateLength())
+
+            UpdateLengthResult check = UpdateLength();
+            if (check == UpdateLengthResult.OK)
             {
-                errorProvider.SetError(source, "Toplam boy maximum demir boyundan büyük olamaz.");
-                errorProvider.SetIconAlignment(source, ErrorIconAlignment.MiddleLeft);
-                return false;
+                errorProvider.SetError(source, "");
+                return true;
             }
             else
             {
+                if (check == UpdateLengthResult.ExceedsMaximum)
+                    errorProvider.SetError(source, "Toplam boy maximum demir boyundan büyük olamaz.");
+                else if (check == UpdateLengthResult.InvalidLength)
+                    errorProvider.SetError(source, "Geçersiz parça boyu.");
+                else
+                    errorProvider.SetError(source, "Geçersiz boy.");
 
-                errorProvider.SetError(source, "");
-                return true;
+                errorProvider.SetIconAlignment(source, ErrorIconAlignment.MiddleLeft);
+                return false;
             }
         }
 

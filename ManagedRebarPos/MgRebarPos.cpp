@@ -19,11 +19,13 @@ using namespace OZOZ::RebarPosWrapper;
 RebarPos::RebarPos() 
 :Autodesk::AutoCAD::DatabaseServices::Entity(IntPtr(new CRebarPos()), true)
 {
+	mCalculatedProperties = gcnew RebarPos::CalculatedProperties();
 }
 
 RebarPos::RebarPos(System::IntPtr unmanagedPointer, bool autoDelete)
 : Autodesk::AutoCAD::DatabaseServices::Entity(unmanagedPointer,autoDelete)
 {
+	mCalculatedProperties = gcnew RebarPos::CalculatedProperties();
 }
 
 //*************************************************************************
@@ -189,24 +191,9 @@ String^ RebarPos::F::get()
     return Marshal::WcharToString(GetImpObj()->F());
 }
 
-bool RebarPos::IsVarLength::get()
-{
-	return GetImpObj()->IsVarLength();
-}
-
 String^ RebarPos::Length::get()
 {
     return Marshal::WcharToString(GetImpObj()->Length());
-}
-
-double RebarPos::MinLength::get()
-{
-	return GetImpObj()->MinLength();
-}
-
-double RebarPos::MaxLength::get()
-{
-	return GetImpObj()->MaxLength();
 }
 
 String^ RebarPos::PosKey::get()
@@ -247,6 +234,13 @@ array<PosShape::Shape^>^ RebarPos::Shapes::get()
 	return list;
 }
 
+RebarPos::CalculatedProperties^ RebarPos::CalcProperties::get()
+{
+	if(mCalculatedProperties->mGeneration < GetImpObj()->CalcProps().Generation)
+		mCalculatedProperties = gcnew RebarPos::CalculatedProperties(GetImpObj()->CalcProps()); 
+	return mCalculatedProperties; 
+}
+
 //*************************************************************************
 // Methods
 //*************************************************************************
@@ -263,13 +257,13 @@ RebarPos::HitTestResult RebarPos::HitTest(Point3d pt)
 //*************************************************************************
 // Static Methods
 //*************************************************************************
-bool RebarPos::GetTotalLengths(String^ formula, int fieldCount, PosGroup::DrawingUnits inputUnit, String^ a, String^ b, String^ c, String^ d, String^ e, String^ f, String^ diameter, int precision, [Out] double% minLength, [Out] double% maxLength, [Out] bool% isVar)
+bool RebarPos::GetTotalLengths(String^ formula, int fieldCount, PosGroup::DrawingUnits inputUnit, String^ a, String^ b, String^ c, String^ d, String^ e, String^ f, String^ diameter, [Out] double% minLength, [Out] double% maxLength, [Out] bool% isVar)
 {
 	double len1;
 	double len2;
 	bool var;
 
-	bool check = CRebarPos::GetTotalLengths(Marshal::StringToWchar(formula), fieldCount, static_cast<CPosGroup::DrawingUnits>(inputUnit), Marshal::StringToWchar(a), Marshal::StringToWchar(b), Marshal::StringToWchar(c), Marshal::StringToWchar(d), Marshal::StringToWchar(e), Marshal::StringToWchar(f), Marshal::StringToWchar(diameter), precision, len1, len2, var);
+	bool check = CRebarPos::GetTotalLengths(Marshal::StringToWchar(formula), fieldCount, static_cast<CPosGroup::DrawingUnits>(inputUnit), Marshal::StringToWchar(a), Marshal::StringToWchar(b), Marshal::StringToWchar(c), Marshal::StringToWchar(d), Marshal::StringToWchar(e), Marshal::StringToWchar(f), Marshal::StringToWchar(diameter), len1, len2, var);
 
 	minLength = len1;
 	maxLength = len2;

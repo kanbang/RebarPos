@@ -51,6 +51,97 @@ namespace OZOZ
 				MarkerOnly = 2,
 			};
 
+			ref class CalculatedProperties
+			{
+			internal:
+				int mGeneration;
+
+			private:
+				double mDiameter;
+				int mPrecision;
+				int mFieldCount;
+				bool mBending;
+				double mMinA, mMinB, mMinC, mMinD, mMinE, mMinF;
+				double mMaxA, mMaxB, mMaxC, mMaxD, mMaxE, mMaxF;
+				bool mIsVarA, mIsVarB, mIsVarC, mIsVarD, mIsVarE, mIsVarF;
+				double mMinLength, mMaxLength;
+				bool mIsVarLength;
+				double mMinSpacing, mMaxSpacing;
+				bool mIsVarSpacing;
+
+			public:
+				property double Diameter { double get() { return mDiameter; } }
+				property int Precision   { int    get() { return mPrecision; } }
+				property int FieldCount  { int    get() { return mFieldCount; } }
+				property bool Bending    { bool   get() { return mBending; } }
+				property double MinA     { double get() { return mMinA; } }
+				property double MinB     { double get() { return mMinB; } }
+				property double MinC     { double get() { return mMinC; } }
+				property double MinD     { double get() { return mMinD; } }
+				property double MinE     { double get() { return mMinE; } }
+				property double MinF     { double get() { return mMinF; } }
+				property double MaxA     { double get() { return mMaxA; } }
+				property double MaxB     { double get() { return mMaxB; } }
+				property double MaxC     { double get() { return mMaxC; } }
+				property double MaxD     { double get() { return mMaxD; } }
+				property double MaxE     { double get() { return mMaxE; } }
+				property double MaxF     { double get() { return mMaxF; } }
+				property bool IsVarA     { bool   get() { return mIsVarA; } }
+				property bool IsVarB     { bool   get() { return mIsVarB; } }
+				property bool IsVarC     { bool   get() { return mIsVarC; } }
+				property bool IsVarD     { bool   get() { return mIsVarD; } }
+				property bool IsVarE     { bool   get() { return mIsVarE; } }
+				property bool IsVarF     { bool   get() { return mIsVarF; } }
+				property double MinLength { double get() { return mMinLength; } }
+				property double MaxLength { double get() { return mMaxLength; } }
+				property bool IsVarLength { bool   get() { return mIsVarLength; } }
+				property double MinSpacing { double get() { return mMinSpacing; } }
+				property double MaxSpacing { double get() { return mMaxSpacing; } }
+				property bool IsVarSpacing { bool   get() { return mIsVarSpacing; } }
+
+			internal:
+				CalculatedProperties()
+				{
+					mGeneration = -1;
+				}
+
+				CalculatedProperties(const CRebarPos::CCalculatedProperties& source)
+				{
+					mGeneration  = source.Generation;
+					mDiameter    = source.Diameter;
+					mPrecision	 = source.Precision;
+					mFieldCount	 = source.FieldCount;
+					mBending	 = source.Bending;
+					mMinA		 = source.MinA;
+					mMinB		 = source.MinB;
+					mMinC		 = source.MinC;
+					mMinD		 = source.MinD;
+					mMinE		 = source.MinE;
+					mMinF		 = source.MinF;
+					mMaxA		 = source.MaxA;
+					mMaxB		 = source.MaxB;
+					mMaxC		 = source.MaxC;
+					mMaxD		 = source.MaxD;
+					mMaxE		 = source.MaxE;
+					mMaxF		 = source.MaxF;
+					mIsVarA		 = source.IsVarA;
+					mIsVarB		 = source.IsVarB;
+					mIsVarC		 = source.IsVarC;
+					mIsVarD		 = source.IsVarD;
+					mIsVarE		 = source.IsVarE;
+					mIsVarF		 = source.IsVarF;
+					mMinLength	 = source.MinLength;
+					mMaxLength	 = source.MaxLength;
+					mIsVarLength = source.IsVarLength;
+					mMinSpacing	 = source.MinSpacing;
+					mMaxSpacing	 = source.MaxSpacing;
+					mIsVarSpacing = source.IsVarSpacing;
+				}
+			};
+
+		private:
+			CalculatedProperties^ mCalculatedProperties;
+
         public:
 			property Vector3d DirectionVector { Vector3d get(); }
 			property Vector3d UpVector        { Vector3d get(); }
@@ -78,10 +169,9 @@ namespace OZOZ
 			property String^ E { String^ get(); void set(String^ value); }
 			property String^ F { String^ get(); void set(String^ value); }
 
-			property bool IsVarLength { bool get(); }
+			property CalculatedProperties^ CalcProperties { CalculatedProperties^ get(); }
+
 			property String^ Length { String^ get(); }
-			property double MinLength { double get(); }
-			property double MaxLength { double get(); }
 
 			property String^ PosKey { String^ get(); }
 
@@ -95,10 +185,9 @@ namespace OZOZ
 			HitTestResult HitTest(Point3d pt);
 
 		public:
-			static bool GetTotalLengths(String^ formula, int fieldCount, PosGroup::DrawingUnits inputUnit, String^ a, String^ b, String^ c, String^ d, String^ e, String^ f, String^ diameter, int precision, [Out] double% minLength, [Out] double% maxLength, [Out] bool% isVar);
+			static bool GetTotalLengths(String^ formula, int fieldCount, PosGroup::DrawingUnits inputUnit, String^ a, String^ b, String^ c, String^ d, String^ e, String^ f, String^ diameter, [Out] double% minLength, [Out] double% maxLength, [Out] bool% isVar);
 			static double ConvertLength(double length, PosGroup::DrawingUnits fromUnit, PosGroup::DrawingUnits toUnit);
 			static double BendingRadius(double d);
         };
     }
-
 }

@@ -75,6 +75,31 @@ public:
 		MARKERONLY = 2,
 	};
 
+public:
+	struct DLLIMPEXP CCalculatedProperties
+	{
+	public:
+		int Generation;
+
+		double Diameter;
+		int Precision;
+		int FieldCount;
+		bool Bending;
+
+		double MinA, MinB, MinC, MinD, MinE, MinF;
+		double MaxA, MaxB, MaxC, MaxD, MaxE, MaxF;
+		bool IsVarA, IsVarB, IsVarC, IsVarD, IsVarE, IsVarF;
+
+		double MinLength, MaxLength;
+		bool IsVarLength;
+
+		double MinSpacing, MaxSpacing;
+		bool IsVarSpacing;
+
+		CPosGroup::DrawingUnits DrawingUnit;
+		CPosGroup::DrawingUnits DisplayUnit;
+	};
+
 private:
 	/// Used to cache last draw params
 	mutable DrawList lastDrawList;
@@ -84,12 +109,13 @@ private:
     mutable AcGiTextStyle lastTextStyle;
     mutable AcGiTextStyle lastNoteStyle;
 	mutable Adesk::UInt16 lastCircleColor;
-	mutable Adesk::UInt16 lastGroupHighlightColor;
 	mutable AcDbObjectId zeroLayer;
 	mutable AcDbObjectId defpointsLayer;
 	mutable double lastNoteScale;
+	mutable std::vector<CShape*> lastShapes;
 	double circleRadius;
 	double partSpacing;
+	mutable CCalculatedProperties m_CalcProps;
 
 private:
 	/// Property backing fields
@@ -97,10 +123,6 @@ private:
 	AcGePoint3d m_NoteGrip;
 	mutable ACHAR* m_Key;
 	mutable ACHAR* m_Length;
-	mutable bool m_IsVarLength;
-	mutable double m_MinLength, m_MaxLength;
-	mutable bool m_IsVarSpacing;
-	mutable double m_MinSpacing, m_MaxSpacing;
 	mutable ACHAR* m_DisplayedSpacing;
 	ACHAR* m_Pos;
 	ACHAR* m_Count;
@@ -114,8 +136,6 @@ private:
 	ACHAR* m_D;
 	ACHAR* m_E;
 	ACHAR* m_F;
-
-	mutable std::vector<CShape*> lastShapes;
 
 	DisplayStyle m_DisplayStyle;
 
@@ -137,15 +157,15 @@ protected:
 
 protected:
 	/// Calculates lengths
-	static double CalcConsLength(const ACHAR* str, const ACHAR* diameter, const double scale);
-	static void CalcLength(const ACHAR* str, const ACHAR* diameter, const double scale, double& minLength, double& maxLength, bool& isVar);
+	static bool CalcConsLength(const ACHAR* str, const double diameter, const CPosGroup::DrawingUnits inputUnit, double& value);
+	static bool GetTotalLengths(const ACHAR* formula, CCalculatedProperties& props);
 
 public:
-	// Gets total lengths
-	static bool GetTotalLengths(const ACHAR* formula, const int fieldCount, const CPosGroup::DrawingUnits inputUnit, const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f, const ACHAR* diameter, const int precision, double& minLength, double& maxLength, bool& isVar);
+	/// Gets piece lengths
+	static bool GetLengths(const ACHAR* str, const double diameter, const CPosGroup::DrawingUnits inputUnit, double& minLength, double& maxLength, bool& isVar);
 
-	// Calculates spacing
-	static bool GetSpacings(const ACHAR* spacing, const CPosGroup::DrawingUnits inputUnit, const int precision, double& minLength, double& maxLength, bool& isVar);
+	// Gets total lengths
+	static bool GetTotalLengths(const ACHAR* formula, const int fieldCount, const CPosGroup::DrawingUnits inputUnit, const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f, const ACHAR* diameter, double& minLength, double& maxLength, bool& isVar);
 
 	// Unit conversion
 	static double ConvertLength(const double length, const CPosGroup::DrawingUnits fromUnit, const CPosGroup::DrawingUnits toUnit);
@@ -234,13 +254,6 @@ public:
 	/// Gets the total length
 	const ACHAR* Length(void) const;
 
-	/// Gets if the lengths are variable
-	const bool IsVarLength(void) const;
-
-	/// Gets lengths
-	const double MinLength(void) const;
-	const double MaxLength(void) const;
-
 	/// Gets or sets the pos shape
 	const AcDbObjectId& ShapeId(void) const;
 	Acad::ErrorStatus setShapeId(const AcDbObjectId& newVal);
@@ -248,6 +261,9 @@ public:
 	/// Gets or sets the pos group
 	const AcDbObjectId& GroupId(void) const;
 	Acad::ErrorStatus setGroupId(const AcDbObjectId& newVal);
+
+	/// Gets calculated properties
+	const CCalculatedProperties& CalcProps(void) const;
 
 public:
 	/// Gets a string key identifying a pos with a certain diameter,
