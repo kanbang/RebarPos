@@ -226,8 +226,7 @@ namespace RebarPosCommands
 
                     // Draw
                     g.ResetTransform();
-                    g.ScaleTransform(1.0f / scale, 1.0f / scale, MatrixOrder.Append);
-                    g.RotateTransform(180, MatrixOrder.Append);
+                    g.ScaleTransform(1.0f / scale, -1.0f / scale, MatrixOrder.Append);
                     g.TranslateTransform((float)text.X, (float)text.Y, MatrixOrder.Append);
                     g.TranslateTransform(-xmin, -ymin, System.Drawing.Drawing2D.MatrixOrder.Append);
                     g.ScaleTransform(scale, -scale, System.Drawing.Drawing2D.MatrixOrder.Append);
