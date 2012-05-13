@@ -832,8 +832,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	{
         return Adesk::kTrue;
     }
-	worldDraw->geometry().circle(m_BasePoint, 10, m_Normal);
-	return Adesk::kTrue;
+
 	// Update if required
 	if(isModified)
 	{
@@ -855,6 +854,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	// Transform to match text orientation
 	worldDraw->geometry().pushModelTransform(trans);
 	// Draw items
+	worldDraw->subEntityTraits().setSelectionMarker(1);
 	worldDraw->subEntityTraits().setLayer(zeroLayer);
 	lastTextStyle.setTextSize(1.0);
 	lastTextStyle.loadStyleRec();
@@ -892,6 +892,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	// Draw note text
 	lastNoteStyle.setTextSize(lastNoteScale);
 	lastNoteStyle.loadStyleRec();
+	worldDraw->subEntityTraits().setSelectionMarker(2);
 	worldDraw->subEntityTraits().setColor(lastNoteDraw.color);
 	worldDraw->subEntityTraits().setLayer(zeroLayer);
 	worldDraw->geometry().text(AcGePoint3d(lastNoteDraw.x, lastNoteDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, m_Note, -1, Adesk::kFalse, lastNoteStyle);
@@ -1759,7 +1760,7 @@ const void CRebarPos::Calculate(void) const
 		acdbUcsMatrix(ucs);
 		geomInit = true;
 	}
-return;
+
 	// Layers
 	zeroLayer = Utility::GetZeroLayer();
 	defpointsLayer = Utility::GetDefpointsLayer();
