@@ -70,7 +70,7 @@ ACRX_DXF_DEFINE_MEMBERS(CRebarPos, AcDbEntity,
 
 CRebarPos::CRebarPos() :
 	m_BasePoint(0, 0, 0), geomInit(false), ucs(AcGeMatrix3d::kIdentity), 
-	direction(1, 0, 0), up(0, 1, 0), norm(0, 0, 1), m_NoteGrip(0, -1.6, 0),
+	m_Direction(1, 0, 0), m_Up(0, 1, 0), m_Normal(0, 0, 1), m_NoteGrip(0, -1.6, 0),
 	m_DisplayStyle(CRebarPos::ALL), isModified(true), m_Length(NULL), m_Key(NULL),
 	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), m_Multiplier(1),
 	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), 
@@ -112,19 +112,19 @@ CRebarPos::~CRebarPos()
 const AcGeVector3d& CRebarPos::DirectionVector(void) const
 {
 	assertReadEnabled();
-	return direction;
+	return m_Direction;
 }
 
 const AcGeVector3d& CRebarPos::UpVector(void) const
 {
 	assertReadEnabled();
-	return up;
+	return m_Up;
 }
 
 const AcGeVector3d& CRebarPos::NormalVector(void) const
 {
 	assertReadEnabled();
-	return norm;
+	return m_Normal;
 }
 
 const double CRebarPos::Width(void) const
@@ -143,7 +143,7 @@ const double CRebarPos::Width(void) const
 
 	CDrawParams p;
 	p = lastDrawList.at(lastDrawList.size() - 1);
-	return (p.x + p.w) * direction.length();
+	return (p.x + p.w) * m_Direction.length();
 }
 
 const double CRebarPos::Height(void) const
@@ -162,7 +162,7 @@ const double CRebarPos::Height(void) const
 
 	CDrawParams p;
 	p = lastDrawList.at(lastDrawList.size() - 1);
-	return (p.y + p.h) * direction.length();
+	return (p.y + p.h) * m_Direction.length();
 }
 
 const AcGePoint3d& CRebarPos::BasePoint(void) const
@@ -491,7 +491,7 @@ const CRebarPos::PosSubEntityType CRebarPos::HitTest(const AcGePoint3d& pt0) con
 {
 	// Transform to text coordinate system
 	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
-	trans.setCoordSystem(m_BasePoint, direction, up, norm);
+	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
 	if(trans.isSingular())
 	{
 		return CRebarPos::NONE;
@@ -527,7 +527,7 @@ const CRebarPos::PosSubEntityType CRebarPos::HitTest(const AcGePoint3d& pt0) con
 
 	// Transform to note coordinate system
 	trans = AcGeMatrix3d::kIdentity;
-	trans.setCoordSystem(m_NoteGrip, direction, up, norm);
+	trans.setCoordSystem(m_NoteGrip, m_Direction, m_Up, m_Normal);
 	if(trans.isSingular())
 	{
 		return CRebarPos::NONE;
@@ -623,14 +623,14 @@ Acad::ErrorStatus CRebarPos::subTransformBy(const AcGeMatrix3d& xform)
 
 	m_BasePoint.transformBy(xform);
 	m_NoteGrip.transformBy(xform);
-	direction.transformBy(xform);
-	up.transformBy(xform);
-	norm = direction.crossProduct(up);
+	m_Direction.transformBy(xform);
+	m_Up.transformBy(xform);
+	m_Normal = m_Direction.crossProduct(m_Up);
 
 	// Get UCS vectors
-	AcGeVector3d ucsdir(direction);
+	AcGeVector3d ucsdir(m_Direction);
 	ucsdir.transformBy(ucs);
-	AcGeVector3d ucsup(up);
+	AcGeVector3d ucsup(m_Up);
 	ucsup.transformBy(ucs);
 
 	// Set mirror base point to middle of entity
@@ -642,7 +642,7 @@ Acad::ErrorStatus CRebarPos::subTransformBy(const AcGeMatrix3d& xform)
 		pt.y = (p.y + p.h) / 2.0;
 		// Transform to WCS
 		AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
-		trans.setCoordSystem(m_BasePoint, direction, up, norm);
+		trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
 		pt.transformBy(trans);
 	}
 
@@ -651,12 +651,12 @@ Acad::ErrorStatus CRebarPos::subTransformBy(const AcGeMatrix3d& xform)
 	{
 		// Mirror around vertical axis
 		AcGeMatrix3d mirror = AcGeMatrix3d::kIdentity;
-		mirror.setToMirroring(AcGeLine3d(pt, up));
+		mirror.setToMirroring(AcGeLine3d(pt, m_Up));
 		m_BasePoint.transformBy(mirror);
 		m_NoteGrip.transformBy(mirror);
-		direction.transformBy(mirror);
-		up.transformBy(mirror);
-		norm = direction.crossProduct(up);
+		m_Direction.transformBy(mirror);
+		m_Up.transformBy(mirror);
+		m_Normal = m_Direction.crossProduct(m_Up);
 	}
 
 	// Text always upright
@@ -664,19 +664,19 @@ Acad::ErrorStatus CRebarPos::subTransformBy(const AcGeMatrix3d& xform)
 	{
 		// Mirror around horizontal axis
 		AcGeMatrix3d mirror = AcGeMatrix3d::kIdentity;
-		mirror.setToMirroring(AcGeLine3d(pt, direction));
+		mirror.setToMirroring(AcGeLine3d(pt, m_Direction));
 		m_BasePoint.transformBy(mirror);
 		m_NoteGrip.transformBy(mirror);
-		direction.transformBy(mirror);
-		up.transformBy(mirror);
-		norm = direction.crossProduct(up);
+		m_Direction.transformBy(mirror);
+		m_Up.transformBy(mirror);
+		m_Normal = m_Direction.crossProduct(m_Up);
 	}	
 
 	// Correct direction vectors
-	double scale = direction.length();
-	direction = direction.normal() * scale;
-	up = up.normal() * scale;
-	norm = norm.normal() * scale;
+	double scale = m_Direction.length();
+	m_Direction = m_Direction.normal() * scale;
+	m_Up = m_Up.normal() * scale;
+	m_Normal = m_Normal.normal() * scale;
 
 	isModified = true;
 
@@ -782,9 +782,9 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 
 	// Transformations
 	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
-	trans.setCoordSystem(m_BasePoint, direction, up, norm);
+	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
 	AcGeMatrix3d noteTrans = AcGeMatrix3d::kIdentity;
-	noteTrans.setCoordSystem(m_NoteGrip, direction, up, norm);
+	noteTrans.setCoordSystem(m_NoteGrip, m_Direction, m_Up, m_Normal);
 	
     AcDbText* text;
 	CDrawParams p;
@@ -832,7 +832,8 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	{
         return Adesk::kTrue;
     }
-
+	worldDraw->geometry().circle(m_BasePoint, 10, m_Normal);
+	return Adesk::kTrue;
 	// Update if required
 	if(isModified)
 	{
@@ -847,9 +848,9 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 
 	// Transformations
 	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
-	trans.setCoordSystem(m_BasePoint, direction, up, norm);
+	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
 	AcGeMatrix3d noteTrans = AcGeMatrix3d::kIdentity;
-	noteTrans.setCoordSystem(m_NoteGrip, direction, up, norm);
+	noteTrans.setCoordSystem(m_NoteGrip, m_Direction, m_Up, m_Normal);
 	
 	// Transform to match text orientation
 	worldDraw->geometry().pushModelTransform(trans);
@@ -923,10 +924,10 @@ void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 
 	// Transformations
 	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
-	trans.setCoordSystem(m_BasePoint, direction, up, norm);
+	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
 	AcGeMatrix3d noteTrans = AcGeMatrix3d::kIdentity;
-	noteTrans.setCoordSystem(m_NoteGrip, direction, up, norm);
-	double scale = direction.length();
+	noteTrans.setCoordSystem(m_NoteGrip, m_Direction, m_Up, m_Normal);
+	double scale = m_Direction.length();
 
 	// Draw items
 	worldDraw->subEntityTraits().setLayer(zeroLayer);
@@ -943,7 +944,7 @@ void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 			circlept.transformBy(trans);
 
 			worldDraw->subEntityTraits().setColor(lastCircleColor);
-			worldDraw->geometry().circle(circlept, circleRadius * scale, norm);
+			worldDraw->geometry().circle(circlept, circleRadius * scale, m_Normal);
 		}
 
 		// Text
@@ -951,7 +952,7 @@ void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 		textpt.transformBy(trans);
 
 		worldDraw->subEntityTraits().setColor(p.color);
-		worldDraw->geometry().text(textpt, norm, direction, p.text, -1, Adesk::kFalse, lastTextStyle);
+		worldDraw->geometry().text(textpt, m_Normal, m_Direction, p.text, -1, Adesk::kFalse, lastTextStyle);
 	}
 
 	// Draw note text
@@ -961,7 +962,7 @@ void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 	notept.transformBy(noteTrans);
 	worldDraw->subEntityTraits().setColor(lastNoteDraw.color);
 	worldDraw->subEntityTraits().setLayer(zeroLayer);
-	worldDraw->geometry().text(notept, norm, direction, m_Note, -1, Adesk::kFalse, lastNoteStyle);
+	worldDraw->geometry().text(notept, m_Normal, m_Direction, m_Note, -1, Adesk::kFalse, lastNoteStyle);
 }
 
 Acad::ErrorStatus CRebarPos::subGetGeomExtents(AcDbExtents& extents) const
@@ -975,7 +976,7 @@ Acad::ErrorStatus CRebarPos::subGetGeomExtents(AcDbExtents& extents) const
 
 	if(lastDrawList.empty())
 	{
-		return Acad::eOk;
+		return Acad::eInvalidExtents;
 	}
 
 	// Get ECS extents
@@ -993,13 +994,13 @@ Acad::ErrorStatus CRebarPos::subGetGeomExtents(AcDbExtents& extents) const
 
 	// Transform to WCS
 	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
-	trans.setCoordSystem(m_BasePoint, direction, up, norm);
+	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
 	pt1.transformBy(trans);
 	pt2.transformBy(trans);
 	pt3.transformBy(trans);
 	pt4.transformBy(trans);
 	AcGeMatrix3d noteTrans = AcGeMatrix3d::kIdentity;
-	noteTrans.setCoordSystem(m_NoteGrip, direction, up, norm);
+	noteTrans.setCoordSystem(m_NoteGrip, m_Direction, m_Up, m_Normal);
 	pt5.transformBy(noteTrans);
 	pt6.transformBy(noteTrans);
 	pt7.transformBy(noteTrans);
@@ -1037,8 +1038,8 @@ Acad::ErrorStatus CRebarPos::dwgOutFields(AcDbDwgFiler* pFiler) const
 
 	pFiler->writePoint3d(m_BasePoint);
 	pFiler->writePoint3d(m_NoteGrip);
-	pFiler->writeVector3d(direction);
-	pFiler->writeVector3d(up);
+	pFiler->writeVector3d(m_Direction);
+	pFiler->writeVector3d(m_Up);
 
 	if (m_Pos)
 		pFiler->writeString(m_Pos);
@@ -1114,9 +1115,9 @@ Acad::ErrorStatus CRebarPos::dwgInFields(AcDbDwgFiler* pFiler)
 	{
 		pFiler->readPoint3d(&m_BasePoint);
 		pFiler->readPoint3d(&m_NoteGrip);
-		pFiler->readVector3d(&direction);
-		pFiler->readVector3d(&up);
-		norm = direction.crossProduct(up);
+		pFiler->readVector3d(&m_Direction);
+		pFiler->readVector3d(&m_Up);
+		m_Normal = m_Direction.crossProduct(m_Up);
 		
 		acutDelString(m_Pos);
 		acutDelString(m_Note);
@@ -1173,8 +1174,8 @@ Acad::ErrorStatus CRebarPos::dxfOutFields(AcDbDxfFiler* pFiler) const
 	pFiler->writePoint3d(AcDb::kDxfXCoord, m_BasePoint);
 	pFiler->writePoint3d(AcDb::kDxfXCoord + 1, m_NoteGrip);
 	// Use max precision when writing out direction vectors
-	pFiler->writeVector3d(AcDb::kDxfXCoord + 2, direction, 16);
-	pFiler->writeVector3d(AcDb::kDxfXCoord + 3, up, 16);
+	pFiler->writeVector3d(AcDb::kDxfXCoord + 2, m_Direction, 16);
+	pFiler->writeVector3d(AcDb::kDxfXCoord + 3, m_Up, 16);
 
 	// Properties
 	if(m_Pos)
@@ -1359,8 +1360,9 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	// Successfully read DXF codes; set object properties.
 	m_BasePoint = t_BasePoint;
 	m_NoteGrip = t_NoteGrip;
-	direction = t_Direction;
-	up = t_Up;
+	m_Direction = t_Direction;
+	m_Up = t_Up;
+	m_Normal = m_Direction.crossProduct(m_Up);
 	setPos(t_Pos);
 	setNote(t_Note);
 	setCount(t_Count);
@@ -1732,7 +1734,6 @@ Acad::ErrorStatus CRebarPos::subWblockClone(AcRxObject*    pOwner,
     return Acad::eOk;
 }
 
-
 //return the CLSID of the class here
 Acad::ErrorStatus   CRebarPos::subGetClassID(CLSID* pClsid) const
 {
@@ -1758,7 +1759,7 @@ const void CRebarPos::Calculate(void) const
 		acdbUcsMatrix(ucs);
 		geomInit = true;
 	}
-
+return;
 	// Layers
 	zeroLayer = Utility::GetZeroLayer();
 	defpointsLayer = Utility::GetDefpointsLayer();
@@ -1797,7 +1798,6 @@ const void CRebarPos::Calculate(void) const
 	{
 		delete *it;
 	}
-	lastShapes.clear();
 	for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
 	{
 		lastShapes.push_back(pShape->GetShape(i)->clone());
@@ -2007,11 +2007,11 @@ const void CRebarPos::Calculate(void) const
 
 bool CRebarPos::GetLengths(const ACHAR* str, const double diameter, const CPosGroup::DrawingUnits inputUnit, double& minLength, double& maxLength, bool& isVar)
 {
-	AcString length(str);
+	std::wstring length(str);
 	std::wstring length1, length2;
 
 	// Get variable lengths
-	int i = length.find(_T("~"));
+	int i = length.find(L'~');
 	if(i != -1)
 	{
 		length1 = length.substr(0, i);

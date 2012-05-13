@@ -76,7 +76,7 @@ public:
 	};
 
 public:
-	struct DLLIMPEXP CCalculatedProperties
+	struct CCalculatedProperties
 	{
 	public:
 		int Generation;
@@ -98,6 +98,16 @@ public:
 
 		CPosGroup::DrawingUnits DrawingUnit;
 		CPosGroup::DrawingUnits DisplayUnit;
+
+	public:
+		CCalculatedProperties() : Generation(0), Diameter(0), Precision(0), FieldCount(0), Bending(0),
+			MinA(0),  MinB(0),  MinC(0),  MinD(0),  MinE(0),  MinF(0),
+			MaxA(0),  MaxB(0),  MaxC(0),  MaxD(0),  MaxE(0),  MaxF(0),
+			IsVarA(false),  IsVarB(false),  IsVarC(false),  IsVarD(false),  IsVarE(false),  IsVarF(false), 
+			MinLength(0), MaxLength(0), IsVarLength(false),
+			MinSpacing(0), MaxSpacing(0), IsVarSpacing(false),
+			DrawingUnit(CPosGroup::MM), DisplayUnit(CPosGroup::MM)
+		{ }
 	};
 
 private:
@@ -119,6 +129,7 @@ private:
 
 private:
 	/// Property backing fields
+	AcGeVector3d m_Direction, m_Up, m_Normal;
 	AcGePoint3d m_BasePoint;
 	AcGePoint3d m_NoteGrip;
 	mutable ACHAR* m_Key;
@@ -145,7 +156,6 @@ private:
 	/// Locals
 	mutable bool geomInit;
 	mutable AcGeMatrix3d ucs;
-	AcGeVector3d direction, up, norm;
 	mutable bool isModified;
 
 protected:
