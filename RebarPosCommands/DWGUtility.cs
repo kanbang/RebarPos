@@ -163,17 +163,31 @@ namespace RebarPosCommands
 
                     if (dict.Count == 0)
                     {
-                        PosShape shape = new PosShape();
-                        shape.Name = "Duz Demir";
-                        shape.Fields = 1;
-                        shape.Formula = "A";
-                        shape.FormulaBending = "A";
-                        shape.Items.AddLine(0, 0, 100, 0, Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 1));
-                        shape.Items.AddText(50, 5, 10, "A", Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 2));
                         dict.UpgradeOpen();
-                        id = dict.SetAt("*", shape);
+
+                        PosShape shape1 = new PosShape();
+                        shape1.Name = "Duz Demir";
+                        shape1.Fields = 1;
+                        shape1.Formula = "A";
+                        shape1.FormulaBending = "A";
+                        shape1.Items.AddLine(0, 0, 100, 0, Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 1));
+                        shape1.Items.AddText(50, 5, 10, "A", Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 2));
+                        id = dict.SetAt("*", shape1);
+                        tr.AddNewlyCreatedDBObject(shape1, true);
+
+                        PosShape shape2 = new PosShape();
+                        shape2.Name = "L Demir";
+                        shape2.Fields = 2;
+                        shape2.Formula = "A+B";
+                        shape2.FormulaBending = "A+B-0.5*r-d";
+                        shape2.Items.AddLine(10, 0, 100, 0, Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 1));
+                        shape2.Items.AddText(55, 5, 10, "A", Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 2));
+                        shape2.Items.AddLine(10, 0, 10, 20, Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 1));
+                        shape2.Items.AddText(0, 10, 10, "B", Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 2));
+                        dict.SetAt("*", shape2);
+                        tr.AddNewlyCreatedDBObject(shape2, true);
+
                         dict.DowngradeOpen();
-                        tr.AddNewlyCreatedDBObject(shape, true);
                     }
                     else
                     {
