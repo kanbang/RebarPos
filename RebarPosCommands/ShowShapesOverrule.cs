@@ -56,6 +56,10 @@ namespace RebarPosCommands
             }
 
             RebarPos pos = drawable as RebarPos;
+            if (pos == null)
+            {
+                return base.WorldDraw(drawable, wd);
+            }
 
             WorldGeometry g = wd.Geometry;
             SubEntityTraits s = wd.SubEntityTraits;

@@ -24,7 +24,7 @@ namespace RebarPosCommands
         }
         public void AddGroup(ObjectId id, Autodesk.AutoCAD.Colors.Color color)
         {
-            if(!mGroups.ContainsKey(id))
+            if (!mGroups.ContainsKey(id))
                 mGroups.Add(id, color);
         }
 
@@ -48,23 +48,19 @@ namespace RebarPosCommands
             }
 
             RebarPos pos = drawable as RebarPos;
-
-            // Get color
-            short color = 0;
-            bool found = false;
-            foreach (KeyValuePair<ObjectId, Autodesk.AutoCAD.Colors.Color> item in mGroups)
-            {
-                if (item.Key.Database == pos.Database)
-                {
-                    color = item.Value.ColorIndex;
-                    found = true;
-                    break;
-                }
-            }
-            if (!found)
+            if (pos == null)
             {
                 return base.WorldDraw(drawable, wd);
             }
+
+            // Get color
+            Autodesk.AutoCAD.Colors.Color col = Autodesk.AutoCAD.Colors.Color.FromColorIndex(ColorMethod.ByAci, 1);
+            short color = 0;
+            if (!mGroups.TryGetValue(pos.GroupId, out col))
+            {
+                return base.WorldDraw(drawable, wd);
+            }
+            color = col.ColorIndex;
 
             WorldGeometry g = wd.Geometry;
             SubEntityTraits s = wd.SubEntityTraits;
