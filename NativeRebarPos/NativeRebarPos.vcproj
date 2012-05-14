@@ -48,7 +48,7 @@
 				PreprocessorDefinitions="ACRXAPP;RADPACK;REBARPOS_MODULE;"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
-				DisableSpecificWarnings="4201;4100;4512"
+				DisableSpecificWarnings="4201;4100;4512;4189"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -120,7 +120,7 @@
 				PreprocessorDefinitions="ACRXAPP;RADPACK;REBARPOS_MODULE;"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
-				DisableSpecificWarnings="4201;4100;4512"
+				DisableSpecificWarnings="4201;4100;4512;4189"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -194,7 +194,7 @@
 				PreprocessorDefinitions="ACRXAPP;RADPACK;REBARPOS_MODULE;"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
-				DisableSpecificWarnings="4201;4100;4512"
+				DisableSpecificWarnings="4201;4100;4512;4189"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -266,7 +266,7 @@
 				PreprocessorDefinitions="ACRXAPP;RADPACK;REBARPOS_MODULE;"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
-				DisableSpecificWarnings="4201;4100;4512"
+				DisableSpecificWarnings="4201;4100;4512;4189"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
