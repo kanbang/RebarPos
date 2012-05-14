@@ -636,7 +636,7 @@ namespace RebarPosCommands
             }
             else
             {
-                errorProvider.SetError(txtReplaceMultiplier, "Poz çarpanı tamsayı olmalıdır.");
+                errorProvider.SetError(txtReplaceMultiplier, "Poz çarpanı tam sayı olmalıdır.");
                 errorProvider.SetIconAlignment(txtReplaceMultiplier, ErrorIconAlignment.MiddleLeft);
                 return false;
             }

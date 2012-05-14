@@ -662,7 +662,7 @@ namespace RebarPosCommands
             }
             else
             {
-                errorProvider.SetError(txtPosMarker, "Poz numarası tamsayı olmalıdır.");
+                errorProvider.SetError(txtPosMarker, "Poz numarası tam sayı olmalıdır.");
                 errorProvider.SetIconAlignment(txtPosMarker, ErrorIconAlignment.MiddleLeft);
                 return false;
             }
@@ -728,7 +728,7 @@ namespace RebarPosCommands
             }
             else
             {
-                errorProvider.SetError(txtPosMultiplier, "Poz çarpanı tamsayı olmalıdır.");
+                errorProvider.SetError(txtPosMultiplier, "Poz çarpanı tam sayı olmalıdır.");
                 errorProvider.SetIconAlignment(txtPosMultiplier, ErrorIconAlignment.MiddleLeft);
                 return false;
             }
