@@ -263,6 +263,7 @@ namespace RebarPosCommands
                             Dimension dobj = obj as Dimension;
                             txt.Text = dobj.Measurement.ToString();
                         }
+                        CheckPosLength(txt);
                     }
                     catch (System.Exception ex)
                     {
@@ -285,9 +286,10 @@ namespace RebarPosCommands
                 {
                     length += "~" + length2.ToString("F0");
                 }
+                txt.Text = length;
+                CheckPosLength(txt);
             }
             Show();
-            txt.Text = length;
         }
 
         private PromptStatus GetDistance(string message1, string message2, out double length, bool allowEmpty)
