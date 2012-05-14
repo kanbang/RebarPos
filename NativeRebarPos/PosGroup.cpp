@@ -577,24 +577,25 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
 
 	// Properties
 	ACHAR* t_Name = NULL;
-	Adesk::Boolean t_Bending;
-	double t_MaxBarLength;
-	int t_Precision;
-	int t_DrawingUnit;
-	int t_DisplayUnit;
+	Adesk::Boolean t_Bending = Adesk::kFalse;
+	double t_MaxBarLength = 0;
+	int t_Precision = 0;
+	int t_DrawingUnit = 0;
+	int t_DisplayUnit = 0;
 	ACHAR* t_Formula = NULL;
 	ACHAR* t_FormulaWithoutLength = NULL;
 	ACHAR* t_FormulaPosOnly = NULL;
 	ACHAR* t_StandardDiameters = NULL;
-	Adesk::UInt16 t_TextColor;
-	Adesk::UInt16 t_PosColor;
-	Adesk::UInt16 t_CircleColor;
-	Adesk::UInt16 t_MultiplierColor;
-	Adesk::UInt16 t_GroupColor;
-	Adesk::UInt16 t_NoteColor;
-	Adesk::UInt16 t_CurrentGroupHighlightColor;
-	double t_NoteScale;
-	AcDbObjectId t_TextStyleID, t_NoteStyleID;
+	Adesk::UInt16 t_TextColor = 0;
+	Adesk::UInt16 t_PosColor = 0;
+	Adesk::UInt16 t_CircleColor = 0;
+	Adesk::UInt16 t_MultiplierColor = 0;
+	Adesk::UInt16 t_GroupColor = 0;
+	Adesk::UInt16 t_NoteColor = 0;
+	Adesk::UInt16 t_CurrentGroupHighlightColor = 0;
+	double t_NoteScale = 0;
+	AcDbObjectId t_TextStyleID = AcDbObjectId::kNull;
+	AcDbObjectId t_NoteStyleID = AcDbObjectId::kNull;
 
     while ((es == Acad::eOk) && ((es = pFiler->readResBuf(&rb)) == Acad::eOk))
     {

@@ -12,8 +12,8 @@ namespace OZOZ
         {
         private:
 			Utility() { }
-			Utility(const Utility%) { }
-			void operator=(const Utility%) { }
+			Utility(Utility%) { }
+			void operator=(Utility%) { }
 
 		public:
 			static double EvaluateFormula(System::String^ formula);

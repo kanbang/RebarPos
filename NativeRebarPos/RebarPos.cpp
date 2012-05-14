@@ -1263,15 +1263,16 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	ACHAR* t_Count = NULL;
 	ACHAR* t_Diameter = NULL;
 	ACHAR* t_Spacing = NULL;
-	Adesk::Int32 t_Multiplier;
-	int t_Display;
+	Adesk::Int32 t_Multiplier = 0;
+	int t_Display = 0;
 	ACHAR* t_A = NULL;
 	ACHAR* t_B = NULL;
 	ACHAR* t_C = NULL;
 	ACHAR* t_D = NULL;
 	ACHAR* t_E = NULL;
 	ACHAR* t_F = NULL;
-	AcDbObjectId t_ShapeID, t_GroupID;
+	AcDbObjectId t_ShapeID = AcDbObjectId::kNull;
+	AcDbObjectId t_GroupID = AcDbObjectId::kNull;
 
     while ((es == Acad::eOk) && ((es = pFiler->readResBuf(&rb)) == Acad::eOk))
     {

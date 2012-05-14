@@ -40,8 +40,8 @@ namespace OZOZ
 				}
 
 			private:
-				Shape(const Shape%) { }
-				void operator=(const Shape%) { }
+				Shape(Shape%) { }
+				void operator=(Shape%) { }
 
 			internal:
 				virtual CShape* ToNative(void) = 0;
@@ -180,8 +180,8 @@ namespace OZOZ
 
 			private:
 				ShapeCollection() { }
-				ShapeCollection(const ShapeCollection%) { }
-				void operator=(const ShapeCollection%) { }
+				ShapeCollection(ShapeCollection%) { }
+				void operator=(ShapeCollection%) { }
 
 			internal:
 				ShapeCollection(PosShape^ parent);

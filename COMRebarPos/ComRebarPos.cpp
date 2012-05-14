@@ -144,24 +144,31 @@ STDMETHODIMP CComRebarPos::GetElementValue(
 		switch(dispID)
 		{
 		case DISPID_BASEPOINT:
-			if (dwCookie > 2)
-				throw Acad::eInvalidInput;
+			{
+				if (dwCookie > 2)
+					throw Acad::eInvalidInput;
 
-		    pt = pRebarPos->BasePoint();
-			acdbWcs2Ucs(asDblArray(pt), asDblArray(pt), false);
-            ::VariantCopy(pVarOut, &CComVariant(pt[dwCookie]));
+				pt = pRebarPos->BasePoint();
+				acdbWcs2Ucs(asDblArray(pt), asDblArray(pt), false);
+				CComVariant var(pt[dwCookie]);
+				
+				::VariantCopy(pVarOut, &var);
 
-			return S_OK;
+				return S_OK;
+			}
 			break;
 		case DISPID_NOTEGRIP:
-			if (dwCookie > 2)
-				throw Acad::eInvalidInput;
+			{
+				if (dwCookie > 2)
+					throw Acad::eInvalidInput;
 
-			pt = pRebarPos->NoteGrip();
-			acdbWcs2Ucs(asDblArray(pt), asDblArray(pt), false);
-            ::VariantCopy(pVarOut, &CComVariant(pt[dwCookie]));
+				pt = pRebarPos->NoteGrip();
+				acdbWcs2Ucs(asDblArray(pt), asDblArray(pt), false);
+				CComVariant var(pt[dwCookie]);
+				::VariantCopy(pVarOut, &var);
 
-			return S_OK;
+				return S_OK;
+			}
 			break;
 		default:
 			;
@@ -454,7 +461,8 @@ STDMETHODIMP CComRebarPos::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VAR
 			if(pShape.openStatus() == Acad::eOk)
 			{
 				hr = S_OK;
-				VariantCopy(pVarOut, &CComVariant(CT2W(pShape->Name())));
+				CComVariant var(CT2W(pShape->Name()));
+				VariantCopy(pVarOut, &var);
 			}	    
 			return hr;
 		}
@@ -469,7 +477,8 @@ STDMETHODIMP CComRebarPos::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VAR
 			if(pGroup.openStatus() == Acad::eOk)
 			{
 				hr = S_OK;
-				VariantCopy(pVarOut, &CComVariant(CT2W(pGroup->Name())));
+				CComVariant var(CT2W(pGroup->Name()));
+				VariantCopy(pVarOut, &var);
 			}
 			return hr;
 		}
@@ -479,11 +488,20 @@ STDMETHODIMP CComRebarPos::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VAR
 		assert((INT_PTR)dwCookie < 3);
 
 		if(dwCookie == 0)
-			VariantCopy(pVarOut, &CComVariant(L"Normal"));
+		{
+			CComVariant var(L"Normal");
+			VariantCopy(pVarOut, &var);
+		}
 		else if(dwCookie == 1)
-			VariantCopy(pVarOut, &CComVariant(L"Toplam Boyu Gösterme"));
+		{
+			CComVariant var(L"Toplam Boyu Gösterme");
+			VariantCopy(pVarOut, &var);
+		}
 		else
-			VariantCopy(pVarOut, &CComVariant(L"Sadece Poz Numarasý"));
+		{
+			CComVariant var(L"Sadece Poz Numarasý");
+			VariantCopy(pVarOut, &var);
+		}
 
 		return S_OK;
 		break;

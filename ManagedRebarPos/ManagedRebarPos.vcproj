@@ -51,6 +51,8 @@
 				ExceptionHandling="2"
 				BasicRuntimeChecks="0"
 				SmallerTypeCheck="false"
+				WarningLevel="4"
+				DisableSpecificWarnings="4100;4201;4512"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -125,6 +127,8 @@
 				ExceptionHandling="2"
 				BasicRuntimeChecks="0"
 				SmallerTypeCheck="false"
+				WarningLevel="4"
+				DisableSpecificWarnings="4100;4201;4512"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -198,6 +202,8 @@
 				AdditionalUsingDirectories="..\..\..\..\inc"
 				PreprocessorDefinitions="VC7"
 				ExceptionHandling="2"
+				WarningLevel="4"
+				DisableSpecificWarnings="4100;4201;4512"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -268,6 +274,8 @@
 				AdditionalUsingDirectories="..\..\..\..\inc"
 				PreprocessorDefinitions="VC7"
 				ExceptionHandling="2"
+				WarningLevel="4"
+				DisableSpecificWarnings="4100;4201;4512"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

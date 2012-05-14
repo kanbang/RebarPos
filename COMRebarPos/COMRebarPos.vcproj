@@ -51,6 +51,8 @@
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\..\inc;..\..\..\..\inc;..\"
 				PreprocessorDefinitions="_ATL_NO_UUIDOF"
+				WarningLevel="4"
+				DisableSpecificWarnings="4100"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -123,6 +125,8 @@
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\..\inc;..\..\..\..\inc;..\"
 				PreprocessorDefinitions="_ATL_NO_UUIDOF"
+				WarningLevel="4"
+				DisableSpecificWarnings="4100"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -196,6 +200,8 @@
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\..\inc;..\..\..\..\inc;..\"
 				PreprocessorDefinitions="_ATL_NO_UUIDOF"
+				WarningLevel="4"
+				DisableSpecificWarnings="4100"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -267,6 +273,8 @@
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\..\inc;..\..\..\..\inc;..\"
 				PreprocessorDefinitions="_ATL_NO_UUIDOF"
+				WarningLevel="4"
+				DisableSpecificWarnings="4100"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

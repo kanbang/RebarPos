@@ -15,8 +15,8 @@ namespace OZOZ
         {
         private:
 			Marshal() { }
-			Marshal(const Marshal%) { }
-			void operator=(const Marshal%) { }
+			Marshal(Marshal%) { }
+			void operator=(Marshal%) { }
 
 		public:
 			// Convert System::String to const wchar_t*

@@ -445,11 +445,11 @@ Acad::ErrorStatus CPosShape::dxfInFields(AcDbDxfFiler *pFiler)
 
 	// Properties
 	ACHAR* t_Name = NULL;
-	Adesk::Int32 t_Fields;
+	Adesk::Int32 t_Fields = 0;
 	ACHAR* t_Formula = NULL;
 	ACHAR* t_FormulaBending = NULL;
 	ShapeList t_List;
-	Adesk::Int32 t_Priority;
+	Adesk::Int32 t_Priority = 0;
 
 	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("name"), t_Name)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32 + 1, _T("fields"), t_Fields)) != Acad::eOk) return es;
