@@ -176,7 +176,6 @@ Acad::ErrorStatus CRebarPos::setBasePoint(const AcGePoint3d& newVal)
 {
 	assertWriteEnabled();
 	m_BasePoint = newVal;
-	isModified = true;
 	return Acad::eOk;
 }
 
@@ -190,7 +189,6 @@ Acad::ErrorStatus CRebarPos::setNoteGrip(const AcGePoint3d& newVal)
 {
 	assertWriteEnabled();
 	m_NoteGrip = newVal;
-	isModified = true;
 	return Acad::eOk;
 }
 
