@@ -157,6 +157,7 @@
             this.btnPickSpacing.Size = new System.Drawing.Size(24, 24);
             this.btnPickSpacing.TabIndex = 9;
             this.btnPickSpacing.UseVisualStyleBackColor = true;
+            this.btnPickSpacing.Click += new System.EventHandler(this.btnPickSpacing_Click);
             // 
             // btnPickNumber
             // 
@@ -167,6 +168,7 @@
             this.btnPickNumber.Size = new System.Drawing.Size(24, 24);
             this.btnPickNumber.TabIndex = 4;
             this.btnPickNumber.UseVisualStyleBackColor = true;
+            this.btnPickNumber.Click += new System.EventHandler(this.btnPickNumber_Click);
             // 
             // txtPosMultiplier
             // 
@@ -345,6 +347,7 @@
             this.btnMeasureF.Size = new System.Drawing.Size(24, 24);
             this.btnMeasureF.TabIndex = 24;
             this.btnMeasureF.UseVisualStyleBackColor = true;
+            this.btnMeasureF.Click += new System.EventHandler(this.btnMeasureF_Click);
             // 
             // btnMeasureE
             // 
@@ -355,6 +358,7 @@
             this.btnMeasureE.Size = new System.Drawing.Size(24, 24);
             this.btnMeasureE.TabIndex = 20;
             this.btnMeasureE.UseVisualStyleBackColor = true;
+            this.btnMeasureE.Click += new System.EventHandler(this.btnMeasureE_Click);
             // 
             // btnMeasureD
             // 
@@ -365,6 +369,7 @@
             this.btnMeasureD.Size = new System.Drawing.Size(24, 24);
             this.btnMeasureD.TabIndex = 16;
             this.btnMeasureD.UseVisualStyleBackColor = true;
+            this.btnMeasureD.Click += new System.EventHandler(this.btnMeasureD_Click);
             // 
             // btnMeasureC
             // 
@@ -375,6 +380,7 @@
             this.btnMeasureC.Size = new System.Drawing.Size(24, 24);
             this.btnMeasureC.TabIndex = 12;
             this.btnMeasureC.UseVisualStyleBackColor = true;
+            this.btnMeasureC.Click += new System.EventHandler(this.btnMeasureC_Click);
             // 
             // btnMeasureB
             // 
@@ -385,6 +391,7 @@
             this.btnMeasureB.Size = new System.Drawing.Size(24, 24);
             this.btnMeasureB.TabIndex = 8;
             this.btnMeasureB.UseVisualStyleBackColor = true;
+            this.btnMeasureB.Click += new System.EventHandler(this.btnMeasureB_Click);
             // 
             // btnMeasureA
             // 
@@ -395,6 +402,7 @@
             this.btnMeasureA.Size = new System.Drawing.Size(24, 24);
             this.btnMeasureA.TabIndex = 4;
             this.btnMeasureA.UseVisualStyleBackColor = true;
+            this.btnMeasureA.Click += new System.EventHandler(this.btnMeasureA_Click);
             // 
             // btnSelectF
             // 
@@ -405,6 +413,7 @@
             this.btnSelectF.Size = new System.Drawing.Size(24, 24);
             this.btnSelectF.TabIndex = 23;
             this.btnSelectF.UseVisualStyleBackColor = true;
+            this.btnSelectF.Click += new System.EventHandler(this.btnSelectF_Click);
             // 
             // btnSelectE
             // 
@@ -415,6 +424,7 @@
             this.btnSelectE.Size = new System.Drawing.Size(24, 24);
             this.btnSelectE.TabIndex = 19;
             this.btnSelectE.UseVisualStyleBackColor = true;
+            this.btnSelectE.Click += new System.EventHandler(this.btnSelectE_Click);
             // 
             // btnSelectD
             // 
@@ -425,6 +435,7 @@
             this.btnSelectD.Size = new System.Drawing.Size(24, 24);
             this.btnSelectD.TabIndex = 15;
             this.btnSelectD.UseVisualStyleBackColor = true;
+            this.btnSelectD.Click += new System.EventHandler(this.btnSelectD_Click);
             // 
             // btnSelectC
             // 
@@ -435,6 +446,7 @@
             this.btnSelectC.Size = new System.Drawing.Size(24, 24);
             this.btnSelectC.TabIndex = 11;
             this.btnSelectC.UseVisualStyleBackColor = true;
+            this.btnSelectC.Click += new System.EventHandler(this.btnSelectC_Click);
             // 
             // btnSelectB
             // 
@@ -445,6 +457,7 @@
             this.btnSelectB.Size = new System.Drawing.Size(24, 24);
             this.btnSelectB.TabIndex = 7;
             this.btnSelectB.UseVisualStyleBackColor = true;
+            this.btnSelectB.Click += new System.EventHandler(this.btnSelectB_Click);
             // 
             // btnSelectA
             // 

@@ -222,12 +222,101 @@ namespace RebarPosCommands
             Close();
         }
 
-        private void btnSelectA_Click(object sender, EventArgs e)
+        private void GetLengthFromEntity(TextBox txt)
         {
             Hide();
             Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
-            PromptEntityResult per = ed.GetEntity("\nSelect entity: ");
+            PromptEntityOptions opts = new PromptEntityOptions("\nSelect entity: ");
+            opts.SetRejectMessage("\nSelect a LINE, TEXT, MTEXT or DIMENSION entity.");
+            opts.AddAllowedClass(typeof(Line), false);
+            opts.AddAllowedClass(typeof(DBText), false);
+            opts.AddAllowedClass(typeof(MText), false);
+            opts.AddAllowedClass(typeof(Dimension), false);
+            PromptEntityResult per = ed.GetEntity(opts);
             Show();
+            if (per.Status == PromptStatus.OK)
+            {
+                ObjectId id = per.ObjectId;
+                Database db = HostApplicationServices.WorkingDatabase;
+                using (Transaction tr = db.TransactionManager.StartTransaction())
+                {
+                    try
+                    {
+                        DBObject obj = tr.GetObject(per.ObjectId, OpenMode.ForRead);
+                        if (obj is Line)
+                        {
+                            Line dobj = obj as Line;
+                            txt.Text = dobj.Length.ToString();
+                        }
+                        else if (obj is DBText)
+                        {
+                            DBText dobj = obj as DBText;
+                            txt.Text = dobj.TextString;
+                        }
+                        else if (obj is MText)
+                        {
+                            MText dobj = obj as MText;
+                            txt.Text = dobj.Text;
+                        }
+                        else if (obj is Dimension)
+                        {
+                            Dimension dobj = obj as Dimension;
+                            txt.Text = dobj.Measurement.ToString();
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void GetLengthFromMeasurement(TextBox txt)
+        {
+            Hide();
+            string length = "";
+            double length1 = 0;
+            if (GetDistance("\nFirst point: ", "\nSecond point: ", out length1) == PromptStatus.OK)
+            {
+                length = length1.ToString("F0");
+                double length2 = 0;
+                if (GetDistance("\n" + length + "-... First point: ", "\n" + length + "-... Second point: ", out length2, true) == PromptStatus.OK)
+                {
+                    length += "~" + length2.ToString("F0");
+                }
+            }
+            Show();
+            txt.Text = length;
+        }
+
+        private PromptStatus GetDistance(string message1, string message2, out double length, bool allowEmpty)
+        {
+            Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+            PromptPointOptions opt1 = new PromptPointOptions(message1);
+            opt1.AllowNone = allowEmpty;
+            PromptPointResult res1 = ed.GetPoint(opt1);
+            if (res1.Status == PromptStatus.OK)
+            {
+                PromptDistanceOptions opt2 = new PromptDistanceOptions(message2);
+                opt2.AllowNone = allowEmpty;
+                opt2.BasePoint = res1.Value;
+                opt2.UseBasePoint = true;
+                PromptDoubleResult res2 = ed.GetDistance(opt2);
+                if (res2.Status == PromptStatus.OK)
+                {
+                    length = res2.Value;
+                    return PromptStatus.OK;
+                }
+            }
+
+            length = 0;
+            return PromptStatus.Cancel;
+        }
+
+        private PromptStatus GetDistance(string message1, string message2, out double length)
+        {
+            return GetDistance(message1, message2, out length, false);
         }
 
         private void posShapeView_Click(object sender, EventArgs e)
@@ -718,6 +807,139 @@ namespace RebarPosCommands
             }
 
             UpdateLength();
+        }
+
+        private void btnSelectA_Click(object sender, EventArgs e)
+        {
+            GetLengthFromEntity(txtA);
+        }
+
+        private void btnSelectB_Click(object sender, EventArgs e)
+        {
+            GetLengthFromEntity(txtB);
+        }
+
+        private void btnSelectC_Click(object sender, EventArgs e)
+        {
+            GetLengthFromEntity(txtC);
+        }
+
+        private void btnSelectD_Click(object sender, EventArgs e)
+        {
+            GetLengthFromEntity(txtD);
+        }
+
+        private void btnSelectE_Click(object sender, EventArgs e)
+        {
+            GetLengthFromEntity(txtE);
+        }
+
+        private void btnSelectF_Click(object sender, EventArgs e)
+        {
+            GetLengthFromEntity(txtF);
+        }
+
+        private void btnMeasureA_Click(object sender, EventArgs e)
+        {
+            GetLengthFromMeasurement(txtA);
+        }
+
+        private void btnMeasureB_Click(object sender, EventArgs e)
+        {
+            GetLengthFromMeasurement(txtB);
+        }
+
+        private void btnMeasureC_Click(object sender, EventArgs e)
+        {
+            GetLengthFromMeasurement(txtC);
+        }
+
+        private void btnMeasureD_Click(object sender, EventArgs e)
+        {
+            GetLengthFromMeasurement(txtD);
+        }
+
+        private void btnMeasureE_Click(object sender, EventArgs e)
+        {
+            GetLengthFromMeasurement(txtE);
+        }
+
+        private void btnMeasureF_Click(object sender, EventArgs e)
+        {
+            GetLengthFromMeasurement(txtF);
+        }
+
+        private void btnPickNumber_Click(object sender, EventArgs e)
+        {
+            Hide();
+            Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+            TypedValue[] tvs = new TypedValue[] {
+                new TypedValue((int)DxfCode.Operator, "<OR"),
+                new TypedValue((int)DxfCode.Start, "TEXT"),
+                new TypedValue((int)DxfCode.Start, "MTEXT"),
+                new TypedValue((int)DxfCode.Operator, "OR>")
+            };
+            PromptSelectionResult res = ed.GetSelection(new SelectionFilter(tvs));
+            Show();
+            if (res.Status == PromptStatus.OK)
+            {
+                Database db = HostApplicationServices.WorkingDatabase;
+                using (Transaction tr = db.TransactionManager.StartTransaction())
+                {
+                    try
+                    {
+                        int total = 0;
+                        foreach (SelectedObject sobj in res.Value)
+                        {
+                            string text = "";
+                            DBObject obj = tr.GetObject(sobj.ObjectId, OpenMode.ForRead);
+                            if (obj is DBText)
+                            {
+                                DBText dobj = obj as DBText;
+                                text = dobj.TextString;
+                            }
+                            else if (obj is MText)
+                            {
+                                MText dobj = obj as MText;
+                                text = dobj.Text;
+                            }
+                            if (!string.IsNullOrEmpty(text))
+                            {
+                                text = text.TrimStart('(').TrimEnd(')');
+                                int num = 0;
+                                if (int.TryParse(text, out num))
+                                {
+                                    total += num;
+                                }
+                            }
+                        }
+                        if (total != 0)
+                        {
+                            txtPosCount.Text = total.ToString();
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void btnPickSpacing_Click(object sender, EventArgs e)
+        {
+            Hide();
+            double length;
+            if (GetDistance("\nStart point: ", "\nEnd point: ", out length) == PromptStatus.OK)
+            {
+                double spa = 0;
+                if (double.TryParse(txtPosSpacing.Text, out spa) && spa > double.Epsilon)
+                {
+                    int num = 1 + (int)Math.Ceiling(length / spa);
+                    txtPosCount.Text = num.ToString();
+                }
+            }
+            Show();
         }
     }
 }
