@@ -86,25 +86,16 @@ namespace RebarPosCommands
                         PosShape.ShapeLine line = shape as PosShape.ShapeLine;
                         xmin = Math.Min(xmin, Math.Min(line.X1, line.X2));
                         ymin = Math.Min(ymin, Math.Min(line.Y1, line.Y2));
-                        xmax = Math.Min(xmax, Math.Max(line.X1, line.X2));
-                        ymax = Math.Min(ymax, Math.Max(line.Y1, line.Y2));
+                        xmax = Math.Max(xmax, Math.Max(line.X1, line.X2));
+                        ymax = Math.Max(ymax, Math.Max(line.Y1, line.Y2));
                     }
                     else if (shape is PosShape.ShapeArc)
                     {
                         PosShape.ShapeArc arc = shape as PosShape.ShapeArc;
                         xmin = Math.Min(xmin, arc.X - arc.R);
-                        xmax = Math.Max(xmax, arc.X + arc.R);
                         ymin = Math.Min(ymin, arc.Y - arc.R);
+                        xmax = Math.Max(xmax, arc.X + arc.R);
                         ymax = Math.Max(ymax, arc.Y + arc.R);
-
-                    }
-                    else if (shape is PosShape.ShapeText)
-                    {
-                        PosShape.ShapeText text = shape as PosShape.ShapeText;
-                        xmin = Math.Min(xmin, text.X - text.Height);
-                        xmax = Math.Max(xmax, text.X + text.Height);
-                        ymin = Math.Min(ymin, text.Y - text.Height);
-                        ymax = Math.Max(ymax, text.Y + text.Height);
 
                     }
                 }
@@ -136,11 +127,15 @@ namespace RebarPosCommands
                     else if (shape is PosShape.ShapeArc)
                     {
                         PosShape.ShapeArc arc = shape as PosShape.ShapeArc;
+                        g.EllipticalArc(new Point3d(arc.X, arc.Y, 0), Vector3d.ZAxis, arc.R, arc.R, arc.StartAngle, arc.EndAngle, 0, ArcType.ArcSimple);
 
                     }
                     else if (shape is PosShape.ShapeText)
                     {
                         PosShape.ShapeText text = shape as PosShape.ShapeText;
+                        string str = text.Text;
+                        str = str.Replace("A", pos.A).Replace("B", pos.B).Replace("C", pos.C).Replace("D", pos.D).Replace("E", pos.E).Replace("F", pos.F);
+                        g.Text(new Point3d(text.X, text.Y, 0), Vector3d.ZAxis, Vector3d.XAxis, text.Height, 1.0, 0, str);
                     }
                 }
 
