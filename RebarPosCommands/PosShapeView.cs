@@ -243,16 +243,17 @@ namespace RebarPosCommands
             float scale = Math.Min(xscale, yscale);
             // Client offsets
             float xoff = (w - scale * (xmax - xmin)) / 2.0f;
-            float yoff = (h - scale * (ymax - ymin)) / 2.0f;
+            float yoff = h - (h - scale * (ymax - ymin)) / 2.0f;
             if (m_ShowName)
             {
-                yoff -= 15.0f / 2.0f;
+                yoff += 15.0f;
             }
+
             // Transform
             g.ResetTransform();
             g.TranslateTransform(-xmin, -ymin, System.Drawing.Drawing2D.MatrixOrder.Append);
             g.ScaleTransform(scale, -scale, System.Drawing.Drawing2D.MatrixOrder.Append);
-            g.TranslateTransform(xoff, h - yoff, System.Drawing.Drawing2D.MatrixOrder.Append);
+            g.TranslateTransform(xoff, yoff, System.Drawing.Drawing2D.MatrixOrder.Append);
 
             // Calculate conversion from world units to em-size
             float fontScale = 1.0f;
@@ -320,23 +321,13 @@ namespace RebarPosCommands
                     g.ScaleTransform(1.0f, -1.0f, MatrixOrder.Append);
                     g.TranslateTransform(-xmin, -ymin, System.Drawing.Drawing2D.MatrixOrder.Append);
                     g.ScaleTransform(scale, -scale, System.Drawing.Drawing2D.MatrixOrder.Append);
-                    g.TranslateTransform(xoff, h - yoff, System.Drawing.Drawing2D.MatrixOrder.Append);
+                    g.TranslateTransform(xoff, yoff, System.Drawing.Drawing2D.MatrixOrder.Append);
 
                     // Draw
                     g.DrawString(text.Text, font, brush, text.X + txoff, -text.Y - tyoff - size.Height);
                     //g.DrawRectangle(Pens.Green, text.X + txoff, -text.Y - tyoff - size.Height, size.Width, size.Height);
                 }
             }
-        }
-
-        private RectangleF GetTextBounds(Graphics graphics, string text, Font font)
-        {
-            CharacterRange[] characterRanges = { new CharacterRange(0, text.Length) };
-            StringFormat stringFormat = new StringFormat(StringFormat.GenericTypographic);
-            stringFormat.SetMeasurableCharacterRanges(characterRanges);
-
-            Region region = graphics.MeasureCharacterRanges(text, font, new RectangleF(0, 0, float.MaxValue, float.MaxValue), stringFormat)[0];
-            return region.GetBounds(graphics);
         }
     }
 }
