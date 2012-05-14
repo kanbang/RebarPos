@@ -421,7 +421,7 @@ namespace RebarPosCommands
                         else if (sh is PosShape.ShapeArc)
                         {
                             PosShape.ShapeArc arc = sh as PosShape.ShapeArc;
-                            posShapeView.AddArc(color, (float)arc.X, (float)arc.Y, (float)arc.R, (float)arc.StartAngle, (float)arc.EndAngle);
+                            posShapeView.AddArc(color, (float)arc.X, (float)arc.Y, (float)arc.R, (float)(arc.StartAngle * 180.0 / Math.PI), (float)(arc.EndAngle * 180.0 / Math.PI));
                         }
                         else if (sh is PosShape.ShapeText)
                         {

@@ -175,7 +175,7 @@ namespace RebarPosCommands
                 else if (draw is PosShape.ShapeArc)
                 {
                     PosShape.ShapeArc arc = draw as PosShape.ShapeArc;
-                    posShapeView.AddArc(arc.Color.ColorValue, (float)arc.X, (float)arc.Y, (float)arc.R, (float)arc.StartAngle, (float)arc.EndAngle);
+                    posShapeView.AddArc(arc.Color.ColorValue, (float)arc.X, (float)arc.Y, (float)arc.R, (float)(arc.StartAngle * 180.0 / Math.PI), (float)(arc.EndAngle * 180.0 / Math.PI));
                 }
                 else if (draw is PosShape.ShapeText)
                 {
@@ -301,6 +301,8 @@ namespace RebarPosCommands
                 btnRemove.Enabled = false;
                 btnRename.Enabled = false;
                 gbOptions.Enabled = false;
+                posShapeView.Enabled = false;
+                btnSelectShape.Enabled = false;
                 return;
             }
             else
@@ -308,6 +310,8 @@ namespace RebarPosCommands
                 btnRemove.Enabled = true;
                 btnRename.Enabled = true;
                 gbOptions.Enabled = true;
+                posShapeView.Enabled = true;
+                btnSelectShape.Enabled = true;
                 SetShape();
             }
         }

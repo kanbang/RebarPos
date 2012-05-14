@@ -97,6 +97,7 @@ namespace RebarPosCommands
             lines.Clear();
             arcs.Clear();
             texts.Clear();
+            Refresh();
         }
 
         public void AddLine(Color color, float x1, float y1, float x2, float y2)
@@ -265,7 +266,7 @@ namespace RebarPosCommands
             // Draw shapes
             foreach (DrawLine line in dlines)
             {
-                using (Pen pen = new Pen(line.Color, 1.0f))
+                using (Pen pen = new Pen(line.Color, 2.0f / scale))
                 {
                     pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
                     pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
@@ -274,11 +275,14 @@ namespace RebarPosCommands
             }
             foreach (DrawArc arc in darcs)
             {
-                using (Pen pen = new Pen(arc.Color, 1.0f))
+                using (Pen pen = new Pen(arc.Color, 2.0f / scale))
                 {
                     pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
                     pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
-                    g.DrawArc(pen, arc.X, arc.Y, 2.0f * arc.R, 2.0f * arc.R, arc.StartAngle, arc.EndAngle);
+                    float sweep = arc.EndAngle - arc.StartAngle;
+                    while (sweep > 360.0f) sweep -= 360.0f;
+                    while (sweep < 0.0f) sweep += 360.0f;
+                    g.DrawArc(pen, arc.X - arc.R, arc.Y - arc.R, 2.0f * arc.R, 2.0f * arc.R, arc.StartAngle, sweep);
                 }
             }
 
