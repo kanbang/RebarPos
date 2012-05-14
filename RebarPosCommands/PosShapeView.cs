@@ -224,8 +224,8 @@ namespace RebarPosCommands
                     }
                     xmin = Math.Min(xmin, text.X - left);
                     xmax = Math.Max(xmax, text.X + right);
-                    ymin = Math.Min(ymin, text.Y - top);
-                    ymax = Math.Max(ymax, text.Y + bottom);
+                    ymin = Math.Min(ymin, text.Y - bottom);
+                    ymax = Math.Max(ymax, text.Y + top);
                 }
             }
             if (!hasEnt)
