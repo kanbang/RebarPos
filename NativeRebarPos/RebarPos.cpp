@@ -72,7 +72,8 @@ CRebarPos::CRebarPos() :
 	m_BasePoint(0, 0, 0), geomInit(false), ucs(AcGeMatrix3d::kIdentity), 
 	m_Direction(1, 0, 0), m_Up(0, 1, 0), m_Normal(0, 0, 1), m_NoteGrip(0, -1.6, 0),
 	m_DisplayStyle(CRebarPos::ALL), isModified(true), m_Length(NULL), m_Key(NULL),
-	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), m_Multiplier(1),
+	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), 
+	m_Multiplier(1), m_DisplayedSpacing(NULL),
 	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), 
 	m_ShapeID(AcDbObjectId::kNull), m_GroupID(AcDbObjectId::kNull),
 	circleRadius(1.125), partSpacing(0.15), 
@@ -1866,39 +1867,39 @@ const void CRebarPos::Calculate(void) const
 	acutUpdString(strL.c_str(), m_Length);
 
 	// Set spacing text
-	Utility::DoubleToStr(m_CalcProps.MinSpacing * scale, m_CalcProps.Precision, strL1);
-	Utility::DoubleToStr(m_CalcProps.MaxSpacing * scale, m_CalcProps.Precision, strL2);
+	std::wstring strS1;
+	Utility::DoubleToStr(m_CalcProps.MinSpacing * scale, m_CalcProps.Precision, strS1);
+	std::wstring strS2;
+	Utility::DoubleToStr(m_CalcProps.MaxSpacing * scale, m_CalcProps.Precision, strS2);
+	std::wstring strS;
 	if(m_CalcProps.IsVarSpacing)
 	{
-		strL = strL1 + L"~" + strL2;
+		strS = strS1 + L"~" + strS2;
 	}
 	else
 	{
-		strL = strL1;
+		strS = strS1;
 	}
-	acutUpdString(strL.c_str(), m_DisplayedSpacing);
+	acutUpdString(strS.c_str(), m_DisplayedSpacing);
 
 	// Shape code
-	AcString shape;
-	shape.format(_T("_%i_%i_"), m_ShapeID.handle().low(), m_ShapeID.handle().high());
-	Adesk::Int32 fields = pShape->Fields();
+	std::wstringstream oss;
+	oss << L'T' << m_Diameter << L':';
+	oss << L'' << m_ShapeID.handle().low() << L'_' << m_ShapeID.handle().high() << L':';
 
-	AcString key(_T(""));
-	key = key.concat(m_Diameter);
-	key = key.concat(shape);
-	if(fields >= 1)
-		key = key.concat(m_A);
-	if(fields >= 2)
-		key = key.concat(m_B);
-	if(fields >= 3)
-		key = key.concat(m_C);
-	if(fields >= 4)
-		key = key.concat(m_D);
-	if(fields >= 5)
-		key = key.concat(m_E);
-	if(fields >= 6)
-		key = key.concat(m_F);
-	acutUpdString(key, m_Key);
+	if(m_CalcProps.FieldCount >= 1)
+		oss << m_A << L':';
+	if(m_CalcProps.FieldCount >= 2)
+		oss << m_B << L':';
+	if(m_CalcProps.FieldCount >= 3)
+		oss << m_C << L':';
+	if(m_CalcProps.FieldCount >= 4)
+		oss << m_D << L':';
+	if(m_CalcProps.FieldCount >= 5)
+		oss << m_E << L':';
+	if(m_CalcProps.FieldCount >= 6)
+		oss << m_F << L':';
+	acutUpdString(oss.str().c_str(), m_Key);
 
 	// Rebuild draw lists
 	lastDrawList.clear();
@@ -2012,7 +2013,7 @@ bool CRebarPos::GetLengths(const ACHAR* str, const double diameter, const CPosGr
 	std::wstring length1, length2;
 
 	// Get variable lengths
-	int i = length.find(L'~');
+	size_t i = length.find(L'~');
 	if(i != -1)
 	{
 		length1 = length.substr(0, i);
