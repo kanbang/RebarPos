@@ -2,41 +2,9 @@
 //----- RebarPos.cpp : Implementation of CRebarPos
 //-----------------------------------------------------------------------------
 
-#define WIN32_LEAN_AND_MEAN
-#if defined(_DEBUG) && !defined(AC_FULL_DEBUG)
-#error _DEBUG should not be defined except in internal Adesk debug builds
-#endif
+#include "StdAfx.h"
 
-#include <windows.h>
-#include <objbase.h>
-
-#include "rxregsvc.h"
-
-#include "assert.h"
-#include "math.h"
-
-#include "gepnt3d.h"
-#include "gevec3d.h"
-#include "gelnsg3d.h"
-#include "gearc3d.h"
-
-#include "dbents.h"
-#include "dbsymtb.h"
-#include "dbcfilrs.h"
-#include "dbspline.h"
-#include "dbproxy.h"
-#include "dbxutil.h"
-#include "acutmem.h"
-#include "dbobjptr.h"
-
-#include "acdb.h"
-#include "dbidmap.h"
-#include "adesk.h"
-
-#include "dbapserv.h"
-#include "appinfo.h"
-#include "tchar.h"
-#include "AcString.h"
+#include <sstream>
 
 #include "Utility.h"
 #include "Calculator.h"
@@ -44,12 +12,8 @@
 #include "PosShape.h"
 #include "PosGroup.h"
 
-#include <initguid.h>
+// To get the class id of the COM interface (subGetClassID)
 #include "..\COMRebarPos\COMRebarPos_i.c"
-#include <basetsd.h>
-#include "ac64bithelpers.h"
-
-#include <sstream>
 
 Adesk::UInt32 CRebarPos::kCurrentVersionNumber = 1;
 
@@ -790,7 +754,8 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
 	{
 		p = lastDrawList[i];
-		text = new AcDbText(AcGePoint3d(p.x, p.y, 0), p.text, textStyle, 1.0);
+		std::wstring t;
+		text = new AcDbText(AcGePoint3d(p.x, p.y, 0), p.text.c_str(), textStyle, 1.0);
 		text->setColorIndex(p.color);
 		text->setWidthFactor(pTextStyle->xScale());
 		if((es = text->transformBy(trans)) != Acad::eOk)
@@ -811,7 +776,7 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 		}
 	}
 	p = lastNoteDraw;
-	text = new AcDbText(AcGePoint3d(p.x, p.y, 0), p.text, noteStyle, 1.0 * pGroup->NoteScale());
+	text = new AcDbText(AcGePoint3d(p.x, p.y, 0), p.text.c_str(), noteStyle, 1.0 * pGroup->NoteScale());
 	text->setColorIndex(p.color);
 	text->setWidthFactor(pNoteStyle->xScale());
 	if((es = text->transformBy(noteTrans)) != Acad::eOk)
@@ -871,7 +836,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 
 		// Text
 		worldDraw->subEntityTraits().setColor(p.color);
-		worldDraw->geometry().text(AcGePoint3d(p.x, p.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, p.text, -1, Adesk::kFalse, lastTextStyle);
+		worldDraw->geometry().text(AcGePoint3d(p.x, p.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, p.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
 	}
 
 	// Group name
@@ -879,10 +844,10 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	lastTextStyle.setTextSize(0.4);
 	lastTextStyle.loadStyleRec();
 	worldDraw->subEntityTraits().setColor(lastGroupDraw.color);
-	worldDraw->geometry().text(AcGePoint3d(lastGroupDraw.x, lastGroupDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastGroupDraw.text, -1, Adesk::kFalse, lastTextStyle);
+	worldDraw->geometry().text(AcGePoint3d(lastGroupDraw.x, lastGroupDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastGroupDraw.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
 	// Multiplier
 	worldDraw->subEntityTraits().setColor(lastMultiplierDraw.color);
-	worldDraw->geometry().text(AcGePoint3d(lastMultiplierDraw.x, lastMultiplierDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastMultiplierDraw.text, -1, Adesk::kFalse, lastTextStyle);
+	worldDraw->geometry().text(AcGePoint3d(lastMultiplierDraw.x, lastMultiplierDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastMultiplierDraw.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
 	// Reset transform
 	worldDraw->geometry().popModelTransform();
 
@@ -952,7 +917,7 @@ void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 		textpt.transformBy(trans);
 
 		worldDraw->subEntityTraits().setColor(p.color);
-		worldDraw->geometry().text(textpt, m_Normal, m_Direction, p.text, -1, Adesk::kFalse, lastTextStyle);
+		worldDraw->geometry().text(textpt, m_Normal, m_Direction, p.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
 	}
 
 	// Draw note text
@@ -1736,7 +1701,7 @@ Acad::ErrorStatus CRebarPos::subWblockClone(AcRxObject*    pOwner,
 }
 
 //return the CLSID of the class here
-Acad::ErrorStatus   CRebarPos::subGetClassID(CLSID* pClsid) const
+Acad::ErrorStatus CRebarPos::subGetClassID(CLSID* pClsid) const
 {
     assertReadEnabled();
     *pClsid = CLSID_ComRebarPos;
@@ -1805,7 +1770,7 @@ const void CRebarPos::Calculate(void) const
 	}
 
 	// Get group name
-	lastGroupDraw.text.setEmpty();
+	lastGroupDraw.text.clear();
 	lastGroupDraw.text = pGroup->Name();
 
 	lastNoteScale = pGroup->NoteScale();
@@ -1917,9 +1882,9 @@ const void CRebarPos::Calculate(void) const
 	lastNoteDraw.text = m_Note;
 
 	if(m_Multiplier == 0)
-		lastMultiplierDraw.text = _T("-");
+		lastMultiplierDraw.text = L"-";
 	else
-		lastMultiplierDraw.text.format(_T("%dx"), m_Multiplier);
+		Utility::IntToStr(m_Multiplier, lastMultiplierDraw.text);
 
 	// Set colors
 	lastCircleColor = pGroup->CircleColor();
@@ -1959,12 +1924,12 @@ const void CRebarPos::Calculate(void) const
 		AcGePoint2d ext;
 		if(p.hasCircle)
 		{
-			ext = lastTextStyle.extents(p.text, Adesk::kFalse, -1, Adesk::kFalse);
+			ext = lastTextStyle.extents(p.text.c_str(), Adesk::kFalse, -1, Adesk::kFalse);
 			p.x = x + (2.0 * circleRadius - ext.x ) / 2.0;
 		}
 		else
 		{
-			ext = lastTextStyle.extents(p.text, Adesk::kTrue, -1, Adesk::kFalse);
+			ext = lastTextStyle.extents(p.text.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
 			p.x = x;
 		}
 		p.y = y;
@@ -1983,20 +1948,20 @@ const void CRebarPos::Calculate(void) const
 	// Measure group text
 	lastTextStyle.setTextSize(0.4);
 	lastTextStyle.loadStyleRec();
-	AcGePoint2d gext = lastTextStyle.extents(lastGroupDraw.text, Adesk::kTrue, -1, Adesk::kFalse);
+	AcGePoint2d gext = lastTextStyle.extents(lastGroupDraw.text.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
 	lastGroupDraw.x = 0;
 	lastGroupDraw.y = -0.8;
 	lastGroupDraw.w = gext.x;
 	lastGroupDraw.h = lastTextStyle.textSize();
     // Measure multiplier text
-	AcGePoint2d mext = lastTextStyle.extents(lastMultiplierDraw.text, Adesk::kTrue, -1, Adesk::kFalse);
+	AcGePoint2d mext = lastTextStyle.extents(lastMultiplierDraw.text.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
 	lastMultiplierDraw.x = 0;
 	lastMultiplierDraw.y = 1.4;
 	lastMultiplierDraw.w = gext.x;
 	lastMultiplierDraw.h = lastTextStyle.textSize();
 
 	// Measure note text
-	AcGePoint2d noteExt = lastNoteStyle.extents(lastNoteDraw.text, Adesk::kTrue, -1, Adesk::kFalse);
+	AcGePoint2d noteExt = lastNoteStyle.extents(lastNoteDraw.text.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
 	lastNoteDraw.x = 0;
 	lastNoteDraw.y = 0;
 	lastNoteDraw.w = noteExt.x;
@@ -2270,31 +2235,31 @@ const DrawList CRebarPos::ParseFormula(const ACHAR* formula) const
 	list.clear();
 
 	// First pass: separate parts
-	AcString str(formula);
-	AcString part;
+	std::wstring str(formula);
+	std::wstring part;
 	bool indeco = false;
 	for(unsigned int i = 0; i < str.length(); i++)
 	{
-		AcString c = str.substr(i, 1);
-		if((!indeco && c == _T('[')) || (indeco && (c == _T(']'))) || (i == str.length() - 1))
+		wchar_t c = str.at(i);
+		if((!indeco && c == L'[') || (indeco && (c == L']')) || (i == str.length() - 1))
 		{
-			if((i == str.length() - 1) && (c != _T('[')) && (c != _T(']')))
+			if((i == str.length() - 1) && (c != L'[') && (c != L']'))
 			{
 				part += c;
 			}
-			if(!indeco && !part.isEmpty())
+			if(!indeco && !part.empty())
 			{
 				CDrawParams p(0, part);
 				list.push_back(p);
 			}
-			else if(indeco && !part.isEmpty())
+			else if(indeco && !part.empty())
 			{
 				CDrawParams p(1, part);
 				list.push_back(p);
 			}
-			indeco = (c == _T('['));
+			indeco = (c == L'[');
 
-			part.setEmpty();
+			part.clear();
 		}
 		else
 		{
@@ -2317,68 +2282,68 @@ const DrawList CRebarPos::ParseFormula(const ACHAR* formula) const
 		else if(p.type == 1)
 		{
 			p.type = CRebarPos::NONE;
-			part.setEmpty();
-			std::vector<AcString> parts;
+			part.clear();
+			std::vector<std::wstring> parts;
 			bool inliteral = false;
 			for(unsigned int i = 0; i < p.text.length(); i++)
 			{
-				AcString c = p.text.substr(i, 1);
-				if(!inliteral && (c == _T('"')))
+				wchar_t c = p.text.at(i);;
+				if(!inliteral && (c == L'"'))
 				{
 					inliteral = true;
 				}
-				else if(inliteral && (c == _T('"')))
+				else if(inliteral && (c == L'"'))
 				{
 					parts.push_back(part);
-					part.setEmpty();
+					part.clear();
 					inliteral = false;
 				}
-				else if(c == _T(':') || (i == p.text.length() - 1))
+				else if(c == L':' || (i == p.text.length() - 1))
 				{
 					if(i == p.text.length() - 1)
 					{
 						part += c;
 					}
-					if(part == _T("M"))
+					if(part == L"M")
 					{
 						p.type = CRebarPos::POS;
-						AcString pos(m_Pos);
+						std::wstring pos(m_Pos);
 						if(pos.length() == 0) pos = _T(" ");
 						parts.push_back(pos);
 					}
-					else if(part == _T("MM"))
+					else if(part == L"MM")
 					{
 						p.type = CRebarPos::POS;
-						AcString pos(m_Pos);
-						if(pos.length() == 0) pos = _T("  ");
-						if(pos.length() == 1) pos.precat(_T("0"));
+						std::wstring pos(m_Pos);
+						if(pos.length() == 0) pos = L"  ";
+						if(pos.length() == 1) pos = std::wstring(L"0").append(pos);
 						parts.push_back(pos);
 					}
-					else if(part == _T("N") && m_Count != NULL && m_Count[0] != _T('\0'))
+					else if(part == L"N" && m_Count != NULL && m_Count[0] != _T('\0'))
 					{
 						p.type = CRebarPos::COUNT;
 						parts.push_back(m_Count);
 					}
-					else if(part == _T("D") && m_Diameter != NULL && m_Diameter[0] != _T('\0'))
+					else if(part == L"D" && m_Diameter != NULL && m_Diameter[0] != _T('\0'))
 					{
 						p.type = CRebarPos::DIAMETER;
 						parts.push_back(m_Diameter);
 					}
-					else if(part == _T("S") && m_DisplayedSpacing != NULL && m_DisplayedSpacing[0] != _T('\0') && m_DisplayedSpacing[0] != _T('0'))
+					else if(part == L"S" && m_DisplayedSpacing != NULL && m_DisplayedSpacing[0] != _T('\0') && m_DisplayedSpacing[0] != _T('0'))
 					{
 						p.type = CRebarPos::SPACING;
 						parts.push_back(m_DisplayedSpacing);
 					}
-					else if(part == _T("L") && m_Length != NULL && m_Length[0] != _T('\0') && m_Length[0] != _T('0'))
+					else if(part == L"L" && m_Length != NULL && m_Length[0] != _T('\0') && m_Length[0] != _T('0'))
 					{
 						p.type = CRebarPos::LENGTH;
 						parts.push_back(m_Length);
 					}
-					else if(part == _T("C"))
+					else if(part == L"C")
 					{
 						p.hasCircle = true;
 					}
-					part.setEmpty();
+					part.clear();
 				}
 				else
 				{
@@ -2387,8 +2352,8 @@ const DrawList CRebarPos::ParseFormula(const ACHAR* formula) const
 			}
 			if(p.type != CRebarPos::NONE)
 			{
-				p.text.setEmpty();
-				for(std::vector<AcString>::size_type k = 0; k < parts.size(); k++)
+				p.text.clear();
+				for(std::vector<std::wstring>::size_type k = 0; k < parts.size(); k++)
 				{
 					p.text.append(parts[k]);
 				}

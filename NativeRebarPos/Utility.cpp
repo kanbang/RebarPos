@@ -2,30 +2,12 @@
 //----- Utility.cpp : Implementation of utility functions
 //-----------------------------------------------------------------------------
 
-#if defined(_DEBUG) && !defined(AC_FULL_DEBUG)
-#error _DEBUG should not be defined except in internal Adesk debug builds
-#endif
-
-#include "assert.h"
-#include "math.h"
-#include "adslib.h"
-
-#include "gepnt3d.h"
-#include "gearc2d.h"
-#include "gearc3d.h"
-
-#include "dbspline.h"
-#include "dbents.h"
-#include "dbsymtb.h"
-#include "acutmem.h"
-
-#include "dbapserv.h"
-#include "tchar.h"
-
-#include "Utility.h"
+#include "StdAfx.h"
 
 #include <sstream>
 #include <iomanip>
+
+#include "Utility.h"
 
 AcDbObjectId Utility::CreateTextStyle(const ACHAR* name, const ACHAR* filename, const double scale)
 {
@@ -137,6 +119,23 @@ const void Utility::ReplaceString(std::wstring& str, const std::wstring& oldStr,
 		str.replace(pos, oldStr.length(), newStr);
 		pos += newStr.length();
 	}
+}
+
+const void Utility::IntToStr(const int val, std::wstring& str)
+{
+	std::wstringstream s;
+	s << val;
+	str = s.str();
+}
+
+const int Utility::StrToInt(const std::wstring& str)
+{
+	return Utility::StrToInt(str.c_str());
+}
+
+const int Utility::StrToInt(const wchar_t* str)
+{
+	return _wtoi(str);
 }
 
 const void Utility::DoubleToStr(const double val, const int digits, std::wstring& str)

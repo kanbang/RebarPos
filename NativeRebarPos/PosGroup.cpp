@@ -1,39 +1,8 @@
 //-----------------------------------------------------------------------------
 //----- PosGroup.cpp : Implementation of CPosGroup
 //-----------------------------------------------------------------------------
-#define WIN32_LEAN_AND_MEAN
-#if defined(_DEBUG) && !defined(AC_FULL_DEBUG)
-#error _DEBUG should not be defined except in internal Adesk debug builds
-#endif
 
-#include <windows.h>
-#include <objbase.h>
-
-#include "rxregsvc.h"
-
-#include "assert.h"
-#include "math.h"
-
-#include "gepnt3d.h"
-#include "gevec3d.h"
-#include "gelnsg3d.h"
-#include "gearc3d.h"
-
-#include "dbents.h"
-#include "dbsymtb.h"
-#include "dbcfilrs.h"
-#include "dbspline.h"
-#include "dbproxy.h"
-#include "dbxutil.h"
-#include "acutmem.h"
-
-#include "acdb.h"
-#include "dbidmap.h"
-#include "adesk.h"
-
-#include "dbapserv.h"
-#include "appinfo.h"
-#include "tchar.h"
+#include "StdAfx.h"
 
 #include "PosGroup.h"
 

@@ -24,12 +24,17 @@
 extern CComModule _Module;
 #include <atlcom.h>
 
+#pragma warning( push )
+#pragma warning( disable : 4100 )
+#pragma warning( disable : 4189 )
 #include "axdb.h"
 #include "dbmain.h"
 #include "dbents.h"
 #include "dbsymtb.h"
 #include "dbobjptr.h"
 #include "rxregsvc.h"
+#include "geassign.h"
+#pragma warning( pop ) 
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Developer Studio will insert additional declarations immediately before the previous line.

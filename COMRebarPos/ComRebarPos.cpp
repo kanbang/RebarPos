@@ -1,21 +1,27 @@
-#include "StdAfx.h"
 // ComRebarPos.cpp : Implementation of CComRebarPos
+
+#include "StdAfx.h"
+
 #if defined(_DEBUG) && !defined(AC_FULL_DEBUG)
 #error _DEBUG should not be defined except in internal Adesk debug builds
 #endif
 
-#include "COMRebarPos_i.h"
-#include "ComRebarPos.h"
+#pragma warning( push )
+#pragma warning( disable : 4100 )
 #include "dbsymtb.h"
-#include "../NativeRebarPos/RebarPos.h"
-#include "../NativeRebarPos/PosShape.h"
-#include "../NativeRebarPos/PosGroup.h"
 #include "axpnt3d.h"
 #include "axpnt2d.h"
 #include "dbxutil.h"
 #include "dbapserv.h"
-
 #include "axlock.h"
+#pragma warning( pop )
+
+#include "COMRebarPos_i.h"
+#include "ComRebarPos.h"
+
+#include "../NativeRebarPos/RebarPos.h"
+#include "../NativeRebarPos/PosShape.h"
+#include "../NativeRebarPos/PosGroup.h"
 
 #define AXEntityDocLockNoDbOk(objId)                        \
     AcAxDocLock docLock(objId, AcAxDocLock::kNormal);       \
@@ -300,8 +306,8 @@ STDMETHODIMP CComRebarPos::GetElementStrings(
 //This function is called to determine the number of elements in a group
 //It defaults to the number of elements in the array (3 in this case)
 STDMETHODIMP CComRebarPos::GetElementGrouping(
-    /* [in] */ DISPID dispID,
-	/* [out] */ short *groupingNumber)
+    /* [in] */ DISPID /* dispID */,
+	/* [out] */ short* /* groupingNumber */)
 {
     return E_NOTIMPL;
 }
@@ -311,8 +317,8 @@ STDMETHODIMP CComRebarPos::GetElementGrouping(
 //For example in case of the polyline this is the number of vertices.
 //We are not implementing this because it defaults to nGroupCnt = 0
 STDMETHODIMP CComRebarPos::GetGroupCount(
-    /* [in] */ DISPID dispID,
-	/* [out] */ long *nGroupCnt)
+    /* [in] */ DISPID /* dispID */,
+	/* [out] */ long* /* nGroupCnt */)
 {
     return E_NOTIMPL;
 }
@@ -540,7 +546,7 @@ STDMETHODIMP CComRebarPos::ForceDbResident(VARIANT_BOOL *forceDbResident)
 	return S_OK;
 }
 
-STDMETHODIMP CComRebarPos::CreateObject(AcDbObjectId ownerId, TCHAR *keyName) 
+STDMETHODIMP CComRebarPos::CreateObject(AcDbObjectId ownerId, TCHAR* /* keyName */) 
 {
     try 
     {
@@ -563,7 +569,7 @@ STDMETHODIMP CComRebarPos::CreateObject(AcDbObjectId ownerId, TCHAR *keyName)
     return S_OK;
 }
 
-STDMETHODIMP CComRebarPos::AddToDb(AcDbObjectId& objId, AcDbObjectId ownerId, TCHAR* keyName)
+STDMETHODIMP CComRebarPos::AddToDb(AcDbObjectId& objId, AcDbObjectId ownerId, TCHAR* /* keyName */)
 {
     try 
     {

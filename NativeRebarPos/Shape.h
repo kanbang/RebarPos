@@ -1,8 +1,18 @@
 #pragma once
 
-#include "dbmain.h"
+#include <string>
 
-struct CShape
+// The following is part of the code used to export an API
+// and/or use the exported API.
+//
+#pragma warning( disable: 4275 4251 )
+#ifdef REBARPOS_MODULE
+#define DLLIMPEXP __declspec( dllexport )
+#else
+#define DLLIMPEXP
+#endif
+
+struct DLLIMPEXP CShape
 {
 	enum ShapeType
 	{ 
@@ -21,75 +31,48 @@ protected:
 	{ }
 };
 
-struct CShapeLine : CShape
+struct DLLIMPEXP CShapeLine : CShape
 {
-	ads_real x1;
-	ads_real y1;
-	ads_real x2;
-	ads_real y2;
+	double x1;
+	double y1;
+	double x2;
+	double y2;
 
-	CShapeLine()
-		: CShape(CShape::Line), x1(0), y1(0), x2(0), y2(0) 
-	{ }
+	CShapeLine();
+	CShapeLine(const Adesk::UInt16 Color, const double X1, const double Y1, const double X2, const double Y2);
 
-	CShapeLine(const Adesk::UInt16 Color, ads_real X1, ads_real Y1, ads_real X2, ads_real Y2)
-		: CShape(CShape::Line, Color), x1(X1), y1(Y1), x2(X2), y2(Y2) 
-	{ }
-
-	virtual CShapeLine* clone() const
-	{
-		return new CShapeLine(*this);
-	}
+	virtual CShapeLine* clone() const;
 };
 
-struct CShapeArc : CShape
+struct DLLIMPEXP CShapeArc : CShape
 {
-	ads_real x;
-	ads_real y;
-	ads_real r;
-	ads_real startAngle;
-	ads_real endAngle;
+	double x;
+	double y;
+	double r;
+	double startAngle;
+	double endAngle;
 
-	CShapeArc()
-		: CShape(CShape::Arc), x(0), y(0), r(0), startAngle(0), endAngle(0)
-	{ }
+	CShapeArc();
 
-	CShapeArc(const Adesk::UInt16 Color, ads_real X, ads_real Y, ads_real R, ads_real StartAngle, ads_real EndAngle)
-		: CShape(CShape::Arc, Color), x(X), y(Y), r(R), startAngle(StartAngle), endAngle(EndAngle)
-	{ }
+	CShapeArc(const Adesk::UInt16 Color, const double X, const double Y, const double R, const double StartAngle, const double EndAngle);
 
-	virtual CShapeArc* clone() const
-	{
-		return new CShapeArc(*this);
-	}
+	virtual CShapeArc* clone() const;
 };
 
-struct CShapeText : CShape
+struct DLLIMPEXP CShapeText : CShape
 {
-	ads_real x;
-	ads_real y;
-	ads_real height;
-	ACHAR* text;
+	double x;
+	double y;
+	double height;
+	wchar_t* text;
 	AcDb::TextHorzMode horizontalAlignment;
 	AcDb::TextVertMode verticalAlignment;
 
-	CShapeText()
-		: CShape(CShape::Text), x(0), y(0), height(0), text(NULL), horizontalAlignment(AcDb::kTextLeft), verticalAlignment(AcDb::kTextBase)
-	{ }
+	CShapeText();
 
-	CShapeText(const Adesk::UInt16 Color, ads_real X, ads_real Y, ads_real Height, ACHAR* Text, AcDb::TextHorzMode HorizontalAlignment, AcDb::TextVertMode VerticalAlignment)
-		: CShape(CShape::Text, Color), x(X), y(Y), height(Height), text(NULL), horizontalAlignment(HorizontalAlignment), verticalAlignment(VerticalAlignment)
-	{ 
-		acutUpdString(Text, text);
-	}
+	CShapeText(const Adesk::UInt16 Color, const double X, const double Y, const double Height, const wchar_t* Text, const AcDb::TextHorzMode HorizontalAlignment, const AcDb::TextVertMode VerticalAlignment);
 
-	~CShapeText()
-	{
-		acutDelString(text);
-	}
+	~CShapeText();
 
-	virtual CShapeText* clone() const
-	{
-		return new CShapeText(*this);
-	}
+	virtual CShapeText* clone() const;
 };

@@ -46,7 +46,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\..\..\inc;..\..\..\inc"
 				PreprocessorDefinitions="ACRXAPP;RADPACK;REBARPOS_MODULE;"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				DisableSpecificWarnings="4201;4100;4512;4189"
 			/>
@@ -118,7 +118,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\..\..\inc;..\..\..\inc"
 				PreprocessorDefinitions="ACRXAPP;RADPACK;REBARPOS_MODULE;"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				DisableSpecificWarnings="4201;4100;4512;4189"
 			/>
@@ -192,7 +192,7 @@
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\..\..\inc;..\..\..\inc"
 				PreprocessorDefinitions="ACRXAPP;RADPACK;REBARPOS_MODULE;"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				DisableSpecificWarnings="4201;4100;4512;4189"
 			/>
@@ -264,7 +264,7 @@
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\..\..\inc;..\..\..\inc"
 				PreprocessorDefinitions="ACRXAPP;RADPACK;REBARPOS_MODULE;"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				DisableSpecificWarnings="4201;4100;4512;4189"
 			/>
@@ -337,6 +337,46 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Shape.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\StdAfx.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\Utility.cpp"
 				>
 			</File>
@@ -367,6 +407,10 @@
 			</File>
 			<File
 				RelativePath=".\Shape.h"
+				>
+			</File>
+			<File
+				RelativePath=".\StdAfx.h"
 				>
 			</File>
 			<File

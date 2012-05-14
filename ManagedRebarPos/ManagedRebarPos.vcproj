@@ -52,7 +52,6 @@
 				BasicRuntimeChecks="0"
 				SmallerTypeCheck="false"
 				WarningLevel="4"
-				DisableSpecificWarnings="4100;4201;4512"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -128,7 +127,6 @@
 				BasicRuntimeChecks="0"
 				SmallerTypeCheck="false"
 				WarningLevel="4"
-				DisableSpecificWarnings="4100;4201;4512"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -203,7 +201,6 @@
 				PreprocessorDefinitions="VC7"
 				ExceptionHandling="2"
 				WarningLevel="4"
-				DisableSpecificWarnings="4100;4201;4512"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -275,7 +272,6 @@
 				PreprocessorDefinitions="VC7"
 				ExceptionHandling="2"
 				WarningLevel="4"
-				DisableSpecificWarnings="4100;4201;4512"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -411,7 +407,7 @@
 				>
 			</File>
 			<File
-				RelativePath="Stdafx.h"
+				RelativePath=".\StdAfx.h"
 				>
 			</File>
 		</Filter>

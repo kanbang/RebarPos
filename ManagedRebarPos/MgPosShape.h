@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "..\NativeRebarPos\Shape.h"
 #include "..\NativeRebarPos\PosShape.h"
 #include "Marshal.h"
 

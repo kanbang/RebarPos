@@ -3,22 +3,18 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
-#include "dbmain.h"
-#include "dbcurve.h"
-#include "geassign.h"
-#include "gegbl.h"
-#include "gegblabb.h"
-#include "gemat3d.h"
-#include "acestext.h"
-#include "gept2dar.h"
-#include "windows.h"
-#include "dbxutil.h"
+#pragma warning( push )
+#pragma warning( disable : 4100 )
+#include "acgi.h"
+#pragma warning( pop )
+
+#include <vector>
 
 #include "DrawParams.h"
 #include "PosShape.h"
 #include "PosGroup.h"
 #include "Shape.h"
-#include <vector>
+
 
 // The following is part of the code used to export an API
 // and/or use the exported API.
@@ -351,22 +347,11 @@ private:
 #undef new
 #undef delete
 #endif
-    void *operator new[](size_t nSize) { return 0;}
-    void operator delete[](void *p) {};
-    void *operator new[](size_t nSize, const TCHAR *file, int line) { return 0;}
+    void *operator new[](size_t /* nSize */) { return 0;}
+    void operator delete[](void* /* p */) {};
+    void *operator new[](size_t /* nSize */, const TCHAR* /* file*/ , int /* line */) { return 0;}
 #ifdef MEM_DEBUG
 #define new DEBUG_NEW
 #define delete DEBUG_DELETE
 #endif
-     
 };
-
-//- This line allows us to get rid of the .def file in ARX projects
-#ifndef NO_ARX_DEF
-#define NO_ARX_DEF
-#ifndef _WIN64
-#pragma comment(linker, "/export:_acrxGetApiVersion,PRIVATE")
-#else
-#pragma comment(linker, "/export:acrxGetApiVersion,PRIVATE")
-#endif
-#endif

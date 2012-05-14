@@ -2,6 +2,8 @@
 //----- Calculator.cpp : Implementation of Calculator
 //-----------------------------------------------------------------------------
 
+#include "StdAfx.h"
+
 #include "Calculator.h"
 
 bool Calculator::IsOperator(const wchar_t c)

@@ -3,7 +3,6 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
-#include "acgi.h"
 #include <string>
 
 namespace Utility
@@ -30,6 +29,13 @@ namespace Utility
 	/// Convert string to double
 	const double StrToDouble(const std::wstring& str);
 	const double StrToDouble(const wchar_t* str);
+
+	/// Convert int to string
+	const void IntToStr(const int val, std::wstring& str);
+
+	/// Convert string to int
+	const int StrToInt(const std::wstring& str);
+	const int StrToInt(const wchar_t* str);
 
 	// Read DXF vals
 	const Acad::ErrorStatus ReadDXFItem(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, resbuf* val);

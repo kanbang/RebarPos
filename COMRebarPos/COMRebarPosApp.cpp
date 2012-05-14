@@ -10,7 +10,6 @@
 #include "initguid.h"
 
 #include "COMRebarPos_i.h"
-
 #include "COMRebarPos_i.c"
 
 #include "ComRebarPos.h"

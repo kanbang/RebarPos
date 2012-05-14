@@ -149,9 +149,9 @@ END_OPMPROP_MAP()
 		/* [out] */ BSTR * propName);
 
     STDMETHOD(GetCategoryName)(THIS_
-                           /* [in]  */ PROPCAT propcat, 
-                           /* [in]  */ LCID lcid,
-                           /* [out] */ BSTR* pbstrName) { return S_FALSE;}
+                           /* [in]  */ PROPCAT /* propcat */, 
+                           /* [in]  */ LCID /* lcid */,
+                           /* [out] */ BSTR* /* pbstrName*/ ) { return S_FALSE;}
 
     //Override to make property read-only
 	STDMETHOD(Editable)( 
