@@ -63,6 +63,7 @@ namespace RebarPosCommands
 
             WorldGeometry g = wd.Geometry;
             SubEntityTraits s = wd.SubEntityTraits;
+            TextStyle style = new TextStyle();
 
             // Get geometry
             Point3d pt = pos.BasePoint;
@@ -96,7 +97,55 @@ namespace RebarPosCommands
                         ymin = Math.Min(ymin, arc.Y - arc.R);
                         xmax = Math.Max(xmax, arc.X + arc.R);
                         ymax = Math.Max(ymax, arc.Y + arc.R);
-
+                    }
+                    else if (shape is PosShape.ShapeText)
+                    {
+                        PosShape.ShapeText text = shape as PosShape.ShapeText;
+                        style.TextSize = text.Height;
+                        Extents2d size = style.ExtentsBox(text.Text, true, false, null);
+                        double left = 0, right = 0, top = 0, bottom = 0;
+                        double width = size.MaxPoint.X - size.MinPoint.X;
+                        double height = size.MaxPoint.Y - size.MinPoint.Y;
+                        switch (text.HorizontalAlignment)
+                        {
+                            case TextHorizontalMode.TextLeft:
+                                right = width;
+                                break;
+                            case TextHorizontalMode.TextRight:
+                                left = width;
+                                break;
+                            case TextHorizontalMode.TextCenter:
+                                left = right = width / 2.0;
+                                break;
+                            case TextHorizontalMode.TextMid:
+                                left = right = width / 2.0;
+                                break;
+                            case TextHorizontalMode.TextAlign:
+                                left = right = width / 2.0;
+                                break;
+                            case TextHorizontalMode.TextFit:
+                                left = right = width / 2.0;
+                                break;
+                        }
+                        switch (text.VerticalAlignment)
+                        {
+                            case TextVerticalMode.TextBase:
+                                top = height;
+                                break;
+                            case TextVerticalMode.TextBottom:
+                                top = height;
+                                break;
+                            case TextVerticalMode.TextTop:
+                                bottom = height;
+                                break;
+                            case TextVerticalMode.TextVerticalMid:
+                                top = bottom = height / 2.0;
+                                break;
+                        }
+                        xmin = Math.Min(xmin, text.X - left);
+                        xmax = Math.Max(xmax, text.X + right);
+                        ymin = Math.Min(ymin, text.Y - bottom);
+                        ymax = Math.Max(ymax, text.Y + top);
                     }
                 }
 
@@ -128,14 +177,54 @@ namespace RebarPosCommands
                     {
                         PosShape.ShapeArc arc = shape as PosShape.ShapeArc;
                         g.EllipticalArc(new Point3d(arc.X, arc.Y, 0), Vector3d.ZAxis, arc.R, arc.R, arc.StartAngle, arc.EndAngle, 0, ArcType.ArcSimple);
-
                     }
                     else if (shape is PosShape.ShapeText)
                     {
                         PosShape.ShapeText text = shape as PosShape.ShapeText;
                         string str = text.Text;
                         str = str.Replace("A", pos.A).Replace("B", pos.B).Replace("C", pos.C).Replace("D", pos.D).Replace("E", pos.E).Replace("F", pos.F);
-                        g.Text(new Point3d(text.X, text.Y, 0), Vector3d.ZAxis, Vector3d.XAxis, text.Height, 1.0, 0, str);
+                        style.TextSize = text.Height;
+                        double txoff = 0, tyoff = 0;
+                        Extents2d size = style.ExtentsBox(str, true, false, null);
+                        double width = size.MaxPoint.X - size.MinPoint.X;
+                        double height = size.MaxPoint.Y - size.MinPoint.Y;
+                        switch (text.HorizontalAlignment)
+                        {
+                            case TextHorizontalMode.TextLeft:
+                                txoff = 0;
+                                break;
+                            case TextHorizontalMode.TextRight:
+                                txoff = -width;
+                                break;
+                            case TextHorizontalMode.TextCenter:
+                                txoff = -width / 2.0f;
+                                break;
+                            case TextHorizontalMode.TextAlign:
+                                txoff = -width / 2.0f;
+                                break;
+                            case TextHorizontalMode.TextFit:
+                                txoff = -width / 2.0f;
+                                break;
+                            case TextHorizontalMode.TextMid:
+                                txoff = -width / 2.0f;
+                                break;
+                        }
+                        switch (text.VerticalAlignment)
+                        {
+                            case TextVerticalMode.TextBase:
+                                tyoff = 0;
+                                break;
+                            case TextVerticalMode.TextBottom:
+                                tyoff = 0;
+                                break;
+                            case TextVerticalMode.TextTop:
+                                tyoff = -height;
+                                break;
+                            case TextVerticalMode.TextVerticalMid:
+                                tyoff = -height / 2.0f;
+                                break;
+                        }
+                        g.Text(new Point3d(text.X + txoff, text.Y + tyoff, 0), Vector3d.ZAxis, Vector3d.XAxis, str, false, style);
                     }
                 }
 
