@@ -99,9 +99,10 @@ void PosShape::ShapeCollection::AddArc(double x, double y, double r, double star
 	m_Parent->GetImpObj()->AddShape(new CShapeArc(color->ColorIndex, x, y, r, startAngle, endAngle));
 }
 
-void PosShape::ShapeCollection::AddText(double x, double y, double height, String^ str, Autodesk::AutoCAD::Colors::Color^ color)
+void PosShape::ShapeCollection::AddText(double x, double y, double height, String^ str, Autodesk::AutoCAD::Colors::Color^ color, TextHorizontalMode horizontalAlignment, TextVerticalMode verticalAlignment)
 {
-	m_Parent->GetImpObj()->AddShape(new CShapeText(color->ColorIndex, x, y, height, (wchar_t*)Marshal::StringToWchar(str)));
+	m_Parent->GetImpObj()->AddShape(new CShapeText(color->ColorIndex, x, y, height, (wchar_t*)Marshal::StringToWchar(str),
+		static_cast<AcDb::TextHorzMode>(horizontalAlignment), static_cast<AcDb::TextVertMode>(verticalAlignment)));
 }
 
 int PosShape::ShapeCollection::Count::get()

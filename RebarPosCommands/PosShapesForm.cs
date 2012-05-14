@@ -46,9 +46,9 @@ namespace RebarPosCommands
             {
                 shapes.Add(new PosShape.ShapeArc(Autodesk.AutoCAD.Colors.Color.FromColor(color), x, y, r, startAngle, endAngle));
             }
-            public void AddText(Color color, double x, double y, double height, string text)
+            public void AddText(Color color, double x, double y, double height, string text, TextHorizontalMode horizontalAlignment, TextVerticalMode verticalAlignment)
             {
-                shapes.Add(new PosShape.ShapeText(Autodesk.AutoCAD.Colors.Color.FromColor(color), x, y, height, text));
+                shapes.Add(new PosShape.ShapeText(Autodesk.AutoCAD.Colors.Color.FromColor(color), x, y, height, text, horizontalAlignment, verticalAlignment));
             }
         }
 
@@ -180,7 +180,27 @@ namespace RebarPosCommands
                 else if (draw is PosShape.ShapeText)
                 {
                     PosShape.ShapeText text = draw as PosShape.ShapeText;
-                    posShapeView.AddText(text.Color.ColorValue, (float)text.X, (float)text.Y, (float)text.Height, text.Text);
+                    StringAlignment horizontal = StringAlignment.Near;
+                    StringAlignment vertical = StringAlignment.Near;
+                    switch (text.HorizontalAlignment)
+                    {
+                        case TextHorizontalMode.TextCenter:
+                            horizontal = StringAlignment.Center;
+                            break;
+                        case TextHorizontalMode.TextRight:
+                            horizontal = StringAlignment.Far;
+                            break;
+                    }
+                    switch (text.VerticalAlignment)
+                    {
+                        case TextVerticalMode.TextVerticalMid:
+                            vertical = StringAlignment.Center;
+                            break;
+                        case TextVerticalMode.TextTop:
+                            vertical = StringAlignment.Far;
+                            break;
+                    }
+                    posShapeView.AddText(text.Color.ColorValue, (float)text.X, (float)text.Y, (float)text.Height, text.Text, horizontal, vertical);
                 }
             }
         }
@@ -411,7 +431,7 @@ namespace RebarPosCommands
                         else if (obj is DBText)
                         {
                             DBText text = obj as DBText;
-                            copy.AddText(text.Color.ColorValue, text.Position.X, text.Position.Y, text.Height, text.TextString);
+                            copy.AddText(text.Color.ColorValue, text.Position.X, text.Position.Y, text.Height, text.TextString, text.HorizontalMode, text.VerticalMode);
                         }
                     }
                 }
@@ -468,7 +488,7 @@ namespace RebarPosCommands
                                 else if (draw is PosShape.ShapeText)
                                 {
                                     PosShape.ShapeText text = draw as PosShape.ShapeText;
-                                    shape.Items.AddText(text.X, text.Y, text.Height, text.Text, text.Color);
+                                    shape.Items.AddText(text.X, text.Y, text.Height, text.Text, text.Color, text.HorizontalAlignment, text.VerticalAlignment);
                                 }
                             }
 
@@ -502,7 +522,7 @@ namespace RebarPosCommands
                                 else if (draw is PosShape.ShapeText)
                                 {
                                     PosShape.ShapeText text = draw as PosShape.ShapeText;
-                                    shape.Items.AddText(text.X, text.Y, text.Height, text.Text, text.Color);
+                                    shape.Items.AddText(text.X, text.Y, text.Height, text.Text, text.Color, text.HorizontalAlignment, text.VerticalAlignment);
                                 }
                             }
 

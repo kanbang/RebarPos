@@ -171,7 +171,7 @@ namespace RebarPosCommands
                         shape1.Formula = "A";
                         shape1.FormulaBending = "A";
                         shape1.Items.AddLine(0, 0, 100, 0, Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 1));
-                        shape1.Items.AddText(50, 5, 10, "A", Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 2));
+                        shape1.Items.AddText(50, 5, 10, "A", Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 2), TextHorizontalMode.TextCenter, TextVerticalMode.TextBase);
                         id = dict.SetAt("*", shape1);
                         tr.AddNewlyCreatedDBObject(shape1, true);
 
@@ -181,9 +181,9 @@ namespace RebarPosCommands
                         shape2.Formula = "A+B";
                         shape2.FormulaBending = "A+B-0.5*r-d";
                         shape2.Items.AddLine(10, 0, 100, 0, Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 1));
-                        shape2.Items.AddText(55, 5, 10, "A", Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 2));
+                        shape2.Items.AddText(55, 5, 10, "A", Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 2), TextHorizontalMode.TextCenter, TextVerticalMode.TextBase);
                         shape2.Items.AddLine(10, 0, 10, 20, Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 1));
-                        shape2.Items.AddText(0, 10, 10, "B", Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 2));
+                        shape2.Items.AddText(0, 10, 10, "B", Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 2), TextHorizontalMode.TextRight, TextVerticalMode.TextVerticalMid);
                         dict.SetAt("*", shape2);
                         tr.AddNewlyCreatedDBObject(shape2, true);
 

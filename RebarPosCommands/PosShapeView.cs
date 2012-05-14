@@ -46,14 +46,18 @@ namespace RebarPosCommands
             public Color Color;
             public float X, Y, Height;
             public string Text;
+            public StringAlignment HorizontalAlignment;
+            public StringAlignment VerticalAlignment;
 
-            public DrawText(Color color, float x, float y, float height, string text)
+            public DrawText(Color color, float x, float y, float height, string text, StringAlignment horizontalAlignment, StringAlignment verticalAlignment)
             {
                 Color = color;
                 X = x;
                 Y = y;
                 Height = height;
                 Text = text;
+                HorizontalAlignment = horizontalAlignment;
+                VerticalAlignment = verticalAlignment;
             }
         }
         private List<DrawLine> lines;
@@ -107,15 +111,16 @@ namespace RebarPosCommands
             Refresh();
         }
 
-        public void AddText(Color color, float x, float y, float height, string text)
+        public void AddText(Color color, float x, float y, float height, string text, StringAlignment horizontalAlignment, StringAlignment verticalAlignment)
         {
-            texts.Add(new DrawText(color, x, y, height, text));
+            texts.Add(new DrawText(color, x, y, height, text, horizontalAlignment, verticalAlignment));
             Refresh();
         }
 
         private void PosShapeView_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
+
             if (!Enabled)
                 g.Clear(SystemColors.Control);
             else
@@ -132,19 +137,43 @@ namespace RebarPosCommands
                 }
             }
 
+            // Show a default shape in design mode
+            string dname = string.Empty;
+            List<DrawLine> dlines = null;
+            List<DrawArc> darcs = null;
+            List<DrawText> dtexts = null;
+            if (DesignMode)
+            {
+                dname = "Shape";
+                dlines = new List<DrawLine>();
+                darcs = new List<DrawArc>();
+                dtexts = new List<DrawText>();
+                dlines.Add(new DrawLine(Color.Red, 0, 0, 100, 0));
+                dtexts.Add(new DrawText(Color.Yellow, 50, 2, 10, "A", StringAlignment.Center, StringAlignment.Near));
+                dlines.Add(new DrawLine(Color.Red, 0, 0, 0, 20));
+                dtexts.Add(new DrawText(Color.Yellow, -2, 10, 10, "B", StringAlignment.Far, StringAlignment.Center));
+            }
+            else
+            {
+                dname = m_Name;
+                dlines = lines;
+                darcs = arcs;
+                dtexts = texts;
+            }
+
             // Shape name
             if (m_ShowName)
             {
                 using (Brush brush = new SolidBrush(ForeColor))
                 {
-                    g.DrawString(m_Name, Font, brush, 5, 8);
+                    g.DrawString(dname, Font, brush, 5, 8);
                 }
             }
 
             bool hasEnt = false;
             // Calculate extents
             float xmin = float.MaxValue, xmax = float.MinValue, ymin = float.MaxValue, ymax = float.MinValue;
-            foreach (DrawLine line in lines)
+            foreach (DrawLine line in dlines)
             {
                 hasEnt = true;
                 xmin = Math.Min(xmin, Math.Min(line.X1, line.X2));
@@ -152,7 +181,7 @@ namespace RebarPosCommands
                 ymin = Math.Min(ymin, Math.Min(line.Y1, line.Y2));
                 ymax = Math.Max(ymax, Math.Max(line.Y1, line.Y2));
             }
-            foreach (DrawArc arc in arcs)
+            foreach (DrawArc arc in darcs)
             {
                 hasEnt = true;
                 xmin = Math.Min(xmin, arc.X - arc.R);
@@ -160,13 +189,44 @@ namespace RebarPosCommands
                 ymin = Math.Min(ymin, arc.Y - arc.R);
                 ymax = Math.Max(ymax, arc.Y + arc.R);
             }
-            foreach (DrawText text in texts)
+            foreach (DrawText text in dtexts)
             {
-                hasEnt = true;
-                xmin = Math.Min(xmin, text.X - text.Height);
-                xmax = Math.Max(xmax, text.X + text.Height);
-                ymin = Math.Min(ymin, text.Y - text.Height);
-                ymax = Math.Max(ymax, text.Y + text.Height);
+                using (Font font = new Font(Font.FontFamily, 1.0f))
+                {
+                    hasEnt = true;
+                    float left = 0, right = 0, top = 0, bottom = 0;
+                    SizeF size = g.MeasureString(text.Text, font);
+                    float fscale = text.Height / size.Height;
+                    size = new SizeF(size.Width * fscale, size.Height * fscale);
+                    switch (text.HorizontalAlignment)
+                    {
+                        case StringAlignment.Near:
+                            right = size.Width;
+                            break;
+                        case StringAlignment.Far:
+                            left = size.Width;
+                            break;
+                        case StringAlignment.Center:
+                            left = right = size.Width / 2.0f;
+                            break;
+                    }
+                    switch (text.VerticalAlignment)
+                    {
+                        case StringAlignment.Near:
+                            top = size.Height;
+                            break;
+                        case StringAlignment.Far:
+                            bottom = size.Height;
+                            break;
+                        case StringAlignment.Center:
+                            top = bottom = size.Height / 2.0f;
+                            break;
+                    }
+                    xmin = Math.Min(xmin, text.X - left);
+                    xmax = Math.Max(xmax, text.X + right);
+                    ymin = Math.Min(ymin, text.Y - top);
+                    ymax = Math.Max(ymax, text.Y + bottom);
+                }
             }
             if (!hasEnt)
                 return;
@@ -194,49 +254,89 @@ namespace RebarPosCommands
             g.ScaleTransform(scale, -scale, System.Drawing.Drawing2D.MatrixOrder.Append);
             g.TranslateTransform(xoff, h - yoff, System.Drawing.Drawing2D.MatrixOrder.Append);
 
+            // Calculate conversion from world units to em-size
+            float fontScale = 1.0f;
+            using (Font font = new Font(Font.FontFamily, 1.0f))
+            {
+                fontScale = 1.0f / g.MeasureString("M", font).Height;
+            }
+
             // Draw shapes
-            foreach (DrawLine line in lines)
+            foreach (DrawLine line in dlines)
             {
                 using (Pen pen = new Pen(line.Color, 1.0f))
                 {
                     pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
                     pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
-                    g.DrawLine(pen, (float)line.X1, (float)line.Y1, (float)line.X2, (float)line.Y2);
+                    g.DrawLine(pen, line.X1, line.Y1, line.X2, line.Y2);
                 }
             }
-            foreach (DrawArc arc in arcs)
+            foreach (DrawArc arc in darcs)
             {
                 using (Pen pen = new Pen(arc.Color, 1.0f))
                 {
                     pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
                     pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
-                    g.DrawArc(pen, (float)arc.X, (float)arc.Y, 2.0f * (float)arc.R, 2.0f * (float)arc.R, (float)arc.StartAngle, (float)arc.EndAngle);
+                    g.DrawArc(pen, arc.X, arc.Y, 2.0f * arc.R, 2.0f * arc.R, arc.StartAngle, arc.EndAngle);
                 }
             }
-            foreach (DrawText text in texts)
+
+            foreach (DrawText text in dtexts)
             {
+                g.ResetTransform();
+
                 using (Brush brush = new SolidBrush(text.Color))
-                using (StringFormat format = new StringFormat())
+                using (Font font = new Font(Font.FontFamily, text.Height * fontScale))
                 {
-                    format.Alignment = StringAlignment.Center;
-                    format.LineAlignment = StringAlignment.Center;
+                    float txoff = 0, tyoff = 0;
+                    SizeF size = g.MeasureString(text.Text, font);
+                    switch (text.HorizontalAlignment)
+                    {
+                        case StringAlignment.Near:
+                            txoff = 0;
+                            break;
+                        case StringAlignment.Far:
+                            txoff = -size.Width;
+                            break;
+                        case StringAlignment.Center:
+                            txoff = -size.Width / 2.0f;
+                            break;
+                    }
+                    switch (text.VerticalAlignment)
+                    {
+                        case StringAlignment.Near:
+                            tyoff = 0;
+                            break;
+                        case StringAlignment.Far:
+                            tyoff = -size.Height;
+                            break;
+                        case StringAlignment.Center:
+                            tyoff = -size.Height / 2.0f;
+                            break;
+                    }
 
-                    // Save state
-                    GraphicsState state = g.Save();
-
-                    // Draw
+                    // Transform upside-down text
                     g.ResetTransform();
-                    g.ScaleTransform(1.0f / scale, -1.0f / scale, MatrixOrder.Append);
-                    g.TranslateTransform((float)text.X, (float)text.Y, MatrixOrder.Append);
+                    g.ScaleTransform(1.0f, -1.0f, MatrixOrder.Append);
                     g.TranslateTransform(-xmin, -ymin, System.Drawing.Drawing2D.MatrixOrder.Append);
                     g.ScaleTransform(scale, -scale, System.Drawing.Drawing2D.MatrixOrder.Append);
                     g.TranslateTransform(xoff, h - yoff, System.Drawing.Drawing2D.MatrixOrder.Append);
-                    g.DrawString(text.Text, Font, brush, 0.0f, 0.0f, format);
 
-                    // Restore state
-                    g.Restore(state);
+                    // Draw
+                    g.DrawString(text.Text, font, brush, text.X + txoff, -text.Y - tyoff - size.Height);
+                    //g.DrawRectangle(Pens.Green, text.X + txoff, -text.Y - tyoff - size.Height, size.Width, size.Height);
                 }
             }
+        }
+
+        private RectangleF GetTextBounds(Graphics graphics, string text, Font font)
+        {
+            CharacterRange[] characterRanges = { new CharacterRange(0, text.Length) };
+            StringFormat stringFormat = new StringFormat(StringFormat.GenericTypographic);
+            stringFormat.SetMeasurableCharacterRanges(characterRanges);
+
+            Region region = graphics.MeasureCharacterRanges(text, font, new RectangleF(0, 0, float.MaxValue, float.MaxValue), stringFormat)[0];
+            return region.GetBounds(graphics);
         }
     }
 }

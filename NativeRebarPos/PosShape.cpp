@@ -262,6 +262,8 @@ Acad::ErrorStatus CPosShape::dwgOutFields(AcDbDwgFiler *pFiler) const
 				pFiler->writeDouble(text->y);
 				pFiler->writeDouble(text->height);
 				pFiler->writeString(text->text);
+				pFiler->writeInt32(text->horizontalAlignment);
+				pFiler->writeInt32(text->verticalAlignment);
 			}
 			break;
 		}
@@ -341,6 +343,12 @@ Acad::ErrorStatus CPosShape::dwgInFields(AcDbDwgFiler *pFiler)
 					pFiler->readDouble(&text->y);
 					pFiler->readDouble(&text->height);
 					pFiler->readString(&text->text);
+					Adesk::Int32 hAlignment = 0;
+					pFiler->readInt32(&hAlignment);
+					text->horizontalAlignment = (AcDb::TextHorzMode)hAlignment;
+					Adesk::Int32 vAlignment = 0;
+					pFiler->readInt32(&vAlignment);
+					text->verticalAlignment = (AcDb::TextVertMode)vAlignment;
 					m_List.push_back(text);
 				}
 				break;
@@ -420,6 +428,8 @@ Acad::ErrorStatus CPosShape::dxfOutFields(AcDbDxfFiler *pFiler) const
 				pFiler->writeDouble(AcDb::kDxfYCoord, text->y);
 				pFiler->writeDouble(AcDb::kDxfTxtSize, text->height);
 				pFiler->writeString(AcDb::kDxfText, text->text);
+				pFiler->writeInt32(AcDb::kDxfInt32, text->horizontalAlignment);
+				pFiler->writeInt32(AcDb::kDxfInt32 + 1, text->verticalAlignment);
 			}
 			break;
 		}
@@ -503,6 +513,12 @@ Acad::ErrorStatus CPosShape::dxfInFields(AcDbDxfFiler *pFiler)
 				text->x = p.x; text->y = p.y;
 				if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfTxtSize, _T("text height"), text->height)) != Acad::eOk) return es;
 				if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("text contents"), text->text)) != Acad::eOk) return es;
+				Adesk::Int32 hAlignment = 0;
+				if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("text horizontal alignment"), hAlignment)) != Acad::eOk) return es;
+				text->horizontalAlignment = (AcDb::TextHorzMode)hAlignment;
+				Adesk::Int32 vAlignment = 0;
+				if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32 + 1, _T("text vertical alignment"), vAlignment)) != Acad::eOk) return es;
+				text->verticalAlignment = (AcDb::TextVertMode)vAlignment;
 				t_List.push_back(text);
 			}
 			break;

@@ -80,7 +80,8 @@ namespace OZOZ
 				{
 					return gcnew ShapeText(
 						Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, text->color),
-						text->x, text->y, text->height, Marshal::WcharToString(text->text));
+						text->x, text->y, text->height, Marshal::WcharToString(text->text), 
+						static_cast<TextHorizontalMode>(text->horizontalAlignment), static_cast<TextVerticalMode>(text->verticalAlignment));
 				}
 			};
 
@@ -151,24 +152,29 @@ namespace OZOZ
 				property double Y;
 				property double Height;
 				property String^ Text;
+				property TextHorizontalMode HorizontalAlignment;
+				property TextVerticalMode VerticalAlignment;
 
 			public:
 				ShapeText() : Shape()
 				{
 					;
 				}
-				ShapeText(Autodesk::AutoCAD::Colors::Color^ color, double x, double y, double height, String^ text) : Shape(color)
+				ShapeText(Autodesk::AutoCAD::Colors::Color^ color, double x, double y, double height, String^ text, TextHorizontalMode horizontalAlignment, TextVerticalMode verticalAlignment) : Shape(color)
 				{
 					X = x;
 					Y = y;
 					Height = height;
 					Text = text;
+					HorizontalAlignment = horizontalAlignment;
+					VerticalAlignment = verticalAlignment;
 				}
 
 			internal:
 				virtual CShape* ToNative(void) override
 				{
-					return new CShapeText(Color->ColorIndex, X, Y, Height, (wchar_t*)Marshal::StringToWchar(Text));
+					return new CShapeText(Color->ColorIndex, X, Y, Height, (wchar_t*)Marshal::StringToWchar(Text),
+						static_cast<AcDb::TextHorzMode>(HorizontalAlignment), static_cast<AcDb::TextVertMode>(VerticalAlignment));
 				}
 			};
 
@@ -189,7 +195,7 @@ namespace OZOZ
 			public:
 				void AddLine(double x1, double y1, double x2, double y2, Autodesk::AutoCAD::Colors::Color^ color);
 				void AddArc(double x, double y, double r, double startAngle, double endAngle, Autodesk::AutoCAD::Colors::Color^ color);
-				void AddText(double x, double y, double height, String^ text, Autodesk::AutoCAD::Colors::Color^ color);
+				void AddText(double x, double y, double height, String^ text, Autodesk::AutoCAD::Colors::Color^ color, TextHorizontalMode horizontalAlignment, TextVerticalMode verticalAlignment);
 				property int Count { int get(); }
 				property Shape^ default[int] { Shape^ get(int index); void set(int index, Shape^ value); }
 				void Remove(int index);

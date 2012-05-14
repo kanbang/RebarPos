@@ -70,13 +70,15 @@ struct CShapeText : CShape
 	ads_real y;
 	ads_real height;
 	ACHAR* text;
+	AcDb::TextHorzMode horizontalAlignment;
+	AcDb::TextVertMode verticalAlignment;
 
 	CShapeText()
-		: CShape(CShape::Text), x(0), y(0), height(0), text(NULL)
+		: CShape(CShape::Text), x(0), y(0), height(0), text(NULL), horizontalAlignment(AcDb::kTextLeft), verticalAlignment(AcDb::kTextBase)
 	{ }
 
-	CShapeText(const Adesk::UInt16 Color, ads_real X, ads_real Y, ads_real Height, ACHAR* Text)
-		: CShape(CShape::Text, Color), x(X), y(Y), height(Height), text(NULL)
+	CShapeText(const Adesk::UInt16 Color, ads_real X, ads_real Y, ads_real Height, ACHAR* Text, AcDb::TextHorzMode HorizontalAlignment, AcDb::TextVertMode VerticalAlignment)
+		: CShape(CShape::Text, Color), x(X), y(Y), height(Height), text(NULL), horizontalAlignment(HorizontalAlignment), verticalAlignment(VerticalAlignment)
 	{ 
 		acutUpdString(Text, text);
 	}

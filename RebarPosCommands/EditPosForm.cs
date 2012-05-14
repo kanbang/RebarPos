@@ -426,7 +426,27 @@ namespace RebarPosCommands
                         else if (sh is PosShape.ShapeText)
                         {
                             PosShape.ShapeText text = sh as PosShape.ShapeText;
-                            posShapeView.AddText(color, (float)text.X, (float)text.Y, (float)text.Height, text.Text);
+                            StringAlignment horizontal = StringAlignment.Near;
+                            StringAlignment vertical = StringAlignment.Near;
+                            switch (text.HorizontalAlignment)
+                            {
+                                case TextHorizontalMode.TextCenter:
+                                    horizontal = StringAlignment.Center;
+                                    break;
+                                case TextHorizontalMode.TextRight:
+                                    horizontal = StringAlignment.Far;
+                                    break;
+                            }
+                            switch (text.VerticalAlignment)
+                            {
+                                case TextVerticalMode.TextVerticalMid:
+                                    vertical = StringAlignment.Center;
+                                    break;
+                                case TextVerticalMode.TextTop:
+                                    vertical = StringAlignment.Far;
+                                    break;
+                            }
+                            posShapeView.AddText(color, (float)text.X, (float)text.Y, (float)text.Height, text.Text, horizontal, vertical);
                         }
                     }
 
