@@ -5,7 +5,7 @@
 // Type library section and components
 //
 [
-	uuid(60E2E250-99CE-42EB-8881-54C193F35E40),
+	uuid(26E9A3B0-6567-4857-AABB-E09AC4A7A8AE),
 	version(1.0),
 	helpstring("RebarPos 1.0 Type Library"),
 	helpfile("RebarPos.hlp")
@@ -33,7 +33,7 @@ library COMREBARPOSLib
 	// IComRebarPos interface
 	[
 		object,
-		uuid(4EB91FA1-8DD3-4DF9-9277-E0BA3EA5361F),
+		uuid(5D19CA2D-2E6E-4dce-A7FB-DA0B7C7CD913),
 		dual,
 		helpstring("IComRebarPos Interface"),
 		helpcontext(IDH_ICOMREBARPOS),
@@ -85,7 +85,7 @@ library COMREBARPOSLib
 
 	// ComRebarPos coclass
 	[
-		uuid(6421F67D-6A0A-4CA4-85BA-F11A0852A656),
+		uuid(97CAC17D-B1C7-49ca-8D57-D3FF491860FF),
 		helpstring("ComRebarPos Class"),
 		helpcontext(IDH_CCOMREBARPOS),
 		noncreatable

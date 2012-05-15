@@ -2,7 +2,7 @@ HKCR
 {
 	NoRemove CLSID
 	{
-		ForceRemove {6421F67D-6A0A-4CA4-85BA-F11A0852A656} = s 'ComRebarPos Class'
+		ForceRemove {97CAC17D-B1C7-49ca-8D57-D3FF491860FF} = s 'ComRebarPos Class'
 		{
 			ForceRemove 'Programmable'
 			InprocServer32 = s '%MODULE%'
@@ -24,7 +24,7 @@ HKLM
 				{
 					NoRemove ActiveXCLSID
 					{
-						val RebarPos = s '{6421F67D-6A0A-4CA4-85BA-F11A0852A656}'
+						val RebarPos = s '{97CAC17D-B1C7-49ca-8D57-D3FF491860FF}'
 					}
 				}			
 			}
