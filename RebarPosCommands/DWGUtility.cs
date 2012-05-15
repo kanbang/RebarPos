@@ -137,6 +137,7 @@ namespace RebarPosCommands
             return list.ToArray();
         }
 
+        // Creates default shapes
         public static ObjectId CreateDefaultShapes()
         {
             ObjectId id = ObjectId.Null;
@@ -209,6 +210,7 @@ namespace RebarPosCommands
             }
         }
 
+        // Creates default groups
         public static ObjectId CreateDefaultGroups()
         {
             ObjectId id = ObjectId.Null;
@@ -247,6 +249,63 @@ namespace RebarPosCommands
                         id = dict.SetAt("*", group);
                         dict.DowngradeOpen();
                         tr.AddNewlyCreatedDBObject(group, true);
+                    }
+                    else
+                    {
+                        foreach (DBDictionaryEntry entry in dict)
+                        {
+                            id = entry.Value;
+                            break;
+                        }
+                    }
+
+                    tr.Commit();
+                }
+                catch (System.Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                }
+
+                return id;
+            }
+        }
+
+        // Creates default BOQ styles
+        public static ObjectId CreateDefaultBOQStyles()
+        {
+            ObjectId id = ObjectId.Null;
+
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
+                    DBDictionary dict = null;
+                    if (!namedDict.Contains(BOQStyle.TableName))
+                    {
+                        dict = new DBDictionary();
+                        namedDict.UpgradeOpen();
+                        namedDict.SetAt(BOQStyle.TableName, dict);
+                        namedDict.DowngradeOpen();
+                        tr.AddNewlyCreatedDBObject(dict, true);
+                    }
+                    else
+                    {
+                        dict = (DBDictionary)tr.GetObject(namedDict.GetAt(BOQStyle.TableName), OpenMode.ForRead);
+                    }
+
+                    if (dict.Count == 0)
+                    {
+                        BOQStyle style = new BOQStyle();
+                        style.Name = "0";
+                        style.Columns = "[M][N][\"T\":D][L][DL]";
+                        style.TextStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Style", "leroy.shx", 0.7);
+                        style.HeadingStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Heading Style", "simplxtw.shx", 1.0);
+                        dict.UpgradeOpen();
+                        id = dict.SetAt("*", style);
+                        dict.DowngradeOpen();
+                        tr.AddNewlyCreatedDBObject(style, true);
                     }
                     else
                     {

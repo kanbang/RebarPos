@@ -31,6 +31,7 @@ namespace RebarPosCommands
         {
             DWGUtility.CreateDefaultShapes();
             ObjectId id = DWGUtility.CreateDefaultGroups();
+            DWGUtility.CreateDefaultBOQStyles();
             SetCurrentGroup(id);
 
             ShowShapes = false;
