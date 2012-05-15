@@ -990,8 +990,6 @@ Acad::ErrorStatus CRebarPos::subGetGeomExtents(AcDbExtents& extents) const
 	extents.addPoint(pt7);
 	extents.addPoint(pt8);
 	
-	acutPrintf(_T("xMin: %f"), extents.minPoint().x);
-
 	return Acad::eOk;
 }
 
