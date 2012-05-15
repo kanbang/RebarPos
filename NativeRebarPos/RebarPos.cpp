@@ -12,9 +12,6 @@
 #include "PosShape.h"
 #include "PosGroup.h"
 
-// To get the class id of the COM interface (subGetClassID)
-#include "..\COMRebarPos\COMRebarPos_i.c"
-
 Adesk::UInt32 CRebarPos::kCurrentVersionNumber = 1;
 
 //*************************************************************************
@@ -1717,7 +1714,9 @@ Acad::ErrorStatus CRebarPos::subWblockClone(AcRxObject*    pOwner,
 Acad::ErrorStatus CRebarPos::subGetClassID(CLSID* pClsid) const
 {
     assertReadEnabled();
-    *pClsid = CLSID_ComRebarPos;
+	// See the interface definition file for the CLASS ID
+	CLSID clsid = {0x97CAC17D,0xB1C7,0x49ca,{0x8D,0x57,0xD3,0xFF,0x49,0x18,0x60,0xFF}};
+    *pClsid = clsid;
     return Acad::eOk;
 }
 
@@ -1986,9 +1985,11 @@ const void CRebarPos::Calculate(void) const
 
 bool CRebarPos::GetLengths(const ACHAR* str, const double diameter, const CPosGroup::DrawingUnits inputUnit, double& minLength, double& maxLength, bool& isVar)
 {
-	std::wstring length(str);
+	std::wstring length;
+	if(str != NULL)
+		length.assign(str);
 	std::wstring length1, length2;
-
+	
 	// Get variable lengths
 	size_t i = length.find(L'~');
 	if(i != -1)
@@ -2021,7 +2022,9 @@ bool CRebarPos::GetLengths(const ACHAR* str, const double diameter, const CPosGr
 
 bool CRebarPos::CalcConsLength(const ACHAR* str, const double diameter, const CPosGroup::DrawingUnits inputUnit, double& value)
 {
-	std::wstring length(str);
+	std::wstring length;
+	if(str != NULL)
+		length.assign(str);
 
 	double scale = ConvertLength(1.0, inputUnit, CPosGroup::MM);
 
@@ -2052,8 +2055,12 @@ bool CRebarPos::CalcConsLength(const ACHAR* str, const double diameter, const CP
 
 bool CRebarPos::GetTotalLengths(const ACHAR* formula, CRebarPos::CCalculatedProperties& props)
 {
-	std::wstring length1(formula);
-	std::wstring length2(formula);
+	std::wstring length1, length2;
+	if(formula != NULL)
+	{
+		length1.assign(formula);
+		length2.assign(formula);
+	}
 
 	// Replace lengths
 	std::wstring strA1, strA2, strB1, strB2, strC1, strC2;
@@ -2111,8 +2118,12 @@ bool CRebarPos::GetTotalLengths(const ACHAR* formula, CRebarPos::CCalculatedProp
 
 bool CRebarPos::GetTotalLengths(const ACHAR* formula, const int fieldCount, const CPosGroup::DrawingUnits inputUnit, const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f, const ACHAR* diameter, double& minLength, double& maxLength, bool& isVar)
 {
-	std::wstring length1(formula);
-	std::wstring length2(formula);
+	std::wstring length1, length2;
+	if(formula != NULL)
+	{
+		length1.assign(formula);
+		length2.assign(formula);
+	}
 
 	double dia = 0.0;
 	if(diameter != NULL && diameter[0] != _T('\0'))
@@ -2248,7 +2259,9 @@ const DrawList CRebarPos::ParseFormula(const ACHAR* formula) const
 	list.clear();
 
 	// First pass: separate parts
-	std::wstring str(formula);
+	std::wstring str;
+	if(formula != NULL)
+		str.assign(formula);
 	std::wstring part;
 	bool indeco = false;
 	for(unsigned int i = 0; i < str.length(); i++)
