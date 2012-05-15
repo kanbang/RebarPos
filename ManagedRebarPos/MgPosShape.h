@@ -81,7 +81,7 @@ namespace OZOZ
 				{
 					return gcnew ShapeText(
 						Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, text->color),
-						text->x, text->y, text->height, Marshal::WcharToString(text->text), 
+						text->x, text->y, text->height, Marshal::WstringToString(text->text), 
 						static_cast<TextHorizontalMode>(text->horizontalAlignment), static_cast<TextVerticalMode>(text->verticalAlignment));
 				}
 			};
@@ -174,7 +174,7 @@ namespace OZOZ
 			internal:
 				virtual CShape* ToNative(void) override
 				{
-					return new CShapeText(Color->ColorIndex, X, Y, Height, (wchar_t*)Marshal::StringToWchar(Text),
+					return new CShapeText(Color->ColorIndex, X, Y, Height, Marshal::StringToWstring(Text),
 						static_cast<AcDb::TextHorzMode>(HorizontalAlignment), static_cast<AcDb::TextVertMode>(VerticalAlignment));
 				}
 			};

@@ -26,19 +26,24 @@ CShapeArc* CShapeArc::clone() const
 	return new CShapeArc(*this);
 }
 
-CShapeText::CShapeText() : CShape(CShape::Text), x(0), y(0), height(0), text(NULL), 
+CShapeText::CShapeText() : CShape(CShape::Text), x(0), y(0), height(0), text(L""), 
 	horizontalAlignment(AcDb::kTextLeft), verticalAlignment(AcDb::kTextBase)
 { }
 
-CShapeText::CShapeText(const Adesk::UInt16 Color, const double X, const double Y, const double Height, const wchar_t* Text, const AcDb::TextHorzMode HorizontalAlignment, const AcDb::TextVertMode VerticalAlignment)
-	: CShape(CShape::Text, Color), x(X), y(Y), height(Height), text(NULL), horizontalAlignment(HorizontalAlignment), verticalAlignment(VerticalAlignment)
+CShapeText::CShapeText(const Adesk::UInt16 Color, const double X, const double Y, const double Height, const std::wstring& Text, const AcDb::TextHorzMode HorizontalAlignment, const AcDb::TextVertMode VerticalAlignment)
+	: CShape(CShape::Text, Color), x(X), y(Y), height(Height), text(L""), horizontalAlignment(HorizontalAlignment), verticalAlignment(VerticalAlignment)
 {
-	acutUpdString(Text, text);
+	text = Text;
 }
 
-CShapeText::~CShapeText()
+void CShapeText::SetText(const std::wstring& Text)
 {
-	acutDelString(text);
+	text.assign(Text);
+}
+
+void CShapeText::SetText(const wchar_t* Text)
+{
+	text.assign(Text);
 }
 
 CShapeText* CShapeText::clone() const
