@@ -92,6 +92,19 @@ const AcGeVector3d& CRebarPos::NormalVector(void) const
 	return m_Normal;
 }
 
+const double CRebarPos::Scale(void) const
+{
+	assertReadEnabled();
+	return m_Direction.length();
+}
+
+Acad::ErrorStatus CRebarPos::setScale(const double newVal)
+{
+	assertWriteEnabled();
+	AcGeMatrix3d xform = AcGeMatrix3d::scaling(newVal / m_Direction.length(), m_BasePoint);
+	return transformBy(xform);
+}
+
 const double CRebarPos::Width(void) const
 {
     assertReadEnabled();

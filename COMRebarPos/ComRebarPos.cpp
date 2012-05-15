@@ -1477,3 +1477,45 @@ STDMETHODIMP CComRebarPos::put_Group(BSTR newVal)
 	return S_OK;
 }
 
+STDMETHODIMP CComRebarPos::get_Scale(double * pVal)
+{
+    CHECKOUTPARAM(pVal);
+    try
+    {
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
+            throw es;
+
+        *pVal = pRebarPos->Scale();
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComRebarPos::put_Scale(double newVal)
+{
+    try
+    {
+        AXEntityDocLockNoDbOk(m_objRef.objectId());
+
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
+            throw es;
+        
+        USES_CONVERSION;
+        if ((es = pRebarPos->setScale(newVal)) != Acad::eOk)
+            throw es;
+        else 
+            Fire_Notification(DISPID_SCALE);
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
+    }
+	return S_OK;
+}

@@ -187,6 +187,10 @@ public:
 	/// Get normal vector
 	const AcGeVector3d& NormalVector(void) const;
 
+	/// Object scale
+	const double Scale(void) const;
+	Acad::ErrorStatus setScale(const double newVal);
+
 	/// Get extents
 	const double Width(void) const;
 	const double Height(void) const;
