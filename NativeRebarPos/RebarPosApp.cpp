@@ -5,6 +5,7 @@
 #include "RebarPos.h"
 #include "PosShape.h"
 #include "PosGroup.h"
+#include "BOQStyle.h"
 
 // locally defined entry point invoked by Rx.
 extern "C" AcRx::AppRetCode __declspec(dllexport)
@@ -20,6 +21,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 		CPosShape::rxInit();
 		CPosGroup::rxInit();
         CRebarPos::rxInit();
+		CBOQStyle::rxInit();
         acrxBuildClassHierarchy();
 
         // Register a service using the class name.
@@ -35,6 +37,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
             delete obj;
 
 		// Remove custom classes
+		deleteAcRxClass(CBOQStyle::desc());
         deleteAcRxClass(CRebarPos::desc());
 		deleteAcRxClass(CPosGroup::desc());
         deleteAcRxClass(CPosShape::desc());
