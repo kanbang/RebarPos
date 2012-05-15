@@ -55,6 +55,7 @@ namespace OZOZ
 			property Autodesk::AutoCAD::Colors::Color^ CircleColor     { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }
 			property Autodesk::AutoCAD::Colors::Color^ MultiplierColor { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }
 			property Autodesk::AutoCAD::Colors::Color^ GroupColor      { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }
+			property Autodesk::AutoCAD::Colors::Color^ NoteColor       { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }
 			property Autodesk::AutoCAD::Colors::Color^ CurrentGroupHighlightColor { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }
 
 			property Autodesk::AutoCAD::DatabaseServices::ObjectId TextStyleId { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }

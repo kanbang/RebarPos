@@ -40,6 +40,7 @@ namespace RebarPosCommands
             public Autodesk.AutoCAD.Colors.Color circleColor;
             public Autodesk.AutoCAD.Colors.Color multiplierColor;
             public Autodesk.AutoCAD.Colors.Color groupColor;
+            public Autodesk.AutoCAD.Colors.Color noteColor;
             public Autodesk.AutoCAD.Colors.Color currentGroupHighlightColor;
 
             public ObjectId textStyleId;
@@ -114,6 +115,7 @@ namespace RebarPosCommands
                         copy.circleColor = group.CircleColor;
                         copy.multiplierColor = group.MultiplierColor;
                         copy.groupColor = group.GroupColor;
+                        copy.noteColor = group.NoteColor;
                         copy.currentGroupHighlightColor = group.CurrentGroupHighlightColor;
 
                         copy.textStyleId = group.TextStyleId;
@@ -202,6 +204,7 @@ namespace RebarPosCommands
             btnPickCircleColor.BackColor = copy.circleColor.ColorValue;
             btnPickMultiplierColor.BackColor = copy.multiplierColor.ColorValue;
             btnPickGroupColor.BackColor = copy.groupColor.ColorValue;
+            btnPickNoteColor.BackColor = copy.noteColor.ColorValue;
             btnPickCurrentGroupColor.BackColor = copy.currentGroupHighlightColor.ColorValue;
 
             posStylePreview.TextColor = copy.textColor.ColorValue;
@@ -209,6 +212,7 @@ namespace RebarPosCommands
             posStylePreview.CircleColor = copy.circleColor.ColorValue;
             posStylePreview.MultiplierColor = copy.multiplierColor.ColorValue;
             posStylePreview.GroupColor = copy.groupColor.ColorValue;
+            posStylePreview.NoteColor = copy.noteColor.ColorValue;
             posStylePreview.CurrentGroupHighlightColor = copy.currentGroupHighlightColor.ColorValue;
 
             if (copy.displayUnits == PosGroup.DrawingUnits.Millimeter)
@@ -272,6 +276,7 @@ namespace RebarPosCommands
             copy.circleColor = org.circleColor;
             copy.multiplierColor = org.multiplierColor;
             copy.groupColor = org.groupColor;
+            copy.noteColor = org.noteColor;
             copy.currentGroupHighlightColor = org.currentGroupHighlightColor;
 
             copy.textStyleId = org.textStyleId;
@@ -466,6 +471,7 @@ namespace RebarPosCommands
                             group.CircleColor = copy.circleColor;
                             group.MultiplierColor = copy.multiplierColor;
                             group.GroupColor = copy.groupColor;
+                            group.NoteColor = copy.noteColor;
                             group.CurrentGroupHighlightColor = copy.currentGroupHighlightColor;
 
                             group.TextStyleId = copy.textStyleId;
@@ -498,6 +504,7 @@ namespace RebarPosCommands
                             group.CircleColor = copy.circleColor;
                             group.MultiplierColor = copy.multiplierColor;
                             group.GroupColor = copy.groupColor;
+                            group.NoteColor = copy.noteColor;
                             group.CurrentGroupHighlightColor = copy.currentGroupHighlightColor;
 
                             group.TextStyleId = copy.textStyleId;
@@ -755,6 +762,23 @@ namespace RebarPosCommands
                 copy.currentGroupHighlightColor = cd.Color;
                 btn.BackColor = cd.Color.ColorValue;
                 posStylePreview.CurrentGroupHighlightColor = copy.currentGroupHighlightColor.ColorValue;
+            }
+        }
+
+        private void btnPickNoteColor_Click(object sender, EventArgs e)
+        {
+            GroupCopy copy = GetSelected();
+            if (copy == null) return;
+            Button btn = (Button)sender;
+            Autodesk.AutoCAD.Windows.ColorDialog cd = new Autodesk.AutoCAD.Windows.ColorDialog();
+            cd.SetDialogTabs(Autodesk.AutoCAD.Windows.ColorDialog.ColorTabs.ACITab);
+            cd.Color = Autodesk.AutoCAD.Colors.Color.FromColor(btn.BackColor);
+            cd.IncludeByBlockByLayer = false;
+            if (cd.ShowDialog() == DialogResult.OK)
+            {
+                copy.noteColor = cd.Color;
+                btn.BackColor = cd.Color.ColorValue;
+                posStylePreview.NoteColor = copy.noteColor.ColorValue;
             }
         }
     }

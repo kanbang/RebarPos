@@ -63,8 +63,10 @@
             this.label15 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
+            this.btnPickNoteColor = new System.Windows.Forms.Button();
             this.btnPickCircleColor = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
             this.btnPickPosColor = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.btnPickTextColor = new System.Windows.Forms.Button();
@@ -103,7 +105,7 @@
             this.gbOptions.Controls.Add(this.chkBending);
             this.gbOptions.Location = new System.Drawing.Point(306, 12);
             this.gbOptions.Name = "gbOptions";
-            this.gbOptions.Size = new System.Drawing.Size(311, 246);
+            this.gbOptions.Size = new System.Drawing.Size(311, 244);
             this.gbOptions.TabIndex = 1;
             this.gbOptions.TabStop = false;
             this.gbOptions.Text = "Grup S&eçenekleri";
@@ -226,7 +228,7 @@
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(461, 621);
+            this.btnOK.Location = new System.Drawing.Point(461, 613);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 3;
@@ -238,7 +240,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(542, 621);
+            this.btnCancel.Location = new System.Drawing.Point(542, 613);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 4;
@@ -258,7 +260,7 @@
             this.groupBox2.Controls.Add(this.btnAdd);
             this.groupBox2.Location = new System.Drawing.Point(12, 12);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(288, 246);
+            this.groupBox2.Size = new System.Drawing.Size(288, 244);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "&Poz Grupları";
@@ -277,7 +279,7 @@
             this.lbGroups.Location = new System.Drawing.Point(15, 23);
             this.lbGroups.MultiSelect = false;
             this.lbGroups.Name = "lbGroups";
-            this.lbGroups.Size = new System.Drawing.Size(227, 204);
+            this.lbGroups.Size = new System.Drawing.Size(227, 202);
             this.lbGroups.SmallImageList = this.lGroups;
             this.lbGroups.TabIndex = 0;
             this.lbGroups.UseCompatibleStateImageBehavior = false;
@@ -358,8 +360,10 @@
             this.gbDisplay.Controls.Add(this.label15);
             this.gbDisplay.Controls.Add(this.label12);
             this.gbDisplay.Controls.Add(this.label14);
+            this.gbDisplay.Controls.Add(this.btnPickNoteColor);
             this.gbDisplay.Controls.Add(this.btnPickCircleColor);
             this.gbDisplay.Controls.Add(this.label11);
+            this.gbDisplay.Controls.Add(this.label18);
             this.gbDisplay.Controls.Add(this.btnPickPosColor);
             this.gbDisplay.Controls.Add(this.label10);
             this.gbDisplay.Controls.Add(this.btnPickTextColor);
@@ -373,9 +377,9 @@
             this.gbDisplay.Controls.Add(this.label6);
             this.gbDisplay.Controls.Add(this.txtFormula);
             this.gbDisplay.Controls.Add(this.label5);
-            this.gbDisplay.Location = new System.Drawing.Point(12, 265);
+            this.gbDisplay.Location = new System.Drawing.Point(12, 262);
             this.gbDisplay.Name = "gbDisplay";
-            this.gbDisplay.Size = new System.Drawing.Size(605, 339);
+            this.gbDisplay.Size = new System.Drawing.Size(605, 327);
             this.gbDisplay.TabIndex = 2;
             this.gbDisplay.TabStop = false;
             this.gbDisplay.Text = "Görünüm &Ayarları";
@@ -391,7 +395,7 @@
             this.posStylePreview.Formula2 = "[M:C][N][\"T\":D][\"/\":S]";
             this.posStylePreview.Formula3 = "[M:C]";
             this.posStylePreview.GroupColor = System.Drawing.Color.Gray;
-            this.posStylePreview.Location = new System.Drawing.Point(314, 207);
+            this.posStylePreview.Location = new System.Drawing.Point(314, 192);
             this.posStylePreview.MultiplierColor = System.Drawing.Color.Gray;
             this.posStylePreview.Name = "posStylePreview";
             this.posStylePreview.NoteColor = System.Drawing.Color.Orange;
@@ -404,10 +408,10 @@
             // 
             this.btnPickCurrentGroupColor.BackColor = System.Drawing.Color.White;
             this.btnPickCurrentGroupColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPickCurrentGroupColor.Location = new System.Drawing.Point(482, 167);
+            this.btnPickCurrentGroupColor.Location = new System.Drawing.Point(187, 283);
             this.btnPickCurrentGroupColor.Name = "btnPickCurrentGroupColor";
             this.btnPickCurrentGroupColor.Size = new System.Drawing.Size(100, 23);
-            this.btnPickCurrentGroupColor.TabIndex = 17;
+            this.btnPickCurrentGroupColor.TabIndex = 19;
             this.btnPickCurrentGroupColor.UseVisualStyleBackColor = false;
             this.btnPickCurrentGroupColor.Click += new System.EventHandler(this.btnPickCurrentGroupColor_Click);
             // 
@@ -415,10 +419,10 @@
             // 
             this.btnPickGroupColor.BackColor = System.Drawing.Color.White;
             this.btnPickGroupColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPickGroupColor.Location = new System.Drawing.Point(482, 138);
+            this.btnPickGroupColor.Location = new System.Drawing.Point(187, 254);
             this.btnPickGroupColor.Name = "btnPickGroupColor";
             this.btnPickGroupColor.Size = new System.Drawing.Size(100, 23);
-            this.btnPickGroupColor.TabIndex = 15;
+            this.btnPickGroupColor.TabIndex = 17;
             this.btnPickGroupColor.UseVisualStyleBackColor = false;
             this.btnPickGroupColor.Click += new System.EventHandler(this.btnPickGroupColor_Click);
             // 
@@ -426,68 +430,79 @@
             // 
             this.cbNoteStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbNoteStyle.FormattingEnabled = true;
-            this.cbNoteStyle.Location = new System.Drawing.Point(187, 233);
+            this.cbNoteStyle.Location = new System.Drawing.Point(482, 137);
             this.cbNoteStyle.Name = "cbNoteStyle";
             this.cbNoteStyle.Size = new System.Drawing.Size(100, 21);
-            this.cbNoteStyle.TabIndex = 21;
+            this.cbNoteStyle.TabIndex = 23;
             this.cbNoteStyle.SelectedIndexChanged += new System.EventHandler(this.cbNoteStyle_SelectedIndexChanged);
             // 
             // cbTextStyle
             // 
             this.cbTextStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbTextStyle.FormattingEnabled = true;
-            this.cbTextStyle.Location = new System.Drawing.Point(187, 207);
+            this.cbTextStyle.Location = new System.Drawing.Point(482, 111);
             this.cbTextStyle.Name = "cbTextStyle";
             this.cbTextStyle.Size = new System.Drawing.Size(100, 21);
-            this.cbTextStyle.TabIndex = 19;
+            this.cbTextStyle.TabIndex = 21;
             this.cbTextStyle.SelectedIndexChanged += new System.EventHandler(this.cbTextStyle_SelectedIndexChanged);
             // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(311, 172);
+            this.label13.Location = new System.Drawing.Point(16, 288);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(112, 13);
-            this.label13.TabIndex = 16;
+            this.label13.TabIndex = 18;
             this.label13.Text = "&Aktif Poz Grubu Rengi";
             // 
             // btnPickMultiplierColor
             // 
             this.btnPickMultiplierColor.BackColor = System.Drawing.Color.White;
             this.btnPickMultiplierColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPickMultiplierColor.Location = new System.Drawing.Point(482, 109);
+            this.btnPickMultiplierColor.Location = new System.Drawing.Point(187, 225);
             this.btnPickMultiplierColor.Name = "btnPickMultiplierColor";
             this.btnPickMultiplierColor.Size = new System.Drawing.Size(100, 23);
-            this.btnPickMultiplierColor.TabIndex = 13;
+            this.btnPickMultiplierColor.TabIndex = 15;
             this.btnPickMultiplierColor.UseVisualStyleBackColor = false;
             this.btnPickMultiplierColor.Click += new System.EventHandler(this.btnPickMultiplierColor_Click);
             // 
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(16, 236);
+            this.label15.Location = new System.Drawing.Point(311, 140);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(73, 13);
-            this.label15.TabIndex = 20;
+            this.label15.TabIndex = 22;
             this.label15.Text = "&Not Yazısı Stili";
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(311, 143);
+            this.label12.Location = new System.Drawing.Point(16, 259);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(88, 13);
-            this.label12.TabIndex = 14;
+            this.label12.TabIndex = 16;
             this.label12.Text = "Poz &Grubu Rengi";
             // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(16, 210);
+            this.label14.Location = new System.Drawing.Point(311, 114);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(46, 13);
-            this.label14.TabIndex = 18;
+            this.label14.TabIndex = 20;
             this.label14.Text = "&Yazı Stili";
+            // 
+            // btnPickNoteColor
+            // 
+            this.btnPickNoteColor.BackColor = System.Drawing.Color.White;
+            this.btnPickNoteColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnPickNoteColor.Location = new System.Drawing.Point(187, 196);
+            this.btnPickNoteColor.Name = "btnPickNoteColor";
+            this.btnPickNoteColor.Size = new System.Drawing.Size(100, 23);
+            this.btnPickNoteColor.TabIndex = 13;
+            this.btnPickNoteColor.UseVisualStyleBackColor = false;
+            this.btnPickNoteColor.Click += new System.EventHandler(this.btnPickNoteColor_Click);
             // 
             // btnPickCircleColor
             // 
@@ -503,11 +518,20 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(311, 114);
+            this.label11.Location = new System.Drawing.Point(16, 230);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(95, 13);
-            this.label11.TabIndex = 12;
+            this.label11.TabIndex = 14;
             this.label11.Text = "Poz Ç&arpanı Rengi";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(16, 201);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(85, 13);
+            this.label18.TabIndex = 12;
+            this.label18.Text = "&Not Yazısı Rengi";
             // 
             // btnPickPosColor
             // 
@@ -551,10 +575,10 @@
             // 
             // txtNoteScale
             // 
-            this.txtNoteScale.Location = new System.Drawing.Point(187, 259);
+            this.txtNoteScale.Location = new System.Drawing.Point(482, 163);
             this.txtNoteScale.Name = "txtNoteScale";
             this.txtNoteScale.Size = new System.Drawing.Size(100, 20);
-            this.txtNoteScale.TabIndex = 23;
+            this.txtNoteScale.TabIndex = 25;
             this.txtNoteScale.Validated += new System.EventHandler(this.txtNoteScale_Validated);
             this.txtNoteScale.Validating += new System.ComponentModel.CancelEventHandler(this.txtNoteScale_Validating);
             // 
@@ -569,10 +593,10 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(16, 262);
+            this.label16.Location = new System.Drawing.Point(311, 166);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(87, 13);
-            this.label16.TabIndex = 22;
+            this.label16.TabIndex = 24;
             this.label16.Text = "Not Yazısı Ö&lçeği";
             // 
             // label8
@@ -638,7 +662,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(629, 659);
+            this.ClientSize = new System.Drawing.Size(629, 651);
             this.Controls.Add(this.gbDisplay);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.btnCancel);
@@ -713,5 +737,7 @@
         private System.Windows.Forms.ErrorProvider errorProvider;
         private System.Windows.Forms.TextBox txtDiameterList;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Button btnPickNoteColor;
+        private System.Windows.Forms.Label label18;
     }
 }

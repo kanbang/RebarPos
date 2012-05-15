@@ -164,6 +164,15 @@ void PosGroup::GroupColor::set(Autodesk::AutoCAD::Colors::Color^ value)
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setGroupColor(value->ColorIndex));
 }
 
+Autodesk::AutoCAD::Colors::Color^ PosGroup::NoteColor::get()
+{
+	return Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, GetImpObj()->NoteColor());
+}
+void PosGroup::NoteColor::set(Autodesk::AutoCAD::Colors::Color^ value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setNoteColor(value->ColorIndex));
+}
+
 Autodesk::AutoCAD::Colors::Color^ PosGroup::CurrentGroupHighlightColor::get()
 {
 	return Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, GetImpObj()->CurrentGroupHighlightColor());
