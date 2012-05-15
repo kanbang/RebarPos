@@ -317,6 +317,10 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90"
 			>
 			<File
+				RelativePath=".\BOQStyle.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Calculator.cpp"
 				>
 			</File>
@@ -385,6 +389,10 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;fi;fd"
 			>
+			<File
+				RelativePath=".\BOQStyle.h"
+				>
+			</File>
 			<File
 				RelativePath=".\Calculator.h"
 				>

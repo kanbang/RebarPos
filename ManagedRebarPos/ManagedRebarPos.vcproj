@@ -326,6 +326,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MgBOQStyle.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MgPosGroup.cpp"
 				>
 			</File>
@@ -388,6 +392,10 @@
 			>
 			<File
 				RelativePath=".\Marshal.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MgBOQStyle.h"
 				>
 			</File>
 			<File
