@@ -49,4 +49,9 @@ namespace Utility
 	const Acad::ErrorStatus ReadDXFString(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, ACHAR*& val);
 	const Acad::ErrorStatus ReadDXFPoint(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, AcGePoint2d& val);
 	const Acad::ErrorStatus ReadDXFPoint(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, AcGePoint3d& val);
+	const Acad::ErrorStatus ReadDXFVector(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, AcGeVector2d& val);
+	const Acad::ErrorStatus ReadDXFVector(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, AcGeVector3d& val);
+	const Acad::ErrorStatus ReadDXFBool(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, Adesk::Boolean& val);
+	const Acad::ErrorStatus ReadDXFBool(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, bool& val);
+	const Acad::ErrorStatus ReadDXFObjectId(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, AcDbObjectId& val);
 }

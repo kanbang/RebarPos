@@ -299,3 +299,63 @@ const Acad::ErrorStatus Utility::ReadDXFPoint(AcDbDxfFiler* pFiler, const short 
 	return es;
 }
 
+const Acad::ErrorStatus Utility::ReadDXFVector(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, AcGeVector2d& val)
+{
+	Acad::ErrorStatus es;
+	resbuf rb;
+	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	{
+		val.x = rb.resval.rpoint[0];
+		val.y = rb.resval.rpoint[1];
+	}
+	return es;
+}
+
+const Acad::ErrorStatus Utility::ReadDXFVector(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, AcGeVector3d& val)
+{
+	Acad::ErrorStatus es;
+	resbuf rb;
+	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	{
+		val.x = rb.resval.rpoint[0];
+		val.y = rb.resval.rpoint[1];
+		val.z = rb.resval.rpoint[2];
+	}
+	return es;
+}
+
+const Acad::ErrorStatus Utility::ReadDXFBool(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, Adesk::Boolean& val)
+{
+	Acad::ErrorStatus es;
+	resbuf rb;
+	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	{
+		val = (rb.resval.rint == 0) ? Adesk::kFalse : Adesk::kTrue;
+	}
+	return es;
+}
+
+const Acad::ErrorStatus Utility::ReadDXFBool(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, bool& val)
+{
+	Acad::ErrorStatus es;
+	resbuf rb;
+	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	{
+		val = (rb.resval.rint != 0);
+	}
+	return es;
+}
+
+const Acad::ErrorStatus Utility::ReadDXFObjectId(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, AcDbObjectId& val)
+{
+	Acad::ErrorStatus es;
+	resbuf rb;
+	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	{
+		if((es = acdbGetObjectId(val, rb.resval.rlname)) != Acad::eOk)
+		{
+			val = AcDbObjectId::kNull;
+		}
+	}
+	return es;
+}

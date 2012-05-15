@@ -321,6 +321,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\BOQTable.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Calculator.cpp"
 				>
 			</File>
@@ -390,7 +394,15 @@
 			Filter="h;hpp;hxx;hm;inl;fi;fd"
 			>
 			<File
+				RelativePath=".\BOQRow.h"
+				>
+			</File>
+			<File
 				RelativePath=".\BOQStyle.h"
+				>
+			</File>
+			<File
+				RelativePath=".\BOQTable.h"
 				>
 			</File>
 			<File
