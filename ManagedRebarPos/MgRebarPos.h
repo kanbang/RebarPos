@@ -147,6 +147,8 @@ namespace OZOZ
 			property Vector3d UpVector        { Vector3d get(); }
 			property Vector3d NormalVector    { Vector3d get(); }
 
+			property double Scale { double get(); void set(double value); }
+
 			property double Width  { double get(); }
 			property double Height { double get(); }
 

@@ -46,6 +46,15 @@ Vector3d RebarPos::NormalVector::get()
 	return Marshal::ToVector3d (GetImpObj()->NormalVector());
 }
 
+double RebarPos::Scale::get()
+{
+	return (GetImpObj()->Scale());
+}
+void RebarPos::Scale::set(double value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setScale(value));
+}
+
 double RebarPos::Width::get()
 {
 	return (GetImpObj()->Width());
