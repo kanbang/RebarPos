@@ -33,11 +33,7 @@ CBOQTable::CBOQTable() :
 
 CBOQTable::~CBOQTable()
 {
-	for(RowListIt it = m_List.begin(); it != m_List.end(); it++)
-	{
-		delete *it;
-	}
-	m_List.clear();
+	ClearRows();
 }
 
 
@@ -131,7 +127,48 @@ Acad::ErrorStatus CBOQTable::setStyleId(const AcDbObjectId& newVal)
 //*************************************************************************
 // Class Methods
 //*************************************************************************
+void CBOQTable::AddRow(CBOQRow* const row)
+{
+	assertWriteEnabled();
+	m_List.push_back(row);
+}
 
+const CBOQRow* CBOQTable::GetRow(const RowListSize index) const
+{
+	assertReadEnabled();
+	return m_List.at(index);
+}
+
+void CBOQTable::Setrow(const RowListSize index, CBOQRow* const row)
+{
+	assertWriteEnabled();
+	delete m_List[index];
+	m_List[index] = row;
+}
+
+void CBOQTable::RemoveRow(const RowListSize index)
+{
+	assertWriteEnabled();
+	delete m_List[index];
+	RowListIt it = m_List.begin();
+	m_List.erase(it + index);
+}
+
+void CBOQTable::ClearRows()
+{
+	assertWriteEnabled();
+	for(RowListIt it = m_List.begin(); it != m_List.end(); it++)
+	{
+		delete *it;
+	}
+	m_List.clear();
+}
+
+const RowListSize CBOQTable::GetRowCount() const
+{
+	assertReadEnabled();
+	return m_List.size();
+}
 
 //*************************************************************************
 // Overridden methods from AcDbEntity
@@ -368,11 +405,7 @@ Acad::ErrorStatus CBOQTable::dwgInFields(AcDbDwgFiler* pFiler)
 
 
 		// Rows
-		for(RowListIt it = m_List.begin(); it != m_List.end(); it++)
-		{
-			delete *it;
-		}
-		m_List.clear();
+		ClearRows();
 		long count = 0;
 		pFiler->readInt32(&count);
 		for(long i = 0; i < count; i++)
@@ -496,10 +529,7 @@ Acad::ErrorStatus CBOQTable::dxfInFields(AcDbDxfFiler* pFiler)
 	m_Multiplier = t_Multiplier;
 	m_StyleID = t_StyleID;
 
-	for(RowListIt it = m_List.begin(); it != m_List.end(); it++)
-	{
-		delete *it;
-	}
+	ClearRows();
 	m_List.clear();
 	m_List = t_List;
 

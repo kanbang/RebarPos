@@ -120,7 +120,7 @@ Acad::ErrorStatus CPosShape::setPriority(const Adesk::Int32 newVal)
 }
 
 //*************************************************************************
-// Methods
+// Class Methods
 //*************************************************************************
 void CPosShape::AddShape(CShape* const shape)
 {
@@ -137,12 +137,14 @@ const CShape* CPosShape::GetShape(const ShapeSize index) const
 void CPosShape::SetShape(const ShapeSize index, CShape* const shape)
 {
 	assertWriteEnabled();
+	delete m_List[index];
 	m_List[index] = shape;
 }
 
 void CPosShape::RemoveShape(const ShapeSize index)
 {
 	assertWriteEnabled();
+	delete m_List[index];
 	ShapeListIt it = m_List.begin();
 	m_List.erase(it + index);
 }
@@ -270,6 +272,7 @@ Acad::ErrorStatus CPosShape::dwgInFields(AcDbDwgFiler *pFiler)
         pFiler->readInt32(&m_Priority);
 
 		// Segments
+		ClearShapes();
 		long count;
 		pFiler->readInt32(&count);
 		for(long i = 0; i < count; i++)
@@ -503,6 +506,7 @@ Acad::ErrorStatus CPosShape::dxfInFields(AcDbDxfFiler *pFiler)
 	m_Fields = t_Fields;
 	setFormula(t_Formula);
 	setFormulaBending(t_FormulaBending);
+	ClearShapes();
 	m_List = t_List;
 	m_Priority = t_Priority;
 
