@@ -23,20 +23,8 @@
 #include "../NativeRebarPos/PosShape.h"
 #include "../NativeRebarPos/PosGroup.h"
 
-#define AXEntityDocLockNoDbOk(objId)                        \
-    AcAxDocLock docLock(objId, AcAxDocLock::kNormal);       \
-    if (docLock.lockStatus() != Acad::eNoDatabase && \
-        docLock.lockStatus() != Acad::eOk)                  \
-        throw docLock.lockStatus();
-
-#define AXEntityDocLock(objId)                              \
-    AcAxDocLock docLock(objId, AcAxDocLock::kNormal);       \
-    if(docLock.lockStatus() != Acad::eOk)                   \
-        throw docLock.lockStatus();
-
 /////////////////////////////////////////////////////////////////////////////
 // CComRebarPos
-#define CHECKOUTPARAM(x) if (x==NULL) return E_POINTER;
 
 STDMETHODIMP CComRebarPos::InterfaceSupportsErrorInfo(REFIID riid)
 {

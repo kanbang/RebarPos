@@ -10,6 +10,14 @@ HKCR
 				val ThreadingModel = s 'Apartment'
 			}
 		}
+		ForceRemove {BA77CFFF-0274-4d4c-BFE2-64A5731BAD37} = s 'ComBOQTable Class'
+		{
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+		}		
 	}
 }
 HKLM
@@ -25,6 +33,7 @@ HKLM
 					NoRemove ActiveXCLSID
 					{
 						val RebarPos = s '{97CAC17D-B1C7-49ca-8D57-D3FF491860FF}'
+						val BOQTable = s '{BA77CFFF-0274-4d4c-BFE2-64A5731BAD37}'
 					}
 				}			
 			}

@@ -15,12 +15,14 @@
 #include "ComRebarPos.h"
 #include "../NativeRebarPos/RebarPos.h"
 
-
+#include "ComBOQTable.h"
+#include "../NativeRebarPos/BOQTable.h"
 
 CComModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
     OBJECT_ENTRY(CLSID_ComRebarPos, CComRebarPos)
+	OBJECT_ENTRY(CLSID_ComBOQTable, CComBOQTable)
 END_OBJECT_MAP()
 
 /////////////////////////////////////////////////////////////////////////////

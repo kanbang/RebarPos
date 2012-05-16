@@ -95,4 +95,44 @@ library COMREBARPOSLib
 		[default] interface IComRebarPos;
 		[source] interface IAcadObjectEvents;
 	};
+
+	//
+	// Interfaces
+	//
+	// IComBOQTable interface
+	[
+		object,
+		uuid(3E0EF436-0D8E-41a7-B33D-3B7AAD33BCDB),
+		dual,
+		helpstring("IComBOQTable Interface"),
+		helpcontext(IDH_ICOMBOQTABLE),
+		pointer_default(unique)
+	]
+	interface IComBOQTable : IAcadEntity
+	{
+		[propget, id(1), helpstring("property BasePoint"),helpcontext(IDH_TBASEPOINT)] HRESULT BasePoint([out, retval] VARIANT *pVal);
+		[propput, id(1), helpstring("property BasePoint"),helpcontext(IDH_TBASEPOINT)] HRESULT BasePoint([in] VARIANT newVal);
+		[propget, id(2), helpstring("property Multiplier"),helpcontext(IDH_TMULTIPLIER)] HRESULT Multiplier([out, retval] long *pVal);
+		[propput, id(2), helpstring("property Multiplier"),helpcontext(IDH_TMULTIPLIER)] HRESULT Multiplier([in] long newVal);
+		[propget, id(3), helpstring("property Style"),helpcontext(IDH_TSTYLE)] HRESULT Style([out, retval] BSTR *pVal);
+		[propput, id(3), helpstring("property Style"),helpcontext(IDH_TSTYLE)] HRESULT Style([in] BSTR newVal);
+		[propget, id(4), helpstring("property Scale"),helpcontext(IDH_TSCALE)] HRESULT Scale([out, retval] double *pVal);
+		[propput, id(4), helpstring("property Scale"),helpcontext(IDH_TSCALE)] HRESULT Scale([in] double newVal);
+	};
+	//
+	// coclasses in type library
+	//
+
+	// ComBOQTable coclass
+	[
+		uuid(BA77CFFF-0274-4d4c-BFE2-64A5731BAD37),
+		helpstring("ComBOQTable Class"),
+		helpcontext(IDH_CCOMBOQTABLE),
+		noncreatable
+	]
+	coclass ComBOQTable
+	{
+		[default] interface IComBOQTable;
+		[source] interface IAcadObjectEvents;
+	};
 };

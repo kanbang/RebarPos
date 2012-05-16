@@ -36,6 +36,19 @@ extern CComModule _Module;
 #include "geassign.h"
 #pragma warning( pop ) 
 
+#define AXEntityDocLockNoDbOk(objId)                        \
+    AcAxDocLock docLock(objId, AcAxDocLock::kNormal);       \
+    if (docLock.lockStatus() != Acad::eNoDatabase && \
+        docLock.lockStatus() != Acad::eOk)                  \
+        throw docLock.lockStatus();
+
+#define AXEntityDocLock(objId)                              \
+    AcAxDocLock docLock(objId, AcAxDocLock::kNormal);       \
+    if(docLock.lockStatus() != Acad::eOk)                   \
+        throw docLock.lockStatus();
+
+#define CHECKOUTPARAM(x) if (x==NULL) return E_POINTER;
+
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Developer Studio will insert additional declarations immediately before the previous line.
 

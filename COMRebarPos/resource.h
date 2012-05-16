@@ -4,6 +4,7 @@
 //
 #define IDS_PROJNAME                    100
 #define IDR_COMREBARPOS                 101
+#define IDR_COMBOQTABLE                 102
 
 // Next default values for new objects
 // 
