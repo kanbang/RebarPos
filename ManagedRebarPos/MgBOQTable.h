@@ -70,6 +70,31 @@ namespace OZOZ
 				}
 			};
 			
+		public:
+			ref class BOQRowCollection
+			{
+			private:
+				BOQTable^ m_Parent;
+
+			private:
+				BOQRowCollection() { }
+				BOQRowCollection(BOQRowCollection%) { }
+				void operator=(BOQRowCollection%) { }
+
+			internal:
+				BOQRowCollection(BOQTable^ parent);
+
+			public:
+				void Add(int pos, int count, double diameter, double length1, double length2, bool isVarLength, Autodesk::AutoCAD::DatabaseServices::ObjectId shapeId);
+				property int Count { int get(); }
+				property BOQRow^ default[int] { BOQRow^ get(int index); void set(int index, BOQRow^ value); }
+				void Remove(int index);
+				void Clear();
+			};
+
+		protected:
+			BOQRowCollection^ m_Rows;
+
         public:
             BOQTable();
 
@@ -81,6 +106,8 @@ namespace OZOZ
             }
 
         public:
+			property BOQRowCollection^ Items { BOQRowCollection^ get(); }
+
 			property Vector3d DirectionVector { Vector3d get(); }
 			property Vector3d UpVector        { Vector3d get(); }
 			property Vector3d NormalVector    { Vector3d get(); }

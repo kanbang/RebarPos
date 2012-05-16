@@ -19,13 +19,13 @@ using namespace OZOZ::RebarPosWrapper;
 BOQTable::BOQTable() 
 :Autodesk::AutoCAD::DatabaseServices::Entity(IntPtr(new CBOQTable()), true)
 {
-	
+	m_Rows = gcnew BOQTable::BOQRowCollection(this);
 }
 
 BOQTable::BOQTable(System::IntPtr unmanagedPointer, bool autoDelete)
 : Autodesk::AutoCAD::DatabaseServices::Entity(unmanagedPointer,autoDelete)
 {
-	
+	m_Rows = gcnew BOQTable::BOQRowCollection(this);	
 }
 
 //*************************************************************************
@@ -92,3 +92,45 @@ void BOQTable::StyleId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
     Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setStyleId(Marshal::FromObjectId(value)));
 }
 
+BOQTable::BOQRowCollection^ BOQTable::Items::get()
+{
+	return m_Rows;
+}
+
+//*************************************************************************
+// Shape Collection
+//*************************************************************************
+BOQTable::BOQRowCollection::BOQRowCollection(BOQTable^ parent)
+{
+	m_Parent = parent;
+}
+
+void BOQTable::BOQRowCollection::Add(int pos, int count, double diameter, double length1, double length2, bool isVarLength, Autodesk::AutoCAD::DatabaseServices::ObjectId shapeId)
+{
+	m_Parent->GetImpObj()->AddRow(new CBOQRow(pos, count, diameter, length1, length2, (isVarLength ? Adesk::kTrue : Adesk::kFalse), OZOZ::RebarPosWrapper::Marshal::FromObjectId(shapeId)));
+}
+
+int BOQTable::BOQRowCollection::Count::get()
+{
+	return (int)m_Parent->GetImpObj()->GetRowCount();
+}
+
+void BOQTable::BOQRowCollection::Remove(int index)
+{
+	m_Parent->GetImpObj()->RemoveRow((int)index);
+}
+
+void BOQTable::BOQRowCollection::Clear()
+{
+	m_Parent->GetImpObj()->ClearRows();
+}
+
+BOQTable::BOQRow^ BOQTable::BOQRowCollection::default::get(int index)
+{
+	return BOQTable::BOQRow::FromNative(m_Parent->GetImpObj()->GetRow(index));
+}
+
+void BOQTable::BOQRowCollection::default::set(int index, BOQTable::BOQRow^ value)
+{
+	m_Parent->GetImpObj()->SetRow(index, value->ToNative());
+}

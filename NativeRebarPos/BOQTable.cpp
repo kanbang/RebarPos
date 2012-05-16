@@ -139,7 +139,7 @@ const CBOQRow* CBOQTable::GetRow(const RowListSize index) const
 	return m_List.at(index);
 }
 
-void CBOQTable::Setrow(const RowListSize index, CBOQRow* const row)
+void CBOQTable::SetRow(const RowListSize index, CBOQRow* const row)
 {
 	assertWriteEnabled();
 	delete m_List[index];

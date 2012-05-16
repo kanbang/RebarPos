@@ -90,7 +90,7 @@ public:
 	const CBOQRow* GetRow(const RowListSize index) const;
 
 	/// Sets the row at the given index.
-	void Setrow(const RowListSize index, CBOQRow* const row);
+	void SetRow(const RowListSize index, CBOQRow* const row);
 
 	/// Gets the count of rows.
 	const RowListSize GetRowCount() const;

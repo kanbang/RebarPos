@@ -10,7 +10,8 @@
 #include "MgPosShape.h"
 #include "MgPosGroup.h"
 #include "MgRebarPos.h"
-#include "MGBOQStyle.h"
+#include "MgBOQStyle.h"
+#include "MgBOQTable.h"
 
 static AcMgObjectFactoryBase **g_PEs = NULL;
 
@@ -31,6 +32,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 				new AcMgObjectFactory<OZOZ::RebarPosWrapper::PosGroup, CPosGroup>(), 
 				new AcMgObjectFactory<OZOZ::RebarPosWrapper::RebarPos, CRebarPos>(), 
 				new AcMgObjectFactory<OZOZ::RebarPosWrapper::BOQStyle, CBOQStyle>(), 
+				new AcMgObjectFactory<OZOZ::RebarPosWrapper::BOQTable, CBOQTable>(), 
 				// end the array with a NULL
 				NULL
 			};
