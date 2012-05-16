@@ -80,6 +80,7 @@
     <Compile Include="Commands_NumberPos.cs" />
     <Compile Include="Commands_PosShapes.cs" />
     <Compile Include="Commands_FindReplace.cs" />
+    <Compile Include="Commands_DrawBOM.cs" />
     <Compile Include="ShowShapesOverrule.cs" />
     <Compile Include="HighlightGroupOverrule.cs" />
     <Compile Include="FindReplaceForm.cs">

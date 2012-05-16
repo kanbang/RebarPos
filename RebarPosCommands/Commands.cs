@@ -89,8 +89,7 @@ namespace RebarPosCommands
                             // CheckPos();
                             break;
                         case "BOM":
-                            MessageBox.Show("Bu komut henüz tamamlanmadı.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            // DrawBOM();
+                            DrawBOM();
                             break;
                         case "Find":
                             cont = !FindReplace(false);
@@ -151,6 +150,12 @@ namespace RebarPosCommands
         public void CMD_CopyPos()
         {
             CopyPos();
+        }
+
+        [CommandMethod("RebarPos", "BOM", "BOM_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
+        public void CMD_DrawBOM()
+        {
+            DrawBOM();
         }
 
         [CommandMethod("RebarPos", "POSFIND", "POSFIND_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
