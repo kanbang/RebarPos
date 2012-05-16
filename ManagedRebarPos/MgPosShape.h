@@ -26,7 +26,6 @@ namespace OZOZ
 
 			ref struct Shape abstract
 			{
-
 			public:
 				property Autodesk::AutoCAD::Colors::Color^ Color;
 
