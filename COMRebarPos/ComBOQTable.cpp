@@ -622,3 +622,91 @@ STDMETHODIMP CComBOQTable::put_Scale(double newVal)
     }
 	return S_OK;
 }
+
+STDMETHODIMP CComBOQTable::get_Heading(BSTR * pVal)
+{
+    CHECKOUTPARAM(pVal);
+    try
+    {
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pBOQTable.openStatus()) != Acad::eOk)
+            throw es;
+        
+        USES_CONVERSION;
+        *pVal = SysAllocString(CT2W(pBOQTable->Heading()));
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComBOQTable::put_Heading(BSTR newVal)
+{
+    try
+    {
+        AXEntityDocLockNoDbOk(m_objRef.objectId());
+
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pBOQTable.openStatus()) != Acad::eOk)
+            throw es;
+        
+        USES_CONVERSION;
+        if ((es = pBOQTable->setHeading(W2T(newVal))) != Acad::eOk)
+            throw es;
+        else 
+            Fire_Notification(DISPID_THEADING);
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComBOQTable::get_Footing(BSTR * pVal)
+{
+    CHECKOUTPARAM(pVal);
+    try
+    {
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pBOQTable.openStatus()) != Acad::eOk)
+            throw es;
+        
+        USES_CONVERSION;
+        *pVal = SysAllocString(CT2W(pBOQTable->Footing()));
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComBOQTable::put_Footing(BSTR newVal)
+{
+    try
+    {
+        AXEntityDocLockNoDbOk(m_objRef.objectId());
+
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pBOQTable.openStatus()) != Acad::eOk)
+            throw es;
+        
+        USES_CONVERSION;
+        if ((es = pBOQTable->setFooting(W2T(newVal))) != Acad::eOk)
+            throw es;
+        else 
+            Fire_Notification(DISPID_TFOOTING);
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
+    }
+	return S_OK;
+}

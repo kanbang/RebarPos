@@ -118,6 +118,10 @@ library COMREBARPOSLib
 		[propput, id(3), helpstring("property Style"),helpcontext(IDH_TSTYLE)] HRESULT Style([in] BSTR newVal);
 		[propget, id(4), helpstring("property Scale"),helpcontext(IDH_TSCALE)] HRESULT Scale([out, retval] double *pVal);
 		[propput, id(4), helpstring("property Scale"),helpcontext(IDH_TSCALE)] HRESULT Scale([in] double newVal);
+		[propget, id(5), helpstring("property Heading"),helpcontext(IDH_THEADING)] HRESULT Heading([out, retval] BSTR *pVal);
+		[propput, id(5), helpstring("property Heading"),helpcontext(IDH_THEADING)] HRESULT Heading([in] BSTR newVal);
+		[propget, id(6), helpstring("property Footing"),helpcontext(IDH_TFOOTING)] HRESULT Footing([out, retval] BSTR *pVal);
+		[propput, id(6), helpstring("property Footing"),helpcontext(IDH_TFOOTING)] HRESULT Footing([in] BSTR newVal);
 	};
 	//
 	// coclasses in type library

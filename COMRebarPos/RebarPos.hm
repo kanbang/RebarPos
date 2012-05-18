@@ -35,3 +35,5 @@
 #define	IDH_TMULTIPLIER		0x202
 #define	IDH_TSTYLE		0x203
 #define	IDH_TSCALE		0x204
+#define	IDH_THEADING		0x205
+#define	IDH_TFOOTING		0x206
