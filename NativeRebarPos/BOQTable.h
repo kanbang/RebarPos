@@ -50,6 +50,9 @@ private:
 	AcGePoint3d m_BasePoint;
 	Adesk::Int32 m_Multiplier;
 
+	ACHAR* m_Heading;
+	ACHAR* m_Footing;
+
 	AcDbHardPointerId m_StyleID;
 
 	RowList m_List;
@@ -77,6 +80,14 @@ public:
 	/// Gets or sets the BOQ multiplier
 	const Adesk::Int32 Multiplier(void) const;
 	Acad::ErrorStatus setMultiplier(const Adesk::Int32 newVal);
+
+	/// Gets or sets heading text
+	const ACHAR* Heading(void) const;
+	Acad::ErrorStatus setHeading(const ACHAR* newVal);
+
+	/// Gets or sets heading text
+	const ACHAR* Footing(void) const;
+	Acad::ErrorStatus setFooting(const ACHAR* newVal);
 
 	/// Gets or sets the BOQ style
 	const AcDbObjectId& StyleId(void) const;

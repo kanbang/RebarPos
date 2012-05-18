@@ -64,6 +64,9 @@ protected:
 	Adesk::UInt16 m_HeadingColor;
 	Adesk::UInt16 m_FootingColor;
 
+	ACHAR* m_Heading;
+	ACHAR* m_Footing;
+
     AcDbHardPointerId m_TextStyleId;
     AcDbHardPointerId m_HeadingStyleId;
 
@@ -114,6 +117,14 @@ public:
 	/// Gets or sets the footing text color.
 	const Adesk::UInt16 FootingColor(void) const;
 	Acad::ErrorStatus setFootingColor(const Adesk::UInt16 newVal);
+
+	/// Gets or sets heading text
+	const ACHAR* Heading(void) const;
+	Acad::ErrorStatus setHeading(const ACHAR* newVal);
+
+	/// Gets or sets heading text
+	const ACHAR* Footing(void) const;
+	Acad::ErrorStatus setFooting(const ACHAR* newVal);
 
 	/// Gets or sets pointer to the text style.
 	const AcDbObjectId& TextStyleId(void) const;

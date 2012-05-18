@@ -27,13 +27,15 @@ ACRX_DXF_DEFINE_MEMBERS(CBOQTable, AcDbEntity,
 
 CBOQTable::CBOQTable() :
 	m_BasePoint(0, 0, 0), m_Direction(1, 0, 0), m_Up(0, 1, 0), m_Normal(0, 0, 1),
-	m_Multiplier(1),m_StyleID(AcDbObjectId::kNull)
+	m_Multiplier(1),m_StyleID(AcDbObjectId::kNull), m_Heading(NULL), m_Footing(NULL)
 {
 }
 
 CBOQTable::~CBOQTable()
 {
 	ClearRows();
+	acutDelString(m_Heading);
+	acutDelString(m_Footing);
 }
 
 
@@ -108,6 +110,40 @@ Acad::ErrorStatus CBOQTable::setMultiplier(const Adesk::Int32 newVal)
 {
 	assertWriteEnabled();
 	m_Multiplier = newVal;
+	return Acad::eOk;
+}
+
+const ACHAR* CBOQTable::Heading(void) const
+{
+	assertReadEnabled();
+	return m_Heading;
+}
+Acad::ErrorStatus CBOQTable::setHeading(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+    acutDelString(m_Heading);
+    m_Heading = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_Heading);
+    }
+	return Acad::eOk;
+}
+
+const ACHAR* CBOQTable::Footing(void) const
+{
+	assertReadEnabled();
+	return m_Footing;
+}
+Acad::ErrorStatus CBOQTable::setFooting(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+    acutDelString(m_Footing);
+    m_Footing = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_Footing);
+    }
 	return Acad::eOk;
 }
 
@@ -355,6 +391,16 @@ Acad::ErrorStatus CBOQTable::dwgOutFields(AcDbDwgFiler* pFiler) const
 
 	pFiler->writeInt32(m_Multiplier);
 
+	// Texts
+	if (m_Heading)
+		pFiler->writeString(m_Heading);
+	else
+		pFiler->writeString(_T(""));
+	if (m_Footing)
+		pFiler->writeString(m_Footing);
+	else
+		pFiler->writeString(_T(""));
+
 	// Style
 	pFiler->writeHardPointerId(m_StyleID);
 
@@ -393,12 +439,18 @@ Acad::ErrorStatus CBOQTable::dwgInFields(AcDbDwgFiler* pFiler)
 	// Read params
 	if (version >= 1)
 	{
+		acutDelString(m_Heading);
+		acutDelString(m_Footing);
+
 		pFiler->readPoint3d(&m_BasePoint);
 		pFiler->readVector3d(&m_Direction);
 		pFiler->readVector3d(&m_Up);
 		m_Normal = m_Direction.crossProduct(m_Up);
 		
 		pFiler->readInt32(&m_Multiplier);
+
+		pFiler->readString(&m_Heading);
+		pFiler->readString(&m_Footing);
 
 		// Style
 		pFiler->readHardPointerId(&m_StyleID);
@@ -449,6 +501,16 @@ Acad::ErrorStatus CBOQTable::dxfOutFields(AcDbDxfFiler* pFiler) const
 	// Properties
 	pFiler->writeInt32(AcDb::kDxfInt32 + 1, m_Multiplier);
 	
+	// Texts
+	if (m_Heading)
+		pFiler->writeString(AcDb::kDxfXTextString, m_Heading);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString, _T(""));
+	if (m_Footing)
+		pFiler->writeString(AcDb::kDxfXTextString + 1, m_Footing);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 1, _T(""));
+
     // Style
 	pFiler->writeItem(AcDb::kDxfHardPointerId, m_StyleID);
 
@@ -496,6 +558,8 @@ Acad::ErrorStatus CBOQTable::dxfInFields(AcDbDxfFiler* pFiler)
 	AcGePoint3d t_BasePoint;
 	AcGeVector3d t_Direction, t_Up;
 	Adesk::Int32 t_Multiplier = 0;
+	ACHAR* t_Heading = NULL;
+	ACHAR* t_Footing = NULL;
 	AcDbObjectId t_StyleID = AcDbObjectId::kNull;
 	RowList t_List;
 	long count;
@@ -504,6 +568,8 @@ Acad::ErrorStatus CBOQTable::dxfInFields(AcDbDxfFiler* pFiler)
 	if((es = Utility::ReadDXFVector(pFiler, AcDb::kDxfXCoord + 1, _T("direction vector"), t_Direction)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFVector(pFiler, AcDb::kDxfXCoord + 2, _T("up vector"), t_Up)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32 + 1, _T("multiplier"), t_Multiplier)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("heading"), t_Heading)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString + 1, _T("footing"), t_Footing)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFObjectId(pFiler, AcDb::kDxfHardPointerId, _T("style id"), t_StyleID)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32 + 2, _T("row count"), count)) != Acad::eOk) return es;
 
@@ -527,11 +593,17 @@ Acad::ErrorStatus CBOQTable::dxfInFields(AcDbDxfFiler* pFiler)
 	m_Normal = m_Direction.crossProduct(m_Up);
 
 	m_Multiplier = t_Multiplier;
+
+	setHeading(t_Heading);
+	setFooting(t_Footing);
 	m_StyleID = t_StyleID;
 
 	ClearRows();
 	m_List.clear();
 	m_List = t_List;
+
+	acutDelString(t_Heading);
+	acutDelString(t_Footing);
 
     return es;
 }

@@ -23,13 +23,15 @@ ACRX_DXF_DEFINE_MEMBERS(CBOQStyle, AcDbObject,
 CBOQStyle::CBOQStyle () : m_Name(NULL), m_Precision(0),	m_DisplayUnit(CBOQStyle::MM), m_Columns(NULL),
 	m_TextColor(2), m_PosColor(4), m_LineColor(1), m_BorderColor(33), m_HeadingColor(9), m_FootingColor(9),
 	m_TextStyleId(AcDbObjectId::kNull), m_HeadingStyleId(AcDbObjectId::kNull),
-	m_HeadingScale(1.5), m_RowSpacing(0.2)
+	m_HeadingScale(1.5), m_RowSpacing(0.2), m_Heading(NULL), m_Footing(NULL)
 { }
 
 CBOQStyle::~CBOQStyle () 
 { 
 	acutDelString(m_Name);
 	acutDelString(m_Columns);
+	acutDelString(m_Heading);
+	acutDelString(m_Footing);
 }
 
 //*************************************************************************
@@ -48,6 +50,40 @@ Acad::ErrorStatus CBOQStyle::setName(const ACHAR* newVal)
     if(newVal != NULL)
     {
         acutUpdString(newVal, m_Name);
+    }
+	return Acad::eOk;
+}
+
+const ACHAR* CBOQStyle::Heading(void) const
+{
+	assertReadEnabled();
+	return m_Heading;
+}
+Acad::ErrorStatus CBOQStyle::setHeading(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+    acutDelString(m_Heading);
+    m_Heading = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_Heading);
+    }
+	return Acad::eOk;
+}
+
+const ACHAR* CBOQStyle::Footing(void) const
+{
+	assertReadEnabled();
+	return m_Footing;
+}
+Acad::ErrorStatus CBOQStyle::setFooting(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+    acutDelString(m_Footing);
+    m_Footing = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_Footing);
     }
 	return Acad::eOk;
 }
@@ -263,6 +299,16 @@ Acad::ErrorStatus CBOQStyle::dwgOutFields(AcDbDwgFiler *pFiler) const
     pFiler->writeDouble(m_HeadingScale);
     pFiler->writeDouble(m_RowSpacing);
 
+	// Texts
+	if (m_Heading)
+		pFiler->writeString(m_Heading);
+	else
+		pFiler->writeString(_T(""));
+	if (m_Footing)
+		pFiler->writeString(m_Footing);
+	else
+		pFiler->writeString(_T(""));
+
     // Styles
     pFiler->writeHardPointerId(m_TextStyleId);
     pFiler->writeHardPointerId(m_HeadingStyleId);
@@ -290,6 +336,8 @@ Acad::ErrorStatus CBOQStyle::dwgInFields(AcDbDwgFiler *pFiler)
 	{
 		acutDelString(m_Name);
 		acutDelString(m_Columns);
+		acutDelString(m_Heading);
+		acutDelString(m_Footing);
 
 		// Properties
 		pFiler->readItem(&m_Name);
@@ -310,6 +358,9 @@ Acad::ErrorStatus CBOQStyle::dwgInFields(AcDbDwgFiler *pFiler)
 
         pFiler->readDouble(&m_HeadingScale);
         pFiler->readDouble(&m_RowSpacing);
+
+		pFiler->readString(&m_Heading);
+		pFiler->readString(&m_Footing);
 
 		pFiler->readHardPointerId(&m_TextStyleId);
 		pFiler->readHardPointerId(&m_HeadingStyleId);
@@ -361,6 +412,16 @@ Acad::ErrorStatus CBOQStyle::dxfOutFields(AcDbDxfFiler *pFiler) const
     pFiler->writeDouble(AcDb::kDxfXReal, m_HeadingScale);
     pFiler->writeDouble(AcDb::kDxfXReal + 1, m_RowSpacing);
 
+	// Texts
+	if (m_Heading)
+		pFiler->writeString(AcDb::kDxfXTextString + 2, m_Heading);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 2, _T(""));
+	if (m_Footing)
+		pFiler->writeString(AcDb::kDxfXTextString + 3, m_Footing);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 3, _T(""));
+
     // Styles
     pFiler->writeItem(AcDb::kDxfHardPointerId, m_TextStyleId);
     pFiler->writeItem(AcDb::kDxfHardPointerId + 1, m_HeadingStyleId);
@@ -404,6 +465,8 @@ Acad::ErrorStatus CBOQStyle::dxfInFields(AcDbDxfFiler *pFiler)
 	Adesk::UInt16 t_FootingColor = 0;
 	double t_HeadingScale = 0;
 	double t_RowSpacing = 0;
+	ACHAR* t_Heading = NULL;
+	ACHAR* t_Footing = NULL;
 	AcDbObjectId t_TextStyleId = AcDbObjectId::kNull;
 	AcDbObjectId t_HeadingStyleId = AcDbObjectId::kNull;
 
@@ -447,6 +510,12 @@ Acad::ErrorStatus CBOQStyle::dxfInFields(AcDbDxfFiler *pFiler)
         case AcDb::kDxfXReal + 1:
 			t_RowSpacing = rb.resval.rreal;
 			break;
+        case AcDb::kDxfXTextString + 2:
+			acutUpdString(rb.resval.rstring, t_Heading);
+			break;
+        case AcDb::kDxfXTextString + 3:
+			acutUpdString(rb.resval.rstring, t_Footing);
+			break;
         case AcDb::kDxfHardPointerId:
 			acdbGetObjectId(t_TextStyleId, rb.resval.rlname);
 			break;
@@ -484,11 +553,15 @@ Acad::ErrorStatus CBOQStyle::dxfInFields(AcDbDxfFiler *pFiler)
 	m_FootingColor = t_FootingColor;
 	m_HeadingScale = t_HeadingScale;
 	m_RowSpacing = t_RowSpacing;
+	setHeading(t_Heading);
+	setFooting(t_Footing);
 	m_TextStyleId = t_TextStyleId;
 	m_HeadingStyleId = t_HeadingStyleId;
 
 	acutDelString(t_Name);
 	acutDelString(t_Columns);
+	acutDelString(t_Heading);
+	acutDelString(t_Footing);
 
 	return es;
 }

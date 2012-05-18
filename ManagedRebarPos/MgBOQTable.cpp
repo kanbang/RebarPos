@@ -83,6 +83,24 @@ void BOQTable::Multiplier::set(int value)
     Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setMultiplier(value));
 }
 
+String^ BOQTable::Heading::get()
+{
+	return Marshal::WcharToString(GetImpObj()->Heading());
+}
+void BOQTable::Heading::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setHeading(Marshal::StringToWchar(value)));
+}
+
+String^ BOQTable::Footing::get()
+{
+	return Marshal::WcharToString(GetImpObj()->Footing());
+}
+void BOQTable::Footing::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFooting(Marshal::StringToWchar(value)));
+}
+
 Autodesk::AutoCAD::DatabaseServices::ObjectId BOQTable::StyleId::get()
 {
 	return Marshal::ToObjectId(GetImpObj()->StyleId());

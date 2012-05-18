@@ -50,6 +50,9 @@ namespace OZOZ
 			property Autodesk::AutoCAD::Colors::Color^ HeadingColor    { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }
 			property Autodesk::AutoCAD::Colors::Color^ FootingColor    { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }
 
+			property String^ Heading { String^ get(); void set(String^ value); }
+			property String^ Footing { String^ get(); void set(String^ value); }
+
 			property Autodesk::AutoCAD::DatabaseServices::ObjectId TextStyleId    { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
 			property Autodesk::AutoCAD::DatabaseServices::ObjectId HeadingStyleId { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
 
