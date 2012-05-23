@@ -243,6 +243,7 @@ namespace RebarPosCommands
                         group.FormulaWithoutLength = "[M:C][N][\"T\":D][\"/\":S]";
                         group.FormulaPosOnly = "[M:C]";
                         group.StandardDiameters = "8 10 12 14 16 18 20 22 25 26 32 36";
+                        group.HiddenLayerId = DWGUtility.CreateHiddenLayer("Rebar Defpoints", Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 8));
                         group.TextStyleId = DWGUtility.CreateTextStyle("Rebar Text Style", "leroy.shx", 0.7);
                         group.NoteStyleId = DWGUtility.CreateTextStyle("Rebar Note Style", "simplxtw.shx", 0.9);
                         dict.UpgradeOpen();
@@ -325,6 +326,44 @@ namespace RebarPosCommands
 
                 return id;
             }
+        }
+
+        // Creates a new non plot layer and returns the ObjectId of the new layer
+        public static ObjectId CreateHiddenLayer(string name, Autodesk.AutoCAD.Colors.Color color)
+        {
+            ObjectId id = ObjectId.Null;
+
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    LayerTable table = (LayerTable)tr.GetObject(db.LayerTableId, OpenMode.ForRead);
+                    if (!table.Has(name))
+                    {
+                        LayerTableRecord style = new LayerTableRecord();
+                        style.Name = name;
+                        style.Color = color;
+                        style.IsPlottable = false;
+                        table.UpgradeOpen();
+                        id = table.Add(style);
+                        table.DowngradeOpen();
+                        tr.AddNewlyCreatedDBObject(style, true);
+                    }
+                    else
+                    {
+                        id = table[name];
+                    }
+
+                    tr.Commit();
+                }
+                catch (System.Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                }
+            }
+
+            return id;
         }
 
         // Creates a new text style and returns the ObjectId of the new style 

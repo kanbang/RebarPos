@@ -43,6 +43,7 @@ namespace RebarPosCommands
             public Autodesk.AutoCAD.Colors.Color noteColor;
             public Autodesk.AutoCAD.Colors.Color currentGroupHighlightColor;
 
+            public ObjectId hiddenLayerId;
             public ObjectId textStyleId;
             public ObjectId noteStyleId;
 
@@ -118,6 +119,7 @@ namespace RebarPosCommands
                         copy.noteColor = group.NoteColor;
                         copy.currentGroupHighlightColor = group.CurrentGroupHighlightColor;
 
+                        copy.hiddenLayerId = group.HiddenLayerId;
                         copy.textStyleId = group.TextStyleId;
                         copy.noteStyleId = group.NoteStyleId;
                         copy.noteScale = group.NoteScale;
@@ -279,6 +281,7 @@ namespace RebarPosCommands
             copy.noteColor = org.noteColor;
             copy.currentGroupHighlightColor = org.currentGroupHighlightColor;
 
+            copy.hiddenLayerId = org.hiddenLayerId;
             copy.textStyleId = org.textStyleId;
             copy.noteStyleId = org.noteStyleId;
             copy.noteScale = org.noteScale;
@@ -474,6 +477,7 @@ namespace RebarPosCommands
                             group.NoteColor = copy.noteColor;
                             group.CurrentGroupHighlightColor = copy.currentGroupHighlightColor;
 
+                            group.HiddenLayerId = copy.hiddenLayerId;
                             group.TextStyleId = copy.textStyleId;
                             group.NoteStyleId = copy.noteStyleId;
                             group.NoteScale = copy.noteScale;
@@ -507,6 +511,7 @@ namespace RebarPosCommands
                             group.NoteColor = copy.noteColor;
                             group.CurrentGroupHighlightColor = copy.currentGroupHighlightColor;
 
+                            group.HiddenLayerId = copy.hiddenLayerId;
                             group.TextStyleId = copy.textStyleId;
                             group.NoteStyleId = copy.noteStyleId;
                             group.NoteScale = copy.noteScale;

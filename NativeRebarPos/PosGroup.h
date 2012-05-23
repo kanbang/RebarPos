@@ -73,6 +73,8 @@ protected:
 
     double m_NoteScale;
 
+	AcDbHardPointerId m_HiddenLayerID;
+
     AcDbHardPointerId m_TextStyleID;
     AcDbHardPointerId m_NoteStyleID;
 
@@ -148,6 +150,10 @@ public:
 	/// Gets or sets the note height relative to text height.
 	const double NoteScale(void) const;
 	Acad::ErrorStatus setNoteScale(const double newVal);
+
+	/// Gets or sets the hidden layer.
+	const AcDbObjectId& HiddenLayerId(void) const;
+	Acad::ErrorStatus setHiddenLayerId(const AcDbObjectId& newVal);
 
 	/// Gets or sets pointer to the text style.
 	const AcDbObjectId& TextStyleId(void) const;

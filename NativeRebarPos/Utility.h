@@ -13,12 +13,6 @@ namespace Utility
 	/// Create an AcGiTextStyle from the db id of an AcDbTextStyleTableRecord
 	Acad::ErrorStatus MakeGiTextStyle(AcGiTextStyle &ts, const AcDbObjectId  styleId);
 
-	/// Gets the "0" layer
-	const AcDbObjectId GetZeroLayer(void);
-
-	/// Gets the "Defpoints" layer
-	const AcDbObjectId GetDefpointsLayer(void);
-
 	/// Replace all occurences of string
 	const void ReplaceString(std::wstring& str, const std::wstring& oldStr, const std::wstring& newStr);
 

@@ -115,7 +115,6 @@ private:
     mutable AcGiTextStyle lastTextStyle;
     mutable AcGiTextStyle lastNoteStyle;
 	mutable Adesk::UInt16 lastCircleColor;
-	mutable AcDbObjectId zeroLayer;
 	mutable AcDbObjectId defpointsLayer;
 	mutable double lastNoteScale;
 	mutable std::vector<CShape*> lastShapes;

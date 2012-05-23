@@ -182,6 +182,15 @@ void PosGroup::CurrentGroupHighlightColor::set(Autodesk::AutoCAD::Colors::Color^
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setCurrentGroupHighlightColor(value->ColorIndex));
 }
 
+Autodesk::AutoCAD::DatabaseServices::ObjectId PosGroup::HiddenLayerId::get()
+{
+	return Marshal::ToObjectId (GetImpObj()->HiddenLayerId());
+}
+void PosGroup::HiddenLayerId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setHiddenLayerId(Marshal::FromObjectId(value)));
+}
+
 Autodesk::AutoCAD::DatabaseServices::ObjectId PosGroup::TextStyleId::get()
 {
 	return Marshal::ToObjectId (GetImpObj()->TextStyleId());

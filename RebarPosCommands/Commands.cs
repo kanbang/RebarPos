@@ -39,13 +39,13 @@ namespace RebarPosCommands
 
         private string CurrentGroupName { get; set; }
         private ObjectId CurrentGroupId { get; set; }
-        private bool ShowShapes 
+        private bool ShowShapes
         {
-            get 
+            get
             {
-                return ShowShapesOverrule.Instance.Has(); 
+                return ShowShapesOverrule.Instance.Has();
             }
-            set 
+            set
             {
                 if (value)
                     ShowShapesOverrule.Instance.Add();
@@ -64,7 +64,7 @@ namespace RebarPosCommands
                     "New Numbering Copy Group Check BOM Find Empty Shapes");
                 opts.AllowNone = false;
                 PromptEntityResult result = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetEntity(opts);
-                
+
                 if (result.Status == PromptStatus.Keyword)
                 {
                     switch (result.StringResult)

@@ -38,7 +38,7 @@ CRebarPos::CRebarPos() :
 	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), 
 	m_ShapeID(AcDbObjectId::kNull), m_GroupID(AcDbObjectId::kNull),
 	circleRadius(1.125), partSpacing(0.15), 
-	zeroLayer(AcDbObjectId::kNull), defpointsLayer(AcDbObjectId::kNull),
+	defpointsLayer(AcDbObjectId::kNull),
 	m_CalcProps()
 {
 }
@@ -829,7 +829,6 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	worldDraw->geometry().pushModelTransform(trans);
 	// Draw items
 	worldDraw->subEntityTraits().setSelectionMarker(1);
-	worldDraw->subEntityTraits().setLayer(zeroLayer);
 	lastTextStyle.setTextSize(1.0);
 	lastTextStyle.loadStyleRec();
 	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
@@ -849,18 +848,6 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 		worldDraw->geometry().text(AcGePoint3d(p.x, p.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, p.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
 	}
 
-	// Group name
-	worldDraw->subEntityTraits().setLayer(defpointsLayer);
-	lastTextStyle.setTextSize(0.4);
-	lastTextStyle.loadStyleRec();
-	worldDraw->subEntityTraits().setColor(lastGroupDraw.color);
-	worldDraw->geometry().text(AcGePoint3d(lastGroupDraw.x, lastGroupDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastGroupDraw.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
-	// Multiplier
-	worldDraw->subEntityTraits().setColor(lastMultiplierDraw.color);
-	worldDraw->geometry().text(AcGePoint3d(lastMultiplierDraw.x, lastMultiplierDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastMultiplierDraw.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
-	// Reset transform
-	worldDraw->geometry().popModelTransform();
-
 	// Transform to match note orientation
 	worldDraw->geometry().pushModelTransform(noteTrans);
 	// Draw note text
@@ -868,8 +855,22 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	lastNoteStyle.loadStyleRec();
 	worldDraw->subEntityTraits().setSelectionMarker(2);
 	worldDraw->subEntityTraits().setColor(lastNoteDraw.color);
-	worldDraw->subEntityTraits().setLayer(zeroLayer);
 	worldDraw->geometry().text(AcGePoint3d(lastNoteDraw.x, lastNoteDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, m_Note, -1, Adesk::kFalse, lastNoteStyle);
+	// Reset transform
+	worldDraw->geometry().popModelTransform();
+
+	// Transform to match text orientation
+	worldDraw->geometry().pushModelTransform(trans);
+	worldDraw->subEntityTraits().setLayer(defpointsLayer);
+	lastTextStyle.setTextSize(0.4);
+	lastTextStyle.loadStyleRec();
+	worldDraw->subEntityTraits().setSelectionMarker(1);
+	// Group name
+	worldDraw->subEntityTraits().setColor(lastGroupDraw.color);
+	worldDraw->geometry().text(AcGePoint3d(lastGroupDraw.x, lastGroupDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastGroupDraw.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
+	// Multiplier
+	worldDraw->subEntityTraits().setColor(lastMultiplierDraw.color);
+	worldDraw->geometry().text(AcGePoint3d(lastMultiplierDraw.x, lastMultiplierDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastMultiplierDraw.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
 	// Reset transform
 	worldDraw->geometry().popModelTransform();
 
@@ -905,7 +906,6 @@ void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 	double scale = m_Direction.length();
 
 	// Draw items
-	worldDraw->subEntityTraits().setLayer(zeroLayer);
 	lastTextStyle.setTextSize(1.0 * scale);
 	lastTextStyle.loadStyleRec();
 	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
@@ -936,7 +936,6 @@ void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 	AcGePoint3d notept(lastNoteDraw.x, lastNoteDraw.y, 0);
 	notept.transformBy(noteTrans);
 	worldDraw->subEntityTraits().setColor(lastNoteDraw.color);
-	worldDraw->subEntityTraits().setLayer(zeroLayer);
 	worldDraw->geometry().text(notept, m_Normal, m_Direction, m_Note, -1, Adesk::kFalse, lastNoteStyle);
 }
 
@@ -1736,10 +1735,6 @@ const void CRebarPos::Calculate(void) const
 		geomInit = true;
 	}
 
-	// Layers
-	zeroLayer = Utility::GetZeroLayer();
-	defpointsLayer = Utility::GetDefpointsLayer();
-
 	// Open group and shape
 	Acad::ErrorStatus es;
 	AcDbObjectPointer<CPosGroup> pGroup (m_GroupID, AcDb::kForRead);
@@ -1897,6 +1892,7 @@ const void CRebarPos::Calculate(void) const
 		Utility::IntToStr(m_Multiplier, lastMultiplierDraw.text);
 
 	// Set colors
+	defpointsLayer = pGroup->HiddenLayerId();
 	lastCircleColor = pGroup->CircleColor();
 	lastGroupDraw.color = pGroup->GroupColor();
 	lastMultiplierDraw.color = pGroup->MultiplierColor();
