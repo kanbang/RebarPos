@@ -25,7 +25,9 @@ namespace RebarPosCommands
                         BOQTable table = new BOQTable();
                         table.TransformBy(Matrix3d.Displacement(pt.GetAsVector()));
                         table.TransformBy(Matrix3d.Scaling(25.0, pt));
-                        table.Items.Add(1, 6, 12, 1000, 2000, true, ObjectId.Null);
+                        table.Items.Add(1, 6, 26, 1000, 2000, true, ObjectId.Null);
+                        table.Items.Add(2, 2, 16, 1000, ObjectId.Null);
+                        table.Items.Add(3, 3, 22, 1300.345435435345, ObjectId.Null);
                         table.StyleId = DWGUtility.CreateDefaultBOQStyles();
 
                         table.SetDatabaseDefaults(db);

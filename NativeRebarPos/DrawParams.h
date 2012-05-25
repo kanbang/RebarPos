@@ -4,6 +4,7 @@
 #pragma once
 
 #include <string>
+#include "Shape.h"
 
 struct CDrawParams
 {
@@ -26,4 +27,62 @@ public:
 
 	CDrawParams(int _type, std::wstring _text) : type(_type), text(_text), hasCircle(false), color(0), x(0), y(0), w(0), h(0)
 	{ }
+};
+
+struct CDrawTextParams
+{
+public:
+	std::wstring text;
+	unsigned short color;
+	double x;
+	double y;
+	double w;
+	double h;
+
+public:
+	CDrawTextParams() : text(L""), color(0), x(0), y(0), w(0), h(0)
+	{ }
+
+	CDrawTextParams(std::wstring _text) : text(_text), color(0), x(0), y(0), w(0), h(0)
+	{ }
+};
+
+struct CDrawLineParams
+{
+public:
+	unsigned short color;
+	double x1;
+	double y1;
+	double x2;
+	double y2;
+
+public:
+	CDrawLineParams() : color(0), x1(0), y1(0), x2(0), y2(0)
+	{ }
+};
+
+struct CDrawShapeParams
+{
+public:
+	double x;
+	double y;
+	double xmin;
+	double ymin;
+	double xmax;
+	double ymax;
+	double scale;
+	std::vector<CShape*> shapes;
+
+public:
+	CDrawShapeParams() : x(0), y(0), scale(1.0)
+	{ }
+
+	~CDrawShapeParams()
+	{
+		for(std::vector<CShape*>::iterator it = shapes.begin(); it != shapes.end(); it++)
+		{
+			delete *it;
+		}
+		shapes.clear();
+	}
 };

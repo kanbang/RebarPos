@@ -128,6 +128,11 @@ void BOQTable::BOQRowCollection::Add(int pos, int count, double diameter, double
 	m_Parent->GetImpObj()->AddRow(new CBOQRow(pos, count, diameter, length1, length2, (isVarLength ? Adesk::kTrue : Adesk::kFalse), OZOZ::RebarPosWrapper::Marshal::FromObjectId(shapeId)));
 }
 
+void BOQTable::BOQRowCollection::Add(int pos, int count, double diameter, double length, Autodesk::AutoCAD::DatabaseServices::ObjectId shapeId)
+{
+	Add(pos, count, diameter, length, length, false, shapeId);
+}
+
 int BOQTable::BOQRowCollection::Count::get()
 {
 	return (int)m_Parent->GetImpObj()->GetRowCount();

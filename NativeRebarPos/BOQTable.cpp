@@ -27,15 +27,37 @@ ACRX_DXF_DEFINE_MEMBERS(CBOQTable, AcDbEntity,
 
 CBOQTable::CBOQTable() :
 	m_BasePoint(0, 0, 0), m_Direction(1, 0, 0), m_Up(0, 1, 0), m_Normal(0, 0, 1),
-	m_Multiplier(1),m_StyleID(AcDbObjectId::kNull), m_Heading(NULL), m_Footing(NULL)
+	m_Multiplier(1),m_StyleID(AcDbObjectId::kNull), m_Heading(NULL), m_Footing(NULL),
+	isModified(true), lastColumns(NULL), lastHeading(NULL), lastFooting(NULL)
 {
 }
 
 CBOQTable::~CBOQTable()
 {
 	ClearRows();
+
 	acutDelString(m_Heading);
 	acutDelString(m_Footing);
+
+	acutDelString(lastColumns);
+	acutDelString(lastHeading);
+	acutDelString(lastFooting);
+
+	for(std::vector<CDrawTextParams*>::iterator it1 = lastTexts.begin(); it1 != lastTexts.end(); it1++)
+	{
+		delete *it1;
+	}
+	lastTexts.clear();
+	for(std::vector<CDrawLineParams*>::iterator it2 = lastLines.begin(); it2 != lastLines.end(); it2++)
+	{
+		delete *it2;
+	}
+	lastLines.clear();
+	for(std::vector<CDrawShapeParams*>::iterator it3 = lastShapes.begin(); it3 != lastShapes.end(); it3++)
+	{
+		delete *it3;
+	}
+	lastShapes.clear();
 }
 
 
@@ -110,6 +132,7 @@ Acad::ErrorStatus CBOQTable::setMultiplier(const Adesk::Int32 newVal)
 {
 	assertWriteEnabled();
 	m_Multiplier = newVal;
+	isModified = true;
 	return Acad::eOk;
 }
 
@@ -127,6 +150,7 @@ Acad::ErrorStatus CBOQTable::setHeading(const ACHAR* newVal)
     {
         acutUpdString(newVal, m_Heading);
     }
+	isModified = true;
 	return Acad::eOk;
 }
 
@@ -144,6 +168,7 @@ Acad::ErrorStatus CBOQTable::setFooting(const ACHAR* newVal)
     {
         acutUpdString(newVal, m_Footing);
     }
+	isModified = true;
 	return Acad::eOk;
 }
 
@@ -157,6 +182,7 @@ Acad::ErrorStatus CBOQTable::setStyleId(const AcDbObjectId& newVal)
 {
 	assertWriteEnabled();
 	m_StyleID = newVal;
+	isModified = true;
 	return Acad::eOk;
 }
 
@@ -204,6 +230,260 @@ const RowListSize CBOQTable::GetRowCount() const
 {
 	assertReadEnabled();
 	return m_List.size();
+}
+
+//*************************************************************************
+// Helper methods
+//*************************************************************************
+
+const void CBOQTable::Calculate(void) const
+{
+	if(!isModified)
+		return;
+
+	assertReadEnabled();
+
+	for(std::vector<CDrawTextParams*>::iterator it1 = lastTexts.begin(); it1 != lastTexts.end(); it1++)
+	{
+		delete *it1;
+	}
+	lastTexts.clear();
+	for(std::vector<CDrawLineParams*>::iterator it2 = lastLines.begin(); it2 != lastLines.end(); it2++)
+	{
+		delete *it2;
+	}
+	lastLines.clear();
+	for(std::vector<CDrawShapeParams*>::iterator it3 = lastShapes.begin(); it3 != lastShapes.end(); it3++)
+	{
+		delete *it3;
+	}
+	lastShapes.clear();
+
+	// Open style
+	Acad::ErrorStatus es;
+	AcDbObjectPointer<CBOQStyle> pStyle (m_StyleID, AcDb::kForRead);
+	if((es = pStyle.openStatus()) != Acad::eOk)
+	{
+		return;
+	}
+	acutUpdString(pStyle->Columns(), lastColumns);
+
+	// Parse columns
+	std::vector<CBOQTable::ColumnType> columns = ParseColumns(lastColumns);
+
+	// Create text styles
+	if (pStyle->TextStyleId() != AcDbObjectId::kNull)
+		Utility::MakeGiTextStyle(lastTextStyle, pStyle->TextStyleId());
+	if (pStyle->HeadingStyleId() != AcDbObjectId::kNull)
+		Utility::MakeGiTextStyle(lastHeadingStyle, pStyle->HeadingStyleId());
+
+	// Set colors
+	lastTextColor = pStyle->TextColor();
+	lastPosColor = pStyle->PosColor();
+	lastLineColor = pStyle->LineColor();
+	lastBorderColor = pStyle->BorderColor();
+	lastHeadingColor = pStyle->HeadingColor();
+	lastFootingColor = pStyle->FootingColor();
+
+	// Get texts
+	acutUpdString(pStyle->Heading(), lastHeading);
+	acutUpdString(pStyle->Footing(), lastFooting);
+	if(m_Heading != NULL && m_Heading[0] != _T('\0'))
+		acutUpdString(m_Heading, lastHeading);
+	if(m_Footing != NULL && m_Footing[0] != _T('\0'))
+		acutUpdString(m_Footing, lastFooting);
+
+	// Get other styles
+	lastHeadingScale = pStyle->HeadingScale();
+	lastRowSpacing = pStyle->RowSpacing();
+
+	lastPrecision = pStyle->Precision();
+	lastDisplayUnit = pStyle->DisplayUnit();
+
+	// Create diamater list
+	std::map<double, int> diameters;
+	for(RowListConstIt it = m_List.begin(); it != m_List.end(); it++)
+	{
+		CBOQRow* row = *it;
+		diameters[row->diameter] = 0;
+	}
+	// Set column position
+	int diacol = 0;
+	for(std::map<double, int>::iterator it = diameters.begin(); it != diameters.end(); it++)
+	{
+		it->second = diacol;
+		diacol++;
+	}
+
+	// Set drawables
+	lastTextStyle.setTextSize(1.0);
+	lastTextStyle.loadStyleRec();
+	double rowHeight = lastTextStyle.extents(_T("A"), Adesk::kTrue, -1, Adesk::kFalse).y;
+	rowHeight += 2.0 * lastRowSpacing;
+
+	double x = 0;
+	double y = 0;
+	std::vector<double> columnWidths;
+	for(std::vector<CBOQTable::ColumnType>::iterator tit = columns.begin(); tit != columns.end(); tit++)
+	{
+		double columnWidth = 0;
+		CBOQTable::ColumnType type = *tit;
+		switch(type)
+		{
+		case CBOQTable::POS:
+			columnWidth = lastTextStyle.extents(_T("999"), Adesk::kTrue, -1, Adesk::kFalse).x;
+			break;
+		case CBOQTable::POSDD:
+			columnWidth = lastTextStyle.extents(_T("999"), Adesk::kTrue, -1, Adesk::kFalse).x;
+			break;
+		case CBOQTable::COUNT:
+			columnWidth = lastTextStyle.extents(_T("9999"), Adesk::kTrue, -1, Adesk::kFalse).x;
+			break;
+		case CBOQTable::DIAMETER:
+			columnWidth = lastTextStyle.extents(_T("99"), Adesk::kTrue, -1, Adesk::kFalse).x;
+			break;
+		case CBOQTable::LENGTH:
+			columnWidth = lastTextStyle.extents(_T("99999.9999"), Adesk::kTrue, -1, Adesk::kFalse).x;
+			break;
+		case CBOQTable::SHAPE:
+			columnWidth = lastTextStyle.extents(_T("999999"), Adesk::kTrue, -1, Adesk::kFalse).x;
+			break;
+		case CBOQTable::TOTALLENGTH:
+			columnWidth = lastTextStyle.extents(_T("99.9999"), Adesk::kTrue, -1, Adesk::kFalse).x;
+			break;
+		}
+		columnWidth += 2.0 * lastRowSpacing;
+		if(type == CBOQTable::TOTALLENGTH)
+		{
+			for(int j = 0; j < diameters.size(); j++)
+			{
+				columnWidths.push_back(columnWidth);
+			}
+		}
+		else
+		{
+			columnWidths.push_back(columnWidth);
+		}
+		int i = 0;
+		double len;
+		for(RowListConstIt it = m_List.begin(); it != m_List.end(); it++)
+		{
+			CBOQRow* row = *it;
+			CDrawTextParams* txt = new CDrawTextParams();
+			txt->y = y  - rowHeight + lastRowSpacing - i * rowHeight;
+
+			if(type == CBOQTable::POS)
+				txt->color = lastPosColor;
+			else
+				txt->color = lastTextColor;
+
+			switch(type)
+			{
+			case CBOQTable::POS:
+				Utility::IntToStr(row->pos, txt->text);
+				txt->x = x + (columnWidth - lastTextStyle.extents(txt->text.c_str(), Adesk::kTrue, -1, Adesk::kFalse).x) / 2.0;
+				break;
+			case CBOQTable::POSDD:
+				Utility::IntToStr(row->pos, txt->text);
+				if(txt->text.length() == 1) txt->text.insert(0, L"0");
+				txt->x = x + (columnWidth - lastTextStyle.extents(txt->text.c_str(), Adesk::kTrue, -1, Adesk::kFalse).x) / 2.0;
+				break;
+			case CBOQTable::COUNT:
+				Utility::IntToStr(m_Multiplier * row->count, txt->text);
+				txt->x = x + (columnWidth - lastTextStyle.extents(txt->text.c_str(), Adesk::kTrue, -1, Adesk::kFalse).x) / 2.0;
+				break;
+			case CBOQTable::DIAMETER:
+				Utility::DoubleToStr(row->diameter, txt->text);
+				txt->x = x + (columnWidth - lastTextStyle.extents(txt->text.c_str(), Adesk::kTrue, -1, Adesk::kFalse).x) / 2.0;
+				break;
+			case CBOQTable::LENGTH:
+				len = (row->length1 + row->length2) / 2.0;
+				if(lastDisplayUnit == CBOQStyle::CM) len /= 10.0;
+				Utility::DoubleToStr(len, lastPrecision, txt->text);
+				txt->x = x + lastRowSpacing;
+				break;
+			case CBOQTable::SHAPE:
+				txt->text = L"SHAPE";
+				txt->x = x + (columnWidth - lastTextStyle.extents(txt->text.c_str(), Adesk::kTrue, -1, Adesk::kFalse).x) / 2.0;
+				break;
+			case CBOQTable::TOTALLENGTH:
+				Utility::DoubleToStr(m_Multiplier * row->count * (row->length1 + row->length2) / 2.0 / 1000.0, lastPrecision, txt->text);
+				txt->x = x + lastRowSpacing + diameters[row->diameter] * columnWidth;
+				break;
+			}
+			lastTexts.push_back(txt);
+			i++;
+		}
+		x += columnWidth;
+	}
+	double width = 0;
+	double height = 0;
+	for(std::vector<double>::iterator it = columnWidths.begin(); it != columnWidths.end(); it++)
+	{
+		width += *it;
+	}
+	height = m_List.size() * rowHeight;
+
+	// Row lines
+	x = 0;
+	y = -rowHeight;
+	for(RowListSize i = 0; i < m_List.size() - 1; i++)
+	{
+		CDrawLineParams* line = new CDrawLineParams();
+		line->color = lastLineColor;
+		line->x1 = x;
+		line->x2 = x + width;
+		line->y1 = line->y2 = y;
+		lastLines.push_back(line);
+		y -= rowHeight;
+	}
+	// Column lines
+	x = 0;
+	y = 0;
+	for(std::vector<double>::size_type i = 0; i < columnWidths.size() - 1; i++)
+	{
+		x += columnWidths.at(i);
+		CDrawLineParams* line = new CDrawLineParams();
+		line->color = lastLineColor;
+		line->x1 = line->x2 = x;
+		line->y1 = y;
+		line->y2 = y - height;
+		lastLines.push_back(line);
+	}
+
+	// Measure texts
+	for(std::vector<CDrawTextParams*>::iterator it1 = lastTexts.begin(); it1 != lastTexts.end(); it1++)
+	{
+		CDrawTextParams* p = *it1;
+		AcGePoint2d ext = lastTextStyle.extents(p->text.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
+		p->w = ext.x;
+		p->h = ext.y;
+	}
+	// Shapes
+	for(std::vector<CDrawShapeParams*>::iterator it2 = lastShapes.begin(); it2 != lastShapes.end(); it2++)
+	{
+		CDrawShapeParams* p = *it2;
+		bool init = false;
+		for(std::vector<CShape*>::iterator it = p->shapes.begin(); it != p->shapes.end(); it++)
+		{
+			CShape* shape = *it;
+			
+		}
+		//AcGePoint2d ext = lastTextStyle.extents(p->text.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
+		//p->w = ext.x;
+		//p->h = ext.y;
+	}
+
+	// Done update
+	isModified = false;
+}
+
+const void CBOQTable::Update(void)
+{
+	assertWriteEnabled();
+
+	isModified = true;
+	return;
 }
 
 //*************************************************************************
@@ -314,6 +594,12 @@ Adesk::Boolean CBOQTable::subWorldDraw(AcGiWorldDraw* worldDraw)
         return Adesk::kTrue;
     }
 
+	// Update if required
+	if(isModified)
+	{
+		Calculate();
+	}
+
 	// Transformations
 	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
 	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
@@ -322,11 +608,26 @@ Adesk::Boolean CBOQTable::subWorldDraw(AcGiWorldDraw* worldDraw)
 	worldDraw->geometry().pushModelTransform(trans);
 	// Draw items
 	worldDraw->subEntityTraits().setSelectionMarker(1);
-	AcGiTextStyle style;
-	style.setTextSize(1.0);
-	style.loadStyleRec();
-	worldDraw->geometry().text(AcGePoint3d(0, 0, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, _T("BOQTable"), -1, Adesk::kFalse, style);
-
+	lastTextStyle.setTextSize(1.0);
+	lastTextStyle.loadStyleRec();
+	// Texts
+	for(std::vector<CDrawTextParams*>::iterator it1 = lastTexts.begin(); it1 != lastTexts.end(); it1++)
+	{
+		CDrawTextParams* p = *it1;
+		worldDraw->subEntityTraits().setColor(p->color);
+		worldDraw->geometry().text(AcGePoint3d(p->x, p->y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, p->text.c_str(), -1, Adesk::kFalse, lastTextStyle);
+	}
+	// Lines
+	AcGePoint3d pts[2];
+	for(std::vector<CDrawLineParams*>::iterator it2 = lastLines.begin(); it2 != lastLines.end(); it2++)
+	{
+		CDrawLineParams* p = *it2;
+		pts[0] = AcGePoint3d(p->x1, p->y1, 0.0);
+		pts[1] = AcGePoint3d(p->x2, p->y2, 0.0);
+		worldDraw->subEntityTraits().setColor(p->color);
+		worldDraw->geometry().polyline(2, pts, &AcGeVector3d::kZAxis);
+	}
+	
 	worldDraw->geometry().popModelTransform();
 
     return Adesk::kTrue; // Don't call viewportDraw().
@@ -956,4 +1257,70 @@ Acad::ErrorStatus CBOQTable::subGetClassID(CLSID* pClsid) const
 	CLSID clsid = { 0xba77cfff, 0x274, 0x4d4c, { 0xbf, 0xe2, 0x64, 0xa5, 0x73, 0x1b, 0xad, 0x37 } };
     *pClsid = clsid;
     return Acad::eOk;
+}
+
+const std::vector<CBOQTable::ColumnType> CBOQTable::ParseColumns(const ACHAR* columns) const
+{
+	assertReadEnabled();
+
+	// Column definition text
+	// [M] Pos marker
+	// [MM] Pos marker with double digits
+	// [N] Bar count
+	// [D] Bar diameter
+	// [L] Length
+	// [SH] Shape
+	// [TL] Total length
+	// e.g. [MM][D][N][L][SH][TL]
+
+	std::vector<CBOQTable::ColumnType> list;
+
+	// First pass: separate parts
+	std::wstring str;
+	if(columns != NULL)
+		str.assign(columns);
+	std::wstring part;
+	bool indeco = false;
+	for(unsigned int i = 0; i < str.length(); i++)
+	{
+		wchar_t c = str.at(i);
+		if((!indeco && c == L'[') || (indeco && (c == L']')) || (i == str.length() - 1))
+		{
+			if((i == str.length() - 1) && (c != L'[') && (c != L']'))
+			{
+				part += c;
+			}
+			if(indeco && !part.empty())
+			{
+				CBOQTable::ColumnType type = CBOQTable::NONE;
+
+				if(part == L"M")
+					type = CBOQTable::POS;
+				else if(part == L"MM")
+					type = CBOQTable::POSDD;
+				else if(part == L"N")
+					type = CBOQTable::COUNT;
+				else if(part == L"D")
+					type = CBOQTable::DIAMETER;
+				else if(part == L"L")
+					type = CBOQTable::LENGTH;
+				else if(part == L"SH")
+					type = CBOQTable::SHAPE;
+				else if(part == L"TL")
+					type = CBOQTable::TOTALLENGTH;
+
+				if(type != CBOQTable::NONE)
+					list.push_back(type);
+			}
+			indeco = (c == L'[');
+
+			part.clear();
+		}
+		else
+		{
+			part += c;
+		}
+	}
+
+	return list;
 }

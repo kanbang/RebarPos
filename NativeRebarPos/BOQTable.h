@@ -9,7 +9,10 @@
 #pragma warning( pop )
 
 #include <vector>
+#include <map>
 #include "BOQRow.h"
+#include "BOQStyle.h"
+#include "DrawParams.h"
 
 // The following is part of the code used to export an API
 // and/or use the exported API.
@@ -44,6 +47,47 @@ public:
     CBOQTable();
     virtual ~CBOQTable();
        
+public:
+	enum ColumnType
+	{ 
+		NONE = 0,
+		POS = 1,
+		POSDD = 2,
+		COUNT = 3,
+		DIAMETER = 4,
+		LENGTH = 5,
+		SHAPE = 6,
+		TOTALLENGTH = 7
+	};
+
+private:
+	/// Used to cache last draw params
+	mutable Adesk::Int32 lastPrecision;
+
+	mutable CBOQStyle::DrawingUnits lastDisplayUnit;
+
+	mutable ACHAR* lastColumns;
+
+	mutable Adesk::UInt16 lastTextColor;
+	mutable Adesk::UInt16 lastPosColor;
+	mutable Adesk::UInt16 lastLineColor;
+	mutable Adesk::UInt16 lastBorderColor;
+	mutable Adesk::UInt16 lastHeadingColor;
+	mutable Adesk::UInt16 lastFootingColor;
+
+	mutable ACHAR* lastHeading;
+	mutable ACHAR* lastFooting;
+
+    mutable AcGiTextStyle lastTextStyle;
+    mutable AcGiTextStyle lastHeadingStyle;
+
+	mutable double lastHeadingScale;
+	mutable double lastRowSpacing;
+
+	mutable std::vector<CDrawTextParams*> lastTexts;
+	mutable std::vector<CDrawLineParams*> lastLines;
+	mutable std::vector<CDrawShapeParams*> lastShapes;
+
 private:
 	/// Property backing fields
 	AcGeVector3d m_Direction, m_Up, m_Normal;
@@ -56,6 +100,21 @@ private:
 	AcDbHardPointerId m_StyleID;
 
 	RowList m_List;
+
+	/// Locals
+	mutable bool isModified;
+
+protected:
+	/// Calculates table when modified.
+	const void Calculate(void) const;
+
+public:
+	/// Forces a view update.
+	const void Update(void);
+
+private:
+	/// Parses column definition text
+	const std::vector<ColumnType> ParseColumns(const ACHAR* columns) const;
 
 public:
 	/// Get direction vector

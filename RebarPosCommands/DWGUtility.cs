@@ -300,9 +300,10 @@ namespace RebarPosCommands
                     {
                         BOQStyle style = new BOQStyle();
                         style.Name = "TableStyle1";
-                        style.Columns = "[M][N][\"T\":D][L][DL]";
+                        style.Columns = "[M][N][D][L][TL]";
                         style.TextStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Style", "leroy.shx", 0.7);
                         style.HeadingStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Heading Style", "simplxtw.shx", 1.0);
+                        style.Precision = 2;
                         dict.UpgradeOpen();
                         id = dict.SetAt("*", style);
                         dict.DowngradeOpen();

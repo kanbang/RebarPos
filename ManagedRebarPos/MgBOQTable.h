@@ -86,6 +86,7 @@ namespace OZOZ
 
 			public:
 				void Add(int pos, int count, double diameter, double length1, double length2, bool isVarLength, Autodesk::AutoCAD::DatabaseServices::ObjectId shapeId);
+				void Add(int pos, int count, double diameter, double length, Autodesk::AutoCAD::DatabaseServices::ObjectId shapeId);
 				property int Count { int get(); }
 				property BOQRow^ default[int] { BOQRow^ get(int index); void set(int index, BOQRow^ value); }
 				void Remove(int index);
