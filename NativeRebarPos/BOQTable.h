@@ -30,7 +30,7 @@ typedef std::vector<CBOQRow*>::iterator RowListIt;
 typedef std::vector<CBOQRow*>::const_iterator RowListConstIt;
 
 /// ---------------------------------------------------------------------------
-/// The CBOQTable represents the BOQ list of rebar marker in the drawing.
+/// The CBOQTable represents the BOQ list of rebar markers in the drawing.
 /// ---------------------------------------------------------------------------
 class DLLIMPEXP CBOQTable : public  AcDbEntity
 {

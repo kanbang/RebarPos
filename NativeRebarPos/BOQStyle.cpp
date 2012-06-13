@@ -5,6 +5,7 @@
 #include "StdAfx.h"
 
 #include "BOQStyle.h"
+#include "Utility.h"
 
 //-----------------------------------------------------------------------------
 Adesk::UInt32 CBOQStyle::kCurrentVersionNumber = 1;
@@ -23,7 +24,9 @@ ACRX_DXF_DEFINE_MEMBERS(CBOQStyle, AcDbObject,
 CBOQStyle::CBOQStyle () : m_Name(NULL), m_Precision(0),	m_DisplayUnit(CBOQStyle::MM), m_Columns(NULL),
 	m_TextColor(2), m_PosColor(4), m_LineColor(1), m_BorderColor(33), m_HeadingColor(9), m_FootingColor(9),
 	m_TextStyleId(AcDbObjectId::kNull), m_HeadingStyleId(AcDbObjectId::kNull),
-	m_HeadingScale(1.5), m_RowSpacing(0.2), m_Heading(NULL), m_Footing(NULL)
+	m_HeadingScale(1.5), m_RowSpacing(0.2), m_Heading(NULL), m_Footing(NULL),
+	m_PosLabel(NULL), m_CountLabel(NULL), m_DiameterLabel(NULL), m_LengthLabel(NULL), m_ShapeLabel(NULL),
+	m_TotalLengthLabel(NULL), m_DiameterLengthLabel(NULL), m_UnitWeightLabel(NULL), m_WeightLabel(NULL), m_GrossWeightLabel(NULL)
 { }
 
 CBOQStyle::~CBOQStyle () 
@@ -32,6 +35,17 @@ CBOQStyle::~CBOQStyle ()
 	acutDelString(m_Columns);
 	acutDelString(m_Heading);
 	acutDelString(m_Footing);
+
+	acutDelString(m_PosLabel);
+	acutDelString(m_CountLabel);
+	acutDelString(m_DiameterLabel);
+	acutDelString(m_LengthLabel);
+	acutDelString(m_ShapeLabel);
+	acutDelString(m_TotalLengthLabel);
+	acutDelString(m_DiameterLengthLabel);
+	acutDelString(m_UnitWeightLabel);
+	acutDelString(m_WeightLabel);
+	acutDelString(m_GrossWeightLabel);
 }
 
 //*************************************************************************
@@ -253,6 +267,29 @@ Acad::ErrorStatus CBOQStyle::setRowSpacing(const double newVal)
 	return Acad::eOk;
 }
 
+// Get labels
+const ACHAR* CBOQStyle::PosLabel(void) const            { assertReadEnabled(); return m_PosLabel; }
+const ACHAR* CBOQStyle::CountLabel(void) const          { assertReadEnabled(); return m_CountLabel; }
+const ACHAR* CBOQStyle::DiameterLabel(void) const       { assertReadEnabled(); return m_DiameterLabel; }
+const ACHAR* CBOQStyle::LengthLabel(void) const         { assertReadEnabled(); return m_LengthLabel; }
+const ACHAR* CBOQStyle::ShapeLabel(void) const          { assertReadEnabled(); return m_ShapeLabel; }
+const ACHAR* CBOQStyle::TotalLengthLabel(void) const    { assertReadEnabled(); return m_TotalLengthLabel; }
+const ACHAR* CBOQStyle::DiameterLengthLabel(void) const { assertReadEnabled(); return m_DiameterLengthLabel; }
+const ACHAR* CBOQStyle::UnitWeightLabel(void) const     { assertReadEnabled(); return m_UnitWeightLabel; }
+const ACHAR* CBOQStyle::WeightLabel(void) const         { assertReadEnabled(); return m_WeightLabel; }
+const ACHAR* CBOQStyle::GrossWeightLabel(void) const    { assertReadEnabled(); return m_GrossWeightLabel; }
+// Set labels
+Acad::ErrorStatus CBOQStyle::setPosLabel(const ACHAR* newVal)            { assertWriteEnabled(); acutDelString(m_PosLabel); acutUpdString(newVal, m_PosLabel); return Acad::eOk; }
+Acad::ErrorStatus CBOQStyle::setCountLabel(const ACHAR* newVal)          { assertWriteEnabled(); acutDelString(m_CountLabel); acutUpdString(newVal, m_CountLabel); return Acad::eOk; }
+Acad::ErrorStatus CBOQStyle::setDiameterLabel(const ACHAR* newVal)       { assertWriteEnabled(); acutDelString(m_DiameterLabel); acutUpdString(newVal, m_DiameterLabel); return Acad::eOk; }
+Acad::ErrorStatus CBOQStyle::setLengthLabel(const ACHAR* newVal)         { assertWriteEnabled(); acutDelString(m_LengthLabel); acutUpdString(newVal, m_LengthLabel); return Acad::eOk; }
+Acad::ErrorStatus CBOQStyle::setShapeLabel(const ACHAR* newVal)          { assertWriteEnabled(); acutDelString(m_ShapeLabel); acutUpdString(newVal, m_ShapeLabel); return Acad::eOk; }
+Acad::ErrorStatus CBOQStyle::setTotalLengthLabel(const ACHAR* newVal)    { assertWriteEnabled(); acutDelString(m_TotalLengthLabel); acutUpdString(newVal, m_TotalLengthLabel); return Acad::eOk; }
+Acad::ErrorStatus CBOQStyle::setDiameterLengthLabel(const ACHAR* newVal) { assertWriteEnabled(); acutDelString(m_DiameterLengthLabel); acutUpdString(newVal, m_DiameterLengthLabel); return Acad::eOk; }
+Acad::ErrorStatus CBOQStyle::setUnitWeightLabel(const ACHAR* newVal)     { assertWriteEnabled(); acutDelString(m_UnitWeightLabel); acutUpdString(newVal, m_UnitWeightLabel); return Acad::eOk; }
+Acad::ErrorStatus CBOQStyle::setWeightLabel(const ACHAR* newVal)         { assertWriteEnabled(); acutDelString(m_WeightLabel); acutUpdString(newVal, m_WeightLabel); return Acad::eOk; }
+Acad::ErrorStatus CBOQStyle::setGrossWeightLabel(const ACHAR* newVal)    { assertWriteEnabled(); acutDelString(m_GrossWeightLabel); acutUpdString(newVal, m_GrossWeightLabel); return Acad::eOk; }
+
 //*************************************************************************
 // Overrides
 //*************************************************************************
@@ -294,6 +331,18 @@ Acad::ErrorStatus CBOQStyle::dwgOutFields(AcDbDwgFiler *pFiler) const
     pFiler->writeUInt16(m_BorderColor);
     pFiler->writeUInt16(m_HeadingColor);
     pFiler->writeUInt16(m_FootingColor);
+
+	// Labels
+	if (m_PosLabel) pFiler->writeString(m_PosLabel); else pFiler->writeString(_T(""));
+	if (m_CountLabel) pFiler->writeString(m_CountLabel); else pFiler->writeString(_T(""));
+	if (m_DiameterLabel) pFiler->writeString(m_DiameterLabel); else pFiler->writeString(_T(""));
+	if (m_LengthLabel) pFiler->writeString(m_LengthLabel); else pFiler->writeString(_T(""));
+	if (m_ShapeLabel) pFiler->writeString(m_ShapeLabel); else pFiler->writeString(_T(""));
+	if (m_TotalLengthLabel) pFiler->writeString(m_TotalLengthLabel); else pFiler->writeString(_T(""));
+	if (m_DiameterLengthLabel) pFiler->writeString(m_DiameterLengthLabel); else pFiler->writeString(_T(""));
+	if (m_UnitWeightLabel) pFiler->writeString(m_UnitWeightLabel); else pFiler->writeString(_T(""));
+	if (m_WeightLabel) pFiler->writeString(m_WeightLabel); else pFiler->writeString(_T(""));
+	if (m_GrossWeightLabel) pFiler->writeString(m_GrossWeightLabel); else pFiler->writeString(_T(""));
 
     // Scales
     pFiler->writeDouble(m_HeadingScale);
@@ -349,12 +398,25 @@ Acad::ErrorStatus CBOQStyle::dwgInFields(AcDbDwgFiler *pFiler)
 
 		pFiler->readString(&m_Columns);
 
+		// Columns
         pFiler->readUInt16(&m_TextColor);
         pFiler->readUInt16(&m_PosColor);
         pFiler->readUInt16(&m_LineColor);
         pFiler->readUInt16(&m_BorderColor);
         pFiler->readUInt16(&m_HeadingColor);
         pFiler->readUInt16(&m_FootingColor);
+
+		// Labels
+		pFiler->readString(&m_PosLabel);
+		pFiler->readString(&m_CountLabel);
+		pFiler->readString(&m_DiameterLabel);
+		pFiler->readString(&m_LengthLabel);
+		pFiler->readString(&m_ShapeLabel);
+		pFiler->readString(&m_TotalLengthLabel);
+		pFiler->readString(&m_DiameterLengthLabel);
+		pFiler->readString(&m_UnitWeightLabel);
+		pFiler->readString(&m_WeightLabel);
+		pFiler->readString(&m_GrossWeightLabel);
 
         pFiler->readDouble(&m_HeadingScale);
         pFiler->readDouble(&m_RowSpacing);
@@ -392,39 +454,51 @@ Acad::ErrorStatus CBOQStyle::dxfOutFields(AcDbDxfFiler *pFiler) const
 		pFiler->writeString(AcDb::kDxfXTextString, m_Name);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString, _T(""));
-	pFiler->writeInt32(AcDb::kDxfInt32 + 1, m_Precision);
-	pFiler->writeInt32(AcDb::kDxfInt32 + 2, m_DisplayUnit);
+	pFiler->writeInt32(AcDb::kDxfInt32, m_Precision);
+	pFiler->writeInt32(AcDb::kDxfInt32, m_DisplayUnit);
 
 	if(m_Columns)
-		pFiler->writeString(AcDb::kDxfXTextString + 1, m_Columns);
+		pFiler->writeString(AcDb::kDxfXTextString, m_Columns);
 	else
-		pFiler->writeString(AcDb::kDxfXTextString + 1, _T(""));
+		pFiler->writeString(AcDb::kDxfXTextString, _T(""));
 
     // Colors
     pFiler->writeUInt16(AcDb::kDxfXInt16, m_TextColor);
-    pFiler->writeUInt16(AcDb::kDxfXInt16 + 1, m_PosColor);
-    pFiler->writeUInt16(AcDb::kDxfXInt16 + 2, m_LineColor);
-    pFiler->writeUInt16(AcDb::kDxfXInt16 + 3, m_BorderColor);
-    pFiler->writeUInt16(AcDb::kDxfXInt16 + 4, m_HeadingColor);
-    pFiler->writeUInt16(AcDb::kDxfXInt16 + 5, m_FootingColor);
+    pFiler->writeUInt16(AcDb::kDxfXInt16, m_PosColor);
+    pFiler->writeUInt16(AcDb::kDxfXInt16, m_LineColor);
+    pFiler->writeUInt16(AcDb::kDxfXInt16, m_BorderColor);
+    pFiler->writeUInt16(AcDb::kDxfXInt16, m_HeadingColor);
+    pFiler->writeUInt16(AcDb::kDxfXInt16, m_FootingColor);
+
+	// Labels
+	if (m_PosLabel) pFiler->writeString(AcDb::kDxfXTextString, m_PosLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
+	if (m_CountLabel) pFiler->writeString(AcDb::kDxfXTextString, m_CountLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
+	if (m_DiameterLabel) pFiler->writeString(AcDb::kDxfXTextString, m_DiameterLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
+	if (m_LengthLabel) pFiler->writeString(AcDb::kDxfXTextString, m_LengthLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
+	if (m_ShapeLabel) pFiler->writeString(AcDb::kDxfXTextString, m_ShapeLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
+	if (m_TotalLengthLabel) pFiler->writeString(AcDb::kDxfXTextString, m_TotalLengthLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
+	if (m_DiameterLengthLabel) pFiler->writeString(AcDb::kDxfXTextString, m_DiameterLengthLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
+	if (m_UnitWeightLabel) pFiler->writeString(AcDb::kDxfXTextString, m_UnitWeightLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
+	if (m_WeightLabel) pFiler->writeString(AcDb::kDxfXTextString, m_WeightLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
+	if (m_GrossWeightLabel) pFiler->writeString(AcDb::kDxfXTextString, m_GrossWeightLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
 
     // Note scale
     pFiler->writeDouble(AcDb::kDxfXReal, m_HeadingScale);
-    pFiler->writeDouble(AcDb::kDxfXReal + 1, m_RowSpacing);
+    pFiler->writeDouble(AcDb::kDxfXReal, m_RowSpacing);
 
 	// Texts
 	if (m_Heading)
-		pFiler->writeString(AcDb::kDxfXTextString + 2, m_Heading);
+		pFiler->writeString(AcDb::kDxfXTextString, m_Heading);
 	else
-		pFiler->writeString(AcDb::kDxfXTextString + 2, _T(""));
+		pFiler->writeString(AcDb::kDxfXTextString, _T(""));
 	if (m_Footing)
-		pFiler->writeString(AcDb::kDxfXTextString + 3, m_Footing);
+		pFiler->writeString(AcDb::kDxfXTextString, m_Footing);
 	else
-		pFiler->writeString(AcDb::kDxfXTextString + 3, _T(""));
+		pFiler->writeString(AcDb::kDxfXTextString, _T(""));
 
     // Styles
     pFiler->writeItem(AcDb::kDxfHardPointerId, m_TextStyleId);
-    pFiler->writeItem(AcDb::kDxfHardPointerId + 1, m_HeadingStyleId);
+    pFiler->writeItem(AcDb::kDxfHardPointerId, m_HeadingStyleId);
 
 	return pFiler->filerStatus();
 }
@@ -463,6 +537,16 @@ Acad::ErrorStatus CBOQStyle::dxfInFields(AcDbDxfFiler *pFiler)
 	Adesk::UInt16 t_BorderColor = 0;
 	Adesk::UInt16 t_HeadingColor = 0;
 	Adesk::UInt16 t_FootingColor = 0;
+	ACHAR* t_PosLabel = NULL;
+	ACHAR* t_CountLabel = NULL;
+	ACHAR* t_DiameterLabel = NULL;
+	ACHAR* t_LengthLabel = NULL;
+	ACHAR* t_ShapeLabel = NULL;
+	ACHAR* t_TotalLengthLabel = NULL;
+	ACHAR* t_DiameterLengthLabel = NULL;
+	ACHAR* t_UnitWeightLabel = NULL;
+	ACHAR* t_WeightLabel = NULL;
+	ACHAR* t_GrossWeightLabel = NULL;
 	double t_HeadingScale = 0;
 	double t_RowSpacing = 0;
 	ACHAR* t_Heading = NULL;
@@ -470,87 +554,51 @@ Acad::ErrorStatus CBOQStyle::dxfInFields(AcDbDxfFiler *pFiler)
 	AcDbObjectId t_TextStyleId = AcDbObjectId::kNull;
 	AcDbObjectId t_HeadingStyleId = AcDbObjectId::kNull;
 
-    while ((es == Acad::eOk) && ((es = pFiler->readResBuf(&rb)) == Acad::eOk))
-    {
-        switch (rb.restype) 
-		{
-        case AcDb::kDxfXTextString:
-            acutUpdString(rb.resval.rstring, t_Name);
-            break;
-        case AcDb::kDxfInt32 + 1:
-			t_Precision = rb.resval.rlong;
-            break;
-        case AcDb::kDxfInt32 + 2:
-            t_DisplayUnit = rb.resval.rlong;
-            break;
-        case AcDb::kDxfXTextString + 1:
-			acutUpdString(rb.resval.rstring, t_Columns);
-			break;
-		case AcDb::kDxfXInt16:
-			t_TextColor = rb.resval.rint;
-			break;
-        case AcDb::kDxfXInt16 + 1:
-			t_PosColor = rb.resval.rint;
-			break;
-        case AcDb::kDxfXInt16 + 2:
-			t_LineColor = rb.resval.rint;
-			break;
-        case AcDb::kDxfXInt16 + 3:
-			t_BorderColor = rb.resval.rint;
-			break;
-        case AcDb::kDxfXInt16 + 4:
-			t_HeadingColor = rb.resval.rint;
-			break;
-        case AcDb::kDxfXInt16 + 5:
-			t_FootingColor = rb.resval.rint;
-			break;
-        case AcDb::kDxfXReal:
-			t_HeadingScale = rb.resval.rreal;
-			break;
-        case AcDb::kDxfXReal + 1:
-			t_RowSpacing = rb.resval.rreal;
-			break;
-        case AcDb::kDxfXTextString + 2:
-			acutUpdString(rb.resval.rstring, t_Heading);
-			break;
-        case AcDb::kDxfXTextString + 3:
-			acutUpdString(rb.resval.rstring, t_Footing);
-			break;
-        case AcDb::kDxfHardPointerId:
-			acdbGetObjectId(t_TextStyleId, rb.resval.rlname);
-			break;
-        case AcDb::kDxfHardPointerId + 1:
-			acdbGetObjectId(t_HeadingStyleId, rb.resval.rlname);
-			break;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("name"), t_Name)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("prevision"), t_Precision)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("display unit"), t_DisplayUnit)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("columns"), t_Columns)) != Acad::eOk) return es;
 
-        default:
-            // An unrecognized group. Push it back so that
-            // the subclass can read it again.
-            pFiler->pushBackItem();
-            es = Acad::eEndOfFile;
-            break;
-        }
-    }
+	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("text color"), t_TextColor)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("pos color"), t_PosColor)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("line color"), t_LineColor)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("border color"), t_BorderColor)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("heading color"), t_HeadingColor)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("footing color"), t_FootingColor)) != Acad::eOk) return es;
 
-    // At this point the es variable must contain eEndOfFile
-    // - either from readResBuf() or from pushback. If not,
-    // it indicates that an error happened and we should
-    // return immediately.
-    //
-    if (es != Acad::eEndOfFile)
-        return Acad::eInvalidResBuf;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("pos label"), t_PosLabel)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("count label"), t_CountLabel)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("diameter label"), t_DiameterLabel)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("length label"), t_LengthLabel)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("shape label"), t_ShapeLabel)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("total length label"), t_TotalLengthLabel)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("diameter length label"), t_DiameterLengthLabel)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("unit weight label"), t_UnitWeightLabel)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("weight label"), t_WeightLabel)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("gross weight label"), t_GrossWeightLabel)) != Acad::eOk) return es;
+
+	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("heading scale"), t_HeadingScale)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("row spacing"), t_RowSpacing)) != Acad::eOk) return es;
+
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("heading"), t_Heading)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("footing"), t_Footing)) != Acad::eOk) return es;
+
+	if((es = Utility::ReadDXFObjectId(pFiler, AcDb::kDxfHardPointerId, _T("text style"), t_TextStyleId)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFObjectId(pFiler, AcDb::kDxfHardPointerId, _T("heading style"), t_HeadingStyleId)) != Acad::eOk) return es;
 
 	// Successfully read DXF codes; set object properties.
 	setName(t_Name);
 	m_Precision = t_Precision;
     m_DisplayUnit = (DrawingUnits)t_DisplayUnit;
 	setColumns(t_Columns);
+
 	m_TextColor = t_TextColor;
 	m_PosColor = t_PosColor;
 	m_LineColor = t_LineColor;
 	m_BorderColor = t_BorderColor;
 	m_HeadingColor = t_HeadingColor;
 	m_FootingColor = t_FootingColor;
+
 	m_HeadingScale = t_HeadingScale;
 	m_RowSpacing = t_RowSpacing;
 	setHeading(t_Heading);
@@ -562,6 +610,17 @@ Acad::ErrorStatus CBOQStyle::dxfInFields(AcDbDxfFiler *pFiler)
 	acutDelString(t_Columns);
 	acutDelString(t_Heading);
 	acutDelString(t_Footing);
+
+	acutDelString(t_PosLabel);
+	acutDelString(t_CountLabel);
+	acutDelString(t_DiameterLabel);
+	acutDelString(t_LengthLabel);
+	acutDelString(t_ShapeLabel);
+	acutDelString(t_TotalLengthLabel);
+	acutDelString(t_DiameterLengthLabel);
+	acutDelString(t_UnitWeightLabel);
+	acutDelString(t_WeightLabel);
+	acutDelString(t_GrossWeightLabel);
 
 	return es;
 }

@@ -67,6 +67,17 @@ protected:
 	ACHAR* m_Heading;
 	ACHAR* m_Footing;
 
+	ACHAR* m_PosLabel;
+	ACHAR* m_CountLabel;
+	ACHAR* m_DiameterLabel;
+	ACHAR* m_LengthLabel;
+	ACHAR* m_ShapeLabel;
+	ACHAR* m_TotalLengthLabel;
+	ACHAR* m_DiameterLengthLabel;
+	ACHAR* m_UnitWeightLabel;
+	ACHAR* m_WeightLabel;
+	ACHAR* m_GrossWeightLabel;
+
     AcDbHardPointerId m_TextStyleId;
     AcDbHardPointerId m_HeadingStyleId;
 
@@ -125,6 +136,29 @@ public:
 	/// Gets or sets heading text
 	const ACHAR* Footing(void) const;
 	Acad::ErrorStatus setFooting(const ACHAR* newVal);
+
+	// Get labels
+	const ACHAR* PosLabel(void) const;
+	const ACHAR* CountLabel(void) const;
+	const ACHAR* DiameterLabel(void) const;
+	const ACHAR* LengthLabel(void) const;
+	const ACHAR* ShapeLabel(void) const;
+	const ACHAR* TotalLengthLabel(void) const;
+	const ACHAR* DiameterLengthLabel(void) const;
+	const ACHAR* UnitWeightLabel(void) const;
+	const ACHAR* WeightLabel(void) const;
+	const ACHAR* GrossWeightLabel(void) const;
+	// Set labels
+	Acad::ErrorStatus setPosLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setCountLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setDiameterLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setLengthLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setShapeLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setTotalLengthLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setDiameterLengthLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setUnitWeightLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setWeightLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setGrossWeightLabel(const ACHAR* newVal);
 
 	/// Gets or sets pointer to the text style.
 	const AcDbObjectId& TextStyleId(void) const;
