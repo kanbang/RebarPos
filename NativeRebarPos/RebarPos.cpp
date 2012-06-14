@@ -847,6 +847,8 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 		worldDraw->subEntityTraits().setColor(p.color);
 		worldDraw->geometry().text(AcGePoint3d(p.x, p.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, p.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
 	}
+	// Reset transform
+	worldDraw->geometry().popModelTransform();
 
 	// Transform to match note orientation
 	worldDraw->geometry().pushModelTransform(noteTrans);
