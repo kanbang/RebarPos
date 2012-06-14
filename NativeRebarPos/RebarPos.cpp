@@ -1707,12 +1707,12 @@ Acad::ErrorStatus CRebarPos::subWblockClone(AcRxObject*    pOwner,
     return Acad::eOk;
 }
 
-//return the CLSID of the class here
+// Return the CLSID of the class here
 Acad::ErrorStatus CRebarPos::subGetClassID(CLSID* pClsid) const
 {
     assertReadEnabled();
 	// See the interface definition file for the CLASS ID
-	CLSID clsid = {0x97CAC17D,0xB1C7,0x49ca,{0x8D,0x57,0xD3,0xFF,0x49,0x18,0x60,0xFF}};
+	CLSID clsid = {0x97CAC17D, 0xB1C7, 0x49ca, { 0x8D, 0x57, 0xD3, 0xFF, 0x49, 0x18, 0x60, 0xFF}};
     *pClsid = clsid;
     return Acad::eOk;
 }

@@ -1249,12 +1249,12 @@ Acad::ErrorStatus CBOQTable::subWblockClone(AcRxObject*    pOwner,
     return Acad::eOk;
 }
 
-//return the CLSID of the class here
+// Return the CLSID of the class here
 Acad::ErrorStatus CBOQTable::subGetClassID(CLSID* pClsid) const
 {
     assertReadEnabled();
 	// See the interface definition file for the CLASS ID
-	CLSID clsid = { 0xba77cfff, 0x274, 0x4d4c, { 0xbf, 0xe2, 0x64, 0xa5, 0x73, 0x1b, 0xad, 0x37 } };
+	CLSID clsid = { 0xba77cfff, 0x0274, 0x4d4c, { 0xbf, 0xe2, 0x64, 0xa5, 0x73, 0x1b, 0xad, 0x37 } };
     *pClsid = clsid;
     return Acad::eOk;
 }

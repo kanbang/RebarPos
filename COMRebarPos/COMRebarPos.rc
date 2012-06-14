@@ -110,7 +110,10 @@ END
 //
 // Generated from the TEXTINCLUDE 3 resource.
 //
-1 TYPELIB "COMRebarPos.tlb"
+3 TEXTINCLUDE 
+BEGIN
+    "1 TYPELIB ""COMRebarPos.tlb""\r\0"
+END
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
