@@ -311,3 +311,17 @@ const Acad::ErrorStatus Utility::ReadDXFObjectId(AcDbDxfFiler* pFiler, const sho
 	}
 	return es;
 }
+
+std::vector<std::wstring> Utility::SplitString(const std::wstring& s, wchar_t delim)
+{
+	std::vector<std::wstring> elems;
+
+	std::wstringstream ss(s);
+	std::wstring item;
+	while(std::getline(ss, item, delim)) 
+	{
+		elems.push_back(item);
+	}
+
+	return elems;
+}

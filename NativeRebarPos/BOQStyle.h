@@ -67,10 +67,23 @@ protected:
 	ACHAR* m_Heading;
 	ACHAR* m_Footing;
 
+	ACHAR* m_PosLabel;
+	ACHAR* m_CountLabel;
+	ACHAR* m_DiameterLabel;
+	ACHAR* m_LengthLabel;
+	ACHAR* m_ShapeLabel;
+	ACHAR* m_TotalLengthLabel;
+	ACHAR* m_DiameterLengthLabel;
+	ACHAR* m_UnitWeightLabel;
+	ACHAR* m_WeightLabel;
+	ACHAR* m_GrossWeightLabel;
+
     AcDbHardPointerId m_TextStyleId;
     AcDbHardPointerId m_HeadingStyleId;
+    AcDbHardPointerId m_FootingStyleId;
 
 	double m_HeadingScale;
+	double m_FootingScale;
 	double m_RowSpacing;
 
 public:
@@ -126,17 +139,48 @@ public:
 	const ACHAR* Footing(void) const;
 	Acad::ErrorStatus setFooting(const ACHAR* newVal);
 
+	// Get labels
+	const ACHAR* PosLabel(void) const;
+	const ACHAR* CountLabel(void) const;
+	const ACHAR* DiameterLabel(void) const;
+	const ACHAR* LengthLabel(void) const;
+	const ACHAR* ShapeLabel(void) const;
+	const ACHAR* TotalLengthLabel(void) const;
+	const ACHAR* DiameterLengthLabel(void) const;
+	const ACHAR* UnitWeightLabel(void) const;
+	const ACHAR* WeightLabel(void) const;
+	const ACHAR* GrossWeightLabel(void) const;
+	// Set labels
+	Acad::ErrorStatus setPosLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setCountLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setDiameterLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setLengthLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setShapeLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setTotalLengthLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setDiameterLengthLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setUnitWeightLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setWeightLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setGrossWeightLabel(const ACHAR* newVal);
+
 	/// Gets or sets pointer to the text style.
 	const AcDbObjectId& TextStyleId(void) const;
 	Acad::ErrorStatus setTextStyleId(const AcDbObjectId& newVal);
 
-	/// Gets or sets pointer to the note style.
+	/// Gets or sets pointer to the heading style.
 	const AcDbObjectId& HeadingStyleId(void) const;
 	Acad::ErrorStatus setHeadingStyleId(const AcDbObjectId& newVal);
 
-	/// Gets or sets the note scale relative to text height.
+	/// Gets or sets pointer to the footing style.
+	const AcDbObjectId& FootingStyleId(void) const;
+	Acad::ErrorStatus setFootingStyleId(const AcDbObjectId& newVal);
+
+	/// Gets or sets the heading scale relative to text height.
 	const double HeadingScale(void) const;
 	Acad::ErrorStatus setHeadingScale(const double newVal);
+
+	/// Gets or sets the footing scale relative to text height.
+	const double FootingScale(void) const;
+	Acad::ErrorStatus setFootingScale(const double newVal);
 
 	/// Gets or sets the row spacing.
 	const double RowSpacing(void) const;

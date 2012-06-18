@@ -4,6 +4,8 @@
 #pragma once
 
 #include <string>
+#include <sstream>
+#include <vector>
 
 namespace Utility
 {
@@ -48,4 +50,7 @@ namespace Utility
 	const Acad::ErrorStatus ReadDXFBool(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, Adesk::Boolean& val);
 	const Acad::ErrorStatus ReadDXFBool(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, bool& val);
 	const Acad::ErrorStatus ReadDXFObjectId(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, AcDbObjectId& val);
+
+	// Split string
+	std::vector<std::wstring> SplitString(const std::wstring& s, wchar_t delim);
 }

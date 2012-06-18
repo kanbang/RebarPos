@@ -299,11 +299,16 @@ namespace RebarPosCommands
                     if (dict.Count == 0)
                     {
                         BOQStyle style = new BOQStyle();
+
                         style.Name = "TableStyle1";
                         style.Columns = "[M][N][D][L][TL]";
                         style.TextStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Style", "leroy.shx", 0.7);
-                        style.HeadingStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Heading Style", "simplxtw.shx", 1.0);
+                        style.HeadingStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Heading Style", "Arial.ttf", 1.0);
+                        style.FootingStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Footing Style", "simplxtw.shx", 1.0);
                         style.Precision = 2;
+                        style.Heading = "Bill of Materials";
+                        style.Footing = "For information only.";
+
                         dict.UpgradeOpen();
                         id = dict.SetAt("*", style);
                         dict.DowngradeOpen();

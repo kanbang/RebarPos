@@ -13,6 +13,7 @@
 #include "BOQRow.h"
 #include "BOQStyle.h"
 #include "DrawParams.h"
+#include "GenericTable.h"
 
 // The following is part of the code used to export an API
 // and/or use the exported API.
@@ -30,9 +31,9 @@ typedef std::vector<CBOQRow*>::iterator RowListIt;
 typedef std::vector<CBOQRow*>::const_iterator RowListConstIt;
 
 /// ---------------------------------------------------------------------------
-/// The CBOQTable represents the BOQ list of rebar marker in the drawing.
+/// The CBOQTable represents the BOQ list of rebar markers in the drawing.
 /// ---------------------------------------------------------------------------
-class DLLIMPEXP CBOQTable : public  AcDbEntity
+class DLLIMPEXP CBOQTable : public  CGenericTable
 {
 public:
 	/// Define additional RTT information for AcRxObject base type.
@@ -61,37 +62,7 @@ public:
 	};
 
 private:
-	/// Used to cache last draw params
-	mutable Adesk::Int32 lastPrecision;
-
-	mutable CBOQStyle::DrawingUnits lastDisplayUnit;
-
-	mutable ACHAR* lastColumns;
-
-	mutable Adesk::UInt16 lastTextColor;
-	mutable Adesk::UInt16 lastPosColor;
-	mutable Adesk::UInt16 lastLineColor;
-	mutable Adesk::UInt16 lastBorderColor;
-	mutable Adesk::UInt16 lastHeadingColor;
-	mutable Adesk::UInt16 lastFootingColor;
-
-	mutable ACHAR* lastHeading;
-	mutable ACHAR* lastFooting;
-
-    mutable AcGiTextStyle lastTextStyle;
-    mutable AcGiTextStyle lastHeadingStyle;
-
-	mutable double lastHeadingScale;
-	mutable double lastRowSpacing;
-
-	mutable std::vector<CDrawTextParams*> lastTexts;
-	mutable std::vector<CDrawLineParams*> lastLines;
-	mutable std::vector<CDrawShapeParams*> lastShapes;
-
-private:
 	/// Property backing fields
-	AcGeVector3d m_Direction, m_Up, m_Normal;
-	AcGePoint3d m_BasePoint;
 	Adesk::Int32 m_Multiplier;
 
 	ACHAR* m_Heading;
@@ -101,41 +72,15 @@ private:
 
 	RowList m_List;
 
-	/// Locals
-	mutable bool isModified;
-
 protected:
 	/// Calculates table when modified.
-	const void Calculate(void) const;
-
-public:
-	/// Forces a view update.
-	const void Update(void);
+	void UpdateTable(void);
 
 private:
 	/// Parses column definition text
 	const std::vector<ColumnType> ParseColumns(const ACHAR* columns) const;
 
 public:
-	/// Get direction vector
-	const AcGeVector3d& DirectionVector(void) const;
-	/// Get up vector
-	const AcGeVector3d& UpVector(void) const;
-	/// Get normal vector
-	const AcGeVector3d& NormalVector(void) const;
-
-	/// Object scale
-	const double Scale(void) const;
-	Acad::ErrorStatus setScale(const double newVal);
-
-	/// Get extents
-	const double Width(void) const;
-	const double Height(void) const;
-
-	/// Gets or sets the base grip point
-	const AcGePoint3d& BasePoint(void) const;
-	Acad::ErrorStatus setBasePoint(const AcGePoint3d& newVal);
-
 	/// Gets or sets the BOQ multiplier
 	const Adesk::Int32 Multiplier(void) const;
 	Acad::ErrorStatus setMultiplier(const Adesk::Int32 newVal);
@@ -179,35 +124,9 @@ public:
     virtual Acad::ErrorStatus	dxfInFields(AcDbDxfFiler* filer);
     virtual Acad::ErrorStatus	dxfOutFields(AcDbDxfFiler* filer) const;
 
-	virtual void saveAs(AcGiWorldDraw *pWd, AcDb::SaveType saveType);
-
 protected:
 	/// AcDbEntity overrides: geometry
-    virtual Acad::ErrorStatus subGetOsnapPoints(
-        AcDb::OsnapMode       osnapMode,
-        Adesk::GsMarker       gsSelectionMark,
-        const AcGePoint3d&    pickPoint,
-        const AcGePoint3d&    lastPoint,
-        const AcGeMatrix3d&   viewXform,
-        AcGePoint3dArray&     snapPoints,
-        AcDbIntArray&         geomIds) const;
-
-    virtual Acad::ErrorStatus   subGetGripPoints(AcGePoint3dArray&     gripPoints,
-        AcDbIntArray&  osnapModes,
-        AcDbIntArray&  geomIds) const;
-
-    virtual Acad::ErrorStatus   subMoveGripPointsAt(const AcDbIntArray& indices,
-        const AcGeVector3d&     offset);
-
-    virtual Acad::ErrorStatus   subTransformBy(const AcGeMatrix3d& xform);
-
     virtual void                subList() const;
-
-    virtual Acad::ErrorStatus	subExplode(AcDbVoidPtrArray& entitySet) const;
-
-    virtual Adesk::Boolean      subWorldDraw(AcGiWorldDraw*	mode);
-    
-	virtual Acad::ErrorStatus   subGetGeomExtents(AcDbExtents& extents) const;
 
     /// Overridden methods from AcDbObject    
     virtual Acad::ErrorStatus subDeepClone(AcDbObject* pOwnerObject,

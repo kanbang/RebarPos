@@ -329,6 +329,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GenericTable.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\PosGroup.cpp"
 				>
 			</File>
@@ -385,6 +389,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\TableCell.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Utility.cpp"
 				>
 			</File>
@@ -414,6 +422,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GenericTable.h"
+				>
+			</File>
+			<File
 				RelativePath=".\PosGroup.h"
 				>
 			</File>
@@ -431,6 +443,10 @@
 			</File>
 			<File
 				RelativePath=".\StdAfx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TableCell.h"
 				>
 			</File>
 			<File

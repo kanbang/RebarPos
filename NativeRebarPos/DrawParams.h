@@ -34,16 +34,18 @@ struct CDrawTextParams
 public:
 	std::wstring text;
 	unsigned short color;
+	AcDbObjectId styleId;
 	double x;
 	double y;
 	double w;
 	double h;
+	double height;
 
 public:
-	CDrawTextParams() : text(L""), color(0), x(0), y(0), w(0), h(0)
+	CDrawTextParams() : text(L""), color(0), x(0), y(0), w(0), h(0), styleId(AcDbObjectId::kNull), height(0)
 	{ }
 
-	CDrawTextParams(std::wstring _text) : text(_text), color(0), x(0), y(0), w(0), h(0)
+	CDrawTextParams(std::wstring _text) : text(_text), color(0), x(0), y(0), w(0), h(0), styleId(AcDbObjectId::kNull), height(0)
 	{ }
 };
 

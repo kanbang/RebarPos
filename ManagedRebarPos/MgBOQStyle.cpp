@@ -155,6 +155,15 @@ void BOQStyle::HeadingStyleId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setHeadingStyleId(Marshal::FromObjectId(value)));
 }
 
+Autodesk::AutoCAD::DatabaseServices::ObjectId BOQStyle::FootingStyleId::get()
+{
+	return Marshal::ToObjectId (GetImpObj()->FootingStyleId());
+}
+void BOQStyle::FootingStyleId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFootingStyleId(Marshal::FromObjectId(value)));
+}
+
 double BOQStyle::HeadingScale::get()
 {
 	return GetImpObj()->HeadingScale();
@@ -162,6 +171,15 @@ double BOQStyle::HeadingScale::get()
 void BOQStyle::HeadingScale::set(double value)
 {
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setHeadingScale(value));
+}
+
+double BOQStyle::FootingScale::get()
+{
+	return GetImpObj()->FootingScale();
+}
+void BOQStyle::FootingScale::set(double value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFootingScale(value));
 }
 
 double BOQStyle::RowSpacing::get()
