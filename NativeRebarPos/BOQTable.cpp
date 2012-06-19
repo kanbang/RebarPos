@@ -225,26 +225,25 @@ void CBOQTable::UpdateTable(void)
 	}
 
 	// Heading/footing
-	std::vector<std::wstring> headingLines;
-	std::vector<std::wstring> footingLines;
+	int headingLines = 0;
 	if(lastHeading != NULL && lastHeading[0] != _T('\0'))
 	{
-		headingLines = Utility::SplitString(lastHeading, _T('\n'));
+		headingLines = 1;
 	}
+	int footingLines = 0;
 	if(lastFooting != NULL && lastFooting[0] != _T('\0'))
 	{
-		footingLines = Utility::SplitString(lastFooting, _T('\n'));
+		footingLines = 1;
 	}
 
-
 	// Create base table
-	int rows = (int)m_List.size() + (int)headingLines.size() + (int)footingLines.size();
+	int rows = (int)m_List.size() + headingLines + footingLines;
 
 	SetSize(rows, (int)columns.size() + (int)diameters.size() - 1);
 	setCellMargin(lastRowSpacing);
 
 	// Set cell properties
-	for(int i = (int)headingLines.size(); i < (int)headingLines.size() + (int)m_List.size(); i++)
+	for(int i = headingLines; i < headingLines + (int)m_List.size(); i++)
 	{
 		for(int j = 0; j < Columns(); j++)
 		{
@@ -262,7 +261,7 @@ void CBOQTable::UpdateTable(void)
 	int j = 0;
 	for(std::vector<CBOQTable::ColumnType>::iterator tit = columns.begin(); tit != columns.end(); tit++)
 	{
-		int i = (int)headingLines.size();
+		int i = headingLines;
 		CBOQTable::ColumnType type = *tit;
 
 		for(RowListConstIt it = m_List.begin(); it != m_List.end(); it++)
@@ -312,6 +311,7 @@ void CBOQTable::UpdateTable(void)
 			setCellTextColor(i, j + doff, color);
 			setCellTextStyleId(i, j + doff, lastTextStyleId);
 			setCellText(i, j + doff, text);
+			setCellText(i, j + doff, L"A\r\nB\r\nC");
 
 			i++;
 		}
@@ -320,31 +320,23 @@ void CBOQTable::UpdateTable(void)
 
 	// Set heading
 	int hi = 0;
-	for(std::vector<std::wstring>::iterator it = headingLines.begin(); it != headingLines.end(); it++)
-	{
-		setCellText(hi, 0, *it);
-		setCellTextColor(hi, 0, lastHeadingColor);
-		setCellTextStyleId(hi, 0, lastHeadingStyleId);
-		setCellHorizontalAlignment(hi, 0, CTableCell::eCENTER);
-		setCellVerticalAlignment(hi, 0, CTableCell::eCENTER);
-		setCellTextHeight(hi, 0, lastHeadingScale);
-		MergeAcross(hi, 0, Columns());
-		hi++;
-	}
+	setCellText(hi, 0, lastHeading);
+	setCellTextColor(hi, 0, lastHeadingColor);
+	setCellTextStyleId(hi, 0, lastHeadingStyleId);
+	setCellHorizontalAlignment(hi, 0, CTableCell::eCENTER);
+	setCellVerticalAlignment(hi, 0, CTableCell::eCENTER);
+	setCellTextHeight(hi, 0, lastHeadingScale);
+	MergeAcross(hi, 0, Columns());
 
 	// Set footing
-	int fi = (int)m_List.size() + (int)headingLines.size();
-	for(std::vector<std::wstring>::iterator it = footingLines.begin(); it != footingLines.end(); it++)
-	{
-		setCellText(fi, 0, *it);
-		setCellTextColor(fi, 0, lastFootingColor);
-		setCellTextStyleId(fi, 0, lastFootingStyleId);
-		setCellHorizontalAlignment(fi, 0, CTableCell::eNEAR);
-		setCellVerticalAlignment(fi, 0, CTableCell::eCENTER);
-		setCellTextHeight(fi, 0, lastFootingScale);
-		MergeAcross(fi, 0, Columns());
-		fi++;
-	}
+	int fi = (int)m_List.size() + headingLines;
+	setCellText(fi, 0, lastFooting);
+	setCellTextColor(fi, 0, lastFootingColor);
+	setCellTextStyleId(fi, 0, lastFootingStyleId);
+	setCellHorizontalAlignment(fi, 0, CTableCell::eNEAR);
+	setCellVerticalAlignment(fi, 0, CTableCell::eCENTER);
+	setCellTextHeight(fi, 0, lastFootingScale);
+	MergeAcross(fi, 0, Columns());
 
 	acutDelString(lastColumns);
 	acutDelString(lastHeading);
@@ -380,6 +372,13 @@ void CBOQTable::subList() const
 
 	// List all properties
 	// TODO
+}
+
+Acad::ErrorStatus CBOQTable::subExplode(AcDbVoidPtrArray& entitySet) const
+{
+    assertReadEnabled();
+
+	return CGenericTable::subExplode(entitySet);
 }
 
 //*************************************************************************

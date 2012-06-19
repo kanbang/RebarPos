@@ -53,4 +53,5 @@ namespace Utility
 
 	// Split string
 	std::vector<std::wstring> SplitString(const std::wstring& s, wchar_t delim);
+	std::vector<std::wstring> SplitString(const std::wstring& s);
 }

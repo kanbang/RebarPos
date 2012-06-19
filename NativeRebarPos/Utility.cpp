@@ -325,3 +325,8 @@ std::vector<std::wstring> Utility::SplitString(const std::wstring& s, wchar_t de
 
 	return elems;
 }
+
+std::vector<std::wstring> Utility::SplitString(const std::wstring& s)
+{
+	return SplitString(s, L'\n');
+}

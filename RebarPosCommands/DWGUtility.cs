@@ -306,8 +306,8 @@ namespace RebarPosCommands
                         style.HeadingStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Heading Style", "Arial.ttf", 1.0);
                         style.FootingStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Footing Style", "simplxtw.shx", 1.0);
                         style.Precision = 2;
-                        style.Heading = "Bill of Materials";
-                        style.Footing = "For information only.";
+                        style.Heading = "Bill\r\nof\r\nMaterials";
+                        style.Footing = "For information only.\r\nCopyright 2012";
 
                         dict.UpgradeOpen();
                         id = dict.SetAt("*", style);

@@ -93,6 +93,7 @@ Acad::ErrorStatus CGenericTable::setCellMargin(const double newVal)
 {
 	assertWriteEnabled();
 	m_CellMargin = newVal;
+	isModified = true;
 	return Acad::eOk;
 }
 
@@ -117,7 +118,7 @@ const double CGenericTable::Width(void) const
 	double w = 0;
 	for(std::vector<double>::iterator it = columnWidths.begin(); it != columnWidths.end(); it++)
 	{
-		w+= (*it);
+		w += (*it);
 	}
 	return w * m_Direction.length();
 }
@@ -131,7 +132,7 @@ const double CGenericTable::Height(void) const
 	double h = 0;
 	for(std::vector<double>::iterator it = rowHeights.begin(); it != rowHeights.end(); it++)
 	{
-		h+= (*it);
+		h += (*it);
 	}
 	return h * m_Direction.length();
 }
@@ -181,7 +182,11 @@ void CGenericTable::Clear()
 void CGenericTable::setCellText(const int i, const int j, const std::wstring& newVal)
 {
 	CTableCell* cell = m_Cells[i * m_Columns + j];
-	cell->setText(newVal);
+	std::wstring scopy(newVal);
+	Utility::ReplaceString(scopy, L"\r\n", L"\\P");
+	Utility::ReplaceString(scopy, L"\r", L"\\P");
+	Utility::ReplaceString(scopy, L"\n", L"\\P");
+	cell->setText(scopy);
 	isModified = true;
 }
 void CGenericTable::setCellTextColor(const int i, const int j, const unsigned short newVal)
@@ -330,28 +335,24 @@ const void CGenericTable::Calculate(void) const
 		for(int j = 0; j < m_Columns; j++)
 		{
 			CTableCell* cell = m_Cells[i * m_Columns + j];
-			AcGiTextStyle style;
-			if(cell->TextStyleId() != AcDbObjectId::kNull)
-			{
-				Utility::MakeGiTextStyle(style, cell->TextStyleId());
-			}
 
-			// Measure text
-			std::wstring text = cell->Text();
-			if(cell->TextHeight() != 0)
-			{
-				style.setTextSize(cell->TextHeight());
-			}
-			style.loadStyleRec();
-			AcGePoint2d ext;
-			ext = style.extents(cell->Text().c_str(), Adesk::kFalse, -1, Adesk::kFalse);
+			AcDbMText* mtext = new AcDbMText();
+			mtext->setTextStyle(cell->TextStyleId());
+			mtext->setTextHeight(cell->TextHeight());
+			mtext->setContents(cell->Text().c_str());
+
 			CDrawTextParams* param = new CDrawTextParams();
+			param->w = mtext->actualWidth();
+			param->h = mtext->actualHeight();
 			param->text = cell->Text();
 			param->color = cell->TextColor();
-			param->w = ext.x;
-			param->h = ext.y;
 			param->styleId = cell->TextStyleId();
 			param->height = cell->TextHeight();
+			param->halign = (CDrawTextParams::Alignment)cell->HorizontalAlignment();
+			param->valign = (CDrawTextParams::Alignment)cell->VerticalAlignment();
+
+			mtext->close();
+			delete mtext;
 			lastTexts[i * m_Columns + j] = param;
 		}
 	}
@@ -441,19 +442,17 @@ const void CGenericTable::Calculate(void) const
 			}
 			double cx = m_CellMargin;
 			double cy = m_CellMargin;
-			double tw = lastTexts[i * m_Columns + j]->w;
-			double th = lastTexts[i * m_Columns + j]->h;
 			if(m_Cells[i * m_Columns + j]->HorizontalAlignment() == CTableCell::eNEAR)
 			{
 				cx = m_CellMargin;
 			}
 			else if(m_Cells[i * m_Columns + j]->HorizontalAlignment() == CTableCell::eFAR)
 			{
-				cx = w - m_CellMargin - tw;
+				cx = w - m_CellMargin;
 			}
 			else if(m_Cells[i * m_Columns + j]->HorizontalAlignment() == CTableCell::eCENTER)
 			{
-				cx = (w - tw) / 2.0;
+				cx = w / 2.0;
 			}
 			if(m_Cells[i * m_Columns + j]->VerticalAlignment() == CTableCell::eNEAR)
 			{
@@ -461,15 +460,15 @@ const void CGenericTable::Calculate(void) const
 			}
 			else if(m_Cells[i * m_Columns + j]->VerticalAlignment() == CTableCell::eFAR)
 			{
-				cy = h - m_CellMargin - th;
+				cy = h - m_CellMargin;
 			}
 			else if(m_Cells[i * m_Columns + j]->VerticalAlignment() == CTableCell::eCENTER)
 			{
-				cy = (h - th) / 2.0;
+				cy = h / 2.0;
 			}
 
 			lastTexts[i * m_Columns + j]->x = x + cx;
-			lastTexts[i * m_Columns + j]->y = y - h + cy;
+			lastTexts[i * m_Columns + j]->y = y - cy;
 
 			x += columnWidths[j];
 		}
@@ -604,6 +603,89 @@ Acad::ErrorStatus CGenericTable::subTransformBy(const AcGeMatrix3d& xform)
 	return Acad::eOk;
 }
 
+Acad::ErrorStatus CGenericTable::subExplode(AcDbVoidPtrArray& entitySet) const
+{
+    assertReadEnabled();
+
+	if(isModified)
+	{
+		Calculate();
+	}
+
+	if(lastTexts.size() == 0 && lastLines.size() == 0)
+	{
+		return Acad::eInvalidInput;
+	}
+
+	Acad::ErrorStatus es;
+
+	// Transformations
+	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
+	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
+
+	// Texts
+	for(std::vector<CDrawTextParams*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
+	{
+		CDrawTextParams* p = (*it);
+		if(!p->text.empty())
+		{
+			AcDbMText* text = new AcDbMText();
+			text->setTextHeight(p->height);
+			text->setTextStyle(p->styleId);
+			text->setLocation(AcGePoint3d(p->x, p->y, 0));
+			text->setColorIndex(p->color);
+			if(p->halign == CDrawTextParams::eNEAR)
+			{
+				if(p->valign == CDrawTextParams::eNEAR)
+					text->setAttachment(AcDbMText::kTopLeft);
+				else if(p->valign == CDrawTextParams::eCENTER)
+					text->setAttachment(AcDbMText::kMiddleLeft);
+				else if(p->valign == CDrawTextParams::eFAR)
+					text->setAttachment(AcDbMText::kBottomLeft);
+			}
+			else if(p->halign == CDrawTextParams::eCENTER)
+			{
+				if(p->valign == CDrawTextParams::eNEAR)
+					text->setAttachment(AcDbMText::kTopCenter);
+				else if(p->valign == CDrawTextParams::eCENTER)
+					text->setAttachment(AcDbMText::kMiddleCenter);
+				else if(p->valign == CDrawTextParams::eFAR)
+					text->setAttachment(AcDbMText::kBottomCenter);
+			}
+			else if(p->halign == CDrawTextParams::eFAR)
+			{
+				if(p->valign == CDrawTextParams::eNEAR)
+					text->setAttachment(AcDbMText::kTopRight);
+				else if(p->valign == CDrawTextParams::eCENTER)
+					text->setAttachment(AcDbMText::kMiddleRight);
+				else if(p->valign == CDrawTextParams::eFAR)
+					text->setAttachment(AcDbMText::kBottomRight);
+			}
+			text->setContents(p->text.c_str());
+			if((es = text->transformBy(trans)) != Acad::eOk)
+			{
+				return es;
+			}
+			entitySet.append(text);
+		}
+	}
+
+	// Lines
+	for(std::vector<CDrawLineParams*>::iterator it = lastLines.begin(); it != lastLines.end(); it++)
+	{
+		CDrawLineParams* p = (*it);
+		AcDbLine* line = new AcDbLine(AcGePoint3d(p->x1, p->y1, 0), AcGePoint3d(p->x2, p->y2, 0));
+		line->setColorIndex(p->color);
+		if((es = line->transformBy(trans)) != Acad::eOk)
+		{
+			return es;
+		}
+		entitySet.append(line);
+	}
+
+    return Acad::eOk;
+}
+
 Adesk::Boolean CGenericTable::subWorldDraw(AcGiWorldDraw* worldDraw)
 {
     assertReadEnabled();
@@ -622,7 +704,6 @@ Adesk::Boolean CGenericTable::subWorldDraw(AcGiWorldDraw* worldDraw)
 	// Transform to match orientation
 	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
 	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
-	worldDraw->geometry().pushModelTransform(trans);
 
 	worldDraw->subEntityTraits().setSelectionMarker(1);
 
@@ -630,18 +711,42 @@ Adesk::Boolean CGenericTable::subWorldDraw(AcGiWorldDraw* worldDraw)
 	for(std::vector<CDrawTextParams*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
 	{
 		CDrawTextParams* p = (*it);
-		worldDraw->subEntityTraits().setColor(p->color);
-		AcGiTextStyle style;
-		if(p->styleId != AcDbObjectId::kNull)
+		AcDbMText* text = new AcDbMText();
+		text->setTextHeight(p->height);
+		text->setTextStyle(p->styleId);
+		text->setLocation(AcGePoint3d(p->x, p->y, 0));
+		text->setColorIndex(p->color);
+		if(p->halign == CDrawTextParams::eNEAR)
 		{
-			Utility::MakeGiTextStyle(style, p->styleId);
+			if(p->valign == CDrawTextParams::eNEAR)
+				text->setAttachment(AcDbMText::kTopLeft);
+			else if(p->valign == CDrawTextParams::eCENTER)
+				text->setAttachment(AcDbMText::kMiddleLeft);
+			else if(p->valign == CDrawTextParams::eFAR)
+				text->setAttachment(AcDbMText::kBottomLeft);
 		}
-		if(p->height != 0)
+		else if(p->halign == CDrawTextParams::eCENTER)
 		{
-			style.setTextSize(p->height);
+			if(p->valign == CDrawTextParams::eNEAR)
+				text->setAttachment(AcDbMText::kTopCenter);
+			else if(p->valign == CDrawTextParams::eCENTER)
+				text->setAttachment(AcDbMText::kMiddleCenter);
+			else if(p->valign == CDrawTextParams::eFAR)
+				text->setAttachment(AcDbMText::kBottomCenter);
 		}
-		style.loadStyleRec();
-		worldDraw->geometry().text(AcGePoint3d(p->x, p->y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, p->text.c_str(), -1, Adesk::kFalse, style);
+		else if(p->halign == CDrawTextParams::eFAR)
+		{
+			if(p->valign == CDrawTextParams::eNEAR)
+				text->setAttachment(AcDbMText::kTopRight);
+			else if(p->valign == CDrawTextParams::eCENTER)
+				text->setAttachment(AcDbMText::kMiddleRight);
+			else if(p->valign == CDrawTextParams::eFAR)
+				text->setAttachment(AcDbMText::kBottomRight);
+		}
+		text->setContents(p->text.c_str());
+		text->transformBy(trans);
+		worldDraw->geometry().draw(text);
+		delete text;
 	}
 
 	// Draw lines
@@ -649,14 +754,13 @@ Adesk::Boolean CGenericTable::subWorldDraw(AcGiWorldDraw* worldDraw)
 	for(std::vector<CDrawLineParams*>::iterator it = lastLines.begin(); it != lastLines.end(); it++)
 	{
 		CDrawLineParams* p = (*it);
-		pts[0] = AcGePoint3d(p->x1, p->y1, 0.0);
-		pts[1] = AcGePoint3d(p->x2, p->y2, 0.0);
-		worldDraw->subEntityTraits().setColor(p->color);
-		worldDraw->geometry().polyline(2, pts, &AcGeVector3d::kZAxis);
+		AcDbLine* line = new AcDbLine(AcGePoint3d(p->x1, p->y1, 0.0), AcGePoint3d(p->x2, p->y2, 0.0));
+		line->setColorIndex(p->color);
+		line->transformBy(trans);
+		worldDraw->geometry().draw(line);
+		delete line;
 	}
 
-	// Reset transform
-	worldDraw->geometry().popModelTransform();
 
     return Adesk::kTrue; // Don't call viewportDraw().
 }

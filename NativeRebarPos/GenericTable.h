@@ -142,9 +142,9 @@ protected:
         const AcGeVector3d&     offset);
 
     virtual Acad::ErrorStatus   subTransformBy(const AcGeMatrix3d& xform);
-/*
+
     virtual Acad::ErrorStatus	subExplode(AcDbVoidPtrArray& entitySet) const;
-*/
+
     virtual Adesk::Boolean      subWorldDraw(AcGiWorldDraw*	mode);
     
 	virtual Acad::ErrorStatus   subGetGeomExtents(AcDbExtents& extents) const;

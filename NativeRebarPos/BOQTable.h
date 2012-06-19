@@ -128,6 +128,8 @@ protected:
 	/// AcDbEntity overrides: geometry
     virtual void                subList() const;
 
+    virtual Acad::ErrorStatus	subExplode(AcDbVoidPtrArray& entitySet) const;
+
     /// Overridden methods from AcDbObject    
     virtual Acad::ErrorStatus subDeepClone(AcDbObject* pOwnerObject,
         AcDbObject*& pClonedObject,

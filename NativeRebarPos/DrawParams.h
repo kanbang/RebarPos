@@ -32,6 +32,14 @@ public:
 struct CDrawTextParams
 {
 public:
+	enum Alignment
+	{
+		eNEAR = 0,
+		eCENTER = 1,
+		eFAR = 2
+	};
+
+public:
 	std::wstring text;
 	unsigned short color;
 	AcDbObjectId styleId;
@@ -40,12 +48,14 @@ public:
 	double w;
 	double h;
 	double height;
+	Alignment halign;
+	Alignment valign;
 
 public:
-	CDrawTextParams() : text(L""), color(0), x(0), y(0), w(0), h(0), styleId(AcDbObjectId::kNull), height(0)
+	CDrawTextParams() : text(L""), color(0), x(0), y(0), w(0), h(0), styleId(AcDbObjectId::kNull), height(0), halign(eNEAR), valign(eNEAR)
 	{ }
 
-	CDrawTextParams(std::wstring _text) : text(_text), color(0), x(0), y(0), w(0), h(0), styleId(AcDbObjectId::kNull), height(0)
+	CDrawTextParams(std::wstring _text) : text(_text), color(0), x(0), y(0), w(0), h(0), styleId(AcDbObjectId::kNull), height(0), halign(eNEAR), valign(eNEAR)
 	{ }
 };
 
