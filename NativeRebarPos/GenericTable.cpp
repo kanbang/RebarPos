@@ -570,15 +570,26 @@ Acad::ErrorStatus CGenericTable::subGetOsnapPoints(
 {
 	assertReadEnabled();
 
+	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
+	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
+
 	if(osnapMode == AcDb::kOsModeIns)
 	{
 		snapPoints.append(m_BasePoint);
+
+		for(std::vector<AcDbMText*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
+		{
+			AcDbMText* text = (*it);
+			if(text->contents() != NULL && text->contents()[0] != _T('\0'))
+			{
+				AcGePoint3d pt = text->location();
+				pt.transformBy(trans);
+				snapPoints.append(pt);
+			}
+		}
 	}
 	else if(osnapMode == AcDb::kOsModeEnd)
 	{
-		AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
-		trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
-
 		for(std::vector<AcDbLine*>::iterator it = lastLines.begin(); it != lastLines.end(); it++)
 		{
 			AcDbLine* line = (*it);
