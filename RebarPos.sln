@@ -1,16 +1,10 @@
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NativeRebarPos", "NativeRebarPos\NativeRebarPos.vcproj", "{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}"
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NativeRebarPos", "NativeRebarPos\NativeRebarPos.vcxproj", "{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ManagedRebarPos", "ManagedRebarPos\ManagedRebarPos.vcproj", "{D26DC853-A22B-4C5B-810F-F76D1247FA93}"
-	ProjectSection(ProjectDependencies) = postProject
-		{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046} = {473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ManagedRebarPos", "ManagedRebarPos\ManagedRebarPos.vcxproj", "{D26DC853-A22B-4C5B-810F-F76D1247FA93}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "COMRebarPos", "COMRebarPos\COMRebarPos.vcproj", "{06B9D355-F6F9-4029-A614-834774D248C0}"
-	ProjectSection(ProjectDependencies) = postProject
-		{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046} = {473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "COMRebarPos", "COMRebarPos\COMRebarPos.vcxproj", "{06B9D355-F6F9-4029-A614-834774D248C0}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RebarPosMSM", "Setup\RebarPosMSM.vdproj", "{DCA46BD2-BA46-45AF-B78F-CF1A18784AD6}"
 EndProject
@@ -18,7 +12,17 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RebarPosMSI", "Setup\RebarP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RebarPosCommands", "RebarPosCommands\RebarPosCommands.csproj", "{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}"
 EndProject
-Project("{8BC9CEB9-8B4A-11D0-8D11-00A0C91BC942}") = "acad.exe", "..\..\..\..\..\..\..\..\..\Program Files\Autodesk\AutoCAD 2012 - English\acad.exe", "{117AF3E4-7A90-42D7-8FB8-E30BA37BEA46}"
+Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "acad", "..\..\..\..\..\..\..\..\..\Program Files\Autodesk\AutoCAD 2012 - English\acad.exe", "{117AF3E4-7A90-42D7-8FB8-E30BA37BEA46}"
+	ProjectSection(DebuggerProjectSystem) = preProject
+		PortSupplier = 00000000-0000-0000-0000-000000000000
+		Executable = C:\Program Files\Autodesk\AutoCAD 2012 - English\acad.exe
+		RemoteMachine = OOZCITAK
+		StartingDirectory = C:\Program Files\Autodesk\AutoCAD 2012 - English
+		Environment = Default
+		LaunchingEngine = 00000000-0000-0000-0000-000000000000
+		LaunchSQLEngine = No
+		AttachLaunchAction = No
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
