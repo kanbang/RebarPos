@@ -126,9 +126,29 @@ public:
 
 protected:
 	/// AcDbEntity overrides: geometry
+    virtual Acad::ErrorStatus subGetOsnapPoints(
+        AcDb::OsnapMode       osnapMode,
+        Adesk::GsMarker       gsSelectionMark,
+        const AcGePoint3d&    pickPoint,
+        const AcGePoint3d&    lastPoint,
+        const AcGeMatrix3d&   viewXform,
+        AcGePoint3dArray&     snapPoints,
+        AcDbIntArray&         geomIds) const;
+
+    virtual Acad::ErrorStatus   subGetGripPoints(AcGePoint3dArray&     gripPoints,
+        AcDbIntArray&  osnapModes,
+        AcDbIntArray&  geomIds) const;
+
+    virtual Acad::ErrorStatus   subMoveGripPointsAt(const AcDbIntArray& indices,
+        const AcGeVector3d&     offset);
+
+    virtual Acad::ErrorStatus   subTransformBy(const AcGeMatrix3d& xform);
+
     virtual void                subList() const;
 
     virtual Acad::ErrorStatus	subExplode(AcDbVoidPtrArray& entitySet) const;
+
+    virtual Adesk::Boolean      subWorldDraw(AcGiWorldDraw*	mode);
 
     /// Overridden methods from AcDbObject    
     virtual Acad::ErrorStatus subDeepClone(AcDbObject* pOwnerObject,

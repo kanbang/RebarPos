@@ -14,7 +14,7 @@ Adesk::UInt32 CBOQTable::kCurrentVersionNumber = 1;
 // Code for the Class Body. 
 //*************************************************************************
 
-ACRX_DXF_DEFINE_MEMBERS(CBOQTable, AcDbEntity,
+ACRX_DXF_DEFINE_MEMBERS(CBOQTable, CGenericTable,
 	AcDb::kDHL_CURRENT, AcDb::kMReleaseCurrent,
 	AcDbProxyEntity::kAllAllowedBits, BOQTABLE,
 	"OZOZRebarPos\
@@ -345,12 +345,52 @@ void CBOQTable::UpdateTable(void)
 //*************************************************************************
 // Overridden methods from AcDbEntity
 //*************************************************************************
+Acad::ErrorStatus CBOQTable::subGetOsnapPoints(
+    AcDb::OsnapMode       osnapMode,
+    Adesk::GsMarker       gsSelectionMark,
+    const AcGePoint3d&    pickPoint,
+    const AcGePoint3d&    lastPoint,
+    const AcGeMatrix3d&   viewXform,
+    AcGePoint3dArray&     snapPoints,
+    AcDbIntArray&         geomIds) const
+{
+	assertReadEnabled();
+
+	return CGenericTable::subGetOsnapPoints(osnapMode, gsSelectionMark, pickPoint, lastPoint, viewXform, snapPoints, geomIds);
+}
+
+Acad::ErrorStatus CBOQTable::subGetGripPoints(
+    AcGePoint3dArray& gripPoints,
+    AcDbIntArray& osnapModes,
+    AcDbIntArray& geomIds) const
+{
+	assertReadEnabled();
+
+	return CGenericTable::subGetGripPoints(gripPoints, osnapModes, geomIds);
+}
+
+Acad::ErrorStatus CBOQTable::subMoveGripPointsAt(
+    const AcDbIntArray& indices,
+    const AcGeVector3d& offset)
+{
+	assertWriteEnabled();
+
+	return CGenericTable::subMoveGripPointsAt(indices, offset);
+}
+
+Acad::ErrorStatus CBOQTable::subTransformBy(const AcGeMatrix3d& xform)
+{
+	assertWriteEnabled();
+	
+	return CGenericTable::subTransformBy(xform);
+}
+
 void CBOQTable::subList() const
 {
     assertReadEnabled();
 
 	// Call parent first
-    AcDbEntity::subList();
+    CGenericTable::subList();
 
 	// Base point in UCS
     acutPrintf(_T("%18s%16s "), _T(/*MSG0*/""), _T("Base Point:"));
@@ -380,6 +420,13 @@ Acad::ErrorStatus CBOQTable::subExplode(AcDbVoidPtrArray& entitySet) const
 	return CGenericTable::subExplode(entitySet);
 }
 
+Adesk::Boolean CBOQTable::subWorldDraw(AcGiWorldDraw* worldDraw)
+{
+    assertReadEnabled();
+
+	return CGenericTable::subWorldDraw(worldDraw);
+}
+
 //*************************************************************************
 // Overridden methods from AcDbObject
 //*************************************************************************
@@ -390,7 +437,7 @@ Acad::ErrorStatus CBOQTable::dwgOutFields(AcDbDwgFiler* pFiler) const
 
 	// Save parent class information first.
 	Acad::ErrorStatus es;
-	if((es = AcDbEntity::dwgOutFields(pFiler)) != Acad::eOk)
+	if((es = CGenericTable::dwgOutFields(pFiler)) != Acad::eOk)
 		return es;
 
 	// Object version number
@@ -434,7 +481,7 @@ Acad::ErrorStatus CBOQTable::dwgInFields(AcDbDwgFiler* pFiler)
 
 	// Read parent class information first.
 	Acad::ErrorStatus es;
-	if((es = AcDbEntity::dwgInFields(pFiler)) != Acad::eOk)
+	if((es = CGenericTable::dwgInFields(pFiler)) != Acad::eOk)
 		return es;
 
 	// Object version number needs to be read first
@@ -487,7 +534,7 @@ Acad::ErrorStatus CBOQTable::dxfOutFields(AcDbDxfFiler* pFiler) const
 
 	// Save parent class information first.
 	Acad::ErrorStatus es;
-	if((es = AcDbEntity::dxfOutFields(pFiler)) != Acad::eOk)
+	if((es = CGenericTable::dxfOutFields(pFiler)) != Acad::eOk)
 		return es;
 
 	// Subclass
@@ -535,7 +582,7 @@ Acad::ErrorStatus CBOQTable::dxfInFields(AcDbDxfFiler* pFiler)
 
 	// Read parent class information first.
 	Acad::ErrorStatus es;
-	if(((es = AcDbEntity::dxfInFields(pFiler)) != Acad::eOk) || !pFiler->atSubclassData(_T("BOQTable")))
+	if(((es = CGenericTable::dxfInFields(pFiler)) != Acad::eOk) || !pFiler->atSubclassData(_T("BOQTable")))
 		return es;
 
 	resbuf rb;
@@ -747,7 +794,7 @@ Acad::ErrorStatus CBOQTable::subWblockClone(AcRxObject*    pOwner,
     idMap.destDb(pDest);
     idMap.origDb(pOrig);
     if (pDest == pOrig)
-        return AcDbEntity::subWblockClone(pOwner, pClonedObject, idMap, isPrimary);
+        return CGenericTable::subWblockClone(pOwner, pClonedObject, idMap, isPrimary);
 
     // If this is an Xref bind operation and this 
     // entity is in Paper Space,  then we don't want to

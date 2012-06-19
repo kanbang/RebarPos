@@ -62,6 +62,8 @@ private:
 	mutable std::vector<AcDbLine*> lastLines;
 	mutable std::vector<double> columnWidths;
 	mutable std::vector<double> rowHeights;
+	mutable std::vector<double> minColumnWidths;
+	mutable std::vector<double> minRowHeights;
 	mutable bool isModified;
 
 protected:
@@ -92,6 +94,9 @@ public:
 	void MergeAcross(const int i, const int j, const int span = 0);
 	void MergeDown(const int i, const int j, const int span = 0);
 
+	void setMinimumColumnWidth(const int j, const double newVal);
+	void setMinimumRowHeight(const int i, const double newVal);
+
 public:
 	/// Get direction vector
 	const AcGeVector3d& DirectionVector(void) const;
@@ -121,14 +126,13 @@ public:
 	const double Height(void) const;
 
 public:
-/*
 	/// AcDbEntity overrides: database    
     virtual Acad::ErrorStatus	dwgInFields(AcDbDwgFiler* filer);
     virtual Acad::ErrorStatus	dwgOutFields(AcDbDwgFiler* filer) const;
     
     virtual Acad::ErrorStatus	dxfInFields(AcDbDxfFiler* filer);
     virtual Acad::ErrorStatus	dxfOutFields(AcDbDxfFiler* filer) const;
-
+/*
 	virtual void saveAs(AcGiWorldDraw *pWd, AcDb::SaveType saveType);
 */
 protected:

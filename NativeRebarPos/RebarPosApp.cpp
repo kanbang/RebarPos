@@ -6,6 +6,7 @@
 #include "PosGroup.h"
 #include "RebarPos.h"
 #include "BOQStyle.h"
+#include "GenericTable.h"
 #include "BOQTable.h"
 
 // locally defined entry point invoked by Rx.
@@ -23,6 +24,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 		CPosGroup::rxInit();
         CRebarPos::rxInit();
 		CBOQStyle::rxInit();
+		CGenericTable::rxInit();
 		CBOQTable::rxInit();
         acrxBuildClassHierarchy();
 
@@ -40,6 +42,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 
 		// Remove custom classes
 		deleteAcRxClass(CBOQTable::desc());
+		deleteAcRxClass(CGenericTable::desc());
 		deleteAcRxClass(CBOQStyle::desc());
         deleteAcRxClass(CRebarPos::desc());
 		deleteAcRxClass(CPosGroup::desc());
