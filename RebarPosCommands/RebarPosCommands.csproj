@@ -234,7 +234,7 @@
     <None Include="Resources\select.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ManagedRebarPos\ManagedRebarPos.vcxproj">
+    <ProjectReference Include="..\ManagedRebarPos\ManagedRebarPos.vcproj">
       <Project>{D26DC853-A22B-4C5B-810F-F76D1247FA93}</Project>
       <Name>ManagedRebarPos</Name>
     </ProjectReference>
