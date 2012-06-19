@@ -132,9 +132,9 @@ public:
     
     virtual Acad::ErrorStatus	dxfInFields(AcDbDxfFiler* filer);
     virtual Acad::ErrorStatus	dxfOutFields(AcDbDxfFiler* filer) const;
-/*
+
 	virtual void saveAs(AcGiWorldDraw *pWd, AcDb::SaveType saveType);
-*/
+
 protected:
 	/// AcDbEntity overrides: geometry
     virtual Acad::ErrorStatus subGetOsnapPoints(
@@ -160,20 +160,6 @@ protected:
     virtual Adesk::Boolean      subWorldDraw(AcGiWorldDraw*	mode);
     
 	virtual Acad::ErrorStatus   subGetGeomExtents(AcDbExtents& extents) const;
-/*
-    /// Overridden methods from AcDbObject    
-    virtual Acad::ErrorStatus subDeepClone(AcDbObject* pOwnerObject,
-        AcDbObject*& pClonedObject,
-        AcDbIdMapping& idMap,
-        Adesk::Boolean isPrimary
-        = Adesk::kTrue) const;
-    
-    virtual Acad::ErrorStatus subWblockClone(AcRxObject* pOwnerObject,
-        AcDbObject*& pClonedObject,
-        AcDbIdMapping& idMap,
-        Adesk::Boolean isPrimary
-        = Adesk::kTrue) const;
-*/
 
 private:
     // These are here because otherwise dllexport tries to export the

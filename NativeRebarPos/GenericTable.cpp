@@ -1118,3 +1118,41 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
     return es;
 }
 
+
+void CGenericTable::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
+{
+    assertReadEnabled();
+
+    if(worldDraw->regenAbort())
+	{
+        return;
+    }
+
+	// Update if modified
+	if(isModified)
+	{
+		Calculate();
+	}
+
+	// Transform to match orientation
+	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
+	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
+
+	// Draw texts
+	for(std::vector<AcDbMText*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
+	{
+		AcRxObject* obj = (*it)->clone();
+		AcDbMText* text = static_cast<AcDbMText*>(obj);
+		text->transformBy(trans);
+		worldDraw->geometry().draw(text);
+	}
+
+	// Draw lines
+	for(std::vector<AcDbLine*>::iterator it = lastLines.begin(); it != lastLines.end(); it++)
+	{
+		AcRxObject* obj = (*it)->clone();
+		AcDbLine* line = static_cast<AcDbLine*>(obj);
+		line->transformBy(trans);
+		worldDraw->geometry().draw(line);
+	}
+}
