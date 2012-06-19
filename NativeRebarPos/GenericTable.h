@@ -6,6 +6,14 @@
 #include <vector>
 #include <map>
 
+#pragma warning( push )
+#pragma warning( disable : 4005 )
+#pragma warning( disable : 4100 )
+#pragma warning( disable : 4201 )
+#pragma warning( disable : 4512 )
+#include "dbents.h"
+#pragma warning( pop )
+
 #include "TableCell.h"
 #include "DrawParams.h"
 
@@ -50,8 +58,8 @@ private:
 	std::vector<CTableCell*> m_Cells;
 
 	/// Locals
-	mutable std::vector<CDrawTextParams*> lastTexts;
-	mutable std::vector<CDrawLineParams*> lastLines;
+	mutable std::vector<AcDbMText*> lastTexts;
+	mutable std::vector<AcDbLine*> lastLines;
 	mutable std::vector<double> columnWidths;
 	mutable std::vector<double> rowHeights;
 	mutable bool isModified;

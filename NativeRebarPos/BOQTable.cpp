@@ -311,7 +311,6 @@ void CBOQTable::UpdateTable(void)
 			setCellTextColor(i, j + doff, color);
 			setCellTextStyleId(i, j + doff, lastTextStyleId);
 			setCellText(i, j + doff, text);
-			setCellText(i, j + doff, L"A\r\nB\r\nC");
 
 			i++;
 		}
