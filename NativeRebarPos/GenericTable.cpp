@@ -829,14 +829,14 @@ Acad::ErrorStatus CGenericTable::subExplode(AcDbVoidPtrArray& entitySet) const
 Adesk::Boolean CGenericTable::subWorldDraw(AcGiWorldDraw* worldDraw)
 {
     assertReadEnabled();
-
+	
     if(worldDraw->regenAbort())
 	{
         return Adesk::kTrue;
     }
 
 	// Update if modified
-	if(isModified)
+	if(!worldDraw->isDragging() && isModified)
 	{
 		Calculate();
 	}
@@ -846,18 +846,32 @@ Adesk::Boolean CGenericTable::subWorldDraw(AcGiWorldDraw* worldDraw)
 	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
 	worldDraw->geometry().pushModelTransform(trans);
 
-	// Draw texts
-	for(std::vector<AcDbMText*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
+	// Draw outline only if dragging
+	if(worldDraw->isDragging())
 	{
-		AcDbMText* text = (*it);
-		worldDraw->geometry().draw(text);
+		AcGePoint3d pts[5];
+		pts[0] = AcGePoint3d(0.0, 0.0, 0.0);
+		pts[1] = AcGePoint3d(m_Width, 0.0, 0.0);
+		pts[2] = AcGePoint3d(m_Width, -m_Height, 0.0);
+		pts[3] = AcGePoint3d(0.0, -m_Height, 0.0);
+		pts[4] = AcGePoint3d(0.0, 0.0, 0.0);
+		worldDraw->geometry().polyline(5, pts, &AcGeVector3d::kZAxis);
 	}
-
-	// Draw lines
-	for(std::vector<AcDbLine*>::iterator it = lastLines.begin(); it != lastLines.end(); it++)
+	else
 	{
-		AcDbLine* line = (*it);
-		worldDraw->geometry().draw(line);
+		// Draw texts
+		for(std::vector<AcDbMText*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
+		{
+			AcDbMText* text = (*it);
+			worldDraw->geometry().draw(text);
+		}
+
+		// Draw lines
+		for(std::vector<AcDbLine*>::iterator it = lastLines.begin(); it != lastLines.end(); it++)
+		{
+			AcDbLine* line = (*it);
+			worldDraw->geometry().draw(line);
+		}
 	}
 
 	// Reset transform
@@ -925,6 +939,9 @@ Acad::ErrorStatus CGenericTable::dwgOutFields(AcDbDwgFiler* pFiler) const
 	pFiler->writeDouble(m_MaxHeight);
 	pFiler->writeDouble(m_TableSpacing);
 
+	pFiler->writeDouble(m_Width);
+	pFiler->writeDouble(m_Height);
+
 	for(std::vector<CTableCell*>::const_iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
 	{
 		CTableCell* cell = (*it);
@@ -986,6 +1003,9 @@ Acad::ErrorStatus CGenericTable::dwgInFields(AcDbDwgFiler* pFiler)
 	pFiler->readDouble(&m_MaxHeight);
 	pFiler->readDouble(&m_TableSpacing);
 	SetSize(rows, columns);
+
+	pFiler->readDouble(&m_Width);
+	pFiler->readDouble(&m_Height);
 
 	for(int i = 0; i < m_Rows * m_Columns; i++)
 	{
@@ -1092,6 +1112,9 @@ Acad::ErrorStatus CGenericTable::dxfOutFields(AcDbDxfFiler* pFiler) const
 	pFiler->writeDouble(AcDb::kDxfReal, m_MaxHeight);
 	pFiler->writeDouble(AcDb::kDxfReal, m_TableSpacing);
 
+	pFiler->writeDouble(AcDb::kDxfReal, m_Width);
+	pFiler->writeDouble(AcDb::kDxfReal, m_Height);
+
 	for(std::vector<CTableCell*>::const_iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
 	{
 		CTableCell* cell = (*it);
@@ -1154,6 +1177,8 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
 	int t_Columns;
 	double t_MaxHeight;
 	double t_TableSpacing;
+	double t_Width;
+	double t_Height;
 	std::vector<CTableCell*> t_Cells;
 
 	if((es = Utility::ReadDXFPoint(pFiler, AcDb::kDxfXCoord, _T("base point"), t_BasePoint)) != Acad::eOk) return es;
@@ -1166,6 +1191,9 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
 	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("column count"), t_Columns)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("max height"), t_MaxHeight)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("table spacing"), t_TableSpacing)) != Acad::eOk) return es;
+
+	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("table width"), t_Width)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("table height"), t_Height)) != Acad::eOk) return es;
 
 	t_Cells.resize(t_Rows * t_Columns);
 
@@ -1254,6 +1282,8 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
 	SetSize(t_Rows, t_Columns);
 	m_MaxHeight = t_MaxHeight;
 	m_TableSpacing = t_TableSpacing;
+	m_Width = t_Width;
+	m_Height = t_Height;
 	m_Cells = t_Cells;
 
 	isModified = true;
