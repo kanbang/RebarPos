@@ -46,6 +46,7 @@ namespace OZOZ
 			property Autodesk::AutoCAD::Colors::Color^ TextColor       { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }
 			property Autodesk::AutoCAD::Colors::Color^ PosColor        { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }
 			property Autodesk::AutoCAD::Colors::Color^ LineColor       { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }
+			property Autodesk::AutoCAD::Colors::Color^ SeparatorColor  { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }
 			property Autodesk::AutoCAD::Colors::Color^ BorderColor     { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }
 			property Autodesk::AutoCAD::Colors::Color^ HeadingColor    { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }
 			property Autodesk::AutoCAD::Colors::Color^ FootingColor    { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }

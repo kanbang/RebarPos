@@ -196,6 +196,7 @@ void CBOQTable::UpdateTable(void)
 	Adesk::UInt16 lastTextColor = pStyle->TextColor();
 	Adesk::UInt16 lastPosColor = pStyle->PosColor();
 	Adesk::UInt16 lastLineColor = pStyle->LineColor();
+	Adesk::UInt16 lastSeparatorColor = pStyle->SeparatorColor();
 	Adesk::UInt16 lastBorderColor = pStyle->BorderColor();
 	Adesk::UInt16 lastHeadingColor = pStyle->HeadingColor();
 	Adesk::UInt16 lastFootingColor = pStyle->FootingColor();
@@ -295,6 +296,16 @@ void CBOQTable::UpdateTable(void)
 			setCellBottomBorder(i, j, true, lastLineColor);
 		}
 	}
+	// Separator lines
+	for(int i = 0; i < (int)m_List.size(); i++)
+	{
+		for(int j = 0; j < Columns(); j++)
+		{
+			int k = i + headingLines + 2;
+			if(i > 0) setCellTopBorder(k, j, true, lastSeparatorColor);
+			if(i < (int)m_List.size() - 1) setCellBottomBorder(k, j, true, lastSeparatorColor);
+		}
+	}
 
 	// Set column headers
 	int j = 0;
@@ -343,7 +354,7 @@ void CBOQTable::UpdateTable(void)
 					Utility::ReplaceString(dtext, L"[D]", numtext);
 					int k = j + (*dit).second;
 					setCellText(i + 1, k, dtext);
-					setCellTextColor(i + 1, k, lastTextColor);
+					setCellTextColor(i + 1, k, lastPosColor);
 					setCellTextStyleId(i + 1, k, lastTextStyleId);
 				}
 			}
@@ -372,7 +383,7 @@ void CBOQTable::UpdateTable(void)
 			Utility::ReplaceString(ctext, L"[U]", utext);
 			setCellText(i, j, ctext);
 		}
-		setCellTextColor(i, j, lastTextColor);
+		setCellTextColor(i, j, lastPosColor);
 		setCellTextStyleId(i, j, lastTextStyleId);
 
 		j++;
@@ -389,15 +400,9 @@ void CBOQTable::UpdateTable(void)
 		{
 			CBOQRow* row = *it;
 
-			unsigned short color;
 			std::wstring text;
 			double len;
 			int doff = 0;
-
-			if(type == CBOQTable::POS)
-				color = lastPosColor;
-			else
-				color = lastTextColor;
 
 			switch(type)
 			{
@@ -429,7 +434,7 @@ void CBOQTable::UpdateTable(void)
 				break;
 			}
 
-			setCellTextColor(i, j + doff, color);
+			setCellTextColor(i, j + doff, lastTextColor);
 			setCellTextStyleId(i, j + doff, lastTextStyleId);
 			setCellText(i, j + doff, text);
 
@@ -477,13 +482,13 @@ void CBOQTable::UpdateTable(void)
 		int mulcol = cols - (int)diameters.size() - 1;
 		for(int k = ti; k < ti + totalrows; k++)
 		{
-			setCellTextColor(k, 0, lastTextColor);
+			setCellTextColor(k, 0, lastPosColor);
 			setCellTextStyleId(k, 0, lastTextStyleId);
 			setCellHorizontalAlignment(k, 0, CTableCell::eNEAR);
 			setCellVerticalAlignment(k, 0, CTableCell::eCENTER);
 			MergeAcross(k, 0, cols - (int)diameters.size() - 1);
 
-			setCellTextColor(k, mulcol, lastTextColor);
+			setCellTextColor(k, mulcol, lastPosColor);
 			setCellTextStyleId(k, mulcol, lastTextStyleId);
 			setCellHorizontalAlignment(k, mulcol, CTableCell::eFAR);
 			setCellVerticalAlignment(k, mulcol, CTableCell::eCENTER);

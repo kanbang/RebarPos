@@ -92,6 +92,15 @@ void BOQStyle::LineColor::set(Autodesk::AutoCAD::Colors::Color^ value)
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setLineColor(value->ColorIndex));
 }
 
+Autodesk::AutoCAD::Colors::Color^ BOQStyle::SeparatorColor::get()
+{
+	return Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, GetImpObj()->SeparatorColor());
+}
+void BOQStyle::SeparatorColor::set(Autodesk::AutoCAD::Colors::Color^ value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setSeparatorColor(value->ColorIndex));
+}
+
 Autodesk::AutoCAD::Colors::Color^ BOQStyle::BorderColor::get()
 {
 	return Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, GetImpObj()->BorderColor());

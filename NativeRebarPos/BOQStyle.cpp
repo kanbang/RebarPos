@@ -22,7 +22,7 @@ ACRX_DXF_DEFINE_MEMBERS(CBOQStyle, AcDbObject,
 
 //-----------------------------------------------------------------------------
 CBOQStyle::CBOQStyle () : m_Name(NULL), m_Precision(0),	m_DisplayUnit(CBOQStyle::MM), m_Columns(NULL),
-	m_TextColor(2), m_PosColor(4), m_LineColor(1), m_BorderColor(33), m_HeadingColor(9), m_FootingColor(9),
+	m_TextColor(2), m_PosColor(3), m_LineColor(2), m_SeparatorColor(1), m_BorderColor(33), m_HeadingColor(9), m_FootingColor(9),
 	m_TextStyleId(AcDbObjectId::kNull), m_HeadingStyleId(AcDbObjectId::kNull), m_FootingStyleId(AcDbObjectId::kNull),
 	m_HeadingScale(1.5), m_FootingScale(1.0), m_RowSpacing(0.75), m_Heading(NULL), m_Footing(NULL),
 	m_PosLabel(NULL), m_CountLabel(NULL), m_DiameterLabel(NULL), m_LengthLabel(NULL), m_ShapeLabel(NULL),
@@ -182,6 +182,18 @@ Acad::ErrorStatus CBOQStyle::setLineColor(const Adesk::UInt16 newVal)
 {
 	assertWriteEnabled();
 	m_LineColor = newVal;
+	return Acad::eOk;
+}
+
+const Adesk::UInt16 CBOQStyle::SeparatorColor(void) const
+{
+	assertReadEnabled();
+	return m_SeparatorColor;
+}
+Acad::ErrorStatus CBOQStyle::setSeparatorColor(const Adesk::UInt16 newVal)
+{
+	assertWriteEnabled();
+	m_SeparatorColor = newVal;
 	return Acad::eOk;
 }
 
@@ -355,7 +367,8 @@ Acad::ErrorStatus CBOQStyle::dwgOutFields(AcDbDwgFiler *pFiler) const
     // Colors
     pFiler->writeUInt16(m_TextColor);
     pFiler->writeUInt16(m_PosColor);
-    pFiler->writeUInt16(m_LineColor);
+	pFiler->writeUInt16(m_LineColor);
+	pFiler->writeUInt16(m_SeparatorColor);
     pFiler->writeUInt16(m_BorderColor);
     pFiler->writeUInt16(m_HeadingColor);
     pFiler->writeUInt16(m_FootingColor);
@@ -433,6 +446,7 @@ Acad::ErrorStatus CBOQStyle::dwgInFields(AcDbDwgFiler *pFiler)
         pFiler->readUInt16(&m_TextColor);
         pFiler->readUInt16(&m_PosColor);
         pFiler->readUInt16(&m_LineColor);
+		pFiler->readUInt16(&m_SeparatorColor);
         pFiler->readUInt16(&m_BorderColor);
         pFiler->readUInt16(&m_HeadingColor);
         pFiler->readUInt16(&m_FootingColor);
@@ -500,6 +514,7 @@ Acad::ErrorStatus CBOQStyle::dxfOutFields(AcDbDxfFiler *pFiler) const
     pFiler->writeUInt16(AcDb::kDxfXInt16, m_TextColor);
     pFiler->writeUInt16(AcDb::kDxfXInt16, m_PosColor);
     pFiler->writeUInt16(AcDb::kDxfXInt16, m_LineColor);
+	pFiler->writeUInt16(AcDb::kDxfXInt16, m_SeparatorColor);
     pFiler->writeUInt16(AcDb::kDxfXInt16, m_BorderColor);
     pFiler->writeUInt16(AcDb::kDxfXInt16, m_HeadingColor);
     pFiler->writeUInt16(AcDb::kDxfXInt16, m_FootingColor);
@@ -571,6 +586,7 @@ Acad::ErrorStatus CBOQStyle::dxfInFields(AcDbDxfFiler *pFiler)
 	Adesk::UInt16 t_TextColor = 0;
 	Adesk::UInt16 t_PosColor = 0;
 	Adesk::UInt16 t_LineColor = 0;
+	Adesk::UInt16 t_SeparatorColor = 0;
 	Adesk::UInt16 t_BorderColor = 0;
 	Adesk::UInt16 t_HeadingColor = 0;
 	Adesk::UInt16 t_FootingColor = 0;
@@ -602,6 +618,7 @@ Acad::ErrorStatus CBOQStyle::dxfInFields(AcDbDxfFiler *pFiler)
 	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("text color"), t_TextColor)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("pos color"), t_PosColor)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("line color"), t_LineColor)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("separator color"), t_SeparatorColor)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("border color"), t_BorderColor)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("heading color"), t_HeadingColor)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("footing color"), t_FootingColor)) != Acad::eOk) return es;
@@ -638,6 +655,7 @@ Acad::ErrorStatus CBOQStyle::dxfInFields(AcDbDxfFiler *pFiler)
 	m_TextColor = t_TextColor;
 	m_PosColor = t_PosColor;
 	m_LineColor = t_LineColor;
+	m_SeparatorColor = t_SeparatorColor;
 	m_BorderColor = t_BorderColor;
 	m_HeadingColor = t_HeadingColor;
 	m_FootingColor = t_FootingColor;

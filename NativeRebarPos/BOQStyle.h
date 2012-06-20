@@ -60,6 +60,7 @@ protected:
 	Adesk::UInt16 m_TextColor;
 	Adesk::UInt16 m_PosColor;
 	Adesk::UInt16 m_LineColor;
+	Adesk::UInt16 m_SeparatorColor;
 	Adesk::UInt16 m_BorderColor;
 	Adesk::UInt16 m_HeadingColor;
 	Adesk::UInt16 m_FootingColor;
@@ -119,6 +120,10 @@ public:
 	/// Gets or sets the line color.
 	const Adesk::UInt16 LineColor(void) const;
 	Acad::ErrorStatus setLineColor(const Adesk::UInt16 newVal);
+
+	/// Gets or sets the separator line color.
+	const Adesk::UInt16 SeparatorColor(void) const;
+	Acad::ErrorStatus setSeparatorColor(const Adesk::UInt16 newVal);
 
 	/// Gets or sets the border color.
 	const Adesk::UInt16 BorderColor(void) const;
