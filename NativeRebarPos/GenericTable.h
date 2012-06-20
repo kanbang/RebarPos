@@ -93,10 +93,16 @@ public:
 	void setCellTextStyleId(const int i, const int j, const AcDbObjectId& newVal);
 	void setCellTextHeight(const int i, const int j, const double newVal);
 
-	void setCellLeftBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor = 1);
-	void setCellRightBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor = 1);
-	void setCellTopBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor = 1);
-	void setCellBottomBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor = 1);
+	void setCellLeftBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor = 1, bool isdouble = false);
+	void setCellRightBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor = 1, bool isdouble = false);
+	void setCellTopBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor = 1, bool isdouble = false);
+	void setCellBottomBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor = 1, bool isdouble = false);
+
+	void setRowTopBorder(const int i, const bool hasBorder, const unsigned short borderColor = 1, bool isdouble = false);
+	void setRowBottomBorder(const int i, const bool hasBorder, const unsigned short borderColor = 1, bool isdouble = false);
+
+	void setColumnLeftBorder(const int j, const bool hasBorder, const unsigned short borderColor = 1, bool isdouble = false);
+	void setColumnRightBorder(const int j, const bool hasBorder, const unsigned short borderColor = 1, bool isdouble = false);
 
 	void setCellHorizontalAlignment(const int i, const int j, const CTableCell::Alignment newVal);
 	void setCellVerticalAlignment(const int i, const int j, const CTableCell::Alignment newVal);

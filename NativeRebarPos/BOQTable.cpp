@@ -306,6 +306,26 @@ void CBOQTable::UpdateTable(void)
 			if(i < (int)m_List.size() - 1) setCellBottomBorder(k, j, true, lastSeparatorColor);
 		}
 	}
+	// Double borders
+	int bi = 0;
+	bi = headingLines + 2 - 1;
+	if(bi >= 0 && bi < Rows()) setRowBottomBorder(bi, true, lastLineColor, true);
+	bi++;
+	if(bi >= 0 && bi < Rows()) setRowTopBorder(bi, true, lastLineColor, true);
+	if(hasdiameterlist)
+	{
+		bi = headingLines + 2 + (int)m_List.size() - 1;
+		if(bi >= 0 && bi < Rows()) setRowBottomBorder(bi, true, lastLineColor, true);
+		bi++;
+		if(bi >= 0 && bi < Rows()) setRowTopBorder(bi, true, lastLineColor, true);
+		if(m_Multiplier > 1)
+		{
+			bi = headingLines + 2 + (int)m_List.size() + 4 - 1;
+			if(bi >= 0 && bi < Rows()) setRowBottomBorder(bi, true, lastLineColor, true);
+			bi++;
+			if(bi >= 0 && bi < Rows()) setRowTopBorder(bi, true, lastLineColor, true);
+		}
+	}
 
 	// Set column headers
 	int j = 0;

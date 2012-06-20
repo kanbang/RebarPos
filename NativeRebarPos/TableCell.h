@@ -38,6 +38,11 @@ private:
 	bool m_BottomBorder;
 	bool m_RightBorder;
 
+	bool m_TopBorderDouble;
+	bool m_LeftBorderDouble;
+	bool m_BottomBorderDouble;
+	bool m_RightBorderDouble;
+
 	int m_MergeRight;
 	int m_MergeDown;
 
@@ -79,6 +84,18 @@ public:
 
 	const bool RightBorder() const;
 	void setRightBorder(const bool newVal);
+
+	const bool TopBorderDouble() const;
+	void setTopBorderDouble(const bool newVal);
+
+	const bool LeftBorderDouble() const;
+	void setLeftBorderDouble(const bool newVal);
+
+	const bool BottomBorderDouble() const;
+	void setBottomBorderDouble(const bool newVal);
+
+	const bool RightBorderDouble() const;
+	void setRightBorderDouble(const bool newVal);
 
 	const int MergeRight() const;
 	void setMergeRight(const int newVal);

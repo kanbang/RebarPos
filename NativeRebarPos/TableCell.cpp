@@ -11,6 +11,7 @@
 CTableCell::CTableCell(void) : m_TextColor(0), 
 	m_TopBorderColor(0), m_LeftBorderColor(0), m_BottomBorderColor(0), m_RightBorderColor(0),
 	m_TopBorder(false), m_LeftBorder(false), m_BottomBorder(false), m_RightBorder(false),
+	m_TopBorderDouble(false), m_LeftBorderDouble(false), m_BottomBorderDouble(false), m_RightBorderDouble(false),
 	m_MergeRight(false), m_MergeDown(false),
 	m_TextStyleId(AcDbObjectId::kNull),
 	m_TextHeight(1.0),
@@ -54,6 +55,18 @@ void CTableCell::setBottomBorder(const bool newVal) { m_BottomBorder = newVal; }
 
 const bool CTableCell::RightBorder() const         { return m_RightBorder; }
 void CTableCell::setRightBorder(const bool newVal) { m_RightBorder = newVal; }
+
+const bool CTableCell::TopBorderDouble() const         { return m_TopBorderDouble; }
+void CTableCell::setTopBorderDouble(const bool newVal) { m_TopBorderDouble = newVal; }
+
+const bool CTableCell::LeftBorderDouble() const         { return m_LeftBorderDouble; }
+void CTableCell::setLeftBorderDouble(const bool newVal) { m_LeftBorderDouble = newVal; }
+
+const bool CTableCell::BottomBorderDouble() const         { return m_BottomBorderDouble; }
+void CTableCell::setBottomBorderDouble(const bool newVal) { m_BottomBorderDouble = newVal; }
+
+const bool CTableCell::RightBorderDouble() const         { return m_RightBorderDouble; }
+void CTableCell::setRightBorderDouble(const bool newVal) { m_RightBorderDouble = newVal; }
 
 const int CTableCell::MergeRight() const         { return m_MergeRight; }
 void CTableCell::setMergeRight(const int newVal) { m_MergeRight = newVal; }

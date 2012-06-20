@@ -239,32 +239,82 @@ void CGenericTable::setCellTextHeight(const int i, const int j, const double new
 	isModified = true;
 }
 
-void CGenericTable::setCellLeftBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor)
+void CGenericTable::setCellLeftBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor, bool isdouble)
 {
 	CTableCell* cell = m_Cells[i * m_Columns + j];
 	cell->setLeftBorder(hasBorder);
 	cell->setLeftBorderColor(borderColor);
+	cell->setLeftBorderDouble(isdouble);
 	isModified = true;
 }
-void CGenericTable::setCellRightBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor)
+void CGenericTable::setCellRightBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor, bool isdouble)
 {
 	CTableCell* cell = m_Cells[i * m_Columns + j];
 	cell->setRightBorder(hasBorder);
 	cell->setRightBorderColor(borderColor);
+	cell->setRightBorderDouble(isdouble);
 	isModified = true;
 }
-void CGenericTable::setCellTopBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor)
+void CGenericTable::setCellTopBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor, bool isdouble)
 {
 	CTableCell* cell = m_Cells[i * m_Columns + j];
 	cell->setTopBorder(hasBorder);
 	cell->setTopBorderColor(borderColor);
+	cell->setTopBorderDouble(isdouble);
 	isModified = true;
 }
-void CGenericTable::setCellBottomBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor)
+void CGenericTable::setCellBottomBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor, bool isdouble)
 {
 	CTableCell* cell = m_Cells[i * m_Columns + j];
 	cell->setBottomBorder(hasBorder);
 	cell->setBottomBorderColor(borderColor);
+	cell->setBottomBorderDouble(isdouble);
+	isModified = true;
+}
+
+void CGenericTable::setRowTopBorder(const int i, const bool hasBorder, const unsigned short borderColor, bool isdouble)
+{
+	for(int j = 0; j < m_Columns; j++)
+	{
+		CTableCell* cell = m_Cells[i * m_Columns + j];
+		cell->setTopBorder(hasBorder);
+		cell->setTopBorderColor(borderColor);
+		cell->setTopBorderDouble(isdouble);
+	}
+	isModified = true;
+}
+void CGenericTable::setRowBottomBorder(const int i, const bool hasBorder, const unsigned short borderColor, bool isdouble)
+{
+	for(int j = 0; j < m_Columns; j++)
+	{
+		CTableCell* cell = m_Cells[i * m_Columns + j];
+		cell->setBottomBorder(hasBorder);
+		cell->setBottomBorderColor(borderColor);
+		cell->setBottomBorderDouble(isdouble);
+	}
+	isModified = true;
+}
+
+void CGenericTable::setColumnLeftBorder(const int j, const bool hasBorder, const unsigned short borderColor, bool isdouble)
+{
+	for(int i = 0; i < m_Rows; i++)
+	{
+		CTableCell* cell = m_Cells[i * m_Columns + j];
+		cell->setLeftBorder(hasBorder);
+		cell->setLeftBorderColor(borderColor);
+		cell->setLeftBorderDouble(isdouble);
+	}
+	isModified = true;
+}
+void CGenericTable::setColumnRightBorder(const int j, const bool hasBorder, const unsigned short borderColor, bool isdouble)
+{
+	for(int i = 0; i < m_Rows; i++)
+	{
+		CTableCell* cell = m_Cells[i * m_Columns + j];
+		cell->setRightBorder(hasBorder);
+		cell->setRightBorderColor(borderColor);
+		cell->setRightBorderDouble(isdouble);
+	}
 	isModified = true;
 }
 
@@ -407,7 +457,7 @@ const void CGenericTable::Calculate(void) const
 		}
 	}
 
-	// Set minimum columns sizes
+	// Set minimum column sizes
 	columnWidths.resize(m_Columns);
 	for(int j = 0; j < m_Columns; j++)
 	{
@@ -574,6 +624,7 @@ const void CGenericTable::Calculate(void) const
 	tableoffset = 0;
 	x = 0;
 	y = 0;
+	double doublelineoffset = 0.125;
 	for(int i = 0; i < m_Rows; i++)
 	{
 		if(dividers[i])
@@ -592,27 +643,75 @@ const void CGenericTable::Calculate(void) const
 			CTableCell* cell = m_Cells[i * m_Columns + j];
 			if(cell->TopBorder())
 			{
-				AcDbLine* line = new AcDbLine(AcGePoint3d(x, y, 0), AcGePoint3d(x + columnWidths[j], y, 0));
-				line->setColorIndex(cell->TopBorderColor());
-				lastLines.push_back(line);
+				if(cell->TopBorderDouble())
+				{
+					AcDbLine* line1 = new AcDbLine(AcGePoint3d(x, y - doublelineoffset, 0), AcGePoint3d(x + columnWidths[j], y - doublelineoffset, 0));
+					line1->setColorIndex(cell->TopBorderColor());
+					lastLines.push_back(line1);
+					AcDbLine* line2 = new AcDbLine(AcGePoint3d(x, y + doublelineoffset, 0), AcGePoint3d(x + columnWidths[j], y + doublelineoffset, 0));
+					line2->setColorIndex(cell->TopBorderColor());
+					lastLines.push_back(line2);
+				}
+				else
+				{
+					AcDbLine* line = new AcDbLine(AcGePoint3d(x, y, 0), AcGePoint3d(x + columnWidths[j], y, 0));
+					line->setColorIndex(cell->TopBorderColor());
+					lastLines.push_back(line);
+				}
 			}
 			if(cell->BottomBorder())
 			{
-				AcDbLine* line = new AcDbLine(AcGePoint3d(x, y - rowHeights[i], 0), AcGePoint3d(x + columnWidths[j], y - rowHeights[i], 0));
-				line->setColorIndex(cell->BottomBorderColor());
-				lastLines.push_back(line);
+				if(cell->BottomBorderDouble())
+				{
+					AcDbLine* line1 = new AcDbLine(AcGePoint3d(x, y - rowHeights[i] - doublelineoffset, 0), AcGePoint3d(x + columnWidths[j], y - rowHeights[i] - doublelineoffset, 0));
+					line1->setColorIndex(cell->BottomBorderColor());
+					lastLines.push_back(line1);
+					AcDbLine* line2 = new AcDbLine(AcGePoint3d(x, y - rowHeights[i] + doublelineoffset, 0), AcGePoint3d(x + columnWidths[j], y - rowHeights[i] + doublelineoffset, 0));
+					line2->setColorIndex(cell->BottomBorderColor());
+					lastLines.push_back(line2);
+				}
+				else
+				{
+					AcDbLine* line = new AcDbLine(AcGePoint3d(x, y - rowHeights[i], 0), AcGePoint3d(x + columnWidths[j], y - rowHeights[i], 0));
+					line->setColorIndex(cell->BottomBorderColor());
+					lastLines.push_back(line);
+				}
 			}
 			if(cell->LeftBorder())
 			{
-				AcDbLine* line = new AcDbLine(AcGePoint3d(x, y, 0), AcGePoint3d(x, y - rowHeights[i], 0));
-				line->setColorIndex(cell->LeftBorderColor());
-				lastLines.push_back(line);
+				if(cell->LeftBorderDouble())
+				{
+					AcDbLine* line1 = new AcDbLine(AcGePoint3d(x - doublelineoffset, y, 0), AcGePoint3d(x - doublelineoffset, y - rowHeights[i], 0));
+					line1->setColorIndex(cell->LeftBorderColor());
+					lastLines.push_back(line1);
+					AcDbLine* line2 = new AcDbLine(AcGePoint3d(x + doublelineoffset, y, 0), AcGePoint3d(x + doublelineoffset, y - rowHeights[i], 0));
+					line2->setColorIndex(cell->LeftBorderColor());
+					lastLines.push_back(line2);
+				}
+				else
+				{
+					AcDbLine* line = new AcDbLine(AcGePoint3d(x, y, 0), AcGePoint3d(x, y - rowHeights[i], 0));
+					line->setColorIndex(cell->LeftBorderColor());
+					lastLines.push_back(line);
+				}
 			}
 			if(cell->RightBorder())
 			{
-				AcDbLine* line = new AcDbLine(AcGePoint3d(x + columnWidths[j], y, 0), AcGePoint3d(x + columnWidths[j], y - rowHeights[i], 0));
-				line->setColorIndex(cell->RightBorderColor());
-				lastLines.push_back(line);
+				if(cell->RightBorderDouble())
+				{
+					AcDbLine* line1 = new AcDbLine(AcGePoint3d(x + columnWidths[j] - doublelineoffset, y, 0), AcGePoint3d(x + columnWidths[j] - doublelineoffset, y - rowHeights[i], 0));
+					line1->setColorIndex(cell->RightBorderColor());
+					lastLines.push_back(line1);
+					AcDbLine* line2 = new AcDbLine(AcGePoint3d(x + columnWidths[j] + doublelineoffset, y, 0), AcGePoint3d(x + columnWidths[j] + doublelineoffset, y - rowHeights[i], 0));
+					line2->setColorIndex(cell->RightBorderColor());
+					lastLines.push_back(line2);
+				}
+				else
+				{
+					AcDbLine* line = new AcDbLine(AcGePoint3d(x + columnWidths[j], y, 0), AcGePoint3d(x + columnWidths[j], y - rowHeights[i], 0));
+					line->setColorIndex(cell->RightBorderColor());
+					lastLines.push_back(line);
+				}
 			}
 
 			x += columnWidths[j];
@@ -959,6 +1058,11 @@ Acad::ErrorStatus CGenericTable::dwgOutFields(AcDbDwgFiler* pFiler) const
 		pFiler->writeBool(cell->BottomBorder());
 		pFiler->writeBool(cell->RightBorder());
 
+		pFiler->writeBool(cell->TopBorderDouble());
+		pFiler->writeBool(cell->LeftBorderDouble());
+		pFiler->writeBool(cell->BottomBorderDouble());
+		pFiler->writeBool(cell->RightBorderDouble());
+
 		pFiler->writeInt32(cell->MergeRight());
 		pFiler->writeInt32(cell->MergeDown());
 
@@ -1024,6 +1128,11 @@ Acad::ErrorStatus CGenericTable::dwgInFields(AcDbDwgFiler* pFiler)
 		bool t_BottomBorder;
 		bool t_RightBorder;
 
+		bool t_TopBorderDouble;
+		bool t_LeftBorderDouble;
+		bool t_BottomBorderDouble;
+		bool t_RightBorderDouble;
+
 		Adesk::Int32 t_MergeRight;
 		Adesk::Int32 t_MergeDown;
 
@@ -1047,6 +1156,11 @@ Acad::ErrorStatus CGenericTable::dwgInFields(AcDbDwgFiler* pFiler)
 		pFiler->readBool(&t_BottomBorder);
 		pFiler->readBool(&t_RightBorder);
 
+		pFiler->readBool(&t_TopBorderDouble);
+		pFiler->readBool(&t_LeftBorderDouble);
+		pFiler->readBool(&t_BottomBorderDouble);
+		pFiler->readBool(&t_RightBorderDouble);
+
 		pFiler->readInt32(&t_MergeRight);
 		pFiler->readInt32(&t_MergeDown);
 
@@ -1068,6 +1182,11 @@ Acad::ErrorStatus CGenericTable::dwgInFields(AcDbDwgFiler* pFiler)
 		cell->setLeftBorder(t_LeftBorder);
 		cell->setBottomBorder(t_BottomBorder);
 		cell->setRightBorder(t_RightBorder);
+
+		cell->setTopBorderDouble(t_TopBorderDouble);
+		cell->setLeftBorderDouble(t_LeftBorderDouble);
+		cell->setBottomBorderDouble(t_BottomBorderDouble);
+		cell->setRightBorderDouble(t_RightBorderDouble);
 
 		cell->setMergeRight(t_MergeRight);
 		cell->setMergeDown(t_MergeDown);
@@ -1131,6 +1250,11 @@ Acad::ErrorStatus CGenericTable::dxfOutFields(AcDbDxfFiler* pFiler) const
 		pFiler->writeBool(AcDb::kDxfBool, cell->LeftBorder());
 		pFiler->writeBool(AcDb::kDxfBool, cell->BottomBorder());
 		pFiler->writeBool(AcDb::kDxfBool, cell->RightBorder());
+
+		pFiler->writeBool(AcDb::kDxfBool, cell->TopBorderDouble());
+		pFiler->writeBool(AcDb::kDxfBool, cell->LeftBorderDouble());
+		pFiler->writeBool(AcDb::kDxfBool, cell->BottomBorderDouble());
+		pFiler->writeBool(AcDb::kDxfBool, cell->RightBorderDouble());
 
 		pFiler->writeInt32(AcDb::kDxfInt32, cell->MergeRight());
 		pFiler->writeInt32(AcDb::kDxfInt32, cell->MergeDown());
@@ -1214,6 +1338,11 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
 		bool t_BottomBorder;
 		bool t_RightBorder;
 
+		bool t_TopBorderDouble;
+		bool t_LeftBorderDouble;
+		bool t_BottomBorderDouble;
+		bool t_RightBorderDouble;
+
 		int t_MergeRight;
 		int t_MergeDown;
 
@@ -1236,6 +1365,11 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
 		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("cell bottom border"), t_BottomBorder)) != Acad::eOk) return es;
 		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("cell right border"), t_RightBorder)) != Acad::eOk) return es;
 
+		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("cell top border double"), t_TopBorderDouble)) != Acad::eOk) return es;
+		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("cell left border double"), t_LeftBorderDouble)) != Acad::eOk) return es;
+		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("cell bottom border double"), t_BottomBorderDouble)) != Acad::eOk) return es;
+		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("cell right border double"), t_RightBorderDouble)) != Acad::eOk) return es;
+
 		if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("cell merge right"), t_MergeRight)) != Acad::eOk) return es;
 		if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("cell merge down"), t_MergeDown)) != Acad::eOk) return es;
 
@@ -1257,6 +1391,11 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
 		cell->setLeftBorder(t_LeftBorder);
 		cell->setBottomBorder(t_BottomBorder);
 		cell->setRightBorder(t_RightBorder);
+
+		cell->setTopBorder(t_TopBorderDouble);
+		cell->setLeftBorder(t_LeftBorderDouble);
+		cell->setBottomBorder(t_BottomBorderDouble);
+		cell->setRightBorder(t_RightBorderDouble);
 
 		cell->setMergeRight(t_MergeRight);
 		cell->setMergeDown(t_MergeDown);
