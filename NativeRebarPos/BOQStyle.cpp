@@ -26,7 +26,8 @@ CBOQStyle::CBOQStyle () : m_Name(NULL), m_Precision(0),	m_DisplayUnit(CBOQStyle:
 	m_TextStyleId(AcDbObjectId::kNull), m_HeadingStyleId(AcDbObjectId::kNull), m_FootingStyleId(AcDbObjectId::kNull),
 	m_HeadingScale(1.5), m_FootingScale(1.0), m_RowSpacing(0.75), m_Heading(NULL), m_Footing(NULL),
 	m_PosLabel(NULL), m_CountLabel(NULL), m_DiameterLabel(NULL), m_LengthLabel(NULL), m_ShapeLabel(NULL),
-	m_TotalLengthLabel(NULL), m_DiameterLengthLabel(NULL), m_UnitWeightLabel(NULL), m_WeightLabel(NULL), m_GrossWeightLabel(NULL)
+	m_TotalLengthLabel(NULL), m_DiameterListLabel(NULL), 
+	m_DiameterLengthLabel(NULL), m_UnitWeightLabel(NULL), m_WeightLabel(NULL), m_GrossWeightLabel(NULL)
 { }
 
 CBOQStyle::~CBOQStyle () 
@@ -42,6 +43,7 @@ CBOQStyle::~CBOQStyle ()
 	acutDelString(m_LengthLabel);
 	acutDelString(m_ShapeLabel);
 	acutDelString(m_TotalLengthLabel);
+	acutDelString(m_DiameterListLabel);
 	acutDelString(m_DiameterLengthLabel);
 	acutDelString(m_UnitWeightLabel);
 	acutDelString(m_WeightLabel);
@@ -298,6 +300,7 @@ const ACHAR* CBOQStyle::DiameterLabel(void) const       { assertReadEnabled(); r
 const ACHAR* CBOQStyle::LengthLabel(void) const         { assertReadEnabled(); return m_LengthLabel; }
 const ACHAR* CBOQStyle::ShapeLabel(void) const          { assertReadEnabled(); return m_ShapeLabel; }
 const ACHAR* CBOQStyle::TotalLengthLabel(void) const    { assertReadEnabled(); return m_TotalLengthLabel; }
+const ACHAR* CBOQStyle::DiameterListLabel(void) const   { assertReadEnabled(); return m_DiameterListLabel; }
 const ACHAR* CBOQStyle::DiameterLengthLabel(void) const { assertReadEnabled(); return m_DiameterLengthLabel; }
 const ACHAR* CBOQStyle::UnitWeightLabel(void) const     { assertReadEnabled(); return m_UnitWeightLabel; }
 const ACHAR* CBOQStyle::WeightLabel(void) const         { assertReadEnabled(); return m_WeightLabel; }
@@ -309,6 +312,7 @@ Acad::ErrorStatus CBOQStyle::setDiameterLabel(const ACHAR* newVal)       { asser
 Acad::ErrorStatus CBOQStyle::setLengthLabel(const ACHAR* newVal)         { assertWriteEnabled(); acutDelString(m_LengthLabel); acutUpdString(newVal, m_LengthLabel); return Acad::eOk; }
 Acad::ErrorStatus CBOQStyle::setShapeLabel(const ACHAR* newVal)          { assertWriteEnabled(); acutDelString(m_ShapeLabel); acutUpdString(newVal, m_ShapeLabel); return Acad::eOk; }
 Acad::ErrorStatus CBOQStyle::setTotalLengthLabel(const ACHAR* newVal)    { assertWriteEnabled(); acutDelString(m_TotalLengthLabel); acutUpdString(newVal, m_TotalLengthLabel); return Acad::eOk; }
+Acad::ErrorStatus CBOQStyle::setDiameterListLabel(const ACHAR* newVal)   { assertWriteEnabled(); acutDelString(m_DiameterListLabel); acutUpdString(newVal, m_DiameterListLabel); return Acad::eOk; }
 Acad::ErrorStatus CBOQStyle::setDiameterLengthLabel(const ACHAR* newVal) { assertWriteEnabled(); acutDelString(m_DiameterLengthLabel); acutUpdString(newVal, m_DiameterLengthLabel); return Acad::eOk; }
 Acad::ErrorStatus CBOQStyle::setUnitWeightLabel(const ACHAR* newVal)     { assertWriteEnabled(); acutDelString(m_UnitWeightLabel); acutUpdString(newVal, m_UnitWeightLabel); return Acad::eOk; }
 Acad::ErrorStatus CBOQStyle::setWeightLabel(const ACHAR* newVal)         { assertWriteEnabled(); acutDelString(m_WeightLabel); acutUpdString(newVal, m_WeightLabel); return Acad::eOk; }
@@ -363,6 +367,7 @@ Acad::ErrorStatus CBOQStyle::dwgOutFields(AcDbDwgFiler *pFiler) const
 	if (m_LengthLabel) pFiler->writeString(m_LengthLabel); else pFiler->writeString(_T(""));
 	if (m_ShapeLabel) pFiler->writeString(m_ShapeLabel); else pFiler->writeString(_T(""));
 	if (m_TotalLengthLabel) pFiler->writeString(m_TotalLengthLabel); else pFiler->writeString(_T(""));
+	if (m_DiameterListLabel) pFiler->writeString(m_DiameterListLabel); else pFiler->writeString(_T(""));
 	if (m_DiameterLengthLabel) pFiler->writeString(m_DiameterLengthLabel); else pFiler->writeString(_T(""));
 	if (m_UnitWeightLabel) pFiler->writeString(m_UnitWeightLabel); else pFiler->writeString(_T(""));
 	if (m_WeightLabel) pFiler->writeString(m_WeightLabel); else pFiler->writeString(_T(""));
@@ -439,6 +444,7 @@ Acad::ErrorStatus CBOQStyle::dwgInFields(AcDbDwgFiler *pFiler)
 		pFiler->readString(&m_LengthLabel);
 		pFiler->readString(&m_ShapeLabel);
 		pFiler->readString(&m_TotalLengthLabel);
+		pFiler->readString(&m_DiameterListLabel);
 		pFiler->readString(&m_DiameterLengthLabel);
 		pFiler->readString(&m_UnitWeightLabel);
 		pFiler->readString(&m_WeightLabel);
@@ -505,6 +511,7 @@ Acad::ErrorStatus CBOQStyle::dxfOutFields(AcDbDxfFiler *pFiler) const
 	if (m_LengthLabel) pFiler->writeString(AcDb::kDxfXTextString, m_LengthLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
 	if (m_ShapeLabel) pFiler->writeString(AcDb::kDxfXTextString, m_ShapeLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
 	if (m_TotalLengthLabel) pFiler->writeString(AcDb::kDxfXTextString, m_TotalLengthLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
+	if (m_DiameterListLabel) pFiler->writeString(AcDb::kDxfXTextString, m_DiameterListLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
 	if (m_DiameterLengthLabel) pFiler->writeString(AcDb::kDxfXTextString, m_DiameterLengthLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
 	if (m_UnitWeightLabel) pFiler->writeString(AcDb::kDxfXTextString, m_UnitWeightLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
 	if (m_WeightLabel) pFiler->writeString(AcDb::kDxfXTextString, m_WeightLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
@@ -573,6 +580,7 @@ Acad::ErrorStatus CBOQStyle::dxfInFields(AcDbDxfFiler *pFiler)
 	ACHAR* t_LengthLabel = NULL;
 	ACHAR* t_ShapeLabel = NULL;
 	ACHAR* t_TotalLengthLabel = NULL;
+	ACHAR* t_DiameterListLabel = NULL;
 	ACHAR* t_DiameterLengthLabel = NULL;
 	ACHAR* t_UnitWeightLabel = NULL;
 	ACHAR* t_WeightLabel = NULL;
@@ -604,6 +612,7 @@ Acad::ErrorStatus CBOQStyle::dxfInFields(AcDbDxfFiler *pFiler)
 	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("length label"), t_LengthLabel)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("shape label"), t_ShapeLabel)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("total length label"), t_TotalLengthLabel)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("diameter list label"), t_DiameterListLabel)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("diameter length label"), t_DiameterLengthLabel)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("unit weight label"), t_UnitWeightLabel)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("weight label"), t_WeightLabel)) != Acad::eOk) return es;
@@ -636,8 +645,22 @@ Acad::ErrorStatus CBOQStyle::dxfInFields(AcDbDxfFiler *pFiler)
 	m_HeadingScale = t_HeadingScale;
 	m_FootingScale = t_FootingScale;
 	m_RowSpacing = t_RowSpacing;
+
 	setHeading(t_Heading);
 	setFooting(t_Footing);
+
+	setPosLabel(t_PosLabel);
+	setCountLabel(t_CountLabel);
+	setDiameterLabel(t_DiameterLabel);
+	setLengthLabel(t_LengthLabel);
+	setShapeLabel(t_ShapeLabel);
+	setTotalLengthLabel(t_TotalLengthLabel);
+	setDiameterListLabel(t_DiameterListLabel);
+	setDiameterLengthLabel(t_DiameterLengthLabel);
+	setUnitWeightLabel(t_UnitWeightLabel);
+	setWeightLabel(t_WeightLabel);
+	setGrossWeightLabel(t_GrossWeightLabel);
+
 	m_TextStyleId = t_TextStyleId;
 	m_HeadingStyleId = t_HeadingStyleId;
 	m_FootingStyleId = t_FootingStyleId;
@@ -653,6 +676,7 @@ Acad::ErrorStatus CBOQStyle::dxfInFields(AcDbDxfFiler *pFiler)
 	acutDelString(t_LengthLabel);
 	acutDelString(t_ShapeLabel);
 	acutDelString(t_TotalLengthLabel);
+	acutDelString(t_DiameterListLabel);
 	acutDelString(t_DiameterLengthLabel);
 	acutDelString(t_UnitWeightLabel);
 	acutDelString(t_WeightLabel);

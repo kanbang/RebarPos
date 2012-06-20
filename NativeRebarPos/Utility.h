@@ -29,6 +29,9 @@ namespace Utility
 	/// Convert int to string
 	const void IntToStr(const int val, std::wstring& str);
 
+	/// Convert double to int
+	const int DoubleToInt(const double val);
+
 	/// Convert string to int
 	const int StrToInt(const std::wstring& str);
 	const int StrToInt(const wchar_t* str);

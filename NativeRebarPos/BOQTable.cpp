@@ -177,6 +177,15 @@ void CBOQTable::UpdateTable(void)
 
 	// Parse columns
 	std::vector<CBOQTable::ColumnType> columns = ParseColumns(lastColumns);
+	bool hasdiameterlist = false;
+	for(std::vector<CBOQTable::ColumnType>::iterator it = columns.begin(); it != columns.end(); it++)
+	{
+		if((*it) == CBOQTable::TOTALLENGTH)
+		{
+			hasdiameterlist = true;
+			break;
+		}
+	}
 
 	// Create text styles
 	AcDbObjectId lastTextStyleId = pStyle->TextStyleId();
@@ -200,6 +209,31 @@ void CBOQTable::UpdateTable(void)
 		acutUpdString(m_Heading, lastHeading);
 	if(m_Footing != NULL && m_Footing[0] != _T('\0'))
 		acutUpdString(m_Footing, lastFooting);
+
+	// Get column and row labels
+	ACHAR* lastPosLabel = NULL;
+	ACHAR* lastCountLabel = NULL;
+	ACHAR* lastDiameterLabel = NULL;
+	ACHAR* lastLengthLabel = NULL;
+	ACHAR* lastShapeLabel = NULL;
+	ACHAR* lastTotalLengthLabel = NULL;
+	ACHAR* lastDiameterListLabel = NULL;
+	ACHAR* lastDiameterLengthLabel = NULL;
+	ACHAR* lastUnitWeightLabel = NULL;
+	ACHAR* lastWeightLabel = NULL;
+	ACHAR* lastGrossWeightLabel = NULL;
+
+	acutUpdString(pStyle->PosLabel(), lastPosLabel);
+	acutUpdString(pStyle->CountLabel(), lastCountLabel);
+	acutUpdString(pStyle->DiameterLabel(), lastDiameterLabel);
+	acutUpdString(pStyle->LengthLabel(), lastLengthLabel);
+	acutUpdString(pStyle->ShapeLabel(), lastShapeLabel);
+	acutUpdString(pStyle->TotalLengthLabel(), lastTotalLengthLabel);
+	acutUpdString(pStyle->DiameterListLabel(), lastDiameterListLabel);
+	acutUpdString(pStyle->DiameterLengthLabel(), lastDiameterLengthLabel);
+	acutUpdString(pStyle->UnitWeightLabel(), lastUnitWeightLabel);
+	acutUpdString(pStyle->WeightLabel(), lastWeightLabel);
+	acutUpdString(pStyle->GrossWeightLabel(), lastGrossWeightLabel);
 
 	// Get other styles
 	double lastHeadingScale = pStyle->HeadingScale();
@@ -237,13 +271,18 @@ void CBOQTable::UpdateTable(void)
 	}
 
 	// Create base table
-	int rows = (int)m_List.size() + headingLines + footingLines;
+	// + 2 for columns headers
+	// + 4 for total row
+	// + 2 for gross total row (only if multiplier > 1)
+	int totalrows = hasdiameterlist ? (4 + (m_Multiplier > 1 ? 2 : 0)) : 0;
+	int rows = headingLines + 2 + (int)m_List.size() + totalrows + footingLines; 
+	int cols = (int)columns.size() + (hasdiameterlist ? (int)diameters.size() - 1 : 0);
 
-	SetSize(rows, (int)columns.size() + (int)diameters.size() - 1);
+	SetSize(rows, cols);
 	setCellMargin(lastRowSpacing);
 
 	// Set cell properties
-	for(int i = headingLines; i < headingLines + (int)m_List.size(); i++)
+	for(int i = headingLines; i < headingLines + 2 + (int)m_List.size() + totalrows; i++)
 	{
 		for(int j = 0; j < Columns(); j++)
 		{
@@ -257,11 +296,93 @@ void CBOQTable::UpdateTable(void)
 		}
 	}
 
-	// Set rows
+	// Set column headers
 	int j = 0;
 	for(std::vector<CBOQTable::ColumnType>::iterator tit = columns.begin(); tit != columns.end(); tit++)
 	{
 		int i = headingLines;
+		CBOQTable::ColumnType type = *tit;
+		ACHAR* text = NULL;
+
+		switch(type)
+		{
+		case CBOQTable::POS:
+			text = lastPosLabel;
+			MergeDown(i, j, 2);
+			break;
+		case CBOQTable::POSDD:
+			text = lastPosLabel;
+			MergeDown(i, j, 2);
+			break;
+		case CBOQTable::COUNT:
+			text = lastCountLabel;
+			MergeDown(i, j, 2);
+			break;
+		case CBOQTable::DIAMETER:
+			text = lastDiameterLabel;
+			MergeDown(i, j, 2);
+			break;
+		case CBOQTable::LENGTH:
+			text = lastLengthLabel;
+			MergeDown(i, j, 2);
+			break;
+		case CBOQTable::SHAPE:
+			text = lastShapeLabel;
+			MergeDown(i, j, 2);
+			break;
+		case CBOQTable::TOTALLENGTH:
+			text = lastTotalLengthLabel;
+			MergeAcross(i, j, (int)diameters.size());
+			if(lastDiameterListLabel != NULL && lastDiameterListLabel[0] != _T('\0'))
+			{
+				for(std::map<double ,int>::iterator dit = diameters.begin(); dit != diameters.end(); dit++)
+				{
+					std::wstring dtext(lastDiameterListLabel);
+					std::wstring numtext;
+					Utility::IntToStr(Utility::DoubleToInt((*dit).first), numtext);
+					Utility::ReplaceString(dtext, L"[D]", numtext);
+					int k = j + (*dit).second;
+					setCellText(i + 1, k, dtext);
+					setCellTextColor(i + 1, k, lastTextColor);
+					setCellTextStyleId(i + 1, k, lastTextStyleId);
+				}
+			}
+			break;
+		}
+
+		if(text != NULL && text[0] != _T('\0'))
+		{
+			std::wstring ctext(text);
+			std::wstring utext;
+			switch(lastDisplayUnit)
+			{
+			case CBOQStyle::MM:
+				utext = L"mm";
+				break;
+			case CBOQStyle::CM:
+				utext = L"cm";
+				break;
+			case CBOQStyle::DM:
+				utext = L"dm";
+				break;
+			case CBOQStyle::M:
+				utext = L"m";
+				break;
+			}
+			Utility::ReplaceString(ctext, L"[U]", utext);
+			setCellText(i, j, ctext);
+		}
+		setCellTextColor(i, j, lastTextColor);
+		setCellTextStyleId(i, j, lastTextStyleId);
+
+		j++;
+	}
+
+	// Set rows
+	j = 0;
+	for(std::vector<CBOQTable::ColumnType>::iterator tit = columns.begin(); tit != columns.end(); tit++)
+	{
+		int i = headingLines + 2;
 		CBOQTable::ColumnType type = *tit;
 
 		for(RowListConstIt it = m_List.begin(); it != m_List.end(); it++)
@@ -288,7 +409,7 @@ void CBOQTable::UpdateTable(void)
 				if(text.length() == 1) text.insert(0, L"0");
 				break;
 			case CBOQTable::COUNT:
-				Utility::IntToStr(m_Multiplier * row->count, text);
+				Utility::IntToStr(row->count, text);
 				break;
 			case CBOQTable::DIAMETER:
 				Utility::DoubleToStr(row->diameter, text);
@@ -303,7 +424,7 @@ void CBOQTable::UpdateTable(void)
 				text = L"SHAPE";
 				break;
 			case CBOQTable::TOTALLENGTH:
-				Utility::DoubleToStr(m_Multiplier * row->count * (row->length1 + row->length2) / 2.0 / 1000.0, lastPrecision, text);
+				Utility::DoubleToStr((double)row->count * (row->length1 + row->length2) / 2.0 / 1000.0, lastPrecision, text);
 				doff = diameters[row->diameter];
 				break;
 			}
@@ -318,28 +439,170 @@ void CBOQTable::UpdateTable(void)
 	}
 
 	// Set heading
-	int hi = 0;
-	setCellText(hi, 0, lastHeading);
-	setCellTextColor(hi, 0, lastHeadingColor);
-	setCellTextStyleId(hi, 0, lastHeadingStyleId);
-	setCellHorizontalAlignment(hi, 0, CTableCell::eCENTER);
-	setCellVerticalAlignment(hi, 0, CTableCell::eCENTER);
-	setCellTextHeight(hi, 0, lastHeadingScale);
-	MergeAcross(hi, 0, Columns());
+	if(lastHeading != NULL && lastHeading[0] != _T('\0'))
+	{
+		int hi = 0;
+		setCellTextColor(hi, 0, lastHeadingColor);
+		setCellTextStyleId(hi, 0, lastHeadingStyleId);
+		setCellHorizontalAlignment(hi, 0, CTableCell::eCENTER);
+		setCellVerticalAlignment(hi, 0, CTableCell::eCENTER);
+		setCellTextHeight(hi, 0, lastHeadingScale);
+		MergeAcross(hi, 0, cols);
+
+		std::wstring text(lastHeading);
+		std::wstring ntext;
+		Utility::IntToStr(m_Multiplier, ntext);
+		Utility::ReplaceString(text, L"[N]", ntext);
+		setCellText(hi, 0, text);
+	}
+
+	// Set total rows
+	if(hasdiameterlist)
+	{
+		std::map<double, double> totallengths;
+		for(RowListConstIt it = m_List.begin(); it != m_List.end(); it++)
+		{
+			CBOQRow* row = *it;
+			totallengths[row->diameter] += (double)row->count * (row->length1 + row->length2) / 2.0 / 1000.0;
+		}
+		std::map<double, double> unitweights;
+		double pi = atan(1.0) * 4.0;
+		for(std::map<double, int>::iterator it = diameters.begin(); it != diameters.end(); it++)
+		{
+			double d = (*it).first;
+			unitweights[d] = pi * d * d / 4 * 1000.0 * 7850.0 / 1000.0 / 1000.0 / 1000.0;
+		}
+
+		int ti = headingLines + 2 + (int)m_List.size();
+		int mulcol = cols - (int)diameters.size() - 1;
+		for(int k = ti; k < ti + totalrows; k++)
+		{
+			setCellTextColor(k, 0, lastTextColor);
+			setCellTextStyleId(k, 0, lastTextStyleId);
+			setCellHorizontalAlignment(k, 0, CTableCell::eNEAR);
+			setCellVerticalAlignment(k, 0, CTableCell::eCENTER);
+			MergeAcross(k, 0, cols - (int)diameters.size() - 1);
+
+			setCellTextColor(k, mulcol, lastTextColor);
+			setCellTextStyleId(k, mulcol, lastTextStyleId);
+			setCellHorizontalAlignment(k, mulcol, CTableCell::eFAR);
+			setCellVerticalAlignment(k, mulcol, CTableCell::eCENTER);
+
+			setCellRightBorder(k, mulcol - 1, false);
+			setCellLeftBorder(k, mulcol, false);
+		}
+
+		if(lastDiameterLengthLabel != NULL && lastDiameterLengthLabel[0] != _T('\0'))
+			setCellText(ti, 0, lastDiameterLengthLabel);
+		if(lastUnitWeightLabel != NULL && lastUnitWeightLabel[0] != _T('\0'))
+			setCellText(ti + 1, 0, lastUnitWeightLabel);
+		if(lastWeightLabel != NULL && lastWeightLabel[0] != _T('\0'))
+			setCellText(ti + 2, 0, lastWeightLabel);
+		if(lastGrossWeightLabel != NULL && lastGrossWeightLabel[0] != _T('\0'))
+			setCellText(ti + 3, 0, lastGrossWeightLabel);
+		MergeAcross(ti + 3, cols - (int)diameters.size(), (int)diameters.size());
+
+		for(int ki = ti; ki < ti + totalrows; ki++)
+		{
+			for(std::map<double, int>::iterator it = diameters.begin(); it != diameters.end(); it++)
+			{
+				int kj = cols - (int)diameters.size() + (*it).second;
+				setCellTextColor(ki, kj, lastTextColor);
+				setCellTextStyleId(ki, kj, lastTextStyleId);
+				setCellHorizontalAlignment(ki, kj, CTableCell::eCENTER);
+				setCellVerticalAlignment(ki, kj, CTableCell::eCENTER);
+			}
+		}
+
+		double grosstotal = 0;
+		for(std::map<double, int>::iterator it = diameters.begin(); it != diameters.end(); it++)
+		{
+			int k = cols - (int)diameters.size() + (*it).second;
+			std::wstring text;
+			// Total lengths
+			double len = totallengths[(*it).first];
+			Utility::DoubleToStr(len, lastPrecision, text);
+			setCellText(ti, k, text);
+			// Unit weights
+			double uw = unitweights[(*it).first];
+			Utility::DoubleToStr(uw, 3, text);
+			setCellText(ti + 1, k, text);
+			// Weights
+			double w = len * uw;
+			Utility::DoubleToStr(w, lastPrecision, text);
+			setCellText(ti + 2, k, text);
+			grosstotal += w;
+		}
+		std::wstring gtext;
+		Utility::DoubleToStr(grosstotal, lastPrecision, gtext);
+		setCellText(ti + 3, cols - (int)diameters.size(), gtext);
+
+		if(m_Multiplier > 1)
+		{
+			if(lastWeightLabel != NULL && lastWeightLabel[0] != _T('\0'))
+				setCellText(ti + 4, 0, lastWeightLabel);
+			if(lastGrossWeightLabel != NULL && lastGrossWeightLabel[0] != _T('\0'))
+				setCellText(ti + 5, 0, lastGrossWeightLabel);
+			std::wstring mtext(L"x1");
+			setCellText(ti + 2, mulcol, mtext);
+			setCellText(ti + 3, mulcol, mtext);
+			mtext.clear();
+			Utility::IntToStr(m_Multiplier, mtext);
+			mtext.insert(0, L"x");
+			setCellText(ti + 4, mulcol, mtext);
+			setCellText(ti + 5, mulcol, mtext);
+			MergeAcross(ti + 5, cols - (int)diameters.size(), (int)diameters.size());
+
+			double grossgrosstotal = 0;
+			for(std::map<double, int>::iterator it = diameters.begin(); it != diameters.end(); it++)
+			{
+				int k = cols - (int)diameters.size() + (*it).second;
+				std::wstring text;
+				// Gross total weights
+				double w = (double)m_Multiplier * totallengths[(*it).first] * unitweights[(*it).first];
+				Utility::DoubleToStr(w, lastPrecision, text);
+				setCellText(ti + 4, k, text);
+				grossgrosstotal += w;
+			}
+			std::wstring gtext;
+			Utility::DoubleToStr(grossgrosstotal, lastPrecision, gtext);
+			setCellText(ti + 5, cols - (int)diameters.size(), gtext);
+		}
+	}
 
 	// Set footing
-	int fi = (int)m_List.size() + headingLines;
-	setCellText(fi, 0, lastFooting);
-	setCellTextColor(fi, 0, lastFootingColor);
-	setCellTextStyleId(fi, 0, lastFootingStyleId);
-	setCellHorizontalAlignment(fi, 0, CTableCell::eNEAR);
-	setCellVerticalAlignment(fi, 0, CTableCell::eCENTER);
-	setCellTextHeight(fi, 0, lastFootingScale);
-	MergeAcross(fi, 0, Columns());
+	if(lastFooting != NULL && lastFooting[0] != _T('\0'))
+	{
+		int fi = headingLines + 2 + (int)m_List.size() + totalrows;
+		setCellTextColor(fi, 0, lastFootingColor);
+		setCellTextStyleId(fi, 0, lastFootingStyleId);
+		setCellHorizontalAlignment(fi, 0, CTableCell::eNEAR);
+		setCellVerticalAlignment(fi, 0, CTableCell::eCENTER);
+		setCellTextHeight(fi, 0, lastFootingScale);
+		MergeAcross(fi, 0, cols);
+
+		std::wstring text(lastFooting);
+		std::wstring ntext;
+		Utility::IntToStr(m_Multiplier, ntext);
+		Utility::ReplaceString(text, L"[N]", ntext);
+		setCellText(fi, 0, text);
+	}
 
 	acutDelString(lastColumns);
 	acutDelString(lastHeading);
 	acutDelString(lastFooting);
+
+	acutDelString(lastPosLabel);
+	acutDelString(lastCountLabel);
+	acutDelString(lastDiameterLabel);
+	acutDelString(lastLengthLabel);
+	acutDelString(lastShapeLabel);
+	acutDelString(lastTotalLengthLabel);
+	acutDelString(lastDiameterListLabel);
+	acutDelString(lastDiameterLengthLabel);
+	acutDelString(lastUnitWeightLabel);
+	acutDelString(lastWeightLabel);
+	acutDelString(lastGrossWeightLabel);
 }
 
 //*************************************************************************

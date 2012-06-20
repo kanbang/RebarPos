@@ -137,6 +137,105 @@ void BOQStyle::Footing::set(String^ value)
     Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFooting(Marshal::StringToWchar(value)));
 }
 
+String^ BOQStyle::PosLabel::get()
+{
+	return Marshal::WcharToString(GetImpObj()->PosLabel());
+}
+void BOQStyle::PosLabel::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setPosLabel(Marshal::StringToWchar(value)));
+}
+
+String^ BOQStyle::CountLabel::get()
+{
+	return Marshal::WcharToString(GetImpObj()->CountLabel());
+}
+void BOQStyle::CountLabel::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setCountLabel(Marshal::StringToWchar(value)));
+}
+
+String^ BOQStyle::DiameterLabel::get()
+{
+	return Marshal::WcharToString(GetImpObj()->DiameterLabel());
+}
+void BOQStyle::DiameterLabel::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setDiameterLabel(Marshal::StringToWchar(value)));
+}
+
+String^ BOQStyle::LengthLabel::get()
+{
+	return Marshal::WcharToString(GetImpObj()->LengthLabel());
+}
+void BOQStyle::LengthLabel::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setLengthLabel(Marshal::StringToWchar(value)));
+}
+
+String^ BOQStyle::ShapeLabel::get()
+{
+	return Marshal::WcharToString(GetImpObj()->ShapeLabel());
+}
+void BOQStyle::ShapeLabel::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setShapeLabel(Marshal::StringToWchar(value)));
+}
+
+String^ BOQStyle::TotalLengthLabel::get()
+{
+	return Marshal::WcharToString(GetImpObj()->TotalLengthLabel());
+}
+void BOQStyle::TotalLengthLabel::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setTotalLengthLabel(Marshal::StringToWchar(value)));
+}
+
+String^ BOQStyle::DiameterListLabel::get()
+{
+	return Marshal::WcharToString(GetImpObj()->DiameterListLabel());
+}
+void BOQStyle::DiameterListLabel::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setDiameterListLabel(Marshal::StringToWchar(value)));
+}
+
+String^ BOQStyle::DiameterLengthLabel::get()
+{
+	return Marshal::WcharToString(GetImpObj()->DiameterLengthLabel());
+}
+void BOQStyle::DiameterLengthLabel::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setDiameterLengthLabel(Marshal::StringToWchar(value)));
+}
+
+String^ BOQStyle::UnitWeightLabel::get()
+{
+	return Marshal::WcharToString(GetImpObj()->UnitWeightLabel());
+}
+void BOQStyle::UnitWeightLabel::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setUnitWeightLabel(Marshal::StringToWchar(value)));
+}
+
+String^ BOQStyle::WeightLabel::get()
+{
+	return Marshal::WcharToString(GetImpObj()->WeightLabel());
+}
+void BOQStyle::WeightLabel::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setWeightLabel(Marshal::StringToWchar(value)));
+}
+
+String^ BOQStyle::GrossWeightLabel::get()
+{
+	return Marshal::WcharToString(GetImpObj()->GrossWeightLabel());
+}
+void BOQStyle::GrossWeightLabel::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setGrossWeightLabel(Marshal::StringToWchar(value)));
+}
+
 Autodesk::AutoCAD::DatabaseServices::ObjectId BOQStyle::TextStyleId::get()
 {
 	return Marshal::ToObjectId (GetImpObj()->TextStyleId());

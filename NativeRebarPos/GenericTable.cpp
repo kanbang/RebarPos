@@ -111,6 +111,7 @@ Acad::ErrorStatus CGenericTable::setBasePoint(const AcGePoint3d& newVal)
 
 const double CGenericTable::Width(void) const
 {
+	assertReadEnabled();
 	if(isModified)
 	{
 		Calculate();
@@ -125,6 +126,7 @@ const double CGenericTable::Width(void) const
 
 const double CGenericTable::Height(void) const
 {
+	assertReadEnabled();
 	if(isModified)
 	{
 		Calculate();
@@ -182,12 +184,14 @@ void CGenericTable::setMinimumColumnWidth(const int j, const double newVal)
 {
 	assertWriteEnabled();
 	minColumnWidths[j] = newVal;
+	isModified = true;
 }
 
 void CGenericTable::setMinimumRowHeight(const int i, const double newVal)
 {
 	assertWriteEnabled();
 	minRowHeights[i] = newVal;
+	isModified = true;
 }
 
 //*************************************************************************
@@ -196,11 +200,7 @@ void CGenericTable::setMinimumRowHeight(const int i, const double newVal)
 void CGenericTable::setCellText(const int i, const int j, const std::wstring& newVal)
 {
 	CTableCell* cell = m_Cells[i * m_Columns + j];
-	std::wstring scopy(newVal);
-	Utility::ReplaceString(scopy, L"\r\n", L"\\P");
-	Utility::ReplaceString(scopy, L"\r", L"\\P");
-	Utility::ReplaceString(scopy, L"\n", L"\\P");
-	cell->setText(scopy);
+	cell->setText(newVal);
 	isModified = true;
 }
 void CGenericTable::setCellTextColor(const int i, const int j, const unsigned short newVal)
@@ -451,9 +451,9 @@ const void CGenericTable::Calculate(void) const
 	double y = 0;
 	for(int i = 0; i < m_Rows; i++)
 	{
-		double h = rowHeights[i];
 		for(int j = 0; j < m_Columns; j++)
 		{
+			double h = rowHeights[i];
 			double w = columnWidths[j];
 			if(m_Cells[i * m_Columns + j]->MergeRight() != 0)
 			{

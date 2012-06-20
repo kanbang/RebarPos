@@ -7,8 +7,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "winres.h"
-
+#include "winres.h"
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
@@ -34,12 +33,12 @@ END
 
 2 TEXTINCLUDE 
 BEGIN
-    "#include ""winres.h""\r\0"
+    "#include ""winres.h""\0"
 END
 
 3 TEXTINCLUDE 
 BEGIN
-    "1 TYPELIB ""COMRebarPos.tlb""\r\0"
+    "1 TYPELIB ""COMRebarPos.tlb""\0"
 END
 
 #endif    // APSTUDIO_INVOKED
@@ -110,11 +109,7 @@ END
 //
 // Generated from the TEXTINCLUDE 3 resource.
 //
-3 TEXTINCLUDE 
-BEGIN
-    "1 TYPELIB ""COMRebarPos.tlb""\r\0"
-END
-
+1 TYPELIB "COMRebarPos.tlb"
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
 

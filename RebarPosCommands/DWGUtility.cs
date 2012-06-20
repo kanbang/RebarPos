@@ -302,12 +302,27 @@ namespace RebarPosCommands
 
                         style.Name = "TableStyle1";
                         style.Columns = "[M][N][D][L][TL]";
+
                         style.TextStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Style", "leroy.shx", 0.7);
                         style.HeadingStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Heading Style", "Arial.ttf", 1.0);
                         style.FootingStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Footing Style", "simplxtw.shx", 1.0);
+
                         style.Precision = 2;
-                        style.Heading = "Bill\r\nof\r\nMaterials";
-                        style.Footing = "For information only.\r\nCopyright 2012";
+
+                        style.Heading = "Bill\\Pof\\PMaterials";
+                        style.Footing = "For information only.\\PCopyright 2012";
+
+                        style.PosLabel = "POS";
+                        style.CountLabel = "NO.";
+                        style.DiameterLabel = "DIA";
+                        style.LengthLabel = "LENGTH\\P([U])";
+                        style.ShapeLabel = "SHAPE";
+                        style.TotalLengthLabel = "TOTAL LENGTH (m)";
+                        style.DiameterListLabel = "T[D]";
+                        style.DiameterLengthLabel = "TOTAL LENGTH (m)";
+                        style.UnitWeightLabel = "UNIT WEIGHT (kg/m)";
+                        style.WeightLabel = "WEIGHT (kg)";
+                        style.GrossWeightLabel = "TOTAL WEIGHT (kg)";
 
                         dict.UpgradeOpen();
                         id = dict.SetAt("*", style);

@@ -80,6 +80,11 @@ const void Utility::IntToStr(const int val, std::wstring& str)
 	str = s.str();
 }
 
+const int Utility::DoubleToInt(const double val)
+{
+	 return (int)(val >= 0 ? val + 0.5 : val - 0.5);
+}
+
 const int Utility::StrToInt(const std::wstring& str)
 {
 	return Utility::StrToInt(str.c_str());

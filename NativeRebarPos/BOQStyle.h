@@ -73,6 +73,7 @@ protected:
 	ACHAR* m_LengthLabel;
 	ACHAR* m_ShapeLabel;
 	ACHAR* m_TotalLengthLabel;
+	ACHAR* m_DiameterListLabel;
 	ACHAR* m_DiameterLengthLabel;
 	ACHAR* m_UnitWeightLabel;
 	ACHAR* m_WeightLabel;
@@ -146,6 +147,7 @@ public:
 	const ACHAR* LengthLabel(void) const;
 	const ACHAR* ShapeLabel(void) const;
 	const ACHAR* TotalLengthLabel(void) const;
+	const ACHAR* DiameterListLabel(void) const;
 	const ACHAR* DiameterLengthLabel(void) const;
 	const ACHAR* UnitWeightLabel(void) const;
 	const ACHAR* WeightLabel(void) const;
@@ -158,6 +160,7 @@ public:
 	Acad::ErrorStatus setShapeLabel(const ACHAR* newVal);
 	Acad::ErrorStatus setTotalLengthLabel(const ACHAR* newVal);
 	Acad::ErrorStatus setDiameterLengthLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setDiameterListLabel(const ACHAR* newVal);
 	Acad::ErrorStatus setUnitWeightLabel(const ACHAR* newVal);
 	Acad::ErrorStatus setWeightLabel(const ACHAR* newVal);
 	Acad::ErrorStatus setGrossWeightLabel(const ACHAR* newVal);

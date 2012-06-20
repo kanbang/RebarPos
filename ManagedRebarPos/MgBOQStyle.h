@@ -53,6 +53,18 @@ namespace OZOZ
 			property String^ Heading { String^ get(); void set(String^ value); }
 			property String^ Footing { String^ get(); void set(String^ value); }
 
+			property String^ PosLabel            { String^ get(); void set(String^ value); }
+			property String^ CountLabel          { String^ get(); void set(String^ value); }
+			property String^ DiameterLabel       { String^ get(); void set(String^ value); }
+			property String^ LengthLabel         { String^ get(); void set(String^ value); }
+			property String^ ShapeLabel          { String^ get(); void set(String^ value); }
+			property String^ TotalLengthLabel    { String^ get(); void set(String^ value); }
+			property String^ DiameterListLabel   { String^ get(); void set(String^ value); }
+			property String^ DiameterLengthLabel { String^ get(); void set(String^ value); }
+			property String^ UnitWeightLabel     { String^ get(); void set(String^ value); }
+			property String^ WeightLabel         { String^ get(); void set(String^ value); }
+			property String^ GrossWeightLabel    { String^ get(); void set(String^ value); }
+
 			property Autodesk::AutoCAD::DatabaseServices::ObjectId TextStyleId    { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
 			property Autodesk::AutoCAD::DatabaseServices::ObjectId HeadingStyleId { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
 			property Autodesk::AutoCAD::DatabaseServices::ObjectId FootingStyleId { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
