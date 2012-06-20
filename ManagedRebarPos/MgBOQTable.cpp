@@ -74,6 +74,24 @@ void BOQTable::BasePoint::set(Point3d point)
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setBasePoint(Marshal::FromPoint3d(point)));
 }
 
+double BOQTable::MaxHeight::get()
+{
+    return GetImpObj()->MaxHeight();
+}
+void BOQTable::MaxHeight::set(double value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setMaxHeight(value));
+}
+
+double BOQTable::TableSpacing::get()
+{
+	return (GetImpObj()->TableSpacing());
+}
+void BOQTable::TableSpacing::set(double value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setTableSpacing(value));
+}
+
 int BOQTable::Multiplier::get()
 {
     return GetImpObj()->Multiplier();

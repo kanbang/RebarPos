@@ -494,6 +494,92 @@ STDMETHODIMP CComBOQTable::put_Multiplier(long newVal)
 	return S_OK;
 }
 
+STDMETHODIMP CComBOQTable::get_MaxHeight(double * pVal)
+{
+    CHECKOUTPARAM(pVal);
+    try
+    {
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pBOQTable.openStatus()) != Acad::eOk)
+            throw es;
+
+        *pVal = pBOQTable->MaxHeight();
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to open object", IID_IComBOQTable, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComBOQTable::put_MaxHeight(double newVal)
+{
+    try
+    {
+        AXEntityDocLockNoDbOk(m_objRef.objectId());
+
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pBOQTable.openStatus()) != Acad::eOk)
+            throw es;
+        
+        USES_CONVERSION;
+        if ((es = pBOQTable->setMaxHeight(newVal)) != Acad::eOk)
+            throw es;
+        else 
+            Fire_Notification(DISPID_TMAXROWS);
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to set property.", IID_IComBOQTable, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComBOQTable::get_TableSpacing(double * pVal)
+{
+    CHECKOUTPARAM(pVal);
+    try
+    {
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pBOQTable.openStatus()) != Acad::eOk)
+            throw es;
+
+        *pVal = pBOQTable->TableSpacing();
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to open object", IID_IComBOQTable, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComBOQTable::put_TableSpacing(double newVal)
+{
+    try
+    {
+        AXEntityDocLockNoDbOk(m_objRef.objectId());
+
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pBOQTable.openStatus()) != Acad::eOk)
+            throw es;
+        
+        USES_CONVERSION;
+        if ((es = pBOQTable->setTableSpacing(newVal)) != Acad::eOk)
+            throw es;
+        else 
+            Fire_Notification(DISPID_TTABLESPACING);
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to set property.", IID_IComBOQTable, E_FAIL);
+    }
+	return S_OK;
+}
+
 STDMETHODIMP CComBOQTable::get_Style(BSTR * pVal)
 {
 	CHECKOUTPARAM(pVal);

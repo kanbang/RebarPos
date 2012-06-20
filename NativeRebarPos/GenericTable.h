@@ -57,6 +57,12 @@ private:
 	int m_Columns;
 	std::vector<CTableCell*> m_Cells;
 
+	mutable double m_Width;
+	mutable double m_Height;
+
+	double m_MaxHeight;
+	double m_TableSpacing;
+
 	/// Locals
 	mutable std::vector<AcDbMText*> lastTexts;
 	mutable std::vector<AcDbLine*> lastLines;
@@ -72,6 +78,10 @@ protected:
 
 	// Resets last draw parameters
 	const void ResetDrawParams(void) const;
+
+	// Returns the row index around the given height
+	// before which the table can be divided
+	const int DivideAt(double& y) const;
 
 public:
 	/// Methods
@@ -108,6 +118,14 @@ public:
 	/// Table size
 	const int Columns(void) const;
 	const int Rows(void) const;
+
+	/// Divide table at max height
+	const double MaxHeight(void) const;
+	Acad::ErrorStatus setMaxHeight(const double newVal);
+
+	/// Spacing between divided tables
+	const double TableSpacing(void) const;
+	Acad::ErrorStatus setTableSpacing(const double newVal);
 
 	/// Object scale
 	const double Scale(void) const;

@@ -30,7 +30,8 @@ CGenericTable::CGenericTable(void) : m_BasePoint(0, 0, 0),
 	m_Direction(1, 0, 0), m_Up(0, 1, 0), m_Normal(0, 0, 1),
 	m_Rows(0), m_Columns(0), m_Cells(0),
 	lastTexts(), lastLines(), columnWidths(), rowHeights(), isModified(true),
-	m_CellMargin(0.2)
+	m_CellMargin(0.2), m_MaxHeight(0), m_TableSpacing(2.0),
+	m_Width(0), m_Height(0)
 {
 }
 
@@ -84,6 +85,32 @@ const int CGenericTable::Rows(void) const
 	return m_Rows;
 }
 
+const double CGenericTable::MaxHeight(void) const
+{
+	assertReadEnabled();
+	return m_MaxHeight * m_Direction.length();
+}
+Acad::ErrorStatus CGenericTable::setMaxHeight(const double newVal)
+{
+	assertWriteEnabled();
+	m_MaxHeight = newVal / m_Direction.length();
+	isModified = true;
+	return Acad::eOk;
+}
+
+const double CGenericTable::TableSpacing(void) const
+{
+	assertReadEnabled();
+	return m_TableSpacing * m_Direction.length();
+}
+Acad::ErrorStatus CGenericTable::setTableSpacing(const double newVal)
+{
+	assertWriteEnabled();
+	m_TableSpacing = newVal / m_Direction.length();
+	isModified = true;
+	return Acad::eOk;
+}
+
 const double CGenericTable::CellMargin(void) const
 {
 	assertReadEnabled();
@@ -116,12 +143,7 @@ const double CGenericTable::Width(void) const
 	{
 		Calculate();
 	}
-	double w = 0;
-	for(std::vector<double>::iterator it = columnWidths.begin(); it != columnWidths.end(); it++)
-	{
-		w += (*it);
-	}
-	return w * m_Direction.length();
+	return m_Width * m_Direction.length();
 }
 
 const double CGenericTable::Height(void) const
@@ -131,12 +153,7 @@ const double CGenericTable::Height(void) const
 	{
 		Calculate();
 	}
-	double h = 0;
-	for(std::vector<double>::iterator it = rowHeights.begin(); it != rowHeights.end(); it++)
-	{
-		h += (*it);
-	}
-	return h * m_Direction.length();
+	return m_Height * m_Direction.length();
 }
 
 //*************************************************************************
@@ -446,11 +463,53 @@ const void CGenericTable::Calculate(void) const
 		rowHeights[i] = max(rowHeights[i], minRowHeights[i]);
 	}
 
+	// Calculate table size
+	m_Width = 0;
+	for(std::vector<double>::iterator it = columnWidths.begin(); it != columnWidths.end(); it++)
+	{
+		m_Width += (*it);
+	}
+	m_Height = 0;
+	for(std::vector<double>::iterator it = rowHeights.begin(); it != rowHeights.end(); it++)
+	{
+		m_Height += (*it);
+	}
+
+	// Calculate rows to divide table at
+	int ntables = 1;
+	std::vector<bool> dividers;
+	dividers.resize(m_Rows);
+	for(std::vector<bool>::iterator it = dividers.begin(); it != dividers.end(); it++)
+	{
+		(*it) = false;
+	}
+
+	if(m_MaxHeight > 0.001)
+	{
+		double y = m_MaxHeight;
+		int sr = DivideAt(y);
+		while(sr > 0 && sr < m_Rows)
+		{
+			dividers[sr] = true;
+			y += m_MaxHeight;
+			sr = DivideAt(y);
+		}
+	}
+
 	// Set text location
+	double tableoffset = 0;
 	double x = 0;
 	double y = 0;
 	for(int i = 0; i < m_Rows; i++)
 	{
+		if(dividers[i])
+		{
+			ntables++;
+			tableoffset += m_Width + m_TableSpacing;
+			x = tableoffset;
+			y = 0;
+		}
+
 		for(int j = 0; j < m_Columns; j++)
 		{
 			double h = rowHeights[i];
@@ -506,18 +565,28 @@ const void CGenericTable::Calculate(void) const
 
 			x += columnWidths[j];
 		}
-		x = 0;
+
+		x = tableoffset;
 		y -= rowHeights[i];
 	}
 
 	// Set lines
+	tableoffset = 0;
 	x = 0;
 	y = 0;
 	for(int i = 0; i < m_Rows; i++)
 	{
-		double h = rowHeights[i];
+		if(dividers[i])
+		{
+			ntables++;
+			tableoffset += m_Width + m_TableSpacing;
+			x = tableoffset;
+			y = 0;
+		}
+
 		for(int j = 0; j < m_Columns; j++)
 		{
+			double h = rowHeights[i];
 			double w = columnWidths[j];
 
 			CTableCell* cell = m_Cells[i * m_Columns + j];
@@ -548,12 +617,75 @@ const void CGenericTable::Calculate(void) const
 
 			x += columnWidths[j];
 		}
-		x = 0;
+		x = tableoffset;
+		y -= rowHeights[i];
+	}
+
+	// Recalculate table size
+	tableoffset = 0;
+	x = 0;
+	y = 0;
+	m_Width = 0;
+	m_Height = 0;
+	for(int i = 0; i < m_Rows; i++)
+	{
+		if(dividers[i])
+		{
+			ntables++;
+			tableoffset += m_Width + m_TableSpacing;
+			x = tableoffset;
+			y = 0;
+		}
+
+		for(int j = 0; j < m_Columns; j++)
+		{
+			double h = rowHeights[i];
+			double w = columnWidths[j];
+
+			CTableCell* cell = m_Cells[i * m_Columns + j];
+			m_Width = max(m_Width, x + columnWidths[j]);
+			m_Height = max(m_Height, abs(y - rowHeights[i]));
+
+			x += columnWidths[j];
+		}
+		x = tableoffset;
 		y -= rowHeights[i];
 	}
 
 	// Done update
 	isModified = false;
+}
+
+const int CGenericTable::DivideAt(double& y) const
+{
+	int r = 0;
+	double yt = 0;
+	for(int i = 0; i < (int)rowHeights.size(); i++)
+	{
+		yt += rowHeights[i];
+		if(yt > y)
+		{
+			if(i <= 1) return 0;
+			r = i - 1;
+			yt -= rowHeights[i];
+			break;
+		}
+	}
+	if(r > m_Rows - 1) return 0;
+	for(int j = 0; j < m_Columns; j++)
+	{
+		for(int i = 0; i < r; i++)
+		{
+			CTableCell* cell = m_Cells[i * m_Columns + j];
+			int span = cell->MergeDown();
+			if(span > 0)
+			{
+				if(i + span > r) r = i;
+			}
+		}
+	}
+	y = yt;
+	return r;
 }
 
 //*************************************************************************
@@ -744,12 +876,10 @@ Acad::ErrorStatus CGenericTable::subGetGeomExtents(AcDbExtents& extents) const
 	}
 
 	// Get ECS extents
-	double w = Width();
-	double h = Height();
 	AcGePoint3d pt1(0, 0, 0);
-	AcGePoint3d pt2(w, 0, 0);
-	AcGePoint3d pt3(w, h, 0);
-	AcGePoint3d pt4(0, h, 0);
+	AcGePoint3d pt2(m_Width, 0, 0);
+	AcGePoint3d pt3(m_Width, -m_Height, 0);
+	AcGePoint3d pt4(0, -m_Height, 0);
 
 	// Transform to WCS
 	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
@@ -791,6 +921,9 @@ Acad::ErrorStatus CGenericTable::dwgOutFields(AcDbDwgFiler* pFiler) const
 
 	pFiler->writeInt32(m_Rows);
 	pFiler->writeInt32(m_Columns);
+
+	pFiler->writeDouble(m_MaxHeight);
+	pFiler->writeDouble(m_TableSpacing);
 
 	for(std::vector<CTableCell*>::const_iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
 	{
@@ -850,6 +983,8 @@ Acad::ErrorStatus CGenericTable::dwgInFields(AcDbDwgFiler* pFiler)
 	Adesk::Int32 columns;
 	pFiler->readInt32(&rows);
 	pFiler->readInt32(&columns);
+	pFiler->readDouble(&m_MaxHeight);
+	pFiler->readDouble(&m_TableSpacing);
 	SetSize(rows, columns);
 
 	for(int i = 0; i < m_Rows * m_Columns; i++)
@@ -954,6 +1089,8 @@ Acad::ErrorStatus CGenericTable::dxfOutFields(AcDbDxfFiler* pFiler) const
 
 	pFiler->writeInt32(AcDb::kDxfInt32, m_Rows);
 	pFiler->writeInt32(AcDb::kDxfInt32, m_Columns);
+	pFiler->writeDouble(AcDb::kDxfReal, m_MaxHeight);
+	pFiler->writeDouble(AcDb::kDxfReal, m_TableSpacing);
 
 	for(std::vector<CTableCell*>::const_iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
 	{
@@ -1015,6 +1152,8 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
 	double t_CellMargin;
 	int t_Rows;
 	int t_Columns;
+	double t_MaxHeight;
+	double t_TableSpacing;
 	std::vector<CTableCell*> t_Cells;
 
 	if((es = Utility::ReadDXFPoint(pFiler, AcDb::kDxfXCoord, _T("base point"), t_BasePoint)) != Acad::eOk) return es;
@@ -1025,6 +1164,8 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
 
 	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("row count"), t_Rows)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("column count"), t_Columns)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("max height"), t_MaxHeight)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("table spacing"), t_TableSpacing)) != Acad::eOk) return es;
 
 	t_Cells.resize(t_Rows * t_Columns);
 
@@ -1111,6 +1252,8 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
 	m_Normal = m_Direction.crossProduct(m_Up);
 	m_CellMargin = t_CellMargin;
 	SetSize(t_Rows, t_Columns);
+	m_MaxHeight = t_MaxHeight;
+	m_TableSpacing = t_TableSpacing;
 	m_Cells = t_Cells;
 
 	isModified = true;

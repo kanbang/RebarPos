@@ -118,6 +118,9 @@ namespace OZOZ
 			property double Width  { double get(); }
 			property double Height { double get(); }
 
+			property double MaxHeight    { double get(); void set(double value); }
+			property double TableSpacing { double get(); void set(double value); }
+
 			property Point3d BasePoint { Point3d get(); void set(Point3d value); }
 
 			property int Multiplier   { int get(); void set(int value); }

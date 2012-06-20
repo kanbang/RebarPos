@@ -28,6 +28,22 @@ namespace RebarPosCommands
                         table.Items.Add(1, 6, 26, 1000, 2000, true, ObjectId.Null);
                         table.Items.Add(2, 2, 16, 1000, ObjectId.Null);
                         table.Items.Add(3, 3, 22, 1300.345435435345, ObjectId.Null);
+                        table.Items.Add(4, 3, 22, 1300.345435435345, ObjectId.Null);
+                        table.Items.Add(5, 3, 22, 1300.345435435345, ObjectId.Null);
+                        table.Items.Add(6, 3, 22, 1300.345435435345, ObjectId.Null);
+                        table.Items.Add(7, 3, 22, 1300.345435435345, ObjectId.Null);
+                        table.Items.Add(8, 3, 22, 1300.345435435345, ObjectId.Null);
+                        table.Items.Add(9, 3, 22, 1300.345435435345, ObjectId.Null);
+                        table.Items.Add(10, 3, 22, 1300.345435435345, ObjectId.Null);
+                        table.Items.Add(11, 3, 22, 1300.345435435345, ObjectId.Null);
+                        table.Items.Add(12, 3, 22, 1300.345435435345, ObjectId.Null);
+                        table.Items.Add(13, 3, 22, 1300.345435435345, ObjectId.Null);
+                        table.Items.Add(14, 3, 22, 1300.345435435345, ObjectId.Null);
+                        table.Items.Add(15, 3, 22, 1300.345435435345, ObjectId.Null);
+                        table.Items.Add(16, 3, 22, 1300.345435435345, ObjectId.Null);
+                        table.Items.Add(17, 3, 22, 1300.345435435345, ObjectId.Null);
+                        table.Items.Add(18, 3, 20, 1300.345435435345, ObjectId.Null);
+                        table.Items.Add(19, 3, 26, 1300.345435435345, ObjectId.Null);
                         table.StyleId = DWGUtility.CreateDefaultBOQStyles();
 
                         table.SetDatabaseDefaults(db);
