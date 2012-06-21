@@ -764,15 +764,17 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
 	{
 		p = lastDrawList[i];
-		std::wstring t;
-		text = new AcDbText(AcGePoint3d(p.x, p.y, 0), p.text.c_str(), textStyle, 1.0);
-		text->setColorIndex(p.color);
-		text->setWidthFactor(pTextStyle->xScale());
-		if((es = text->transformBy(trans)) != Acad::eOk)
+		if(!p.text.empty())
 		{
-			return es;
+			text = new AcDbText(AcGePoint3d(p.x, p.y, 0), p.text.c_str(), textStyle, 1.0);
+			text->setColorIndex(p.color);
+			text->setWidthFactor(pTextStyle->xScale());
+			if((es = text->transformBy(trans)) != Acad::eOk)
+			{
+				return es;
+			}
+			entitySet.append(text);
 		}
-		entitySet.append(text);
 		if(p.hasCircle)
 		{
 			AcDbCircle* circle;
@@ -786,14 +788,17 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 		}
 	}
 	p = lastNoteDraw;
-	text = new AcDbText(AcGePoint3d(p.x, p.y, 0), p.text.c_str(), noteStyle, 1.0 * pGroup->NoteScale());
-	text->setColorIndex(p.color);
-	text->setWidthFactor(pNoteStyle->xScale());
-	if((es = text->transformBy(noteTrans)) != Acad::eOk)
+	if(!p.text.empty())
 	{
-		return es;
+		text = new AcDbText(AcGePoint3d(p.x, p.y, 0), p.text.c_str(), noteStyle, 1.0 * pGroup->NoteScale());
+		text->setColorIndex(p.color);
+		text->setWidthFactor(pNoteStyle->xScale());
+		if((es = text->transformBy(noteTrans)) != Acad::eOk)
+		{
+			return es;
+		}
+		entitySet.append(text);
 	}
-	entitySet.append(text);
 
     return Acad::eOk;
 }
