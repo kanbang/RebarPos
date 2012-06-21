@@ -651,7 +651,6 @@ const void CBOQTable::Update(void)
 	assertWriteEnabled();
 
 	UpdateTable();
-	return;
 }
 
 //*************************************************************************

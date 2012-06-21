@@ -801,6 +801,11 @@ Acad::ErrorStatus CGenericTable::subGetOsnapPoints(
 {
 	assertReadEnabled();
 
+	if(isModified)
+	{
+		Calculate();
+	}
+
 	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
 	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
 
@@ -1018,6 +1023,11 @@ Acad::ErrorStatus CGenericTable::dwgOutFields(AcDbDwgFiler* pFiler) const
 {
 	assertReadEnabled();
 
+	if(isModified)
+	{
+		Calculate();
+	}
+
 	// Save parent class information first.
 	Acad::ErrorStatus es;
 	if((es = AcDbEntity::dwgOutFields(pFiler)) != Acad::eOk)
@@ -1210,6 +1220,11 @@ Acad::ErrorStatus CGenericTable::dwgInFields(AcDbDwgFiler* pFiler)
 Acad::ErrorStatus CGenericTable::dxfOutFields(AcDbDxfFiler* pFiler) const
 {
 	assertReadEnabled();
+
+	if(isModified)
+	{
+		Calculate();
+	}
 
 	// Save parent class information first.
 	Acad::ErrorStatus es;

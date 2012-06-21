@@ -522,7 +522,6 @@ const void CRebarPos::Update(void)
 	assertWriteEnabled();
 
 	isModified = true;
-	return;
 }
 
 const std::vector<CShape*>& CRebarPos::GetShapes(void) const
