@@ -61,7 +61,7 @@ namespace RebarPosCommands
             while (cont)
             {
                 PromptEntityOptions opts = new PromptEntityOptions("Poz secin veya [Yeni/Numaralandir/Kopyala/Grup/kOntrol/Metraj/bul Degistir/numara Sil/Acilimlar]: ",
-                    "New Numbering Copy Group Check BOM Find Empty Shapes");
+                    "New Numbering Copy Group Check BOQ Find Empty Shapes");
                 opts.AllowNone = false;
                 PromptEntityResult result = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetEntity(opts);
 
@@ -88,8 +88,8 @@ namespace RebarPosCommands
                             MessageBox.Show("Bu komut henüz tamamlanmadı.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             // CheckPos();
                             break;
-                        case "BOM":
-                            DrawBOM();
+                        case "BOQ":
+                            DrawBOQ();
                             break;
                         case "Find":
                             cont = !FindReplace(false);
@@ -152,10 +152,10 @@ namespace RebarPosCommands
             CopyPos();
         }
 
-        [CommandMethod("RebarPos", "BOM", "BOM_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
-        public void CMD_DrawBOM()
+        [CommandMethod("RebarPos", "BOQ", "BOQ_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
+        public void CMD_DrawBOQ()
         {
-            DrawBOM();
+            DrawBOQ();
         }
 
         [CommandMethod("RebarPos", "POSFIND", "POSFIND_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]

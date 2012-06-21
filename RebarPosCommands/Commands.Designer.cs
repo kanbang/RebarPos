@@ -63,9 +63,9 @@ namespace RebarPosCommands {
         /// <summary>
         ///   Looks up a localized string similar to METRAJ.
         /// </summary>
-        internal static string BOM_Local {
+        internal static string BOQ_Local {
             get {
-                return ResourceManager.GetString("BOM_Local", resourceCulture);
+                return ResourceManager.GetString("BOQ_Local", resourceCulture);
             }
         }
         

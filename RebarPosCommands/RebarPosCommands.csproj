@@ -95,7 +95,14 @@
     <Compile Include="Commands_NumberPos.cs" />
     <Compile Include="Commands_PosShapes.cs" />
     <Compile Include="Commands_FindReplace.cs" />
-    <Compile Include="Commands_DrawBOM.cs" />
+    <Compile Include="Commands_DrawBOQ.cs" />
+    <Compile Include="DrawBOQForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DrawBOQForm.Designer.cs">
+      <DependentUpon>DrawBOQForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PosCopy.cs" />
     <Compile Include="ShowShapesOverrule.cs" />
     <Compile Include="HighlightGroupOverrule.cs" />
     <Compile Include="FindReplaceForm.cs">
@@ -164,6 +171,9 @@
       <DependentUpon>Commands.cs</DependentUpon>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Commands.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DrawBOQForm.resx">
+      <DependentUpon>DrawBOQForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FindReplaceForm.resx">
       <DependentUpon>FindReplaceForm.cs</DependentUpon>

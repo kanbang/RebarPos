@@ -58,6 +58,7 @@ namespace OZOZ
 
 			private:
 				double mDiameter;
+				int mCount;
 				int mPrecision;
 				int mFieldCount;
 				bool mBending;
@@ -71,6 +72,7 @@ namespace OZOZ
 
 			public:
 				property double Diameter { double get() { return mDiameter; } }
+				property int Count       { int    get() { return mCount; } }
 				property int Precision   { int    get() { return mPrecision; } }
 				property int FieldCount  { int    get() { return mFieldCount; } }
 				property bool Bending    { bool   get() { return mBending; } }
@@ -108,6 +110,7 @@ namespace OZOZ
 				CalculatedProperties(const CRebarPos::CCalculatedProperties& source)
 				{
 					mGeneration  = source.Generation;
+					mCount       = source.Count;
 					mDiameter    = source.Diameter;
 					mPrecision	 = source.Precision;
 					mFieldCount	 = source.FieldCount;

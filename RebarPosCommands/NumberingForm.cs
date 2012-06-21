@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using Autodesk.AutoCAD.DatabaseServices;
 using OZOZ.RebarPosWrapper;
@@ -19,48 +16,6 @@ namespace RebarPosCommands
             Shape = 2,
             Diameter = 3,
             TotalLength = 4
-        }
-
-        private class PosCopy
-        {
-            public List<ObjectId> list;
-            public string key;
-            public string pos;
-            public string newpos;
-            public int priority;
-            public string diameter;
-            public string length;
-            public string a;
-            public string b;
-            public string c;
-            public string d;
-            public string e;
-            public string f;
-            public ObjectId shapeId;
-            public string shapename;
-            public double x;
-            public double y;
-            public double length1;
-            public double length2;
-            public bool existing;
-
-            public PosCopy()
-            {
-                list = new List<ObjectId>();
-                x = double.MaxValue;
-                y = double.MaxValue;
-                priority = -1;
-                length = string.Empty;
-                length1 = 0.0;
-                length2 = 0.0;
-                pos = string.Empty;
-                newpos = string.Empty;
-                shapeId = ObjectId.Null;
-                shapename = string.Empty;
-                diameter = string.Empty;
-                key = string.Empty;
-                existing = false;
-            }
         }
 
         List<PosCopy> m_PosList;
@@ -98,10 +53,6 @@ namespace RebarPosCommands
             rbKeepExisting.Checked = true;
 
             ReadPos(groupId);
-            if (m_PosList.Count == 0)
-            {
-                return false;
-            }
             AddMissing();
             SortDisplayList();
             PopulateList();
@@ -202,7 +153,6 @@ namespace RebarPosCommands
             {
                 order = ord;
             }
-
 
             public int Compare(PosCopy p1, PosCopy p2)
             {
@@ -322,70 +272,16 @@ namespace RebarPosCommands
 
         private void ReadPos(ObjectId groupId)
         {
-            m_PosList = new List<PosCopy>();
-
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
+            try
             {
-                try
-                {
-                    BlockTableRecord btr = (BlockTableRecord)tr.GetObject(db.CurrentSpaceId, OpenMode.ForRead);
-                    using (BlockTableRecordEnumerator it = btr.GetEnumerator())
-                    {
-                        while (it.MoveNext())
-                        {
-                            RebarPos pos = tr.GetObject(it.Current, OpenMode.ForRead) as RebarPos;
-                            if (pos != null && pos.GroupId == groupId)
-                            {
-                                PosCopy copy = m_PosList.Find(p => p.key == pos.PosKey); ;
-
-                                if (copy != null)
-                                {
-                                    copy.list.Add(it.Current);
-                                    copy.x = Math.Min(copy.x, pos.BasePoint.X);
-                                    copy.y = Math.Min(copy.y, pos.BasePoint.Y);
-                                }
-                                else
-                                {
-                                    copy = new PosCopy();
-                                    copy.key = pos.PosKey;
-                                    copy.list.Add(it.Current);
-                                    copy.pos = pos.Pos;
-                                    copy.newpos = pos.Pos;
-                                    copy.existing = true;
-                                    copy.diameter = pos.Diameter;
-                                    copy.length = pos.Length;
-                                    copy.a = pos.A;
-                                    copy.b = pos.B;
-                                    copy.c = pos.C;
-                                    copy.d = pos.D;
-                                    copy.e = pos.E;
-                                    copy.f = pos.F;
-                                    copy.x = pos.BasePoint.X;
-                                    copy.y = pos.BasePoint.Y;
-                                    copy.shapeId = pos.ShapeId;
-                                    PosShape shape = tr.GetObject(copy.shapeId, OpenMode.ForRead) as PosShape;
-                                    if (shape != null)
-                                    {
-                                        copy.priority = shape.Priority;
-                                        copy.shapename = shape.Name;
-                                    }
-                                    copy.length1 = pos.CalcProperties.MinLength;
-                                    copy.length2 = pos.CalcProperties.MaxLength;
-                                    m_PosList.Add(copy);
-                                }
-                            }
-                        }
-                    }
-                }
-                catch (System.Exception ex)
-                {
-                    MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                m_PosList = PosCopy.ReadAllInGroup(groupId, PosCopy.PosGrouping.PosKey);
+                AddMissing();
+                SortDisplayList();
             }
-
-            AddMissing();
-            SortDisplayList();
+            catch (System.Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void cbGroup_SelectedIndexChanged(object sender, EventArgs e)

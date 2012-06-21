@@ -1788,6 +1788,22 @@ const void CRebarPos::Calculate(void) const
 	if (pGroup->NoteStyleId() != AcDbObjectId::kNull)
 		Utility::MakeGiTextStyle(lastNoteStyle, pGroup->NoteStyleId());
 
+	// Calculate count
+	if(m_Count != NULL && m_Count[0] != _T('\0'))
+	{
+		std::wstring countstring(m_Count);
+		try
+		{
+			Utility::ReplaceString(countstring, L"x", L"*");
+			Utility::ReplaceString(countstring, L"X", L"*");
+			m_CalcProps.Count = Utility::DoubleToInt(Calculator::Evaluate(countstring));
+		}
+		catch(...)
+		{
+			m_CalcProps.Count = 0;
+		}
+	}
+
 	// Calculate diameter
 	m_CalcProps.Diameter = 0;
 	if(m_Diameter != NULL && m_Diameter[0] != _T('\0'))

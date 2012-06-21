@@ -485,6 +485,37 @@ namespace RebarPosCommands
         }
 
         // Returns all items in the dictionary.
+        public static Dictionary<string, ObjectId> GetTableStyles()
+        {
+            Dictionary<string, ObjectId> list = new Dictionary<string, ObjectId>();
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
+                    if (namedDict.Contains(BOQStyle.TableName))
+                    {
+                        DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(BOQStyle.TableName), OpenMode.ForRead);
+                        using (DbDictionaryEnumerator it = dict.GetEnumerator())
+                        {
+                            while (it.MoveNext())
+                            {
+                                BOQStyle item = (BOQStyle)tr.GetObject(it.Value, OpenMode.ForRead);
+                                list.Add(item.Name, it.Value);
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    ;
+                }
+            }
+            return list;
+        }
+
+        // Returns all items in the dictionary.
         public static Dictionary<string, ObjectId> GetShapes()
         {
             Dictionary<string, ObjectId> list = new Dictionary<string, ObjectId>();

@@ -77,6 +77,7 @@ public:
 	public:
 		int Generation;
 
+		int Count;
 		double Diameter;
 		int Precision;
 		int FieldCount;
@@ -96,7 +97,7 @@ public:
 		CPosGroup::DrawingUnits DisplayUnit;
 
 	public:
-		CCalculatedProperties() : Generation(0), Diameter(0), Precision(0), FieldCount(0), Bending(0),
+		CCalculatedProperties() : Generation(0), Count(0), Diameter(0), Precision(0), FieldCount(0), Bending(0),
 			MinA(0),  MinB(0),  MinC(0),  MinD(0),  MinE(0),  MinF(0),
 			MaxA(0),  MaxB(0),  MaxC(0),  MaxD(0),  MaxE(0),  MaxF(0),
 			IsVarA(false),  IsVarB(false),  IsVarC(false),  IsVarD(false),  IsVarE(false),  IsVarF(false), 

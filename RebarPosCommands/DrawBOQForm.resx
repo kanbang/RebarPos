@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,40 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BOQ_Local" xml:space="preserve">
-    <value>METRAJ</value>
-  </data>
-  <data name="COPYPOS_Local" xml:space="preserve">
-    <value>POZKOPYALA</value>
-  </data>
-  <data name="EMPTYPOS_Local" xml:space="preserve">
-    <value>NUMARASIL</value>
-  </data>
-  <data name="HIDESHAPES_Local" xml:space="preserve">
-    <value>SEKILSIL</value>
-  </data>
-  <data name="NEWPOS_Local" xml:space="preserve">
-    <value>POZEKLE</value>
-  </data>
-  <data name="NUMBERPOS_Local" xml:space="preserve">
-    <value>POZNUM</value>
-  </data>
-  <data name="POSEDIT_Local" xml:space="preserve">
-    <value>POZEDIT</value>
-  </data>
-  <data name="POSFIND_Local" xml:space="preserve">
-    <value>POZBUL</value>
-  </data>
-  <data name="POSGROUP_Local" xml:space="preserve">
-    <value>POZGRUP</value>
-  </data>
-  <data name="POSSHAPES_Local" xml:space="preserve">
-    <value>ACILIMLAR</value>
-  </data>
-  <data name="POS_Local" xml:space="preserve">
-    <value>POZ</value>
-  </data>
-  <data name="SHOWSHAPES_Local" xml:space="preserve">
-    <value>SEKILGOSTER</value>
-  </data>
 </root>
