@@ -67,7 +67,7 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(417, 217);
+            this.groupBox1.Size = new System.Drawing.Size(417, 145);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "&Tablo Seçenekleri";
@@ -96,16 +96,15 @@
             // 
             // txtFooter
             // 
-            this.txtFooter.Location = new System.Drawing.Point(159, 142);
-            this.txtFooter.Multiline = true;
+            this.txtFooter.Location = new System.Drawing.Point(159, 109);
             this.txtFooter.Name = "txtFooter";
-            this.txtFooter.Size = new System.Drawing.Size(234, 53);
+            this.txtFooter.Size = new System.Drawing.Size(234, 20);
             this.txtFooter.TabIndex = 7;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(21, 145);
+            this.label3.Location = new System.Drawing.Point(21, 112);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(37, 13);
             this.label3.TabIndex = 6;
@@ -114,9 +113,8 @@
             // txtHeader
             // 
             this.txtHeader.Location = new System.Drawing.Point(159, 83);
-            this.txtHeader.Multiline = true;
             this.txtHeader.Name = "txtHeader";
-            this.txtHeader.Size = new System.Drawing.Size(234, 53);
+            this.txtHeader.Size = new System.Drawing.Size(234, 20);
             this.txtHeader.TabIndex = 5;
             // 
             // label2
@@ -160,7 +158,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(357, 374);
+            this.btnCancel.Location = new System.Drawing.Point(357, 303);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
@@ -171,7 +169,7 @@
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(276, 374);
+            this.btnOK.Location = new System.Drawing.Point(276, 303);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 2;
@@ -187,7 +185,7 @@
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.txtTextHeight);
             this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Location = new System.Drawing.Point(13, 235);
+            this.groupBox2.Location = new System.Drawing.Point(13, 163);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(419, 125);
             this.groupBox2.TabIndex = 1;
@@ -259,7 +257,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(444, 409);
+            this.ClientSize = new System.Drawing.Size(444, 338);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
