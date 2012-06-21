@@ -70,6 +70,15 @@ namespace RebarPosCommands {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to METRAJEDIT.
+        /// </summary>
+        internal static string BOQEDIT_Local {
+            get {
+                return ResourceManager.GetString("BOQEDIT_Local", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to POZKOPYALA.
         /// </summary>
         internal static string COPYPOS_Local {

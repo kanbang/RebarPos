@@ -40,12 +40,14 @@ namespace RebarPosCommands
 
                     Point3d pt = result.Value;
                     table.TransformBy(Matrix3d.Displacement(pt.GetAsVector()));
-                    table.TransformBy(Matrix3d.Scaling(25.0, pt));
+                    table.TransformBy(Matrix3d.Scaling(form.TextHeight, pt));
 
                     table.Heading = form.TableHeader;
                     table.Footing = form.TableFooter;
                     table.Multiplier = form.Multiplier;
                     table.StyleId = form.TableStyle;
+                    table.MaxHeight = form.TableHeight;
+                    table.TableSpacing = form.TableMargin;
 
                     // Add rows
                     foreach (PosCopy copy in form.PosList)

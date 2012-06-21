@@ -101,12 +101,26 @@ namespace RebarPosCommands
                 }
                 else if (result.Status == PromptStatus.OK)
                 {
-                    PosEdit(result.ObjectId, result.PickedPoint);
+                    ItemEdit(result.ObjectId, result.PickedPoint);
                 }
                 else
                 {
                     cont = false;
                 }
+            }
+        }
+
+        // Edits a pos or table
+        private void ItemEdit(ObjectId id, Point3d pt)
+        {
+            RXClass cls = id.ObjectClass;
+            if (cls == RXObject.GetClass(typeof(RebarPos)))
+            {
+                PosEdit(id, pt);
+            }
+            else if (cls == RXObject.GetClass(typeof(BOQTable)))
+            {
+                BOQEdit(id);
             }
         }
 
@@ -119,6 +133,18 @@ namespace RebarPosCommands
             if (result.Status == PromptStatus.OK)
             {
                 PosEdit(result.ObjectId, result.PickedPoint);
+            }
+        }
+
+        [CommandMethod("RebarPos", "BOQEDIT", "BOQEDIT_Local", CommandFlags.Modal)]
+        public void CMD_BOQEdit()
+        {
+            PromptEntityOptions opts = new PromptEntityOptions("Select entity: ");
+            opts.AllowNone = false;
+            PromptEntityResult result = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetEntity(opts);
+            if (result.Status == PromptStatus.OK)
+            {
+                BOQEdit(result.ObjectId);
             }
         }
 

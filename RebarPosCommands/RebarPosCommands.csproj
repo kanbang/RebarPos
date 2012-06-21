@@ -96,6 +96,13 @@
     <Compile Include="Commands_PosShapes.cs" />
     <Compile Include="Commands_FindReplace.cs" />
     <Compile Include="Commands_DrawBOQ.cs" />
+    <Compile Include="Commands_BOQEdit.cs" />
+    <Compile Include="EditBOQForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditBOQForm.Designer.cs">
+      <DependentUpon>EditBOQForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DrawBOQForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -171,6 +178,9 @@
       <DependentUpon>Commands.cs</DependentUpon>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Commands.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditBOQForm.resx">
+      <DependentUpon>EditBOQForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DrawBOQForm.resx">
       <DependentUpon>DrawBOQForm.cs</DependentUpon>
