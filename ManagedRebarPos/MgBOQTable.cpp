@@ -175,3 +175,11 @@ void BOQTable::BOQRowCollection::default::set(int index, BOQTable::BOQRow^ value
 {
 	m_Parent->GetImpObj()->SetRow(index, value->ToNative());
 }
+
+//*************************************************************************
+// Methods
+//*************************************************************************
+void BOQTable::Update()
+{
+	GetImpObj()->Update();
+}

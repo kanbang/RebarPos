@@ -137,6 +137,66 @@ namespace RebarPosCommands
             return list.ToArray();
         }
 
+        public static ObjectId[] GetAllTables()
+        {
+            List<ObjectId> list = new List<ObjectId>();
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    BlockTableRecord btr = (BlockTableRecord)tr.GetObject(db.CurrentSpaceId, OpenMode.ForRead);
+                    using (BlockTableRecordEnumerator it = btr.GetEnumerator())
+                    {
+                        while (it.MoveNext())
+                        {
+                            if (it.Current.ObjectClass == Autodesk.AutoCAD.Runtime.RXObject.GetClass(typeof(BOQTable)))
+                            {
+                                list.Add(it.Current);
+                            }
+                        }
+                    }
+                }
+                catch (System.Exception)
+                {
+                    ;
+                }
+            }
+            return list.ToArray();
+        }
+
+        public static ObjectId[] GetTableWithStyle(ObjectId styleId)
+        {
+            List<ObjectId> list = new List<ObjectId>();
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    BlockTableRecord btr = (BlockTableRecord)tr.GetObject(db.CurrentSpaceId, OpenMode.ForRead);
+                    using (BlockTableRecordEnumerator it = btr.GetEnumerator())
+                    {
+                        while (it.MoveNext())
+                        {
+                            BOQTable table = tr.GetObject(it.Current, OpenMode.ForRead) as BOQTable;
+                            if (table != null)
+                            {
+                                if (table.StyleId == styleId)
+                                {
+                                    list.Add(it.Current);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (System.Exception)
+                {
+                    ;
+                }
+            }
+            return list.ToArray();
+        }
+
         // Creates default shapes
         public static ObjectId CreateDefaultShapes()
         {
@@ -583,6 +643,42 @@ namespace RebarPosCommands
         public static void RefreshAllPos()
         {
             RefreshPos(GetAllPos());
+        }
+
+        // Refreshes given items
+        public static void RefreshTable(IEnumerable<ObjectId> ids)
+        {
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    foreach (ObjectId posid in ids)
+                    {
+                        BOQTable table = tr.GetObject(posid, OpenMode.ForWrite) as BOQTable;
+                        table.Update();
+                        table.Draw();
+                    }
+
+                    tr.Commit();
+                }
+                catch
+                {
+                    ;
+                }
+            }
+        }
+
+        // Refreshes all items with given style
+        public static void RefreshTableWithStyle(ObjectId id)
+        {
+            RefreshTable(GetTableWithStyle(id));
+        }
+
+        // Refreshes all items
+        public static void RefreshAllTables()
+        {
+            RefreshTable(GetAllTables());
         }
 
         // Regenerates the drawing window

@@ -632,6 +632,14 @@ void CBOQTable::UpdateTable(void)
 	acutDelString(lastGrossWeightLabel);
 }
 
+const void CBOQTable::Update(void)
+{
+	assertWriteEnabled();
+
+	UpdateTable();
+	return;
+}
+
 //*************************************************************************
 // Overridden methods from AcDbEntity
 //*************************************************************************

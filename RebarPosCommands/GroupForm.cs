@@ -362,18 +362,18 @@ namespace RebarPosCommands
             {
                 btnRemove.Enabled = false;
                 btnRename.Enabled = false;
-                gbOptions.Enabled = false;
                 btnSetCurrent.Enabled = false;
-                return;
             }
             else
             {
                 btnRemove.Enabled = true;
                 btnRename.Enabled = true;
-                gbOptions.Enabled = true;
                 btnSetCurrent.Enabled = true;
                 SetGroup();
             }
+
+            gbDisplay.Enabled = (lbGroups.SelectedIndices.Count != 0);
+            gbOptions.Enabled = (lbGroups.SelectedIndices.Count != 0);
         }
 
         private void UpdateItemImages()

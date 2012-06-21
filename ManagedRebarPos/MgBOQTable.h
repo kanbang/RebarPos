@@ -129,6 +129,9 @@ namespace OZOZ
 			property String^ Footing { String^ get(); void set(String^ value); }
 
 			property Autodesk::AutoCAD::DatabaseServices::ObjectId StyleId { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
+
+		public:
+			void Update();
         };
     }
 }

@@ -97,6 +97,13 @@
     <Compile Include="Commands_FindReplace.cs" />
     <Compile Include="Commands_DrawBOQ.cs" />
     <Compile Include="Commands_BOQEdit.cs" />
+    <Compile Include="Commands_TableStyles.cs" />
+    <Compile Include="TableStyleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TableStyleForm.Designer.cs">
+      <DependentUpon>TableStyleForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="EditBOQForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -178,6 +185,9 @@
       <DependentUpon>Commands.cs</DependentUpon>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Commands.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TableStyleForm.resx">
+      <DependentUpon>TableStyleForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EditBOQForm.resx">
       <DependentUpon>EditBOQForm.cs</DependentUpon>
