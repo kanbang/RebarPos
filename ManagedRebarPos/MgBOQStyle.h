@@ -51,9 +51,6 @@ namespace OZOZ
 			property Autodesk::AutoCAD::Colors::Color^ HeadingColor    { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }
 			property Autodesk::AutoCAD::Colors::Color^ FootingColor    { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }
 
-			property String^ Heading { String^ get(); void set(String^ value); }
-			property String^ Footing { String^ get(); void set(String^ value); }
-
 			property String^ PosLabel            { String^ get(); void set(String^ value); }
 			property String^ CountLabel          { String^ get(); void set(String^ value); }
 			property String^ DiameterLabel       { String^ get(); void set(String^ value); }

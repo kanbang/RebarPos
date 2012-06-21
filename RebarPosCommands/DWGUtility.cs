@@ -309,9 +309,6 @@ namespace RebarPosCommands
 
                         style.Precision = 2;
 
-                        style.Heading = "Bill\\Pof\\PMaterials";
-                        style.Footing = "For information only.\\PCopyright 2012";
-
                         style.PosLabel = "POS";
                         style.CountLabel = "NO.";
                         style.DiameterLabel = "DIA";

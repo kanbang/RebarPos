@@ -204,8 +204,6 @@ void CBOQTable::UpdateTable(void)
 	// Get texts
 	ACHAR* lastHeading = NULL;
 	ACHAR* lastFooting = NULL;
-	acutUpdString(pStyle->Heading(), lastHeading);
-	acutUpdString(pStyle->Footing(), lastFooting);
 	if(m_Heading != NULL && m_Heading[0] != _T('\0'))
 		acutUpdString(m_Heading, lastHeading);
 	if(m_Footing != NULL && m_Footing[0] != _T('\0'))
@@ -250,6 +248,10 @@ void CBOQTable::UpdateTable(void)
 	{
 		CBOQRow* row = *it;
 		diameters[row->diameter] = 0;
+	}
+	if(diameters.empty())
+	{
+		diameters[12] = 0;
 	}
 	// Set column position
 	int diacol = 0;

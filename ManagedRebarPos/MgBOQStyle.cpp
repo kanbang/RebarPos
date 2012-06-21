@@ -128,24 +128,6 @@ void BOQStyle::FootingColor::set(Autodesk::AutoCAD::Colors::Color^ value)
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFootingColor(value->ColorIndex));
 }
 
-String^ BOQStyle::Heading::get()
-{
-	return Marshal::WcharToString(GetImpObj()->Heading());
-}
-void BOQStyle::Heading::set(String^ value)
-{
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setHeading(Marshal::StringToWchar(value)));
-}
-
-String^ BOQStyle::Footing::get()
-{
-	return Marshal::WcharToString(GetImpObj()->Footing());
-}
-void BOQStyle::Footing::set(String^ value)
-{
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFooting(Marshal::StringToWchar(value)));
-}
-
 String^ BOQStyle::PosLabel::get()
 {
 	return Marshal::WcharToString(GetImpObj()->PosLabel());
