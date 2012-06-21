@@ -599,6 +599,19 @@ namespace RebarPosCommands
             }
         }
 
+
+        private void txtColumns_Validating(object sender, CancelEventArgs e)
+        {
+            string text = txtColumns.Text;
+            if(text.Contains("[TL]") && !text.EndsWith("[TL]"))
+            {
+                errorProvider.SetError(txtColumns, "Toplam sütunu son sütun olmalıdır.");
+                e.Cancel = true;
+            }
+            else
+                errorProvider.SetError(txtColumns, "");
+        }
+
         private void txtColumns_Validated(object sender, EventArgs e)
         {
             TableStyleCopy copy = GetSelected();

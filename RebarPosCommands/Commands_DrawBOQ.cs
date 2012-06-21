@@ -52,7 +52,10 @@ namespace RebarPosCommands
                     // Add rows
                     foreach (PosCopy copy in form.PosList)
                     {
-                        table.Items.Add(int.Parse(copy.pos), copy.count, double.Parse(copy.diameter), copy.length1, copy.length2, copy.isVarLength, copy.shapeId);
+                        if (copy.existing)
+                            table.Items.Add(int.Parse(copy.pos), copy.count, double.Parse(copy.diameter), copy.length1, copy.length2, copy.isVarLength, copy.shapeId);
+                        else
+                            table.Items.Add(int.Parse(copy.pos));
                     }
 
                     table.SetDatabaseDefaults(db);

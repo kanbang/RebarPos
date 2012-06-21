@@ -29,6 +29,7 @@ namespace OZOZ
 				property double Length1;
 				property double Length2;
 				property bool IsVarLength;
+				property bool IsEmpty;
 				property Autodesk::AutoCAD::DatabaseServices::ObjectId ShapeId;
 
 			public:
@@ -40,6 +41,7 @@ namespace OZOZ
 					Length1 = 0;
 					Length2 = 0;
 					IsVarLength = false;
+					IsEmpty = false;
 					ShapeId = Autodesk::AutoCAD::DatabaseServices::ObjectId::Null;
 				}
 				BOQRow(int pos, int count, double diameter, double length1, double length2, bool isVarLength, Autodesk::AutoCAD::DatabaseServices::ObjectId shapeId)
@@ -50,7 +52,19 @@ namespace OZOZ
 					Length1 = length1;
 					Length2 = length2;
 					IsVarLength = isVarLength;
+					IsEmpty = false;
 					ShapeId = shapeId;
+				}
+				BOQRow(int pos)
+				{
+					Pos = pos;
+					Count = 0;
+					Diameter = 0;
+					Length1 = 0;
+					Length2 = 0;
+					IsVarLength = false;
+					IsEmpty = true;
+					ShapeId = Autodesk::AutoCAD::DatabaseServices::ObjectId::Null;
 				}
 
 			private:
@@ -60,13 +74,19 @@ namespace OZOZ
 			internal:
 				CBOQRow* ToNative(void)
 				{
-					return new CBOQRow(Pos, Count, Diameter, Length1, Length2, IsVarLength ? Adesk::kTrue : Adesk::kFalse, OZOZ::RebarPosWrapper::Marshal::FromObjectId(ShapeId));
+					if(!IsEmpty)
+						return new CBOQRow(Pos, Count, Diameter, Length1, Length2, IsVarLength ? Adesk::kTrue : Adesk::kFalse, OZOZ::RebarPosWrapper::Marshal::FromObjectId(ShapeId));
+					else
+						return new CBOQRow(Pos);
 				}
 
 			internal:
 				static BOQRow^ FromNative(const CBOQRow* shape)
 				{
-					return gcnew BOQRow(shape->pos, shape->count, shape->diameter, shape->length1, shape->length2, (shape->isVarLength == Adesk::kTrue), OZOZ::RebarPosWrapper::Marshal::ToObjectId(shape->shapeId));
+					if(!shape->isEmpty)
+						return gcnew BOQRow(shape->pos, shape->count, shape->diameter, shape->length1, shape->length2, (shape->isVarLength == Adesk::kTrue), OZOZ::RebarPosWrapper::Marshal::ToObjectId(shape->shapeId));
+					else
+						return gcnew BOQRow(shape->pos);
 				}
 			};
 			
@@ -87,6 +107,7 @@ namespace OZOZ
 			public:
 				void Add(int pos, int count, double diameter, double length1, double length2, bool isVarLength, Autodesk::AutoCAD::DatabaseServices::ObjectId shapeId);
 				void Add(int pos, int count, double diameter, double length, Autodesk::AutoCAD::DatabaseServices::ObjectId shapeId);
+				void Add(int pos);
 				property int Count { int get(); }
 				property BOQRow^ default[int] { BOQRow^ get(int index); void set(int index, BOQRow^ value); }
 				void Remove(int index);

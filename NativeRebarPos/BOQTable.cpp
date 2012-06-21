@@ -247,7 +247,10 @@ void CBOQTable::UpdateTable(void)
 	for(RowListConstIt it = m_List.begin(); it != m_List.end(); it++)
 	{
 		CBOQRow* row = *it;
-		diameters[row->diameter] = 0;
+		if(!row->isEmpty)
+		{
+			diameters[row->diameter] = 0;
+		}
 	}
 	if(diameters.empty())
 	{
@@ -422,43 +425,54 @@ void CBOQTable::UpdateTable(void)
 		{
 			CBOQRow* row = *it;
 
-			std::wstring text;
-			double len;
-			int doff = 0;
-
-			switch(type)
+			if(!row->isEmpty)
 			{
-			case CBOQTable::POS:
-				Utility::IntToStr(row->pos, text);
-				break;
-			case CBOQTable::POSDD:
-				Utility::IntToStr(row->pos, text);
-				if(text.length() == 1) text.insert(0, L"0");
-				break;
-			case CBOQTable::COUNT:
-				Utility::IntToStr(row->count, text);
-				break;
-			case CBOQTable::DIAMETER:
-				Utility::DoubleToStr(row->diameter, text);
-				break;
-			case CBOQTable::LENGTH:
-				len = (row->length1 + row->length2) / 2.0;
-				if(lastDisplayUnit == CBOQStyle::CM) len /= 10.0;
-				Utility::DoubleToStr(len, lastPrecision, text);
-				break;
-			case CBOQTable::SHAPE:
-				// TODO: Add shape cell
-				text = L"SHAPE";
-				break;
-			case CBOQTable::TOTALLENGTH:
-				Utility::DoubleToStr((double)row->count * (row->length1 + row->length2) / 2.0 / 1000.0, lastPrecision, text);
-				doff = diameters[row->diameter];
-				break;
-			}
+				std::wstring text;
+				double len;
+				int doff = 0;
 
-			setCellTextColor(i, j + doff, lastTextColor);
-			setCellTextStyleId(i, j + doff, lastTextStyleId);
-			setCellText(i, j + doff, text);
+				switch(type)
+				{
+				case CBOQTable::POS:
+					Utility::IntToStr(row->pos, text);
+					break;
+				case CBOQTable::POSDD:
+					Utility::IntToStr(row->pos, text);
+					if(text.length() == 1) text.insert(0, L"0");
+					break;
+				case CBOQTable::COUNT:
+					Utility::IntToStr(row->count, text);
+					break;
+				case CBOQTable::DIAMETER:
+					Utility::DoubleToStr(row->diameter, text);
+					break;
+				case CBOQTable::LENGTH:
+					len = (row->length1 + row->length2) / 2.0;
+					if(lastDisplayUnit == CBOQStyle::CM) len /= 10.0;
+					Utility::DoubleToStr(len, lastPrecision, text);
+					break;
+				case CBOQTable::SHAPE:
+					// TODO: Add shape cell
+					text = L"SHAPE";
+					break;
+				case CBOQTable::TOTALLENGTH:
+					Utility::DoubleToStr((double)row->count * (row->length1 + row->length2) / 2.0 / 1000.0, lastPrecision, text);
+					doff = diameters[row->diameter];
+					break;
+				}
+
+				setCellTextColor(i, j + doff, lastTextColor);
+				setCellTextStyleId(i, j + doff, lastTextStyleId);
+				setCellText(i, j + doff, text);
+			}
+			else if(type == CBOQTable::POS)
+			{
+				std::wstring text;
+				Utility::IntToStr(row->pos, text);
+				setCellTextColor(i, j, lastTextColor);
+				setCellTextStyleId(i, j, lastTextStyleId);
+				setCellText(i, j, text);
+			}
 
 			i++;
 		}
@@ -767,6 +781,7 @@ Acad::ErrorStatus CBOQTable::dwgOutFields(AcDbDwgFiler* pFiler) const
 		pFiler->writeDouble(row->length1);
 		pFiler->writeDouble(row->length2);
 		pFiler->writeBoolean(row->isVarLength);
+		pFiler->writeBoolean(row->isEmpty);
 		pFiler->writeHardPointerId(row->shapeId);
 	}
 
@@ -816,6 +831,7 @@ Acad::ErrorStatus CBOQTable::dwgInFields(AcDbDwgFiler* pFiler)
 			pFiler->readDouble(&row->length1);
 			pFiler->readDouble(&row->length2);
 			pFiler->readBoolean(&row->isVarLength);
+			pFiler->readBoolean(&row->isEmpty);
 			pFiler->readHardPointerId(&row->shapeId);
 			m_List.push_back(row);
 		}
@@ -868,6 +884,7 @@ Acad::ErrorStatus CBOQTable::dxfOutFields(AcDbDxfFiler* pFiler) const
 		pFiler->writeDouble(AcDb::kDxfReal, row->length1);
 		pFiler->writeDouble(AcDb::kDxfReal, row->length2);
 		pFiler->writeBoolean(AcDb::kDxfBool, row->isVarLength);
+		pFiler->writeBoolean(AcDb::kDxfBool, row->isEmpty);
 		pFiler->writeObjectId(AcDb::kDxfHardPointerId, row->shapeId);
 	}
 
@@ -920,6 +937,7 @@ Acad::ErrorStatus CBOQTable::dxfInFields(AcDbDxfFiler* pFiler)
 		if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("row length1"), row->length1)) != Acad::eOk) return es;
 		if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("row length2"), row->length2)) != Acad::eOk) return es;
 		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("row var length"), row->isVarLength)) != Acad::eOk) return es;
+		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("row is empty"), row->isEmpty)) != Acad::eOk) return es;
 		if((es = Utility::ReadDXFObjectId(pFiler, AcDb::kDxfHardPointerId, _T("row shape id"), row->shapeId)) != Acad::eOk) return es;
 		t_List.push_back(row);
     }

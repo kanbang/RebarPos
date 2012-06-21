@@ -151,6 +151,11 @@ void BOQTable::BOQRowCollection::Add(int pos, int count, double diameter, double
 	Add(pos, count, diameter, length, length, false, shapeId);
 }
 
+void BOQTable::BOQRowCollection::Add(int pos)
+{
+	m_Parent->GetImpObj()->AddRow(new CBOQRow(pos));
+}
+
 int BOQTable::BOQRowCollection::Count::get()
 {
 	return (int)m_Parent->GetImpObj()->GetRowCount();

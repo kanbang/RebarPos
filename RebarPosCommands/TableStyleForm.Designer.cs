@@ -570,6 +570,7 @@
             this.txtColumns.Size = new System.Drawing.Size(217, 20);
             this.txtColumns.TabIndex = 1;
             this.txtColumns.Validated += new System.EventHandler(this.txtColumns_Validated);
+            this.txtColumns.Validating += new System.ComponentModel.CancelEventHandler(this.txtColumns_Validating);
             // 
             // label5
             // 

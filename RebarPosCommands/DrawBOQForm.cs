@@ -74,12 +74,12 @@ namespace RebarPosCommands
             {
                 m_CurrentGroup = groupId;
                 m_PosList = PosCopy.ReadAllInGroup(groupId, PosCopy.PosGrouping.PosMarker);
-                SortList();
                 RemoveEmpty();
-                if (chkHideMissing.Checked)
+                if (!chkHideMissing.Checked)
                 {
                     AddMissing();
                 }
+                SortList();
             }
             catch (System.Exception ex)
             {
@@ -95,20 +95,22 @@ namespace RebarPosCommands
             foreach (PosCopy copy in m_PosList)
             {
                 int posno;
-                if (int.TryParse(copy.newpos, out posno))
+                if (int.TryParse(copy.pos, out posno))
                 {
                     lastpos = Math.Max(lastpos, posno);
                 }
             }
             for (int i = 1; i <= lastpos; i++)
             {
-                if (!m_PosList.Exists(p => p.newpos == i.ToString()))
+                if (!m_PosList.Exists(p => p.pos == i.ToString()))
                 {
                     PosCopy copy = new PosCopy();
                     copy.pos = i.ToString();
                     m_PosList.Add(copy);
                 }
             }
+
+            SortList();
         }
 
         private void RemoveEmpty()
@@ -165,7 +167,7 @@ namespace RebarPosCommands
         private void chkHideMissing_CheckedChanged(object sender, EventArgs e)
         {
             RemoveEmpty();
-            if (chkHideMissing.Checked)
+            if (!chkHideMissing.Checked)
             {
                 AddMissing();
             }
