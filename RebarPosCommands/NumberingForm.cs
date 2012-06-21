@@ -223,11 +223,11 @@ namespace RebarPosCommands
         {
             public int Compare(PosCopy e1, PosCopy e2)
             {
-                if (string.IsNullOrEmpty(e1.newpos))
-                    return -1;
-                if (string.IsNullOrEmpty(e2.newpos))
-                    return 1;
-                return (int.Parse(e1.newpos) < int.Parse(e2.newpos) ? -1 : 1);
+                int p1 = 0;
+                int p2 = 0;
+                int.TryParse(e1.newpos, out p1);
+                int.TryParse(e2.newpos, out p2);
+                return (p1 == p2 ? 0 : (p1 < p2 ? -1 : 1));
             }
         }
 
@@ -323,7 +323,7 @@ namespace RebarPosCommands
         private void btnAutoNumber_Click(object sender, EventArgs e)
         {
             bool keepcurrent = rbKeepExisting.Checked;
-            int startnum = 0;
+            int startnum = 1;
             if (keepcurrent)
             {
                 foreach (PosCopy copy in m_PosList)
