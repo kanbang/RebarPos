@@ -64,7 +64,7 @@ private:
 	double m_TableSpacing;
 
 	/// Locals
-	mutable std::vector<AcDbMText*> lastTexts;
+	mutable std::map<int, AcDbMText*> lastTexts;
 	mutable std::vector<AcDbLine*> lastLines;
 	mutable std::vector<double> columnWidths;
 	mutable std::vector<double> rowHeights;

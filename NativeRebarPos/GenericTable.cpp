@@ -391,8 +391,8 @@ void CGenericTable::MergeDown(const int i, const int j, const int span)
 //*************************************************************************
 const void CGenericTable::ResetDrawParams(void) const
 {
-	for(std::vector<AcDbMText*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
-		delete *it;
+	for(std::map<int, AcDbMText*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
+		delete (*it).second;
 	for(std::vector<AcDbLine*>::iterator it = lastLines.begin(); it != lastLines.end(); it++)
 		delete *it;
 	lastTexts.clear();
@@ -414,8 +414,6 @@ const void CGenericTable::Calculate(void) const
 	// Reset old params
 	ResetDrawParams();
 
-	lastTexts.resize(m_Columns * m_Rows);
-
 	// Create text styles
 	for(int i = 0; i < m_Rows; i++)
 	{
@@ -423,43 +421,46 @@ const void CGenericTable::Calculate(void) const
 		{
 			CTableCell* cell = m_Cells[i * m_Columns + j];
 
-			AcDbMText* mtext = new AcDbMText();
-			mtext->setTextStyle(cell->TextStyleId());
-			mtext->setTextHeight(cell->TextHeight());
-			mtext->setColorIndex(cell->TextColor());
-			mtext->setTextStyle(cell->TextStyleId());
-
-			if(cell->HorizontalAlignment() == CTableCell::eNEAR)
+			if(!cell->Text().empty() && cell->ShapeId() == AcDbObjectId::kNull)
 			{
-				if(cell->VerticalAlignment() == CTableCell::eNEAR)
-					mtext->setAttachment(AcDbMText::kTopLeft);
-				else if(cell->VerticalAlignment() == CTableCell::eCENTER)
-					mtext->setAttachment(AcDbMText::kMiddleLeft);
-				else if(cell->VerticalAlignment() == CTableCell::eFAR)
-					mtext->setAttachment(AcDbMText::kBottomLeft);
-			}
-			else if(cell->HorizontalAlignment() == CTableCell::eCENTER)
-			{
-				if(cell->VerticalAlignment() == CTableCell::eNEAR)
-					mtext->setAttachment(AcDbMText::kTopCenter);
-				else if(cell->VerticalAlignment() == CTableCell::eCENTER)
-					mtext->setAttachment(AcDbMText::kMiddleCenter);
-				else if(cell->VerticalAlignment() == CTableCell::eFAR)
-					mtext->setAttachment(AcDbMText::kBottomCenter);
-			}
-			else if(cell->HorizontalAlignment() == CTableCell::eFAR)
-			{
-				if(cell->VerticalAlignment() == CTableCell::eNEAR)
-					mtext->setAttachment(AcDbMText::kTopRight);
-				else if(cell->VerticalAlignment() == CTableCell::eCENTER)
-					mtext->setAttachment(AcDbMText::kMiddleRight);
-				else if(cell->VerticalAlignment() == CTableCell::eFAR)
-					mtext->setAttachment(AcDbMText::kBottomRight);
-			}
+				AcDbMText* mtext = new AcDbMText();
+				mtext->setTextStyle(cell->TextStyleId());
+				mtext->setTextHeight(cell->TextHeight());
+				mtext->setColorIndex(cell->TextColor());
+				mtext->setTextStyle(cell->TextStyleId());
 
-			mtext->setContents(cell->Text().c_str());
+				if(cell->HorizontalAlignment() == CTableCell::eNEAR)
+				{
+					if(cell->VerticalAlignment() == CTableCell::eNEAR)
+						mtext->setAttachment(AcDbMText::kTopLeft);
+					else if(cell->VerticalAlignment() == CTableCell::eCENTER)
+						mtext->setAttachment(AcDbMText::kMiddleLeft);
+					else if(cell->VerticalAlignment() == CTableCell::eFAR)
+						mtext->setAttachment(AcDbMText::kBottomLeft);
+				}
+				else if(cell->HorizontalAlignment() == CTableCell::eCENTER)
+				{
+					if(cell->VerticalAlignment() == CTableCell::eNEAR)
+						mtext->setAttachment(AcDbMText::kTopCenter);
+					else if(cell->VerticalAlignment() == CTableCell::eCENTER)
+						mtext->setAttachment(AcDbMText::kMiddleCenter);
+					else if(cell->VerticalAlignment() == CTableCell::eFAR)
+						mtext->setAttachment(AcDbMText::kBottomCenter);
+				}
+				else if(cell->HorizontalAlignment() == CTableCell::eFAR)
+				{
+					if(cell->VerticalAlignment() == CTableCell::eNEAR)
+						mtext->setAttachment(AcDbMText::kTopRight);
+					else if(cell->VerticalAlignment() == CTableCell::eCENTER)
+						mtext->setAttachment(AcDbMText::kMiddleRight);
+					else if(cell->VerticalAlignment() == CTableCell::eFAR)
+						mtext->setAttachment(AcDbMText::kBottomRight);
+				}
 
-			lastTexts[i * m_Columns + j] = mtext;
+				mtext->setContents(cell->Text().c_str());
+
+				lastTexts[i * m_Columns + j] = mtext;
+			}
 		}
 	}
 
@@ -473,15 +474,27 @@ const void CGenericTable::Calculate(void) const
 	{
 		for(int i = 0; i < m_Rows; i++)
 		{
-			if(m_Cells[i * m_Columns + j]->MergeRight() == 0)
+			CTableCell* cell = m_Cells[i * m_Columns + j];
+
+			double w = 0;
+			if(cell->ShapeId() != AcDbObjectId::kNull)
 			{
-				columnWidths[j] = max(columnWidths[j], lastTexts[i * m_Columns + j]->actualWidth() + 2.0 * m_CellMargin);
+				w = cell->TextHeight() * 5.0 + 2.0 * m_CellMargin;
+			}
+			else if(!cell->Text().empty())
+			{
+				w = lastTexts[i * m_Columns + j]->actualWidth() + 2.0 * m_CellMargin;
+			}
+			
+			if(cell->MergeRight() == 0)
+			{
+				columnWidths[j] = max(columnWidths[j], w);
 			}
 			else
 			{
-				int span = m_Cells[i * m_Columns + j]->MergeRight();
+				int span = cell->MergeRight();
 				if(j + span - 1 > m_Columns - 1) span = m_Columns - j;
-				double w = (lastTexts[i * m_Columns + j]->actualWidth() + 2.0 * m_CellMargin) / (double)span;
+				w /= (double)span;
 				for(int k = j; k < j + span; k++)
 				{
 					columnWidths[k] = max(columnWidths[k], w);
@@ -501,15 +514,27 @@ const void CGenericTable::Calculate(void) const
 	{
 		for(int j = 0; j < m_Columns; j++)
 		{
-			if(m_Cells[i * m_Columns + j]->MergeDown() == 0)
+			CTableCell* cell = m_Cells[i * m_Columns + j];
+
+			double h = 0;
+			if(cell->ShapeId() != AcDbObjectId::kNull)
 			{
-				rowHeights[i] = max(rowHeights[i], lastTexts[i * m_Columns + j]->actualHeight() + 2.0 * m_CellMargin);
+				h = cell->TextHeight() + 2.0 * m_CellMargin;
+			}
+			else if(!cell->Text().empty())
+			{
+				h = lastTexts[i * m_Columns + j]->actualHeight() + 2.0 * m_CellMargin;
+			}
+
+			if(cell->MergeDown() == 0)
+			{
+				rowHeights[i] = max(rowHeights[i], h);
 			}
 			else
 			{
-				int span = m_Cells[i * m_Columns + j]->MergeDown();
+				int span = cell->MergeDown();
 				if(i + span - 1 > m_Rows - 1) span = m_Rows - i;
-				double h = (lastTexts[i * m_Columns + j]->actualHeight() + 2.0 * m_CellMargin) / (double)span;
+				h /= (double)span;
 				for(int k = i; k < i + span; k++)
 				{
 					rowHeights[k] = max(rowHeights[k], h);
@@ -568,56 +593,61 @@ const void CGenericTable::Calculate(void) const
 
 		for(int j = 0; j < m_Columns; j++)
 		{
-			double h = rowHeights[i];
-			double w = columnWidths[j];
-			if(m_Cells[i * m_Columns + j]->MergeRight() != 0)
-			{
-				int span = m_Cells[i * m_Columns + j]->MergeRight();
-				if(j + span - 1 > m_Columns - 1) span = m_Columns - j;
-				w = 0;
-				for(int k = j ; k < j + span; k++)
-				{
-					w += columnWidths[k];
-				}
-			}
-			if(m_Cells[i * m_Columns + j]->MergeDown() != 0)
-			{
-				int span = m_Cells[i * m_Columns + j]->MergeDown();
-				if(i + span - 1 > m_Rows - 1) span = m_Rows - i;
-				h = 0;
-				for(int k = i ; k < i + span; k++)
-				{
-					h += rowHeights[k];
-				}
-			}
-			double cx = m_CellMargin;
-			double cy = m_CellMargin;
-			if(m_Cells[i * m_Columns + j]->HorizontalAlignment() == CTableCell::eNEAR)
-			{
-				cx = m_CellMargin;
-			}
-			else if(m_Cells[i * m_Columns + j]->HorizontalAlignment() == CTableCell::eFAR)
-			{
-				cx = w - m_CellMargin;
-			}
-			else if(m_Cells[i * m_Columns + j]->HorizontalAlignment() == CTableCell::eCENTER)
-			{
-				cx = w / 2.0;
-			}
-			if(m_Cells[i * m_Columns + j]->VerticalAlignment() == CTableCell::eNEAR)
-			{
-				cy = m_CellMargin;
-			}
-			else if(m_Cells[i * m_Columns + j]->VerticalAlignment() == CTableCell::eFAR)
-			{
-				cy = h - m_CellMargin;
-			}
-			else if(m_Cells[i * m_Columns + j]->VerticalAlignment() == CTableCell::eCENTER)
-			{
-				cy = h / 2.0;
-			}
+			CTableCell* cell = m_Cells[i * m_Columns + j];
 
-			lastTexts[i * m_Columns + j]->setLocation(AcGePoint3d(x + cx, y - cy, 0));
+			if(!cell->Text().empty())
+			{
+				double h = rowHeights[i];
+				double w = columnWidths[j];
+				if(cell->MergeRight() != 0)
+				{
+					int span =cell->MergeRight();
+					if(j + span - 1 > m_Columns - 1) span = m_Columns - j;
+					w = 0;
+					for(int k = j ; k < j + span; k++)
+					{
+						w += columnWidths[k];
+					}
+				}
+				if(cell->MergeDown() != 0)
+				{
+					int span = cell->MergeDown();
+					if(i + span - 1 > m_Rows - 1) span = m_Rows - i;
+					h = 0;
+					for(int k = i ; k < i + span; k++)
+					{
+						h += rowHeights[k];
+					}
+				}
+				double cx = m_CellMargin;
+				double cy = m_CellMargin;
+				if(cell->HorizontalAlignment() == CTableCell::eNEAR)
+				{
+					cx = m_CellMargin;
+				}
+				else if(cell->HorizontalAlignment() == CTableCell::eFAR)
+				{
+					cx = w - m_CellMargin;
+				}
+				else if(cell->HorizontalAlignment() == CTableCell::eCENTER)
+				{
+					cx = w / 2.0;
+				}
+				if(cell->VerticalAlignment() == CTableCell::eNEAR)
+				{
+					cy = m_CellMargin;
+				}
+				else if(cell->VerticalAlignment() == CTableCell::eFAR)
+				{
+					cy = h - m_CellMargin;
+				}
+				else if(cell->VerticalAlignment() == CTableCell::eCENTER)
+				{
+					cy = h / 2.0;
+				}
+
+				lastTexts[i * m_Columns + j]->setLocation(AcGePoint3d(x + cx, y - cy, 0));
+			}
 
 			x += columnWidths[j];
 		}
@@ -647,6 +677,7 @@ const void CGenericTable::Calculate(void) const
 			double w = columnWidths[j];
 
 			CTableCell* cell = m_Cells[i * m_Columns + j];
+
 			if(cell->TopBorder())
 			{
 				if(cell->TopBorderDouble())
@@ -734,6 +765,8 @@ const void CGenericTable::Calculate(void) const
 	m_Height = 0;
 	for(int i = 0; i < m_Rows; i++)
 	{
+		double h = rowHeights[i];
+
 		if(dividers[i])
 		{
 			ntables++;
@@ -744,10 +777,8 @@ const void CGenericTable::Calculate(void) const
 
 		for(int j = 0; j < m_Columns; j++)
 		{
-			double h = rowHeights[i];
 			double w = columnWidths[j];
 
-			CTableCell* cell = m_Cells[i * m_Columns + j];
 			m_Width = max(m_Width, x + columnWidths[j]);
 			m_Height = max(m_Height, abs(y - rowHeights[i]));
 
@@ -819,9 +850,9 @@ Acad::ErrorStatus CGenericTable::subGetOsnapPoints(
 	{
 		snapPoints.append(m_BasePoint);
 
-		for(std::vector<AcDbMText*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
+		for(std::map<int, AcDbMText*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
 		{
-			AcDbMText* text = (*it);
+			AcDbMText* text = (*it).second;
 			if(text->contents() != NULL && text->contents()[0] != _T('\0'))
 			{
 				AcGePoint3d pt = text->location();
@@ -910,9 +941,9 @@ Acad::ErrorStatus CGenericTable::subExplode(AcDbVoidPtrArray& entitySet) const
 	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
 
 	// Texts
-	for(std::vector<AcDbMText*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
+	for(std::map<int, AcDbMText*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
 	{
-		AcRxObject* obj = (*it)->clone();
+		AcRxObject* obj = (*it).second->clone();
 		AcDbMText* text = static_cast<AcDbMText*>(obj);
 		if((es = text->transformBy(trans)) != Acad::eOk)
 		{
@@ -970,9 +1001,9 @@ Adesk::Boolean CGenericTable::subWorldDraw(AcGiWorldDraw* worldDraw)
 	else
 	{
 		// Draw texts
-		for(std::vector<AcDbMText*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
+		for(std::map<int, AcDbMText*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
 		{
-			AcDbMText* text = (*it);
+			AcDbMText* text = (*it).second;
 			worldDraw->geometry().draw(text);
 		}
 
@@ -1487,9 +1518,9 @@ void CGenericTable::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
 
 	// Draw texts
-	for(std::vector<AcDbMText*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
+	for(std::map<int, AcDbMText*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
 	{
-		AcRxObject* obj = (*it)->clone();
+		AcRxObject* obj = (*it).second->clone();
 		AcDbMText* text = static_cast<AcDbMText*>(obj);
 		text->transformBy(trans);
 		worldDraw->geometry().draw(text);
