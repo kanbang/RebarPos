@@ -89,6 +89,7 @@ public:
 	void Clear();
 
 	void setCellText(const int i, const int j, const std::wstring& newVal);
+	void setCellShapeId(const int i, const int j, const AcDbObjectId& newVal);
 	void setCellTextColor(const int i, const int j, const unsigned short newVal);
 	void setCellTextStyleId(const int i, const int j, const AcDbObjectId& newVal);
 	void setCellTextHeight(const int i, const int j, const double newVal);

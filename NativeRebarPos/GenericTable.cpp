@@ -220,6 +220,12 @@ void CGenericTable::setCellText(const int i, const int j, const std::wstring& ne
 	cell->setText(newVal);
 	isModified = true;
 }
+void CGenericTable::setCellShapeId(const int i, const int j, const AcDbObjectId& newVal)
+{
+	CTableCell* cell = m_Cells[i * m_Columns + j];
+	cell->setShapeId(newVal);
+	isModified = true;
+}
 void CGenericTable::setCellTextColor(const int i, const int j, const unsigned short newVal)
 {
 	CTableCell* cell = m_Cells[i * m_Columns + j];
@@ -1057,6 +1063,8 @@ Acad::ErrorStatus CGenericTable::dwgOutFields(AcDbDwgFiler* pFiler) const
 
 		pFiler->writeString(cell->Text().c_str());
 
+		pFiler->writeHardPointerId(cell->ShapeId());
+
 		pFiler->writeUInt16(cell->TextColor());
 		pFiler->writeUInt16(cell->TopBorderColor());
 		pFiler->writeUInt16(cell->LeftBorderColor());
@@ -1126,6 +1134,8 @@ Acad::ErrorStatus CGenericTable::dwgInFields(AcDbDwgFiler* pFiler)
 		CTableCell* cell = m_Cells[i];
 
 		ACHAR* t_Text = NULL;
+
+		AcDbHardPointerId t_ShapeId = AcDbObjectId::kNull;
 		
 		Adesk::UInt16 t_TextColor;
 		Adesk::UInt16 t_TopBorderColor;
@@ -1155,6 +1165,8 @@ Acad::ErrorStatus CGenericTable::dwgInFields(AcDbDwgFiler* pFiler)
 
 		pFiler->readString(&t_Text);
 
+		pFiler->readHardPointerId(&t_ShapeId);
+
 		pFiler->readUInt16(&t_TextColor);
 		pFiler->readUInt16(&t_TopBorderColor);
 		pFiler->readUInt16(&t_LeftBorderColor);
@@ -1182,6 +1194,7 @@ Acad::ErrorStatus CGenericTable::dwgInFields(AcDbDwgFiler* pFiler)
 		pFiler->readInt32(&t_VerticalAlignment);
 
 		cell->setText(t_Text);
+		cell->setShapeId(t_ShapeId);
 		cell->setTextColor(t_TextColor);
 		cell->setTopBorderColor(t_TopBorderColor);
 		cell->setLeftBorderColor(t_LeftBorderColor);
@@ -1254,6 +1267,8 @@ Acad::ErrorStatus CGenericTable::dxfOutFields(AcDbDxfFiler* pFiler) const
 		CTableCell* cell = (*it);
 
 		pFiler->writeString(AcDb::kDxfText, cell->Text().c_str());
+
+		pFiler->writeObjectId(AcDb::kDxfHardPointerId, cell->ShapeId());
 
 		pFiler->writeUInt16(AcDb::kDxfXInt16, cell->TextColor());
 		pFiler->writeUInt16(AcDb::kDxfXInt16, cell->TopBorderColor());
@@ -1342,6 +1357,8 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
 
 		ACHAR* t_Text = NULL;
 		
+		AcDbHardPointerId t_ShapeId;
+
 		unsigned short t_TextColor;
 		unsigned short t_TopBorderColor;
 		unsigned short t_LeftBorderColor;
@@ -1368,7 +1385,10 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
 		int t_HorizontalAlignment;
 		int t_VerticalAlignment;
 
-		if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("cell text pos"), t_Text)) != Acad::eOk) return es;
+		if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("cell text"), t_Text)) != Acad::eOk) return es;
+
+		if((es = Utility::ReadDXFObjectId(pFiler, AcDb::kDxfHardPointerId, _T("cell shape id"), t_ShapeId)) != Acad::eOk) return es;
+
 		if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("cell text color"), t_TextColor)) != Acad::eOk) return es;
 		if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("cell top border color"), t_TopBorderColor)) != Acad::eOk) return es;
 		if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("cell left border color"), t_LeftBorderColor)) != Acad::eOk) return es;
@@ -1396,6 +1416,7 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
 		if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("cell vertical alignment"), t_VerticalAlignment)) != Acad::eOk) return es;
 
 		cell->setText(t_Text);
+		cell->setShapeId(t_ShapeId);
 		cell->setTextColor(t_TextColor);
 		cell->setTopBorderColor(t_TopBorderColor);
 		cell->setLeftBorderColor(t_LeftBorderColor);

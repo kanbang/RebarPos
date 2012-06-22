@@ -15,7 +15,8 @@ CTableCell::CTableCell(void) : m_TextColor(0),
 	m_MergeRight(false), m_MergeDown(false),
 	m_TextStyleId(AcDbObjectId::kNull),
 	m_TextHeight(1.0),
-	m_HorizontalAlignment(CTableCell::eNEAR), m_VerticalAlignment(CTableCell::eNEAR)
+	m_HorizontalAlignment(CTableCell::eNEAR), m_VerticalAlignment(CTableCell::eNEAR),
+	m_ShapeId(AcDbObjectId::kNull)
 {
 }
 
@@ -28,6 +29,9 @@ CTableCell::~CTableCell(void)
 //*************************************************************************
 const std::wstring& CTableCell::Text() const         { return m_Text; }
 void CTableCell::setText(const std::wstring& newVal) { m_Text = newVal; }
+
+const AcDbObjectId& CTableCell::ShapeId() const        { return m_ShapeId; }
+void CTableCell::setShapeId(const AcDbObjectId& newVal) { m_ShapeId = newVal; }
 
 const unsigned short CTableCell::TextColor() const         { return m_TextColor; }
 void CTableCell::setTextColor(const unsigned short newVal) { m_TextColor = newVal; }

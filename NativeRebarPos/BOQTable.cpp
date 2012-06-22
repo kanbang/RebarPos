@@ -425,7 +425,11 @@ void CBOQTable::UpdateTable(void)
 		{
 			CBOQRow* row = *it;
 
-			if(!row->isEmpty)
+			if(!row->isEmpty && type == CBOQTable::SHAPE)
+			{
+				setCellShapeId(i, j, row->shapeId);
+			}
+			else if(!row->isEmpty)
 			{
 				std::wstring text;
 				double len;
@@ -450,10 +454,6 @@ void CBOQTable::UpdateTable(void)
 					len = (row->length1 + row->length2) / 2.0;
 					if(lastDisplayUnit == CBOQStyle::CM) len /= 10.0;
 					Utility::DoubleToStr(len, lastPrecision, text);
-					break;
-				case CBOQTable::SHAPE:
-					// TODO: Add shape cell
-					text = L"SHAPE";
 					break;
 				case CBOQTable::TOTALLENGTH:
 					Utility::DoubleToStr((double)row->count * (row->length1 + row->length2) / 2.0 / 1000.0, lastPrecision, text);

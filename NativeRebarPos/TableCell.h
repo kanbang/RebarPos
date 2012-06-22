@@ -47,6 +47,7 @@ private:
 	int m_MergeDown;
 
 	AcDbHardPointerId m_TextStyleId;
+	AcDbHardPointerId m_ShapeId;
 
 	double m_TextHeight;
 
@@ -57,6 +58,9 @@ public:
 	/// Properties
 	const std::wstring& Text() const;
 	void setText(const std::wstring& newVal);
+
+	const AcDbObjectId& ShapeId() const;
+	void setShapeId(const AcDbObjectId& newVal);
 
 	const unsigned short TextColor() const;
 	void setTextColor(const unsigned short newVal);
