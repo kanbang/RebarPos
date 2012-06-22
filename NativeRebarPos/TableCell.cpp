@@ -4,6 +4,7 @@
 #include "StdAfx.h"
 
 #include "TableCell.h"
+#include "PosShape.h"
 #include "Utility.h"
 
 //*************************************************************************
@@ -230,8 +231,52 @@ const std::vector<AcDbMText*> CTableCell::GetTexts() const
 		mtext->setContents(m_Text);
 
 		mtext->transformBy(trans);
-
 		texts.push_back(mtext);
+	}
+	else if(HasShape())
+	{
+		Acad::ErrorStatus es;
+		AcDbObjectPointer<CPosShape> pShape (m_ShapeId, AcDb::kForRead);
+		if((es = pShape.openStatus()) == Acad::eOk)
+		{
+			AcDbExtents ext = pShape->GetShapeExtents();
+			double maxwidth = 5.0 * m_TextHeight;
+			double maxheight = m_TextHeight;
+			double xscale = maxwidth / (ext.maxPoint().x - ext.minPoint().x);
+			double yscale = maxheight / (ext.maxPoint().y - ext.minPoint().y);
+			double scale = min(xscale, yscale);
+            double xoff = (maxwidth - scale * (ext.maxPoint().x - ext.minPoint().x)) / 2.0;
+            double yoff = (maxheight - scale * (ext.maxPoint().y - ext.minPoint().y)) / 2.0;
+
+			for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
+			{
+				const CShape* shape = pShape->GetShape(i);
+				if(shape->type == CShape::Text)
+				{
+					const CShapeText* text = dynamic_cast<const CShapeText*>(shape);
+
+					AcDbMText* mtext = new AcDbMText();
+
+					// Text style
+					mtext->setTextStyle(m_TextStyleId);
+					mtext->setTextHeight(text->height * scale);
+					mtext->setColorIndex(text->color);
+
+					// Location
+					double x = xoff + (text->x  - ext.minPoint().x) * scale;
+					double y = yoff + (text->y  - ext.minPoint().y) * scale;
+					double cx = m_Margin;
+					double cy = -m_Height + m_Margin;
+					mtext->setLocation(AcGePoint3d(x + cx, y + cy, 0));
+
+					// Contents
+					mtext->setContents(text->text.c_str());
+
+					mtext->transformBy(trans);
+					texts.push_back(mtext);
+				}
+			}
+		}
 	}
 
 	return texts;
@@ -329,6 +374,49 @@ const std::vector<AcDbLine*> CTableCell::GetLines() const
 			line->setColorIndex(m_RightBorderColor);
 			line->transformBy(trans);
 			lines.push_back(line);
+		}
+	}
+
+	if(HasShape())
+	{
+		Acad::ErrorStatus es;
+		AcDbObjectPointer<CPosShape> pShape (m_ShapeId, AcDb::kForRead);
+		if((es = pShape.openStatus()) == Acad::eOk)
+		{
+			AcDbExtents ext = pShape->GetShapeExtents();
+			double maxwidth = 5.0 * m_TextHeight;
+			double maxheight = m_TextHeight;
+			double xscale = maxwidth / (ext.maxPoint().x - ext.minPoint().x);
+			double yscale = maxheight / (ext.maxPoint().y - ext.minPoint().y);
+			double scale = min(xscale, yscale);
+            double xoff = (maxwidth - scale * (ext.maxPoint().x - ext.minPoint().x)) / 2.0;
+            double yoff = (maxheight - scale * (ext.maxPoint().y - ext.minPoint().y)) / 2.0;
+
+			for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
+			{
+				const CShape* shape = pShape->GetShape(i);
+				if(shape->type == CShape::Line)
+				{
+					const CShapeLine* line = dynamic_cast<const CShapeLine*>(shape);
+
+					AcDbLine* mline = new AcDbLine();
+
+					mline->setColorIndex(line->color);
+
+					// Location
+					double x1 = xoff + (line->x1 - ext.minPoint().x) * scale;
+					double y1 = yoff + (line->y1 - ext.minPoint().y) * scale;
+					double x2 = xoff + (line->x2 - ext.minPoint().x) * scale;
+					double y2 = yoff + (line->y2 - ext.minPoint().y) * scale;
+					double cx = m_Margin;
+					double cy = -m_Height + m_Margin;
+					mline->setStartPoint(AcGePoint3d(x1 + cx, y1 + cy, 0));
+					mline->setEndPoint(AcGePoint3d(x2 + cx, y2 + cy, 0));
+
+					mline->transformBy(trans);
+					lines.push_back(mline);
+				}
+			}
 		}
 	}
 

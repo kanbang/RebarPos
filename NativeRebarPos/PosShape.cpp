@@ -165,6 +165,40 @@ const ShapeSize CPosShape::GetShapeCount() const
 	return m_List.size();
 }
 
+const AcDbExtents CPosShape::GetShapeExtents() const
+{
+	AcDbExtents ext;
+	for(ShapeListConstIt it = m_List.begin(); it != m_List.end(); it++)
+	{
+		CShape* shape = *it;
+		switch(shape->type)
+		{
+		case CShape::Line:
+			{
+				CShapeLine* line = dynamic_cast<CShapeLine*>(shape);
+				ext.addPoint(AcGePoint3d(line->x1, line->y1, 0));
+				ext.addPoint(AcGePoint3d(line->x2, line->y2, 0));
+			}
+			break;
+		case CShape::Arc:
+			{
+				CShapeArc* arc = dynamic_cast<CShapeArc*>(shape);
+				ext.addPoint(AcGePoint3d(arc->x - arc->r, arc->y - arc->r, 0));
+				ext.addPoint(AcGePoint3d(arc->x + arc->r, arc->y + arc->r, 0));
+			}
+			break;
+		case CShape::Text:
+			{
+				CShapeText* text = dynamic_cast<CShapeText*>(shape);
+				ext.addPoint(AcGePoint3d(text->x - 2.0 * text->height, text->y, 0));
+				ext.addPoint(AcGePoint3d(text->x + 2.0 * text->height, text->y + text->height, 0));
+			}
+			break;
+		}
+	}
+	return ext;
+}
+
 //*************************************************************************
 // Overrides
 //*************************************************************************

@@ -102,6 +102,9 @@ public:
 	/// Clears all shapes.
 	void ClearShapes();
 
+	/// Get shape extents
+	const AcDbExtents GetShapeExtents() const;
+
 private:
 	static ACHAR* Table_Name;
 
