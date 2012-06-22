@@ -19,7 +19,7 @@ ACRX_DXF_DEFINE_MEMBERS(CGenericTable, AcDbEntity,
 	AcDb::kDHL_CURRENT, AcDb::kMReleaseCurrent,
 	AcDbProxyEntity::kAllAllowedBits, GENERICTABLE,
 	"OZOZRebarPos\
-	|Product Desc:     Geberic Table Entity\
+	|Product Desc:     Generic Table Entity\
 	|Company:          OZOZ");
 
 //*************************************************************************
