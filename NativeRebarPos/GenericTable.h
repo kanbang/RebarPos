@@ -64,12 +64,14 @@ private:
 	double m_TableSpacing;
 
 	/// Locals
-	mutable std::map<int, AcDbMText*> lastTexts;
-	mutable std::vector<AcDbLine*> lastLines;
 	mutable std::vector<double> columnWidths;
 	mutable std::vector<double> rowHeights;
 	mutable std::vector<double> minColumnWidths;
 	mutable std::vector<double> minRowHeights;
+
+	mutable bool geomInit;
+	mutable AcGeMatrix3d ucs;
+
 	mutable bool isModified;
 
 protected:
@@ -88,7 +90,7 @@ public:
 	void SetSize(int rows, int columns);
 	void Clear();
 
-	void setCellText(const int i, const int j, const std::wstring& newVal);
+	void setCellText(const int i, const int j, const ACHAR* newVal);
 	void setCellShapeId(const int i, const int j, const AcDbObjectId& newVal);
 	void setCellTextColor(const int i, const int j, const unsigned short newVal);
 	void setCellTextStyleId(const int i, const int j, const AcDbObjectId& newVal);

@@ -6,6 +6,7 @@
 #include "PosGroup.h"
 #include "RebarPos.h"
 #include "BOQStyle.h"
+#include "TableCell.h"
 #include "GenericTable.h"
 #include "BOQTable.h"
 

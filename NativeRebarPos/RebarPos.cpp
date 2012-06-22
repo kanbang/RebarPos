@@ -642,7 +642,7 @@ Acad::ErrorStatus CRebarPos::subTransformBy(const AcGeMatrix3d& xform)
 		m_Direction.transformBy(mirror);
 		m_Up.transformBy(mirror);
 		m_Normal = m_Direction.crossProduct(m_Up);
-	}	
+	}
 
 	// Correct direction vectors
 	double scale = m_Direction.length();

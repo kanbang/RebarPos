@@ -26,10 +26,11 @@ ACRX_DXF_DEFINE_MEMBERS(CGenericTable, AcDbEntity,
 // Constructors and destructors 
 //*************************************************************************
 
-CGenericTable::CGenericTable(void) : m_BasePoint(0, 0, 0), 
+CGenericTable::CGenericTable(void) : 
+	m_BasePoint(0, 0, 0), geomInit(false), ucs(AcGeMatrix3d::kIdentity),
 	m_Direction(1, 0, 0), m_Up(0, 1, 0), m_Normal(0, 0, 1),
 	m_Rows(0), m_Columns(0), m_Cells(0),
-	lastTexts(), lastLines(), columnWidths(), rowHeights(), isModified(true),
+	columnWidths(), rowHeights(), isModified(true),
 	m_CellMargin(0.2), m_MaxHeight(0), m_TableSpacing(2.0),
 	m_Width(0), m_Height(0)
 {
@@ -119,7 +120,10 @@ const double CGenericTable::CellMargin(void) const
 Acad::ErrorStatus CGenericTable::setCellMargin(const double newVal)
 {
 	assertWriteEnabled();
-	m_CellMargin = newVal;
+	for(std::vector<CTableCell*>::iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
+	{
+		(*it)->setMargin(newVal);
+	}
 	isModified = true;
 	return Acad::eOk;
 }
@@ -214,7 +218,7 @@ void CGenericTable::setMinimumRowHeight(const int i, const double newVal)
 //*************************************************************************
 // Cell Access Methods
 //*************************************************************************
-void CGenericTable::setCellText(const int i, const int j, const std::wstring& newVal)
+void CGenericTable::setCellText(const int i, const int j, const ACHAR* newVal)
 {
 	CTableCell* cell = m_Cells[i * m_Columns + j];
 	cell->setText(newVal);
@@ -391,13 +395,6 @@ void CGenericTable::MergeDown(const int i, const int j, const int span)
 //*************************************************************************
 const void CGenericTable::ResetDrawParams(void) const
 {
-	for(std::map<int, AcDbMText*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
-		delete (*it).second;
-	for(std::vector<AcDbLine*>::iterator it = lastLines.begin(); it != lastLines.end(); it++)
-		delete *it;
-	lastTexts.clear();
-	lastLines.clear();
-
 	columnWidths.clear();
 	rowHeights.clear();
 }
@@ -411,58 +408,15 @@ const void CGenericTable::Calculate(void) const
 
 	assertReadEnabled();
 
+	// Current UCS
+	if(!geomInit)
+	{
+		acdbUcsMatrix(ucs);
+		geomInit = true;
+	}
+
 	// Reset old params
 	ResetDrawParams();
-
-	// Create text styles
-	for(int i = 0; i < m_Rows; i++)
-	{
-		for(int j = 0; j < m_Columns; j++)
-		{
-			CTableCell* cell = m_Cells[i * m_Columns + j];
-
-			if(!cell->Text().empty() && cell->ShapeId() == AcDbObjectId::kNull)
-			{
-				AcDbMText* mtext = new AcDbMText();
-				mtext->setTextStyle(cell->TextStyleId());
-				mtext->setTextHeight(cell->TextHeight());
-				mtext->setColorIndex(cell->TextColor());
-				mtext->setTextStyle(cell->TextStyleId());
-
-				if(cell->HorizontalAlignment() == CTableCell::eNEAR)
-				{
-					if(cell->VerticalAlignment() == CTableCell::eNEAR)
-						mtext->setAttachment(AcDbMText::kTopLeft);
-					else if(cell->VerticalAlignment() == CTableCell::eCENTER)
-						mtext->setAttachment(AcDbMText::kMiddleLeft);
-					else if(cell->VerticalAlignment() == CTableCell::eFAR)
-						mtext->setAttachment(AcDbMText::kBottomLeft);
-				}
-				else if(cell->HorizontalAlignment() == CTableCell::eCENTER)
-				{
-					if(cell->VerticalAlignment() == CTableCell::eNEAR)
-						mtext->setAttachment(AcDbMText::kTopCenter);
-					else if(cell->VerticalAlignment() == CTableCell::eCENTER)
-						mtext->setAttachment(AcDbMText::kMiddleCenter);
-					else if(cell->VerticalAlignment() == CTableCell::eFAR)
-						mtext->setAttachment(AcDbMText::kBottomCenter);
-				}
-				else if(cell->HorizontalAlignment() == CTableCell::eFAR)
-				{
-					if(cell->VerticalAlignment() == CTableCell::eNEAR)
-						mtext->setAttachment(AcDbMText::kTopRight);
-					else if(cell->VerticalAlignment() == CTableCell::eCENTER)
-						mtext->setAttachment(AcDbMText::kMiddleRight);
-					else if(cell->VerticalAlignment() == CTableCell::eFAR)
-						mtext->setAttachment(AcDbMText::kBottomRight);
-				}
-
-				mtext->setContents(cell->Text().c_str());
-
-				lastTexts[i * m_Columns + j] = mtext;
-			}
-		}
-	}
 
 	// Set minimum column sizes
 	columnWidths.resize(m_Columns);
@@ -476,15 +430,9 @@ const void CGenericTable::Calculate(void) const
 		{
 			CTableCell* cell = m_Cells[i * m_Columns + j];
 
-			double w = 0;
-			if(cell->ShapeId() != AcDbObjectId::kNull)
-			{
-				w = cell->TextHeight() * 5.0 + 2.0 * m_CellMargin;
-			}
-			else if(!cell->Text().empty())
-			{
-				w = lastTexts[i * m_Columns + j]->actualWidth() + 2.0 * m_CellMargin;
-			}
+			AcGePoint2d pt = cell->MeasureContents();
+			double w = pt.x;
+			double h = pt.y;
 			
 			if(cell->MergeRight() == 0)
 			{
@@ -516,15 +464,9 @@ const void CGenericTable::Calculate(void) const
 		{
 			CTableCell* cell = m_Cells[i * m_Columns + j];
 
-			double h = 0;
-			if(cell->ShapeId() != AcDbObjectId::kNull)
-			{
-				h = cell->TextHeight() + 2.0 * m_CellMargin;
-			}
-			else if(!cell->Text().empty())
-			{
-				h = lastTexts[i * m_Columns + j]->actualHeight() + 2.0 * m_CellMargin;
-			}
+			AcGePoint2d pt = cell->MeasureContents();
+			double w = pt.x;
+			double h = pt.y;
 
 			if(cell->MergeDown() == 0)
 			{
@@ -577,7 +519,7 @@ const void CGenericTable::Calculate(void) const
 		}
 	}
 
-	// Set text location
+	// Set cell sizes and location
 	double tableoffset = 0;
 	double x = 0;
 	double y = 0;
@@ -595,59 +537,32 @@ const void CGenericTable::Calculate(void) const
 		{
 			CTableCell* cell = m_Cells[i * m_Columns + j];
 
-			if(!cell->Text().empty())
+			double h = rowHeights[i];
+			double w = columnWidths[j];
+			if(cell->MergeRight() != 0)
 			{
-				double h = rowHeights[i];
-				double w = columnWidths[j];
-				if(cell->MergeRight() != 0)
+				int span =cell->MergeRight();
+				if(j + span - 1 > m_Columns - 1) span = m_Columns - j;
+				w = 0;
+				for(int k = j ; k < j + span; k++)
 				{
-					int span =cell->MergeRight();
-					if(j + span - 1 > m_Columns - 1) span = m_Columns - j;
-					w = 0;
-					for(int k = j ; k < j + span; k++)
-					{
-						w += columnWidths[k];
-					}
+					w += columnWidths[k];
 				}
-				if(cell->MergeDown() != 0)
-				{
-					int span = cell->MergeDown();
-					if(i + span - 1 > m_Rows - 1) span = m_Rows - i;
-					h = 0;
-					for(int k = i ; k < i + span; k++)
-					{
-						h += rowHeights[k];
-					}
-				}
-				double cx = m_CellMargin;
-				double cy = m_CellMargin;
-				if(cell->HorizontalAlignment() == CTableCell::eNEAR)
-				{
-					cx = m_CellMargin;
-				}
-				else if(cell->HorizontalAlignment() == CTableCell::eFAR)
-				{
-					cx = w - m_CellMargin;
-				}
-				else if(cell->HorizontalAlignment() == CTableCell::eCENTER)
-				{
-					cx = w / 2.0;
-				}
-				if(cell->VerticalAlignment() == CTableCell::eNEAR)
-				{
-					cy = m_CellMargin;
-				}
-				else if(cell->VerticalAlignment() == CTableCell::eFAR)
-				{
-					cy = h - m_CellMargin;
-				}
-				else if(cell->VerticalAlignment() == CTableCell::eCENTER)
-				{
-					cy = h / 2.0;
-				}
-
-				lastTexts[i * m_Columns + j]->setLocation(AcGePoint3d(x + cx, y - cy, 0));
 			}
+			if(cell->MergeDown() != 0)
+			{
+				int span = cell->MergeDown();
+				if(i + span - 1 > m_Rows - 1) span = m_Rows - i;
+				h = 0;
+				for(int k = i ; k < i + span; k++)
+				{
+					h += rowHeights[k];
+				}
+			}
+
+			cell->setBasePoint(AcGePoint3d(x, y, 0));
+			cell->setWidth(w);
+			cell->setHeight(h);
 
 			x += columnWidths[j];
 		}
@@ -656,105 +571,13 @@ const void CGenericTable::Calculate(void) const
 		y -= rowHeights[i];
 	}
 
-	// Set lines
-	tableoffset = 0;
-	x = 0;
-	y = 0;
-	double doublelineoffset = 0.125;
-	for(int i = 0; i < m_Rows; i++)
+	// Transform cells
+	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
+	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
+	for(std::vector<CTableCell*>::const_iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
 	{
-		if(dividers[i])
-		{
-			ntables++;
-			tableoffset += m_Width + m_TableSpacing;
-			x = tableoffset;
-			y = 0;
-		}
-
-		for(int j = 0; j < m_Columns; j++)
-		{
-			double h = rowHeights[i];
-			double w = columnWidths[j];
-
-			CTableCell* cell = m_Cells[i * m_Columns + j];
-
-			if(cell->TopBorder())
-			{
-				if(cell->TopBorderDouble())
-				{
-					AcDbLine* line1 = new AcDbLine(AcGePoint3d(x, y - doublelineoffset, 0), AcGePoint3d(x + columnWidths[j], y - doublelineoffset, 0));
-					line1->setColorIndex(cell->TopBorderColor());
-					lastLines.push_back(line1);
-					AcDbLine* line2 = new AcDbLine(AcGePoint3d(x, y + doublelineoffset, 0), AcGePoint3d(x + columnWidths[j], y + doublelineoffset, 0));
-					line2->setColorIndex(cell->TopBorderColor());
-					lastLines.push_back(line2);
-				}
-				else
-				{
-					AcDbLine* line = new AcDbLine(AcGePoint3d(x, y, 0), AcGePoint3d(x + columnWidths[j], y, 0));
-					line->setColorIndex(cell->TopBorderColor());
-					lastLines.push_back(line);
-				}
-			}
-			if(cell->BottomBorder())
-			{
-				if(cell->BottomBorderDouble())
-				{
-					AcDbLine* line1 = new AcDbLine(AcGePoint3d(x, y - rowHeights[i] - doublelineoffset, 0), AcGePoint3d(x + columnWidths[j], y - rowHeights[i] - doublelineoffset, 0));
-					line1->setColorIndex(cell->BottomBorderColor());
-					lastLines.push_back(line1);
-					AcDbLine* line2 = new AcDbLine(AcGePoint3d(x, y - rowHeights[i] + doublelineoffset, 0), AcGePoint3d(x + columnWidths[j], y - rowHeights[i] + doublelineoffset, 0));
-					line2->setColorIndex(cell->BottomBorderColor());
-					lastLines.push_back(line2);
-				}
-				else
-				{
-					AcDbLine* line = new AcDbLine(AcGePoint3d(x, y - rowHeights[i], 0), AcGePoint3d(x + columnWidths[j], y - rowHeights[i], 0));
-					line->setColorIndex(cell->BottomBorderColor());
-					lastLines.push_back(line);
-				}
-			}
-			if(cell->LeftBorder())
-			{
-				if(cell->LeftBorderDouble())
-				{
-					AcDbLine* line1 = new AcDbLine(AcGePoint3d(x - doublelineoffset, y, 0), AcGePoint3d(x - doublelineoffset, y - rowHeights[i], 0));
-					line1->setColorIndex(cell->LeftBorderColor());
-					lastLines.push_back(line1);
-					AcDbLine* line2 = new AcDbLine(AcGePoint3d(x + doublelineoffset, y, 0), AcGePoint3d(x + doublelineoffset, y - rowHeights[i], 0));
-					line2->setColorIndex(cell->LeftBorderColor());
-					lastLines.push_back(line2);
-				}
-				else
-				{
-					AcDbLine* line = new AcDbLine(AcGePoint3d(x, y, 0), AcGePoint3d(x, y - rowHeights[i], 0));
-					line->setColorIndex(cell->LeftBorderColor());
-					lastLines.push_back(line);
-				}
-			}
-			if(cell->RightBorder())
-			{
-				if(cell->RightBorderDouble())
-				{
-					AcDbLine* line1 = new AcDbLine(AcGePoint3d(x + columnWidths[j] - doublelineoffset, y, 0), AcGePoint3d(x + columnWidths[j] - doublelineoffset, y - rowHeights[i], 0));
-					line1->setColorIndex(cell->RightBorderColor());
-					lastLines.push_back(line1);
-					AcDbLine* line2 = new AcDbLine(AcGePoint3d(x + columnWidths[j] + doublelineoffset, y, 0), AcGePoint3d(x + columnWidths[j] + doublelineoffset, y - rowHeights[i], 0));
-					line2->setColorIndex(cell->RightBorderColor());
-					lastLines.push_back(line2);
-				}
-				else
-				{
-					AcDbLine* line = new AcDbLine(AcGePoint3d(x + columnWidths[j], y, 0), AcGePoint3d(x + columnWidths[j], y - rowHeights[i], 0));
-					line->setColorIndex(cell->RightBorderColor());
-					lastLines.push_back(line);
-				}
-			}
-
-			x += columnWidths[j];
-		}
-		x = tableoffset;
-		y -= rowHeights[i];
+		CTableCell* cell = (*it);
+		cell->transformBy(trans);
 	}
 
 	// Recalculate table size
@@ -834,7 +657,7 @@ Acad::ErrorStatus CGenericTable::subGetOsnapPoints(
     const AcGePoint3d&    lastPoint,
     const AcGeMatrix3d&   viewXform,
     AcGePoint3dArray&     snapPoints,
-    AcDbIntArray&         /*geomIds*/) const
+    AcDbIntArray&         geomIds) const
 {
 	assertReadEnabled();
 
@@ -843,36 +666,15 @@ Acad::ErrorStatus CGenericTable::subGetOsnapPoints(
 		Calculate();
 	}
 
-	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
-	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
-
 	if(osnapMode == AcDb::kOsModeIns)
 	{
 		snapPoints.append(m_BasePoint);
-
-		for(std::map<int, AcDbMText*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
-		{
-			AcDbMText* text = (*it).second;
-			if(text->contents() != NULL && text->contents()[0] != _T('\0'))
-			{
-				AcGePoint3d pt = text->location();
-				pt.transformBy(trans);
-				snapPoints.append(pt);
-			}
-		}
 	}
-	else if(osnapMode == AcDb::kOsModeEnd)
+
+	for(std::vector<CTableCell*>::const_iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
 	{
-		for(std::vector<AcDbLine*>::iterator it = lastLines.begin(); it != lastLines.end(); it++)
-		{
-			AcDbLine* line = (*it);
-			AcGePoint3d pt1 = line->startPoint();
-			AcGePoint3d pt2 = line->endPoint();
-			pt1.transformBy(trans);
-			pt2.transformBy(trans);
-			snapPoints.append(pt1);
-			snapPoints.append(pt2);
-		}
+		CTableCell* cell = (*it);
+		cell->getOsnapPoints(osnapMode, gsSelectionMark, pickPoint, lastPoint, viewXform, snapPoints, geomIds);
 	}
 
 	return Acad::eOk;
@@ -906,10 +708,59 @@ Acad::ErrorStatus CGenericTable::subTransformBy(const AcGeMatrix3d& xform)
 {
 	assertWriteEnabled();
 	
+	AcGeMatrix3d cellTrans(xform);
+
 	m_BasePoint.transformBy(xform);
 	m_Direction.transformBy(xform);
 	m_Up.transformBy(xform);
 	m_Normal = m_Direction.crossProduct(m_Up);
+
+	// Get UCS vectors
+	AcGeVector3d ucsdir(m_Direction);
+	ucsdir.transformBy(ucs);
+	AcGeVector3d ucsup(m_Up);
+	ucsup.transformBy(ucs);
+
+	// Set mirror base point to middle of entity
+	AcGePoint3d pt(m_Width / 2.0, -m_Height / 2.0, 0);
+	
+	// Transform to WCS
+	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
+	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
+	pt.transformBy(trans);
+
+	// Text always left to right
+	if(ucsdir.x < 0)
+	{
+		// Mirror around vertical axis
+		AcGeMatrix3d mirror = AcGeMatrix3d::kIdentity;
+		mirror.setToMirroring(AcGeLine3d(pt, m_Up));
+		cellTrans.preMultBy(mirror);
+		m_BasePoint.transformBy(mirror);
+		m_Direction.transformBy(mirror);
+		m_Up.transformBy(mirror);
+		m_Normal = m_Direction.crossProduct(m_Up);
+	}
+
+	// Text always upright
+	if(ucsup.y < 0)
+	{
+		// Mirror around horizontal axis
+		AcGeMatrix3d mirror = AcGeMatrix3d::kIdentity;
+		mirror.setToMirroring(AcGeLine3d(pt, m_Direction));
+		cellTrans.preMultBy(mirror);
+		m_BasePoint.transformBy(mirror);
+		m_Direction.transformBy(mirror);
+		m_Up.transformBy(mirror);
+		m_Normal = m_Direction.crossProduct(m_Up);
+	}
+
+	// Transform cells
+	for(std::vector<CTableCell*>::iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
+	{
+		CTableCell* cell = (*it);
+		cell->transformBy(cellTrans);
+	}
 
 	// Correct direction vectors
 	double scale = m_Direction.length();
@@ -929,39 +780,10 @@ Acad::ErrorStatus CGenericTable::subExplode(AcDbVoidPtrArray& entitySet) const
 		Calculate();
 	}
 
-	if(lastTexts.size() == 0 && lastLines.size() == 0)
+	for(std::vector<CTableCell*>::const_iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
 	{
-		return Acad::eInvalidInput;
-	}
-
-	Acad::ErrorStatus es;
-
-	// Transformations
-	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
-	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
-
-	// Texts
-	for(std::map<int, AcDbMText*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
-	{
-		AcRxObject* obj = (*it).second->clone();
-		AcDbMText* text = static_cast<AcDbMText*>(obj);
-		if((es = text->transformBy(trans)) != Acad::eOk)
-		{
-			return es;
-		}
-		entitySet.append(text);
-	}
-
-	// Lines
-	for(std::vector<AcDbLine*>::iterator it = lastLines.begin(); it != lastLines.end(); it++)
-	{
-		AcRxObject* obj = (*it)->clone();
-		AcDbLine* line = static_cast<AcDbLine*>(obj);
-		if((es = line->transformBy(trans)) != Acad::eOk)
-		{
-			return es;
-		}
-		entitySet.append(line);
+		CTableCell* cell = (*it);
+		cell->explode(entitySet);
 	}
 
     return Acad::eOk;
@@ -982,41 +804,11 @@ Adesk::Boolean CGenericTable::subWorldDraw(AcGiWorldDraw* worldDraw)
 		Calculate();
 	}
 
-	// Transform to match orientation
-	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
-	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
-	worldDraw->geometry().pushModelTransform(trans);
-
-	// Draw outline only if dragging
-	if(worldDraw->isDragging())
+	for(std::vector<CTableCell*>::iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
 	{
-		AcGePoint3d pts[5];
-		pts[0] = AcGePoint3d(0.0, 0.0, 0.0);
-		pts[1] = AcGePoint3d(m_Width, 0.0, 0.0);
-		pts[2] = AcGePoint3d(m_Width, -m_Height, 0.0);
-		pts[3] = AcGePoint3d(0.0, -m_Height, 0.0);
-		pts[4] = AcGePoint3d(0.0, 0.0, 0.0);
-		worldDraw->geometry().polyline(5, pts, &AcGeVector3d::kZAxis);
+		CTableCell* cell = (*it);
+		cell->worldDraw(worldDraw);
 	}
-	else
-	{
-		// Draw texts
-		for(std::map<int, AcDbMText*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
-		{
-			AcDbMText* text = (*it).second;
-			worldDraw->geometry().draw(text);
-		}
-
-		// Draw lines
-		for(std::vector<AcDbLine*>::iterator it = lastLines.begin(); it != lastLines.end(); it++)
-		{
-			AcDbLine* line = (*it);
-			worldDraw->geometry().draw(line);
-		}
-	}
-
-	// Reset transform
-	worldDraw->geometry().popModelTransform();
 
     return Adesk::kTrue; // Don't call viewportDraw().
 }
@@ -1091,36 +883,7 @@ Acad::ErrorStatus CGenericTable::dwgOutFields(AcDbDwgFiler* pFiler) const
 	for(std::vector<CTableCell*>::const_iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
 	{
 		CTableCell* cell = (*it);
-
-		pFiler->writeString(cell->Text().c_str());
-
-		pFiler->writeHardPointerId(cell->ShapeId());
-
-		pFiler->writeUInt16(cell->TextColor());
-		pFiler->writeUInt16(cell->TopBorderColor());
-		pFiler->writeUInt16(cell->LeftBorderColor());
-		pFiler->writeUInt16(cell->BottomBorderColor());
-		pFiler->writeUInt16(cell->RightBorderColor());
-
-		pFiler->writeBool(cell->TopBorder());
-		pFiler->writeBool(cell->LeftBorder());
-		pFiler->writeBool(cell->BottomBorder());
-		pFiler->writeBool(cell->RightBorder());
-
-		pFiler->writeBool(cell->TopBorderDouble());
-		pFiler->writeBool(cell->LeftBorderDouble());
-		pFiler->writeBool(cell->BottomBorderDouble());
-		pFiler->writeBool(cell->RightBorderDouble());
-
-		pFiler->writeInt32(cell->MergeRight());
-		pFiler->writeInt32(cell->MergeDown());
-
-		pFiler->writeHardPointerId(cell->TextStyleId());
-
-		pFiler->writeDouble(cell->TextHeight());
-
-		pFiler->writeInt32(cell->HorizontalAlignment());
-		pFiler->writeInt32(cell->VerticalAlignment());
+		cell->dwgOutFields(pFiler);
 	}
 
 	return pFiler->filerStatus();
@@ -1163,96 +926,7 @@ Acad::ErrorStatus CGenericTable::dwgInFields(AcDbDwgFiler* pFiler)
 	for(int i = 0; i < m_Rows * m_Columns; i++)
 	{
 		CTableCell* cell = m_Cells[i];
-
-		ACHAR* t_Text = NULL;
-
-		AcDbHardPointerId t_ShapeId = AcDbObjectId::kNull;
-		
-		Adesk::UInt16 t_TextColor;
-		Adesk::UInt16 t_TopBorderColor;
-		Adesk::UInt16 t_LeftBorderColor;
-		Adesk::UInt16 t_BottomBorderColor;
-		Adesk::UInt16 t_RightBorderColor;
-
-		bool t_TopBorder;
-		bool t_LeftBorder;
-		bool t_BottomBorder;
-		bool t_RightBorder;
-
-		bool t_TopBorderDouble;
-		bool t_LeftBorderDouble;
-		bool t_BottomBorderDouble;
-		bool t_RightBorderDouble;
-
-		Adesk::Int32 t_MergeRight;
-		Adesk::Int32 t_MergeDown;
-
-		AcDbHardPointerId t_TextStyleId;
-
-		double t_TextHeight;
-
-		Adesk::Int32 t_HorizontalAlignment;
-		Adesk::Int32 t_VerticalAlignment;
-
-		pFiler->readString(&t_Text);
-
-		pFiler->readHardPointerId(&t_ShapeId);
-
-		pFiler->readUInt16(&t_TextColor);
-		pFiler->readUInt16(&t_TopBorderColor);
-		pFiler->readUInt16(&t_LeftBorderColor);
-		pFiler->readUInt16(&t_BottomBorderColor);
-		pFiler->readUInt16(&t_RightBorderColor);
-
-		pFiler->readBool(&t_TopBorder);
-		pFiler->readBool(&t_LeftBorder);
-		pFiler->readBool(&t_BottomBorder);
-		pFiler->readBool(&t_RightBorder);
-
-		pFiler->readBool(&t_TopBorderDouble);
-		pFiler->readBool(&t_LeftBorderDouble);
-		pFiler->readBool(&t_BottomBorderDouble);
-		pFiler->readBool(&t_RightBorderDouble);
-
-		pFiler->readInt32(&t_MergeRight);
-		pFiler->readInt32(&t_MergeDown);
-
-		pFiler->readHardPointerId(&t_TextStyleId);
-
-		pFiler->readDouble(&t_TextHeight);
-
-		pFiler->readInt32(&t_HorizontalAlignment);
-		pFiler->readInt32(&t_VerticalAlignment);
-
-		cell->setText(t_Text);
-		cell->setShapeId(t_ShapeId);
-		cell->setTextColor(t_TextColor);
-		cell->setTopBorderColor(t_TopBorderColor);
-		cell->setLeftBorderColor(t_LeftBorderColor);
-		cell->setBottomBorderColor(t_BottomBorderColor);
-		cell->setRightBorderColor(t_RightBorderColor);
-
-		cell->setTopBorder(t_TopBorder);
-		cell->setLeftBorder(t_LeftBorder);
-		cell->setBottomBorder(t_BottomBorder);
-		cell->setRightBorder(t_RightBorder);
-
-		cell->setTopBorderDouble(t_TopBorderDouble);
-		cell->setLeftBorderDouble(t_LeftBorderDouble);
-		cell->setBottomBorderDouble(t_BottomBorderDouble);
-		cell->setRightBorderDouble(t_RightBorderDouble);
-
-		cell->setMergeRight(t_MergeRight);
-		cell->setMergeDown(t_MergeDown);
-
-		cell->setTextStyleId(t_TextStyleId);
-
-		cell->setTextHeight(t_TextHeight);
-
-		cell->setHorizontalAlignment((CTableCell::Alignment)t_HorizontalAlignment);
-		cell->setVerticalAlignment((CTableCell::Alignment)t_VerticalAlignment);
-
-		acutDelString(t_Text);
+		cell->dwgInFields(pFiler);
 	}
 
 
@@ -1281,7 +955,7 @@ Acad::ErrorStatus CGenericTable::dxfOutFields(AcDbDxfFiler* pFiler) const
 	pFiler->writePoint3d(AcDb::kDxfXCoord, m_BasePoint);
 	// Use max precision when writing out direction vectors
 	pFiler->writeVector3d(AcDb::kDxfXCoord + 1, m_Direction, 16);
-	pFiler->writeVector3d(AcDb::kDxfXCoord + 2, m_Up, 16);;
+	pFiler->writeVector3d(AcDb::kDxfXCoord + 2, m_Up, 16);
 
 	pFiler->writeDouble(AcDb::kDxfReal, m_CellMargin);
 
@@ -1296,36 +970,7 @@ Acad::ErrorStatus CGenericTable::dxfOutFields(AcDbDxfFiler* pFiler) const
 	for(std::vector<CTableCell*>::const_iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
 	{
 		CTableCell* cell = (*it);
-
-		pFiler->writeString(AcDb::kDxfText, cell->Text().c_str());
-
-		pFiler->writeObjectId(AcDb::kDxfHardPointerId, cell->ShapeId());
-
-		pFiler->writeUInt16(AcDb::kDxfXInt16, cell->TextColor());
-		pFiler->writeUInt16(AcDb::kDxfXInt16, cell->TopBorderColor());
-		pFiler->writeUInt16(AcDb::kDxfXInt16, cell->LeftBorderColor());
-		pFiler->writeUInt16(AcDb::kDxfXInt16, cell->BottomBorderColor());
-		pFiler->writeUInt16(AcDb::kDxfXInt16, cell->RightBorderColor());
-
-		pFiler->writeBool(AcDb::kDxfBool, cell->TopBorder());
-		pFiler->writeBool(AcDb::kDxfBool, cell->LeftBorder());
-		pFiler->writeBool(AcDb::kDxfBool, cell->BottomBorder());
-		pFiler->writeBool(AcDb::kDxfBool, cell->RightBorder());
-
-		pFiler->writeBool(AcDb::kDxfBool, cell->TopBorderDouble());
-		pFiler->writeBool(AcDb::kDxfBool, cell->LeftBorderDouble());
-		pFiler->writeBool(AcDb::kDxfBool, cell->BottomBorderDouble());
-		pFiler->writeBool(AcDb::kDxfBool, cell->RightBorderDouble());
-
-		pFiler->writeInt32(AcDb::kDxfInt32, cell->MergeRight());
-		pFiler->writeInt32(AcDb::kDxfInt32, cell->MergeDown());
-
-		pFiler->writeObjectId(AcDb::kDxfHardPointerId, cell->TextStyleId());
-
-		pFiler->writeDouble(AcDb::kDxfReal, cell->TextHeight());
-
-		pFiler->writeInt32(AcDb::kDxfInt32, cell->HorizontalAlignment());
-		pFiler->writeInt32(AcDb::kDxfInt32, cell->VerticalAlignment());
+		cell->dxfOutFields(pFiler);
 	}
 
 	return pFiler->filerStatus();
@@ -1380,102 +1025,10 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
 	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("table width"), t_Width)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("table height"), t_Height)) != Acad::eOk) return es;
 
-	t_Cells.resize(t_Rows * t_Columns);
-
 	for(int i = 0; i < t_Rows * t_Columns; i++)
     {
 		CTableCell* cell = new CTableCell();
-
-		ACHAR* t_Text = NULL;
-		
-		AcDbHardPointerId t_ShapeId;
-
-		unsigned short t_TextColor;
-		unsigned short t_TopBorderColor;
-		unsigned short t_LeftBorderColor;
-		unsigned short t_BottomBorderColor;
-		unsigned short t_RightBorderColor;
-
-		bool t_TopBorder;
-		bool t_LeftBorder;
-		bool t_BottomBorder;
-		bool t_RightBorder;
-
-		bool t_TopBorderDouble;
-		bool t_LeftBorderDouble;
-		bool t_BottomBorderDouble;
-		bool t_RightBorderDouble;
-
-		int t_MergeRight;
-		int t_MergeDown;
-
-		AcDbHardPointerId t_TextStyleId;
-
-		double t_TextHeight;
-
-		int t_HorizontalAlignment;
-		int t_VerticalAlignment;
-
-		if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("cell text"), t_Text)) != Acad::eOk) return es;
-
-		if((es = Utility::ReadDXFObjectId(pFiler, AcDb::kDxfHardPointerId, _T("cell shape id"), t_ShapeId)) != Acad::eOk) return es;
-
-		if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("cell text color"), t_TextColor)) != Acad::eOk) return es;
-		if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("cell top border color"), t_TopBorderColor)) != Acad::eOk) return es;
-		if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("cell left border color"), t_LeftBorderColor)) != Acad::eOk) return es;
-		if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("cell bottom border color"), t_BottomBorderColor)) != Acad::eOk) return es;
-		if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("cell right border color"), t_RightBorderColor)) != Acad::eOk) return es;
-
-		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("cell top border"), t_TopBorder)) != Acad::eOk) return es;
-		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("cell left border"), t_LeftBorder)) != Acad::eOk) return es;
-		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("cell bottom border"), t_BottomBorder)) != Acad::eOk) return es;
-		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("cell right border"), t_RightBorder)) != Acad::eOk) return es;
-
-		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("cell top border double"), t_TopBorderDouble)) != Acad::eOk) return es;
-		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("cell left border double"), t_LeftBorderDouble)) != Acad::eOk) return es;
-		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("cell bottom border double"), t_BottomBorderDouble)) != Acad::eOk) return es;
-		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("cell right border double"), t_RightBorderDouble)) != Acad::eOk) return es;
-
-		if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("cell merge right"), t_MergeRight)) != Acad::eOk) return es;
-		if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("cell merge down"), t_MergeDown)) != Acad::eOk) return es;
-
-		if((es = Utility::ReadDXFObjectId(pFiler, AcDb::kDxfHardPointerId, _T("cell text style"), t_TextStyleId)) != Acad::eOk) return es;
-
-		if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("cell text height"), t_TextHeight)) != Acad::eOk) return es;
-
-		if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("cell horizontal alignment"), t_HorizontalAlignment)) != Acad::eOk) return es;
-		if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("cell vertical alignment"), t_VerticalAlignment)) != Acad::eOk) return es;
-
-		cell->setText(t_Text);
-		cell->setShapeId(t_ShapeId);
-		cell->setTextColor(t_TextColor);
-		cell->setTopBorderColor(t_TopBorderColor);
-		cell->setLeftBorderColor(t_LeftBorderColor);
-		cell->setBottomBorderColor(t_BottomBorderColor);
-		cell->setRightBorderColor(t_RightBorderColor);
-
-		cell->setTopBorder(t_TopBorder);
-		cell->setLeftBorder(t_LeftBorder);
-		cell->setBottomBorder(t_BottomBorder);
-		cell->setRightBorder(t_RightBorder);
-
-		cell->setTopBorder(t_TopBorderDouble);
-		cell->setLeftBorder(t_LeftBorderDouble);
-		cell->setBottomBorder(t_BottomBorderDouble);
-		cell->setRightBorder(t_RightBorderDouble);
-
-		cell->setMergeRight(t_MergeRight);
-		cell->setMergeDown(t_MergeDown);
-
-		cell->setTextStyleId(t_TextStyleId);
-
-		cell->setTextHeight(t_TextHeight);
-
-		cell->setHorizontalAlignment((CTableCell::Alignment)t_HorizontalAlignment);
-		cell->setVerticalAlignment((CTableCell::Alignment)t_VerticalAlignment);
-
-		acutDelString(t_Text);
-
+		cell->dxfInFields(pFiler);
 		t_Cells.push_back(cell);
     }
 
@@ -1513,25 +1066,9 @@ void CGenericTable::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 		Calculate();
 	}
 
-	// Transform to match orientation
-	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
-	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
-
-	// Draw texts
-	for(std::map<int, AcDbMText*>::iterator it = lastTexts.begin(); it != lastTexts.end(); it++)
+	for(std::vector<CTableCell*>::const_iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
 	{
-		AcRxObject* obj = (*it).second->clone();
-		AcDbMText* text = static_cast<AcDbMText*>(obj);
-		text->transformBy(trans);
-		worldDraw->geometry().draw(text);
-	}
-
-	// Draw lines
-	for(std::vector<AcDbLine*>::iterator it = lastLines.begin(); it != lastLines.end(); it++)
-	{
-		AcRxObject* obj = (*it)->clone();
-		AcDbLine* line = static_cast<AcDbLine*>(obj);
-		line->transformBy(trans);
-		worldDraw->geometry().draw(line);
+		CTableCell* cell = (*it);
+		cell->saveAs(worldDraw, saveType);
 	}
 }

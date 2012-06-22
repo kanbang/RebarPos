@@ -378,7 +378,7 @@ void CBOQTable::UpdateTable(void)
 					Utility::IntToStr(Utility::DoubleToInt((*dit).first), numtext);
 					Utility::ReplaceString(dtext, L"[D]", numtext);
 					int k = j + (*dit).second;
-					setCellText(i + 1, k, dtext);
+					setCellText(i + 1, k, dtext.c_str());
 					setCellTextColor(i + 1, k, lastPosColor);
 					setCellTextStyleId(i + 1, k, lastTextStyleId);
 				}
@@ -406,7 +406,7 @@ void CBOQTable::UpdateTable(void)
 				break;
 			}
 			Utility::ReplaceString(ctext, L"[U]", utext);
-			setCellText(i, j, ctext);
+			setCellText(i, j, ctext.c_str());
 		}
 		setCellTextColor(i, j, lastPosColor);
 		setCellTextStyleId(i, j, lastTextStyleId);
@@ -463,7 +463,7 @@ void CBOQTable::UpdateTable(void)
 
 				setCellTextColor(i, j + doff, lastTextColor);
 				setCellTextStyleId(i, j + doff, lastTextStyleId);
-				setCellText(i, j + doff, text);
+				setCellText(i, j + doff, text.c_str());
 			}
 			else if(type == CBOQTable::POS)
 			{
@@ -471,7 +471,7 @@ void CBOQTable::UpdateTable(void)
 				Utility::IntToStr(row->pos, text);
 				setCellTextColor(i, j, lastTextColor);
 				setCellTextStyleId(i, j, lastTextStyleId);
-				setCellText(i, j, text);
+				setCellText(i, j, text.c_str());
 			}
 
 			i++;
@@ -494,7 +494,7 @@ void CBOQTable::UpdateTable(void)
 		std::wstring ntext;
 		Utility::IntToStr(m_Multiplier, ntext);
 		Utility::ReplaceString(text, L"[N]", ntext);
-		setCellText(hi, 0, text);
+		setCellText(hi, 0, text.c_str());
 	}
 
 	// Set total rows
@@ -563,20 +563,20 @@ void CBOQTable::UpdateTable(void)
 			// Total lengths
 			double len = totallengths[(*it).first];
 			Utility::DoubleToStr(len, lastPrecision, text);
-			setCellText(ti, k, text);
+			setCellText(ti, k, text.c_str());
 			// Unit weights
 			double uw = unitweights[(*it).first];
 			Utility::DoubleToStr(uw, 3, text);
-			setCellText(ti + 1, k, text);
+			setCellText(ti + 1, k, text.c_str());
 			// Weights
 			double w = len * uw;
 			Utility::DoubleToStr(w, lastPrecision, text);
-			setCellText(ti + 2, k, text);
+			setCellText(ti + 2, k, text.c_str());
 			grosstotal += w;
 		}
 		std::wstring gtext;
 		Utility::DoubleToStr(grosstotal, lastPrecision, gtext);
-		setCellText(ti + 3, cols - (int)diameters.size(), gtext);
+		setCellText(ti + 3, cols - (int)diameters.size(), gtext.c_str());
 
 		if(m_Multiplier > 1)
 		{
@@ -585,13 +585,13 @@ void CBOQTable::UpdateTable(void)
 			if(lastGrossWeightLabel != NULL && lastGrossWeightLabel[0] != _T('\0'))
 				setCellText(ti + 5, 0, lastGrossWeightLabel);
 			std::wstring mtext(L"x1");
-			setCellText(ti + 2, mulcol, mtext);
-			setCellText(ti + 3, mulcol, mtext);
+			setCellText(ti + 2, mulcol, mtext.c_str());
+			setCellText(ti + 3, mulcol, mtext.c_str());
 			mtext.clear();
 			Utility::IntToStr(m_Multiplier, mtext);
 			mtext.insert(0, L"x");
-			setCellText(ti + 4, mulcol, mtext);
-			setCellText(ti + 5, mulcol, mtext);
+			setCellText(ti + 4, mulcol, mtext.c_str());
+			setCellText(ti + 5, mulcol, mtext.c_str());
 			MergeAcross(ti + 5, cols - (int)diameters.size(), (int)diameters.size());
 
 			double grossgrosstotal = 0;
@@ -602,12 +602,12 @@ void CBOQTable::UpdateTable(void)
 				// Gross total weights
 				double w = (double)m_Multiplier * totallengths[(*it).first] * unitweights[(*it).first];
 				Utility::DoubleToStr(w, lastPrecision, text);
-				setCellText(ti + 4, k, text);
+				setCellText(ti + 4, k, text.c_str());
 				grossgrosstotal += w;
 			}
 			std::wstring gtext;
 			Utility::DoubleToStr(grossgrosstotal, lastPrecision, gtext);
-			setCellText(ti + 5, cols - (int)diameters.size(), gtext);
+			setCellText(ti + 5, cols - (int)diameters.size(), gtext.c_str());
 		}
 	}
 
@@ -626,7 +626,7 @@ void CBOQTable::UpdateTable(void)
 		std::wstring ntext;
 		Utility::IntToStr(m_Multiplier, ntext);
 		Utility::ReplaceString(text, L"[N]", ntext);
-		setCellText(fi, 0, text);
+		setCellText(fi, 0, text.c_str());
 	}
 
 	acutDelString(lastColumns);
