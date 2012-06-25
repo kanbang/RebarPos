@@ -230,6 +230,12 @@ void CGenericTable::setCellShapeId(const int i, const int j, const AcDbObjectId&
 	cell->setShapeId(newVal);
 	isModified = true;
 }
+void CGenericTable::setCellShapeText(const int i, const int j, const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f)
+{
+	CTableCell* cell = m_Cells[i * m_Columns + j];
+	cell->setShapeText(a, b, c, d, e, f);
+	isModified = true;
+}
 void CGenericTable::setCellTextColor(const int i, const int j, const unsigned short newVal)
 {
 	CTableCell* cell = m_Cells[i * m_Columns + j];

@@ -53,7 +53,7 @@ namespace RebarPosCommands
                     foreach (PosCopy copy in form.PosList)
                     {
                         if (copy.existing)
-                            table.Items.Add(int.Parse(copy.pos), copy.count, double.Parse(copy.diameter), copy.length1, copy.length2, copy.isVarLength, copy.shapeId);
+                            table.Items.Add(int.Parse(copy.pos), copy.count, double.Parse(copy.diameter), copy.length1, copy.length2, copy.isVarLength, copy.shapeId, copy.a, copy.b, copy.c, copy.d, copy.e, copy.f);
                         else
                             table.Items.Add(int.Parse(copy.pos));
                     }

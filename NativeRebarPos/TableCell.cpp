@@ -16,7 +16,7 @@ CTableCell::CTableCell(void) : m_BasePoint(0, 0, 0), m_Direction(1, 0, 0), m_Up(
 	m_TopBorderDouble(Adesk::kFalse), m_LeftBorderDouble(Adesk::kFalse), m_BottomBorderDouble(Adesk::kFalse), m_RightBorderDouble(Adesk::kFalse),
 	m_MergeRight(0), m_MergeDown(0),
 	m_TextStyleId(AcDbObjectId::kNull), m_ShapeId(AcDbObjectId::kNull),
-	m_TextHeight(1.0),
+	m_TextHeight(1.0), m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL),
 	m_HorizontalAlignment(CTableCell::eNEAR), m_VerticalAlignment(CTableCell::eNEAR),
 	m_Width(0), m_Height(0), m_Margin(0)
 {
@@ -25,6 +25,12 @@ CTableCell::CTableCell(void) : m_BasePoint(0, 0, 0), m_Direction(1, 0, 0), m_Up(
 CTableCell::~CTableCell(void)
 {
 	acutDelString(m_Text);
+	acutDelString(m_A);
+	acutDelString(m_B);
+	acutDelString(m_C);
+	acutDelString(m_D);
+	acutDelString(m_E);
+	acutDelString(m_F);
 }
 
 //*************************************************************************
@@ -90,6 +96,18 @@ Acad::ErrorStatus CTableCell::setTextStyleId(const AcDbObjectId& newVal)  { m_Te
 
 const AcDbObjectId& CTableCell::ShapeId() const        { return m_ShapeId; }
 Acad::ErrorStatus CTableCell::setShapeId(const AcDbObjectId& newVal) { m_ShapeId = newVal; return Acad::eOk; }
+
+Acad::ErrorStatus CTableCell::setShapeText(const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f)
+{
+	acutUpdString(a, m_A);
+	acutUpdString(b, m_B);
+	acutUpdString(c, m_C);
+	acutUpdString(d, m_D);
+	acutUpdString(e, m_E);
+	acutUpdString(f, m_F);
+
+	return Acad::eOk;
+}
 
 const double CTableCell::TextHeight() const         { return m_TextHeight; }
 Acad::ErrorStatus CTableCell::setTextHeight(const double newVal) { m_TextHeight = newVal; return Acad::eOk; }
@@ -269,8 +287,44 @@ const std::vector<AcDbMText*> CTableCell::GetTexts() const
 					double cy = -m_Height + m_Margin;
 					mtext->setLocation(AcGePoint3d(x + cx, y + cy, 0));
 
+					// Text attachment
+					if(text->horizontalAlignment == AcDb::kTextLeft)
+					{
+						if(text->verticalAlignment == AcDb::kTextTop)
+							mtext->setAttachment(AcDbMText::kTopLeft);
+						else if(text->verticalAlignment == AcDb::kTextBase || text->verticalAlignment == AcDb::kTextBottom)
+							mtext->setAttachment(AcDbMText::kBottomLeft);
+						else
+							mtext->setAttachment(AcDbMText::kMiddleLeft);
+					}
+					else if(text->horizontalAlignment == AcDb::kTextRight)
+					{
+						if(text->verticalAlignment == AcDb::kTextTop)
+							mtext->setAttachment(AcDbMText::kTopRight);
+						else if(text->verticalAlignment == AcDb::kTextBase || text->verticalAlignment == AcDb::kTextBottom)
+							mtext->setAttachment(AcDbMText::kBottomRight);
+						else
+							mtext->setAttachment(AcDbMText::kMiddleRight);
+					}
+					else
+					{
+						if(text->verticalAlignment == AcDb::kTextTop)
+							mtext->setAttachment(AcDbMText::kTopCenter);
+						else if(text->verticalAlignment == AcDb::kTextBase || text->verticalAlignment == AcDb::kTextBottom)
+							mtext->setAttachment(AcDbMText::kBottomCenter);
+						else
+							mtext->setAttachment(AcDbMText::kMiddleCenter);
+					}
+
 					// Contents
-					mtext->setContents(text->text.c_str());
+					std::wstring txt(text->text);
+					if(m_A != NULL) Utility::ReplaceString(txt, L"A", m_A);
+					if(m_B != NULL) Utility::ReplaceString(txt, L"B", m_B);
+					if(m_C != NULL) Utility::ReplaceString(txt, L"C", m_C);
+					if(m_D != NULL) Utility::ReplaceString(txt, L"D", m_D);
+					if(m_E != NULL) Utility::ReplaceString(txt, L"E", m_E);
+					if(m_F != NULL) Utility::ReplaceString(txt, L"F", m_F);
+					mtext->setContents(txt.c_str());
 
 					mtext->transformBy(trans);
 					texts.push_back(mtext);
@@ -438,6 +492,31 @@ Acad::ErrorStatus CTableCell::dwgOutFields(AcDbDwgFiler* pFiler) const
 	else
 		pFiler->writeString(_T(""));
 
+	if(m_A != NULL && m_A[0] != _T('\0'))
+		pFiler->writeString(m_A);
+	else
+		pFiler->writeString(_T(""));
+	if(m_B != NULL && m_B[0] != _T('\0'))
+		pFiler->writeString(m_B);
+	else
+		pFiler->writeString(_T(""));
+	if(m_C != NULL && m_C[0] != _T('\0'))
+		pFiler->writeString(m_C);
+	else
+		pFiler->writeString(_T(""));
+	if(m_D != NULL && m_D[0] != _T('\0'))
+		pFiler->writeString(m_D);
+	else
+		pFiler->writeString(_T(""));
+	if(m_E != NULL && m_E[0] != _T('\0'))
+		pFiler->writeString(m_E);
+	else
+		pFiler->writeString(_T(""));
+	if(m_F != NULL && m_F[0] != _T('\0'))
+		pFiler->writeString(m_F);
+	else
+		pFiler->writeString(_T(""));
+
 	pFiler->writeUInt16(m_TextColor);
 	pFiler->writeUInt16(m_TopBorderColor);
 	pFiler->writeUInt16(m_LeftBorderColor);
@@ -481,7 +560,22 @@ Acad::ErrorStatus CTableCell::dwgInFields(AcDbDwgFiler* pFiler)
 	m_Normal = m_Direction.crossProduct(m_Up);
 
 	acutDelString(m_Text);
+
+	acutDelString(m_A);
+	acutDelString(m_B);
+	acutDelString(m_C);
+	acutDelString(m_D);
+	acutDelString(m_E);
+	acutDelString(m_F);
+
 	pFiler->readString(&m_Text);
+
+	pFiler->readString(&m_A);
+	pFiler->readString(&m_B);
+	pFiler->readString(&m_C);
+	pFiler->readString(&m_D);
+	pFiler->readString(&m_E);
+	pFiler->readString(&m_F);
 
 	pFiler->readUInt16(&m_TextColor);
 	pFiler->readUInt16(&m_TopBorderColor);
@@ -534,6 +628,31 @@ Acad::ErrorStatus CTableCell::dxfOutFields(AcDbDxfFiler* pFiler) const
 	else
 		pFiler->writeString(AcDb::kDxfText, _T(""));
 
+	if(m_A != NULL && m_A[0] != _T('\0'))
+		pFiler->writeString(AcDb::kDxfText, m_A);
+	else
+		pFiler->writeString(AcDb::kDxfText, _T(""));
+	if(m_B != NULL && m_B[0] != _T('\0'))
+		pFiler->writeString(AcDb::kDxfText, m_B);
+	else
+		pFiler->writeString(AcDb::kDxfText, _T(""));
+	if(m_C != NULL && m_C[0] != _T('\0'))
+		pFiler->writeString(AcDb::kDxfText, m_C);
+	else
+		pFiler->writeString(AcDb::kDxfText, _T(""));
+	if(m_D != NULL && m_D[0] != _T('\0'))
+		pFiler->writeString(AcDb::kDxfText, m_D);
+	else
+		pFiler->writeString(AcDb::kDxfText, _T(""));
+	if(m_E != NULL && m_E[0] != _T('\0'))
+		pFiler->writeString(AcDb::kDxfText, m_E);
+	else
+		pFiler->writeString(AcDb::kDxfText, _T(""));
+	if(m_F != NULL && m_F[0] != _T('\0'))
+		pFiler->writeString(AcDb::kDxfText, m_F);
+	else
+		pFiler->writeString(AcDb::kDxfText, _T(""));
+
 	pFiler->writeUInt16(AcDb::kDxfXInt16, m_TextColor);
 	pFiler->writeUInt16(AcDb::kDxfXInt16, m_TopBorderColor);
 	pFiler->writeUInt16(AcDb::kDxfXInt16, m_LeftBorderColor);
@@ -577,6 +696,12 @@ Acad::ErrorStatus CTableCell::dxfInFields(AcDbDxfFiler* pFiler)
 	AcGeVector3d t_Direction, t_Up;
 
 	ACHAR* t_Text = NULL;
+	ACHAR* t_A = NULL;
+	ACHAR* t_B = NULL;
+	ACHAR* t_C = NULL;
+	ACHAR* t_D = NULL;
+	ACHAR* t_E = NULL;
+	ACHAR* t_F = NULL;
 	
 	Adesk::UInt16 t_TextColor;
 	Adesk::UInt16 t_TopBorderColor;
@@ -615,6 +740,13 @@ Acad::ErrorStatus CTableCell::dxfInFields(AcDbDxfFiler* pFiler)
 
 	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("cell text"), t_Text)) != Acad::eOk) return es;
 
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("text replacement A"), t_A)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("text replacement B"), t_B)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("text replacement C"), t_C)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("text replacement D"), t_D)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("text replacement E"), t_E)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("text replacement F"), t_F)) != Acad::eOk) return es;
+
 	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("cell text color"), t_TextColor)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("cell top border color"), t_TopBorderColor)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("cell left border color"), t_LeftBorderColor)) != Acad::eOk) return es;
@@ -652,6 +784,7 @@ Acad::ErrorStatus CTableCell::dxfInFields(AcDbDxfFiler* pFiler)
 	m_Normal = m_Direction.crossProduct(m_Up);
 
 	setText(t_Text);
+	setShapeText(t_A, t_B, t_C, t_D, t_E, t_F);
 
 	m_TextColor = t_TextColor;
 	m_TopBorderColor = t_TopBorderColor;
@@ -685,6 +818,12 @@ Acad::ErrorStatus CTableCell::dxfInFields(AcDbDxfFiler* pFiler)
 	m_Margin = t_Margin;
 
 	acutDelString(t_Text);
+	acutDelString(t_A);
+	acutDelString(t_B);
+	acutDelString(t_C);
+	acutDelString(t_D);
+	acutDelString(t_E);
+	acutDelString(t_F);
 
 	return Acad::eOk;
 }
@@ -746,15 +885,46 @@ Acad::ErrorStatus CTableCell::getOsnapPoints(
 	}
 	else if(osnapMode == AcDb::kOsModeEnd)
 	{
-		std::vector<AcDbLine*> lines = GetLines();
-		for(std::vector<AcDbLine*>::iterator it = lines.begin(); it != lines.end(); it++)
+		AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
+		trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
+
+		if(m_TopBorder)
 		{
-			AcDbLine* line = (*it);
-			snapPoints.append(line->startPoint());
-			snapPoints.append(line->endPoint());
-			delete line;
+
+			AcGePoint3d pt1(0, 0, 0);
+			AcGePoint3d pt2(m_Width, 0, 0);
+			pt1.transformBy(trans);
+			pt2.transformBy(trans);
+			snapPoints.append(pt1);
+			snapPoints.append(pt2);
 		}
-		lines.clear();
+		if(m_BottomBorder)
+		{
+			AcGePoint3d pt1(0, -m_Height, 0);
+			AcGePoint3d pt2(m_Width, -m_Height, 0);
+			pt1.transformBy(trans);
+			pt2.transformBy(trans);
+			snapPoints.append(pt1);
+			snapPoints.append(pt2);
+		}
+		if(m_LeftBorder)
+		{
+			AcGePoint3d pt1(0, 0, 0);
+			AcGePoint3d pt2(0, - m_Height, 0);
+			pt1.transformBy(trans);
+			pt2.transformBy(trans);
+			snapPoints.append(pt1);
+			snapPoints.append(pt2);
+		}
+		if(m_RightBorder)
+		{
+			AcGePoint3d pt1(m_Width, 0, 0);
+			AcGePoint3d pt2(m_Width, -m_Height, 0);
+			pt1.transformBy(trans);
+			pt2.transformBy(trans);
+			snapPoints.append(pt1);
+			snapPoints.append(pt2);
+		}
 	}
 
 	return Acad::eOk;

@@ -39,6 +39,12 @@ private:
 	AcGePoint3d m_BasePoint;
 
 	ACHAR* m_Text;
+	ACHAR* m_A;
+	ACHAR* m_B;
+	ACHAR* m_C;
+	ACHAR* m_D;
+	ACHAR* m_E;
+	ACHAR* m_F;
 
 	Adesk::UInt16 m_TextColor;
 	Adesk::UInt16 m_TopBorderColor;
@@ -89,6 +95,8 @@ public:
 
 	const AcDbObjectId& ShapeId() const;
 	Acad::ErrorStatus setShapeId(const AcDbObjectId& newVal);
+
+	Acad::ErrorStatus setShapeText(const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f);
 
 	const Adesk::UInt16 TextColor() const;
 	Acad::ErrorStatus setTextColor(const Adesk::UInt16 newVal);

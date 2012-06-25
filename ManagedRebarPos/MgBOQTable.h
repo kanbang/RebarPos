@@ -31,6 +31,12 @@ namespace OZOZ
 				property bool IsVarLength;
 				property bool IsEmpty;
 				property Autodesk::AutoCAD::DatabaseServices::ObjectId ShapeId;
+				property System::String^ A;
+				property System::String^ B;
+				property System::String^ C;
+				property System::String^ D;
+				property System::String^ E;
+				property System::String^ F;
 
 			public:
 				BOQRow()
@@ -44,7 +50,7 @@ namespace OZOZ
 					IsEmpty = false;
 					ShapeId = Autodesk::AutoCAD::DatabaseServices::ObjectId::Null;
 				}
-				BOQRow(int pos, int count, double diameter, double length1, double length2, bool isVarLength, Autodesk::AutoCAD::DatabaseServices::ObjectId shapeId)
+				BOQRow(int pos, int count, double diameter, double length1, double length2, bool isVarLength, Autodesk::AutoCAD::DatabaseServices::ObjectId shapeId, System::String^ a, System::String^ b, System::String^ c, System::String^ d, System::String^ e, System::String^ f)
 				{
 					Pos = pos;
 					Count = count;
@@ -54,6 +60,12 @@ namespace OZOZ
 					IsVarLength = isVarLength;
 					IsEmpty = false;
 					ShapeId = shapeId;
+					A = a;
+					B = b;
+					C = c;
+					D = d;
+					E = e;
+					F = f;
 				}
 				BOQRow(int pos)
 				{
@@ -75,7 +87,8 @@ namespace OZOZ
 				CBOQRow* ToNative(void)
 				{
 					if(!IsEmpty)
-						return new CBOQRow(Pos, Count, Diameter, Length1, Length2, IsVarLength ? Adesk::kTrue : Adesk::kFalse, OZOZ::RebarPosWrapper::Marshal::FromObjectId(ShapeId));
+						return new CBOQRow(Pos, Count, Diameter, Length1, Length2, IsVarLength ? Adesk::kTrue : Adesk::kFalse, OZOZ::RebarPosWrapper::Marshal::FromObjectId(ShapeId), 
+						OZOZ::RebarPosWrapper::Marshal::StringToWchar(A), OZOZ::RebarPosWrapper::Marshal::StringToWchar(B), OZOZ::RebarPosWrapper::Marshal::StringToWchar(C), OZOZ::RebarPosWrapper::Marshal::StringToWchar(D), OZOZ::RebarPosWrapper::Marshal::StringToWchar(E), OZOZ::RebarPosWrapper::Marshal::StringToWchar(F));
 					else
 						return new CBOQRow(Pos);
 				}
@@ -84,7 +97,8 @@ namespace OZOZ
 				static BOQRow^ FromNative(const CBOQRow* shape)
 				{
 					if(!shape->isEmpty)
-						return gcnew BOQRow(shape->pos, shape->count, shape->diameter, shape->length1, shape->length2, (shape->isVarLength == Adesk::kTrue), OZOZ::RebarPosWrapper::Marshal::ToObjectId(shape->shapeId));
+						return gcnew BOQRow(shape->pos, shape->count, shape->diameter, shape->length1, shape->length2, (shape->isVarLength == Adesk::kTrue), OZOZ::RebarPosWrapper::Marshal::ToObjectId(shape->shapeId),
+						Marshal::WcharToString(shape->a.c_str()), Marshal::WcharToString(shape->b.c_str()), Marshal::WcharToString(shape->c.c_str()), Marshal::WcharToString(shape->d.c_str()), Marshal::WcharToString(shape->e.c_str()), Marshal::WcharToString(shape->f.c_str()));
 					else
 						return gcnew BOQRow(shape->pos);
 				}
@@ -105,8 +119,8 @@ namespace OZOZ
 				BOQRowCollection(BOQTable^ parent);
 
 			public:
-				void Add(int pos, int count, double diameter, double length1, double length2, bool isVarLength, Autodesk::AutoCAD::DatabaseServices::ObjectId shapeId);
-				void Add(int pos, int count, double diameter, double length, Autodesk::AutoCAD::DatabaseServices::ObjectId shapeId);
+				void Add(int pos, int count, double diameter, double length1, double length2, bool isVarLength, Autodesk::AutoCAD::DatabaseServices::ObjectId shapeId, System::String^ a, System::String^ b, System::String^ c, System::String^ d, System::String^ e, System::String^ f);
+				void Add(int pos, int count, double diameter, double length, Autodesk::AutoCAD::DatabaseServices::ObjectId shapeId, System::String^ a, System::String^ b, System::String^ c, System::String^ d, System::String^ e, System::String^ f);
 				void Add(int pos);
 				property int Count { int get(); }
 				property BOQRow^ default[int] { BOQRow^ get(int index); void set(int index, BOQRow^ value); }

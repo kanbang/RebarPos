@@ -428,6 +428,8 @@ void CBOQTable::UpdateTable(void)
 			if(!row->isEmpty && type == CBOQTable::SHAPE)
 			{
 				setCellShapeId(i, j, row->shapeId);
+				setCellTextStyleId(i, j, lastTextStyleId);
+				setCellShapeText(i, j, row->a.c_str(), row->b.c_str(), row->c.c_str(), row->d.c_str(), row->e.c_str(), row->f.c_str());
 			}
 			else if(!row->isEmpty)
 			{
