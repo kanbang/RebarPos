@@ -784,6 +784,12 @@ Acad::ErrorStatus CBOQTable::dwgOutFields(AcDbDwgFiler* pFiler) const
 		pFiler->writeBoolean(row->isVarLength);
 		pFiler->writeBoolean(row->isEmpty);
 		pFiler->writeHardPointerId(row->shapeId);
+		pFiler->writeString(row->a.c_str());
+		pFiler->writeString(row->b.c_str());
+		pFiler->writeString(row->c.c_str());
+		pFiler->writeString(row->d.c_str());
+		pFiler->writeString(row->e.c_str());
+		pFiler->writeString(row->f.c_str());
 	}
 
 	return pFiler->filerStatus();
@@ -834,6 +840,30 @@ Acad::ErrorStatus CBOQTable::dwgInFields(AcDbDwgFiler* pFiler)
 			pFiler->readBoolean(&row->isVarLength);
 			pFiler->readBoolean(&row->isEmpty);
 			pFiler->readHardPointerId(&row->shapeId);
+			ACHAR* a = NULL;
+			ACHAR* b = NULL;
+			ACHAR* c = NULL;
+			ACHAR* d = NULL;
+			ACHAR* e = NULL;
+			ACHAR* f = NULL;
+			pFiler->readString(&a);
+			pFiler->readString(&b);
+			pFiler->readString(&c);
+			pFiler->readString(&d);
+			pFiler->readString(&e);
+			pFiler->readString(&f);
+			row->a.assign(a);
+			row->b.assign(b);
+			row->c.assign(c);
+			row->d.assign(d);
+			row->e.assign(e);
+			row->f.assign(f);
+			acutDelString(a);
+			acutDelString(b);
+			acutDelString(c);
+			acutDelString(d);
+			acutDelString(e);
+			acutDelString(f);
 			m_List.push_back(row);
 		}
 	}
@@ -887,6 +917,12 @@ Acad::ErrorStatus CBOQTable::dxfOutFields(AcDbDxfFiler* pFiler) const
 		pFiler->writeBoolean(AcDb::kDxfBool, row->isVarLength);
 		pFiler->writeBoolean(AcDb::kDxfBool, row->isEmpty);
 		pFiler->writeObjectId(AcDb::kDxfHardPointerId, row->shapeId);
+		pFiler->writeString(AcDb::kDxfText, row->a.c_str());
+		pFiler->writeString(AcDb::kDxfText, row->b.c_str());
+		pFiler->writeString(AcDb::kDxfText, row->c.c_str());
+		pFiler->writeString(AcDb::kDxfText, row->d.c_str());
+		pFiler->writeString(AcDb::kDxfText, row->e.c_str());
+		pFiler->writeString(AcDb::kDxfText, row->f.c_str());
 	}
 
 	return pFiler->filerStatus();
@@ -940,6 +976,30 @@ Acad::ErrorStatus CBOQTable::dxfInFields(AcDbDxfFiler* pFiler)
 		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("row var length"), row->isVarLength)) != Acad::eOk) return es;
 		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("row is empty"), row->isEmpty)) != Acad::eOk) return es;
 		if((es = Utility::ReadDXFObjectId(pFiler, AcDb::kDxfHardPointerId, _T("row shape id"), row->shapeId)) != Acad::eOk) return es;
+		ACHAR* a = NULL;
+		ACHAR* b = NULL;
+		ACHAR* c = NULL;
+		ACHAR* d = NULL;
+		ACHAR* e = NULL;
+		ACHAR* f = NULL;
+		if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("row shape length a"), a)) != Acad::eOk) return es;
+		if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("row shape length b"), b)) != Acad::eOk) return es;
+		if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("row shape length c"), c)) != Acad::eOk) return es;
+		if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("row shape length d"), d)) != Acad::eOk) return es;
+		if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("row shape length e"), e)) != Acad::eOk) return es;
+		if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("row shape length f"), f)) != Acad::eOk) return es;
+		row->a.assign(a);
+		row->b.assign(b);
+		row->c.assign(c);
+		row->d.assign(d);
+		row->e.assign(e);
+		row->f.assign(f);
+		acutDelString(a);
+		acutDelString(b);
+		acutDelString(c);
+		acutDelString(d);
+		acutDelString(e);
+		acutDelString(f);
 		t_List.push_back(row);
     }
 
