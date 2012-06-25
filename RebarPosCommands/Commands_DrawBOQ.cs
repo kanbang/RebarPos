@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
 using OZOZ.RebarPosWrapper;
@@ -9,25 +10,65 @@ namespace RebarPosCommands
 {
     public partial class MyCommands
     {
-        private void DrawBOQ()
+        private bool DrawBOQ()
         {
             DrawBOQForm form = new DrawBOQForm();
 
             if (!form.Init(CurrentGroupId))
-                return;
+                return false;
 
             if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) != System.Windows.Forms.DialogResult.OK)
-                return;
+                return true;
 
-            if (form.PosList.Count == 0)
+            List<PosCopy> posList = new List<PosCopy>();
+            try
+            {
+                posList = PosCopy.ReadAllInGroup(form.CurrentGroup, PosCopy.PosGrouping.PosMarker);
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            if (posList.Count == 0)
             {
                 MessageBox.Show("Seçilen grupta poz mevcut değil.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
+                return false;
+            }
+
+            posList = RemoveEmpty(posList);
+            if (!form.HideMissing)
+            {
+                posList = AddMissing(posList);
+            }
+            posList = SortList(posList);
+
+            // Pos error check
+            List<PosCheckResult> check = PosCheckResult.CheckAllInGroup(form.CurrentGroup, PosCheckResult.CheckType.Errors);
+            if (check.Count != 0)
+            {
+                PosCheckResult.ConsoleOut(check);
+                Autodesk.AutoCAD.ApplicationServices.Application.DisplayTextScreen = true;
+                return false;
+            }
+            // Pos similarity check
+            List<PosCheckResult> checks = PosCheckResult.CheckAllInGroup(form.CurrentGroup, PosCheckResult.CheckType.Warnings);
+            if (checks.Count != 0)
+            {
+                PosCheckResult.ConsoleOut(checks);
+                Autodesk.AutoCAD.ApplicationServices.Application.DisplayTextScreen = true;
+                PromptKeywordOptions opts=new PromptKeywordOptions("Metraja devam edilsin mi? [Evet/Hayir]", "Yes No");
+                PromptResult res = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetKeywords(opts);
+                if (res.Status != PromptStatus.Keyword || res.StringResult == "No")
+                {
+                    return true;
+                }
             }
 
             PromptPointResult result = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetPoint("Baz noktası: ");
             if (result.Status != PromptStatus.OK)
-                return;
+                return true;
 
             Database db = HostApplicationServices.WorkingDatabase;
             using (Transaction tr = db.TransactionManager.StartTransaction())
@@ -50,7 +91,7 @@ namespace RebarPosCommands
                     table.TableSpacing = form.TableMargin;
 
                     // Add rows
-                    foreach (PosCopy copy in form.PosList)
+                    foreach (PosCopy copy in posList)
                     {
                         if (copy.existing)
                             table.Items.Add(int.Parse(copy.pos), copy.count, double.Parse(copy.diameter), copy.length1, copy.length2, copy.isVarLength, copy.shapeId, copy.a, copy.b, copy.c, copy.d, copy.e, copy.f);
@@ -69,6 +110,59 @@ namespace RebarPosCommands
                 {
                     MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+            }
+
+            return true;
+        }
+
+        private List<PosCopy> AddMissing(List<PosCopy> list)
+        {
+            list = RemoveEmpty(list);
+
+            int lastpos = 0;
+            foreach (PosCopy copy in list)
+            {
+                int posno;
+                if (int.TryParse(copy.pos, out posno))
+                {
+                    lastpos = Math.Max(lastpos, posno);
+                }
+            }
+            for (int i = 1; i <= lastpos; i++)
+            {
+                if (!list.Exists(p => p.pos == i.ToString()))
+                {
+                    PosCopy copy = new PosCopy();
+                    copy.pos = i.ToString();
+                    list.Add(copy);
+                }
+            }
+
+            return SortList(list);
+        }
+
+        private List<PosCopy> RemoveEmpty(List<PosCopy> list)
+        {
+            list.RemoveAll(p => p.existing == false);
+            return list;
+        }
+
+        private List<PosCopy> SortList(List<PosCopy> list)
+        {
+            list.Sort(new CompareByPosNumber());
+            return list;
+        }
+
+        private class CompareByPosNumber : IComparer<PosCopy>
+        {
+            public int Compare(PosCopy e1, PosCopy e2)
+            {
+                int p1 = 0;
+                int p2 = 0;
+                int.TryParse(e1.pos, out p1);
+                int.TryParse(e2.pos, out p2);
+
+                return (p1 == p2 ? 0 : (p1 < p2 ? -1 : 1));
             }
         }
     }

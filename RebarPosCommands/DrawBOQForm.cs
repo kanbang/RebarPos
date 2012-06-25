@@ -8,13 +8,11 @@ namespace RebarPosCommands
 {
     public partial class DrawBOQForm : Form
     {
-        List<PosCopy> m_PosList;
         Dictionary<string, ObjectId> m_Groups;
         Dictionary<string, ObjectId> m_Styles;
         ObjectId m_CurrentGroup;
         ObjectId m_CurrentStyle;
 
-        public List<PosCopy> PosList { get { return m_PosList; } }
         public ObjectId CurrentGroup { get { return m_CurrentGroup; } }
         public ObjectId TableStyle { get { return m_CurrentStyle; } }
         public string TableHeader { get { return txtHeader.Text; } }
@@ -29,7 +27,6 @@ namespace RebarPosCommands
         {
             InitializeComponent();
 
-            m_PosList = new List<PosCopy>();
             m_Groups = new Dictionary<string, ObjectId>();
             m_Styles = new Dictionary<string, ObjectId>();
         }
@@ -64,76 +61,8 @@ namespace RebarPosCommands
             }
             cbStyle.SelectedIndex = 0;
 
-            ReadPos(groupId);
+            m_CurrentGroup = groupId;
             return true;
-        }
-
-        private void ReadPos(ObjectId groupId)
-        {
-            try
-            {
-                m_CurrentGroup = groupId;
-                m_PosList = PosCopy.ReadAllInGroup(groupId, PosCopy.PosGrouping.PosMarker);
-                RemoveEmpty();
-                if (!chkHideMissing.Checked)
-                {
-                    AddMissing();
-                }
-                SortList();
-            }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void AddMissing()
-        {
-            RemoveEmpty();
-
-            int lastpos = 0;
-            foreach (PosCopy copy in m_PosList)
-            {
-                int posno;
-                if (int.TryParse(copy.pos, out posno))
-                {
-                    lastpos = Math.Max(lastpos, posno);
-                }
-            }
-            for (int i = 1; i <= lastpos; i++)
-            {
-                if (!m_PosList.Exists(p => p.pos == i.ToString()))
-                {
-                    PosCopy copy = new PosCopy();
-                    copy.pos = i.ToString();
-                    m_PosList.Add(copy);
-                }
-            }
-
-            SortList();
-        }
-
-        private void RemoveEmpty()
-        {
-            m_PosList.RemoveAll(p => p.existing == false);
-        }
-
-        private void SortList()
-        {
-            m_PosList.Sort(new CompareByPosNumber());
-        }
-
-        private class CompareByPosNumber : IComparer<PosCopy>
-        {
-            public int Compare(PosCopy e1, PosCopy e2)
-            {
-                int p1 = 0;
-                int p2 = 0;
-                int.TryParse(e1.pos, out p1);
-                int.TryParse(e2.pos, out p2);
-
-                return (p1 == p2 ? 0 : (p1 < p2 ? -1 : 1));
-            }
         }
 
         private void cbGroup_SelectedIndexChanged(object sender, EventArgs e)
@@ -143,7 +72,7 @@ namespace RebarPosCommands
             {
                 if (i == cbGroup.SelectedIndex)
                 {
-                    ReadPos(id);
+                    m_CurrentGroup = id;
                     break;
                 }
                 i++;
@@ -161,15 +90,6 @@ namespace RebarPosCommands
                     break;
                 }
                 i++;
-            }
-        }
-
-        private void chkHideMissing_CheckedChanged(object sender, EventArgs e)
-        {
-            RemoveEmpty();
-            if (!chkHideMissing.Checked)
-            {
-                AddMissing();
             }
         }
 

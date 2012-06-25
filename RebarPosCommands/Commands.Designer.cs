@@ -133,6 +133,15 @@ namespace RebarPosCommands {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to POZKONTROL.
+        /// </summary>
+        internal static string POSCHECK_Local {
+            get {
+                return ResourceManager.GetString("POSCHECK_Local", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to POZEDIT.
         /// </summary>
         internal static string POSEDIT_Local {

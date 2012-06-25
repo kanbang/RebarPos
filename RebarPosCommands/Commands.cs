@@ -85,14 +85,13 @@ namespace RebarPosCommands
                             PosGroups();
                             break;
                         case "Check":
-                            MessageBox.Show("Bu komut henüz tamamlanmadı.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            // CheckPos();
+                            PosCheck();
                             break;
                         case "BOQ":
                             DrawBOQ();
                             break;
                         case "Find":
-                            cont = !FindReplace(false);
+                            FindReplace(false);
                             break;
                         case "Shapes":
                             PosShapes();
@@ -101,10 +100,12 @@ namespace RebarPosCommands
                             TableStyles();
                             break;
                     }
+                    cont = false;
                 }
                 else if (result.Status == PromptStatus.OK)
                 {
                     ItemEdit(result.ObjectId, result.PickedPoint);
+                    cont = true;
                 }
                 else
                 {
@@ -157,7 +158,7 @@ namespace RebarPosCommands
             NewPos();
         }
 
-        [CommandMethod("RebarPos", "NUMBEROS", "NUMBERPOS_Local", CommandFlags.Modal)]
+        [CommandMethod("RebarPos", "NUMBERPOS", "NUMBERPOS_Local", CommandFlags.Modal)]
         public void CMD_NumberPos()
         {
             NumberPos();
@@ -173,6 +174,12 @@ namespace RebarPosCommands
         public void CMD_PosGroups()
         {
             PosGroups();
+        }
+
+        [CommandMethod("RebarPos", "POSCHECK", "POSCHECK_Local", CommandFlags.Modal)]
+        public void CMD_PosCheck()
+        {
+            PosCheck();
         }
 
         [CommandMethod("RebarPos", "COPYPOS", "COPYPOS_Local", CommandFlags.Modal)]

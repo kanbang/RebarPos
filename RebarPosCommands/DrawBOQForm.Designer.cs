@@ -104,7 +104,6 @@
             this.chkHideMissing.TabIndex = 8;
             this.chkHideMissing.Text = "&Kullanılmayan Pozları Gösterme";
             this.chkHideMissing.UseVisualStyleBackColor = true;
-            this.chkHideMissing.CheckedChanged += new System.EventHandler(this.chkHideMissing_CheckedChanged);
             // 
             // udMultiplier
             // 

@@ -98,6 +98,14 @@
     <Compile Include="Commands_DrawBOQ.cs" />
     <Compile Include="Commands_BOQEdit.cs" />
     <Compile Include="Commands_TableStyles.cs" />
+    <Compile Include="Commands_PosCheck.cs" />
+    <Compile Include="CheckForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CheckForm.Designer.cs">
+      <DependentUpon>CheckForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PosCheckResult.cs" />
     <Compile Include="TableStyleForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -185,6 +193,9 @@
       <DependentUpon>Commands.cs</DependentUpon>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Commands.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CheckForm.resx">
+      <DependentUpon>CheckForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TableStyleForm.resx">
       <DependentUpon>TableStyleForm.cs</DependentUpon>
@@ -285,6 +296,15 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\selectalllist.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\selectlist.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoomtolist.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
