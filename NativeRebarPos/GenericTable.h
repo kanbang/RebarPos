@@ -48,7 +48,7 @@ public:
 
 private:
 	/// Property backing fields
-	AcGeVector3d m_Direction, m_Up, m_Normal;
+	AcGeVector3d m_Direction, m_Up;
 	AcGePoint3d m_BasePoint;
 
 	double m_CellMargin;
@@ -123,7 +123,7 @@ public:
 	/// Get up vector
 	const AcGeVector3d& UpVector(void) const;
 	/// Get normal vector
-	const AcGeVector3d& NormalVector(void) const;
+	const AcGeVector3d NormalVector(void) const;
 
 	/// Table size
 	const int Columns(void) const;

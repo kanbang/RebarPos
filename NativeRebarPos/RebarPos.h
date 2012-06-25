@@ -125,7 +125,7 @@ private:
 
 private:
 	/// Property backing fields
-	AcGeVector3d m_Direction, m_Up, m_Normal;
+	AcGeVector3d m_Direction, m_Up;
 	AcGePoint3d m_BasePoint;
 	AcGePoint3d m_NoteGrip;
 	mutable ACHAR* m_Key;
@@ -185,7 +185,7 @@ public:
 	/// Get up vector
 	const AcGeVector3d& UpVector(void) const;
 	/// Get normal vector
-	const AcGeVector3d& NormalVector(void) const;
+	const AcGeVector3d NormalVector(void) const;
 
 	/// Object scale
 	const double Scale(void) const;

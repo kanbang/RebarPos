@@ -28,7 +28,7 @@ ACRX_DXF_DEFINE_MEMBERS(CGenericTable, AcDbEntity,
 
 CGenericTable::CGenericTable(void) : 
 	m_BasePoint(0, 0, 0), geomInit(false), ucs(AcGeMatrix3d::kIdentity),
-	m_Direction(1, 0, 0), m_Up(0, 1, 0), m_Normal(0, 0, 1),
+	m_Direction(1, 0, 0), m_Up(0, 1, 0),
 	m_Rows(0), m_Columns(0), m_Cells(0),
 	columnWidths(), rowHeights(), isModified(true),
 	m_CellMargin(0.2), m_MaxHeight(0), m_TableSpacing(2.0),
@@ -57,10 +57,12 @@ const AcGeVector3d& CGenericTable::UpVector(void) const
 	return m_Up;
 }
 
-const AcGeVector3d& CGenericTable::NormalVector(void) const
+const AcGeVector3d CGenericTable::NormalVector(void) const
 {
 	assertReadEnabled();
-	return m_Normal;
+	AcGeVector3d norm = m_Direction.crossProduct(m_Up);
+	norm = norm.normal() * m_Direction.length();
+	return norm;
 }
 
 const double CGenericTable::Scale(void) const
@@ -579,7 +581,7 @@ const void CGenericTable::Calculate(void) const
 
 	// Transform cells
 	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
-	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
+	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, NormalVector());
 	for(std::vector<CTableCell*>::const_iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
 	{
 		CTableCell* cell = (*it);
@@ -719,7 +721,6 @@ Acad::ErrorStatus CGenericTable::subTransformBy(const AcGeMatrix3d& xform)
 	m_BasePoint.transformBy(xform);
 	m_Direction.transformBy(xform);
 	m_Up.transformBy(xform);
-	m_Normal = m_Direction.crossProduct(m_Up);
 
 	// Get UCS vectors
 	AcGeVector3d ucsdir(m_Direction);
@@ -732,7 +733,7 @@ Acad::ErrorStatus CGenericTable::subTransformBy(const AcGeMatrix3d& xform)
 	
 	// Transform to WCS
 	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
-	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
+	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, NormalVector());
 	pt.transformBy(trans);
 
 	// Text always left to right
@@ -745,7 +746,6 @@ Acad::ErrorStatus CGenericTable::subTransformBy(const AcGeMatrix3d& xform)
 		m_BasePoint.transformBy(mirror);
 		m_Direction.transformBy(mirror);
 		m_Up.transformBy(mirror);
-		m_Normal = m_Direction.crossProduct(m_Up);
 	}
 
 	// Text always upright
@@ -758,7 +758,6 @@ Acad::ErrorStatus CGenericTable::subTransformBy(const AcGeMatrix3d& xform)
 		m_BasePoint.transformBy(mirror);
 		m_Direction.transformBy(mirror);
 		m_Up.transformBy(mirror);
-		m_Normal = m_Direction.crossProduct(m_Up);
 	}
 
 	// Transform cells
@@ -772,7 +771,6 @@ Acad::ErrorStatus CGenericTable::subTransformBy(const AcGeMatrix3d& xform)
 	double scale = m_Direction.length();
 	m_Direction = m_Direction.normal() * scale;
 	m_Up = m_Up.normal() * scale;
-	m_Normal = m_Normal.normal() * scale;
 
 	return Acad::eOk;
 }
@@ -836,7 +834,7 @@ Acad::ErrorStatus CGenericTable::subGetGeomExtents(AcDbExtents& extents) const
 
 	// Transform to WCS
 	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
-	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
+	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, NormalVector());
 	pt1.transformBy(trans);
 	pt2.transformBy(trans);
 	pt3.transformBy(trans);
@@ -914,7 +912,6 @@ Acad::ErrorStatus CGenericTable::dwgInFields(AcDbDwgFiler* pFiler)
 	pFiler->readPoint3d(&m_BasePoint);
 	pFiler->readVector3d(&m_Direction);
 	pFiler->readVector3d(&m_Up);
-	m_Normal = m_Direction.crossProduct(m_Up);
 
 	pFiler->readDouble(&m_CellMargin);
 
@@ -1042,7 +1039,6 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
 	m_BasePoint = t_BasePoint;
 	m_Direction = t_Direction;
 	m_Up = t_Up;
-	m_Normal = m_Direction.crossProduct(m_Up);
 	m_CellMargin = t_CellMargin;
 	SetSize(t_Rows, t_Columns);
 	m_MaxHeight = t_MaxHeight;
