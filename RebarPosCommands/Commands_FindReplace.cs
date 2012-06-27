@@ -10,9 +10,18 @@ namespace RebarPosCommands
     {
         private bool FindReplace(bool usePickSet)
         {
+            // Pos error check
+            List<PosCheckResult> check = PosCheckResult.CheckAllInGroup(CurrentGroupId, PosCheckResult.CheckType.Errors);
+            if (check.Count != 0)
+            {
+                PosCheckResult.ConsoleOut(check);
+                Autodesk.AutoCAD.ApplicationServices.Application.DisplayTextScreen = true;
+                return false;
+            }
+
             FindReplaceForm form = new FindReplaceForm();
 
-            if (form.Init(CurrentGroupId, usePickSet))
+            if (form.Init(CurrentGroupId))
             {
                 if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
                 {

@@ -8,12 +8,9 @@ namespace RebarPosCommands
 {
     public partial class DrawBOQForm : Form
     {
-        Dictionary<string, ObjectId> m_Groups;
         Dictionary<string, ObjectId> m_Styles;
-        ObjectId m_CurrentGroup;
         ObjectId m_CurrentStyle;
 
-        public ObjectId CurrentGroup { get { return m_CurrentGroup; } }
         public ObjectId TableStyle { get { return m_CurrentStyle; } }
         public string TableHeader { get { return txtHeader.Text; } }
         public string TableFooter { get { return txtFooter.Text; } }
@@ -27,32 +24,20 @@ namespace RebarPosCommands
         {
             InitializeComponent();
 
-            m_Groups = new Dictionary<string, ObjectId>();
             m_Styles = new Dictionary<string, ObjectId>();
         }
 
         public bool Init(ObjectId groupId)
         {
-            m_Groups = DWGUtility.GetGroups();
+            lblGroup.Text = DWGUtility.GetGroupName(groupId);
             m_Styles = DWGUtility.GetTableStyles();
 
-            if (m_Groups.Count == 0)
-            {
-                return false;
-            }
             if (m_Styles.Count == 0)
             {
                 return false;
             }
 
             int i = 0;
-            foreach (KeyValuePair<string, ObjectId> pair in m_Groups)
-            {
-                cbGroup.Items.Add(pair.Key);
-                if (pair.Value == groupId) cbGroup.SelectedIndex = i;
-                i++;
-            }
-            i = 0;
             foreach (KeyValuePair<string, ObjectId> pair in m_Styles)
             {
                 if (i == 0) m_CurrentStyle = pair.Value;
@@ -61,22 +46,7 @@ namespace RebarPosCommands
             }
             cbStyle.SelectedIndex = 0;
 
-            m_CurrentGroup = groupId;
             return true;
-        }
-
-        private void cbGroup_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int i = 0;
-            foreach (ObjectId id in m_Groups.Values)
-            {
-                if (i == cbGroup.SelectedIndex)
-                {
-                    m_CurrentGroup = id;
-                    break;
-                }
-                i++;
-            }
         }
 
         private void cbStyle_SelectedIndexChanged(object sender, EventArgs e)

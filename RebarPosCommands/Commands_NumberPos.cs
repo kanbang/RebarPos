@@ -10,6 +10,15 @@ namespace RebarPosCommands
     {
         private bool NumberPos()
         {
+            // Pos error check
+            List<PosCheckResult> check = PosCheckResult.CheckAllInGroup(CurrentGroupId, PosCheckResult.CheckType.Errors);
+            if (check.Count != 0)
+            {
+                PosCheckResult.ConsoleOut(check);
+                Autodesk.AutoCAD.ApplicationServices.Application.DisplayTextScreen = true;
+                return false;
+            }
+
             NumberingForm form = new NumberingForm();
 
             if (form.Init(CurrentGroupId))

@@ -19,30 +19,17 @@ namespace RebarPosCommands
         }
 
         List<PosCopy> m_PosList;
-        Dictionary<string, ObjectId> m_Groups;
 
         public NumberingForm()
         {
             InitializeComponent();
 
             m_PosList = new List<PosCopy>();
-            m_Groups = new Dictionary<string, ObjectId>();
         }
 
         public bool Init(ObjectId groupId)
         {
-            m_Groups = DWGUtility.GetGroups();
-            if (m_Groups.Count == 0)
-            {
-                return false;
-            }
-            int i = 0;
-            foreach (KeyValuePair<string, ObjectId> pair in m_Groups)
-            {
-                cbGroup.Items.Add(pair.Key);
-                if (pair.Value == groupId) cbGroup.SelectedIndex = i;
-                i++;
-            }
+            lblGroup.Text = DWGUtility.GetGroupName(groupId);
 
             cbOrder1.SelectedIndex = 1;
             cbOrder2.SelectedIndex = 2;
@@ -282,22 +269,6 @@ namespace RebarPosCommands
             {
                 MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void cbGroup_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int i = 0;
-            foreach (ObjectId id in m_Groups.Values)
-            {
-                if (i == cbGroup.SelectedIndex)
-                {
-                    ReadPos(id);
-                    break;
-                }
-                i++;
-            }
-
-            PopulateList();
         }
 
         private void lbItems_SelectedIndexChanged(object sender, EventArgs e)

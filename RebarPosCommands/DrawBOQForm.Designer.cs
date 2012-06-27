@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DrawBOQForm));
             this.label8 = new System.Windows.Forms.Label();
-            this.cbGroup = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.chkHideMissing = new System.Windows.Forms.CheckBox();
             this.udMultiplier = new System.Windows.Forms.NumericUpDown();
@@ -52,6 +51,7 @@
             this.txtTextHeight = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.lblGroup = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udMultiplier)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -63,19 +63,9 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(13, 15);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(141, 13);
+            this.label8.Size = new System.Drawing.Size(144, 13);
             this.label8.TabIndex = 0;
-            this.label8.Text = "Metrajı Yapılacak Poz &Grupu";
-            // 
-            // cbGroup
-            // 
-            this.cbGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbGroup.FormattingEnabled = true;
-            this.cbGroup.Location = new System.Drawing.Point(171, 12);
-            this.cbGroup.Name = "cbGroup";
-            this.cbGroup.Size = new System.Drawing.Size(100, 21);
-            this.cbGroup.TabIndex = 1;
-            this.cbGroup.SelectedIndexChanged += new System.EventHandler(this.cbGroup_SelectedIndexChanged);
+            this.label8.Text = "Metrajı Yapılacak Poz &Grubu:";
             // 
             // groupBox1
             // 
@@ -285,6 +275,15 @@
             this.errorProvider.ContainerControl = this;
             this.errorProvider.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProvider.Icon")));
             // 
+            // lblGroup
+            // 
+            this.lblGroup.AutoSize = true;
+            this.lblGroup.Location = new System.Drawing.Point(168, 15);
+            this.lblGroup.Name = "lblGroup";
+            this.lblGroup.Size = new System.Drawing.Size(14, 13);
+            this.lblGroup.TabIndex = 0;
+            this.lblGroup.Text = "#";
+            // 
             // DrawBOQForm
             // 
             this.AcceptButton = this.btnOK;
@@ -296,8 +295,8 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.lblGroup);
             this.Controls.Add(this.label8);
-            this.Controls.Add(this.cbGroup);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -319,7 +318,6 @@
         #endregion
 
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.ComboBox cbGroup;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox txtHeader;
         private System.Windows.Forms.Label label2;
@@ -340,5 +338,6 @@
         private System.Windows.Forms.TextBox txtTextHeight;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ErrorProvider errorProvider;
+        private System.Windows.Forms.Label lblGroup;
     }
 }

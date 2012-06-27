@@ -65,8 +65,8 @@
             this.lblNumber = new System.Windows.Forms.Label();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.label8 = new System.Windows.Forms.Label();
-            this.cbGroup = new System.Windows.Forms.ComboBox();
+            this.lblGroup = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.gbAutoNumber.SuspendLayout();
             this.gbManualNumber.SuspendLayout();
             this.SuspendLayout();
@@ -443,24 +443,23 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // label8
+            // lblGroup
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(12, 22);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(150, 13);
-            this.label8.TabIndex = 0;
-            this.label8.Text = "Numaralandırılacak Poz &Grupu";
+            this.lblGroup.AutoSize = true;
+            this.lblGroup.Location = new System.Drawing.Point(168, 22);
+            this.lblGroup.Name = "lblGroup";
+            this.lblGroup.Size = new System.Drawing.Size(14, 13);
+            this.lblGroup.TabIndex = 0;
+            this.lblGroup.Text = "#";
             // 
-            // cbGroup
+            // label6
             // 
-            this.cbGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbGroup.FormattingEnabled = true;
-            this.cbGroup.Location = new System.Drawing.Point(202, 19);
-            this.cbGroup.Name = "cbGroup";
-            this.cbGroup.Size = new System.Drawing.Size(100, 21);
-            this.cbGroup.TabIndex = 1;
-            this.cbGroup.SelectedIndexChanged += new System.EventHandler(this.cbGroup_SelectedIndexChanged);
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(12, 22);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(153, 13);
+            this.label6.TabIndex = 0;
+            this.label6.Text = "Numaralandırılacak Poz &Grupu:";
             // 
             // NumberingForm
             // 
@@ -474,8 +473,8 @@
             this.Controls.Add(this.gbManualNumber);
             this.Controls.Add(this.gbAutoNumber);
             this.Controls.Add(this.lbItems);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.cbGroup);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.lblGroup);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -529,9 +528,9 @@
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.ColumnHeader chLength;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.ComboBox cbGroup;
         private System.Windows.Forms.RadioButton rbNumberAll;
         private System.Windows.Forms.RadioButton rbKeepExisting;
+        private System.Windows.Forms.Label lblGroup;
+        private System.Windows.Forms.Label label6;
     }
 }

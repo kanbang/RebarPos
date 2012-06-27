@@ -59,13 +59,6 @@
             this.cbFindDiameter = new System.Windows.Forms.ComboBox();
             this.cbFindCount = new System.Windows.Forms.ComboBox();
             this.cbFindPosNumber = new System.Windows.Forms.ComboBox();
-            this.cbSelectGroup = new System.Windows.Forms.ComboBox();
-            this.rbSelectAll = new System.Windows.Forms.RadioButton();
-            this.rbSelectGroup = new System.Windows.Forms.RadioButton();
-            this.rbSelectUser = new System.Windows.Forms.RadioButton();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.lblSelectStatus = new System.Windows.Forms.Label();
-            this.btnSelectUser = new System.Windows.Forms.Button();
             this.gbReplace = new System.Windows.Forms.GroupBox();
             this.rbReplaceGroup = new System.Windows.Forms.CheckBox();
             this.cbReplaceGroup = new System.Windows.Forms.ComboBox();
@@ -97,8 +90,9 @@
             this.btnReplace = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.btnFind = new System.Windows.Forms.Button();
+            this.label13 = new System.Windows.Forms.Label();
+            this.lblGroup = new System.Windows.Forms.Label();
             this.gbFind.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.gbReplace.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
@@ -133,7 +127,7 @@
             this.gbFind.Controls.Add(this.cbFindDiameter);
             this.gbFind.Controls.Add(this.cbFindCount);
             this.gbFind.Controls.Add(this.cbFindPosNumber);
-            this.gbFind.Location = new System.Drawing.Point(12, 146);
+            this.gbFind.Location = new System.Drawing.Point(12, 49);
             this.gbFind.Name = "gbFind";
             this.gbFind.Size = new System.Drawing.Size(264, 423);
             this.gbFind.TabIndex = 1;
@@ -404,86 +398,6 @@
             this.cbFindPosNumber.Size = new System.Drawing.Size(117, 21);
             this.cbFindPosNumber.TabIndex = 1;
             // 
-            // cbSelectGroup
-            // 
-            this.cbSelectGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSelectGroup.FormattingEnabled = true;
-            this.cbSelectGroup.Location = new System.Drawing.Point(119, 54);
-            this.cbSelectGroup.Name = "cbSelectGroup";
-            this.cbSelectGroup.Size = new System.Drawing.Size(117, 21);
-            this.cbSelectGroup.TabIndex = 2;
-            this.cbSelectGroup.SelectedIndexChanged += new System.EventHandler(this.cbSelectGroup_SelectedIndexChanged);
-            // 
-            // rbSelectAll
-            // 
-            this.rbSelectAll.AutoSize = true;
-            this.rbSelectAll.Location = new System.Drawing.Point(16, 26);
-            this.rbSelectAll.Name = "rbSelectAll";
-            this.rbSelectAll.Size = new System.Drawing.Size(78, 17);
-            this.rbSelectAll.TabIndex = 0;
-            this.rbSelectAll.TabStop = true;
-            this.rbSelectAll.Text = "&Tüm Pozlar";
-            this.rbSelectAll.UseVisualStyleBackColor = true;
-            this.rbSelectAll.CheckedChanged += new System.EventHandler(this.rbSelectAll_CheckedChanged);
-            // 
-            // rbSelectGroup
-            // 
-            this.rbSelectGroup.AutoSize = true;
-            this.rbSelectGroup.Location = new System.Drawing.Point(16, 55);
-            this.rbSelectGroup.Name = "rbSelectGroup";
-            this.rbSelectGroup.Size = new System.Drawing.Size(48, 17);
-            this.rbSelectGroup.TabIndex = 1;
-            this.rbSelectGroup.TabStop = true;
-            this.rbSelectGroup.Text = "&Grup";
-            this.rbSelectGroup.UseVisualStyleBackColor = true;
-            this.rbSelectGroup.CheckedChanged += new System.EventHandler(this.rbSelectGroup_CheckedChanged);
-            // 
-            // rbSelectUser
-            // 
-            this.rbSelectUser.AutoSize = true;
-            this.rbSelectUser.Location = new System.Drawing.Point(16, 85);
-            this.rbSelectUser.Name = "rbSelectUser";
-            this.rbSelectUser.Size = new System.Drawing.Size(54, 17);
-            this.rbSelectUser.TabIndex = 3;
-            this.rbSelectUser.TabStop = true;
-            this.rbSelectUser.Text = "&Seçim";
-            this.rbSelectUser.UseVisualStyleBackColor = true;
-            this.rbSelectUser.CheckedChanged += new System.EventHandler(this.rbSelectUser_CheckedChanged);
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.lblSelectStatus);
-            this.groupBox2.Controls.Add(this.cbSelectGroup);
-            this.groupBox2.Controls.Add(this.rbSelectAll);
-            this.groupBox2.Controls.Add(this.rbSelectGroup);
-            this.groupBox2.Controls.Add(this.rbSelectUser);
-            this.groupBox2.Controls.Add(this.btnSelectUser);
-            this.groupBox2.Location = new System.Drawing.Point(12, 12);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(534, 128);
-            this.groupBox2.TabIndex = 0;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "&Seçim";
-            // 
-            // lblSelectStatus
-            // 
-            this.lblSelectStatus.AutoSize = true;
-            this.lblSelectStatus.Location = new System.Drawing.Point(267, 59);
-            this.lblSelectStatus.Name = "lblSelectStatus";
-            this.lblSelectStatus.Size = new System.Drawing.Size(14, 13);
-            this.lblSelectStatus.TabIndex = 5;
-            this.lblSelectStatus.Text = "#";
-            // 
-            // btnSelectUser
-            // 
-            this.btnSelectUser.Image = global::RebarPosCommands.Properties.Resources.select;
-            this.btnSelectUser.Location = new System.Drawing.Point(119, 81);
-            this.btnSelectUser.Name = "btnSelectUser";
-            this.btnSelectUser.Size = new System.Drawing.Size(24, 24);
-            this.btnSelectUser.TabIndex = 4;
-            this.btnSelectUser.UseVisualStyleBackColor = true;
-            this.btnSelectUser.Click += new System.EventHandler(this.btnSelectUser_Click);
-            // 
             // gbReplace
             // 
             this.gbReplace.Controls.Add(this.rbReplaceGroup);
@@ -512,7 +426,7 @@
             this.gbReplace.Controls.Add(this.rbReplaceDiameter);
             this.gbReplace.Controls.Add(this.rbReplaceCount);
             this.gbReplace.Controls.Add(this.cbReplaceDiameter);
-            this.gbReplace.Location = new System.Drawing.Point(282, 146);
+            this.gbReplace.Location = new System.Drawing.Point(282, 49);
             this.gbReplace.Name = "gbReplace";
             this.gbReplace.Size = new System.Drawing.Size(264, 423);
             this.gbReplace.TabIndex = 2;
@@ -761,7 +675,7 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(473, 587);
+            this.btnCancel.Location = new System.Drawing.Point(471, 491);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 5;
@@ -771,7 +685,7 @@
             // 
             // btnReplace
             // 
-            this.btnReplace.Location = new System.Drawing.Point(392, 587);
+            this.btnReplace.Location = new System.Drawing.Point(390, 491);
             this.btnReplace.Name = "btnReplace";
             this.btnReplace.Size = new System.Drawing.Size(75, 23);
             this.btnReplace.TabIndex = 4;
@@ -786,7 +700,7 @@
             // 
             // btnFind
             // 
-            this.btnFind.Location = new System.Drawing.Point(312, 587);
+            this.btnFind.Location = new System.Drawing.Point(310, 491);
             this.btnFind.Name = "btnFind";
             this.btnFind.Size = new System.Drawing.Size(75, 23);
             this.btnFind.TabIndex = 3;
@@ -794,16 +708,35 @@
             this.btnFind.UseVisualStyleBackColor = true;
             this.btnFind.Click += new System.EventHandler(this.btnFind_Click);
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(12, 18);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(143, 13);
+            this.label13.TabIndex = 6;
+            this.label13.Text = "&Arama Yapılacak Poz Grubu:";
+            // 
+            // lblGroup
+            // 
+            this.lblGroup.AutoSize = true;
+            this.lblGroup.Location = new System.Drawing.Point(161, 18);
+            this.lblGroup.Name = "lblGroup";
+            this.lblGroup.Size = new System.Drawing.Size(14, 13);
+            this.lblGroup.TabIndex = 6;
+            this.lblGroup.Text = "#";
+            // 
             // FindReplaceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(560, 622);
+            this.ClientSize = new System.Drawing.Size(560, 529);
+            this.Controls.Add(this.lblGroup);
+            this.Controls.Add(this.label13);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnFind);
             this.Controls.Add(this.btnReplace);
-            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.gbReplace);
             this.Controls.Add(this.gbFind);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -815,23 +748,17 @@
             this.Text = "Bul Değiştir";
             this.gbFind.ResumeLayout(false);
             this.gbFind.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.gbReplace.ResumeLayout(false);
             this.gbReplace.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.GroupBox gbFind;
-        private System.Windows.Forms.RadioButton rbSelectUser;
-        private System.Windows.Forms.RadioButton rbSelectGroup;
-        private System.Windows.Forms.RadioButton rbSelectAll;
-        private System.Windows.Forms.ComboBox cbSelectGroup;
-        private System.Windows.Forms.Button btnSelectUser;
         private PosShapeView psvFind;
         private System.Windows.Forms.CheckBox rbFindShape;
         private System.Windows.Forms.CheckBox rbFindMultiplier;
@@ -858,7 +785,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtFindA;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox gbReplace;
         private SpacingTextBox txtReplaceSpacing;
         private System.Windows.Forms.TextBox txtReplaceCount;
@@ -887,11 +813,12 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnReplace;
         private System.Windows.Forms.ErrorProvider errorProvider;
-        private System.Windows.Forms.Label lblSelectStatus;
         private System.Windows.Forms.CheckBox rbFindGroup;
         private System.Windows.Forms.ComboBox cbFindGroup;
         private System.Windows.Forms.CheckBox rbReplaceGroup;
         private System.Windows.Forms.ComboBox cbReplaceGroup;
         private System.Windows.Forms.Button btnFind;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label lblGroup;
     }
 }

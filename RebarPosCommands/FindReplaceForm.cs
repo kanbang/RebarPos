@@ -14,9 +14,9 @@ namespace RebarPosCommands
 {
     public partial class FindReplaceForm : Form
     {
-        ObjectId m_GroupId;
-        SortedDictionary<string, ObjectId> m_Groups;
         ObjectId[] m_Selection;
+
+        Dictionary<string, ObjectId> m_Groups;
 
         SortedDictionary<string, List<ObjectId>> m_PosList;
         SortedDictionary<string, List<ObjectId>> m_CountList;
@@ -38,8 +38,6 @@ namespace RebarPosCommands
         {
             InitializeComponent();
 
-            m_GroupId = ObjectId.Null;
-            m_Groups = new SortedDictionary<string, ObjectId>();
             m_Selection = new ObjectId[0];
 
             m_PosList = new SortedDictionary<string, List<ObjectId>>();
@@ -64,69 +62,13 @@ namespace RebarPosCommands
             init = false;
         }
 
-        public bool Init(ObjectId currentGroup, bool usePickSet)
+        public bool Init(ObjectId currentGroup)
         {
             init = true;
-            m_GroupId = currentGroup;
-            m_Groups = new SortedDictionary<string, ObjectId>(DWGUtility.GetGroups());
+            lblGroup.Text = DWGUtility.GetGroupName(currentGroup);
+            m_Groups = DWGUtility.GetGroups();
 
-            if (m_Groups.Count == 0)
-            {
-                init = false;
-                return false;
-            }
-            int i = 0;
-            foreach (KeyValuePair<string, ObjectId> item in m_Groups)
-            {
-                cbSelectGroup.Items.Add(item.Key);
-                if (item.Value == m_GroupId) cbSelectGroup.SelectedIndex = i;
-                i++;
-            }
-
-            // Get implied selection
-            if (usePickSet)
-            {
-                PromptSelectionResult res = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.SelectImplied();
-                if (res.Status == PromptStatus.OK)
-                {
-                    List<ObjectId> idlist = new List<ObjectId>();
-                    foreach (SelectedObject sel in res.Value)
-                    {
-                        ObjectId id = sel.ObjectId;
-                        if (id.ObjectClass == Autodesk.AutoCAD.Runtime.RXObject.GetClass(typeof(RebarPos)))
-                            idlist.Add(id);
-                    }
-                    m_Selection = idlist.ToArray();
-
-                    Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.SetImpliedSelection(new ObjectId[0]);
-                }
-            }
-
-            if (m_Selection != null && m_Selection.Length != 0)
-            {
-                rbSelectUser.Checked = true;
-            }
-            else
-            {
-                m_Selection = DWGUtility.GetPosInGroup(m_GroupId);
-                if (m_Selection != null && m_Selection.Length != 0)
-                {
-                    rbSelectGroup.Checked = true;
-                }
-                else
-                {
-                    m_Selection = DWGUtility.GetAllPos();
-                    if (m_Selection != null && m_Selection.Length != 0)
-                    {
-                        rbSelectAll.Checked = true;
-                    }
-                    else
-                    {
-                        init = false;
-                        return false;
-                    }
-                }
-            }
+            m_Selection = DWGUtility.GetPosInGroup(currentGroup);
 
             cbReplaceGroup.Items.Clear();
             foreach (string name in m_Groups.Keys)
@@ -393,7 +335,7 @@ namespace RebarPosCommands
                         else if (sh is PosShape.ShapeArc)
                         {
                             PosShape.ShapeArc arc = sh as PosShape.ShapeArc;
-                            psvReplace.AddArc(color, (float)arc.X, (float)arc.Y, (float)arc.R, (float)(arc.StartAngle * 180.0 / Math.PI), (float)(arc.EndAngle*180.0/Math.PI));
+                            psvReplace.AddArc(color, (float)arc.X, (float)arc.Y, (float)arc.R, (float)(arc.StartAngle * 180.0 / Math.PI), (float)(arc.EndAngle * 180.0 / Math.PI));
                         }
                         else if (sh is PosShape.ShapeText)
                         {
@@ -431,14 +373,10 @@ namespace RebarPosCommands
 
         private void UpdateUI()
         {
-            cbSelectGroup.Enabled = rbSelectGroup.Checked;
-            btnSelectUser.Enabled = rbSelectUser.Checked;
-
             if (m_Selection == null || m_Selection.Length == 0)
             {
                 gbFind.Enabled = false;
                 gbReplace.Enabled = false;
-                lblSelectStatus.Text = "";
                 btnFind.Enabled = false;
                 btnReplace.Enabled = false;
             }
@@ -446,7 +384,6 @@ namespace RebarPosCommands
             {
                 gbFind.Enabled = true;
                 gbReplace.Enabled = true;
-                lblSelectStatus.Text = m_Selection.Length.ToString() + " adet poz seçildi.";
                 btnFind.Enabled = true;
                 btnReplace.Enabled = true;
             }
@@ -493,77 +430,6 @@ namespace RebarPosCommands
             if (!txtReplaceD.Enabled) txtReplaceD.Text = "";
             if (!txtReplaceE.Enabled) txtReplaceE.Text = "";
             if (!txtReplaceF.Enabled) txtReplaceF.Text = "";
-        }
-
-        private void rbSelectAll_CheckedChanged(object sender, EventArgs e)
-        {
-            if (init) return;
-            if (rbSelectAll.Checked)
-            {
-                m_Selection = DWGUtility.GetAllPos();
-                ReadSelection();
-            }
-            UpdateUI();
-        }
-
-        private void rbSelectGroup_CheckedChanged(object sender, EventArgs e)
-        {
-            if (init) return;
-            if (rbSelectGroup.Checked)
-            {
-                m_Selection = DWGUtility.GetPosInGroup(m_GroupId);
-                ReadSelection();
-                UpdateUI();
-            }
-        }
-
-        private void cbSelectGroup_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (init) return;
-            if (cbSelectGroup.SelectedIndex != -1)
-            {
-                m_Selection = null;
-                string name = (string)cbSelectGroup.SelectedItem;
-                if (m_Groups.TryGetValue(name, out m_GroupId))
-                {
-                    m_Selection = DWGUtility.GetPosInGroup(m_GroupId);
-                    ReadSelection();
-                }
-                UpdateUI();
-            }
-        }
-
-        private void rbSelectUser_CheckedChanged(object sender, EventArgs e)
-        {
-            if (init) return;
-            if (rbSelectUser.Checked)
-            {
-                m_Selection = null;
-                Hide();
-                PromptSelectionResult res = DWGUtility.SelectAllPosUser();
-                Show();
-                if (res.Status == PromptStatus.OK)
-                {
-                    m_Selection = res.Value.GetObjectIds();
-                    ReadSelection();
-                }
-                UpdateUI();
-            }
-        }
-
-        private void btnSelectUser_Click(object sender, EventArgs e)
-        {
-            if (init) return;
-            m_Selection = null;
-            Hide();
-            PromptSelectionResult res = DWGUtility.SelectAllPosUser();
-            Show();
-            if (res.Status == PromptStatus.OK)
-            {
-                m_Selection = res.Value.GetObjectIds();
-                ReadSelection();
-            }
-            UpdateUI();
         }
 
         private void rbFindOptions_CheckedChanged(object sender, EventArgs e)

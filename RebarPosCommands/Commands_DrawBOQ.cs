@@ -14,6 +14,28 @@ namespace RebarPosCommands
         {
             DrawBOQForm form = new DrawBOQForm();
 
+            // Pos error check
+            List<PosCheckResult> check = PosCheckResult.CheckAllInGroup(CurrentGroupId, PosCheckResult.CheckType.Errors);
+            if (check.Count != 0)
+            {
+                PosCheckResult.ConsoleOut(check);
+                Autodesk.AutoCAD.ApplicationServices.Application.DisplayTextScreen = true;
+                return false;
+            }
+            // Pos similarity check
+            List<PosCheckResult> checks = PosCheckResult.CheckAllInGroup(CurrentGroupId, PosCheckResult.CheckType.Warnings);
+            if (checks.Count != 0)
+            {
+                PosCheckResult.ConsoleOut(checks);
+                Autodesk.AutoCAD.ApplicationServices.Application.DisplayTextScreen = true;
+                PromptKeywordOptions opts = new PromptKeywordOptions("\nMetraja devam edilsin mi? [Evet/Hayir]", "Yes No");
+                PromptResult res = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetKeywords(opts);
+                if (res.Status != PromptStatus.OK || res.StringResult == "No")
+                {
+                    return true;
+                }
+            }
+
             if (!form.Init(CurrentGroupId))
                 return false;
 
@@ -23,7 +45,7 @@ namespace RebarPosCommands
             List<PosCopy> posList = new List<PosCopy>();
             try
             {
-                posList = PosCopy.ReadAllInGroup(form.CurrentGroup, PosCopy.PosGrouping.PosMarker);
+                posList = PosCopy.ReadAllInGroup(CurrentGroupId, PosCopy.PosGrouping.PosMarker);
             }
             catch (System.Exception ex)
             {
@@ -43,28 +65,6 @@ namespace RebarPosCommands
                 posList = AddMissing(posList);
             }
             posList = SortList(posList);
-
-            // Pos error check
-            List<PosCheckResult> check = PosCheckResult.CheckAllInGroup(form.CurrentGroup, PosCheckResult.CheckType.Errors);
-            if (check.Count != 0)
-            {
-                PosCheckResult.ConsoleOut(check);
-                Autodesk.AutoCAD.ApplicationServices.Application.DisplayTextScreen = true;
-                return false;
-            }
-            // Pos similarity check
-            List<PosCheckResult> checks = PosCheckResult.CheckAllInGroup(form.CurrentGroup, PosCheckResult.CheckType.Warnings);
-            if (checks.Count != 0)
-            {
-                PosCheckResult.ConsoleOut(checks);
-                Autodesk.AutoCAD.ApplicationServices.Application.DisplayTextScreen = true;
-                PromptKeywordOptions opts=new PromptKeywordOptions("Metraja devam edilsin mi? [Evet/Hayir]", "Yes No");
-                PromptResult res = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetKeywords(opts);
-                if (res.Status != PromptStatus.Keyword || res.StringResult == "No")
-                {
-                    return true;
-                }
-            }
 
             PromptPointResult result = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetPoint("Baz noktası: ");
             if (result.Status != PromptStatus.OK)
