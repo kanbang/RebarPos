@@ -1872,21 +1872,22 @@ const void CRebarPos::Calculate(void) const
 
 	// Shape code
 	std::wstringstream oss;
-	oss << L'T' << m_Diameter << L':';
-	oss << L'' << m_ShapeID.handle().low() << L'_' << m_ShapeID.handle().high() << L':';
+	oss << L"T" << m_Diameter;
+	oss << L":G" << m_GroupID.handle().low() << L'_' << m_GroupID.handle().high();
+	oss << L":S" << m_ShapeID.handle().low() << L'_' << m_ShapeID.handle().high();
 
 	if(m_CalcProps.FieldCount >= 1)
-		oss << m_A << L':';
+		oss << L":A" << m_A;
 	if(m_CalcProps.FieldCount >= 2)
-		oss << m_B << L':';
+		oss << L":B" << m_B;
 	if(m_CalcProps.FieldCount >= 3)
-		oss << m_C << L':';
+		oss << L":C" << m_C;
 	if(m_CalcProps.FieldCount >= 4)
-		oss << m_D << L':';
+		oss << L":D" << m_D;
 	if(m_CalcProps.FieldCount >= 5)
-		oss << m_E << L':';
+		oss << L":E" << m_E;
 	if(m_CalcProps.FieldCount >= 6)
-		oss << m_F << L':';
+		oss << L":F" << m_F;
 	acutUpdString(oss.str().c_str(), m_Key);
 
 	// Rebuild draw lists
