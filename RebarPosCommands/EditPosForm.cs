@@ -51,9 +51,7 @@ namespace RebarPosCommands
             m_Groups = new Dictionary<string, ObjectId>();
             m_Shapes = new Dictionary<string, ObjectId>();
 
-            AcadPreferences pref = Autodesk.AutoCAD.ApplicationServices.Application.Preferences as AcadPreferences;
-            uint indexColor = pref.Display.GraphicsWinModelBackgrndColor;
-            posShapeView.BackColor = ColorTranslator.FromOle((int)indexColor);
+            posShapeView.BackColor = DWGUtility.ModelBackgroundColor();
         }
 
         public bool Init(ObjectId id, Point3d pt)

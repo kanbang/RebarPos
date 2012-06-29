@@ -63,9 +63,7 @@ namespace RebarPosCommands
 
             m_Copies = new List<ShapeCopy>();
             m_Shapes = new Dictionary<string, ObjectId>();
-            AcadPreferences pref = Autodesk.AutoCAD.ApplicationServices.Application.Preferences as AcadPreferences;
-            uint indexColor = pref.Display.GraphicsWinModelBackgrndColor;
-            posShapeView.BackColor = ColorTranslator.FromOle((int)indexColor);
+            posShapeView.BackColor = DWGUtility.ModelBackgroundColor();
         }
 
         public bool Init(bool showShapes)

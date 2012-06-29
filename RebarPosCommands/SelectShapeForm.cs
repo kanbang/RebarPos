@@ -58,9 +58,7 @@ namespace RebarPosCommands
             layoutPanel.Controls.Clear();
 
             // Get AutoCad model background color
-            AcadPreferences pref = Autodesk.AutoCAD.ApplicationServices.Application.Preferences as AcadPreferences;
-            uint indexColor = pref.Display.GraphicsWinModelBackgrndColor;
-            Color backColor = ColorTranslator.FromOle((int)indexColor);
+            Color backColor = DWGUtility.ModelBackgroundColor();
 
             Database db = HostApplicationServices.WorkingDatabase;
             using (Transaction tr = db.TransactionManager.StartTransaction())

@@ -65,9 +65,7 @@ namespace RebarPosCommands
             m_Groups = new Dictionary<string, ObjectId>();
             m_TextStyles = new Dictionary<string, ObjectId>();
 
-            AcadPreferences pref = Autodesk.AutoCAD.ApplicationServices.Application.Preferences as AcadPreferences;
-            uint indexColor = pref.Display.GraphicsWinModelBackgrndColor;
-            posStylePreview.BackColor = ColorTranslator.FromOle((int)indexColor);
+            posStylePreview.BackColor = DWGUtility.ModelBackgroundColor();
         }
 
         public bool Init(ObjectId currentId)

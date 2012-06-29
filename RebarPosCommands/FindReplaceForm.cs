@@ -54,10 +54,8 @@ namespace RebarPosCommands
             m_FindFields = 0;
             m_ReplaceFields = 0;
 
-            AcadPreferences pref = Autodesk.AutoCAD.ApplicationServices.Application.Preferences as AcadPreferences;
-            uint indexColor = pref.Display.GraphicsWinModelBackgrndColor;
-            psvFind.BackColor = ColorTranslator.FromOle((int)indexColor);
-            psvReplace.BackColor = ColorTranslator.FromOle((int)indexColor);
+            psvFind.BackColor = DWGUtility.ModelBackgroundColor();
+            psvReplace.BackColor = DWGUtility.ModelBackgroundColor();
 
             init = false;
         }

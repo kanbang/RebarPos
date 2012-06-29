@@ -1,8 +1,11 @@
-﻿using Autodesk.AutoCAD.ApplicationServices;
+﻿using System.Collections.Generic;
+
+using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
+using Autodesk.AutoCAD.Interop;
+
 using OZOZ.RebarPosWrapper;
-using System.Collections.Generic;
 
 namespace RebarPosCommands
 {
@@ -705,6 +708,21 @@ namespace RebarPosCommands
         {
             Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
             ed.Regen();
+        }
+
+        // Gets the model space background color
+        public static System.Drawing.Color ModelBackgroundColor()
+        {
+            try
+            {
+                AcadPreferences pref = Autodesk.AutoCAD.ApplicationServices.Application.Preferences as AcadPreferences;
+                uint indexColor = pref.Display.GraphicsWinModelBackgrndColor;
+                return System.Drawing.ColorTranslator.FromOle((int)indexColor);
+            }
+            catch
+            {
+                return System.Drawing.Color.Black;
+            }
         }
     }
 }

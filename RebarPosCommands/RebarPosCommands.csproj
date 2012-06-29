@@ -71,15 +71,34 @@
       <HintPath>..\..\..\..\inc-x64\AcMgd.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="AcWindows, Version=18.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\inc-x64\AcWindows.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AdWindows, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\inc-x64\AdWindows.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Autodesk.AutoCAD.Interop, Version=18.0.0.0, Culture=neutral, PublicKeyToken=eed84259d7cbf30b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\inc-x64\Autodesk.AutoCAD.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="PresentationFramework">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands_NewPos.cs" />
@@ -105,6 +124,7 @@
     <Compile Include="CheckForm.Designer.cs">
       <DependentUpon>CheckForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MenuUtility.cs" />
     <Compile Include="PosCheckResult.cs" />
     <Compile Include="TableStyleForm.cs">
       <SubType>Form</SubType>
@@ -306,6 +326,96 @@
   <ItemGroup>
     <None Include="Resources\zoomtolist.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\POZKOPYALA.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\POZKOPYALADETAY.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\POZMIRROR.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\POZNUM.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\POZNUM_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SEKILGOSTER.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SEKILSIL.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SONPOZ.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SONPOZ_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\YENILE.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BALONSIL.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BALONSIL_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LGOSTER.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\METRAJ.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\METRAJ_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\METRAJSIL.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\METRAJSIL_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\METRAJYARDIM.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\POZAYAR.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\POZBENZET.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\POZBUL.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\POZBUL_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\POZDEGIS.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\POZDEGIS_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\POZEDIT.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\POZEDIT_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\POZEKLE.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\POZKATKI.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\POZKONTROL.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\POZKONTROL_32.bmp" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -314,4 +424,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>
