@@ -157,6 +157,7 @@ namespace OZOZ
 
 			property Point3d BasePoint { Point3d get(); void set(Point3d value); }
 			property Point3d NoteGrip  { Point3d get(); void set(Point3d value); }
+			property Point3d LengthGrip  { Point3d get(); void set(Point3d value); }
 
 			property String^ Pos      { String^ get(); void set(String^ value); }
 			property String^ Note     { String^ get(); void set(String^ value); }

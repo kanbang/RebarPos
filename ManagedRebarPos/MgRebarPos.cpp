@@ -83,6 +83,15 @@ Point3d RebarPos::NoteGrip::get()
     return Marshal::ToPoint3d (GetImpObj()->NoteGrip());
 }
 
+void RebarPos::LengthGrip::set(Point3d point)
+{
+  Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setLengthGrip(Marshal::FromPoint3d(point)));
+}
+Point3d RebarPos::LengthGrip::get()
+{
+    return Marshal::ToPoint3d (GetImpObj()->LengthGrip());
+}
+
 void RebarPos::Pos::set(String^ value)
 {
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setPos(Marshal::StringToWchar(value)));
