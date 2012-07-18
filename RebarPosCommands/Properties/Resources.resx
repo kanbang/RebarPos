@@ -130,6 +130,12 @@
   <data name="arrow_up" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\arrow_up.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="BALONSIL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BALONSIL.BMP;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BALONSIL_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BALONSIL_32.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="cursor" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\cursor.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -139,6 +145,69 @@
   <data name="dimension" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\dimension.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="LGOSTER" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LGOSTER.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="METRAJ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\METRAJ.BMP;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="METRAJSIL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\METRAJSIL.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="METRAJSIL_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\METRAJSIL_32.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="METRAJYARDIM" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\METRAJYARDIM.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="METRAJ_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\METRAJ_32.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="POZBENZET" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\POZBENZET.BMP;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="POZBUL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\POZBUL.BMP;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="POZBUL_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\POZBUL_32.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="POZEDIT" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\POZEDIT.BMP;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="POZEDIT_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\POZEDIT_32.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="POZEKLE" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\POZEKLE.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="POZKATKI" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\POZKATKI.BMP;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="POZKONTROL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\POZKONTROL.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="POZKONTROL_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\POZKONTROL_32.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="POZKOPYALA" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\POZKOPYALA.BMP;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="POZKOPYALADETAY" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\POZKOPYALADETAY.BMP;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="POZNUM" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\POZNUM.BMP;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="POZNUM_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\POZNUM_32.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SEKILGOSTER" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SEKILGOSTER.BMP;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SEKILSIL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SEKILSIL.BMP;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="select" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\select.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -147,6 +216,12 @@
   </data>
   <data name="selectlist" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\selectlist.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SONPOZ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SONPOZ.BMP;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SONPOZ_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SONPOZ_32.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="table_row_delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\table_row_delete.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

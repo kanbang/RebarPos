@@ -88,6 +88,20 @@ namespace RebarPosCommands.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap BALONSIL {
+            get {
+                object obj = ResourceManager.GetObject("BALONSIL", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap BALONSIL_32 {
+            get {
+                object obj = ResourceManager.GetObject("BALONSIL_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap cursor {
             get {
                 object obj = ResourceManager.GetObject("cursor", resourceCulture);
@@ -109,6 +123,153 @@ namespace RebarPosCommands.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap LGOSTER {
+            get {
+                object obj = ResourceManager.GetObject("LGOSTER", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap METRAJ {
+            get {
+                object obj = ResourceManager.GetObject("METRAJ", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap METRAJ_32 {
+            get {
+                object obj = ResourceManager.GetObject("METRAJ_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap METRAJSIL {
+            get {
+                object obj = ResourceManager.GetObject("METRAJSIL", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap METRAJSIL_32 {
+            get {
+                object obj = ResourceManager.GetObject("METRAJSIL_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap METRAJYARDIM {
+            get {
+                object obj = ResourceManager.GetObject("METRAJYARDIM", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap POZBENZET {
+            get {
+                object obj = ResourceManager.GetObject("POZBENZET", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap POZBUL {
+            get {
+                object obj = ResourceManager.GetObject("POZBUL", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap POZBUL_32 {
+            get {
+                object obj = ResourceManager.GetObject("POZBUL_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap POZEDIT {
+            get {
+                object obj = ResourceManager.GetObject("POZEDIT", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap POZEDIT_32 {
+            get {
+                object obj = ResourceManager.GetObject("POZEDIT_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap POZEKLE {
+            get {
+                object obj = ResourceManager.GetObject("POZEKLE", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap POZKATKI {
+            get {
+                object obj = ResourceManager.GetObject("POZKATKI", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap POZKONTROL {
+            get {
+                object obj = ResourceManager.GetObject("POZKONTROL", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap POZKONTROL_32 {
+            get {
+                object obj = ResourceManager.GetObject("POZKONTROL_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap POZKOPYALA {
+            get {
+                object obj = ResourceManager.GetObject("POZKOPYALA", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap POZKOPYALADETAY {
+            get {
+                object obj = ResourceManager.GetObject("POZKOPYALADETAY", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap POZNUM {
+            get {
+                object obj = ResourceManager.GetObject("POZNUM", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap POZNUM_32 {
+            get {
+                object obj = ResourceManager.GetObject("POZNUM_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap SEKILGOSTER {
+            get {
+                object obj = ResourceManager.GetObject("SEKILGOSTER", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap SEKILSIL {
+            get {
+                object obj = ResourceManager.GetObject("SEKILSIL", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap select {
             get {
                 object obj = ResourceManager.GetObject("select", resourceCulture);
@@ -126,6 +287,20 @@ namespace RebarPosCommands.Properties {
         internal static System.Drawing.Bitmap selectlist {
             get {
                 object obj = ResourceManager.GetObject("selectlist", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap SONPOZ {
+            get {
+                object obj = ResourceManager.GetObject("SONPOZ", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap SONPOZ_32 {
+            get {
+                object obj = ResourceManager.GetObject("SONPOZ_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
