@@ -113,6 +113,7 @@ private:
 	mutable CDrawParams lastNoteDraw;
 	mutable CDrawParams lastGroupDraw;
 	mutable CDrawParams lastMultiplierDraw;
+	mutable CDrawParams lastLengthDraw;
     mutable AcGiTextStyle lastTextStyle;
     mutable AcGiTextStyle lastNoteStyle;
 	mutable Adesk::UInt16 lastCircleColor;
@@ -128,6 +129,7 @@ private:
 	AcGeVector3d m_Direction, m_Up;
 	AcGePoint3d m_BasePoint;
 	AcGePoint3d m_NoteGrip;
+	AcGePoint3d m_LengthGrip;
 	mutable ACHAR* m_Key;
 	mutable ACHAR* m_Length;
 	mutable ACHAR* m_DisplayedSpacing;
@@ -208,6 +210,10 @@ public:
 	/// Gets or sets the note grip point
 	const AcGePoint3d& NoteGrip(void) const;
 	Acad::ErrorStatus setNoteGrip(const AcGePoint3d& newVal);
+
+	/// Gets or sets the length grip point
+	const AcGePoint3d& LengthGrip(void) const;
+	Acad::ErrorStatus setLengthGrip(const AcGePoint3d& newVal);
 
 	/// Gets or sets pos marker number
 	const ACHAR* Pos(void) const;

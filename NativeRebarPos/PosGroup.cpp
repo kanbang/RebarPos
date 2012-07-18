@@ -22,7 +22,7 @@ ACRX_DXF_DEFINE_MEMBERS(CPosGroup, AcDbObject,
 //-----------------------------------------------------------------------------
 CPosGroup::CPosGroup () : m_Name(NULL), m_Bending(Adesk::kFalse), m_MaxBarLength(12), m_Precision(0),
 	m_DrawingUnit(CPosGroup::MM), m_DisplayUnit(CPosGroup::MM), 
-	m_Formula(NULL), m_FormulaWithoutLength(NULL), m_FormulaPosOnly(NULL), m_StandardDiameters(NULL),
+	m_Formula(NULL), m_FormulaLengthOnly(NULL), m_FormulaPosOnly(NULL), m_StandardDiameters(NULL),
 	m_TextColor(2), m_PosColor(4), m_CircleColor(1), m_MultiplierColor(33), m_GroupColor(9), 
 	m_NoteColor(30), m_CurrentGroupHighlightColor(8), m_NoteScale(0.75), 
 	m_HiddenLayerID(AcDbObjectId::kNull), m_TextStyleID(AcDbObjectId::kNull), m_NoteStyleID(AcDbObjectId::kNull)
@@ -32,7 +32,7 @@ CPosGroup::~CPosGroup ()
 { 
 	acutDelString(m_Name);
 	acutDelString(m_Formula);
-	acutDelString(m_FormulaWithoutLength);
+	acutDelString(m_FormulaLengthOnly);
 	acutDelString(m_FormulaPosOnly);
 }
 
@@ -137,22 +137,22 @@ Acad::ErrorStatus CPosGroup::setFormula(const ACHAR* newVal)
 	return Acad::eOk;
 }
 
-const ACHAR* CPosGroup::FormulaWithoutLength(void) const
+const ACHAR* CPosGroup::FormulaLengthOnly(void) const
 {
 	assertReadEnabled();
-	return m_FormulaWithoutLength;
+	return m_FormulaLengthOnly;
 }
 
-Acad::ErrorStatus CPosGroup::setFormulaWithoutLength(const ACHAR* newVal)
+Acad::ErrorStatus CPosGroup::setFormulaLengthOnly(const ACHAR* newVal)
 {
 	assertWriteEnabled();
 
-	if(m_FormulaWithoutLength != NULL)
-		acutDelString(m_FormulaWithoutLength);
-    m_FormulaWithoutLength = NULL;
+	if(m_FormulaLengthOnly != NULL)
+		acutDelString(m_FormulaLengthOnly);
+    m_FormulaLengthOnly = NULL;
     if(newVal != NULL)
     {
-        acutUpdString(newVal, m_FormulaWithoutLength);
+        acutUpdString(newVal, m_FormulaLengthOnly);
     }
 
 	return Acad::eOk;
@@ -379,8 +379,8 @@ Acad::ErrorStatus CPosGroup::dwgOutFields(AcDbDwgFiler *pFiler) const
 		pFiler->writeString(m_Formula);
 	else
 		pFiler->writeString(_T(""));
-	if (m_FormulaWithoutLength)
-		pFiler->writeString(m_FormulaWithoutLength);
+	if (m_FormulaLengthOnly)
+		pFiler->writeString(m_FormulaLengthOnly);
 	else
 		pFiler->writeString(_T(""));
 	if (m_FormulaPosOnly)
@@ -432,7 +432,7 @@ Acad::ErrorStatus CPosGroup::dwgInFields(AcDbDwgFiler *pFiler)
 	{
 		acutDelString(m_Name);
 		acutDelString(m_Formula);
-		acutDelString(m_FormulaWithoutLength);
+		acutDelString(m_FormulaLengthOnly);
 		acutDelString(m_FormulaPosOnly);
 
 		// Properties
@@ -449,7 +449,7 @@ Acad::ErrorStatus CPosGroup::dwgInFields(AcDbDwgFiler *pFiler)
 		m_DisplayUnit = (DrawingUnits)displayunit;
 
 		pFiler->readString(&m_Formula);
-		pFiler->readString(&m_FormulaWithoutLength);
+		pFiler->readString(&m_FormulaLengthOnly);
 		pFiler->readString(&m_FormulaPosOnly);
 		pFiler->readString(&m_StandardDiameters);
 
@@ -504,8 +504,8 @@ Acad::ErrorStatus CPosGroup::dxfOutFields(AcDbDxfFiler *pFiler) const
 		pFiler->writeString(AcDb::kDxfXTextString + 1, m_Formula);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString + 1, _T(""));
-	if(m_FormulaWithoutLength)
-		pFiler->writeString(AcDb::kDxfXTextString + 2, m_FormulaWithoutLength);
+	if(m_FormulaLengthOnly)
+		pFiler->writeString(AcDb::kDxfXTextString + 2, m_FormulaLengthOnly);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString + 2, _T(""));
 	if(m_FormulaPosOnly)
@@ -568,7 +568,7 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
 	int t_DrawingUnit = 0;
 	int t_DisplayUnit = 0;
 	ACHAR* t_Formula = NULL;
-	ACHAR* t_FormulaWithoutLength = NULL;
+	ACHAR* t_FormulaLengthOnly = NULL;
 	ACHAR* t_FormulaPosOnly = NULL;
 	ACHAR* t_StandardDiameters = NULL;
 	Adesk::UInt16 t_TextColor = 0;
@@ -609,7 +609,7 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
 			acutUpdString(rb.resval.rstring, t_Formula);
 			break;
         case AcDb::kDxfXTextString + 2:
-			acutUpdString(rb.resval.rstring, t_FormulaWithoutLength);
+			acutUpdString(rb.resval.rstring, t_FormulaLengthOnly);
 			break;
         case AcDb::kDxfXTextString + 3:
 			acutUpdString(rb.resval.rstring, t_FormulaPosOnly);
@@ -676,7 +676,7 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
     m_DrawingUnit = (DrawingUnits)t_DrawingUnit;
     m_DisplayUnit = (DrawingUnits)t_DisplayUnit;
 	setFormula(t_Formula);
-	setFormulaWithoutLength(t_FormulaWithoutLength);
+	setFormulaLengthOnly(t_FormulaLengthOnly);
 	setFormulaPosOnly(t_FormulaPosOnly);
 	setStandardDiameters(t_StandardDiameters);
 	m_TextColor = t_TextColor;
@@ -693,7 +693,7 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
 
 	acutDelString(t_Name);
 	acutDelString(t_Formula);
-	acutDelString(t_FormulaWithoutLength);
+	acutDelString(t_FormulaLengthOnly);
 	acutDelString(t_FormulaPosOnly);
 	acutDelString(t_StandardDiameters);
 

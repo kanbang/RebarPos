@@ -302,8 +302,8 @@ namespace RebarPosCommands
                     {
                         PosGroup group = new PosGroup();
                         group.Name = "0";
-                        group.Formula = "[M:C][N][\"T\":D][\"/\":S][\" L=\":L]";
-                        group.FormulaWithoutLength = "[M:C][N][\"T\":D][\"/\":S]";
+                        group.Formula = "[M:C][N][\"T\":D][\"/\":S]";
+                        group.FormulaLengthOnly = "[\"L=\":L]";
                         group.FormulaPosOnly = "[M:C]";
                         group.StandardDiameters = "8 10 12 14 16 18 20 22 25 26 32 36";
                         group.HiddenLayerId = DWGUtility.CreateHiddenLayer("Rebar Defpoints", Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 8));

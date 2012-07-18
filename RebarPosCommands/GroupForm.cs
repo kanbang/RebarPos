@@ -30,7 +30,7 @@ namespace RebarPosCommands
             public bool bending;
 
             public string formula;
-            public string formulaWithoutLength;
+            public string formulaLengthOnly;
             public string formulaPosOnly;
 
             public string standardDiameters;
@@ -104,7 +104,7 @@ namespace RebarPosCommands
                         copy.bending = group.Bending;
 
                         copy.formula = group.Formula;
-                        copy.formulaWithoutLength = group.FormulaWithoutLength;
+                        copy.formulaLengthOnly = group.FormulaLengthOnly;
                         copy.formulaPosOnly = group.FormulaPosOnly;
 
                         copy.standardDiameters = group.StandardDiameters;
@@ -193,9 +193,9 @@ namespace RebarPosCommands
             chkBending.Checked = copy.bending;
 
             txtFormula.Text = copy.formula;
-            txtFormulaWithoutLength.Text = copy.formulaWithoutLength;
+            txtFormulaWithoutLength.Text = copy.formulaLengthOnly;
             txtFormulaPosOnly.Text = copy.formulaPosOnly;
-            posStylePreview.SetFormula(copy.formula, copy.formulaWithoutLength, copy.formulaPosOnly);
+            posStylePreview.SetFormula(copy.formula, copy.formulaLengthOnly, copy.formulaPosOnly);
 
             txtDiameterList.Text = copy.standardDiameters;
 
@@ -266,7 +266,7 @@ namespace RebarPosCommands
             copy.bending = org.bending;
 
             copy.formula = org.formula;
-            copy.formulaWithoutLength = org.formulaWithoutLength;
+            copy.formulaLengthOnly = org.formulaLengthOnly;
             copy.formulaPosOnly = org.formulaPosOnly;
 
             copy.standardDiameters = "8 10 12 14 16 18 20 22 25 26 32 36";
@@ -462,7 +462,7 @@ namespace RebarPosCommands
                             group.Bending = copy.bending;
 
                             group.Formula = copy.formula;
-                            group.FormulaWithoutLength = copy.formulaWithoutLength;
+                            group.FormulaLengthOnly = copy.formulaLengthOnly;
                             group.FormulaPosOnly = copy.formulaPosOnly;
 
                             group.StandardDiameters = copy.standardDiameters;
@@ -496,7 +496,7 @@ namespace RebarPosCommands
                             group.Bending = copy.bending;
 
                             group.Formula = copy.formula;
-                            group.FormulaWithoutLength = copy.formulaWithoutLength;
+                            group.FormulaLengthOnly = copy.formulaLengthOnly;
                             group.FormulaPosOnly = copy.formulaPosOnly;
 
                             group.StandardDiameters = copy.standardDiameters;
@@ -636,7 +636,7 @@ namespace RebarPosCommands
         {
             GroupCopy copy = GetSelected();
             if (copy == null) return;
-            copy.formulaWithoutLength = txtFormulaWithoutLength.Text;
+            copy.formulaLengthOnly = txtFormulaWithoutLength.Text;
 
             posStylePreview.SetFormula(txtFormula.Text, txtFormulaWithoutLength.Text, txtFormulaPosOnly.Text);
         }

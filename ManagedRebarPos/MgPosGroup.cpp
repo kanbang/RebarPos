@@ -92,13 +92,13 @@ void PosGroup::Formula::set(String^ value)
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormula(Marshal::StringToWchar(value)));
 }
 
-String^ PosGroup::FormulaWithoutLength::get()
+String^ PosGroup::FormulaLengthOnly::get()
 {
-	return Marshal::WcharToString(GetImpObj()->FormulaWithoutLength());
+	return Marshal::WcharToString(GetImpObj()->FormulaLengthOnly());
 }
-void PosGroup::FormulaWithoutLength::set(String^ value)
+void PosGroup::FormulaLengthOnly::set(String^ value)
 {
-	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormulaWithoutLength(Marshal::StringToWchar(value)));
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormulaLengthOnly(Marshal::StringToWchar(value)));
 }
 
 String^ PosGroup::FormulaPosOnly::get()

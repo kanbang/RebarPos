@@ -45,7 +45,7 @@ namespace OZOZ
 			property PosGroup::DrawingUnits DisplayUnit { PosGroup::DrawingUnits get(); void set(PosGroup::DrawingUnits value); }
 
 			property String^ Formula              { String^ get(); void set(String^ value); }
-			property String^ FormulaWithoutLength { String^ get(); void set(String^ value); }
+			property String^ FormulaLengthOnly    { String^ get(); void set(String^ value); }
 			property String^ FormulaPosOnly       { String^ get(); void set(String^ value); }
 			
 			property String^ StandardDiameters    { String^ get(); void set(String^ value); }
