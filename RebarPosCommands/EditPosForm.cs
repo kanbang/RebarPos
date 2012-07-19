@@ -102,8 +102,8 @@ namespace RebarPosCommands
                     cbPosDiameter.Text = pos.Diameter;
                     txtPosSpacing.Text = pos.Spacing;
                     txtPosMultiplier.Text = pos.Multiplier.ToString();
-                    chkIncludePos.Checked = (pos.Multiplier > 0);
-                    txtPosMultiplier.Enabled = (pos.Multiplier > 0);
+                    chkIncludePos.Checked = pos.IncludeInBOQ;
+                    txtPosMultiplier.Enabled = pos.IncludeInBOQ;
                     txtPosNote.Text = pos.Note;
 
                     txtA.Text = pos.A;
@@ -183,8 +183,8 @@ namespace RebarPosCommands
                     pos.Count = txtPosCount.Text;
                     pos.Diameter = cbPosDiameter.Text;
                     pos.Spacing = txtPosSpacing.Text;
+                    pos.IncludeInBOQ = chkIncludePos.Checked && (int.Parse(txtPosMultiplier.Text) > 0);
                     pos.Multiplier = int.Parse(txtPosMultiplier.Text);
-                    if (!chkIncludePos.Checked) pos.Multiplier = 0;
                     pos.Note = txtPosNote.Text;
                     pos.GroupId = m_Group;
                     pos.ShapeId = m_Shape;
@@ -554,7 +554,6 @@ namespace RebarPosCommands
         {
             if (!chkIncludePos.Checked)
             {
-                txtPosMultiplier.Text = "0";
                 txtPosMultiplier.Enabled = false;
             }
             else
