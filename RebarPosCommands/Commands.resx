@@ -123,6 +123,9 @@
   <data name="BOQ_Local" xml:space="preserve">
     <value>METRAJ</value>
   </data>
+  <data name="COPYPOSDETAIL_Local" xml:space="preserve">
+    <value>POZKOPYALADETAY</value>
+  </data>
   <data name="COPYPOS_Local" xml:space="preserve">
     <value>POZKOPYALA</value>
   </data>

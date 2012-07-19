@@ -188,6 +188,12 @@ namespace RebarPosCommands
             CopyPos();
         }
 
+        [CommandMethod("RebarPos", "COPYPOSDETAIL", "COPYPOSDETAIL_Local", CommandFlags.Modal)]
+        public void CMD_CopyPosDetail()
+        {
+            CopyPosDetail();
+        }
+
         [CommandMethod("RebarPos", "BOQ", "BOQ_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_DrawBOQ()
         {
