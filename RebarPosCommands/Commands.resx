@@ -138,6 +138,9 @@
   <data name="HIDESHAPES_Local" xml:space="preserve">
     <value>SEKILSIL</value>
   </data>
+  <data name="INCLUDEPOS_Local" xml:space="preserve">
+    <value>POZKATKI</value>
+  </data>
   <data name="NEWPOS_Local" xml:space="preserve">
     <value>POZEKLE</value>
   </data>

@@ -124,6 +124,15 @@ namespace RebarPosCommands {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to POZKATKI.
+        /// </summary>
+        internal static string INCLUDEPOS_Local {
+            get {
+                return ResourceManager.GetString("INCLUDEPOS_Local", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to POZEKLE.
         /// </summary>
         internal static string NEWPOS_Local {

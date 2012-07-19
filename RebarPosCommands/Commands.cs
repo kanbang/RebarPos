@@ -261,5 +261,29 @@ namespace RebarPosCommands
                 }
             }
         }
+
+        [CommandMethod("RebarPos", "INCLUDEPOS", "INCLUDEPOS_Local", CommandFlags.Modal)]
+        public void CMD_IncludePos()
+        {
+            PromptSelectionResult selresult = DWGUtility.SelectAllPosUser();
+            if (selresult.Status != PromptStatus.OK) return;
+
+            PromptKeywordOptions opts = new PromptKeywordOptions("Metraja [Dahil et/metrajdan Cikar]: ", "Add Remove");
+            opts.AllowNone = false;
+            PromptResult result = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetKeywords(opts);
+
+            if (result.Status == PromptStatus.OK)
+            {
+                switch (result.StringResult)
+                {
+                    case "Add":
+                        IcludePosinBOQ(selresult.Value.GetObjectIds(), true);
+                        break;
+                    case "Remove":
+                        IcludePosinBOQ(selresult.Value.GetObjectIds(), false);
+                        break;
+                }
+            }
+        }
     }
 }

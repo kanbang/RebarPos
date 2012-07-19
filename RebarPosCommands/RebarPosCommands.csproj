@@ -124,6 +124,8 @@
     <Compile Include="CheckForm.Designer.cs">
       <DependentUpon>CheckForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Commands_PosLength.cs" />
+    <Compile Include="Commands_IncludePos.cs" />
     <Compile Include="MenuUtility.cs" />
     <Compile Include="PosCheckResult.cs" />
     <Compile Include="TableStyleForm.cs">
