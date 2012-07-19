@@ -133,6 +133,15 @@ namespace RebarPosCommands {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SONPOZ.
+        /// </summary>
+        internal static string LASTPOSNUMBER_Local {
+            get {
+                return ResourceManager.GetString("LASTPOSNUMBER_Local", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to POZEKLE.
         /// </summary>
         internal static string NEWPOS_Local {

@@ -285,5 +285,19 @@ namespace RebarPosCommands
                 }
             }
         }
+
+        [CommandMethod("RebarPos", "LASTPOSNUMBER", "LASTPOSNUMBER_Local", CommandFlags.Modal)]
+        public void CMD_LastPosNumber()
+        {
+            PromptSelectionResult result = DWGUtility.SelectGroup(CurrentGroupId);
+            if (result.Status != PromptStatus.OK) return;
+
+            int lastNum = GetLastPosNumber(result.Value.GetObjectIds());
+
+            if (lastNum != -1)
+            {
+                MessageBox.Show("Son poz numarası (Grup " + CurrentGroupName + "): " + lastNum.ToString(), "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
     }
 }

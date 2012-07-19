@@ -141,6 +141,9 @@
   <data name="INCLUDEPOS_Local" xml:space="preserve">
     <value>POZKATKI</value>
   </data>
+  <data name="LASTPOSNUMBER_Local" xml:space="preserve">
+    <value>SONPOZ</value>
+  </data>
   <data name="NEWPOS_Local" xml:space="preserve">
     <value>POZEKLE</value>
   </data>
