@@ -237,5 +237,29 @@ namespace RebarPosCommands
         {
             TableStyles();
         }
+
+        [CommandMethod("RebarPos", "POSLENGTH", "POSLENGTH_Local", CommandFlags.Modal)]
+        public void CMD_PosLength()
+        {
+            PromptSelectionResult selresult = DWGUtility.SelectAllPosUser();
+            if (selresult.Status != PromptStatus.OK) return;
+
+            PromptKeywordOptions opts = new PromptKeywordOptions("L boyunu [Göster/giZle]: ", "Show Hide");
+            opts.AllowNone = false;
+            PromptResult result = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetKeywords(opts);
+
+            if (result.Status == PromptStatus.OK)
+            {
+                switch (result.StringResult)
+                {
+                    case "Show":
+                        ShowPosLength(selresult.Value.GetObjectIds(), true);
+                        break;
+                    case "Hide":
+                        ShowPosLength(selresult.Value.GetObjectIds(), false);
+                        break;
+                }
+            }
+        }
     }
 }

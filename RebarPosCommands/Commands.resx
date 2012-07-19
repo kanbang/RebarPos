@@ -156,6 +156,9 @@
   <data name="POSGROUP_Local" xml:space="preserve">
     <value>POZGRUP</value>
   </data>
+  <data name="POSLENGTH_Local" xml:space="preserve">
+    <value>BOYGOSTER</value>
+  </data>
   <data name="POSSHAPES_Local" xml:space="preserve">
     <value>ACILIMLAR</value>
   </data>

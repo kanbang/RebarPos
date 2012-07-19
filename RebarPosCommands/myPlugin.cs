@@ -1,13 +1,15 @@
-﻿using Autodesk.AutoCAD.ApplicationServices;
-using Autodesk.AutoCAD.EditorInput;
-using Autodesk.AutoCAD.Runtime;
+﻿using System;
 using System.Reflection;
 using System.IO;
 using System.Collections.Generic;
-using System;
+
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.EditorInput;
+using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.DatabaseServices;
-using OZOZ.RebarPosWrapper;
 using Autodesk.AutoCAD.GraphicsInterface;
+
+using OZOZ.RebarPosWrapper;
 
 // This line is not mandatory, but improves loading performances
 [assembly: ExtensionApplication(typeof(RebarPosCommands.RebarPosPlugin))]
@@ -21,13 +23,18 @@ namespace RebarPosCommands
     {
         void IExtensionApplication.Initialize()
         {
+            // Create overrules
             DrawableOverrule.Overruling = true;
             ObjectOverrule.AddOverrule(RXClass.GetClass(typeof(RebarPos)), HighlightGroupOverrule.Instance, true);
             ObjectOverrule.AddOverrule(RXClass.GetClass(typeof(RebarPos)), ShowShapesOverrule.Instance, true);
+
+            // Add menu
+            MenuUtility.MakeRibbonTab();
         }
 
         void IExtensionApplication.Terminate()
         {
+            // Remove overrules
             ObjectOverrule.RemoveOverrule(RXClass.GetClass(typeof(RebarPos)), HighlightGroupOverrule.Instance);
             ObjectOverrule.RemoveOverrule(RXClass.GetClass(typeof(RebarPos)), ShowShapesOverrule.Instance);
         }

@@ -187,6 +187,15 @@ namespace RebarPosCommands {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to BOYGOSTER.
+        /// </summary>
+        internal static string POSLENGTH_Local {
+            get {
+                return ResourceManager.GetString("POSLENGTH_Local", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ACILIMLAR.
         /// </summary>
         internal static string POSSHAPES_Local {
