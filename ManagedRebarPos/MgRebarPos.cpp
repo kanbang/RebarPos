@@ -137,6 +137,15 @@ String^ RebarPos::Spacing::get()
     return Marshal::WcharToString(GetImpObj()->Spacing());
 }
 
+void RebarPos::IncludeInBOQ::set(bool value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setIncludeInBOQ(value ?  Adesk::kTrue :  Adesk::kFalse));
+}
+bool RebarPos::IncludeInBOQ::get()
+{
+    return (GetImpObj()->IncludeInBOQ() == Adesk::kTrue);
+}
+
 void RebarPos::Multiplier::set(int value)
 {
     Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setMultiplier(value));

@@ -85,7 +85,10 @@ namespace RebarPosCommands
                             if (copy != null)
                             {
                                 copy.list.Add(it.Current);
-                                copy.count += pos.CalcProperties.Count * pos.Multiplier;
+                                if (pos.IncludeInBOQ)
+                                {
+                                    copy.count += pos.CalcProperties.Count * pos.Multiplier;
+                                }
                                 copy.x = Math.Min(copy.x, pos.BasePoint.X);
                                 copy.y = Math.Min(copy.y, pos.BasePoint.Y);
                             }
@@ -97,7 +100,10 @@ namespace RebarPosCommands
                                 copy.pos = pos.Pos;
                                 copy.newpos = pos.Pos;
                                 copy.existing = true;
-                                copy.count = pos.CalcProperties.Count * pos.Multiplier;
+                                if (pos.IncludeInBOQ)
+                                {
+                                    copy.count = pos.CalcProperties.Count * pos.Multiplier;
+                                }
                                 copy.diameter = pos.Diameter;
                                 copy.length = pos.Length;
                                 copy.a = pos.A;

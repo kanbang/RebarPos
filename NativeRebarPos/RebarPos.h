@@ -137,6 +137,7 @@ private:
 	ACHAR* m_Count;
 	ACHAR* m_Diameter;
 	ACHAR* m_Spacing;
+	Adesk::Boolean m_IncludeInBOQ;
 	Adesk::Int32 m_Multiplier;
 	ACHAR* m_Note;
 	ACHAR* m_A;
@@ -234,6 +235,10 @@ public:
 	/// Gets or sets the bar spacing
 	const ACHAR* Spacing(void) const;
 	Acad::ErrorStatus setSpacing(const ACHAR* newVal);
+
+	/// Gets or sets the pos is included in the BOQ
+	const Adesk::Boolean IncludeInBOQ(void) const;
+	Acad::ErrorStatus setIncludeInBOQ(const Adesk::Boolean newVal);
 
 	/// Gets or sets the BOQ multiplier
 	const Adesk::Int32 Multiplier(void) const;

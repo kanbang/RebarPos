@@ -34,7 +34,7 @@ CRebarPos::CRebarPos() :
 	m_Direction(1, 0, 0), m_Up(0, 1, 0), m_NoteGrip(0, 2.0, 0), m_LengthGrip(0, -2.0, 0),
 	m_DisplayStyle(CRebarPos::ALL), isModified(true), m_Length(NULL), m_Key(NULL),
 	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), 
-	m_Multiplier(1), m_DisplayedSpacing(NULL),
+	m_IncludeInBOQ(Adesk::kTrue), m_Multiplier(1), m_DisplayedSpacing(NULL),
 	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), 
 	m_ShapeID(AcDbObjectId::kNull), m_GroupID(AcDbObjectId::kNull),
 	circleRadius(1.125), partSpacing(0.15), 
@@ -276,6 +276,20 @@ Acad::ErrorStatus CRebarPos::setSpacing(const ACHAR* newVal)
     {
         acutUpdString(newVal, m_Spacing);
     }
+	isModified = true;
+	return Acad::eOk;
+}
+
+const Adesk::Boolean CRebarPos::IncludeInBOQ(void) const
+{
+	assertReadEnabled();
+	return m_IncludeInBOQ;
+}
+
+Acad::ErrorStatus CRebarPos::setIncludeInBOQ(const Adesk::Boolean newVal)
+{
+	assertWriteEnabled();
+	m_IncludeInBOQ = newVal;
 	isModified = true;
 	return Acad::eOk;
 }
@@ -723,7 +737,11 @@ void CRebarPos::subList() const
 		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Diameter:"), m_Diameter);
 	if (m_Spacing != NULL)
 		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Spacing:"), m_Spacing);
-	acutPrintf(_T("%18s%16s %i\n"), _T(/*MSG0*/""), _T("Multiplier:"), m_Multiplier);
+
+	if(m_IncludeInBOQ == Adesk::kTrue)
+		acutPrintf(_T("%18s%16s %i\n"), _T(/*MSG0*/""), _T("Multiplier:"), m_Multiplier);
+	else
+		acutPrintf(_T("%18s%16s %i (Not Included in BOQ)\n"), _T(/*MSG0*/""), _T("Multiplier:"), m_Multiplier);
 
 	// Shape
 	if(!m_ShapeID.isNull())
@@ -1123,6 +1141,7 @@ Acad::ErrorStatus CRebarPos::dwgOutFields(AcDbDwgFiler* pFiler) const
 		pFiler->writeString(m_Spacing);
 	else
 		pFiler->writeString(_T(""));
+	pFiler->writeBoolean(m_IncludeInBOQ);
 	pFiler->writeInt32(m_Multiplier);
 	pFiler->writeInt32(m_DisplayStyle);
 	if(m_A)
@@ -1198,6 +1217,7 @@ Acad::ErrorStatus CRebarPos::dwgInFields(AcDbDwgFiler* pFiler)
 		pFiler->readString(&m_Count);
 		pFiler->readString(&m_Diameter);
 		pFiler->readString(&m_Spacing);
+		pFiler->readBoolean(&m_IncludeInBOQ);
 		pFiler->readInt32(&m_Multiplier);
 		Adesk::Int32 display = 0;
 		pFiler->readInt32(&display);
@@ -1261,6 +1281,7 @@ Acad::ErrorStatus CRebarPos::dxfOutFields(AcDbDxfFiler* pFiler) const
 		pFiler->writeString(AcDb::kDxfXTextString + 3, m_Spacing);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString + 3, _T(""));
+	pFiler->writeBoolean(AcDb::kDxfBool, m_IncludeInBOQ);
 	pFiler->writeInt32(AcDb::kDxfInt32 + 1, m_Multiplier);
 	pFiler->writeInt32(AcDb::kDxfInt32 + 2, m_DisplayStyle);
 	if(m_A)
@@ -1326,6 +1347,7 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	ACHAR* t_Count = NULL;
 	ACHAR* t_Diameter = NULL;
 	ACHAR* t_Spacing = NULL;
+	Adesk::Boolean t_IncludeInBOQ = Adesk::kTrue;
 	Adesk::Int32 t_Multiplier = 0;
 	int t_Display = 0;
 	ACHAR* t_A = NULL;
@@ -1373,6 +1395,9 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
             acutUpdString(rb.resval.rstring, t_Spacing);
             break;
 
+        case AcDb::kDxfBool:
+			t_IncludeInBOQ = (rb.resval.rint == 0) ? Adesk::kFalse : Adesk::kTrue;
+            break;
         case AcDb::kDxfInt32 + 1:
             t_Multiplier = rb.resval.rlong;
             break;
@@ -1436,6 +1461,7 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	setCount(t_Count);
 	setDiameter(t_Diameter);
 	setSpacing(t_Spacing);
+	m_IncludeInBOQ = t_IncludeInBOQ;
 	m_Multiplier = t_Multiplier;
 	m_DisplayStyle = (CRebarPos::DisplayStyle)t_Display;
 	setA(t_A);

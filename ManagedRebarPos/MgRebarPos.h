@@ -164,6 +164,7 @@ namespace OZOZ
 			property String^ Count    { String^ get(); void set(String^ value); }
 			property String^ Diameter { String^ get(); void set(String^ value); }
 			property String^ Spacing  { String^ get(); void set(String^ value); }
+			property bool IncludeInBOQ { bool get(); void set(bool value); }
 			property int Multiplier   { int get(); void set(int value); }
 
 			property DisplayStyle Display { DisplayStyle get(); void set(DisplayStyle value); }
