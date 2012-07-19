@@ -195,7 +195,7 @@ namespace RebarPosCommands
         }
 
         [CommandMethod("RebarPos", "COPYPOSNUMBER", "COPYPOSNUMBER_Local", CommandFlags.Modal)]
-        public void CMD_CopyPosDetail()
+        public void CMD_CopyPosNumber()
         {
             CopyPos(false, true);
         }
@@ -298,6 +298,12 @@ namespace RebarPosCommands
             {
                 MessageBox.Show("Son poz numarası (Grup " + CurrentGroupName + "): " + lastNum.ToString(), "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        [CommandMethod("RebarPos", "POSHELP", "POSHELP_Local", CommandFlags.Modal)]
+        public void CMD_PosHelp()
+        {
+            MessageBox.Show("Yardım dosyası henüz tamamlanmadı.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

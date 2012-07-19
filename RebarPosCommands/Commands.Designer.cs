@@ -205,6 +205,15 @@ namespace RebarPosCommands {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to METRAJYARDIM.
+        /// </summary>
+        internal static string POSHELP_Local {
+            get {
+                return ResourceManager.GetString("POSHELP_Local", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to BOYGOSTER.
         /// </summary>
         internal static string POSLENGTH_Local {

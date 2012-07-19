@@ -162,6 +162,9 @@
   <data name="POSGROUP_Local" xml:space="preserve">
     <value>POZGRUP</value>
   </data>
+  <data name="POSHELP_Local" xml:space="preserve">
+    <value>METRAJYARDIM</value>
+  </data>
   <data name="POSLENGTH_Local" xml:space="preserve">
     <value>BOYGOSTER</value>
   </data>

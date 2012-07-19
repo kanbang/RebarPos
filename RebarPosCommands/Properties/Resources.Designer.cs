@@ -333,6 +333,13 @@ namespace RebarPosCommands.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap YARDIM {
+            get {
+                object obj = ResourceManager.GetObject("YARDIM", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap zoomtolist {
             get {
                 object obj = ResourceManager.GetObject("zoomtolist", resourceCulture);

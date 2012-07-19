@@ -126,6 +126,7 @@
     </Compile>
     <Compile Include="Commands_PosLength.cs" />
     <Compile Include="Commands_IncludePos.cs" />
+    <Compile Include="Commands_LastPosNumber.cs" />
     <Compile Include="MenuUtility.cs" />
     <Compile Include="PosCheckResult.cs" />
     <Compile Include="TableStyleForm.cs">
@@ -417,6 +418,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\POZKONTROL_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\help.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
