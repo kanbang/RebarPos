@@ -9,7 +9,7 @@ namespace RebarPosCommands
 {
     public partial class MyCommands
     {
-        private void CopyPos()
+        private void CopyPos(bool applyToPos, bool applyToText)
         {
             PromptEntityOptions opts = new PromptEntityOptions("Select source object: ");
             opts.AllowNone = false;
@@ -29,24 +29,43 @@ namespace RebarPosCommands
                 {
                     RebarPos source = tr.GetObject(result.ObjectId, OpenMode.ForRead) as RebarPos;
                     if (source == null) return;
-                    RebarPos dest = tr.GetObject(destresult.ObjectId, OpenMode.ForWrite) as RebarPos;
-                    if (dest == null) return;
 
-                    dest.Pos = source.Pos;
-                    dest.Count = source.Count;
-                    dest.Diameter = source.Diameter;
-                    dest.Spacing = source.Spacing;
-                    dest.GroupId = source.GroupId;
-                    dest.ShapeId = source.ShapeId;
-                    dest.A = source.A;
-                    dest.B = source.B;
-                    dest.C = source.C;
-                    dest.D = source.D;
-                    dest.E = source.E;
-                    dest.F = source.F;
-                    dest.Display = source.Display;
-                    dest.Note = source.Note;
-                    dest.Multiplier = source.Multiplier;
+                    if (applyToPos)
+                    {
+                        RebarPos dest = tr.GetObject(destresult.ObjectId, OpenMode.ForWrite) as RebarPos;
+                        if (dest != null)
+                        {
+                            dest.Pos = source.Pos;
+                            dest.Count = source.Count;
+                            dest.Diameter = source.Diameter;
+                            dest.Spacing = source.Spacing;
+                            dest.GroupId = source.GroupId;
+                            dest.ShapeId = source.ShapeId;
+                            dest.A = source.A;
+                            dest.B = source.B;
+                            dest.C = source.C;
+                            dest.D = source.D;
+                            dest.E = source.E;
+                            dest.F = source.F;
+                            dest.Display = source.Display;
+                            dest.Note = source.Note;
+                            dest.Multiplier = source.Multiplier;
+                        }
+                    }
+
+                    if (applyToText)
+                    {
+                        DBText text = tr.GetObject(destresult.ObjectId, OpenMode.ForWrite) as DBText;
+                        if (text != null)
+                        {
+                            text.TextString = source.Pos;
+                        }
+                        MText mtext = tr.GetObject(destresult.ObjectId, OpenMode.ForWrite) as MText;
+                        if (mtext != null)
+                        {
+                            mtext.Contents = source.Pos;
+                        }
+                    }
 
                     tr.Commit();
                 }
@@ -57,7 +76,7 @@ namespace RebarPosCommands
             }
         }
 
-        private void CopyPosDetail()
+        private void CopyPosDetail(bool applyToPos, bool applyToText)
         {
             PromptEntityOptions opts = new PromptEntityOptions("Select source object: ");
             opts.AllowNone = false;
@@ -77,22 +96,42 @@ namespace RebarPosCommands
                 {
                     RebarPos source = tr.GetObject(result.ObjectId, OpenMode.ForRead) as RebarPos;
                     if (source == null) return;
-                    RebarPos dest = tr.GetObject(destresult.ObjectId, OpenMode.ForWrite) as RebarPos;
-                    if (dest == null) return;
 
-                    dest.Pos = source.Pos;
-                    dest.Count = source.Count;
-                    dest.Diameter = source.Diameter;
-                    dest.Spacing = source.Spacing;
-                    dest.GroupId = source.GroupId;
-                    dest.ShapeId = source.ShapeId;
-                    dest.A = source.A;
-                    dest.B = source.B;
-                    dest.C = source.C;
-                    dest.D = source.D;
-                    dest.E = source.E;
-                    dest.F = source.F;
-                    dest.Multiplier = 0;
+                    if (applyToPos)
+                    {
+                        RebarPos dest = tr.GetObject(destresult.ObjectId, OpenMode.ForWrite) as RebarPos;
+                        if (dest != null)
+                        {
+                            dest.Pos = source.Pos;
+                            dest.Count = source.Count;
+                            dest.Diameter = source.Diameter;
+                            dest.Spacing = source.Spacing;
+                            dest.GroupId = source.GroupId;
+                            dest.ShapeId = source.ShapeId;
+                            dest.A = source.A;
+                            dest.B = source.B;
+                            dest.C = source.C;
+                            dest.D = source.D;
+                            dest.E = source.E;
+                            dest.F = source.F;
+                            dest.Multiplier = 0;
+                        }
+                    }
+
+                    if (applyToText)
+                    {
+                        DBText text = tr.GetObject(destresult.ObjectId, OpenMode.ForWrite) as DBText;
+                        if (text != null)
+                        {
+                            text.TextString = source.Pos;
+                        }
+
+                        MText mtext = tr.GetObject(destresult.ObjectId, OpenMode.ForWrite) as MText;
+                        if (mtext != null)
+                        {
+                            mtext.Contents = source.Pos;
+                        }
+                    }
 
                     tr.Commit();
                 }

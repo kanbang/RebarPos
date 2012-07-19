@@ -126,6 +126,9 @@
   <data name="COPYPOSDETAIL_Local" xml:space="preserve">
     <value>POZKOPYALADETAY</value>
   </data>
+  <data name="COPYPOSNUMBER_Local" xml:space="preserve">
+    <value>POZBENZET</value>
+  </data>
   <data name="COPYPOS_Local" xml:space="preserve">
     <value>POZKOPYALA</value>
   </data>

@@ -97,6 +97,15 @@ namespace RebarPosCommands {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to POZBENZET.
+        /// </summary>
+        internal static string COPYPOSNUMBER_Local {
+            get {
+                return ResourceManager.GetString("COPYPOSNUMBER_Local", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to NUMARASIL.
         /// </summary>
         internal static string EMPTYPOS_Local {
