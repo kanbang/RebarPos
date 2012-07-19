@@ -20,7 +20,7 @@ namespace RebarPosCommands
                 {
                     foreach (ObjectId id in list)
                     {
-                        RebarPos pos = tr.GetObject(id, OpenMode.ForRead) as RebarPos;
+                        RebarPos pos = tr.GetObject(id, OpenMode.ForWrite) as RebarPos;
                         if (pos != null)
                         {
                             pos.IncludeInBOQ = include;
