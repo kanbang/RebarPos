@@ -238,6 +238,7 @@ Acad::ErrorStatus CPosShape::dwgOutFields(AcDbDwgFiler *pFiler) const
 		CShape* shape = *it;
 		pFiler->writeInt32(shape->type);
 		pFiler->writeUInt16(shape->color);
+		pFiler->writeBoolean(shape->visible);
 		switch(shape->type)
 		{
 		case CShape::Line:
@@ -315,12 +316,15 @@ Acad::ErrorStatus CPosShape::dwgInFields(AcDbDwgFiler *pFiler)
 			pFiler->readInt32(&type);
 			Adesk::UInt16 color;
 			pFiler->readUInt16(&color);
+			Adesk::Boolean visible;
+			pFiler->readBoolean(&visible);
 			switch(type)
 			{
 			case CShape::Line:
 				{
 					CShapeLine* line = new CShapeLine();
 					line->color = color;
+					line->visible = visible;
 					pFiler->readDouble(&line->x1);
 					pFiler->readDouble(&line->y1);
 					pFiler->readDouble(&line->x2);
@@ -332,6 +336,7 @@ Acad::ErrorStatus CPosShape::dwgInFields(AcDbDwgFiler *pFiler)
 				{
 					CShapeArc* arc = new CShapeArc();
 					arc->color = color;
+					arc->visible = visible;
 					pFiler->readDouble(&arc->x);
 					pFiler->readDouble(&arc->y);
 					pFiler->readDouble(&arc->r);
@@ -344,6 +349,7 @@ Acad::ErrorStatus CPosShape::dwgInFields(AcDbDwgFiler *pFiler)
 				{
 					CShapeText* text = new CShapeText();
 					text->color = color;
+					text->visible = visible;
 					pFiler->readDouble(&text->x);
 					pFiler->readDouble(&text->y);
 					pFiler->readDouble(&text->height);
@@ -408,6 +414,7 @@ Acad::ErrorStatus CPosShape::dxfOutFields(AcDbDxfFiler *pFiler) const
 		CShape* shape = *it;
 		pFiler->writeInt32(AcDb::kDxfInt32, shape->type);
 		pFiler->writeUInt16(AcDb::kDxfColor, shape->color);
+		pFiler->writeBoolean(AcDb::kDxfBool, shape->visible);
 		switch(shape->type)
 		{
 		case CShape::Line:
@@ -482,8 +489,10 @@ Acad::ErrorStatus CPosShape::dxfInFields(AcDbDxfFiler *pFiler)
 	{
 		Adesk::Int32 type;
 		Adesk::UInt16 color;
+		Adesk::Boolean visible;
 		if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("segment type code"), type)) != Acad::eOk) return es;
 		if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfColor, _T("segment color"), color)) != Acad::eOk) return es;
+		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("segment visibility"), visible)) != Acad::eOk) return es;
 
 		switch(type)
 		{
@@ -491,6 +500,7 @@ Acad::ErrorStatus CPosShape::dxfInFields(AcDbDxfFiler *pFiler)
 			{
 				CShapeLine* line = new CShapeLine();
 				line->color = color;
+				line->visible = visible;
 				AcGePoint2d p1, p2;
 				if((es = Utility::ReadDXFPoint(pFiler, AcDb::kDxfXCoord, _T("segment x1"), p1)) != Acad::eOk) return es;
 				if((es = Utility::ReadDXFPoint(pFiler, AcDb::kDxfXCoord + 1, _T("segment x2"), p2)) != Acad::eOk) return es;
@@ -503,6 +513,7 @@ Acad::ErrorStatus CPosShape::dxfInFields(AcDbDxfFiler *pFiler)
 			{
 				CShapeArc* arc = new CShapeArc();
 				arc->color = color;
+				arc->visible = visible;
 				AcGePoint2d p;
 				if((es = Utility::ReadDXFPoint(pFiler, AcDb::kDxfXCoord, _T("arc x"), p)) != Acad::eOk) return es;
 				arc->x = p.x; arc->y = p.y;
@@ -516,6 +527,7 @@ Acad::ErrorStatus CPosShape::dxfInFields(AcDbDxfFiler *pFiler)
 			{
 				CShapeText* text = new CShapeText();
 				text->color = color;
+				text->visible = visible;
 				AcGePoint2d p;
 				if((es = Utility::ReadDXFPoint(pFiler, AcDb::kDxfXCoord, _T("text x"), p)) != Acad::eOk) return es;
 				text->x = p.x; text->y = p.y;

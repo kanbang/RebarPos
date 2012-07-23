@@ -269,7 +269,7 @@ const std::vector<AcDbMText*> CTableCell::GetTexts() const
 			for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
 			{
 				const CShape* shape = pShape->GetShape(i);
-				if(shape->type == CShape::Text)
+				if(shape->type == CShape::Text && shape->visible == Adesk::kTrue)
 				{
 					const CShapeText* text = dynamic_cast<const CShapeText*>(shape);
 
@@ -449,7 +449,7 @@ const std::vector<AcDbLine*> CTableCell::GetLines() const
 			for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
 			{
 				const CShape* shape = pShape->GetShape(i);
-				if(shape->type == CShape::Line)
+				if(shape->type == CShape::Line && shape->visible == Adesk::kTrue)
 				{
 					const CShapeLine* line = dynamic_cast<const CShapeLine*>(shape);
 

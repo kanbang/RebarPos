@@ -38,17 +38,17 @@ namespace RebarPosCommands
             {
                 shapes.Add(shape);
             }
-            public void AddLine(Color color, double x1, double y1, double x2, double y2)
+            public void AddLine(Color color, double x1, double y1, double x2, double y2, bool visible)
             {
-                shapes.Add(new PosShape.ShapeLine(Autodesk.AutoCAD.Colors.Color.FromColor(color), x1, y1, x2, y2));
+                shapes.Add(new PosShape.ShapeLine(Autodesk.AutoCAD.Colors.Color.FromColor(color), x1, y1, x2, y2, visible));
             }
-            public void AddArc(Color color, double x, double y, double r, double startAngle, double endAngle)
+            public void AddArc(Color color, double x, double y, double r, double startAngle, double endAngle, bool visible)
             {
-                shapes.Add(new PosShape.ShapeArc(Autodesk.AutoCAD.Colors.Color.FromColor(color), x, y, r, startAngle, endAngle));
+                shapes.Add(new PosShape.ShapeArc(Autodesk.AutoCAD.Colors.Color.FromColor(color), x, y, r, startAngle, endAngle, visible));
             }
-            public void AddText(Color color, double x, double y, double height, string text, TextHorizontalMode horizontalAlignment, TextVerticalMode verticalAlignment)
+            public void AddText(Color color, double x, double y, double height, string text, TextHorizontalMode horizontalAlignment, TextVerticalMode verticalAlignment, bool visible)
             {
-                shapes.Add(new PosShape.ShapeText(Autodesk.AutoCAD.Colors.Color.FromColor(color), x, y, height, text, horizontalAlignment, verticalAlignment));
+                shapes.Add(new PosShape.ShapeText(Autodesk.AutoCAD.Colors.Color.FromColor(color), x, y, height, text, horizontalAlignment, verticalAlignment, visible));
             }
         }
 
@@ -420,20 +420,33 @@ namespace RebarPosCommands
                     {
                         DBObject obj = tr.GetObject(sel.ObjectId, OpenMode.ForRead);
 
+                        bool visible = true;
+                        Entity en = obj as Entity;
+                        if (en != null)
+                        {
+                            LayerTableRecord ltr = (LayerTableRecord)tr.GetObject(en.LayerId, OpenMode.ForRead);
+
+                            if (ltr != null)
+                            {
+                                visible = ltr.IsPlottable;
+                            }
+                        }
+
                         if (obj is Line)
                         {
                             Line line = obj as Line;
-                            copy.AddLine(line.Color.ColorValue, line.StartPoint.X, line.StartPoint.Y, line.EndPoint.X, line.EndPoint.Y);
+                            
+                            copy.AddLine(line.Color.ColorValue, line.StartPoint.X, line.StartPoint.Y, line.EndPoint.X, line.EndPoint.Y, visible);
                         }
                         else if (obj is Arc)
                         {
                             Arc arc = obj as Arc;
-                            copy.AddArc(arc.Color.ColorValue, arc.Center.X, arc.Center.Y, arc.Radius, arc.StartAngle, arc.EndAngle);
+                            copy.AddArc(arc.Color.ColorValue, arc.Center.X, arc.Center.Y, arc.Radius, arc.StartAngle, arc.EndAngle, visible);
                         }
                         else if (obj is DBText)
                         {
                             DBText text = obj as DBText;
-                            copy.AddText(text.Color.ColorValue, text.Position.X, text.Position.Y, text.Height, text.TextString, text.HorizontalMode, text.VerticalMode);
+                            copy.AddText(text.Color.ColorValue, text.Position.X, text.Position.Y, text.Height, text.TextString, text.HorizontalMode, text.VerticalMode, visible);
                         }
                     }
                 }

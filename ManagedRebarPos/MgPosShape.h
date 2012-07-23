@@ -28,15 +28,18 @@ namespace OZOZ
 			{
 			public:
 				property Autodesk::AutoCAD::Colors::Color^ Color;
+				property bool Visible;
 
 			protected:
 				Shape()
 				{
 					Color = Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, 0);
+					Visible = true;
 				}
-				Shape(Autodesk::AutoCAD::Colors::Color^ color)
+				Shape(Autodesk::AutoCAD::Colors::Color^ color, bool visible)
 				{
 					Color = color;
+					Visible = visible;
 				}
 
 			private:
@@ -68,20 +71,21 @@ namespace OZOZ
 				{
 					return gcnew ShapeLine(
 						Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, line->color),
-						line->x1, line->y1, line->x2, line->y2);
+						line->x1, line->y1, line->x2, line->y2, line->visible == Adesk::kTrue);
 				}
 				static ShapeArc^ FromNative(const CShapeArc* arc)
 				{
 					return gcnew ShapeArc(
 						Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, arc->color),
-						arc->x, arc->y, arc->r, arc->startAngle, arc->endAngle);
+						arc->x, arc->y, arc->r, arc->startAngle, arc->endAngle, arc->visible == Adesk::kTrue);
 				}
 				static ShapeText^ FromNative(const CShapeText* text)
 				{
 					return gcnew ShapeText(
 						Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, text->color),
 						text->x, text->y, text->height, Marshal::WstringToString(text->text), 
-						static_cast<TextHorizontalMode>(text->horizontalAlignment), static_cast<TextVerticalMode>(text->verticalAlignment));
+						static_cast<TextHorizontalMode>(text->horizontalAlignment), static_cast<TextVerticalMode>(text->verticalAlignment),
+						text->visible == Adesk::kTrue);
 				}
 			};
 
@@ -99,7 +103,7 @@ namespace OZOZ
 					;
 				}
 
-				ShapeLine(Autodesk::AutoCAD::Colors::Color^ color, double x1, double y1, double x2, double y2) : Shape(color)
+				ShapeLine(Autodesk::AutoCAD::Colors::Color^ color, double x1, double y1, double x2, double y2, bool visible) : Shape(color, visible)
 				{
 					X1 = x1;
 					Y1 = y1;
@@ -110,7 +114,7 @@ namespace OZOZ
 			internal:
 				virtual CShape* ToNative(void) override
 				{
-					return new CShapeLine(Color->ColorIndex, X1, Y1, X2, Y2);
+					return new CShapeLine(Color->ColorIndex, X1, Y1, X2, Y2, Visible ? Adesk::kTrue : Adesk::kFalse);
 				}
 			};
 
@@ -129,7 +133,7 @@ namespace OZOZ
 					;
 				}
 
-				ShapeArc(Autodesk::AutoCAD::Colors::Color^ color, double x, double y, double r, double startAngle, double endAngle) : Shape(color)
+				ShapeArc(Autodesk::AutoCAD::Colors::Color^ color, double x, double y, double r, double startAngle, double endAngle, bool visible) : Shape(color, visible)
 				{
 					X = x;
 					Y = y;
@@ -141,7 +145,7 @@ namespace OZOZ
 			internal:
 				virtual CShape* ToNative(void) override
 				{
-					return new CShapeArc(Color->ColorIndex, X, Y, R, StartAngle, EndAngle);
+					return new CShapeArc(Color->ColorIndex, X, Y, R, StartAngle, EndAngle, Visible ? Adesk::kTrue : Adesk::kFalse);
 				}
 			};
 
@@ -160,7 +164,7 @@ namespace OZOZ
 				{
 					;
 				}
-				ShapeText(Autodesk::AutoCAD::Colors::Color^ color, double x, double y, double height, String^ text, TextHorizontalMode horizontalAlignment, TextVerticalMode verticalAlignment) : Shape(color)
+				ShapeText(Autodesk::AutoCAD::Colors::Color^ color, double x, double y, double height, String^ text, TextHorizontalMode horizontalAlignment, TextVerticalMode verticalAlignment, bool visible) : Shape(color, visible)
 				{
 					X = x;
 					Y = y;
@@ -174,7 +178,7 @@ namespace OZOZ
 				virtual CShape* ToNative(void) override
 				{
 					return new CShapeText(Color->ColorIndex, X, Y, Height, Marshal::StringToWstring(Text),
-						static_cast<AcDb::TextHorzMode>(HorizontalAlignment), static_cast<AcDb::TextVertMode>(VerticalAlignment));
+						static_cast<AcDb::TextHorzMode>(HorizontalAlignment), static_cast<AcDb::TextVertMode>(VerticalAlignment), Visible ? Adesk::kTrue : Adesk::kFalse);
 				}
 			};
 

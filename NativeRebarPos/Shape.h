@@ -23,11 +23,12 @@ struct DLLIMPEXP CShape
 
 	CShape::ShapeType type;
 	Adesk::UInt16 color;
+	Adesk::Boolean visible;
 
 	virtual CShape* clone() const = 0;
 
 protected:
-	CShape(const CShape::ShapeType Type, const Adesk::UInt16 Color = 0) : type(Type), color(Color)
+	CShape(const CShape::ShapeType Type, const Adesk::UInt16 Color = 0, const Adesk::Boolean Visible = Adesk::kTrue) : type(Type), color(Color), visible(Visible)
 	{ }
 };
 
@@ -39,7 +40,7 @@ struct DLLIMPEXP CShapeLine : CShape
 	double y2;
 
 	CShapeLine();
-	CShapeLine(const Adesk::UInt16 Color, const double X1, const double Y1, const double X2, const double Y2);
+	CShapeLine(const Adesk::UInt16 Color, const double X1, const double Y1, const double X2, const double Y2, const Adesk::Boolean Visible = Adesk::kTrue);
 
 	virtual CShapeLine* clone() const;
 };
@@ -54,7 +55,7 @@ struct DLLIMPEXP CShapeArc : CShape
 
 	CShapeArc();
 
-	CShapeArc(const Adesk::UInt16 Color, const double X, const double Y, const double R, const double StartAngle, const double EndAngle);
+	CShapeArc(const Adesk::UInt16 Color, const double X, const double Y, const double R, const double StartAngle, const double EndAngle, const Adesk::Boolean Visible = Adesk::kTrue);
 
 	virtual CShapeArc* clone() const;
 };
@@ -70,7 +71,7 @@ struct DLLIMPEXP CShapeText : CShape
 
 	CShapeText();
 
-	CShapeText(const Adesk::UInt16 Color, const double X, const double Y, const double Height, const std::wstring& Text, const AcDb::TextHorzMode HorizontalAlignment, const AcDb::TextVertMode VerticalAlignment);
+	CShapeText(const Adesk::UInt16 Color, const double X, const double Y, const double Height, const std::wstring& Text, const AcDb::TextHorzMode HorizontalAlignment, const AcDb::TextVertMode VerticalAlignment, const Adesk::Boolean Visible = Adesk::kTrue);
 
 	void SetText(const std::wstring& Text);
 	void SetText(const wchar_t* Text);
