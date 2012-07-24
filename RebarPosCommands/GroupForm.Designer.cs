@@ -391,8 +391,8 @@
             this.posStylePreview.CircleColor = System.Drawing.Color.Yellow;
             this.posStylePreview.CurrentGroupHighlightColor = System.Drawing.Color.Silver;
             this.posStylePreview.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.posStylePreview.Formula1 = "[M:C][N][\"T\":D][\"/\":S][\" L=\":L]";
-            this.posStylePreview.Formula2 = "[M:C][N][\"T\":D][\"/\":S]";
+            this.posStylePreview.Formula1 = "[M:C][N][\"T\":D][\"/\":S]";
+            this.posStylePreview.Formula2 = "[\" L=\":L]";
             this.posStylePreview.Formula3 = "[M:C]";
             this.posStylePreview.GroupColor = System.Drawing.Color.Gray;
             this.posStylePreview.Location = new System.Drawing.Point(314, 192);
@@ -630,9 +630,9 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(16, 48);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(102, 13);
+            this.label6.Size = new System.Drawing.Size(80, 13);
             this.label6.TabIndex = 2;
-            this.label6.Text = "Formül (&L Boyu Gizli)";
+            this.label6.Text = "Formül (&L Boyu)";
             // 
             // txtFormula
             // 
