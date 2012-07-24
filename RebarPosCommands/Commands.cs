@@ -5,6 +5,7 @@ using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.DatabaseServices;
 using OZOZ.RebarPosWrapper;
 using System.Windows.Forms;
+using System.IO;
 
 
 // This line is not mandatory, but improves loading performances
@@ -305,5 +306,54 @@ namespace RebarPosCommands
         {
             MessageBox.Show("Yardım dosyası henüz tamamlanmadı.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
+        [CommandMethod("RebarPos", "DUMPPOSSHAPES", CommandFlags.Modal)]
+        public void CMD_DumpShapes()
+        {
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
+                DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosShape.TableName), OpenMode.ForRead);
+
+                using (StreamWriter sw = new StreamWriter(@"C:\Users\Ozgur\Documents\Visual Studio 2008\Projects\ObjectARX 2010\samples\entity\RebarPos\s.txt"))
+                {
+                    int i = 1;
+                    foreach (DBDictionaryEntry entry in dict)
+                    {
+                        PosShape shape = (PosShape)tr.GetObject(entry.Value, OpenMode.ForRead);
+
+                        string n = "shape" + i.ToString();
+                        sw.WriteLine("PosShape " + n + " = new PosShape();");
+                        sw.WriteLine(n + ".Name = \"" + shape.Name + "\";");
+                        sw.WriteLine(n + ".Fields = " + shape.Fields.ToString() + ";");
+                        sw.WriteLine(n + ".Formula = \"" + shape.Formula + "\";");
+                        sw.WriteLine(n + ".FormulaBending = \"" + shape.FormulaBending + "\";");
+                        for (int j = 0; j < shape.Items.Count; j++)
+                        {
+                            PosShape.Shape s = shape.Items[i];
+                            if (s is PosShape.ShapeLine)
+                            {
+                                PosShape.ShapeLine x = s as PosShape.ShapeLine;
+                                sw.WriteLine(n + ".Items.AddLine(" + x.X1.ToString() + "," + x.Y1.ToString() + "," + x.X2.ToString() + "," + x.Y2.ToString() + ",Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci," + x.Color.ColorIndex.ToString() + ")," + (x.Visible ? "true" : "false") + ");");
+                            }
+                            else if (s is PosShape.ShapeArc)
+                            {
+                                PosShape.ShapeArc x = s as PosShape.ShapeArc;
+                                sw.WriteLine(n + ".Items.AddArc(" + x.X.ToString() + "," + x.Y.ToString() + "," + x.R.ToString() + "," + x.StartAngle.ToString() + "," + x.EndAngle.ToString() + ",Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci," + x.Color.ColorIndex.ToString() + ")," + (x.Visible ? "true" : "false") + ");");
+                            }
+                            else if (s is PosShape.ShapeText)
+                            {
+                                PosShape.ShapeText x = s as PosShape.ShapeText;
+                                sw.WriteLine(n + ".Items.AddText(" + x.X.ToString() + "," + x.Y.ToString() + "," + x.Height.ToString() + ",\"" + x.Text + "\",Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci," + x.Color.ColorIndex.ToString() + ")," + "TextHorizontalMode." + x.HorizontalAlignment.ToString() + "," + "TextVerticalMode." + x.VerticalAlignment.ToString() + "," + (x.Visible ? "true" : "false") + ");");
+                            }
+                        }
+                        sw.WriteLine();
+                        i++;
+                    }
+                }
+            }
+        }
+
     }
 }
