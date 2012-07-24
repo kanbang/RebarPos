@@ -33,7 +33,7 @@ namespace RebarPosCommands
 
             // Create a new tab
             RibbonTab rt = new RibbonTab();
-            rt.Title = "Donatı Pozlandırma ve Metraj";
+            rt.Title = "SI: Metraj";
             rt.Id = "ID_REBARPOSTAB";
             rc.Tabs.Add(rt);
 
