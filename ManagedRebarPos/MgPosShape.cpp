@@ -89,20 +89,20 @@ PosShape::ShapeCollection::ShapeCollection(PosShape^ parent)
 	m_Parent = parent;
 }
 
-void PosShape::ShapeCollection::AddLine(double x1, double y1, double x2, double y2, Autodesk::AutoCAD::Colors::Color^ color)
+void PosShape::ShapeCollection::AddLine(double x1, double y1, double x2, double y2, Autodesk::AutoCAD::Colors::Color^ color, bool visible)
 {
-	m_Parent->GetImpObj()->AddShape(new CShapeLine(color->ColorIndex, x1, y1, x2, y2));
+	m_Parent->GetImpObj()->AddShape(new CShapeLine(color->ColorIndex, x1, y1, x2, y2, (visible ? Adesk::kTrue : Adesk::kFalse)));
 }
 
-void PosShape::ShapeCollection::AddArc(double x, double y, double r, double startAngle, double endAngle, Autodesk::AutoCAD::Colors::Color^ color)
+void PosShape::ShapeCollection::AddArc(double x, double y, double r, double startAngle, double endAngle, Autodesk::AutoCAD::Colors::Color^ color, bool visible)
 {
-	m_Parent->GetImpObj()->AddShape(new CShapeArc(color->ColorIndex, x, y, r, startAngle, endAngle));
+	m_Parent->GetImpObj()->AddShape(new CShapeArc(color->ColorIndex, x, y, r, startAngle, endAngle, (visible ? Adesk::kTrue : Adesk::kFalse)));
 }
 
-void PosShape::ShapeCollection::AddText(double x, double y, double height, String^ str, Autodesk::AutoCAD::Colors::Color^ color, TextHorizontalMode horizontalAlignment, TextVerticalMode verticalAlignment)
+void PosShape::ShapeCollection::AddText(double x, double y, double height, String^ str, Autodesk::AutoCAD::Colors::Color^ color, TextHorizontalMode horizontalAlignment, TextVerticalMode verticalAlignment, bool visible)
 {
 	m_Parent->GetImpObj()->AddShape(new CShapeText(color->ColorIndex, x, y, height, (wchar_t*)Marshal::StringToWchar(str),
-		static_cast<AcDb::TextHorzMode>(horizontalAlignment), static_cast<AcDb::TextVertMode>(verticalAlignment)));
+		static_cast<AcDb::TextHorzMode>(horizontalAlignment), static_cast<AcDb::TextVertMode>(verticalAlignment), (visible ? Adesk::kTrue : Adesk::kFalse)));
 }
 
 int PosShape::ShapeCollection::Count::get()

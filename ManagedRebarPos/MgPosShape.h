@@ -197,9 +197,21 @@ namespace OZOZ
 				ShapeCollection(PosShape^ parent);
 
 			public:
-				void AddLine(double x1, double y1, double x2, double y2, Autodesk::AutoCAD::Colors::Color^ color);
-				void AddArc(double x, double y, double r, double startAngle, double endAngle, Autodesk::AutoCAD::Colors::Color^ color);
-				void AddText(double x, double y, double height, String^ text, Autodesk::AutoCAD::Colors::Color^ color, TextHorizontalMode horizontalAlignment, TextVerticalMode verticalAlignment);
+				void AddLine(double x1, double y1, double x2, double y2, Autodesk::AutoCAD::Colors::Color^ color, bool visible);
+				void AddArc(double x, double y, double r, double startAngle, double endAngle, Autodesk::AutoCAD::Colors::Color^ color, bool visible);
+				void AddText(double x, double y, double height, String^ text, Autodesk::AutoCAD::Colors::Color^ color, TextHorizontalMode horizontalAlignment, TextVerticalMode verticalAlignment, bool visible);
+				void AddLine(double x1, double y1, double x2, double y2, Autodesk::AutoCAD::Colors::Color^ color)
+				{
+					AddLine(x1, y1, x2, y2, color, true);
+				}
+				void AddArc(double x, double y, double r, double startAngle, double endAngle, Autodesk::AutoCAD::Colors::Color^ color)
+				{
+					AddArc(x, y, r, startAngle, endAngle, color, true);
+				}
+				void AddText(double x, double y, double height, String^ text, Autodesk::AutoCAD::Colors::Color^ color, TextHorizontalMode horizontalAlignment, TextVerticalMode verticalAlignment)
+				{
+					AddText(x, y, height, text, color, horizontalAlignment, verticalAlignment, true);
+				}
 				property int Count { int get(); }
 				property Shape^ default[int] { Shape^ get(int index); void set(int index, Shape^ value); }
 				void Remove(int index);
