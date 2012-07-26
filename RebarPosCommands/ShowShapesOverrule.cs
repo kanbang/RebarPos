@@ -164,67 +164,70 @@ namespace RebarPosCommands
                 // Draw shapes
                 foreach (PosShape.Shape shape in shapes)
                 {
-                    s.Color = shape.Color.ColorIndex;
-                    if (shape is PosShape.ShapeLine)
+                    if (shape.Visible)
                     {
-                        PosShape.ShapeLine line = shape as PosShape.ShapeLine;
-                        Point3dCollection poly = new Point3dCollection();
-                        poly.Add(new Point3d(line.X1, line.Y1, 0.0));
-                        poly.Add(new Point3d(line.X2, line.Y2, 0.0));
-                        g.Polyline(poly, Vector3d.ZAxis, IntPtr.Zero);
-                    }
-                    else if (shape is PosShape.ShapeArc)
-                    {
-                        PosShape.ShapeArc arc = shape as PosShape.ShapeArc;
-                        g.EllipticalArc(new Point3d(arc.X, arc.Y, 0), Vector3d.ZAxis, arc.R, arc.R, arc.StartAngle, arc.EndAngle, 0, ArcType.ArcSimple);
-                    }
-                    else if (shape is PosShape.ShapeText)
-                    {
-                        PosShape.ShapeText text = shape as PosShape.ShapeText;
-                        string str = text.Text;
-                        str = str.Replace("A", pos.A).Replace("B", pos.B).Replace("C", pos.C).Replace("D", pos.D).Replace("E", pos.E).Replace("F", pos.F);
-                        style.TextSize = text.Height;
-                        double txoff = 0, tyoff = 0;
-                        Extents2d size = style.ExtentsBox(str, true, false, null);
-                        double width = size.MaxPoint.X - size.MinPoint.X;
-                        double height = size.MaxPoint.Y - size.MinPoint.Y;
-                        switch (text.HorizontalAlignment)
+                        s.Color = shape.Color.ColorIndex;
+                        if (shape is PosShape.ShapeLine)
                         {
-                            case TextHorizontalMode.TextLeft:
-                                txoff = 0;
-                                break;
-                            case TextHorizontalMode.TextRight:
-                                txoff = -width;
-                                break;
-                            case TextHorizontalMode.TextCenter:
-                                txoff = -width / 2.0f;
-                                break;
-                            case TextHorizontalMode.TextAlign:
-                                txoff = -width / 2.0f;
-                                break;
-                            case TextHorizontalMode.TextFit:
-                                txoff = -width / 2.0f;
-                                break;
-                            case TextHorizontalMode.TextMid:
-                                txoff = -width / 2.0f;
-                                break;
+                            PosShape.ShapeLine line = shape as PosShape.ShapeLine;
+                            Point3dCollection poly = new Point3dCollection();
+                            poly.Add(new Point3d(line.X1, line.Y1, 0.0));
+                            poly.Add(new Point3d(line.X2, line.Y2, 0.0));
+                            g.Polyline(poly, Vector3d.ZAxis, IntPtr.Zero);
                         }
-                        switch (text.VerticalAlignment)
+                        else if (shape is PosShape.ShapeArc)
                         {
-                            case TextVerticalMode.TextBase:
-                                tyoff = 0;
-                                break;
-                            case TextVerticalMode.TextBottom:
-                                tyoff = 0;
-                                break;
-                            case TextVerticalMode.TextTop:
-                                tyoff = -height;
-                                break;
-                            case TextVerticalMode.TextVerticalMid:
-                                tyoff = -height / 2.0f;
-                                break;
+                            PosShape.ShapeArc arc = shape as PosShape.ShapeArc;
+                            g.EllipticalArc(new Point3d(arc.X, arc.Y, 0), Vector3d.ZAxis, arc.R, arc.R, arc.StartAngle, arc.EndAngle, 0, ArcType.ArcSimple);
                         }
-                        g.Text(new Point3d(text.X + txoff, text.Y + tyoff, 0), Vector3d.ZAxis, Vector3d.XAxis, str, false, style);
+                        else if (shape is PosShape.ShapeText)
+                        {
+                            PosShape.ShapeText text = shape as PosShape.ShapeText;
+                            string str = text.Text;
+                            str = str.Replace("A", pos.A).Replace("B", pos.B).Replace("C", pos.C).Replace("D", pos.D).Replace("E", pos.E).Replace("F", pos.F);
+                            style.TextSize = text.Height;
+                            double txoff = 0, tyoff = 0;
+                            Extents2d size = style.ExtentsBox(str, true, false, null);
+                            double width = size.MaxPoint.X - size.MinPoint.X;
+                            double height = size.MaxPoint.Y - size.MinPoint.Y;
+                            switch (text.HorizontalAlignment)
+                            {
+                                case TextHorizontalMode.TextLeft:
+                                    txoff = 0;
+                                    break;
+                                case TextHorizontalMode.TextRight:
+                                    txoff = -width;
+                                    break;
+                                case TextHorizontalMode.TextCenter:
+                                    txoff = -width / 2.0f;
+                                    break;
+                                case TextHorizontalMode.TextAlign:
+                                    txoff = -width / 2.0f;
+                                    break;
+                                case TextHorizontalMode.TextFit:
+                                    txoff = -width / 2.0f;
+                                    break;
+                                case TextHorizontalMode.TextMid:
+                                    txoff = -width / 2.0f;
+                                    break;
+                            }
+                            switch (text.VerticalAlignment)
+                            {
+                                case TextVerticalMode.TextBase:
+                                    tyoff = 0;
+                                    break;
+                                case TextVerticalMode.TextBottom:
+                                    tyoff = 0;
+                                    break;
+                                case TextVerticalMode.TextTop:
+                                    tyoff = -height;
+                                    break;
+                                case TextVerticalMode.TextVerticalMid:
+                                    tyoff = -height / 2.0f;
+                                    break;
+                            }
+                            g.Text(new Point3d(text.X + txoff, text.Y + tyoff, 0), Vector3d.ZAxis, Vector3d.XAxis, str, false, style);
+                        }
                     }
                 }
 
