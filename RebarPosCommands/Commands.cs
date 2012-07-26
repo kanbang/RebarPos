@@ -310,13 +310,21 @@ namespace RebarPosCommands
         [CommandMethod("RebarPos", "DUMPPOSSHAPES", CommandFlags.Modal)]
         public void CMD_DumpShapes()
         {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Title = "Select Shape Dump File";
+            sfd.Filter = "Text Files (.txt)|*.txt|All Files (*.*)|*.*";
+            if (sfd.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
             Database db = HostApplicationServices.WorkingDatabase;
             using (Transaction tr = db.TransactionManager.StartTransaction())
             {
                 DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
                 DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosShape.TableName), OpenMode.ForRead);
 
-                using (StreamWriter sw = new StreamWriter(@"C:\Users\Ozgur\Documents\Visual Studio 2008\Projects\ObjectARX 2010\samples\entity\RebarPos\s.txt"))
+                using (StreamWriter sw = new StreamWriter(sfd.FileName))
                 {
                     int i = 1;
                     foreach (DBDictionaryEntry entry in dict)
@@ -331,7 +339,7 @@ namespace RebarPosCommands
                         sw.WriteLine(n + ".FormulaBending = \"" + shape.FormulaBending + "\";");
                         for (int j = 0; j < shape.Items.Count; j++)
                         {
-                            PosShape.Shape s = shape.Items[i];
+                            PosShape.Shape s = shape.Items[j];
                             if (s is PosShape.ShapeLine)
                             {
                                 PosShape.ShapeLine x = s as PosShape.ShapeLine;
@@ -348,6 +356,8 @@ namespace RebarPosCommands
                                 sw.WriteLine(n + ".Items.AddText(" + x.X.ToString() + "," + x.Y.ToString() + "," + x.Height.ToString() + ",\"" + x.Text + "\",Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci," + x.Color.ColorIndex.ToString() + ")," + "TextHorizontalMode." + x.HorizontalAlignment.ToString() + "," + "TextVerticalMode." + x.VerticalAlignment.ToString() + "," + (x.Visible ? "true" : "false") + ");");
                             }
                         }
+                        sw.WriteLine("dict.SetAt(\"*\", " + n + ");");
+                        sw.WriteLine("tr.AddNewlyCreatedDBObject(" + n + ", true);");
                         sw.WriteLine();
                         i++;
                     }
