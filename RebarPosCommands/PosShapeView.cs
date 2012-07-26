@@ -15,14 +15,16 @@ namespace RebarPosCommands
         {
             public Color Color;
             public float X1, X2, Y1, Y2;
+            public bool Visible;
 
-            public DrawLine(Color color, float x1, float y1, float x2, float y2)
+            public DrawLine(Color color, float x1, float y1, float x2, float y2, bool visible)
             {
                 Color = color;
                 X1 = x1;
                 Y1 = y1;
                 X2 = x2;
                 Y2 = y2;
+                Visible = visible;
             }
         }
         private struct DrawArc
@@ -30,8 +32,9 @@ namespace RebarPosCommands
             public Color Color;
             public float X, Y, R;
             public float StartAngle, EndAngle;
+            public bool Visible;
 
-            public DrawArc(Color color, float x, float y, float r, float startAngle, float endAngle)
+            public DrawArc(Color color, float x, float y, float r, float startAngle, float endAngle, bool visible)
             {
                 Color = color;
                 X = x;
@@ -39,6 +42,7 @@ namespace RebarPosCommands
                 R = r;
                 StartAngle = startAngle;
                 EndAngle = endAngle;
+                Visible = visible;
             }
         }
         private struct DrawText
@@ -48,8 +52,9 @@ namespace RebarPosCommands
             public string Text;
             public StringAlignment HorizontalAlignment;
             public StringAlignment VerticalAlignment;
+            public bool Visible;
 
-            public DrawText(Color color, float x, float y, float height, string text, StringAlignment horizontalAlignment, StringAlignment verticalAlignment)
+            public DrawText(Color color, float x, float y, float height, string text, StringAlignment horizontalAlignment, StringAlignment verticalAlignment, bool visible)
             {
                 Color = color;
                 X = x;
@@ -58,6 +63,7 @@ namespace RebarPosCommands
                 Text = text;
                 HorizontalAlignment = horizontalAlignment;
                 VerticalAlignment = verticalAlignment;
+                Visible = visible;
             }
         }
         private List<DrawLine> lines;
@@ -100,21 +106,21 @@ namespace RebarPosCommands
             Refresh();
         }
 
-        public void AddLine(Color color, float x1, float y1, float x2, float y2)
+        public void AddLine(Color color, float x1, float y1, float x2, float y2, bool visible)
         {
-            lines.Add(new DrawLine(color, x1, y1, x2, y2));
+            lines.Add(new DrawLine(color, x1, y1, x2, y2, visible));
             Refresh();
         }
 
-        public void AddArc(Color color, float x, float y, float r, float startAngle, float endAngle)
+        public void AddArc(Color color, float x, float y, float r, float startAngle, float endAngle, bool visible)
         {
-            arcs.Add(new DrawArc(color, x, y, r, startAngle, endAngle));
+            arcs.Add(new DrawArc(color, x, y, r, startAngle, endAngle, visible));
             Refresh();
         }
 
-        public void AddText(Color color, float x, float y, float height, string text, StringAlignment horizontalAlignment, StringAlignment verticalAlignment)
+        public void AddText(Color color, float x, float y, float height, string text, StringAlignment horizontalAlignment, StringAlignment verticalAlignment, bool visible)
         {
-            texts.Add(new DrawText(color, x, y, height, text, horizontalAlignment, verticalAlignment));
+            texts.Add(new DrawText(color, x, y, height, text, horizontalAlignment, verticalAlignment, visible));
             Refresh();
         }
 
@@ -149,10 +155,10 @@ namespace RebarPosCommands
                 dlines = new List<DrawLine>();
                 darcs = new List<DrawArc>();
                 dtexts = new List<DrawText>();
-                dlines.Add(new DrawLine(Color.Red, 0, 0, 100, 0));
-                dtexts.Add(new DrawText(Color.Yellow, 50, 2, 10, "A", StringAlignment.Center, StringAlignment.Near));
-                dlines.Add(new DrawLine(Color.Red, 0, 0, 0, 20));
-                dtexts.Add(new DrawText(Color.Yellow, -2, 10, 10, "B", StringAlignment.Far, StringAlignment.Center));
+                dlines.Add(new DrawLine(Color.Red, 0, 0, 100, 0, true));
+                dtexts.Add(new DrawText(Color.Yellow, 50, 2, 10, "A", StringAlignment.Center, StringAlignment.Near, true));
+                dlines.Add(new DrawLine(Color.Red, 0, 0, 0, 20, true));
+                dtexts.Add(new DrawText(Color.Yellow, -2, 10, 10, "B", StringAlignment.Far, StringAlignment.Center, true));
             }
             else
             {
@@ -239,8 +245,10 @@ namespace RebarPosCommands
             {
                 h -= 15.0f;
             }
-            float xscale = 0.9f * w / (xmax - xmin);
-            float yscale = 0.9f * h / (ymax - ymin);
+            //float xscale = 0.9f * w / (xmax - xmin);
+            //float yscale = 0.9f * h / (ymax - ymin);
+            float xscale = w / (xmax - xmin);
+            float yscale = h / (ymax - ymin);
             float scale = Math.Min(xscale, yscale);
             // Client offsets
             float xoff = (w - scale * (xmax - xmin)) / 2.0f;
@@ -266,70 +274,79 @@ namespace RebarPosCommands
             // Draw shapes
             foreach (DrawLine line in dlines)
             {
-                using (Pen pen = new Pen(line.Color, 2.0f / scale))
+                if (line.Visible)
                 {
-                    pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
-                    pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
-                    g.DrawLine(pen, line.X1, line.Y1, line.X2, line.Y2);
+                    using (Pen pen = new Pen(line.Color)) // Thick pen: 2.0f / scale
+                    {
+                        pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+                        pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+                        g.DrawLine(pen, line.X1, line.Y1, line.X2, line.Y2);
+                    }
                 }
             }
             foreach (DrawArc arc in darcs)
             {
-                using (Pen pen = new Pen(arc.Color, 2.0f / scale))
+                if (arc.Visible)
                 {
-                    pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
-                    pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
-                    float sweep = arc.EndAngle - arc.StartAngle;
-                    while (sweep > 360.0f) sweep -= 360.0f;
-                    while (sweep < 0.0f) sweep += 360.0f;
-                    g.DrawArc(pen, arc.X - arc.R, arc.Y - arc.R, 2.0f * arc.R, 2.0f * arc.R, arc.StartAngle, sweep);
+                    using (Pen pen = new Pen(arc.Color)) // Thick pen: 2.0f / scale
+                    {
+                        pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+                        pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+                        float sweep = arc.EndAngle - arc.StartAngle;
+                        while (sweep > 360.0f) sweep -= 360.0f;
+                        while (sweep < 0.0f) sweep += 360.0f;
+                        g.DrawArc(pen, arc.X - arc.R, arc.Y - arc.R, 2.0f * arc.R, 2.0f * arc.R, arc.StartAngle, sweep);
+                    }
                 }
             }
 
             foreach (DrawText text in dtexts)
             {
-                g.ResetTransform();
-
-                using (Brush brush = new SolidBrush(text.Color))
-                using (Font font = new Font(Font.FontFamily, text.Height * fontScale))
+                if (text.Visible)
                 {
-                    float txoff = 0, tyoff = 0;
-                    SizeF size = g.MeasureString(text.Text, font);
-                    switch (text.HorizontalAlignment)
-                    {
-                        case StringAlignment.Near:
-                            txoff = 0;
-                            break;
-                        case StringAlignment.Far:
-                            txoff = -size.Width;
-                            break;
-                        case StringAlignment.Center:
-                            txoff = -size.Width / 2.0f;
-                            break;
-                    }
-                    switch (text.VerticalAlignment)
-                    {
-                        case StringAlignment.Near:
-                            tyoff = 0;
-                            break;
-                        case StringAlignment.Far:
-                            tyoff = -size.Height;
-                            break;
-                        case StringAlignment.Center:
-                            tyoff = -size.Height / 2.0f;
-                            break;
-                    }
-
-                    // Transform upside-down text
                     g.ResetTransform();
-                    g.ScaleTransform(1.0f, -1.0f, MatrixOrder.Append);
-                    g.TranslateTransform(-xmin, -ymin, System.Drawing.Drawing2D.MatrixOrder.Append);
-                    g.ScaleTransform(scale, -scale, System.Drawing.Drawing2D.MatrixOrder.Append);
-                    g.TranslateTransform(xoff, yoff, System.Drawing.Drawing2D.MatrixOrder.Append);
 
-                    // Draw
-                    g.DrawString(text.Text, font, brush, text.X + txoff, -text.Y - tyoff - size.Height);
-                    //g.DrawRectangle(Pens.Green, text.X + txoff, -text.Y - tyoff - size.Height, size.Width, size.Height);
+                    using (Brush brush = new SolidBrush(text.Color))
+                    using (Font font = new Font(Font.FontFamily, text.Height * fontScale))
+                    {
+                        float txoff = 0, tyoff = 0;
+                        SizeF size = g.MeasureString(text.Text, font);
+                        switch (text.HorizontalAlignment)
+                        {
+                            case StringAlignment.Near:
+                                txoff = 0;
+                                break;
+                            case StringAlignment.Far:
+                                txoff = -size.Width;
+                                break;
+                            case StringAlignment.Center:
+                                txoff = -size.Width / 2.0f;
+                                break;
+                        }
+                        switch (text.VerticalAlignment)
+                        {
+                            case StringAlignment.Near:
+                                tyoff = 0;
+                                break;
+                            case StringAlignment.Far:
+                                tyoff = -size.Height;
+                                break;
+                            case StringAlignment.Center:
+                                tyoff = -size.Height / 2.0f;
+                                break;
+                        }
+
+                        // Transform upside-down text
+                        g.ResetTransform();
+                        g.ScaleTransform(1.0f, -1.0f, MatrixOrder.Append);
+                        g.TranslateTransform(-xmin, -ymin, System.Drawing.Drawing2D.MatrixOrder.Append);
+                        g.ScaleTransform(scale, -scale, System.Drawing.Drawing2D.MatrixOrder.Append);
+                        g.TranslateTransform(xoff, yoff, System.Drawing.Drawing2D.MatrixOrder.Append);
+
+                        // Draw
+                        g.DrawString(text.Text, font, brush, text.X + txoff, -text.Y - tyoff - size.Height);
+                        //g.DrawRectangle(Pens.Green, text.X + txoff, -text.Y - tyoff - size.Height, size.Width, size.Height);
+                    }
                 }
             }
         }

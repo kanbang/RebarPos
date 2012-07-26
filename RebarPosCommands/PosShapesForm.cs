@@ -134,6 +134,7 @@ namespace RebarPosCommands
                 }
             }
 
+            m_Copies.Sort(new CompareShapesForSort());
             foreach (ShapeCopy copy in m_Copies)
             {
                 ListViewItem lv = new ListViewItem(copy.name);
@@ -146,6 +147,14 @@ namespace RebarPosCommands
             SetShape();
 
             return true;
+        }
+
+        private class CompareShapesForSort : IComparer<ShapeCopy>
+        {
+            public int Compare(ShapeCopy p1, ShapeCopy p2)
+            {
+                return string.CompareOrdinal(p1.name, p2.name);
+            }
         }
 
         public void SetShape()
@@ -168,12 +177,12 @@ namespace RebarPosCommands
                 if (draw is PosShape.ShapeLine)
                 {
                     PosShape.ShapeLine line = draw as PosShape.ShapeLine;
-                    posShapeView.AddLine(line.Color.ColorValue, (float)line.X1, (float)line.Y1, (float)line.X2, (float)line.Y2);
+                    posShapeView.AddLine(line.Color.ColorValue, (float)line.X1, (float)line.Y1, (float)line.X2, (float)line.Y2, line.Visible);
                 }
                 else if (draw is PosShape.ShapeArc)
                 {
                     PosShape.ShapeArc arc = draw as PosShape.ShapeArc;
-                    posShapeView.AddArc(arc.Color.ColorValue, (float)arc.X, (float)arc.Y, (float)arc.R, (float)(arc.StartAngle * 180.0 / Math.PI), (float)(arc.EndAngle * 180.0 / Math.PI));
+                    posShapeView.AddArc(arc.Color.ColorValue, (float)arc.X, (float)arc.Y, (float)arc.R, (float)(arc.StartAngle * 180.0 / Math.PI), (float)(arc.EndAngle * 180.0 / Math.PI), arc.Visible);
                 }
                 else if (draw is PosShape.ShapeText)
                 {
@@ -198,7 +207,7 @@ namespace RebarPosCommands
                             vertical = StringAlignment.Far;
                             break;
                     }
-                    posShapeView.AddText(text.Color.ColorValue, (float)text.X, (float)text.Y, (float)text.Height, text.Text, horizontal, vertical);
+                    posShapeView.AddText(text.Color.ColorValue, (float)text.X, (float)text.Y, (float)text.Height, text.Text, horizontal, vertical, text.Visible);
                 }
             }
         }
@@ -253,6 +262,7 @@ namespace RebarPosCommands
             {
                 return;
             }
+            if (copy.name == "GENEL") return;
             copy.isDeleted = true;
             UpdateItemImages();
         }
@@ -266,6 +276,14 @@ namespace RebarPosCommands
         private void lbShapes_AfterLabelEdit(object sender, LabelEditEventArgs e)
         {
             if (e.Label == null)
+            {
+                return;
+            }
+            if (e.Label == "GENEL")
+            {
+                return;
+            }
+            if (lbShapes.Items[e.Item].Text == "GENEL")
             {
                 return;
             }
@@ -410,6 +428,7 @@ namespace RebarPosCommands
             Show();
             if (result.Status != PromptStatus.OK || result.Value.Count == 0) return;
 
+            int fieldCount = 1;
             copy.shapes.Clear();
             Database db = HostApplicationServices.WorkingDatabase;
             using (Transaction tr = db.TransactionManager.StartTransaction())
@@ -435,7 +454,7 @@ namespace RebarPosCommands
                         if (obj is Line)
                         {
                             Line line = obj as Line;
-                            
+
                             copy.AddLine(line.Color.ColorValue, line.StartPoint.X, line.StartPoint.Y, line.EndPoint.X, line.EndPoint.Y, visible);
                         }
                         else if (obj is Arc)
@@ -446,6 +465,12 @@ namespace RebarPosCommands
                         else if (obj is DBText)
                         {
                             DBText text = obj as DBText;
+                            if (text.TextString == "A" && fieldCount < 1) fieldCount = 1;
+                            if (text.TextString == "B" && fieldCount < 2) fieldCount = 2;
+                            if (text.TextString == "C" && fieldCount < 3) fieldCount = 3;
+                            if (text.TextString == "D" && fieldCount < 4) fieldCount = 4;
+                            if (text.TextString == "E" && fieldCount < 5) fieldCount = 5;
+                            if (text.TextString == "F" && fieldCount < 6) fieldCount = 6;
                             copy.AddText(text.Color.ColorValue, text.Position.X, text.Position.Y, text.Height, text.TextString, text.HorizontalMode, text.VerticalMode, visible);
                         }
                     }
@@ -456,6 +481,7 @@ namespace RebarPosCommands
                 }
             }
 
+            udFields.Value = fieldCount;
             SetShape();
         }
 
@@ -493,17 +519,17 @@ namespace RebarPosCommands
                                 if (draw is PosShape.ShapeLine)
                                 {
                                     PosShape.ShapeLine line = draw as PosShape.ShapeLine;
-                                    shape.Items.AddLine(line.X1, line.Y1, line.X2, line.Y2, line.Color);
+                                    shape.Items.AddLine(line.X1, line.Y1, line.X2, line.Y2, line.Color, line.Visible);
                                 }
                                 else if (draw is PosShape.ShapeArc)
                                 {
                                     PosShape.ShapeArc arc = draw as PosShape.ShapeArc;
-                                    shape.Items.AddArc(arc.X, arc.Y, arc.R, arc.StartAngle, arc.EndAngle, arc.Color);
+                                    shape.Items.AddArc(arc.X, arc.Y, arc.R, arc.StartAngle, arc.EndAngle, arc.Color, arc.Visible);
                                 }
                                 else if (draw is PosShape.ShapeText)
                                 {
                                     PosShape.ShapeText text = draw as PosShape.ShapeText;
-                                    shape.Items.AddText(text.X, text.Y, text.Height, text.Text, text.Color, text.HorizontalAlignment, text.VerticalAlignment);
+                                    shape.Items.AddText(text.X, text.Y, text.Height, text.Text, text.Color, text.HorizontalAlignment, text.VerticalAlignment, text.Visible);
                                 }
                             }
 
@@ -527,17 +553,17 @@ namespace RebarPosCommands
                                 if (draw is PosShape.ShapeLine)
                                 {
                                     PosShape.ShapeLine line = draw as PosShape.ShapeLine;
-                                    shape.Items.AddLine(line.X1, line.Y1, line.X2, line.Y2, line.Color);
+                                    shape.Items.AddLine(line.X1, line.Y1, line.X2, line.Y2, line.Color, line.Visible);
                                 }
                                 else if (draw is PosShape.ShapeArc)
                                 {
                                     PosShape.ShapeArc arc = draw as PosShape.ShapeArc;
-                                    shape.Items.AddArc(arc.X, arc.Y, arc.R, arc.StartAngle, arc.EndAngle, arc.Color);
+                                    shape.Items.AddArc(arc.X, arc.Y, arc.R, arc.StartAngle, arc.EndAngle, arc.Color, arc.Visible);
                                 }
                                 else if (draw is PosShape.ShapeText)
                                 {
                                     PosShape.ShapeText text = draw as PosShape.ShapeText;
-                                    shape.Items.AddText(text.X, text.Y, text.Height, text.Text, text.Color, text.HorizontalAlignment, text.VerticalAlignment);
+                                    shape.Items.AddText(text.X, text.Y, text.Height, text.Text, text.Color, text.HorizontalAlignment, text.VerticalAlignment, text.Visible);
                                 }
                             }
 

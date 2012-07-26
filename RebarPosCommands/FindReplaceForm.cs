@@ -264,12 +264,12 @@ namespace RebarPosCommands
                         if (sh is PosShape.ShapeLine)
                         {
                             PosShape.ShapeLine line = sh as PosShape.ShapeLine;
-                            psvFind.AddLine(color, (float)line.X1, (float)line.Y1, (float)line.X2, (float)line.Y2);
+                            psvFind.AddLine(color, (float)line.X1, (float)line.Y1, (float)line.X2, (float)line.Y2, line.Visible);
                         }
                         else if (sh is PosShape.ShapeArc)
                         {
                             PosShape.ShapeArc arc = sh as PosShape.ShapeArc;
-                            psvFind.AddArc(color, (float)arc.X, (float)arc.Y, (float)arc.R, (float)(arc.StartAngle * 180.0 / Math.PI), (float)(arc.EndAngle * 180.0 / Math.PI));
+                            psvFind.AddArc(color, (float)arc.X, (float)arc.Y, (float)arc.R, (float)(arc.StartAngle * 180.0 / Math.PI), (float)(arc.EndAngle * 180.0 / Math.PI), arc.Visible);
                         }
                         else if (sh is PosShape.ShapeText)
                         {
@@ -294,7 +294,7 @@ namespace RebarPosCommands
                                     vertical = StringAlignment.Far;
                                     break;
                             }
-                            psvFind.AddText(color, (float)text.X, (float)text.Y, (float)text.Height, text.Text, horizontal, vertical);
+                            psvFind.AddText(color, (float)text.X, (float)text.Y, (float)text.Height, text.Text, horizontal, vertical, text.Visible);
                         }
                     }
                 }
@@ -328,12 +328,12 @@ namespace RebarPosCommands
                         if (sh is PosShape.ShapeLine)
                         {
                             PosShape.ShapeLine line = sh as PosShape.ShapeLine;
-                            psvReplace.AddLine(color, (float)line.X1, (float)line.Y1, (float)line.X2, (float)line.Y2);
+                            psvReplace.AddLine(color, (float)line.X1, (float)line.Y1, (float)line.X2, (float)line.Y2, line.Visible);
                         }
                         else if (sh is PosShape.ShapeArc)
                         {
                             PosShape.ShapeArc arc = sh as PosShape.ShapeArc;
-                            psvReplace.AddArc(color, (float)arc.X, (float)arc.Y, (float)arc.R, (float)(arc.StartAngle * 180.0 / Math.PI), (float)(arc.EndAngle * 180.0 / Math.PI));
+                            psvReplace.AddArc(color, (float)arc.X, (float)arc.Y, (float)arc.R, (float)(arc.StartAngle * 180.0 / Math.PI), (float)(arc.EndAngle * 180.0 / Math.PI), arc.Visible);
                         }
                         else if (sh is PosShape.ShapeText)
                         {
@@ -358,7 +358,7 @@ namespace RebarPosCommands
                                     vertical = StringAlignment.Far;
                                     break;
                             }
-                            psvReplace.AddText(color, (float)text.X, (float)text.Y, (float)text.Height, text.Text, horizontal, vertical);
+                            psvReplace.AddText(color, (float)text.X, (float)text.Y, (float)text.Height, text.Text, horizontal, vertical, text.Visible);
                         }
                     }
                 }
