@@ -153,7 +153,24 @@ namespace RebarPosCommands
         {
             public int Compare(ShapeCopy p1, ShapeCopy p2)
             {
-                return string.CompareOrdinal(p1.name, p2.name);
+                if (p1 == p2) return 0;
+                if (p1.name == p2.name) return 0;
+
+                if (p1.name == "GENEL")
+                    return -1;
+                else if (p2.name == "GENEL")
+                    return 1;
+                else
+                {
+                    int n1 = 0;
+                    int n2 = 0;
+                    if (int.TryParse(p1.name, out n1) && int.TryParse(p2.name, out n2))
+                    {
+                        return n1 < n2 ? -1 : n1 > n2 ? 1 : 0;
+                    }
+                    else
+                        return string.CompareOrdinal(p1.name, p2.name);
+                }
             }
         }
 

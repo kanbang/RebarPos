@@ -26,26 +26,17 @@ namespace RebarPosCommands
 
         public void SetShapes(Autodesk.AutoCAD.DatabaseServices.ObjectId current)
         {
-            List<ObjectId> shapes = new List<ObjectId>();
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
+            Dictionary<string, ObjectId> shapedict = DWGUtility.GetShapes();
+            List<KeyValuePair<string, ObjectId>> items = new List<KeyValuePair<string, ObjectId>>();
+            foreach (KeyValuePair<string, ObjectId> item in shapedict)
             {
-                try
-                {
-                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
-                    if (!namedDict.Contains(PosShape.TableName))
-                        return;
-                    DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosShape.TableName), OpenMode.ForRead);
-                    DbDictionaryEnumerator it = dict.GetEnumerator();
-                    while (it.MoveNext())
-                    {
-                        shapes.Add(it.Value);
-                    }
-                }
-                catch (System.Exception ex)
-                {
-                    MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                items.Add(item);
+            }
+            items.Sort(new CompareShapesForSort());
+            List<ObjectId> shapes = new List<ObjectId>();
+            foreach (KeyValuePair<string, ObjectId> item in items)
+            {
+                shapes.Add(item.Value);
             }
 
             SetShapes(current, shapes);
@@ -128,6 +119,30 @@ namespace RebarPosCommands
                 catch (System.Exception ex)
                 {
                     MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private class CompareShapesForSort : IComparer<KeyValuePair<string, ObjectId>>
+        {
+            public int Compare(KeyValuePair<string, ObjectId> p1, KeyValuePair<string, ObjectId> p2)
+            {
+                if (p1.Key == p2.Key) return 0;
+
+                if (p1.Key == "GENEL")
+                    return -1;
+                else if (p2.Key == "GENEL")
+                    return 1;
+                else
+                {
+                    int n1 = 0;
+                    int n2 = 0;
+                    if (int.TryParse(p1.Key, out n1) && int.TryParse(p2.Key, out n2))
+                    {
+                        return n1 < n2 ? -1 : n1 > n2 ? 1 : 0;
+                    }
+                    else
+                        return string.CompareOrdinal(p1.Key, p2.Key);
                 }
             }
         }
