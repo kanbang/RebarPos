@@ -118,38 +118,41 @@ namespace RebarPosCommands
                     }
                 }
 
-                foreach (PosCopy y in pliste)
+                if (!string.IsNullOrEmpty(x.pos))
                 {
-                    if (x == y) continue;
+                    foreach (PosCopy y in pliste)
+                    {
+                        if (x == y) continue;
 
-                    CheckResult err = CheckResult.None;
-                    if ((x.pos == y.pos) && ((checkType & CheckType.Errors) != CheckType.None))
-                    {
-                        // Farkli cap kontrolu
-                        if (x.diameter != y.diameter) err = CheckResult.DiameterError;
-                        // Farkli sekil kontrolu
-                        if (x.shapeId != y.shapeId) err = CheckResult.ShapeError;
-                        // Farkli boy kontrolu
-                        if (x.length != y.length) err = CheckResult.LengthError;
-                        // Farkli acilim kontrolu
-                        if (x.a != y.a || x.b != y.b || x.c != y.c || x.d != y.d || x.e != y.e || x.f != y.f) err = CheckResult.PieceLengthError;
-                    }
-                    else if ((x.pos != y.pos) && ((checkType & CheckType.Warnings) != CheckType.None))
-                    {
-                        // Aynı sekil ve acilim kontrolu
-                        if (x.key == y.key) err = CheckResult.SamePosKeyWarning;
-                    }
-
-                    // Add to error list
-                    if (err != CheckResult.None)
-                    {
-                        if (check.results.ContainsKey(err))
+                        CheckResult err = CheckResult.None;
+                        if ((x.pos == y.pos) && ((checkType & CheckType.Errors) != CheckType.None))
                         {
-                            check.results[err].Add(y.list[0]);
+                            // Farkli cap kontrolu
+                            if (x.diameter != y.diameter) err = CheckResult.DiameterError;
+                            // Farkli sekil kontrolu
+                            if (x.shapeId != y.shapeId) err = CheckResult.ShapeError;
+                            // Farkli boy kontrolu
+                            if (x.length != y.length) err = CheckResult.LengthError;
+                            // Farkli acilim kontrolu
+                            if (x.a != y.a || x.b != y.b || x.c != y.c || x.d != y.d || x.e != y.e || x.f != y.f) err = CheckResult.PieceLengthError;
                         }
-                        else
+                        else if ((x.pos != y.pos) && ((checkType & CheckType.Warnings) != CheckType.None))
                         {
-                            check.results.Add(err, new List<ObjectId>() { y.list[0] });
+                            // Aynı sekil ve acilim kontrolu
+                            if (x.key == y.key) err = CheckResult.SamePosKeyWarning;
+                        }
+
+                        // Add to error list
+                        if (err != CheckResult.None)
+                        {
+                            if (check.results.ContainsKey(err))
+                            {
+                                check.results[err].Add(y.list[0]);
+                            }
+                            else
+                            {
+                                check.results.Add(err, new List<ObjectId>() { y.list[0] });
+                            }
                         }
                     }
                 }
