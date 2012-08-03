@@ -297,10 +297,8 @@ namespace RebarPosCommands
         [CommandMethod("RebarPos", "LASTPOSNUMBER", "LASTPOSNUMBER_Local", CommandFlags.Modal)]
         public void CMD_LastPosNumber()
         {
-            PromptSelectionResult result = DWGUtility.SelectGroup(CurrentGroupId);
-            if (result.Status != PromptStatus.OK) return;
 
-            int lastNum = GetLastPosNumber(result.Value.GetObjectIds());
+            int lastNum = GetLastPosNumber(DWGUtility.GetPosInGroup(CurrentGroupId));
 
             if (lastNum != -1)
             {
