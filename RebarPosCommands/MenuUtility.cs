@@ -60,7 +60,7 @@ namespace RebarPosCommands
             rps.Items.Add(new RibbonSeparator());
             rps.Items.Add(new SimpleRibbonButton("Metraj Tablosu Oluştur", "BOQ ", Properties.Resources.METRAJ, Properties.Resources.METRAJ_32));
             rps.Items.Add(new SimpleRibbonButton("Poz Kontrol", "POSCHECK ", Properties.Resources.POZKONTROL, Properties.Resources.POZKONTROL_32));
-            rps.Items.Add(new SimpleRibbonButton("Poz Şekillerini Göster/Gizle", "SHOWPOSSHAPES ", Properties.Resources.SEKILGOSTER));
+            rps.Items.Add(new SimpleRibbonButton("Poz Şekillerini Göster/Gizle", "TOGGLESHAPES ", Properties.Resources.SEKILGOSTER));
             rps.Items.Add(new RibbonSeparator());
             rps.Items.Add(new SimpleRibbonButton("Poz Bul/Değiştir", "POSFIND ", Properties.Resources.POZBUL, Properties.Resources.POZBUL_32));
             rps.Items.Add(new RibbonSeparator());
@@ -87,7 +87,7 @@ namespace RebarPosCommands
                     LargeImage = GetBitmap(largeImage);
                 }
             }
-
+            
             public SimpleRibbonButton(string text, string command, Bitmap smallImage)
                 : this(text, command, smallImage, null)
             {

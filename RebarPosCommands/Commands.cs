@@ -219,6 +219,13 @@ namespace RebarPosCommands
             PosShapes();
         }
 
+        [CommandMethod("RebarPos", "TOGGLESHAPES", "TOGGLESHAPES_Local", CommandFlags.Modal)]
+        public void CMD_ToggleShapes()
+        {
+            ShowShapes = !ShowShapes;
+            DWGUtility.RefreshAllPos();
+        }
+
         [CommandMethod("RebarPos", "SHOWSHAPES", "SHOWSHAPES_Local", CommandFlags.Modal)]
         public void CMD_ShowShapes()
         {

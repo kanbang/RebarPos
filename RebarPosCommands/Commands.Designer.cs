@@ -248,5 +248,14 @@ namespace RebarPosCommands {
                 return ResourceManager.GetString("TABLESTYLE_Local", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SEKILGOSTERGIZLE.
+        /// </summary>
+        internal static string TOGGLESHAPES_Local {
+            get {
+                return ResourceManager.GetString("TOGGLESHAPES_Local", resourceCulture);
+            }
+        }
     }
 }
