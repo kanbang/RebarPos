@@ -44,6 +44,8 @@ namespace RebarPosCommands
             SortDisplayList();
             PopulateList();
 
+            lbItems_SelectedIndexChanged(lbItems, new EventArgs());
+
             return true;
         }
 

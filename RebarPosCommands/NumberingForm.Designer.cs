@@ -91,6 +91,7 @@
             this.chF});
             this.lbItems.FullRowSelect = true;
             this.lbItems.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lbItems.HideSelection = false;
             this.lbItems.Location = new System.Drawing.Point(13, 57);
             this.lbItems.MultiSelect = false;
             this.lbItems.Name = "lbItems";
