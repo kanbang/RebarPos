@@ -285,6 +285,7 @@ void CBOQTable::UpdateTable(void)
 	int cols = (int)columns.size() + (hasdiameterlist ? (int)diameters.size() - 1 : 0);
 
 	SetSize(rows, cols);
+	setRowsToRepeat(headingLines + 2);
 	setCellMargin(lastRowSpacing);
 
 	// Set cell properties

@@ -62,6 +62,7 @@ private:
 
 	double m_MaxHeight;
 	double m_TableSpacing;
+	int m_RowsToRepeat;
 
 	/// Locals
 	mutable std::vector<double> columnWidths;
@@ -83,7 +84,7 @@ protected:
 
 	// Returns the row index around the given height
 	// before which the table can be divided
-	const int DivideAt(double& y) const;
+	const int DivideAt(double& y, int ntable) const;
 
 public:
 	/// Methods
@@ -136,6 +137,10 @@ public:
 	/// Spacing between divided tables
 	const double TableSpacing(void) const;
 	Acad::ErrorStatus setTableSpacing(const double newVal);
+
+	/// Rows to repeat at top at divided tables
+	const int RowsToRepeat(void) const;
+	Acad::ErrorStatus setRowsToRepeat(const int newVal);
 
 	/// Object scale
 	const double Scale(void) const;

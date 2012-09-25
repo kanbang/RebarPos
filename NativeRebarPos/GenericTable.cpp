@@ -31,7 +31,7 @@ CGenericTable::CGenericTable(void) :
 	m_Direction(1, 0, 0), m_Up(0, 1, 0),
 	m_Rows(0), m_Columns(0), m_Cells(0),
 	columnWidths(), rowHeights(), isModified(true),
-	m_CellMargin(0.2), m_MaxHeight(0), m_TableSpacing(2.0),
+	m_CellMargin(0.2), m_MaxHeight(0), m_TableSpacing(2.0), m_RowsToRepeat(0),
 	m_Width(0), m_Height(0)
 {
 }
@@ -110,6 +110,19 @@ Acad::ErrorStatus CGenericTable::setTableSpacing(const double newVal)
 {
 	assertWriteEnabled();
 	m_TableSpacing = newVal / m_Direction.length();
+	isModified = true;
+	return Acad::eOk;
+}
+
+const int CGenericTable::RowsToRepeat(void) const
+{
+	assertReadEnabled();
+	return m_RowsToRepeat;
+}
+Acad::ErrorStatus CGenericTable::setRowsToRepeat(const int newVal)
+{
+	assertWriteEnabled();
+	m_RowsToRepeat = newVal;
 	isModified = true;
 	return Acad::eOk;
 }
@@ -515,15 +528,17 @@ const void CGenericTable::Calculate(void) const
 		(*it) = false;
 	}
 
+	int itable = 0;
 	if(m_MaxHeight > 0.001)
 	{
 		double y = m_MaxHeight;
-		int sr = DivideAt(y);
+		int sr = DivideAt(y, itable);
 		while(sr > 0 && sr < m_Rows)
 		{
+			itable++;
 			dividers[sr] = true;
 			y += m_MaxHeight;
-			sr = DivideAt(y);
+			sr = DivideAt(y, itable);
 		}
 	}
 
@@ -531,6 +546,12 @@ const void CGenericTable::Calculate(void) const
 	double tableoffset = 0;
 	double x = 0;
 	double y = 0;
+	double ytop = 0;
+	for(int i = 0; i < m_RowsToRepeat; i++)
+	{
+		ytop += rowHeights[i];
+	}
+
 	for(int i = 0; i < m_Rows; i++)
 	{
 		if(dividers[i])
@@ -538,7 +559,7 @@ const void CGenericTable::Calculate(void) const
 			ntables++;
 			tableoffset += m_Width + m_TableSpacing;
 			x = tableoffset;
-			y = 0;
+			y = -ytop;
 		}
 
 		for(int j = 0; j < m_Columns; j++)
@@ -623,10 +644,17 @@ const void CGenericTable::Calculate(void) const
 	isModified = false;
 }
 
-const int CGenericTable::DivideAt(double& y) const
+const int CGenericTable::DivideAt(double& y, int ntable) const
 {
 	int r = 0;
+
 	double yt = 0;
+	for(int i = 0; i < m_RowsToRepeat; i++)
+	{
+		yt += rowHeights[i];
+	}
+	yt *= (double)ntable;
+
 	for(int i = 0; i < (int)rowHeights.size(); i++)
 	{
 		yt += rowHeights[i];
@@ -880,6 +908,7 @@ Acad::ErrorStatus CGenericTable::dwgOutFields(AcDbDwgFiler* pFiler) const
 
 	pFiler->writeDouble(m_MaxHeight);
 	pFiler->writeDouble(m_TableSpacing);
+	pFiler->writeInt32(m_RowsToRepeat);
 
 	pFiler->writeDouble(m_Width);
 	pFiler->writeDouble(m_Height);
@@ -921,6 +950,10 @@ Acad::ErrorStatus CGenericTable::dwgInFields(AcDbDwgFiler* pFiler)
 	pFiler->readInt32(&columns);
 	pFiler->readDouble(&m_MaxHeight);
 	pFiler->readDouble(&m_TableSpacing);
+	Adesk::Int32 rowsToRepeat;
+	pFiler->readInt32(&rowsToRepeat);
+	m_RowsToRepeat = rowsToRepeat;
+
 	SetSize(rows, columns);
 
 	pFiler->readDouble(&m_Width);
@@ -931,7 +964,6 @@ Acad::ErrorStatus CGenericTable::dwgInFields(AcDbDwgFiler* pFiler)
 		CTableCell* cell = m_Cells[i];
 		cell->dwgInFields(pFiler);
 	}
-
 
 	isModified = true;
 
@@ -966,6 +998,7 @@ Acad::ErrorStatus CGenericTable::dxfOutFields(AcDbDxfFiler* pFiler) const
 	pFiler->writeInt32(AcDb::kDxfInt32, m_Columns);
 	pFiler->writeDouble(AcDb::kDxfReal, m_MaxHeight);
 	pFiler->writeDouble(AcDb::kDxfReal, m_TableSpacing);
+	pFiler->writeInt32(AcDb::kDxfInt32, m_RowsToRepeat);
 
 	pFiler->writeDouble(AcDb::kDxfReal, m_Width);
 	pFiler->writeDouble(AcDb::kDxfReal, m_Height);
@@ -1010,6 +1043,7 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
 	int t_Columns;
 	double t_MaxHeight;
 	double t_TableSpacing;
+	int t_RowsToRepeat;
 	double t_Width;
 	double t_Height;
 	std::vector<CTableCell*> t_Cells;
@@ -1024,6 +1058,7 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
 	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("column count"), t_Columns)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("max height"), t_MaxHeight)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("table spacing"), t_TableSpacing)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("rows to repeat"), t_RowsToRepeat)) != Acad::eOk) return es;
 
 	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("table width"), t_Width)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("table height"), t_Height)) != Acad::eOk) return es;
@@ -1043,6 +1078,7 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
 	SetSize(t_Rows, t_Columns);
 	m_MaxHeight = t_MaxHeight;
 	m_TableSpacing = t_TableSpacing;
+	m_RowsToRepeat = t_RowsToRepeat;
 	m_Width = t_Width;
 	m_Height = t_Height;
 	m_Cells = t_Cells;
