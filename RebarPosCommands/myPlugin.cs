@@ -25,7 +25,7 @@ namespace RebarPosCommands
         {
             // Create overrules
             DrawableOverrule.Overruling = true;
-            ObjectOverrule.AddOverrule(RXClass.GetClass(typeof(RebarPos)), HighlightGroupOverrule.Instance, true);
+            // ObjectOverrule.AddOverrule(RXClass.GetClass(typeof(RebarPos)), HighlightGroupOverrule.Instance, true);
             ObjectOverrule.AddOverrule(RXClass.GetClass(typeof(RebarPos)), ShowShapesOverrule.Instance, true);
 
             // Add menu
