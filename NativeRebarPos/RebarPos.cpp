@@ -950,11 +950,11 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	lastTextStyle.loadStyleRec();
 	worldDraw->subEntityTraits().setSelectionMarker(1);
 	// Group name
-	worldDraw->subEntityTraits().setColor(lastGroupDraw.color);
+	//worldDraw->subEntityTraits().setColor(lastGroupDraw.color);
 	//worldDraw->geometry().text(AcGePoint3d(lastGroupDraw.x, lastGroupDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastGroupDraw.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
 	// Multiplier
-	worldDraw->subEntityTraits().setColor(lastMultiplierDraw.color);
-	worldDraw->geometry().text(AcGePoint3d(lastMultiplierDraw.x, lastMultiplierDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastMultiplierDraw.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
+	//worldDraw->subEntityTraits().setColor(lastMultiplierDraw.color);
+	//worldDraw->geometry().text(AcGePoint3d(lastMultiplierDraw.x, lastMultiplierDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastMultiplierDraw.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
 	// Reset transform
 	worldDraw->geometry().popModelTransform();
 
