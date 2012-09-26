@@ -70,6 +70,7 @@ protected:
 	Adesk::UInt16 m_GroupColor;
 	Adesk::UInt16 m_NoteColor;
 	Adesk::UInt16 m_CurrentGroupHighlightColor;
+	Adesk::UInt16 m_CountColor;
 
     double m_NoteScale;
 
@@ -146,6 +147,10 @@ public:
 	/// Gets or sets the highlight color of the pos objects in the current group.
 	const Adesk::UInt16 CurrentGroupHighlightColor(void) const;
 	Acad::ErrorStatus setCurrentGroupHighlightColor(const Adesk::UInt16 newVal);
+
+	/// Gets or sets the highlight color of the pos objects with 0 counts
+	const Adesk::UInt16 CountColor(void) const;
+	Acad::ErrorStatus setCountColor(const Adesk::UInt16 newVal);
 
 	/// Gets or sets the note height relative to text height.
 	const double NoteScale(void) const;

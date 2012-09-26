@@ -42,6 +42,7 @@ namespace RebarPosCommands
             public Autodesk.AutoCAD.Colors.Color groupColor;
             public Autodesk.AutoCAD.Colors.Color noteColor;
             public Autodesk.AutoCAD.Colors.Color currentGroupHighlightColor;
+            public Autodesk.AutoCAD.Colors.Color countColor;
 
             public ObjectId hiddenLayerId;
             public ObjectId textStyleId;
@@ -116,6 +117,7 @@ namespace RebarPosCommands
                         copy.groupColor = group.GroupColor;
                         copy.noteColor = group.NoteColor;
                         copy.currentGroupHighlightColor = group.CurrentGroupHighlightColor;
+                        copy.countColor = group.CountColor;
 
                         copy.hiddenLayerId = group.HiddenLayerId;
                         copy.textStyleId = group.TextStyleId;
@@ -190,6 +192,7 @@ namespace RebarPosCommands
             btnPickMultiplierColor.BackColor = copy.multiplierColor.ColorValue;
             btnPickGroupColor.BackColor = copy.groupColor.ColorValue;
             btnPickNoteColor.BackColor = copy.noteColor.ColorValue;
+            btnPickCountColor.BackColor = copy.countColor.ColorValue;
 
             posStylePreview.TextColor = copy.textColor.ColorValue;
             posStylePreview.PosColor = copy.posColor.ColorValue;
@@ -302,6 +305,7 @@ namespace RebarPosCommands
                             group.GroupColor = copy.groupColor;
                             group.NoteColor = copy.noteColor;
                             group.CurrentGroupHighlightColor = copy.currentGroupHighlightColor;
+                            group.CountColor = copy.countColor;
 
                             group.HiddenLayerId = copy.hiddenLayerId;
                             group.TextStyleId = copy.textStyleId;
@@ -336,6 +340,7 @@ namespace RebarPosCommands
                             group.GroupColor = copy.groupColor;
                             group.NoteColor = copy.noteColor;
                             group.CurrentGroupHighlightColor = copy.currentGroupHighlightColor;
+                            group.CountColor = copy.countColor;
 
                             group.HiddenLayerId = copy.hiddenLayerId;
                             group.TextStyleId = copy.textStyleId;
@@ -610,6 +615,22 @@ namespace RebarPosCommands
                 copy.noteColor = cd.Color;
                 btn.BackColor = cd.Color.ColorValue;
                 posStylePreview.NoteColor = copy.noteColor.ColorValue;
+            }
+        }
+
+        private void btnPickCountColor_Click(object sender, EventArgs e)
+        {
+            GroupCopy copy = GetSelected();
+            if (copy == null) return;
+            Button btn = (Button)sender;
+            Autodesk.AutoCAD.Windows.ColorDialog cd = new Autodesk.AutoCAD.Windows.ColorDialog();
+            cd.SetDialogTabs(Autodesk.AutoCAD.Windows.ColorDialog.ColorTabs.ACITab);
+            cd.Color = Autodesk.AutoCAD.Colors.Color.FromColor(btn.BackColor);
+            cd.IncludeByBlockByLayer = false;
+            if (cd.ShowDialog() == DialogResult.OK)
+            {
+                copy.countColor = cd.Color;
+                btn.BackColor = cd.Color.ColorValue;
             }
         }
     }

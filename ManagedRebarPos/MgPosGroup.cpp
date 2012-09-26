@@ -182,6 +182,15 @@ void PosGroup::CurrentGroupHighlightColor::set(Autodesk::AutoCAD::Colors::Color^
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setCurrentGroupHighlightColor(value->ColorIndex));
 }
 
+Autodesk::AutoCAD::Colors::Color^ PosGroup::CountColor::get()
+{
+	return Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, GetImpObj()->CountColor());
+}
+void PosGroup::CountColor::set(Autodesk::AutoCAD::Colors::Color^ value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setCountColor(value->ColorIndex));
+}
+
 Autodesk::AutoCAD::DatabaseServices::ObjectId PosGroup::HiddenLayerId::get()
 {
 	return Marshal::ToObjectId (GetImpObj()->HiddenLayerId());

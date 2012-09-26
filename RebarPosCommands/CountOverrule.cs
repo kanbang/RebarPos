@@ -10,35 +10,32 @@ using OZOZ.RebarPosWrapper;
 
 namespace RebarPosCommands
 {
-    public class HighlightGroupOverrule : DrawableOverrule
+    public class CountOverrule : DrawableOverrule
     {
-        private static HighlightGroupOverrule mInstance = new HighlightGroupOverrule();
-        private Dictionary<ObjectId, Autodesk.AutoCAD.Colors.Color> mGroups;
+        private static CountOverrule mInstance = new CountOverrule();
+        private Autodesk.AutoCAD.Colors.Color mColor;
+        private ObjectId mLayer;
 
-        public static HighlightGroupOverrule Instance { get { return mInstance; } }
+        public static CountOverrule Instance { get { return mInstance; } }
 
-        public HighlightGroupOverrule()
+        public CountOverrule()
         {
-            mGroups = new Dictionary<ObjectId, Autodesk.AutoCAD.Colors.Color>();
+            mColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(ColorMethod.ByAci, 1);
+            mLayer = ObjectId.Null;
             SetCustomFilter();
         }
 
-        public void AddGroup(ObjectId id, Autodesk.AutoCAD.Colors.Color color)
+        public void SetProperties(Autodesk.AutoCAD.Colors.Color color, ObjectId layer)
         {
-            if (!mGroups.ContainsKey(id))
-                mGroups.Add(id, color);
-        }
-
-        public void RemoveGroup(ObjectId id)
-        {
-            mGroups.Remove(id);
+            mColor = color;
+            mLayer = layer;
         }
 
         public override bool IsApplicable(RXObject overruledSubject)
         {
             // Shade current group only
             RebarPos pos = overruledSubject as RebarPos;
-            return (mGroups.ContainsKey(pos.GroupId));
+            return (!pos.IncludeInBOQ);
         }
 
         public override bool WorldDraw(Drawable drawable, WorldDraw wd)
@@ -53,18 +50,12 @@ namespace RebarPosCommands
             {
                 return base.WorldDraw(drawable, wd);
             }
-
-            // Get color
-            Autodesk.AutoCAD.Colors.Color col = Autodesk.AutoCAD.Colors.Color.FromColorIndex(ColorMethod.ByAci, 1);
-            short color = 0;
-            if (!mGroups.TryGetValue(pos.GroupId, out col))
+            if (pos.IncludeInBOQ)
             {
                 return base.WorldDraw(drawable, wd);
             }
-            color = col.ColorIndex;
 
             WorldGeometry g = wd.Geometry;
-            SubEntityTraits s = wd.SubEntityTraits;
 
             // Get geometry
             Point3d pt = pos.BasePoint;
@@ -78,22 +69,15 @@ namespace RebarPosCommands
             // Transform to object orientation
             Matrix3d trans = Matrix3d.AlignCoordinateSystem(Point3d.Origin, Vector3d.XAxis, Vector3d.YAxis, Vector3d.ZAxis, pt, dir, up, norm);
 
-            // Transform to match text orientation
-            g.PushModelTransform(trans);
-            FillType filltype = s.FillType;
-            s.FillType = FillType.FillAlways;
-            // TODO: Set to defpoints
-            s.Color = color;
-            Point3dCollection rec = new Point3dCollection();
-            rec.Add(new Point3d(-0.15, -0.15, 0));
-            rec.Add(new Point3d(w + .15, -0.15, 0));
-            rec.Add(new Point3d(w + .15, h + .15, 0));
-            rec.Add(new Point3d(-0.15, h + .15, 0));
-            g.Polygon(rec);
-            s.FillType = filltype;
-
-            // Reset transform
-            g.PopModelTransform();
+            Solid solid = new Solid();
+            solid.SetPointAt(0, new Point3d(-0.15, -0.15, 0));
+            solid.SetPointAt(1, new Point3d(w + .15, -0.15, 0));
+            solid.SetPointAt(2, new Point3d(-0.15, h + .15, 0));
+            solid.SetPointAt(3, new Point3d(w + .15, h + .15, 0));
+            solid.Color = mColor;
+            solid.LayerId = mLayer;
+            solid.TransformBy(trans);
+            g.Draw(solid);
 
             // Draw the entity over shading
             base.WorldDraw(drawable, wd);

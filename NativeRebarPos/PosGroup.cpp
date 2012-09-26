@@ -24,7 +24,7 @@ CPosGroup::CPosGroup () : m_Name(NULL), m_Bending(Adesk::kFalse), m_MaxBarLength
 	m_DrawingUnit(CPosGroup::MM), m_DisplayUnit(CPosGroup::MM), 
 	m_Formula(NULL), m_FormulaLengthOnly(NULL), m_FormulaPosOnly(NULL), m_StandardDiameters(NULL),
 	m_TextColor(2), m_PosColor(4), m_CircleColor(1), m_MultiplierColor(33), m_GroupColor(9), 
-	m_NoteColor(30), m_CurrentGroupHighlightColor(8), m_NoteScale(0.75), 
+	m_NoteColor(30), m_CurrentGroupHighlightColor(8), m_CountColor(5), m_NoteScale(0.75), 
 	m_HiddenLayerID(AcDbObjectId::kNull), m_TextStyleID(AcDbObjectId::kNull), m_NoteStyleID(AcDbObjectId::kNull)
 { }
 
@@ -291,6 +291,19 @@ Acad::ErrorStatus CPosGroup::setCurrentGroupHighlightColor(const Adesk::UInt16 n
 	return Acad::eOk;
 }
 
+const Adesk::UInt16 CPosGroup::CountColor(void) const
+{
+	assertReadEnabled();
+	return m_CountColor;
+}
+
+Acad::ErrorStatus CPosGroup::setCountColor(const Adesk::UInt16 newVal)
+{
+	assertWriteEnabled();
+	m_CountColor = newVal;
+	return Acad::eOk;
+}
+
 const AcDbObjectId& CPosGroup::HiddenLayerId(void) const
 {
 	assertReadEnabled();
@@ -400,6 +413,7 @@ Acad::ErrorStatus CPosGroup::dwgOutFields(AcDbDwgFiler *pFiler) const
     pFiler->writeUInt16(m_GroupColor);
     pFiler->writeUInt16(m_NoteColor);
 	pFiler->writeUInt16(m_CurrentGroupHighlightColor);
+	pFiler->writeUInt16(m_CountColor);
 
     // Note scale
     pFiler->writeDouble(m_NoteScale);
@@ -460,6 +474,7 @@ Acad::ErrorStatus CPosGroup::dwgInFields(AcDbDwgFiler *pFiler)
         pFiler->readUInt16(&m_GroupColor);
         pFiler->readUInt16(&m_NoteColor);
 		pFiler->readUInt16(&m_CurrentGroupHighlightColor);
+		pFiler->readUInt16(&m_CountColor);
 
         pFiler->readDouble(&m_NoteScale);
 
@@ -525,6 +540,7 @@ Acad::ErrorStatus CPosGroup::dxfOutFields(AcDbDxfFiler *pFiler) const
     pFiler->writeUInt16(AcDb::kDxfXInt16 + 4, m_GroupColor);
     pFiler->writeUInt16(AcDb::kDxfXInt16 + 5, m_NoteColor);
 	pFiler->writeUInt16(AcDb::kDxfXInt16 + 6, m_CurrentGroupHighlightColor);
+	pFiler->writeUInt16(AcDb::kDxfXInt16 + 7, m_CountColor);
 
     // Note scale
     pFiler->writeDouble(AcDb::kDxfXReal + 1, m_NoteScale);
@@ -578,6 +594,7 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
 	Adesk::UInt16 t_GroupColor = 0;
 	Adesk::UInt16 t_NoteColor = 0;
 	Adesk::UInt16 t_CurrentGroupHighlightColor = 0;
+	Adesk::UInt16 t_CountColor = 0;
 	double t_NoteScale = 0;
 	AcDbObjectId t_HiddenLayerID = AcDbObjectId::kNull;
 	AcDbObjectId t_TextStyleID = AcDbObjectId::kNull;
@@ -638,6 +655,9 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
         case AcDb::kDxfXInt16 + 6:
 			t_CurrentGroupHighlightColor = rb.resval.rint;
 			break;
+        case AcDb::kDxfXInt16 + 7:
+			t_CountColor = rb.resval.rint;
+			break;
         case AcDb::kDxfXReal + 1:
 			t_NoteScale = rb.resval.rreal;
 			break;
@@ -675,10 +695,12 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
 	m_Precision = t_Precision;
     m_DrawingUnit = (DrawingUnits)t_DrawingUnit;
     m_DisplayUnit = (DrawingUnits)t_DisplayUnit;
+
 	setFormula(t_Formula);
 	setFormulaLengthOnly(t_FormulaLengthOnly);
 	setFormulaPosOnly(t_FormulaPosOnly);
 	setStandardDiameters(t_StandardDiameters);
+
 	m_TextColor = t_TextColor;
 	m_PosColor = t_PosColor;
 	m_CircleColor = t_CircleColor;
@@ -686,6 +708,8 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
 	m_GroupColor = t_GroupColor;
 	m_NoteColor = t_NoteColor;
 	m_CurrentGroupHighlightColor = t_CurrentGroupHighlightColor;
+	m_CountColor = t_CountColor;
+
 	m_NoteScale = t_NoteScale;
 	m_HiddenLayerID = t_HiddenLayerID;
 	m_TextStyleID = t_TextStyleID;

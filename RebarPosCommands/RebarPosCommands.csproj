@@ -127,6 +127,7 @@
     <Compile Include="Commands_PosLength.cs" />
     <Compile Include="Commands_IncludePos.cs" />
     <Compile Include="Commands_LastPosNumber.cs" />
+    <Compile Include="CountOverrule.cs" />
     <Compile Include="MenuUtility.cs" />
     <Compile Include="PosCheckResult.cs" />
     <Compile Include="TableStyleForm.cs">

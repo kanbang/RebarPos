@@ -23,10 +23,9 @@ namespace RebarPosCommands
 
         public void SetCurrentGroup(ObjectId id)
         {
-            HighlightGroupOverrule.Instance.RemoveGroup(CurrentGroupId);
-
             string name = "";
-            Autodesk.AutoCAD.Colors.Color highlightColor = new Autodesk.AutoCAD.Colors.Color();
+            Autodesk.AutoCAD.Colors.Color countColor = new Autodesk.AutoCAD.Colors.Color();
+            ObjectId defpointsLayer = ObjectId.Null;
 
             Database db = HostApplicationServices.WorkingDatabase;
             using (Transaction tr = db.TransactionManager.StartTransaction())
@@ -36,7 +35,8 @@ namespace RebarPosCommands
                     PosGroup item = tr.GetObject(id, OpenMode.ForRead) as PosGroup;
                     if (item == null) return;
                     name = item.Name;
-                    highlightColor = item.CurrentGroupHighlightColor;
+                    countColor = item.CountColor;
+                    defpointsLayer = item.HiddenLayerId;
                 }
                 catch
                 {
@@ -47,7 +47,7 @@ namespace RebarPosCommands
             CurrentGroupId = id;
             CurrentGroupName = name;
 
-            HighlightGroupOverrule.Instance.AddGroup(id, highlightColor);
+            CountOverrule.Instance.SetProperties(countColor, defpointsLayer);
 
             DWGUtility.RefreshAllPos();
         }
