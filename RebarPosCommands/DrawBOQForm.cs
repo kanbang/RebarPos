@@ -27,9 +27,8 @@ namespace RebarPosCommands
             m_Styles = new Dictionary<string, ObjectId>();
         }
 
-        public bool Init(ObjectId groupId)
+        public bool Init(ObjectId[] items)
         {
-            lblGroup.Text = DWGUtility.GetGroupName(groupId);
             m_Styles = DWGUtility.GetTableStyles();
 
             if (m_Styles.Count == 0)

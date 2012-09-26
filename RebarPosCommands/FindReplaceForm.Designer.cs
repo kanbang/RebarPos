@@ -90,8 +90,6 @@
             this.btnReplace = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.btnFind = new System.Windows.Forms.Button();
-            this.label13 = new System.Windows.Forms.Label();
-            this.lblGroup = new System.Windows.Forms.Label();
             this.gbFind.SuspendLayout();
             this.gbReplace.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
@@ -127,7 +125,7 @@
             this.gbFind.Controls.Add(this.cbFindDiameter);
             this.gbFind.Controls.Add(this.cbFindCount);
             this.gbFind.Controls.Add(this.cbFindPosNumber);
-            this.gbFind.Location = new System.Drawing.Point(12, 49);
+            this.gbFind.Location = new System.Drawing.Point(12, 12);
             this.gbFind.Name = "gbFind";
             this.gbFind.Size = new System.Drawing.Size(264, 423);
             this.gbFind.TabIndex = 1;
@@ -426,7 +424,7 @@
             this.gbReplace.Controls.Add(this.rbReplaceDiameter);
             this.gbReplace.Controls.Add(this.rbReplaceCount);
             this.gbReplace.Controls.Add(this.cbReplaceDiameter);
-            this.gbReplace.Location = new System.Drawing.Point(282, 49);
+            this.gbReplace.Location = new System.Drawing.Point(282, 12);
             this.gbReplace.Name = "gbReplace";
             this.gbReplace.Size = new System.Drawing.Size(264, 423);
             this.gbReplace.TabIndex = 2;
@@ -675,7 +673,7 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(471, 491);
+            this.btnCancel.Location = new System.Drawing.Point(471, 454);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 5;
@@ -685,7 +683,7 @@
             // 
             // btnReplace
             // 
-            this.btnReplace.Location = new System.Drawing.Point(390, 491);
+            this.btnReplace.Location = new System.Drawing.Point(390, 454);
             this.btnReplace.Name = "btnReplace";
             this.btnReplace.Size = new System.Drawing.Size(75, 23);
             this.btnReplace.TabIndex = 4;
@@ -700,7 +698,7 @@
             // 
             // btnFind
             // 
-            this.btnFind.Location = new System.Drawing.Point(310, 491);
+            this.btnFind.Location = new System.Drawing.Point(310, 454);
             this.btnFind.Name = "btnFind";
             this.btnFind.Size = new System.Drawing.Size(75, 23);
             this.btnFind.TabIndex = 3;
@@ -708,32 +706,12 @@
             this.btnFind.UseVisualStyleBackColor = true;
             this.btnFind.Click += new System.EventHandler(this.btnFind_Click);
             // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(12, 18);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(143, 13);
-            this.label13.TabIndex = 6;
-            this.label13.Text = "&Arama Yapılacak Poz Grubu:";
-            // 
-            // lblGroup
-            // 
-            this.lblGroup.AutoSize = true;
-            this.lblGroup.Location = new System.Drawing.Point(161, 18);
-            this.lblGroup.Name = "lblGroup";
-            this.lblGroup.Size = new System.Drawing.Size(14, 13);
-            this.lblGroup.TabIndex = 6;
-            this.lblGroup.Text = "#";
-            // 
             // FindReplaceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(560, 529);
-            this.Controls.Add(this.lblGroup);
-            this.Controls.Add(this.label13);
+            this.ClientSize = new System.Drawing.Size(560, 494);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnFind);
             this.Controls.Add(this.btnReplace);
@@ -752,7 +730,6 @@
             this.gbReplace.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -818,7 +795,5 @@
         private System.Windows.Forms.CheckBox rbReplaceGroup;
         private System.Windows.Forms.ComboBox cbReplaceGroup;
         private System.Windows.Forms.Button btnFind;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label lblGroup;
     }
 }

@@ -15,15 +15,20 @@ namespace RebarPosCommands
             DrawBOQForm form = new DrawBOQForm();
 
             // Pos error check
-            List<PosCheckResult> check = PosCheckResult.CheckAllInGroup(CurrentGroupId, PosCheckResult.CheckType.Errors);
+            PromptSelectionResult sel = DWGUtility.SelectAllPosUser();
+            if (sel.Status != PromptStatus.OK) return false;
+            ObjectId[] items = sel.Value.GetObjectIds();
+
+            List<PosCheckResult> check = PosCheckResult.CheckAllInSelection(CurrentGroupId, items, PosCheckResult.CheckType.Errors);
             if (check.Count != 0)
             {
                 PosCheckResult.ConsoleOut(check);
                 Autodesk.AutoCAD.ApplicationServices.Application.DisplayTextScreen = true;
                 return false;
             }
+
             // Pos similarity check
-            List<PosCheckResult> checks = PosCheckResult.CheckAllInGroup(CurrentGroupId, PosCheckResult.CheckType.Warnings);
+            List<PosCheckResult> checks = PosCheckResult.CheckAllInSelection(CurrentGroupId, items, PosCheckResult.CheckType.Warnings);
             if (checks.Count != 0)
             {
                 PosCheckResult.ConsoleOut(checks);
@@ -36,7 +41,7 @@ namespace RebarPosCommands
                 }
             }
 
-            if (!form.Init(CurrentGroupId))
+            if (!form.Init(items))
                 return false;
 
             if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) != System.Windows.Forms.DialogResult.OK)
@@ -45,7 +50,7 @@ namespace RebarPosCommands
             List<PosCopy> posList = new List<PosCopy>();
             try
             {
-                posList = PosCopy.ReadAllInGroup(CurrentGroupId, PosCopy.PosGrouping.PosMarker);
+                posList = PosCopy.ReadAllInSelection(items, PosCopy.PosGrouping.PosMarker);
             }
             catch (System.Exception ex)
             {

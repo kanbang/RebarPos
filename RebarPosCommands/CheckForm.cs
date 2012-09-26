@@ -19,11 +19,9 @@ namespace RebarPosCommands
             m_PosList = new List<PosCheckResult>();
         }
 
-        public bool Init(ObjectId groupId)
+        public bool Init(ObjectId groupid, ObjectId[] items)
         {
-            lblGroup.Text = DWGUtility.GetGroupName(groupId);
-
-            ReadPos(groupId);
+            ReadPos(groupid, items);
             PopulateList();
 
             return true;
@@ -79,11 +77,11 @@ namespace RebarPosCommands
             lbItems_SelectedIndexChanged(null, new EventArgs());
         }
 
-        private void ReadPos(ObjectId groupId)
+        private void ReadPos(ObjectId groupid, ObjectId[] items)
         {
             try
             {
-                m_PosList = PosCheckResult.CheckAllInGroup(groupId, PosCheckResult.CheckType.Errors);
+                m_PosList = PosCheckResult.CheckAllInSelection(groupid, items, PosCheckResult.CheckType.Errors);
             }
             catch (System.Exception ex)
             {
@@ -144,7 +142,7 @@ namespace RebarPosCommands
             view.CenterPoint = min2d + ((max2d - min2d) / 2.0);
             view.Height = max2d.Y - min2d.Y;
             view.Width = max2d.X - min2d.X;
-            
+
             ed.SetCurrentView(view);
         }
 

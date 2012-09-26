@@ -27,7 +27,6 @@ namespace RebarPosCommands
         ObjectId m_Group;
         ObjectId m_Shape;
         List<int> m_StandardDiameters;
-        Dictionary<string, ObjectId> m_Groups;
         Dictionary<string, ObjectId> m_Shapes;
         RebarPos.HitTestResult hit;
         string m_Formula;
@@ -48,7 +47,6 @@ namespace RebarPosCommands
             m_Group = ObjectId.Null;
             m_Shape = ObjectId.Null;
             m_StandardDiameters = new List<int>();
-            m_Groups = new Dictionary<string, ObjectId>();
             m_Shapes = new Dictionary<string, ObjectId>();
 
             posShapeView.BackColor = DWGUtility.ModelBackgroundColor();
@@ -74,21 +72,6 @@ namespace RebarPosCommands
 
                     m_Group = pos.GroupId;
                     m_Shape = pos.ShapeId;
-
-                    m_Groups = DWGUtility.GetGroups();
-                    if (m_Groups.Count == 0)
-                    {
-                        init = false;
-                        return false;
-                    }
-
-                    int i = 0;
-                    foreach (KeyValuePair<string, ObjectId> pair in m_Groups)
-                    {
-                        cbGroup.Items.Add(pair.Key);
-                        if (pair.Value == pos.GroupId) cbGroup.SelectedIndex = i;
-                        i++;
-                    }
 
                     m_Shapes = DWGUtility.GetShapes();
                     if (m_Shapes.Count == 0)
@@ -583,9 +566,6 @@ namespace RebarPosCommands
                     txtA.Select();
                     txtA.SelectAll();
                     break;
-                case RebarPos.HitTestResult.Group:
-                    cbGroup.SelectAll();
-                    break;
                 case RebarPos.HitTestResult.Multiplier:
                     txtPosMultiplier.Select();
                     txtPosMultiplier.SelectAll();
@@ -797,35 +777,6 @@ namespace RebarPosCommands
                 errorProvider.SetIconAlignment(source, ErrorIconAlignment.MiddleLeft);
                 return false;
             }
-        }
-
-        private void cbGroup_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (init) return;
-
-            if (cbGroup.SelectedIndex == -1) return;
-            m_Group = m_Groups[(string)cbGroup.SelectedItem];
-
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
-            {
-                try
-                {
-                    PosGroup group = tr.GetObject(m_Group, OpenMode.ForRead) as PosGroup;
-                    if (group == null)
-                        return;
-
-                    m_DisplayUnits = group.DisplayUnit;
-                    m_DrawingUnits = group.DrawingUnit;
-                    m_Bending = group.Bending;
-                }
-                catch (System.Exception ex)
-                {
-                    MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-
-            UpdateLength();
         }
 
         private void btnSelectA_Click(object sender, EventArgs e)

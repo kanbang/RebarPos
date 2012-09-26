@@ -61,8 +61,8 @@ namespace RebarPosCommands
             bool cont = true;
             while (cont)
             {
-                PromptEntityOptions opts = new PromptEntityOptions("Poz secin veya [Yeni/Numaralandir/Kopyala/Grup/kOntrol/Metraj/bul Degistir/numara Sil/Acilimlar/Tablo stili]: ",
-                    "New Numbering Copy Group Check BOQ Find Empty Shapes Table");
+                PromptEntityOptions opts = new PromptEntityOptions("Poz secin veya [Yeni/Numaralandir/Kopyala/kOntrol/Metraj/bul Degistir/numara Sil/Acilimlar/Tablo stili]: ",
+                    "New Numbering Copy Check BOQ Find Empty Shapes Table");
                 opts.AllowNone = false;
                 PromptEntityResult result = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetEntity(opts);
 
@@ -81,9 +81,6 @@ namespace RebarPosCommands
                             break;
                         case "Copy":
                             CopyPos(true, false);
-                            break;
-                        case "Group":
-                            PosGroups();
                             break;
                         case "Check":
                             PosCheck();
@@ -169,12 +166,6 @@ namespace RebarPosCommands
         public void CMD_EmptyBalloons()
         {
             EmptyBalloons();
-        }
-
-        [CommandMethod("RebarPos", "POSGROUP", "POSGROUP_Local", CommandFlags.Modal)]
-        public void CMD_PosGroups()
-        {
-            PosGroups();
         }
 
         [CommandMethod("RebarPos", "POSCHECK", "POSCHECK_Local", CommandFlags.Modal)]
@@ -297,12 +288,15 @@ namespace RebarPosCommands
         [CommandMethod("RebarPos", "LASTPOSNUMBER", "LASTPOSNUMBER_Local", CommandFlags.Modal)]
         public void CMD_LastPosNumber()
         {
+            PromptSelectionResult sel = DWGUtility.SelectAllPosUser();
+            if (sel.Status != PromptStatus.OK) return;
+            ObjectId[] items = sel.Value.GetObjectIds();
 
-            int lastNum = GetLastPosNumber(DWGUtility.GetPosInGroup(CurrentGroupId));
+            int lastNum = GetLastPosNumber(items);
 
             if (lastNum != -1)
             {
-                MessageBox.Show("Son poz numarası (Grup " + CurrentGroupName + "): " + lastNum.ToString(), "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Son poz numarası: " + lastNum.ToString(), "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

@@ -57,6 +57,79 @@ namespace RebarPosCommands
             PosMarker = 2
         }
 
+        public static List<PosCopy> ReadAllInSelection(IEnumerable<ObjectId> items, PosGrouping grouping)
+        {
+            List<PosCopy> poslist = new List<PosCopy>();
+
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                foreach (ObjectId id in items)
+                {
+                    RebarPos pos = tr.GetObject(id, OpenMode.ForRead) as RebarPos;
+                    if (pos != null)
+                    {
+                        PosCopy copy = null;
+                        if (grouping == PosGrouping.PosKey)
+                        {
+                            copy = poslist.Find(p => p.key == pos.PosKey); ;
+                        }
+                        else if (grouping == PosGrouping.PosMarker)
+                        {
+                            copy = poslist.Find(p => p.pos == pos.Pos); ;
+                        }
+
+                        if (copy != null)
+                        {
+                            copy.list.Add(id);
+                            if (pos.IncludeInBOQ)
+                            {
+                                copy.count += pos.CalcProperties.Count * pos.Multiplier;
+                            }
+                            copy.x = Math.Min(copy.x, pos.BasePoint.X);
+                            copy.y = Math.Min(copy.y, pos.BasePoint.Y);
+                        }
+                        else
+                        {
+                            copy = new PosCopy();
+                            copy.key = pos.PosKey;
+                            copy.list.Add(id);
+                            copy.pos = pos.Pos;
+                            copy.newpos = pos.Pos;
+                            copy.existing = true;
+                            if (pos.IncludeInBOQ)
+                            {
+                                copy.count = pos.CalcProperties.Count * pos.Multiplier;
+                            }
+                            copy.diameter = pos.Diameter;
+                            copy.length = pos.Length;
+                            copy.a = pos.A;
+                            copy.b = pos.B;
+                            copy.c = pos.C;
+                            copy.d = pos.D;
+                            copy.e = pos.E;
+                            copy.f = pos.F;
+                            copy.x = pos.BasePoint.X;
+                            copy.y = pos.BasePoint.Y;
+                            copy.shapeId = pos.ShapeId;
+                            PosShape shape = tr.GetObject(copy.shapeId, OpenMode.ForRead) as PosShape;
+                            if (shape != null)
+                            {
+                                copy.priority = shape.Priority;
+                                copy.shapename = shape.Name;
+                            }
+                            copy.length1 = pos.CalcProperties.MinLength;
+                            copy.length2 = pos.CalcProperties.MaxLength;
+                            copy.isVarLength = pos.CalcProperties.IsVarLength;
+                            poslist.Add(copy);
+                        }
+                    }
+                }
+            }
+
+            return poslist;
+        }
+
         public static List<PosCopy> ReadAllInGroup(ObjectId groupId, PosGrouping grouping)
         {
             List<PosCopy> poslist = new List<PosCopy>();

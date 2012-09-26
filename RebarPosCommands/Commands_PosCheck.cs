@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
 using OZOZ.RebarPosWrapper;
+using Autodesk.AutoCAD.EditorInput;
 
 namespace RebarPosCommands
 {
@@ -13,7 +14,11 @@ namespace RebarPosCommands
         {
             CheckForm form = new CheckForm();
 
-            if (form.Init(CurrentGroupId))
+            PromptSelectionResult sel = DWGUtility.SelectAllPosUser();
+            if (sel.Status != PromptStatus.OK) return;
+            ObjectId[] items = sel.Value.GetObjectIds();
+
+            if (form.Init(CurrentGroupId, items))
             {
                 Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false);
             }

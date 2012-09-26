@@ -3,6 +3,7 @@ using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
 using OZOZ.RebarPosWrapper;
 using System.Collections.Generic;
+using Autodesk.AutoCAD.EditorInput;
 
 namespace RebarPosCommands
 {
@@ -11,7 +12,10 @@ namespace RebarPosCommands
         private bool FindReplace(bool usePickSet)
         {
             // Pos error check
-            List<PosCheckResult> check = PosCheckResult.CheckAllInGroup(CurrentGroupId, PosCheckResult.CheckType.Errors);
+            PromptSelectionResult sel = DWGUtility.SelectAllPosUser();
+            if (sel.Status != PromptStatus.OK) return false;
+            ObjectId[] items = sel.Value.GetObjectIds();
+            List<PosCheckResult> check = PosCheckResult.CheckAllInSelection(CurrentGroupId, items, PosCheckResult.CheckType.Errors);
             if (check.Count != 0)
             {
                 PosCheckResult.ConsoleOut(check);
@@ -21,7 +25,7 @@ namespace RebarPosCommands
 
             FindReplaceForm form = new FindReplaceForm();
 
-            if (form.Init(CurrentGroupId))
+            if (form.Init(items))
             {
                 if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
                 {

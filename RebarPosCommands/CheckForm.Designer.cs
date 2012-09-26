@@ -33,11 +33,9 @@
             this.chError = new System.Windows.Forms.ColumnHeader();
             this.chCount = new System.Windows.Forms.ColumnHeader();
             this.btnOK = new System.Windows.Forms.Button();
-            this.label8 = new System.Windows.Forms.Label();
             this.btnZoom = new System.Windows.Forms.Button();
             this.btnSelect = new System.Windows.Forms.Button();
             this.btnSelectAll = new System.Windows.Forms.Button();
-            this.lblGroup = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lbItems
@@ -51,10 +49,10 @@
             this.chCount});
             this.lbItems.FullRowSelect = true;
             this.lbItems.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lbItems.Location = new System.Drawing.Point(13, 57);
+            this.lbItems.Location = new System.Drawing.Point(13, 12);
             this.lbItems.MultiSelect = false;
             this.lbItems.Name = "lbItems";
-            this.lbItems.Size = new System.Drawing.Size(588, 409);
+            this.lbItems.Size = new System.Drawing.Size(588, 454);
             this.lbItems.TabIndex = 2;
             this.lbItems.UseCompatibleStateImageBehavior = false;
             this.lbItems.View = System.Windows.Forms.View.Details;
@@ -86,20 +84,11 @@
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(12, 22);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(140, 13);
-            this.label8.TabIndex = 0;
-            this.label8.Text = "Kontrol Edilecek Poz &Grubu:";
-            // 
             // btnZoom
             // 
             this.btnZoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnZoom.Image = global::RebarPosCommands.Properties.Resources.zoomtolist;
-            this.btnZoom.Location = new System.Drawing.Point(619, 57);
+            this.btnZoom.Location = new System.Drawing.Point(619, 12);
             this.btnZoom.Name = "btnZoom";
             this.btnZoom.Size = new System.Drawing.Size(24, 24);
             this.btnZoom.TabIndex = 3;
@@ -110,7 +99,7 @@
             // 
             this.btnSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSelect.Image = global::RebarPosCommands.Properties.Resources.selectlist;
-            this.btnSelect.Location = new System.Drawing.Point(619, 87);
+            this.btnSelect.Location = new System.Drawing.Point(619, 42);
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(24, 24);
             this.btnSelect.TabIndex = 4;
@@ -121,21 +110,12 @@
             // 
             this.btnSelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSelectAll.Image = global::RebarPosCommands.Properties.Resources.selectalllist;
-            this.btnSelectAll.Location = new System.Drawing.Point(619, 117);
+            this.btnSelectAll.Location = new System.Drawing.Point(619, 72);
             this.btnSelectAll.Name = "btnSelectAll";
             this.btnSelectAll.Size = new System.Drawing.Size(24, 24);
             this.btnSelectAll.TabIndex = 5;
             this.btnSelectAll.UseVisualStyleBackColor = true;
             this.btnSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
-            // 
-            // lblGroup
-            // 
-            this.lblGroup.AutoSize = true;
-            this.lblGroup.Location = new System.Drawing.Point(158, 22);
-            this.lblGroup.Name = "lblGroup";
-            this.lblGroup.Size = new System.Drawing.Size(14, 13);
-            this.lblGroup.TabIndex = 0;
-            this.lblGroup.Text = "#";
             // 
             // CheckForm
             // 
@@ -149,8 +129,6 @@
             this.Controls.Add(this.btnZoom);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.lbItems);
-            this.Controls.Add(this.lblGroup);
-            this.Controls.Add(this.label8);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -159,7 +137,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Poz Kontrol";
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -171,9 +148,7 @@
         private System.Windows.Forms.ColumnHeader chCount;
         private System.Windows.Forms.Button btnZoom;
         private System.Windows.Forms.Button btnOK;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button btnSelect;
         private System.Windows.Forms.Button btnSelectAll;
-        private System.Windows.Forms.Label lblGroup;
     }
 }

@@ -60,13 +60,12 @@ namespace RebarPosCommands
             init = false;
         }
 
-        public bool Init(ObjectId currentGroup)
+        public bool Init(ObjectId[] items)
         {
             init = true;
-            lblGroup.Text = DWGUtility.GetGroupName(currentGroup);
             m_Groups = DWGUtility.GetGroups();
 
-            m_Selection = DWGUtility.GetPosInGroup(currentGroup);
+            m_Selection = items;
 
             cbReplaceGroup.Items.Clear();
             foreach (string name in m_Groups.Keys)

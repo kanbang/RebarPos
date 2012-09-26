@@ -27,10 +27,8 @@ namespace RebarPosCommands
             m_PosList = new List<PosCopy>();
         }
 
-        public bool Init(ObjectId groupId)
+        public bool Init(ObjectId[] items)
         {
-            lblGroup.Text = DWGUtility.GetGroupName(groupId);
-
             cbOrder1.SelectedIndex = 1;
             cbOrder2.SelectedIndex = 2;
             cbOrder3.SelectedIndex = 3;
@@ -39,7 +37,7 @@ namespace RebarPosCommands
             txtStartNum.Text = "1";
             rbKeepExisting.Checked = true;
 
-            ReadPos(groupId);
+            ReadPos(items);
             AddMissing();
             SortDisplayList();
             PopulateList();
@@ -259,11 +257,11 @@ namespace RebarPosCommands
             MessageBox.Show(count.ToString() + " adet farklı numara verildi.\n" + poscount.ToString() + " adet poz nesnesi numaralandırıldı.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void ReadPos(ObjectId groupId)
+        private void ReadPos(ObjectId[] items)
         {
             try
             {
-                m_PosList = PosCopy.ReadAllInGroup(groupId, PosCopy.PosGrouping.PosKey);
+                m_PosList = PosCopy.ReadAllInSelection(items, PosCopy.PosGrouping.PosKey);
                 AddMissing();
                 SortDisplayList();
             }
