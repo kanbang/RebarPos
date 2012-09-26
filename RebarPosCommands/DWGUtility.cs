@@ -1575,33 +1575,61 @@ namespace RebarPosCommands
 
                     if (dict.Count == 0)
                     {
-                        BOQStyle style = new BOQStyle();
+                        BOQStyle styleen = new BOQStyle();
 
-                        style.Name = "TableStyle1";
-                        style.Columns = "[M][N][D][L][SH][TL]";
+                        styleen.Name = "TableStyle - EN";
+                        styleen.Columns = "[M][N][D][L][SH][TL]";
 
-                        style.TextStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Style", "leroy.shx", 0.7);
-                        style.HeadingStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Heading Style", "Arial.ttf", 1.0);
-                        style.FootingStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Footing Style", "simplxtw.shx", 1.0);
+                        styleen.TextStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Style", "romanstw.shx", 0.7);
+                        styleen.HeadingStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Heading Style", "Arial.ttf", 1.0);
+                        styleen.FootingStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Footing Style", "simplxtw.shx", 1.0);
 
-                        style.Precision = 2;
+                        styleen.Precision = 2;
 
-                        style.PosLabel = "POS";
-                        style.CountLabel = "NO.";
-                        style.DiameterLabel = "DIA";
-                        style.LengthLabel = "LENGTH\\P([U])";
-                        style.ShapeLabel = "SHAPE";
-                        style.TotalLengthLabel = "TOTAL LENGTH (m)";
-                        style.DiameterListLabel = "T[D]";
-                        style.DiameterLengthLabel = "TOTAL LENGTH (m)";
-                        style.UnitWeightLabel = "UNIT WEIGHT (kg/m)";
-                        style.WeightLabel = "WEIGHT (kg)";
-                        style.GrossWeightLabel = "TOTAL WEIGHT (kg)";
+                        styleen.PosLabel = "POS";
+                        styleen.CountLabel = "NO.";
+                        styleen.DiameterLabel = "DIA";
+                        styleen.LengthLabel = "LENGTH\\P([U])";
+                        styleen.ShapeLabel = "SHAPE";
+                        styleen.TotalLengthLabel = "TOTAL LENGTH (m)";
+                        styleen.DiameterListLabel = "T[D]";
+                        styleen.DiameterLengthLabel = "TOTAL LENGTH (m)";
+                        styleen.UnitWeightLabel = "UNIT WEIGHT (kg/m)";
+                        styleen.WeightLabel = "WEIGHT (kg)";
+                        styleen.GrossWeightLabel = "TOTAL WEIGHT (kg)";
 
                         dict.UpgradeOpen();
-                        id = dict.SetAt("*", style);
+                        id = dict.SetAt("*", styleen);
                         dict.DowngradeOpen();
-                        tr.AddNewlyCreatedDBObject(style, true);
+                        tr.AddNewlyCreatedDBObject(styleen, true);
+
+                        BOQStyle styletr = new BOQStyle();
+
+                        styletr.Name = "TableStyle - TR";
+                        styletr.Columns = "[M][N][D][L][SH][TL]";
+
+                        styletr.TextStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Style", "romanstw.shx", 0.7);
+                        styletr.HeadingStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Heading Style", "Arial.ttf", 1.0);
+                        styletr.FootingStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Footing Style", "simplxtw.shx", 1.0);
+
+                        styletr.Precision = 2;
+
+                        styletr.PosLabel = "POZ";
+                        styletr.CountLabel = "ADET";
+                        styletr.DiameterLabel = "ÇAP";
+                        styletr.LengthLabel = "BOY\\P([U])";
+                        styletr.ShapeLabel = "DEMİR ŞEKLİ";
+                        styletr.TotalLengthLabel = "TOPLAM BOY (m)";
+                        styletr.DiameterListLabel = "T[D]";
+                        styletr.DiameterLengthLabel = "TOPLAM BOY (m)";
+                        styletr.UnitWeightLabel = "BIRIM AGIRLIK (kg/m)";
+                        styletr.WeightLabel = "TOPLAM AGIRLIK (kg)";
+                        styletr.GrossWeightLabel = "GENEL TOPLAM (kg)";
+
+                        dict.UpgradeOpen();
+                        id = dict.SetAt("*", styletr);
+                        dict.DowngradeOpen();
+                        tr.AddNewlyCreatedDBObject(styletr, true);
                     }
                     else
                     {
