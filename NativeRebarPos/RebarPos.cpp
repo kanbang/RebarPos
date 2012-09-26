@@ -318,6 +318,11 @@ Acad::ErrorStatus CRebarPos::setDisplay(const CRebarPos::DisplayStyle newVal)
 {
 	assertWriteEnabled();
 	m_DisplayStyle = newVal;
+
+	// Do not include in BOQ if only marker is shown.
+	if(m_DisplayStyle == CRebarPos::MARKERONLY)
+		m_IncludeInBOQ = Adesk::kFalse;
+
 	isModified = true;
 	return Acad::eOk;
 }
@@ -930,7 +935,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	lastNoteStyle.loadStyleRec();
 	worldDraw->subEntityTraits().setSelectionMarker(2);
 	worldDraw->subEntityTraits().setColor(lastNoteDraw.color);
-	worldDraw->geometry().text(AcGePoint3d(lastNoteDraw.x, lastNoteDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, m_Note, -1, Adesk::kFalse, lastNoteStyle);
+	worldDraw->geometry().text(AcGePoint3d(lastNoteDraw.x, lastNoteDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastNoteDraw.text.c_str(), -1, Adesk::kFalse, lastNoteStyle);
 	// Reset transform
 	worldDraw->geometry().popModelTransform();
 
@@ -2018,7 +2023,11 @@ const void CRebarPos::Calculate(void) const
 	{
 		lastDrawList = ParseFormula(pGroup->FormulaPosOnly());
 	}
-	lastNoteDraw.text = m_Note;
+
+	if(m_DisplayStyle != CRebarPos::MARKERONLY)
+		lastNoteDraw.text = m_Note;
+	else
+		lastNoteDraw.text = L"";
 
 	if(m_DisplayStyle == CRebarPos::ALL && pGroup->FormulaLengthOnly() != NULL)
 	{
