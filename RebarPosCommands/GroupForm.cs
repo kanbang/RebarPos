@@ -150,20 +150,6 @@ namespace RebarPosCommands
                 }
             }
 
-            int i = 0;
-            foreach (GroupCopy copy in m_Copies)
-            {
-                ListViewItem lv = new ListViewItem(copy.name);
-                lbGroups.Items.Add(lv);
-
-                if (copy.isCurrent)
-                {
-                    lbGroups.SelectedIndices.Add(i);
-                }
-                i++;
-            }
-            UpdateItemImages();
-
             m_TextStyles = DWGUtility.GetTextStyles();
             foreach (string name in m_TextStyles.Keys)
             {
@@ -179,13 +165,12 @@ namespace RebarPosCommands
 
         public void SetGroup()
         {
-            if (lbGroups.SelectedIndices.Count == 0) return;
+            if (m_Copies.Count == 0) return;
 
-            GroupCopy copy = m_Copies.Find(p => p.name == lbGroups.SelectedItems[0].Text);
+            GroupCopy copy = m_Copies[0];
             if (copy == null)
                 return;
 
-            btnRemove.Enabled = !copy.isCurrent && !copy.isUsed;
             cbDrawingUnit.SelectedIndex = (copy.drawingUnits == PosGroup.DrawingUnits.Millimeter ? 0 : 1);
             cbDisplayUnit.SelectedIndex = (copy.displayUnits == PosGroup.DrawingUnits.Millimeter ? 0 : 1);
             udPrecision.Value = copy.precision;
@@ -205,7 +190,6 @@ namespace RebarPosCommands
             btnPickMultiplierColor.BackColor = copy.multiplierColor.ColorValue;
             btnPickGroupColor.BackColor = copy.groupColor.ColorValue;
             btnPickNoteColor.BackColor = copy.noteColor.ColorValue;
-            btnPickCurrentGroupColor.BackColor = copy.currentGroupHighlightColor.ColorValue;
 
             posStylePreview.TextColor = copy.textColor.ColorValue;
             posStylePreview.PosColor = copy.posColor.ColorValue;
@@ -237,166 +221,10 @@ namespace RebarPosCommands
             txtNoteScale.Text = copy.noteScale.ToString();
         }
 
-        private void btnAdd_Click(object sender, EventArgs e)
-        {
-            GroupCopy org = m_Copies[0];
-            if (lbGroups.SelectedIndices.Count != 0)
-                org = m_Copies.Find(p => p.name == lbGroups.SelectedItems[0].Text);
-
-            int i = 1;
-            while (m_Copies.Exists(p => p.name.ToUpperInvariant() == "GROUP" + i.ToString()))
-            {
-                i++;
-            }
-
-            GroupCopy copy = new GroupCopy();
-
-            copy.name = "Group" + i.ToString();
-
-            copy.id = ObjectId.Null;
-            copy.isNew = true;
-            copy.isDeleted = false;
-            copy.isUsed = false;
-            copy.isCurrent = false;
-
-            copy.drawingUnits = org.drawingUnits;
-            copy.displayUnits = org.displayUnits;
-            copy.precision = org.precision;
-            copy.maxLength = org.maxLength;
-            copy.bending = org.bending;
-
-            copy.formula = org.formula;
-            copy.formulaLengthOnly = org.formulaLengthOnly;
-            copy.formulaPosOnly = org.formulaPosOnly;
-
-            copy.standardDiameters = "8 10 12 14 16 18 20 22 25 26 32 36";
-
-            copy.textColor = org.textColor;
-            copy.posColor = org.posColor;
-            copy.circleColor = org.circleColor;
-            copy.multiplierColor = org.multiplierColor;
-            copy.groupColor = org.groupColor;
-            copy.noteColor = org.noteColor;
-            copy.currentGroupHighlightColor = org.currentGroupHighlightColor;
-
-            copy.hiddenLayerId = org.hiddenLayerId;
-            copy.textStyleId = org.textStyleId;
-            copy.noteStyleId = org.noteStyleId;
-            copy.noteScale = org.noteScale;
-
-            m_Copies.Add(copy);
-
-            ListViewItem lv = new ListViewItem(copy.name);
-            lv.ImageIndex = 2;
-            lbGroups.Items.Add(lv);
-            lbGroups.SelectedIndices.Clear();
-            lbGroups.SelectedIndices.Add(lbGroups.Items.Count - 1);
-            lv.BeginEdit();
-        }
-
-        private void btnRemove_Click(object sender, EventArgs e)
-        {
-            if (lbGroups.SelectedIndices.Count == 0) return;
-
-            GroupCopy copy = m_Copies.Find(p => p.name == lbGroups.SelectedItems[0].Text);
-            if (copy == null)
-            {
-                return;
-            }
-            copy.isDeleted = true;
-            UpdateItemImages();
-        }
-
-        private void btnRename_Click(object sender, EventArgs e)
-        {
-            if (lbGroups.SelectedIndices.Count == 0) return;
-            lbGroups.SelectedItems[0].BeginEdit();
-        }
-
-        private void btnSetCurrent_Click(object sender, EventArgs e)
-        {
-            GroupCopy copy = GetSelected();
-            if (copy == null) return;
-            foreach (GroupCopy item in m_Copies)
-            {
-                item.isCurrent = false;
-            }
-            copy.isCurrent = true;
-            UpdateItemImages();
-        }
-
-        private void lbGroups_AfterLabelEdit(object sender, LabelEditEventArgs e)
-        {
-            if (e.Label == null)
-            {
-                return;
-            }
-            if (lbGroups.SelectedIndices.Count == 0)
-            {
-                e.CancelEdit = true;
-                return;
-            }
-            foreach (ListViewItem item in lbGroups.Items)
-            {
-                if (item.Index != lbGroups.SelectedIndices[0] && item.Text == e.Label)
-                {
-                    MessageBox.Show("Bu isim zaten mevcut. Lütfen farklı bir isim seçin.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    e.CancelEdit = true;
-                    return;
-                }
-            }
-            GroupCopy copy = m_Copies.Find(p => p.name == lbGroups.Items[e.Item].Text);
-            if (copy == null)
-            {
-                e.CancelEdit = true;
-                return;
-            }
-            copy.name = e.Label;
-        }
-
-        private void lbGroups_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (lbGroups.SelectedIndices.Count == 0)
-            {
-                btnRemove.Enabled = false;
-                btnRename.Enabled = false;
-                btnSetCurrent.Enabled = false;
-            }
-            else
-            {
-                btnRemove.Enabled = true;
-                btnRename.Enabled = true;
-                btnSetCurrent.Enabled = true;
-                SetGroup();
-            }
-
-            gbDisplay.Enabled = (lbGroups.SelectedIndices.Count != 0);
-            gbOptions.Enabled = (lbGroups.SelectedIndices.Count != 0);
-        }
-
-        private void UpdateItemImages()
-        {
-            for (int i = 0; i < m_Copies.Count; i++)
-            {
-                GroupCopy copy = m_Copies[i];
-                ListViewItem lv = lbGroups.Items[i];
-                if (copy.isCurrent)
-                    lv.ImageIndex = 4;
-                else if (copy.isUsed)
-                    lv.ImageIndex = 0;
-                else if (copy.isDeleted)
-                    lv.ImageIndex = 3;
-                else if (copy.isNew)
-                    lv.ImageIndex = 2;
-                else
-                    lv.ImageIndex = 1;
-            }
-        }
-
         private GroupCopy GetSelected()
         {
-            if (lbGroups.SelectedIndices.Count == 0) return null;
-            return m_Copies.Find(p => p.name == lbGroups.SelectedItems[0].Text);
+            if (m_Copies.Count == 0) return null;
+            return m_Copies[0];
         }
 
         private void cbDrawingUnit_SelectedIndexChanged(object sender, EventArgs e)

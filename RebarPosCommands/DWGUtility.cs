@@ -1486,6 +1486,8 @@ namespace RebarPosCommands
         }
 
         // Creates default groups
+        // Multiple groups are disabled. This will create the one and only
+        // pos group.
         public static ObjectId CreateDefaultGroups()
         {
             ObjectId id = ObjectId.Null;

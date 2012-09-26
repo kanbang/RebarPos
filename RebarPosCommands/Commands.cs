@@ -61,8 +61,8 @@ namespace RebarPosCommands
             bool cont = true;
             while (cont)
             {
-                PromptEntityOptions opts = new PromptEntityOptions("Poz secin veya [Yeni/Numaralandir/Kopyala/kOntrol/Metraj/bul Degistir/numara Sil/Acilimlar/Tablo stili]: ",
-                    "New Numbering Copy Check BOQ Find Empty Shapes Table");
+                PromptEntityOptions opts = new PromptEntityOptions("Poz secin veya [Yeni/Numaralandir/Kopyala/kOntrol/Metraj/bul Degistir/numara Sil/Acilimlar/Tablo stili/ayaRlar]: ",
+                    "New Numbering Copy Check BOQ Find Empty Shapes Table Preferences");
                 opts.AllowNone = false;
                 PromptEntityResult result = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetEntity(opts);
 
@@ -96,6 +96,9 @@ namespace RebarPosCommands
                             break;
                         case "Table":
                             TableStyles();
+                            break;
+                        case "Preferences":
+                            PosGroups();
                             break;
                     }
                     cont = false;
@@ -304,6 +307,12 @@ namespace RebarPosCommands
         public void CMD_PosHelp()
         {
             MessageBox.Show("Yardım dosyası henüz tamamlanmadı.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        [CommandMethod("RebarPos", "POSSETTINGS", "POSSETTINGS_Local", CommandFlags.Modal)]
+        public void CMD_PosGroups()
+        {
+            PosGroups();
         }
 
         [CommandMethod("RebarPos", "DUMPPOSSHAPES", CommandFlags.Modal)]

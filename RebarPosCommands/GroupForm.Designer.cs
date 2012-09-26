@@ -44,21 +44,12 @@
             this.chkBending = new System.Windows.Forms.CheckBox();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.lbGroups = new System.Windows.Forms.ListView();
-            this.chName = new System.Windows.Forms.ColumnHeader();
             this.lGroups = new System.Windows.Forms.ImageList(this.components);
-            this.btnSetCurrent = new System.Windows.Forms.Button();
-            this.btnRename = new System.Windows.Forms.Button();
-            this.btnRemove = new System.Windows.Forms.Button();
-            this.btnAdd = new System.Windows.Forms.Button();
             this.gbDisplay = new System.Windows.Forms.GroupBox();
             this.posStylePreview = new RebarPosCommands.PosStylePreview();
-            this.btnPickCurrentGroupColor = new System.Windows.Forms.Button();
             this.btnPickGroupColor = new System.Windows.Forms.Button();
             this.cbNoteStyle = new System.Windows.Forms.ComboBox();
             this.cbTextStyle = new System.Windows.Forms.ComboBox();
-            this.label13 = new System.Windows.Forms.Label();
             this.btnPickMultiplierColor = new System.Windows.Forms.Button();
             this.label15 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
@@ -83,7 +74,6 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.gbOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udPrecision)).BeginInit();
-            this.groupBox2.SuspendLayout();
             this.gbDisplay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
@@ -103,12 +93,12 @@
             this.gbOptions.Controls.Add(this.label17);
             this.gbOptions.Controls.Add(this.label1);
             this.gbOptions.Controls.Add(this.chkBending);
-            this.gbOptions.Location = new System.Drawing.Point(306, 12);
+            this.gbOptions.Location = new System.Drawing.Point(12, 12);
             this.gbOptions.Name = "gbOptions";
-            this.gbOptions.Size = new System.Drawing.Size(311, 244);
+            this.gbOptions.Size = new System.Drawing.Size(605, 244);
             this.gbOptions.TabIndex = 1;
             this.gbOptions.TabStop = false;
-            this.gbOptions.Text = "Grup S&eçenekleri";
+            this.gbOptions.Text = "S&eçenekler";
             // 
             // udPrecision
             // 
@@ -248,50 +238,6 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // groupBox2
-            // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.lbGroups);
-            this.groupBox2.Controls.Add(this.btnSetCurrent);
-            this.groupBox2.Controls.Add(this.btnRename);
-            this.groupBox2.Controls.Add(this.btnRemove);
-            this.groupBox2.Controls.Add(this.btnAdd);
-            this.groupBox2.Location = new System.Drawing.Point(12, 12);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(288, 244);
-            this.groupBox2.TabIndex = 0;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "&Poz Grupları";
-            // 
-            // lbGroups
-            // 
-            this.lbGroups.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbGroups.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.chName});
-            this.lbGroups.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.lbGroups.LabelEdit = true;
-            this.lbGroups.LabelWrap = false;
-            this.lbGroups.LargeImageList = this.lGroups;
-            this.lbGroups.Location = new System.Drawing.Point(15, 23);
-            this.lbGroups.MultiSelect = false;
-            this.lbGroups.Name = "lbGroups";
-            this.lbGroups.Size = new System.Drawing.Size(227, 202);
-            this.lbGroups.SmallImageList = this.lGroups;
-            this.lbGroups.TabIndex = 0;
-            this.lbGroups.UseCompatibleStateImageBehavior = false;
-            this.lbGroups.View = System.Windows.Forms.View.Details;
-            this.lbGroups.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.lbGroups_AfterLabelEdit);
-            this.lbGroups.SelectedIndexChanged += new System.EventHandler(this.lbGroups_SelectedIndexChanged);
-            // 
-            // chName
-            // 
-            this.chName.Text = "Name";
-            this.chName.Width = 130;
-            // 
             // lGroups
             // 
             this.lGroups.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("lGroups.ImageStream")));
@@ -302,60 +248,14 @@
             this.lGroups.Images.SetKeyName(3, "page_white_delete.png");
             this.lGroups.Images.SetKeyName(4, "page_go.png");
             // 
-            // btnSetCurrent
-            // 
-            this.btnSetCurrent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSetCurrent.Image = global::RebarPosCommands.Properties.Resources.tick;
-            this.btnSetCurrent.Location = new System.Drawing.Point(248, 113);
-            this.btnSetCurrent.Name = "btnSetCurrent";
-            this.btnSetCurrent.Size = new System.Drawing.Size(24, 24);
-            this.btnSetCurrent.TabIndex = 4;
-            this.btnSetCurrent.UseVisualStyleBackColor = true;
-            this.btnSetCurrent.Click += new System.EventHandler(this.btnSetCurrent_Click);
-            // 
-            // btnRename
-            // 
-            this.btnRename.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRename.Image = global::RebarPosCommands.Properties.Resources.textfield;
-            this.btnRename.Location = new System.Drawing.Point(248, 83);
-            this.btnRename.Name = "btnRename";
-            this.btnRename.Size = new System.Drawing.Size(24, 24);
-            this.btnRename.TabIndex = 3;
-            this.btnRename.UseVisualStyleBackColor = true;
-            this.btnRename.Click += new System.EventHandler(this.btnRename_Click);
-            // 
-            // btnRemove
-            // 
-            this.btnRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRemove.Image = global::RebarPosCommands.Properties.Resources.delete;
-            this.btnRemove.Location = new System.Drawing.Point(248, 53);
-            this.btnRemove.Name = "btnRemove";
-            this.btnRemove.Size = new System.Drawing.Size(24, 24);
-            this.btnRemove.TabIndex = 2;
-            this.btnRemove.UseVisualStyleBackColor = true;
-            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
-            // 
-            // btnAdd
-            // 
-            this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAdd.Image = global::RebarPosCommands.Properties.Resources.add;
-            this.btnAdd.Location = new System.Drawing.Point(248, 23);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(24, 24);
-            this.btnAdd.TabIndex = 1;
-            this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
-            // 
             // gbDisplay
             // 
             this.gbDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.gbDisplay.Controls.Add(this.posStylePreview);
-            this.gbDisplay.Controls.Add(this.btnPickCurrentGroupColor);
             this.gbDisplay.Controls.Add(this.btnPickGroupColor);
             this.gbDisplay.Controls.Add(this.cbNoteStyle);
             this.gbDisplay.Controls.Add(this.cbTextStyle);
-            this.gbDisplay.Controls.Add(this.label13);
             this.gbDisplay.Controls.Add(this.btnPickMultiplierColor);
             this.gbDisplay.Controls.Add(this.label15);
             this.gbDisplay.Controls.Add(this.label12);
@@ -404,22 +304,11 @@
             this.posStylePreview.TabIndex = 24;
             this.posStylePreview.TextColor = System.Drawing.Color.Red;
             // 
-            // btnPickCurrentGroupColor
-            // 
-            this.btnPickCurrentGroupColor.BackColor = System.Drawing.Color.White;
-            this.btnPickCurrentGroupColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPickCurrentGroupColor.Location = new System.Drawing.Point(187, 283);
-            this.btnPickCurrentGroupColor.Name = "btnPickCurrentGroupColor";
-            this.btnPickCurrentGroupColor.Size = new System.Drawing.Size(100, 23);
-            this.btnPickCurrentGroupColor.TabIndex = 19;
-            this.btnPickCurrentGroupColor.UseVisualStyleBackColor = false;
-            this.btnPickCurrentGroupColor.Click += new System.EventHandler(this.btnPickCurrentGroupColor_Click);
-            // 
             // btnPickGroupColor
             // 
             this.btnPickGroupColor.BackColor = System.Drawing.Color.White;
             this.btnPickGroupColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPickGroupColor.Location = new System.Drawing.Point(187, 254);
+            this.btnPickGroupColor.Location = new System.Drawing.Point(188, 283);
             this.btnPickGroupColor.Name = "btnPickGroupColor";
             this.btnPickGroupColor.Size = new System.Drawing.Size(100, 23);
             this.btnPickGroupColor.TabIndex = 17;
@@ -430,9 +319,9 @@
             // 
             this.cbNoteStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbNoteStyle.FormattingEnabled = true;
-            this.cbNoteStyle.Location = new System.Drawing.Point(482, 137);
+            this.cbNoteStyle.Location = new System.Drawing.Point(433, 137);
             this.cbNoteStyle.Name = "cbNoteStyle";
-            this.cbNoteStyle.Size = new System.Drawing.Size(100, 21);
+            this.cbNoteStyle.Size = new System.Drawing.Size(149, 21);
             this.cbNoteStyle.TabIndex = 23;
             this.cbNoteStyle.SelectedIndexChanged += new System.EventHandler(this.cbNoteStyle_SelectedIndexChanged);
             // 
@@ -440,26 +329,17 @@
             // 
             this.cbTextStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbTextStyle.FormattingEnabled = true;
-            this.cbTextStyle.Location = new System.Drawing.Point(482, 111);
+            this.cbTextStyle.Location = new System.Drawing.Point(433, 111);
             this.cbTextStyle.Name = "cbTextStyle";
-            this.cbTextStyle.Size = new System.Drawing.Size(100, 21);
+            this.cbTextStyle.Size = new System.Drawing.Size(149, 21);
             this.cbTextStyle.TabIndex = 21;
             this.cbTextStyle.SelectedIndexChanged += new System.EventHandler(this.cbTextStyle_SelectedIndexChanged);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(16, 288);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(112, 13);
-            this.label13.TabIndex = 18;
-            this.label13.Text = "&Aktif Poz Grubu Rengi";
             // 
             // btnPickMultiplierColor
             // 
             this.btnPickMultiplierColor.BackColor = System.Drawing.Color.White;
             this.btnPickMultiplierColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPickMultiplierColor.Location = new System.Drawing.Point(187, 225);
+            this.btnPickMultiplierColor.Location = new System.Drawing.Point(188, 254);
             this.btnPickMultiplierColor.Name = "btnPickMultiplierColor";
             this.btnPickMultiplierColor.Size = new System.Drawing.Size(100, 23);
             this.btnPickMultiplierColor.TabIndex = 15;
@@ -478,7 +358,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(16, 259);
+            this.label12.Location = new System.Drawing.Point(17, 288);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(88, 13);
             this.label12.TabIndex = 16;
@@ -497,7 +377,7 @@
             // 
             this.btnPickNoteColor.BackColor = System.Drawing.Color.White;
             this.btnPickNoteColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPickNoteColor.Location = new System.Drawing.Point(187, 196);
+            this.btnPickNoteColor.Location = new System.Drawing.Point(188, 225);
             this.btnPickNoteColor.Name = "btnPickNoteColor";
             this.btnPickNoteColor.Size = new System.Drawing.Size(100, 23);
             this.btnPickNoteColor.TabIndex = 13;
@@ -508,7 +388,7 @@
             // 
             this.btnPickCircleColor.BackColor = System.Drawing.Color.White;
             this.btnPickCircleColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPickCircleColor.Location = new System.Drawing.Point(187, 167);
+            this.btnPickCircleColor.Location = new System.Drawing.Point(188, 196);
             this.btnPickCircleColor.Name = "btnPickCircleColor";
             this.btnPickCircleColor.Size = new System.Drawing.Size(100, 23);
             this.btnPickCircleColor.TabIndex = 11;
@@ -518,7 +398,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(16, 230);
+            this.label11.Location = new System.Drawing.Point(17, 259);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(95, 13);
             this.label11.TabIndex = 14;
@@ -527,7 +407,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(16, 201);
+            this.label18.Location = new System.Drawing.Point(17, 230);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(85, 13);
             this.label18.TabIndex = 12;
@@ -537,7 +417,7 @@
             // 
             this.btnPickPosColor.BackColor = System.Drawing.Color.White;
             this.btnPickPosColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPickPosColor.Location = new System.Drawing.Point(187, 138);
+            this.btnPickPosColor.Location = new System.Drawing.Point(188, 167);
             this.btnPickPosColor.Name = "btnPickPosColor";
             this.btnPickPosColor.Size = new System.Drawing.Size(100, 23);
             this.btnPickPosColor.TabIndex = 9;
@@ -547,7 +427,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(16, 172);
+            this.label10.Location = new System.Drawing.Point(17, 201);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(91, 13);
             this.label10.TabIndex = 10;
@@ -557,7 +437,7 @@
             // 
             this.btnPickTextColor.BackColor = System.Drawing.Color.White;
             this.btnPickTextColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPickTextColor.Location = new System.Drawing.Point(187, 109);
+            this.btnPickTextColor.Location = new System.Drawing.Point(188, 138);
             this.btnPickTextColor.Name = "btnPickTextColor";
             this.btnPickTextColor.Size = new System.Drawing.Size(100, 23);
             this.btnPickTextColor.TabIndex = 7;
@@ -567,7 +447,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(16, 143);
+            this.label9.Location = new System.Drawing.Point(17, 172);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(103, 13);
             this.label9.TabIndex = 8;
@@ -575,9 +455,9 @@
             // 
             // txtNoteScale
             // 
-            this.txtNoteScale.Location = new System.Drawing.Point(482, 163);
+            this.txtNoteScale.Location = new System.Drawing.Point(433, 163);
             this.txtNoteScale.Name = "txtNoteScale";
-            this.txtNoteScale.Size = new System.Drawing.Size(100, 20);
+            this.txtNoteScale.Size = new System.Drawing.Size(149, 20);
             this.txtNoteScale.TabIndex = 25;
             this.txtNoteScale.Validated += new System.EventHandler(this.txtNoteScale_Validated);
             this.txtNoteScale.Validating += new System.ComponentModel.CancelEventHandler(this.txtNoteScale_Validating);
@@ -602,7 +482,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(16, 114);
+            this.label8.Location = new System.Drawing.Point(17, 143);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(58, 13);
             this.label8.TabIndex = 6;
@@ -664,7 +544,6 @@
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(629, 651);
             this.Controls.Add(this.gbDisplay);
-            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.gbOptions);
@@ -678,7 +557,6 @@
             this.gbOptions.ResumeLayout(false);
             this.gbOptions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udPrecision)).EndInit();
-            this.groupBox2.ResumeLayout(false);
             this.gbDisplay.ResumeLayout(false);
             this.gbDisplay.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
@@ -700,14 +578,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Button btnAdd;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.ListView lbGroups;
-        private System.Windows.Forms.Button btnRename;
-        private System.Windows.Forms.Button btnRemove;
-        private System.Windows.Forms.ColumnHeader chName;
         private System.Windows.Forms.ImageList lGroups;
-        private System.Windows.Forms.Button btnSetCurrent;
         private System.Windows.Forms.GroupBox gbDisplay;
         private System.Windows.Forms.TextBox txtFormulaWithoutLength;
         private System.Windows.Forms.Label label6;
@@ -725,8 +596,6 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Button btnPickGroupColor;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Button btnPickCurrentGroupColor;
-        private System.Windows.Forms.Label label13;
         private System.Windows.Forms.ComboBox cbTextStyle;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.ComboBox cbNoteStyle;

@@ -1746,7 +1746,7 @@ Acad::ErrorStatus CRebarPos::subWblockClone(AcRxObject*    pOwner,
 
     idMap.assign(AcDbIdPair(objectId(), pClonedObject->objectId(), Adesk::kTrue, isPrim, (Adesk::Boolean)(pOwn != NULL)));
 
-   pClonedObject->setOwnerId((pOwn != NULL) ? pOwn->objectId() : ownerId());
+    pClonedObject->setOwnerId((pOwn != NULL) ? pOwn->objectId() : ownerId());
 
     // STEP 5:
     // This must be called for all newly created objects

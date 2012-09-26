@@ -159,14 +159,14 @@
   <data name="POSFIND_Local" xml:space="preserve">
     <value>POZBUL</value>
   </data>
-  <data name="POSGROUP_Local" xml:space="preserve">
-    <value>POZGRUP</value>
-  </data>
   <data name="POSHELP_Local" xml:space="preserve">
     <value>METRAJYARDIM</value>
   </data>
   <data name="POSLENGTH_Local" xml:space="preserve">
     <value>BOYGOSTER</value>
+  </data>
+  <data name="POSSETTINGS_Local" xml:space="preserve">
+    <value>POZAYAR</value>
   </data>
   <data name="POSSHAPES_Local" xml:space="preserve">
     <value>ACILIMLAR</value>

@@ -196,15 +196,6 @@ namespace RebarPosCommands {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to POZGRUP.
-        /// </summary>
-        internal static string POSGROUP_Local {
-            get {
-                return ResourceManager.GetString("POSGROUP_Local", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to METRAJYARDIM.
         /// </summary>
         internal static string POSHELP_Local {
@@ -219,6 +210,15 @@ namespace RebarPosCommands {
         internal static string POSLENGTH_Local {
             get {
                 return ResourceManager.GetString("POSLENGTH_Local", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to POZAYAR.
+        /// </summary>
+        internal static string POSSETTINGS_Local {
+            get {
+                return ResourceManager.GetString("POSSETTINGS_Local", resourceCulture);
             }
         }
         
