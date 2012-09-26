@@ -114,6 +114,9 @@ namespace RebarPosCommands
                             dest.D = source.D;
                             dest.E = source.E;
                             dest.F = source.F;
+                            dest.Display = RebarPos.DisplayStyle.WithoutLength;
+                            dest.Note = "";
+                            dest.IncludeInBOQ = false;
                             dest.Multiplier = 0;
                         }
                     }
