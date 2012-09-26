@@ -37,8 +37,6 @@ namespace RebarPosCommands
         PosGroup.DrawingUnits m_DrawingUnits;
         double m_MaxLength;
 
-        bool init = false;
-
         public EditPosForm()
         {
             InitializeComponent();
@@ -54,8 +52,6 @@ namespace RebarPosCommands
 
         public bool Init(ObjectId id, Point3d pt)
         {
-            init = true;
-
             Database db = HostApplicationServices.WorkingDatabase;
             using (Transaction tr = db.TransactionManager.StartTransaction())
             {
@@ -66,7 +62,6 @@ namespace RebarPosCommands
                     RebarPos pos = tr.GetObject(m_Pos, OpenMode.ForRead) as RebarPos;
                     if (pos == null)
                     {
-                        init = false;
                         return false;
                     }
 
@@ -76,7 +71,6 @@ namespace RebarPosCommands
                     m_Shapes = DWGUtility.GetShapes();
                     if (m_Shapes.Count == 0)
                     {
-                        init = false;
                         return false;
                     }
 
@@ -102,12 +96,10 @@ namespace RebarPosCommands
 
                     if (!SetGroup())
                     {
-                        init = false;
                         return false;
                     }
                     if (!SetShape())
                     {
-                        init = false;
                         return false;
                     }
 
@@ -118,12 +110,10 @@ namespace RebarPosCommands
                 catch (System.Exception ex)
                 {
                     MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    init = false;
                     return false;
                 }
             }
 
-            init = false;
             return true;
         }
 
