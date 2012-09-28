@@ -281,6 +281,15 @@ RebarPos::HitTestResult RebarPos::HitTest(Point3d pt)
 	return static_cast<RebarPos::HitTestResult>(GetImpObj()->HitTest(Marshal::FromPoint3d(pt)));
 }
 
+void RebarPos::TextBox([Out] Point3d% minPoint, [Out] Point3d% maxPoint)
+{
+	AcGePoint3d pmin;
+	AcGePoint3d pmax;
+	GetImpObj()->TextBox(pmin, pmax);
+	minPoint = Point3d(pmin.x, pmin.y, 0.0);
+	maxPoint = Point3d(pmax.x, pmax.y, 0.0);
+}
+
 //*************************************************************************
 // Static Methods
 //*************************************************************************

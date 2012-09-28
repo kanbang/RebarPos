@@ -190,6 +190,7 @@ namespace OZOZ
 		public:
 			void Update();
 			HitTestResult HitTest(Point3d pt);
+			void TextBox([Out] Point3d% minPoint, [Out] Point3d% maxPoint);
 
 		public:
 			static bool GetTotalLengths(String^ formula, int fieldCount, PosGroup::DrawingUnits inputUnit, String^ a, String^ b, String^ c, String^ d, String^ e, String^ f, String^ diameter, [Out] double% minLength, [Out] double% maxLength, [Out] bool% isVar);

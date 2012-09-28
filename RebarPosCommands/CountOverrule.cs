@@ -63,17 +63,20 @@ namespace RebarPosCommands
             Vector3d up = pos.UpVector;
             Vector3d norm = pos.NormalVector;
 
-            double w = pos.Width / dir.Length;
-            double h = pos.Height / dir.Length;
+            Point3d minpt;
+            Point3d maxpt;
+            pos.TextBox(out minpt, out maxpt);
+            minpt = minpt.DivideBy(dir.Length);
+            maxpt = maxpt.DivideBy(dir.Length);
 
             // Transform to object orientation
             Matrix3d trans = Matrix3d.AlignCoordinateSystem(Point3d.Origin, Vector3d.XAxis, Vector3d.YAxis, Vector3d.ZAxis, pt, dir, up, norm);
 
             Solid solid = new Solid();
-            solid.SetPointAt(0, new Point3d(-0.15, -0.15, 0));
-            solid.SetPointAt(1, new Point3d(w + .15, -0.15, 0));
-            solid.SetPointAt(2, new Point3d(-0.15, h + .15, 0));
-            solid.SetPointAt(3, new Point3d(w + .15, h + .15, 0));
+            solid.SetPointAt(0, new Point3d(minpt.X - 0.15, minpt.Y - 0.15, 0));
+            solid.SetPointAt(1, new Point3d(maxpt.X + 0.15, minpt.Y - 0.15, 0));
+            solid.SetPointAt(2, new Point3d(minpt.X - 0.15, maxpt.Y + 0.15, 0));
+            solid.SetPointAt(3, new Point3d(maxpt.X + 0.15, maxpt.Y + 0.15, 0));
             solid.Color = mColor;
             solid.LayerId = mLayer;
             solid.TransformBy(trans);

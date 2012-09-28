@@ -197,6 +197,7 @@ public:
 	/// Get extents
 	const double Width(void) const;
 	const double Height(void) const;
+	const void TextBox(AcGePoint3d& ptmin, AcGePoint3d& ptmax);
 
 	/// Get shapes
 	const std::vector<CShape*>& GetShapes(void) const;

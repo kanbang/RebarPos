@@ -118,9 +118,19 @@ const double CRebarPos::Width(void) const
 		return 0.0;
 	}
 
+	double w = 0.0;
 	CDrawParams p;
-	p = lastDrawList.at(lastDrawList.size() - 1);
-	return (p.x + p.w) * m_Direction.length();
+	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+	{
+		p = lastDrawList[i];
+		w = max(w, p.x + p.w);
+		if(p.hasCircle)
+		{
+			w = max(w, p.x + p.w / 2 + circleRadius);
+		}
+	}
+
+	return w * m_Direction.length();
 }
 
 const double CRebarPos::Height(void) const
@@ -137,9 +147,52 @@ const double CRebarPos::Height(void) const
 		return 0.0;
 	}
 
+	double h = 0.0;
 	CDrawParams p;
-	p = lastDrawList.at(lastDrawList.size() - 1);
-	return (p.y + p.h) * m_Direction.length();
+	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+	{
+		p = lastDrawList[i];
+		h = max(h, p.y + p.h);
+		if(p.hasCircle)
+		{
+			h = max(h, p.y + p.h / 2 + circleRadius);
+		}
+	}
+
+	return h * m_Direction.length();
+}
+
+const void CRebarPos::TextBox(AcGePoint3d& ptmin, AcGePoint3d& ptmax)
+{
+    assertReadEnabled();
+
+	if(isModified)
+	{
+		Calculate();
+	}
+
+	if(lastDrawList.empty())
+	{
+		return;
+	}
+
+	double xmin = 0.0, xmax = 0.0, ymin = 0.0, ymax = 0.0;
+	CDrawParams p;
+	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+	{
+		p = lastDrawList[i];
+		xmin = min(xmin, p.x); xmax = max(xmax, p.x + p.w);
+		ymin = min(ymin, p.y); ymax = max(ymax, p.y + p.y);
+		if(p.hasCircle)
+		{
+			xmin = min(xmin, p.x + p.w / 2 - circleRadius); xmax = max(xmax, p.x + p.w / 2 + circleRadius);
+			ymin = min(ymin, p.y + p.h / 2 - circleRadius); ymax = max(ymax, p.y + p.h / 2 + circleRadius);
+		}
+	}
+
+	double sc = m_Direction.length();
+	ptmin.set(xmin * sc, ymin * sc, 0.0);
+	ptmax.set(xmax * sc, ymax * sc, 0.0);
 }
 
 const AcGePoint3d& CRebarPos::BasePoint(void) const
