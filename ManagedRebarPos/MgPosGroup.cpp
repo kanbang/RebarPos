@@ -234,3 +234,9 @@ String^ PosGroup::TableName::get()
 {
 	return Marshal::WcharToString(CPosGroup::GetTableName());
 }
+
+Autodesk::AutoCAD::DatabaseServices::ObjectId PosGroup::GroupId::get()
+{
+	AcDbObjectId id = CPosGroup::GetGroupId();
+	return Marshal::ToObjectId(id);
+}

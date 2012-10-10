@@ -33,7 +33,6 @@ namespace RebarPosCommands
                         pos.A = "XXXX";
                         pos.Note = "XXXXXXXX";
                         pos.ShapeId = DWGUtility.CreateDefaultShapes();
-                        pos.GroupId = DWGUtility.CreateDefaultGroups();
 
                         pos.SetDatabaseDefaults(db);
 

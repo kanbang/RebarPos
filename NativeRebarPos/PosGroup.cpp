@@ -5,6 +5,7 @@
 #include "StdAfx.h"
 
 #include "PosGroup.h"
+#include "Utility.h"
 
 //-----------------------------------------------------------------------------
 Adesk::UInt32 CPosGroup::kCurrentVersionNumber = 1;
@@ -731,4 +732,48 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
 ACHAR* CPosGroup::GetTableName()
 {
 	return Table_Name;
+}
+
+AcDbObjectId CPosGroup::GetGroupId()
+{
+	AcDbObjectId id = AcDbObjectId::kNull;
+
+	AcDbDictionary* pNamedObj = NULL;
+	AcDbDatabase *pDb = acdbHostApplicationServices()->workingDatabase();
+	pDb->getNamedObjectsDictionary(pNamedObj, AcDb::kForRead);
+
+	AcDbDictionary *pDict = NULL;
+	if (pNamedObj->getAt(GetTableName(), (AcDbObject*&) pDict, AcDb::kForRead) == Acad::eKeyNotFound)
+	{
+        pDict = new AcDbDictionary();
+		pNamedObj->upgradeOpen();
+		AcDbObjectId pid;
+		pNamedObj->setAt(GetTableName(), pDict, pid);
+		pNamedObj->downgradeOpen();
+	}
+
+	if(pDict->getAt(_T("0"), id) == Acad::eKeyNotFound)
+	{
+        CPosGroup* group = new CPosGroup();
+        group->setName(_T("0"));
+        group->setFormula(_T("[M:C][N][\"T\":D][\"/\":S]"));
+        group->setFormulaLengthOnly(_T("[\"L=\":L]"));
+        group->setFormulaPosOnly(_T("[M:C]"));
+        group->setStandardDiameters(_T("8 10 12 14 16 18 20 22 25 26 32 36"));
+		AcCmColor clr;
+		clr.setColorMethod(AcCmEntityColor::kByACI);
+		clr.setColorIndex(8);
+		group->setHiddenLayerId(Utility::CreateHiddenLayer(_T("Rebar Defpoints"), clr));
+		group->setTextStyleId(Utility::CreateTextStyle(_T("Rebar Text Style"), _T("leroy.shx"), 0.7));
+		group->setNoteStyleId(Utility::CreateTextStyle(_T("Rebar Note Style"), _T("simplxtw.shx"), 0.9));
+        pDict->upgradeOpen();
+        pDict->setAt(_T("0"), group, id);
+		group->close();
+        pDict->downgradeOpen();
+	}
+
+	pDict->close();
+	pNamedObj->close();
+
+	return id;
 }

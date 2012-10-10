@@ -174,6 +174,8 @@ private:
 public:
 	/// Gets the table name
 	static ACHAR* GetTableName();
+	/// Gets the one and only group
+	static AcDbObjectId GetGroupId();
 
 private:
     // These are here because otherwise dllexport tries to export the

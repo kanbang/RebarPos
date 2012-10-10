@@ -59,7 +59,6 @@ public:
 		COUNT = 2,
 		DIAMETER = 3,
 		SPACING = 4,
-		GROUP = 5,
 		MULTIPLIER = 6,
 		LENGTH = 7,
 		NOTE = 8
@@ -111,7 +110,6 @@ private:
 	/// Used to cache last draw params
 	mutable DrawList lastDrawList;
 	mutable CDrawParams lastNoteDraw;
-	mutable CDrawParams lastGroupDraw;
 	mutable CDrawParams lastMultiplierDraw;
 	mutable CDrawParams lastLengthDraw;
     mutable AcGiTextStyle lastTextStyle;
@@ -150,7 +148,6 @@ private:
 	DisplayStyle m_DisplayStyle;
 
 	AcDbHardPointerId m_ShapeID;
-	AcDbHardPointerId m_GroupID;
 
 	/// Locals
 	mutable bool geomInit;
@@ -280,10 +277,6 @@ public:
 	const AcDbObjectId& ShapeId(void) const;
 	Acad::ErrorStatus setShapeId(const AcDbObjectId& newVal);
 
-	/// Gets or sets the pos group
-	const AcDbObjectId& GroupId(void) const;
-	Acad::ErrorStatus setGroupId(const AcDbObjectId& newVal);
-
 	/// Gets calculated properties
 	const CCalculatedProperties& CalcProps(void) const;
 
@@ -334,6 +327,7 @@ protected:
     
 	virtual Acad::ErrorStatus   subGetGeomExtents(AcDbExtents& extents) const;
 
+protected:
     /// Overridden methods from AcDbObject    
     virtual Acad::ErrorStatus subDeepClone(AcDbObject* pOwnerObject,
         AcDbObject*& pClonedObject,

@@ -9,6 +9,9 @@
 
 namespace Utility
 {
+	/// Creates a hidden (non-plotted) layer
+	AcDbObjectId CreateHiddenLayer(const ACHAR* name, const AcCmColor& color);
+
 	/// Creates a text style
 	AcDbObjectId CreateTextStyle(const ACHAR* name, const ACHAR* filename, const double scale);
 

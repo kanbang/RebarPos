@@ -16,15 +16,12 @@ namespace RebarPosCommands
     {
         ObjectId[] m_Selection;
 
-        Dictionary<string, ObjectId> m_Groups;
-
         SortedDictionary<string, List<ObjectId>> m_PosList;
         SortedDictionary<string, List<ObjectId>> m_CountList;
         SortedDictionary<string, List<ObjectId>> m_DiameterList;
         SortedDictionary<string, List<ObjectId>> m_SpacingList;
         SortedDictionary<string, List<ObjectId>> m_NoteList;
         SortedDictionary<int, List<ObjectId>> m_MultiplierList;
-        SortedDictionary<ObjectId, List<ObjectId>> m_GroupList;
         SortedDictionary<ObjectId, List<ObjectId>> m_ShapeList;
 
         ObjectId m_FindShape;
@@ -46,7 +43,6 @@ namespace RebarPosCommands
             m_SpacingList = new SortedDictionary<string, List<ObjectId>>();
             m_NoteList = new SortedDictionary<string, List<ObjectId>>();
             m_MultiplierList = new SortedDictionary<int, List<ObjectId>>();
-            m_GroupList = new SortedDictionary<ObjectId, List<ObjectId>>();
             m_ShapeList = new SortedDictionary<ObjectId, List<ObjectId>>();
 
             m_FindShape = ObjectId.Null;
@@ -63,16 +59,8 @@ namespace RebarPosCommands
         public bool Init(ObjectId[] items)
         {
             init = true;
-            m_Groups = DWGUtility.GetGroups();
 
             m_Selection = items;
-
-            cbReplaceGroup.Items.Clear();
-            foreach (string name in m_Groups.Keys)
-            {
-                cbReplaceGroup.Items.Add(name);
-            }
-            if (cbReplaceGroup.Items.Count > 0) cbReplaceGroup.SelectedIndex = 0;
 
             UpdateUI();
             ReadSelection();
@@ -89,7 +77,6 @@ namespace RebarPosCommands
             m_SpacingList = new SortedDictionary<string, List<ObjectId>>();
             m_NoteList = new SortedDictionary<string, List<ObjectId>>();
             m_MultiplierList = new SortedDictionary<int, List<ObjectId>>();
-            m_GroupList = new SortedDictionary<ObjectId, List<ObjectId>>();
             m_ShapeList = new SortedDictionary<ObjectId, List<ObjectId>>();
 
             cbFindPosNumber.Items.Clear();
@@ -98,7 +85,6 @@ namespace RebarPosCommands
             cbFindSpacing.Items.Clear();
             cbFindNote.Items.Clear();
             cbFindMultiplier.Items.Clear();
-            cbFindGroup.Items.Clear();
 
             if (m_Selection == null || m_Selection.Length == 0)
             {
@@ -141,10 +127,6 @@ namespace RebarPosCommands
                                 list.Add(id);
                             else
                                 m_MultiplierList.Add(pos.Multiplier, new List<ObjectId>() { id });
-                            if (m_GroupList.TryGetValue(pos.GroupId, out list))
-                                list.Add(id);
-                            else
-                                m_GroupList.Add(pos.GroupId, new List<ObjectId>() { id });
                             if (m_ShapeList.TryGetValue(pos.ShapeId, out list))
                                 list.Add(id);
                             else
@@ -172,53 +154,37 @@ namespace RebarPosCommands
                 cbFindNote.Items.Add(name);
             foreach (int mult in m_MultiplierList.Keys)
                 cbFindMultiplier.Items.Add(mult.ToString());
-            foreach (ObjectId id in m_GroupList.Keys)
-            {
-                foreach (KeyValuePair<string, ObjectId> item in m_Groups)
-                {
-                    if (item.Value == id)
-                    {
-                        cbFindGroup.Items.Add(item.Key);
-                        break;
-                    }
-                }
-            }
 
             cbReplaceDiameter.Items.Clear();
-            if (m_GroupList.Count == 1)
+
+            using (Transaction tr = db.TransactionManager.StartTransaction())
             {
-                foreach (ObjectId id in m_GroupList.Keys)
+                try
                 {
-                    using (Transaction tr = db.TransactionManager.StartTransaction())
+                    PosGroup group = tr.GetObject(PosGroup.GroupId, OpenMode.ForRead) as PosGroup;
+                    if (group != null)
                     {
-                        try
+                        string stdd = group.StandardDiameters;
+                        if (!string.IsNullOrEmpty(stdd))
                         {
-                            PosGroup group = tr.GetObject(id, OpenMode.ForRead) as PosGroup;
-                            if (group != null)
+                            foreach (string ds in stdd.Split(new char[] { ' ', ',', ';', ':', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries))
                             {
-                                string stdd = group.StandardDiameters;
-                                if (!string.IsNullOrEmpty(stdd))
+                                int d;
+                                if (int.TryParse(ds, out d))
                                 {
-                                    foreach (string ds in stdd.Split(new char[] { ' ', ',', ';', ':', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries))
-                                    {
-                                        int d;
-                                        if (int.TryParse(ds, out d))
-                                        {
-                                            cbReplaceDiameter.Items.Add(d.ToString());
-                                        }
-                                    }
+                                    cbReplaceDiameter.Items.Add(d.ToString());
                                 }
                             }
-
-                        }
-                        catch (System.Exception)
-                        {
-                            ;
                         }
                     }
-                    break;
+
+                }
+                catch (System.Exception)
+                {
+                    ;
                 }
             }
+
             if (cbReplaceDiameter.Items.Count > 0) cbReplaceDiameter.SelectedIndex = 0;
 
             if (m_ShapeList.Count > 0)
@@ -237,7 +203,6 @@ namespace RebarPosCommands
             if (cbFindSpacing.Items.Count > 0) cbFindSpacing.SelectedIndex = 0;
             if (cbFindNote.Items.Count > 0) cbFindNote.SelectedIndex = 0;
             if (cbFindMultiplier.Items.Count > 0) cbFindMultiplier.SelectedIndex = 0;
-            if (cbFindGroup.Items.Count > 0) cbFindGroup.SelectedIndex = 0;
         }
 
         private void SetFindShape(ObjectId id)
@@ -302,6 +267,7 @@ namespace RebarPosCommands
                     ;
                 }
             }
+            UpdateUI();
         }
 
         private void SetReplaceShape(ObjectId id)
@@ -391,7 +357,6 @@ namespace RebarPosCommands
             cbFindSpacing.Enabled = rbFindSpacing.Checked;
             cbFindNote.Enabled = rbFindNote.Checked;
             cbFindMultiplier.Enabled = rbFindMultiplier.Checked;
-            cbFindGroup.Enabled = rbFindGroup.Checked;
             psvFind.Enabled = rbFindShape.Checked;
 
             txtFindA.Enabled = rbFindShape.Checked && (m_FindFields >= 1);
@@ -412,7 +377,6 @@ namespace RebarPosCommands
             txtReplaceSpacing.Enabled = rbReplaceSpacing.Checked;
             txtReplaceNote.Enabled = rbReplaceNote.Checked;
             txtReplaceMultiplier.Enabled = rbReplaceMultiplier.Checked;
-            cbReplaceGroup.Enabled = rbReplaceGroup.Checked;
             psvReplace.Enabled = rbReplaceShape.Checked;
 
             txtReplaceA.Enabled = rbReplaceShape.Checked && (m_ReplaceFields >= 1);
@@ -627,8 +591,6 @@ namespace RebarPosCommands
                             continue;
                         if (rbFindMultiplier.Checked && cbFindMultiplier.SelectedIndex != -1 && (string)cbFindMultiplier.SelectedItem != pos.Multiplier.ToString())
                             continue;
-                        if (rbFindGroup.Checked && cbFindGroup.SelectedIndex != -1 && m_Groups[(string)cbFindGroup.SelectedItem] != pos.GroupId)
-                            continue;
                         if (rbFindShape.Checked && m_FindShape != pos.ShapeId)
                             continue;
                         if (rbFindShape.Checked && !string.IsNullOrEmpty(txtFindA.Text) && txtFindA.Text != pos.A)
@@ -732,8 +694,6 @@ namespace RebarPosCommands
                             continue;
                         if (rbFindMultiplier.Checked && cbFindMultiplier.SelectedIndex != -1 && (string)cbFindMultiplier.SelectedItem != pos.Multiplier.ToString())
                             continue;
-                        if (rbFindGroup.Checked && cbFindGroup.SelectedIndex != -1 && m_Groups[(string)cbFindGroup.SelectedItem] != pos.GroupId)
-                            continue;
                         if (rbFindShape.Checked && m_FindShape != pos.ShapeId)
                             continue;
                         if (rbFindShape.Checked && !string.IsNullOrEmpty(txtFindA.Text) && txtFindA.Text != pos.A)
@@ -763,7 +723,6 @@ namespace RebarPosCommands
                         if (rbReplaceSpacing.Checked) pos.Spacing = txtReplaceSpacing.Text;
                         if (rbReplaceNote.Checked) pos.Note = txtReplaceNote.Text;
                         if (rbReplaceMultiplier.Checked) pos.Multiplier = int.Parse(txtReplaceMultiplier.Text);
-                        if (rbReplaceGroup.Checked) pos.GroupId = m_Groups[(string)cbReplaceGroup.SelectedItem];
                         if (rbReplaceShape.Checked && !m_ReplaceShape.IsNull) pos.ShapeId = m_ReplaceShape;
                         if (rbReplaceShape.Checked && !string.IsNullOrEmpty(txtReplaceA.Text)) pos.A = txtReplaceA.Text;
                         if (rbReplaceShape.Checked && !string.IsNullOrEmpty(txtReplaceB.Text)) pos.B = txtReplaceB.Text;

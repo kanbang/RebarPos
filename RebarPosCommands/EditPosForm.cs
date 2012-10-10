@@ -24,7 +24,6 @@ namespace RebarPosCommands
         }
 
         ObjectId m_Pos;
-        ObjectId m_Group;
         ObjectId m_Shape;
         List<int> m_StandardDiameters;
         Dictionary<string, ObjectId> m_Shapes;
@@ -42,7 +41,6 @@ namespace RebarPosCommands
             InitializeComponent();
 
             m_Pos = ObjectId.Null;
-            m_Group = ObjectId.Null;
             m_Shape = ObjectId.Null;
             m_StandardDiameters = new List<int>();
             m_Shapes = new Dictionary<string, ObjectId>();
@@ -65,7 +63,6 @@ namespace RebarPosCommands
                         return false;
                     }
 
-                    m_Group = pos.GroupId;
                     m_Shape = pos.ShapeId;
 
                     m_Shapes = DWGUtility.GetShapes();
@@ -159,7 +156,6 @@ namespace RebarPosCommands
                     pos.IncludeInBOQ = chkIncludePos.Checked && (int.Parse(txtPosMultiplier.Text) > 0);
                     pos.Multiplier = int.Parse(txtPosMultiplier.Text);
                     pos.Note = txtPosNote.Text;
-                    pos.GroupId = m_Group;
                     pos.ShapeId = m_Shape;
 
                     if (rbShowAll.Checked)
@@ -311,7 +307,7 @@ namespace RebarPosCommands
             {
                 try
                 {
-                    PosGroup group = tr.GetObject(m_Group, OpenMode.ForRead) as PosGroup;
+                    PosGroup group = tr.GetObject(PosGroup.GroupId, OpenMode.ForRead) as PosGroup;
                     if (group == null) return false;
 
                     m_StandardDiameters = new List<int>();

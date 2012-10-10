@@ -12,17 +12,18 @@ namespace RebarPosCommands
         {
             GroupForm form = new GroupForm();
 
-            if (form.Init(CurrentGroupId))
+            if (form.Init())
             {
                 if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == DialogResult.OK)
                 {
-                    SetCurrentGroup(form.CurrentId);
+                    SetCurrentGroup();
                 }
             }
         }
 
-        public void SetCurrentGroup(ObjectId id)
+        public void SetCurrentGroup()
         {
+            ObjectId id = PosGroup.GroupId;
             string name = "";
             Autodesk.AutoCAD.Colors.Color countColor = new Autodesk.AutoCAD.Colors.Color();
             ObjectId defpointsLayer = ObjectId.Null;

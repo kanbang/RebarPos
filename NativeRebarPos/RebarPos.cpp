@@ -36,7 +36,7 @@ CRebarPos::CRebarPos() :
 	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), 
 	m_IncludeInBOQ(Adesk::kTrue), m_Multiplier(1), m_DisplayedSpacing(NULL),
 	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), 
-	m_ShapeID(AcDbObjectId::kNull), m_GroupID(AcDbObjectId::kNull),
+	m_ShapeID(AcDbObjectId::kNull),
 	circleRadius(1.125), partSpacing(0.15), 
 	defpointsLayer(AcDbObjectId::kNull),
 	m_CalcProps()
@@ -514,20 +514,6 @@ Acad::ErrorStatus CRebarPos::setShapeId(const AcDbObjectId& newVal)
 	return Acad::eOk;
 }
 
-const AcDbObjectId& CRebarPos::GroupId(void) const
-{
-	assertReadEnabled();
-	return m_GroupID;
-}
-
-Acad::ErrorStatus CRebarPos::setGroupId(const AcDbObjectId& newVal)
-{
-	assertWriteEnabled();
-	m_GroupID = newVal;
-	isModified = true;
-	return Acad::eOk;
-}
-
 const ACHAR* CRebarPos::PosKey() const
 {
 	assertReadEnabled();
@@ -571,12 +557,6 @@ const CRebarPos::PosSubEntityType CRebarPos::HitTest(const AcGePoint3d& pt0) con
 				return (CRebarPos::PosSubEntityType)p.type;
 			}
 		}
-	}
-	// Check group text
-	p = lastGroupDraw;
-	if(pt.x > p.x && pt.x <= p.x + p.w && pt.y > p.y && pt.y < p.y + p.h)
-	{
-		return CRebarPos::GROUP;
 	}
 	// Check multiplier text
 	p = lastMultiplierDraw;
@@ -775,17 +755,6 @@ void CRebarPos::subList() const
     acdbWcs2Ucs(asDblArray(pt), asDblArray(pt), false);
     acutPrintf(_T("X = %-9.16q0, Y = %-9.16q0, Z = %-9.16q0\n"), pt.x, pt.y, pt.z);
 
-	// Group
-	if(!m_GroupID.isNull())
-	{
-		Acad::ErrorStatus es;
-		AcDbObjectPointer<CPosGroup> pGroup (m_GroupID, AcDb::kForRead);
-		if((es = pGroup.openStatus()) == Acad::eOk)
-		{
-			acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Group:"), pGroup->Name());
-		}
-	}
-
 	// List all properties
 	if (m_Pos != NULL)
 		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Pos Marker:"), m_Pos);
@@ -843,8 +812,9 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 
 	Acad::ErrorStatus es;
 
-	// Open group
-	AcDbObjectPointer<CPosGroup> pGroup (m_GroupID, AcDb::kForRead);
+	// Open the one and only group
+	AcDbObjectId groupId = CPosGroup::GetGroupId();
+	AcDbObjectPointer<CPosGroup> pGroup (groupId, AcDb::kForRead);
 	if((es = pGroup.openStatus()) != Acad::eOk)
 	{
 		return es;
@@ -998,21 +968,6 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	worldDraw->subEntityTraits().setSelectionMarker(3);
 	worldDraw->subEntityTraits().setColor(lastLengthDraw.color);
 	worldDraw->geometry().text(AcGePoint3d(lastLengthDraw.x, lastLengthDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastLengthDraw.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
-	// Reset transform
-	worldDraw->geometry().popModelTransform();
-
-	// Transform to match text orientation
-	worldDraw->geometry().pushModelTransform(trans);
-	worldDraw->subEntityTraits().setLayer(defpointsLayer);
-	lastTextStyle.setTextSize(0.4);
-	lastTextStyle.loadStyleRec();
-	worldDraw->subEntityTraits().setSelectionMarker(1);
-	// Group name
-	//worldDraw->subEntityTraits().setColor(lastGroupDraw.color);
-	//worldDraw->geometry().text(AcGePoint3d(lastGroupDraw.x, lastGroupDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastGroupDraw.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
-	// Multiplier
-	//worldDraw->subEntityTraits().setColor(lastMultiplierDraw.color);
-	//worldDraw->geometry().text(AcGePoint3d(lastMultiplierDraw.x, lastMultiplierDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastMultiplierDraw.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
 	// Reset transform
 	worldDraw->geometry().popModelTransform();
 
@@ -1229,7 +1184,6 @@ Acad::ErrorStatus CRebarPos::dwgOutFields(AcDbDwgFiler* pFiler) const
 
 	// Style
 	pFiler->writeHardPointerId(m_ShapeID);
-	pFiler->writeHardPointerId(m_GroupID);
 
 	return pFiler->filerStatus();
 }
@@ -1289,7 +1243,6 @@ Acad::ErrorStatus CRebarPos::dwgInFields(AcDbDwgFiler* pFiler)
 
 		// Styles
 		pFiler->readHardPointerId(&m_ShapeID);
-		pFiler->readHardPointerId(&m_GroupID);
 	}
 
 	return pFiler->filerStatus();
@@ -1369,7 +1322,6 @@ Acad::ErrorStatus CRebarPos::dxfOutFields(AcDbDxfFiler* pFiler) const
 	
     // Styles
 	pFiler->writeItem(AcDb::kDxfHardPointerId, m_ShapeID);
-    pFiler->writeItem(AcDb::kDxfHardPointerId + 1, m_GroupID);
 
 	return pFiler->filerStatus();
 }
@@ -1415,7 +1367,6 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	ACHAR* t_E = NULL;
 	ACHAR* t_F = NULL;
 	AcDbObjectId t_ShapeID = AcDbObjectId::kNull;
-	AcDbObjectId t_GroupID = AcDbObjectId::kNull;
 
     while ((es == Acad::eOk) && ((es = pFiler->readResBuf(&rb)) == Acad::eOk))
     {
@@ -1486,9 +1437,6 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
         case AcDb::kDxfHardPointerId:
             acdbGetObjectId(t_ShapeID, rb.resval.rlname);
             break;
-        case AcDb::kDxfHardPointerId + 1:
-            acdbGetObjectId(t_GroupID, rb.resval.rlname);
-            break;
 
         default:
             // An unrecognized group. Push it back so that
@@ -1529,7 +1477,6 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	setE(t_E);
 	setF(t_F);
 	m_ShapeID = t_ShapeID;
-	m_GroupID = t_GroupID;
 
 	acutDelString(t_Pos);
 	acutDelString(t_Note);
@@ -1916,7 +1863,8 @@ const void CRebarPos::Calculate(void) const
 
 	// Open group and shape
 	Acad::ErrorStatus es;
-	AcDbObjectPointer<CPosGroup> pGroup (m_GroupID, AcDb::kForRead);
+	AcDbObjectId groupId = CPosGroup::GetGroupId();
+	AcDbObjectPointer<CPosGroup> pGroup (groupId, AcDb::kForRead);
 	if((es = pGroup.openStatus()) != Acad::eOk)
 	{
 		return;
@@ -1952,10 +1900,6 @@ const void CRebarPos::Calculate(void) const
 	{
 		lastShapes.push_back(pShape->GetShape(i)->clone());
 	}
-
-	// Get group name
-	lastGroupDraw.text.clear();
-	lastGroupDraw.text = pGroup->Name();
 
 	lastNoteScale = pGroup->NoteScale();
 
@@ -2049,7 +1993,6 @@ const void CRebarPos::Calculate(void) const
 	// Shape code
 	std::wstringstream oss;
 	oss << L"T" << m_Diameter;
-	oss << L":G" << m_GroupID.handle().low() << L'_' << m_GroupID.handle().high();
 	oss << L":S" << m_ShapeID.handle().low() << L'_' << m_ShapeID.handle().high();
 
 	if(m_CalcProps.FieldCount >= 1)
@@ -2103,7 +2046,6 @@ const void CRebarPos::Calculate(void) const
 	// Set colors
 	defpointsLayer = pGroup->HiddenLayerId();
 	lastCircleColor = pGroup->CircleColor();
-	lastGroupDraw.color = pGroup->GroupColor();
 	lastMultiplierDraw.color = pGroup->MultiplierColor();
 	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
 	{
@@ -2112,9 +2054,6 @@ const void CRebarPos::Calculate(void) const
 		{
 		case CRebarPos::POS:
 			p.color = pGroup->PosColor();
-			break;
-		case CRebarPos::GROUP:
-			p.color = pGroup->GroupColor();
 			break;
 		case CRebarPos::MULTIPLIER:
 			p.color = pGroup->MultiplierColor();
@@ -2161,19 +2100,11 @@ const void CRebarPos::Calculate(void) const
 		}
 		lastDrawList[i] = p;
 	}
-	// Measure group text
-	lastTextStyle.setTextSize(0.4);
-	lastTextStyle.loadStyleRec();
-	AcGePoint2d gext = lastTextStyle.extents(lastGroupDraw.text.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
-	lastGroupDraw.x = 0;
-	lastGroupDraw.y = -0.8;
-	lastGroupDraw.w = gext.x;
-	lastGroupDraw.h = lastTextStyle.textSize();
     // Measure multiplier text
 	AcGePoint2d mext = lastTextStyle.extents(lastMultiplierDraw.text.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
 	lastMultiplierDraw.x = 0;
 	lastMultiplierDraw.y = 1.4;
-	lastMultiplierDraw.w = gext.x;
+	lastMultiplierDraw.w = mext.x;
 	lastMultiplierDraw.h = lastTextStyle.textSize();
 
 	// Measure note text

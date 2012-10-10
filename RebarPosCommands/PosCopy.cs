@@ -130,7 +130,7 @@ namespace RebarPosCommands
             return poslist;
         }
 
-        public static List<PosCopy> ReadAllInGroup(ObjectId groupId, PosGrouping grouping)
+        public static List<PosCopy> ReadAll(PosGrouping grouping)
         {
             List<PosCopy> poslist = new List<PosCopy>();
 
@@ -143,7 +143,7 @@ namespace RebarPosCommands
                     while (it.MoveNext())
                     {
                         RebarPos pos = tr.GetObject(it.Current, OpenMode.ForRead) as RebarPos;
-                        if (pos != null && pos.GroupId == groupId)
+                        if (pos != null)
                         {
                             PosCopy copy = null;
                             if (grouping == PosGrouping.PosKey)

@@ -183,7 +183,6 @@ namespace OZOZ
 			property String^ PosKey { String^ get(); }
 
 			property Autodesk::AutoCAD::DatabaseServices::ObjectId ShapeId { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
-			property Autodesk::AutoCAD::DatabaseServices::ObjectId GroupId { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
 
 			property array<PosShape::Shape^>^ Shapes { array<PosShape::Shape^>^ get(); }
 

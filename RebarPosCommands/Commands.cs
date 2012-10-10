@@ -31,9 +31,8 @@ namespace RebarPosCommands
         public MyCommands()
         {
             DWGUtility.CreateDefaultShapes();
-            ObjectId id = DWGUtility.CreateDefaultGroups();
             DWGUtility.CreateDefaultBOQStyles();
-            SetCurrentGroup(id);
+            SetCurrentGroup();
 
             ShowShapes = false;
         }
@@ -373,5 +372,34 @@ namespace RebarPosCommands
             }
         }
 
+        [CommandMethod("RebarPos", "DUMPPOSGROUPS", CommandFlags.Modal)]
+        public void CMD_DumpGroups()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Title = "Select Group Dump File";
+            sfd.Filter = "Text Files (.txt)|*.txt|All Files (*.*)|*.*";
+            if (sfd.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
+                DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosGroup.TableName), OpenMode.ForRead);
+
+                using (StreamWriter sw = new StreamWriter(sfd.FileName))
+                {
+                    foreach (DBDictionaryEntry entry in dict)
+                    {
+                        PosGroup group = (PosGroup)tr.GetObject(entry.Value, OpenMode.ForRead);
+
+                        sw.WriteLine("Name: " + group.Name  );
+                        sw.WriteLine();
+                    }
+                }
+            }
+        }
     }
 }

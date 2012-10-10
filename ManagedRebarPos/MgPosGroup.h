@@ -68,6 +68,7 @@ namespace OZOZ
 
 		public:
 			property static String^ TableName        { String^ get(); }
+			property static Autodesk::AutoCAD::DatabaseServices::ObjectId GroupId { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); }
 		};
 	}
 }

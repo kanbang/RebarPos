@@ -74,16 +74,16 @@ namespace RebarPosCommands
             return sb.ToString();
         }
 
-        public static List<PosCheckResult> CheckAllInGroup(ObjectId groupId, CheckType checkType)
+        public static List<PosCheckResult> CheckAll(CheckType checkType)
         {
             Database db = HostApplicationServices.WorkingDatabase;
-            List<PosCopy> pliste = PosCopy.ReadAllInGroup(groupId, PosCopy.PosGrouping.None);
+            List<PosCopy> pliste = PosCopy.ReadAll(PosCopy.PosGrouping.None);
             List<int> standardDiameters = new List<int>();
             using (Transaction tr = db.TransactionManager.StartTransaction())
             {
                 try
                 {
-                    PosGroup group = tr.GetObject(groupId, OpenMode.ForRead) as PosGroup;
+                    PosGroup group = tr.GetObject(PosGroup.GroupId, OpenMode.ForRead) as PosGroup;
                     foreach (string ds in group.StandardDiameters.Split(new char[] { ' ', ',', ';', ':', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries))
                     {
                         int d;

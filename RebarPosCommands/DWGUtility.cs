@@ -109,38 +109,6 @@ namespace RebarPosCommands
             return list.ToArray();
         }
 
-        public static ObjectId[] GetPosInGroup(ObjectId groupId)
-        {
-            List<ObjectId> list = new List<ObjectId>();
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
-            {
-                try
-                {
-                    BlockTableRecord btr = (BlockTableRecord)tr.GetObject(db.CurrentSpaceId, OpenMode.ForRead);
-                    using (BlockTableRecordEnumerator it = btr.GetEnumerator())
-                    {
-                        while (it.MoveNext())
-                        {
-                            RebarPos pos = tr.GetObject(it.Current, OpenMode.ForRead) as RebarPos;
-                            if (pos != null)
-                            {
-                                if (pos.GroupId == groupId)
-                                {
-                                    list.Add(it.Current);
-                                }
-                            }
-                        }
-                    }
-                }
-                catch (System.Exception)
-                {
-                    ;
-                }
-            }
-            return list.ToArray();
-        }
-
         public static ObjectId[] GetPosWithShape(ObjectId shapeId)
         {
             List<ObjectId> list = new List<ObjectId>();
@@ -1485,69 +1453,6 @@ namespace RebarPosCommands
             }
         }
 
-        // Creates default groups
-        // Multiple groups are disabled. This will create the one and only
-        // pos group.
-        public static ObjectId CreateDefaultGroups()
-        {
-            ObjectId id = ObjectId.Null;
-
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
-            {
-                try
-                {
-                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
-                    DBDictionary dict = null;
-                    if (!namedDict.Contains(PosGroup.TableName))
-                    {
-                        dict = new DBDictionary();
-                        namedDict.UpgradeOpen();
-                        namedDict.SetAt(PosGroup.TableName, dict);
-                        namedDict.DowngradeOpen();
-                        tr.AddNewlyCreatedDBObject(dict, true);
-                    }
-                    else
-                    {
-                        dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosGroup.TableName), OpenMode.ForRead);
-                    }
-
-                    if (dict.Count == 0)
-                    {
-                        PosGroup group = new PosGroup();
-                        group.Name = "0";
-                        group.Formula = "[M:C][N][\"T\":D][\"/\":S]";
-                        group.FormulaLengthOnly = "[\"L=\":L]";
-                        group.FormulaPosOnly = "[M:C]";
-                        group.StandardDiameters = "8 10 12 14 16 18 20 22 25 26 32 36";
-                        group.HiddenLayerId = DWGUtility.CreateHiddenLayer("Rebar Defpoints", Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 8));
-                        group.TextStyleId = DWGUtility.CreateTextStyle("Rebar Text Style", "leroy.shx", 0.7);
-                        group.NoteStyleId = DWGUtility.CreateTextStyle("Rebar Note Style", "simplxtw.shx", 0.9);
-                        dict.UpgradeOpen();
-                        id = dict.SetAt("*", group);
-                        dict.DowngradeOpen();
-                        tr.AddNewlyCreatedDBObject(group, true);
-                    }
-                    else
-                    {
-                        foreach (DBDictionaryEntry entry in dict)
-                        {
-                            id = entry.Value;
-                            break;
-                        }
-                    }
-
-                    tr.Commit();
-                }
-                catch (System.Exception ex)
-                {
-                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-                }
-
-                return id;
-            }
-        }
-
         // Creates default BOQ styles
         public static ObjectId CreateDefaultBOQStyles()
         {
@@ -1755,37 +1660,6 @@ namespace RebarPosCommands
             return list;
         }
 
-        // Returns all items in the dictionary.
-        public static Dictionary<string, ObjectId> GetGroups()
-        {
-            Dictionary<string, ObjectId> list = new Dictionary<string, ObjectId>();
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
-            {
-                try
-                {
-                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
-                    if (namedDict.Contains(PosGroup.TableName))
-                    {
-                        DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosGroup.TableName), OpenMode.ForRead);
-                        using (DbDictionaryEnumerator it = dict.GetEnumerator())
-                        {
-                            while (it.MoveNext())
-                            {
-                                PosGroup item = (PosGroup)tr.GetObject(it.Value, OpenMode.ForRead);
-                                list.Add(item.Name, it.Value);
-                            }
-                        }
-                    }
-                }
-                catch
-                {
-                    ;
-                }
-            }
-            return list;
-        }
-
         // Returns the name of the group
         public static string GetGroupName(ObjectId id)
         {
@@ -1889,12 +1763,6 @@ namespace RebarPosCommands
                     ;
                 }
             }
-        }
-
-        // Refreshes all items in group
-        public static void RefreshPosInGroup(ObjectId id)
-        {
-            RefreshPos(GetPosInGroup(id));
         }
 
         // Refreshes all items with the given shape

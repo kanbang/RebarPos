@@ -47,10 +47,12 @@
             this.lGroups = new System.Windows.Forms.ImageList(this.components);
             this.gbDisplay = new System.Windows.Forms.GroupBox();
             this.posStylePreview = new RebarPosCommands.PosStylePreview();
+            this.btnPickCountColor = new System.Windows.Forms.Button();
             this.btnPickGroupColor = new System.Windows.Forms.Button();
             this.cbNoteStyle = new System.Windows.Forms.ComboBox();
             this.cbTextStyle = new System.Windows.Forms.ComboBox();
             this.btnPickMultiplierColor = new System.Windows.Forms.Button();
+            this.label13 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
@@ -72,8 +74,6 @@
             this.txtFormula = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.label13 = new System.Windows.Forms.Label();
-            this.btnPickCountColor = new System.Windows.Forms.Button();
             this.gbOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udPrecision)).BeginInit();
             this.gbDisplay.SuspendLayout();
@@ -210,9 +210,9 @@
             this.chkBending.AutoSize = true;
             this.chkBending.Location = new System.Drawing.Point(20, 141);
             this.chkBending.Name = "chkBending";
-            this.chkBending.Size = new System.Drawing.Size(209, 17);
+            this.chkBending.Size = new System.Drawing.Size(284, 17);
             this.chkBending.TabIndex = 8;
-            this.chkBending.Text = "&Toplam Boydan Demir Bükümlerini Düş";
+            this.chkBending.Text = "&Toplam Boy Hesaplarken Demir Bükümlerini Dikkate Al";
             this.chkBending.UseVisualStyleBackColor = true;
             this.chkBending.CheckedChanged += new System.EventHandler(this.chkBending_CheckedChanged);
             // 
@@ -308,6 +308,17 @@
             this.posStylePreview.TabIndex = 26;
             this.posStylePreview.TextColor = System.Drawing.Color.Red;
             // 
+            // btnPickCountColor
+            // 
+            this.btnPickCountColor.BackColor = System.Drawing.Color.White;
+            this.btnPickCountColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnPickCountColor.Location = new System.Drawing.Point(188, 285);
+            this.btnPickCountColor.Name = "btnPickCountColor";
+            this.btnPickCountColor.Size = new System.Drawing.Size(100, 23);
+            this.btnPickCountColor.TabIndex = 19;
+            this.btnPickCountColor.UseVisualStyleBackColor = false;
+            this.btnPickCountColor.Click += new System.EventHandler(this.btnPickCountColor_Click);
+            // 
             // btnPickGroupColor
             // 
             this.btnPickGroupColor.BackColor = System.Drawing.Color.White;
@@ -349,6 +360,15 @@
             this.btnPickMultiplierColor.TabIndex = 15;
             this.btnPickMultiplierColor.UseVisualStyleBackColor = false;
             this.btnPickMultiplierColor.Click += new System.EventHandler(this.btnPickMultiplierColor_Click);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(17, 290);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(108, 13);
+            this.label13.TabIndex = 18;
+            this.label13.Text = "Metraj &Dışı Poz Rengi";
             // 
             // label15
             // 
@@ -539,26 +559,6 @@
             // 
             this.errorProvider.ContainerControl = this;
             this.errorProvider.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProvider.Icon")));
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(17, 290);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(108, 13);
-            this.label13.TabIndex = 18;
-            this.label13.Text = "Metraj &Dışı Poz Rengi";
-            // 
-            // btnPickCountColor
-            // 
-            this.btnPickCountColor.BackColor = System.Drawing.Color.White;
-            this.btnPickCountColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPickCountColor.Location = new System.Drawing.Point(188, 285);
-            this.btnPickCountColor.Name = "btnPickCountColor";
-            this.btnPickCountColor.Size = new System.Drawing.Size(100, 23);
-            this.btnPickCountColor.TabIndex = 19;
-            this.btnPickCountColor.UseVisualStyleBackColor = false;
-            this.btnPickCountColor.Click += new System.EventHandler(this.btnPickCountColor_Click);
             // 
             // GroupForm
             // 

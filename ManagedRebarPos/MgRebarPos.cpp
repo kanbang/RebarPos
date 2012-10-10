@@ -237,15 +237,6 @@ Autodesk::AutoCAD::DatabaseServices::ObjectId RebarPos::ShapeId::get()
 	return Marshal::ToObjectId(GetImpObj()->ShapeId());
 }
 
-void RebarPos::GroupId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
-{
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setGroupId(Marshal::FromObjectId(value)));
-}
-Autodesk::AutoCAD::DatabaseServices::ObjectId RebarPos::GroupId::get()
-{
-	return Marshal::ToObjectId(GetImpObj()->GroupId());
-}
-
 array<PosShape::Shape^>^ RebarPos::Shapes::get()
 {
 	std::vector<CShape*> shapes = GetImpObj()->GetShapes();

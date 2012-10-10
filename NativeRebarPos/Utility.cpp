@@ -9,6 +9,29 @@
 
 #include "Utility.h"
 
+AcDbObjectId Utility::CreateHiddenLayer(const ACHAR* name, const AcCmColor& color)
+{
+    AcDbObjectId id;
+
+	AcDbLayerTable *pLayerTbl = NULL;
+	AcDbDatabase *pDb = acdbHostApplicationServices()->workingDatabase();
+	pDb->getSymbolTable(pLayerTbl, AcDb::kForRead);
+	if (pLayerTbl->getAt(name, id, AcDb::kForRead) == Acad::eKeyNotFound)
+	{
+		pLayerTbl->upgradeOpen();
+		AcDbLayerTableRecord* pLayer = new AcDbLayerTableRecord();
+		pLayer->setName(name);
+		pLayer->setColor(color);
+		pLayer->setIsPlottable(false);
+		pLayerTbl->add(id, pLayer);
+		pLayer->close();
+		pLayerTbl->downgradeOpen();
+	}
+	pLayerTbl->close();
+
+	return id;
+}
+
 AcDbObjectId Utility::CreateTextStyle(const ACHAR* name, const ACHAR* filename, const double scale)
 {
 	AcDbObjectId id;

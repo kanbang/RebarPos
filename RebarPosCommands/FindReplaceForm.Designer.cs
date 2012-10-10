@@ -45,14 +45,12 @@
             this.label5 = new System.Windows.Forms.Label();
             this.psvFind = new RebarPosCommands.PosShapeView();
             this.rbFindShape = new System.Windows.Forms.CheckBox();
-            this.rbFindGroup = new System.Windows.Forms.CheckBox();
             this.rbFindMultiplier = new System.Windows.Forms.CheckBox();
             this.rbFindNote = new System.Windows.Forms.CheckBox();
             this.rbFindSpacing = new System.Windows.Forms.CheckBox();
             this.rbFindDiameter = new System.Windows.Forms.CheckBox();
             this.rbFindCount = new System.Windows.Forms.CheckBox();
             this.rbFindPosNumber = new System.Windows.Forms.CheckBox();
-            this.cbFindGroup = new System.Windows.Forms.ComboBox();
             this.cbFindMultiplier = new System.Windows.Forms.ComboBox();
             this.cbFindNote = new System.Windows.Forms.ComboBox();
             this.cbFindSpacing = new System.Windows.Forms.ComboBox();
@@ -60,8 +58,6 @@
             this.cbFindCount = new System.Windows.Forms.ComboBox();
             this.cbFindPosNumber = new System.Windows.Forms.ComboBox();
             this.gbReplace = new System.Windows.Forms.GroupBox();
-            this.rbReplaceGroup = new System.Windows.Forms.CheckBox();
-            this.cbReplaceGroup = new System.Windows.Forms.ComboBox();
             this.txtReplaceMultiplier = new System.Windows.Forms.TextBox();
             this.txtReplaceNote = new System.Windows.Forms.TextBox();
             this.txtReplaceSpacing = new RebarPosCommands.SpacingTextBox();
@@ -111,14 +107,12 @@
             this.gbFind.Controls.Add(this.label5);
             this.gbFind.Controls.Add(this.psvFind);
             this.gbFind.Controls.Add(this.rbFindShape);
-            this.gbFind.Controls.Add(this.rbFindGroup);
             this.gbFind.Controls.Add(this.rbFindMultiplier);
             this.gbFind.Controls.Add(this.rbFindNote);
             this.gbFind.Controls.Add(this.rbFindSpacing);
             this.gbFind.Controls.Add(this.rbFindDiameter);
             this.gbFind.Controls.Add(this.rbFindCount);
             this.gbFind.Controls.Add(this.rbFindPosNumber);
-            this.gbFind.Controls.Add(this.cbFindGroup);
             this.gbFind.Controls.Add(this.cbFindMultiplier);
             this.gbFind.Controls.Add(this.cbFindNote);
             this.gbFind.Controls.Add(this.cbFindSpacing);
@@ -256,17 +250,6 @@
             this.rbFindShape.UseVisualStyleBackColor = true;
             this.rbFindShape.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
             // 
-            // rbFindGroup
-            // 
-            this.rbFindGroup.AutoSize = true;
-            this.rbFindGroup.Location = new System.Drawing.Point(22, 183);
-            this.rbFindGroup.Name = "rbFindGroup";
-            this.rbFindGroup.Size = new System.Drawing.Size(76, 17);
-            this.rbFindGroup.TabIndex = 12;
-            this.rbFindGroup.Text = "Poz &Grubu";
-            this.rbFindGroup.UseVisualStyleBackColor = true;
-            this.rbFindGroup.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
-            // 
             // rbFindMultiplier
             // 
             this.rbFindMultiplier.AutoSize = true;
@@ -333,15 +316,6 @@
             this.rbFindPosNumber.UseVisualStyleBackColor = true;
             this.rbFindPosNumber.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
             // 
-            // cbFindGroup
-            // 
-            this.cbFindGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFindGroup.FormattingEnabled = true;
-            this.cbFindGroup.Location = new System.Drawing.Point(125, 182);
-            this.cbFindGroup.Name = "cbFindGroup";
-            this.cbFindGroup.Size = new System.Drawing.Size(117, 21);
-            this.cbFindGroup.TabIndex = 13;
-            // 
             // cbFindMultiplier
             // 
             this.cbFindMultiplier.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -398,8 +372,6 @@
             // 
             // gbReplace
             // 
-            this.gbReplace.Controls.Add(this.rbReplaceGroup);
-            this.gbReplace.Controls.Add(this.cbReplaceGroup);
             this.gbReplace.Controls.Add(this.txtReplaceMultiplier);
             this.gbReplace.Controls.Add(this.txtReplaceNote);
             this.gbReplace.Controls.Add(this.txtReplaceSpacing);
@@ -430,26 +402,6 @@
             this.gbReplace.TabIndex = 2;
             this.gbReplace.TabStop = false;
             this.gbReplace.Text = "&Değiştir";
-            // 
-            // rbReplaceGroup
-            // 
-            this.rbReplaceGroup.AutoSize = true;
-            this.rbReplaceGroup.Location = new System.Drawing.Point(22, 184);
-            this.rbReplaceGroup.Name = "rbReplaceGroup";
-            this.rbReplaceGroup.Size = new System.Drawing.Size(76, 17);
-            this.rbReplaceGroup.TabIndex = 10;
-            this.rbReplaceGroup.Text = "Poz &Grubu";
-            this.rbReplaceGroup.UseVisualStyleBackColor = true;
-            this.rbReplaceGroup.CheckedChanged += new System.EventHandler(this.rbFindOptions_CheckedChanged);
-            // 
-            // cbReplaceGroup
-            // 
-            this.cbReplaceGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbReplaceGroup.FormattingEnabled = true;
-            this.cbReplaceGroup.Location = new System.Drawing.Point(125, 183);
-            this.cbReplaceGroup.Name = "cbReplaceGroup";
-            this.cbReplaceGroup.Size = new System.Drawing.Size(117, 21);
-            this.cbReplaceGroup.TabIndex = 11;
             // 
             // txtReplaceMultiplier
             // 
@@ -790,10 +742,6 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnReplace;
         private System.Windows.Forms.ErrorProvider errorProvider;
-        private System.Windows.Forms.CheckBox rbFindGroup;
-        private System.Windows.Forms.ComboBox cbFindGroup;
-        private System.Windows.Forms.CheckBox rbReplaceGroup;
-        private System.Windows.Forms.ComboBox cbReplaceGroup;
         private System.Windows.Forms.Button btnFind;
     }
 }

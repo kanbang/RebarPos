@@ -74,8 +74,6 @@ library COMREBARPOSLib
 		[propget, id(16), helpstring("property Length"),helpcontext(IDH_LENGTH)] HRESULT Length([out, retval] BSTR *pVal);
 		[propget, id(17), helpstring("property Shape"),helpcontext(IDH_SHAPE)] HRESULT Shape([out, retval] BSTR *pVal);
 		[propput, id(17), helpstring("property Shape"),helpcontext(IDH_SHAPE)] HRESULT Shape([in] BSTR newVal);
-		[propget, id(18), helpstring("property Group"),helpcontext(IDH_GROUP)] HRESULT Group([out, retval] BSTR *pVal);
-		[propput, id(18), helpstring("property Group"),helpcontext(IDH_GROUP)] HRESULT Group([in] BSTR newVal);
 		[propget, id(19), helpstring("property Scale"),helpcontext(IDH_SCALE)] HRESULT Scale([out, retval] double *pVal);
 		[propput, id(19), helpstring("property Scale"),helpcontext(IDH_SCALE)] HRESULT Scale([in] double newVal);
 	};
