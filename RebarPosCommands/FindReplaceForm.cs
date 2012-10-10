@@ -332,6 +332,7 @@ namespace RebarPosCommands
                     ;
                 }
             }
+            UpdateUI();
         }
 
         private void UpdateUI()
