@@ -1534,25 +1534,6 @@ namespace RebarPosCommands
             return list;
         }
 
-        // Returns the name of the group
-        public static string GetGroupName(ObjectId id)
-        {
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
-            {
-                try
-                {
-                    PosGroup item = tr.GetObject(id, OpenMode.ForRead) as PosGroup;
-                    if (item != null) return item.Name;
-                }
-                catch
-                {
-                    ;
-                }
-            }
-            return "";
-        }
-
         // Returns all items in the dictionary.
         public static Dictionary<string, ObjectId> GetTableStyles()
         {
