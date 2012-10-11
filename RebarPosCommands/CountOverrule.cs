@@ -14,21 +14,18 @@ namespace RebarPosCommands
     {
         private static CountOverrule mInstance = new CountOverrule();
         private Autodesk.AutoCAD.Colors.Color mColor;
-        private ObjectId mLayer;
 
         public static CountOverrule Instance { get { return mInstance; } }
 
         public CountOverrule()
         {
             mColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(ColorMethod.ByAci, 1);
-            mLayer = ObjectId.Null;
             SetCustomFilter();
         }
 
-        public void SetProperties(Autodesk.AutoCAD.Colors.Color color, ObjectId layer)
+        public void SetProperties(Autodesk.AutoCAD.Colors.Color color)
         {
             mColor = color;
-            mLayer = layer;
         }
 
         public override bool IsApplicable(RXObject overruledSubject)
@@ -78,7 +75,7 @@ namespace RebarPosCommands
             solid.SetPointAt(2, new Point3d(minpt.X - 0.15, maxpt.Y + 0.15, 0));
             solid.SetPointAt(3, new Point3d(maxpt.X + 0.15, maxpt.Y + 0.15, 0));
             solid.Color = mColor;
-            solid.LayerId = mLayer;
+            solid.LayerId = PosUtility.DefpointsLayer;
             solid.TransformBy(trans);
             g.Draw(solid);
 

@@ -637,7 +637,7 @@ namespace RebarPosCommands
             str = str.Replace('x', '*');
             str = str.Replace('X', '*');
 
-            if (string.IsNullOrEmpty(str) || Utility.ValidateFormula(str))
+            if (string.IsNullOrEmpty(str) || PosUtility.ValidateFormula(str))
             {
                 errorProvider.SetError(txtPosCount, "");
                 return true;
@@ -724,7 +724,7 @@ namespace RebarPosCommands
                         isempty = true;
                         break;
                     }
-                    else if (!Utility.ValidateFormula(oldstr))
+                    else if (!PosUtility.ValidateFormula(oldstr))
                     {
                         haserror = true;
                         break;

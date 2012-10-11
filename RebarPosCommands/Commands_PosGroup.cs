@@ -23,8 +23,6 @@ namespace RebarPosCommands
 
         public void SetCurrentGroup()
         {
-            ObjectId id = PosGroup.GroupId;
-            string name = "";
             Autodesk.AutoCAD.Colors.Color countColor = new Autodesk.AutoCAD.Colors.Color();
             ObjectId defpointsLayer = ObjectId.Null;
 
@@ -33,11 +31,9 @@ namespace RebarPosCommands
             {
                 try
                 {
-                    PosGroup item = tr.GetObject(id, OpenMode.ForRead) as PosGroup;
+                    PosGroup item = tr.GetObject(PosGroup.GroupId, OpenMode.ForRead) as PosGroup;
                     if (item == null) return;
-                    name = item.Name;
                     countColor = item.CountColor;
-                    defpointsLayer = item.HiddenLayerId;
                 }
                 catch
                 {
@@ -45,10 +41,7 @@ namespace RebarPosCommands
                 }
             }
 
-            CurrentGroupId = id;
-            CurrentGroupName = name;
-
-            CountOverrule.Instance.SetProperties(countColor, defpointsLayer);
+            CountOverrule.Instance.SetProperties(countColor);
 
             DWGUtility.RefreshAllPos();
         }

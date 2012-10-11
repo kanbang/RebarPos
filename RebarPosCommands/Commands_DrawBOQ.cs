@@ -19,7 +19,7 @@ namespace RebarPosCommands
             if (sel.Status != PromptStatus.OK) return false;
             ObjectId[] items = sel.Value.GetObjectIds();
 
-            List<PosCheckResult> check = PosCheckResult.CheckAllInSelection(CurrentGroupId, items, PosCheckResult.CheckType.Errors);
+            List<PosCheckResult> check = PosCheckResult.CheckAllInSelection(items, PosCheckResult.CheckType.Errors);
             if (check.Count != 0)
             {
                 PosCheckResult.ConsoleOut(check);
@@ -28,7 +28,7 @@ namespace RebarPosCommands
             }
 
             // Pos similarity check
-            List<PosCheckResult> checks = PosCheckResult.CheckAllInSelection(CurrentGroupId, items, PosCheckResult.CheckType.Warnings);
+            List<PosCheckResult> checks = PosCheckResult.CheckAllInSelection(items, PosCheckResult.CheckType.Warnings);
             if (checks.Count != 0)
             {
                 PosCheckResult.ConsoleOut(checks);

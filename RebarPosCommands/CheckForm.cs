@@ -19,9 +19,9 @@ namespace RebarPosCommands
             m_PosList = new List<PosCheckResult>();
         }
 
-        public bool Init(ObjectId groupid, ObjectId[] items)
+        public bool Init(ObjectId[] items)
         {
-            ReadPos(groupid, items);
+            ReadPos(items);
             PopulateList();
 
             return true;
@@ -77,11 +77,11 @@ namespace RebarPosCommands
             lbItems_SelectedIndexChanged(null, new EventArgs());
         }
 
-        private void ReadPos(ObjectId groupid, ObjectId[] items)
+        private void ReadPos(ObjectId[] items)
         {
             try
             {
-                m_PosList = PosCheckResult.CheckAllInSelection(groupid, items, PosCheckResult.CheckType.Errors);
+                m_PosList = PosCheckResult.CheckAllInSelection(items, PosCheckResult.CheckType.Errors);
             }
             catch (System.Exception ex)
             {

@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-//----- Utility.cpp : Implementation of utility functions
+//----- PosUtility.cpp : Implementation of utility functions
 //-----------------------------------------------------------------------------
 
 #include "StdAfx.h"
@@ -9,6 +9,7 @@
 #endif
 
 #include "..\NativeRebarPos\Calculator.h"
+#include "..\NativeRebarPos\Utility.h"
 #include "MgUtility.h"
 #include "Marshal.h"
 
@@ -17,7 +18,7 @@ using namespace OZOZ::RebarPosWrapper;
 //*************************************************************************
 // Functions
 //*************************************************************************
-double Utility::EvaluateFormula(System::String^ formula)
+double PosUtility::EvaluateFormula(System::String^ formula)
 {
 	try
 	{
@@ -50,7 +51,17 @@ double Utility::EvaluateFormula(System::String^ formula)
 	}
 }
 
-bool Utility::ValidateFormula(System::String^ formula)
+bool PosUtility::ValidateFormula(System::String^ formula)
 {
 	return Calculator::IsValid(Marshal::StringToWstring(formula));
+}
+
+Autodesk::AutoCAD::DatabaseServices::ObjectId PosUtility::CreateTextStyle(System::String^ name, System::String^ filename, double scale)
+{
+	return Marshal::ToObjectId(Utility::CreateTextStyle(Marshal::StringToWchar(name), Marshal::StringToWchar(filename), scale));
+}
+
+Autodesk::AutoCAD::DatabaseServices::ObjectId PosUtility::DefpointsLayer::get()
+{
+	return Marshal::ToObjectId(Utility::CreateHiddenLayer());
 }

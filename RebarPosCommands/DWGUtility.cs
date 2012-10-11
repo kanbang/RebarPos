@@ -20,15 +20,6 @@ namespace RebarPosCommands
             return new SelectionFilter(tvs);
         }
 
-        private static SelectionFilter SSPosGroupFilter(ObjectId groupId)
-        {
-            TypedValue[] tvs = new TypedValue[] {
-                new TypedValue((int)DxfCode.Start, "REBARPOS"),
-                new TypedValue((int)DxfCode.HardPointerId + 1, groupId.Handle)
-            };
-            return new SelectionFilter(tvs);
-        }
-
         public static PromptSelectionResult SelectAllPosUser()
         {
             try
@@ -47,32 +38,6 @@ namespace RebarPosCommands
             try
             {
                 return Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.SelectAll(SSPosFilter());
-            }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
-            }
-        }
-
-        public static PromptSelectionResult SelectGroupUser(ObjectId groupid)
-        {
-            try
-            {
-                return Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetSelection(SSPosGroupFilter(groupid));
-            }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
-            }
-        }
-
-        public static PromptSelectionResult SelectGroup(ObjectId groupid)
-        {
-            try
-            {
-                return Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.SelectAll(SSPosGroupFilter(groupid));
             }
             catch (System.Exception ex)
             {
@@ -1470,9 +1435,9 @@ namespace RebarPosCommands
                         styleen.Name = "TableStyle - EN";
                         styleen.Columns = "[M][N][D][L][SH][TL]";
 
-                        styleen.TextStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Style", "romanstw.shx", 0.7);
-                        styleen.HeadingStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Heading Style", "Arial.ttf", 1.0);
-                        styleen.FootingStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Footing Style", "simplxtw.shx", 1.0);
+                        styleen.TextStyleId = PosUtility.CreateTextStyle("Rebar BOQ Style", "romanstw.shx", 0.7);
+                        styleen.HeadingStyleId = PosUtility.CreateTextStyle("Rebar BOQ Heading Style", "Arial.ttf", 1.0);
+                        styleen.FootingStyleId = PosUtility.CreateTextStyle("Rebar BOQ Footing Style", "simplxtw.shx", 1.0);
 
                         styleen.Precision = 2;
 
@@ -1498,9 +1463,9 @@ namespace RebarPosCommands
                         styletr.Name = "TableStyle - TR";
                         styletr.Columns = "[M][N][D][L][SH][TL]";
 
-                        styletr.TextStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Style", "romanstw.shx", 0.7);
-                        styletr.HeadingStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Heading Style", "Arial.ttf", 1.0);
-                        styletr.FootingStyleId = DWGUtility.CreateTextStyle("Rebar BOQ Footing Style", "simplxtw.shx", 1.0);
+                        styletr.TextStyleId = PosUtility.CreateTextStyle("Rebar BOQ Style", "romanstw.shx", 0.7);
+                        styletr.HeadingStyleId = PosUtility.CreateTextStyle("Rebar BOQ Heading Style", "Arial.ttf", 1.0);
+                        styletr.FootingStyleId = PosUtility.CreateTextStyle("Rebar BOQ Footing Style", "simplxtw.shx", 1.0);
 
                         styletr.Precision = 2;
 
@@ -1539,82 +1504,6 @@ namespace RebarPosCommands
 
                 return id;
             }
-        }
-
-        // Creates a new non plot layer and returns the ObjectId of the new layer
-        public static ObjectId CreateHiddenLayer(string name, Autodesk.AutoCAD.Colors.Color color)
-        {
-            ObjectId id = ObjectId.Null;
-
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
-            {
-                try
-                {
-                    LayerTable table = (LayerTable)tr.GetObject(db.LayerTableId, OpenMode.ForRead);
-                    if (!table.Has(name))
-                    {
-                        LayerTableRecord style = new LayerTableRecord();
-                        style.Name = name;
-                        style.Color = color;
-                        style.IsPlottable = false;
-                        table.UpgradeOpen();
-                        id = table.Add(style);
-                        table.DowngradeOpen();
-                        tr.AddNewlyCreatedDBObject(style, true);
-                    }
-                    else
-                    {
-                        id = table[name];
-                    }
-
-                    tr.Commit();
-                }
-                catch (System.Exception ex)
-                {
-                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-                }
-            }
-
-            return id;
-        }
-
-        // Creates a new text style and returns the ObjectId of the new style 
-        public static ObjectId CreateTextStyle(string name, string filename, double scale)
-        {
-            ObjectId id = ObjectId.Null;
-
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
-            {
-                try
-                {
-                    TextStyleTable table = (TextStyleTable)tr.GetObject(db.TextStyleTableId, OpenMode.ForRead);
-                    if (!table.Has(name))
-                    {
-                        TextStyleTableRecord style = new TextStyleTableRecord();
-                        style.Name = name;
-                        style.FileName = filename;
-                        style.XScale = scale;
-                        table.UpgradeOpen();
-                        id = table.Add(style);
-                        table.DowngradeOpen();
-                        tr.AddNewlyCreatedDBObject(style, true);
-                    }
-                    else
-                    {
-                        id = table[name];
-                    }
-
-                    tr.Commit();
-                }
-                catch (System.Exception ex)
-                {
-                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-                }
-            }
-
-            return id;
         }
 
         // Returns all text styles
@@ -1712,8 +1601,7 @@ namespace RebarPosCommands
                         {
                             while (it.MoveNext())
                             {
-                                PosShape item = (PosShape)tr.GetObject(it.Value, OpenMode.ForRead);
-                                list.Add(item.Name, it.Value);
+                                list.Add(it.Key, it.Value);
                             }
                         }
                     }

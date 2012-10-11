@@ -191,15 +191,6 @@ void PosGroup::CountColor::set(Autodesk::AutoCAD::Colors::Color^ value)
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setCountColor(value->ColorIndex));
 }
 
-Autodesk::AutoCAD::DatabaseServices::ObjectId PosGroup::HiddenLayerId::get()
-{
-	return Marshal::ToObjectId (GetImpObj()->HiddenLayerId());
-}
-void PosGroup::HiddenLayerId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
-{
-	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setHiddenLayerId(Marshal::FromObjectId(value)));
-}
-
 Autodesk::AutoCAD::DatabaseServices::ObjectId PosGroup::TextStyleId::get()
 {
 	return Marshal::ToObjectId (GetImpObj()->TextStyleId());

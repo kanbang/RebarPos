@@ -26,7 +26,7 @@ CPosGroup::CPosGroup () : m_Name(NULL), m_Bending(Adesk::kFalse), m_MaxBarLength
 	m_Formula(NULL), m_FormulaLengthOnly(NULL), m_FormulaPosOnly(NULL), m_StandardDiameters(NULL),
 	m_TextColor(2), m_PosColor(4), m_CircleColor(1), m_MultiplierColor(33), m_GroupColor(9), 
 	m_NoteColor(30), m_CurrentGroupHighlightColor(8), m_CountColor(5), m_NoteScale(0.75), 
-	m_HiddenLayerID(AcDbObjectId::kNull), m_TextStyleID(AcDbObjectId::kNull), m_NoteStyleID(AcDbObjectId::kNull)
+	m_TextStyleID(AcDbObjectId::kNull), m_NoteStyleID(AcDbObjectId::kNull)
 { }
 
 CPosGroup::~CPosGroup () 
@@ -305,19 +305,6 @@ Acad::ErrorStatus CPosGroup::setCountColor(const Adesk::UInt16 newVal)
 	return Acad::eOk;
 }
 
-const AcDbObjectId& CPosGroup::HiddenLayerId(void) const
-{
-	assertReadEnabled();
-	return m_HiddenLayerID;
-}
-
-Acad::ErrorStatus CPosGroup::setHiddenLayerId(const AcDbObjectId& newVal)
-{
-	assertWriteEnabled();
-	m_HiddenLayerID = newVal;
-	return Acad::eOk;
-}
-
 const AcDbObjectId& CPosGroup::TextStyleId(void) const
 {
 	assertReadEnabled();
@@ -420,7 +407,6 @@ Acad::ErrorStatus CPosGroup::dwgOutFields(AcDbDwgFiler *pFiler) const
     pFiler->writeDouble(m_NoteScale);
 
     // Styles
-    pFiler->writeHardPointerId(m_HiddenLayerID);
     pFiler->writeHardPointerId(m_TextStyleID);
     pFiler->writeHardPointerId(m_NoteStyleID);
 
@@ -479,7 +465,6 @@ Acad::ErrorStatus CPosGroup::dwgInFields(AcDbDwgFiler *pFiler)
 
         pFiler->readDouble(&m_NoteScale);
 
-		pFiler->readHardPointerId(&m_HiddenLayerID);
 		pFiler->readHardPointerId(&m_TextStyleID);
 		pFiler->readHardPointerId(&m_NoteStyleID);
 	}
@@ -547,7 +532,6 @@ Acad::ErrorStatus CPosGroup::dxfOutFields(AcDbDxfFiler *pFiler) const
     pFiler->writeDouble(AcDb::kDxfXReal + 1, m_NoteScale);
 
     // Styles
-    pFiler->writeItem(AcDb::kDxfHardPointerId, m_HiddenLayerID);
     pFiler->writeItem(AcDb::kDxfHardPointerId + 1, m_TextStyleID);
     pFiler->writeItem(AcDb::kDxfHardPointerId + 2, m_NoteStyleID);
 
@@ -597,7 +581,6 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
 	Adesk::UInt16 t_CurrentGroupHighlightColor = 0;
 	Adesk::UInt16 t_CountColor = 0;
 	double t_NoteScale = 0;
-	AcDbObjectId t_HiddenLayerID = AcDbObjectId::kNull;
 	AcDbObjectId t_TextStyleID = AcDbObjectId::kNull;
 	AcDbObjectId t_NoteStyleID = AcDbObjectId::kNull;
 
@@ -662,9 +645,6 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
         case AcDb::kDxfXReal + 1:
 			t_NoteScale = rb.resval.rreal;
 			break;
-        case AcDb::kDxfHardPointerId:
-			acdbGetObjectId(t_HiddenLayerID, rb.resval.rlname);
-			break;
         case AcDb::kDxfHardPointerId + 1:
 			acdbGetObjectId(t_TextStyleID, rb.resval.rlname);
 			break;
@@ -712,7 +692,7 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
 	m_CountColor = t_CountColor;
 
 	m_NoteScale = t_NoteScale;
-	m_HiddenLayerID = t_HiddenLayerID;
+
 	m_TextStyleID = t_TextStyleID;
 	m_NoteStyleID = t_NoteStyleID;
 
@@ -760,10 +740,6 @@ AcDbObjectId CPosGroup::GetGroupId()
         group->setFormulaLengthOnly(_T("[\"L=\":L]"));
         group->setFormulaPosOnly(_T("[M:C]"));
         group->setStandardDiameters(_T("8 10 12 14 16 18 20 22 25 26 32 36"));
-		AcCmColor clr;
-		clr.setColorMethod(AcCmEntityColor::kByACI);
-		clr.setColorIndex(8);
-		group->setHiddenLayerId(Utility::CreateHiddenLayer(_T("Rebar Defpoints"), clr));
 		group->setTextStyleId(Utility::CreateTextStyle(_T("Rebar Text Style"), _T("leroy.shx"), 0.7));
 		group->setNoteStyleId(Utility::CreateTextStyle(_T("Rebar Note Style"), _T("simplxtw.shx"), 0.9));
         pDict->upgradeOpen();

@@ -36,7 +36,6 @@ namespace RebarPosCommands
             public Autodesk.AutoCAD.Colors.Color currentGroupHighlightColor;
             public Autodesk.AutoCAD.Colors.Color countColor;
 
-            public ObjectId hiddenLayerId;
             public ObjectId textStyleId;
             public ObjectId noteStyleId;
 
@@ -87,7 +86,6 @@ namespace RebarPosCommands
                     m_Copy.currentGroupHighlightColor = group.CurrentGroupHighlightColor;
                     m_Copy.countColor = group.CountColor;
 
-                    m_Copy.hiddenLayerId = group.HiddenLayerId;
                     m_Copy.textStyleId = group.TextStyleId;
                     m_Copy.noteStyleId = group.NoteStyleId;
                     m_Copy.noteScale = group.NoteScale;
@@ -224,7 +222,6 @@ namespace RebarPosCommands
                     group.CurrentGroupHighlightColor = m_Copy.currentGroupHighlightColor;
                     group.CountColor = m_Copy.countColor;
 
-                    group.HiddenLayerId = m_Copy.hiddenLayerId;
                     group.TextStyleId = m_Copy.textStyleId;
                     group.NoteStyleId = m_Copy.noteStyleId;
                     group.NoteScale = m_Copy.noteScale;

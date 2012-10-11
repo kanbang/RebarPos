@@ -2043,7 +2043,7 @@ const void CRebarPos::Calculate(void) const
 		Utility::IntToStr(m_Multiplier, lastMultiplierDraw.text);
 
 	// Set colors
-	defpointsLayer = pGroup->HiddenLayerId();
+	defpointsLayer = Utility::CreateHiddenLayer();
 	lastCircleColor = pGroup->CircleColor();
 	lastMultiplierDraw.color = pGroup->MultiplierColor();
 	for(DrawListSize i = 0; i < lastDrawList.size(); i++)

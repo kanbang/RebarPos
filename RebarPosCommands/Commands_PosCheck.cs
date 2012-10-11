@@ -18,7 +18,7 @@ namespace RebarPosCommands
             if (sel.Status != PromptStatus.OK) return;
             ObjectId[] items = sel.Value.GetObjectIds();
 
-            if (form.Init(CurrentGroupId, items))
+            if (form.Init(items))
             {
                 Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false);
             }

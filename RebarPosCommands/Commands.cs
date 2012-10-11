@@ -37,8 +37,6 @@ namespace RebarPosCommands
             ShowShapes = false;
         }
 
-        private string CurrentGroupName { get; set; }
-        private ObjectId CurrentGroupId { get; set; }
         private bool ShowShapes
         {
             get

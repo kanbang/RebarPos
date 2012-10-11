@@ -189,7 +189,7 @@ namespace RebarPosCommands
             return results;
         }
 
-        public static List<PosCheckResult> CheckAllInSelection(ObjectId groupId, IEnumerable<ObjectId> items, CheckType checkType)
+        public static List<PosCheckResult> CheckAllInSelection(IEnumerable<ObjectId> items, CheckType checkType)
         {
             Database db = HostApplicationServices.WorkingDatabase;
             List<PosCopy> pliste = PosCopy.ReadAllInSelection(items, PosCopy.PosGrouping.None);
@@ -198,7 +198,7 @@ namespace RebarPosCommands
             {
                 try
                 {
-                    PosGroup group = tr.GetObject(groupId, OpenMode.ForRead) as PosGroup;
+                    PosGroup group = tr.GetObject(PosGroup.GroupId, OpenMode.ForRead) as PosGroup;
                     foreach (string ds in group.StandardDiameters.Split(new char[] { ' ', ',', ';', ':', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries))
                     {
                         int d;
