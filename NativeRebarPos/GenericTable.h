@@ -92,7 +92,7 @@ public:
 	void Clear();
 
 	void setCellText(const int i, const int j, const ACHAR* newVal);
-	void setCellShapeId(const int i, const int j, const AcDbObjectId& newVal);
+	void setCellShape(const int i, const int j, const ACHAR* newVal);
 	void setCellShapeText(const int i, const int j, const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f);
 	void setCellTextColor(const int i, const int j, const unsigned short newVal);
 	void setCellTextStyleId(const int i, const int j, const AcDbObjectId& newVal);

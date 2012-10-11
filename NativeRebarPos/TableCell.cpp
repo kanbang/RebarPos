@@ -15,7 +15,7 @@ CTableCell::CTableCell(void) : m_BasePoint(0, 0, 0), m_Direction(1, 0, 0), m_Up(
 	m_TopBorder(Adesk::kFalse), m_LeftBorder(Adesk::kFalse), m_BottomBorder(Adesk::kFalse), m_RightBorder(Adesk::kFalse),
 	m_TopBorderDouble(Adesk::kFalse), m_LeftBorderDouble(Adesk::kFalse), m_BottomBorderDouble(Adesk::kFalse), m_RightBorderDouble(Adesk::kFalse),
 	m_MergeRight(0), m_MergeDown(0),
-	m_TextStyleId(AcDbObjectId::kNull), m_ShapeId(AcDbObjectId::kNull),
+	m_TextStyleId(AcDbObjectId::kNull), m_Shape(NULL),
 	m_TextHeight(1.0), m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL),
 	m_HorizontalAlignment(CTableCell::eNEAR), m_VerticalAlignment(CTableCell::eNEAR),
 	m_Width(0), m_Height(0), m_Margin(0)
@@ -25,6 +25,7 @@ CTableCell::CTableCell(void) : m_BasePoint(0, 0, 0), m_Direction(1, 0, 0), m_Up(
 CTableCell::~CTableCell(void)
 {
 	acutDelString(m_Text);
+	acutDelString(m_Shape);
 	acutDelString(m_A);
 	acutDelString(m_B);
 	acutDelString(m_C);
@@ -94,8 +95,8 @@ Acad::ErrorStatus CTableCell::setMergeDown(const Adesk::Int32 newVal) { m_MergeD
 const AcDbObjectId& CTableCell::TextStyleId() const          { return m_TextStyleId; }
 Acad::ErrorStatus CTableCell::setTextStyleId(const AcDbObjectId& newVal)  { m_TextStyleId = newVal; return Acad::eOk; }
 
-const AcDbObjectId& CTableCell::ShapeId() const        { return m_ShapeId; }
-Acad::ErrorStatus CTableCell::setShapeId(const AcDbObjectId& newVal) { m_ShapeId = newVal; return Acad::eOk; }
+const ACHAR* CTableCell::Shape() const         { return m_Shape; }
+Acad::ErrorStatus CTableCell::setShape(const ACHAR* newVal) { acutUpdString(newVal, m_Shape); return Acad::eOk; }
 
 Acad::ErrorStatus CTableCell::setShapeText(const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f)
 {
@@ -136,7 +137,7 @@ const bool CTableCell::HasText() const
 }
 const bool CTableCell::HasShape() const 
 {
-	return m_ShapeId != AcDbObjectId::kNull; 
+	return m_Shape != NULL && m_Shape[0] != _T('\0'); 
 }
 
 const AcGePoint2d CTableCell::MeasureContents() const
@@ -254,7 +255,7 @@ const std::vector<AcDbMText*> CTableCell::GetTexts() const
 	else if(HasShape())
 	{
 		Acad::ErrorStatus es;
-		AcDbObjectPointer<CPosShape> pShape (m_ShapeId, AcDb::kForRead);
+		AcDbObjectPointer<CPosShape> pShape (CPosShape::GetShapeId(m_Shape), AcDb::kForRead);
 		if((es = pShape.openStatus()) == Acad::eOk)
 		{
 			AcDbExtents ext = pShape->GetShapeExtents();
@@ -434,7 +435,7 @@ const std::vector<AcDbLine*> CTableCell::GetLines() const
 	if(HasShape())
 	{
 		Acad::ErrorStatus es;
-		AcDbObjectPointer<CPosShape> pShape (m_ShapeId, AcDb::kForRead);
+		AcDbObjectPointer<CPosShape> pShape (CPosShape::GetShapeId(m_Shape), AcDb::kForRead);
 		if((es = pShape.openStatus()) == Acad::eOk)
 		{
 			AcDbExtents ext = pShape->GetShapeExtents();
@@ -492,6 +493,11 @@ Acad::ErrorStatus CTableCell::dwgOutFields(AcDbDwgFiler* pFiler) const
 	else
 		pFiler->writeString(_T(""));
 
+	if(HasShape())
+		pFiler->writeString(m_Shape);
+	else
+		pFiler->writeString(_T(""));
+
 	if(m_A != NULL && m_A[0] != _T('\0'))
 		pFiler->writeString(m_A);
 	else
@@ -537,7 +543,6 @@ Acad::ErrorStatus CTableCell::dwgOutFields(AcDbDwgFiler* pFiler) const
 	pFiler->writeInt32(m_MergeDown);
 
 	pFiler->writeHardPointerId(m_TextStyleId);
-	pFiler->writeHardPointerId(m_ShapeId);
 
 	pFiler->writeDouble(m_TextHeight);
 
@@ -560,6 +565,7 @@ Acad::ErrorStatus CTableCell::dwgInFields(AcDbDwgFiler* pFiler)
 	m_Normal = m_Direction.crossProduct(m_Up);
 
 	acutDelString(m_Text);
+	acutDelString(m_Shape);
 
 	acutDelString(m_A);
 	acutDelString(m_B);
@@ -569,6 +575,7 @@ Acad::ErrorStatus CTableCell::dwgInFields(AcDbDwgFiler* pFiler)
 	acutDelString(m_F);
 
 	pFiler->readString(&m_Text);
+	pFiler->readString(&m_Shape);
 
 	pFiler->readString(&m_A);
 	pFiler->readString(&m_B);
@@ -597,7 +604,6 @@ Acad::ErrorStatus CTableCell::dwgInFields(AcDbDwgFiler* pFiler)
 	pFiler->readInt32(&m_MergeDown);
 
 	pFiler->readHardPointerId(&m_TextStyleId);
-	pFiler->readHardPointerId(&m_ShapeId);
 
 	pFiler->readDouble(&m_TextHeight);
 
@@ -625,6 +631,10 @@ Acad::ErrorStatus CTableCell::dxfOutFields(AcDbDxfFiler* pFiler) const
 
 	if(HasText())
 		pFiler->writeString(AcDb::kDxfText, m_Text);
+	else
+		pFiler->writeString(AcDb::kDxfText, _T(""));
+	if(HasShape())
+		pFiler->writeString(AcDb::kDxfText, m_Shape);
 	else
 		pFiler->writeString(AcDb::kDxfText, _T(""));
 
@@ -673,7 +683,6 @@ Acad::ErrorStatus CTableCell::dxfOutFields(AcDbDxfFiler* pFiler) const
 	pFiler->writeInt32(AcDb::kDxfInt32, m_MergeDown);
 
 	pFiler->writeObjectId(AcDb::kDxfHardPointerId, m_TextStyleId);
-	pFiler->writeObjectId(AcDb::kDxfHardPointerId, m_ShapeId);
 
 	pFiler->writeDouble(AcDb::kDxfReal, m_TextHeight);
 
@@ -696,6 +705,7 @@ Acad::ErrorStatus CTableCell::dxfInFields(AcDbDxfFiler* pFiler)
 	AcGeVector3d t_Direction, t_Up;
 
 	ACHAR* t_Text = NULL;
+	ACHAR* t_Shape = NULL;
 	ACHAR* t_A = NULL;
 	ACHAR* t_B = NULL;
 	ACHAR* t_C = NULL;
@@ -723,7 +733,6 @@ Acad::ErrorStatus CTableCell::dxfInFields(AcDbDxfFiler* pFiler)
 	Adesk::Int32 t_MergeDown;
 
 	AcDbHardPointerId t_TextStyleId;
-	AcDbHardPointerId t_ShapeId;
 
 	double t_TextHeight;
 
@@ -739,6 +748,7 @@ Acad::ErrorStatus CTableCell::dxfInFields(AcDbDxfFiler* pFiler)
 	if((es = Utility::ReadDXFVector(pFiler, AcDb::kDxfXCoord + 2, _T("up vector"), t_Up)) != Acad::eOk) return es;
 
 	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("cell text"), t_Text)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("cell shape"), t_Shape)) != Acad::eOk) return es;
 
 	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("text replacement A"), t_A)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("text replacement B"), t_B)) != Acad::eOk) return es;
@@ -767,7 +777,6 @@ Acad::ErrorStatus CTableCell::dxfInFields(AcDbDxfFiler* pFiler)
 	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("cell merge down"), t_MergeDown)) != Acad::eOk) return es;
 
 	if((es = Utility::ReadDXFObjectId(pFiler, AcDb::kDxfHardPointerId, _T("cell text style"), t_TextStyleId)) != Acad::eOk) return es;
-	if((es = Utility::ReadDXFObjectId(pFiler, AcDb::kDxfHardPointerId, _T("cell shape id"), t_ShapeId)) != Acad::eOk) return es;
 
 	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("cell text height"), t_TextHeight)) != Acad::eOk) return es;
 
@@ -784,6 +793,7 @@ Acad::ErrorStatus CTableCell::dxfInFields(AcDbDxfFiler* pFiler)
 	m_Normal = m_Direction.crossProduct(m_Up);
 
 	setText(t_Text);
+	setShape(t_Shape);
 	setShapeText(t_A, t_B, t_C, t_D, t_E, t_F);
 
 	m_TextColor = t_TextColor;
@@ -806,7 +816,6 @@ Acad::ErrorStatus CTableCell::dxfInFields(AcDbDxfFiler* pFiler)
 	m_MergeDown = t_MergeDown;
 
 	m_TextStyleId = t_TextStyleId;
-	m_ShapeId = t_ShapeId;
 
 	m_TextHeight = t_TextHeight;
 

@@ -141,15 +141,15 @@ BOQTable::BOQRowCollection::BOQRowCollection(BOQTable^ parent)
 	m_Parent = parent;
 }
 
-void BOQTable::BOQRowCollection::Add(int pos, int count, double diameter, double length1, double length2, bool isVarLength, Autodesk::AutoCAD::DatabaseServices::ObjectId shapeId, System::String^ a, System::String^ b, System::String^ c, System::String^ d, System::String^ e, System::String^ f)
+void BOQTable::BOQRowCollection::Add(int pos, int count, double diameter, double length1, double length2, bool isVarLength, System::String^ shape, System::String^ a, System::String^ b, System::String^ c, System::String^ d, System::String^ e, System::String^ f)
 {
-	m_Parent->GetImpObj()->AddRow(new CBOQRow(pos, count, diameter, length1, length2, (isVarLength ? Adesk::kTrue : Adesk::kFalse), OZOZ::RebarPosWrapper::Marshal::FromObjectId(shapeId), 
+	m_Parent->GetImpObj()->AddRow(new CBOQRow(pos, count, diameter, length1, length2, (isVarLength ? Adesk::kTrue : Adesk::kFalse), OZOZ::RebarPosWrapper::Marshal::StringToWchar(shape), 
 		OZOZ::RebarPosWrapper::Marshal::StringToWchar(a), OZOZ::RebarPosWrapper::Marshal::StringToWchar(b), OZOZ::RebarPosWrapper::Marshal::StringToWchar(c), OZOZ::RebarPosWrapper::Marshal::StringToWchar(d), OZOZ::RebarPosWrapper::Marshal::StringToWchar(e), OZOZ::RebarPosWrapper::Marshal::StringToWchar(f)));
 }
 
-void BOQTable::BOQRowCollection::Add(int pos, int count, double diameter, double length, Autodesk::AutoCAD::DatabaseServices::ObjectId shapeId, System::String^ a, System::String^ b, System::String^ c, System::String^ d, System::String^ e, System::String^ f)
+void BOQTable::BOQRowCollection::Add(int pos, int count, double diameter, double length, System::String^ shape, System::String^ a, System::String^ b, System::String^ c, System::String^ d, System::String^ e, System::String^ f)
 {
-	Add(pos, count, diameter, length, length, false, shapeId, a, b, c, d, e, f);
+	Add(pos, count, diameter, length, length, false, shape, a, b, c, d, e, f);
 }
 
 void BOQTable::BOQRowCollection::Add(int pos)

@@ -39,6 +39,7 @@ private:
 	AcGePoint3d m_BasePoint;
 
 	ACHAR* m_Text;
+	ACHAR* m_Shape;
 	ACHAR* m_A;
 	ACHAR* m_B;
 	ACHAR* m_C;
@@ -66,7 +67,6 @@ private:
 	Adesk::Int32 m_MergeDown;
 
 	AcDbHardPointerId m_TextStyleId;
-	AcDbHardPointerId m_ShapeId;
 
 	double m_TextHeight;
 
@@ -93,8 +93,8 @@ public:
 	const ACHAR* Text() const;
 	Acad::ErrorStatus setText(const ACHAR* newVal);
 
-	const AcDbObjectId& ShapeId() const;
-	Acad::ErrorStatus setShapeId(const AcDbObjectId& newVal);
+	const ACHAR* Shape() const;
+	Acad::ErrorStatus setShape(const ACHAR* newVal);
 
 	Acad::ErrorStatus setShapeText(const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f);
 

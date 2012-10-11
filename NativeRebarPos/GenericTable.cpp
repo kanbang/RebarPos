@@ -239,10 +239,10 @@ void CGenericTable::setCellText(const int i, const int j, const ACHAR* newVal)
 	cell->setText(newVal);
 	isModified = true;
 }
-void CGenericTable::setCellShapeId(const int i, const int j, const AcDbObjectId& newVal)
+void CGenericTable::setCellShape(const int i, const int j, const ACHAR* newVal)
 {
 	CTableCell* cell = m_Cells[i * m_Columns + j];
-	cell->setShapeId(newVal);
+	cell->setShape(newVal);
 	isModified = true;
 }
 void CGenericTable::setCellShapeText(const int i, const int j, const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f)

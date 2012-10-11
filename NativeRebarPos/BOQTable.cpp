@@ -428,7 +428,7 @@ void CBOQTable::UpdateTable(void)
 
 			if(!row->isEmpty && type == CBOQTable::SHAPE)
 			{
-				setCellShapeId(i, j, row->shapeId);
+				setCellShape(i, j, row->shape.c_str());
 				setCellTextStyleId(i, j, lastTextStyleId);
 				setCellShapeText(i, j, row->a.c_str(), row->b.c_str(), row->c.c_str(), row->d.c_str(), row->e.c_str(), row->f.c_str());
 			}
@@ -784,7 +784,7 @@ Acad::ErrorStatus CBOQTable::dwgOutFields(AcDbDwgFiler* pFiler) const
 		pFiler->writeDouble(row->length2);
 		pFiler->writeBoolean(row->isVarLength);
 		pFiler->writeBoolean(row->isEmpty);
-		pFiler->writeHardPointerId(row->shapeId);
+		pFiler->writeString(row->shape.c_str());
 		pFiler->writeString(row->a.c_str());
 		pFiler->writeString(row->b.c_str());
 		pFiler->writeString(row->c.c_str());
@@ -825,7 +825,6 @@ Acad::ErrorStatus CBOQTable::dwgInFields(AcDbDwgFiler* pFiler)
 		// Style
 		pFiler->readHardPointerId(&m_StyleID);
 
-
 		// Rows
 		ClearRows();
 		long count = 0;
@@ -840,25 +839,28 @@ Acad::ErrorStatus CBOQTable::dwgInFields(AcDbDwgFiler* pFiler)
 			pFiler->readDouble(&row->length2);
 			pFiler->readBoolean(&row->isVarLength);
 			pFiler->readBoolean(&row->isEmpty);
-			pFiler->readHardPointerId(&row->shapeId);
+			ACHAR* sh = NULL;
 			ACHAR* a = NULL;
 			ACHAR* b = NULL;
 			ACHAR* c = NULL;
 			ACHAR* d = NULL;
 			ACHAR* e = NULL;
 			ACHAR* f = NULL;
+			pFiler->readString(&sh);
 			pFiler->readString(&a);
 			pFiler->readString(&b);
 			pFiler->readString(&c);
 			pFiler->readString(&d);
 			pFiler->readString(&e);
 			pFiler->readString(&f);
+			row->shape.assign(sh);
 			row->a.assign(a);
 			row->b.assign(b);
 			row->c.assign(c);
 			row->d.assign(d);
 			row->e.assign(e);
 			row->f.assign(f);
+			acutDelString(sh);
 			acutDelString(a);
 			acutDelString(b);
 			acutDelString(c);
@@ -917,7 +919,7 @@ Acad::ErrorStatus CBOQTable::dxfOutFields(AcDbDxfFiler* pFiler) const
 		pFiler->writeDouble(AcDb::kDxfReal, row->length2);
 		pFiler->writeBoolean(AcDb::kDxfBool, row->isVarLength);
 		pFiler->writeBoolean(AcDb::kDxfBool, row->isEmpty);
-		pFiler->writeObjectId(AcDb::kDxfHardPointerId, row->shapeId);
+		pFiler->writeString(AcDb::kDxfText, row->shape.c_str());
 		pFiler->writeString(AcDb::kDxfText, row->a.c_str());
 		pFiler->writeString(AcDb::kDxfText, row->b.c_str());
 		pFiler->writeString(AcDb::kDxfText, row->c.c_str());
@@ -976,25 +978,28 @@ Acad::ErrorStatus CBOQTable::dxfInFields(AcDbDxfFiler* pFiler)
 		if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("row length2"), row->length2)) != Acad::eOk) return es;
 		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("row var length"), row->isVarLength)) != Acad::eOk) return es;
 		if((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("row is empty"), row->isEmpty)) != Acad::eOk) return es;
-		if((es = Utility::ReadDXFObjectId(pFiler, AcDb::kDxfHardPointerId, _T("row shape id"), row->shapeId)) != Acad::eOk) return es;
+		ACHAR* sh = NULL;
 		ACHAR* a = NULL;
 		ACHAR* b = NULL;
 		ACHAR* c = NULL;
 		ACHAR* d = NULL;
 		ACHAR* e = NULL;
 		ACHAR* f = NULL;
+		if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("row shape"), sh)) != Acad::eOk) return es;
 		if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("row shape length a"), a)) != Acad::eOk) return es;
 		if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("row shape length b"), b)) != Acad::eOk) return es;
 		if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("row shape length c"), c)) != Acad::eOk) return es;
 		if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("row shape length d"), d)) != Acad::eOk) return es;
 		if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("row shape length e"), e)) != Acad::eOk) return es;
 		if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("row shape length f"), f)) != Acad::eOk) return es;
+		row->shape.assign(sh);
 		row->a.assign(a);
 		row->b.assign(b);
 		row->c.assign(c);
 		row->d.assign(d);
 		row->e.assign(e);
 		row->f.assign(f);
+		acutDelString(sh);
 		acutDelString(a);
 		acutDelString(b);
 		acutDelString(c);
