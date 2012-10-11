@@ -565,12 +565,13 @@ const void CGenericTable::Calculate(void) const
 		for(int j = 0; j < m_Columns; j++)
 		{
 			CTableCell* cell = m_Cells[i * m_Columns + j];
+			cell->resetTransform();
 
 			double h = rowHeights[i];
 			double w = columnWidths[j];
 			if(cell->MergeRight() != 0)
 			{
-				int span =cell->MergeRight();
+				int span = cell->MergeRight();
 				if(j + span - 1 > m_Columns - 1) span = m_Columns - j;
 				w = 0;
 				for(int k = j ; k < j + span; k++)

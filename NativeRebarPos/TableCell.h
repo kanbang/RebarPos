@@ -197,6 +197,7 @@ public:
         AcGePoint3dArray&     snapPoints,
         AcDbIntArray&         geomIds) const;
 
+    Acad::ErrorStatus   resetTransform();
     Acad::ErrorStatus   transformBy(const AcGeMatrix3d& xform);
 
     Acad::ErrorStatus	explode(AcDbVoidPtrArray& entitySet) const;

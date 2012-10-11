@@ -930,6 +930,16 @@ Acad::ErrorStatus CTableCell::getOsnapPoints(
 	return Acad::eOk;
 }
 
+Acad::ErrorStatus CTableCell::resetTransform()
+{
+	m_BasePoint.set(0, 0, 0);
+	m_Direction.set(1, 0, 0);
+	m_Up.set(0, 1, 0);
+	m_Normal.set(0, 0, 1);
+
+	return Acad::eOk;
+}
+
 Acad::ErrorStatus CTableCell::transformBy(const AcGeMatrix3d& xform)
 {
 	m_BasePoint.transformBy(xform);
