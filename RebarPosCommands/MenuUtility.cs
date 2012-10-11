@@ -2,16 +2,10 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Reflection;
 using System.Windows.Media.Imaging;
 using System.Windows.Input;
 
 using Autodesk.Windows;
-using Autodesk.AutoCAD.Runtime;
-using Autodesk.AutoCAD.ApplicationServices;
-using System.Windows;
-using System.Windows.Controls;
-using Autodesk.AutoCAD.EditorInput;
 
 namespace RebarPosCommands
 {
@@ -21,7 +15,7 @@ namespace RebarPosCommands
         {
             // Main ribbon control
             RibbonControl rc = ComponentManager.Ribbon;
-
+            
             // Check if the tab already exists
             foreach (RibbonTab tab in rc.Tabs)
             {

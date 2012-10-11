@@ -29,6 +29,9 @@ namespace OZOZ
 			public:
 				StringToWchar(System::String^ value)
 				{
+					if(System::String::IsNullOrEmpty(value))
+						value = System::String::Empty;
+
 					context = gcnew msclr::interop::marshal_context();
 					m_ptr = context->marshal_as<const wchar_t*>(value);
 				}
@@ -46,6 +49,8 @@ namespace OZOZ
 			// Convert const wchar_t* to System::String
 			static inline System::String^ WcharToString(const wchar_t* value)
 			{
+				if(value == NULL || value[0] == L'\0')
+					value = L"";
 				return msclr::interop::marshal_as<System::String^>(value);
 			}
 
@@ -64,6 +69,9 @@ namespace OZOZ
 			// Convert const AcDbObjectId& to ObjectId
 			static inline Autodesk::AutoCAD::DatabaseServices::ObjectId ToObjectId(const AcDbObjectId& value)
 			{
+				if(value.isNull())
+					return Autodesk::AutoCAD::DatabaseServices::ObjectId::Null;
+
 				Autodesk::AutoCAD::DatabaseServices::ObjectId ret;
 				AcDbObjectId* native = reinterpret_cast<AcDbObjectId*>(&(ret));
 				*native = value;
@@ -73,6 +81,9 @@ namespace OZOZ
 			// Convert ObjectId to const AcDbObjectId&
 			static inline AcDbObjectId FromObjectId(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
 			{
+				if(value.IsNull)
+					return AcDbObjectId::kNull;
+
 				return *reinterpret_cast<AcDbObjectId*>(&(value));
 			}
 

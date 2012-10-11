@@ -1,11 +1,4 @@
-﻿using System;
-using System.Reflection;
-using System.IO;
-using System.Collections.Generic;
-
-using Autodesk.AutoCAD.ApplicationServices;
-using Autodesk.AutoCAD.EditorInput;
-using Autodesk.AutoCAD.Runtime;
+﻿using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.GraphicsInterface;
 
@@ -25,7 +18,6 @@ namespace RebarPosCommands
         {
             // Create overrules
             DrawableOverrule.Overruling = true;
-            // ObjectOverrule.AddOverrule(RXClass.GetClass(typeof(RebarPos)), HighlightGroupOverrule.Instance, true);
             ObjectOverrule.AddOverrule(RXClass.GetClass(typeof(RebarPos)), CountOverrule.Instance, true);
             ObjectOverrule.AddOverrule(RXClass.GetClass(typeof(RebarPos)), ShowShapesOverrule.Instance, true);
 
@@ -36,7 +28,6 @@ namespace RebarPosCommands
         void IExtensionApplication.Terminate()
         {
             // Remove overrules
-            //ObjectOverrule.RemoveOverrule(RXClass.GetClass(typeof(RebarPos)), HighlightGroupOverrule.Instance);
             ObjectOverrule.RemoveOverrule(RXClass.GetClass(typeof(RebarPos)), CountOverrule.Instance);
             ObjectOverrule.RemoveOverrule(RXClass.GetClass(typeof(RebarPos)), ShowShapesOverrule.Instance);
         }
