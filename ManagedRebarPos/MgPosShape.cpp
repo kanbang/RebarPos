@@ -137,3 +137,12 @@ String^ PosShape::TableName::get()
 {
 	return Marshal::WcharToString(CPosShape::GetTableName());
 }
+
+//*************************************************************************
+// Static Methods
+//*************************************************************************
+Autodesk::AutoCAD::DatabaseServices::ObjectId PosShape::GetShapeId(String^ name)
+{
+	AcDbObjectId id = CPosShape::GetShapeId(Marshal::StringToWchar(name));
+	return Marshal::ToObjectId(id);
+}

@@ -243,6 +243,9 @@ namespace OZOZ
 
 		public:
 			property static String^ TableName        { String^ get(); }
+
+		public:
+			static Autodesk::AutoCAD::DatabaseServices::ObjectId GetShapeId(String^ name);
         };
     }
 

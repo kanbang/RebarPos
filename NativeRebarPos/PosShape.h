@@ -112,6 +112,9 @@ public:
 	/// Gets the table name
 	static ACHAR* GetTableName();
 
+	/// Gets the shape with the given name
+	static AcDbObjectId GetShapeId(const ACHAR* name);
+
 private:
     // These are here because otherwise dllexport tries to export the
     // private methods of AcDbObject.  They're private in AcDbObject

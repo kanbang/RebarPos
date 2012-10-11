@@ -13,18 +13,18 @@ namespace RebarPosCommands
 {
     public partial class SelectShapeForm : Form
     {
-        Autodesk.AutoCAD.DatabaseServices.ObjectId m_Current;
+        string m_Current;
 
         public SelectShapeForm()
         {
             InitializeComponent();
 
-            m_Current = Autodesk.AutoCAD.DatabaseServices.ObjectId.Null;
+            m_Current = string.Empty;
         }
 
-        public Autodesk.AutoCAD.DatabaseServices.ObjectId Current { get { return m_Current; } }
+        public string Current { get { return m_Current; } }
 
-        public void SetShapes(Autodesk.AutoCAD.DatabaseServices.ObjectId current)
+        public void SetShapes(string current)
         {
             Dictionary<string, ObjectId> shapedict = DWGUtility.GetShapes();
             List<KeyValuePair<string, ObjectId>> items = new List<KeyValuePair<string, ObjectId>>();
@@ -33,16 +33,16 @@ namespace RebarPosCommands
                 items.Add(item);
             }
             items.Sort(new CompareShapesForSort());
-            List<ObjectId> shapes = new List<ObjectId>();
+            List<string> shapes = new List<string>();
             foreach (KeyValuePair<string, ObjectId> item in items)
             {
-                shapes.Add(item.Value);
+                shapes.Add(item.Key);
             }
 
             SetShapes(current, shapes);
         }
 
-        public void SetShapes(ObjectId current, IEnumerable<ObjectId> shapes)
+        public void SetShapes(string current, IEnumerable<string> shapes)
         {
             m_Current = current;
 
@@ -56,18 +56,18 @@ namespace RebarPosCommands
             {
                 try
                 {
-                    foreach (ObjectId id in shapes)
+                    foreach (string name in shapes)
                     {
-                        PosShape shape = tr.GetObject(id, OpenMode.ForRead) as PosShape;
+                        PosShape shape = tr.GetObject(PosShape.GetShapeId(name), OpenMode.ForRead) as PosShape;
                         if (shape != null)
                         {
                             PosShapeView posShapeView = new PosShapeView();
                             posShapeView.ShapeName = shape.Name;
                             posShapeView.ShowName = true;
-                            posShapeView.Selected = (id == m_Current);
+                            posShapeView.Selected = (shape.Name == m_Current);
                             posShapeView.Visible = true;
                             posShapeView.Size = new Size(200, 100);
-                            posShapeView.Tag = id;
+                            posShapeView.Tag = shape.Name;
                             posShapeView.BackColor = backColor;
 
                             posShapeView.Click += new EventHandler(posShapeView_Click);
@@ -152,7 +152,7 @@ namespace RebarPosCommands
             PosShapeView ctrl = sender as PosShapeView;
             if (ctrl != null)
             {
-                m_Current = (Autodesk.AutoCAD.DatabaseServices.ObjectId)ctrl.Tag;
+                m_Current = (string)ctrl.Tag;
                 DialogResult = DialogResult.OK;
                 Close();
             }

@@ -1243,12 +1243,8 @@ STDMETHODIMP CComRebarPos::get_Shape(BSTR * pVal)
 	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
 
-		AcDbObjectPointer<CPosShape> pShape (pRebarPos->ShapeId(), AcDb::kForRead);
-		if((es = pShape.openStatus()) != Acad::eOk)
-            throw es;
-
 		USES_CONVERSION;
-		*pVal = SysAllocString(CT2W(pShape->Name()));
+		*pVal = SysAllocString(CT2W(pRebarPos->Shape()));
     }
     catch(const Acad::ErrorStatus)
     {
@@ -1272,41 +1268,11 @@ STDMETHODIMP CComRebarPos::put_Shape(BSTR newVal)
 	    if((es = pRebarPos.openStatus()) != Acad::eOk)
             throw es;
 
-		AcDbDatabase* pDb = NULL;
-		AcDbDictionary* pNamedObj = NULL;
-		AcDbDictionary* pDict = NULL;
-		AcDbDictionaryIterator* it = NULL;
-		AcDbObjectId id;
-
-		pDb = pRebarPos->database();
-		if (NULL == pDb)
-			pDb = acdbHostApplicationServices()->workingDatabase();
-	    
-		if (pDb->getNamedObjectsDictionary(pNamedObj, AcDb::kForRead) == Acad::eOk)
-		{
-			if (pNamedObj->getAt(CPosShape::GetTableName(), (AcDbObject*&)pDict, AcDb::kForRead) == Acad::eOk)
-			{
-				it = pDict->newIterator();
-				while(it->next())
-				{
-					AcDbObjectPointer<CPosShape> pShape (it->objectId(), AcDb::kForRead);
-					if((es = pShape.openStatus()) != Acad::eOk)
-						throw es;
-					if(wcscmp(W2T(newVal), pShape->Name()) == 0)
-					{
-						if ((es = pRebarPos->setShapeId(it->objectId())) != Acad::eOk)
-							throw es;
-						else
-							Fire_Notification(DISPID_SHAPE);
-						break;
-					}
-				}
-				if(it)
-					delete it;
-				pDict->close();
-			}
-			pNamedObj->close();
-		}
+        USES_CONVERSION;
+        if ((es = pRebarPos->setShape(W2T(newVal))) != Acad::eOk)
+            throw es;
+        else 
+            Fire_Notification(DISPID_SHAPE);   
     }
     catch(const Acad::ErrorStatus)
     {

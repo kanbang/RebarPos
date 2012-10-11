@@ -363,7 +363,7 @@ namespace RebarPosCommands
                                 sw.WriteLine(n + ".Items.AddText(" + x.X.ToString() + "," + x.Y.ToString() + "," + x.Height.ToString() + ",\"" + x.Text + "\",Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci," + x.Color.ColorIndex.ToString() + ")," + "TextHorizontalMode." + x.HorizontalAlignment.ToString() + "," + "TextVerticalMode." + x.VerticalAlignment.ToString() + "," + (x.Visible ? "true" : "false") + ");");
                             }
                         }
-                        sw.WriteLine("dict.SetAt(\"*\", " + n + ");");
+                        sw.WriteLine("dict.SetAt(\"" + shape.Name + "\", " + n + ");");
                         sw.WriteLine("tr.AddNewlyCreatedDBObject(" + n + ", true);");
                         sw.WriteLine();
                         i++;
@@ -395,7 +395,7 @@ namespace RebarPosCommands
                     {
                         PosGroup group = (PosGroup)tr.GetObject(entry.Value, OpenMode.ForRead);
 
-                        sw.WriteLine("Name: " + group.Name  );
+                        sw.WriteLine("Name: " + group.Name);
                         sw.WriteLine();
                     }
                 }

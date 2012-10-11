@@ -111,8 +111,8 @@ namespace RebarPosCommands
                             copy.f = pos.F;
                             copy.x = pos.BasePoint.X;
                             copy.y = pos.BasePoint.Y;
-                            copy.shapeId = pos.ShapeId;
-                            PosShape shape = tr.GetObject(copy.shapeId, OpenMode.ForRead) as PosShape;
+                            copy.shapename = pos.Shape;
+                            PosShape shape = tr.GetObject(PosShape.GetShapeId(copy.shapename), OpenMode.ForRead) as PosShape;
                             if (shape != null)
                             {
                                 copy.priority = shape.Priority;
@@ -187,8 +187,8 @@ namespace RebarPosCommands
                                 copy.f = pos.F;
                                 copy.x = pos.BasePoint.X;
                                 copy.y = pos.BasePoint.Y;
-                                copy.shapeId = pos.ShapeId;
-                                PosShape shape = tr.GetObject(copy.shapeId, OpenMode.ForRead) as PosShape;
+                                copy.shapename = pos.Shape;
+                                PosShape shape = tr.GetObject(PosShape.GetShapeId(copy.shapename), OpenMode.ForRead) as PosShape;
                                 if (shape != null)
                                 {
                                     copy.priority = shape.Priority;

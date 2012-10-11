@@ -22,10 +22,10 @@ namespace RebarPosCommands
         SortedDictionary<string, List<ObjectId>> m_SpacingList;
         SortedDictionary<string, List<ObjectId>> m_NoteList;
         SortedDictionary<int, List<ObjectId>> m_MultiplierList;
-        SortedDictionary<ObjectId, List<ObjectId>> m_ShapeList;
+        SortedDictionary<string, List<ObjectId>> m_ShapeList;
 
-        ObjectId m_FindShape;
-        ObjectId m_ReplaceShape;
+        string m_FindShape;
+        string m_ReplaceShape;
         int m_FindFields;
         int m_ReplaceFields;
 
@@ -43,10 +43,10 @@ namespace RebarPosCommands
             m_SpacingList = new SortedDictionary<string, List<ObjectId>>();
             m_NoteList = new SortedDictionary<string, List<ObjectId>>();
             m_MultiplierList = new SortedDictionary<int, List<ObjectId>>();
-            m_ShapeList = new SortedDictionary<ObjectId, List<ObjectId>>();
+            m_ShapeList = new SortedDictionary<string, List<ObjectId>>();
 
-            m_FindShape = ObjectId.Null;
-            m_ReplaceShape = ObjectId.Null;
+            m_FindShape = string.Empty;
+            m_ReplaceShape = string.Empty;
             m_FindFields = 0;
             m_ReplaceFields = 0;
 
@@ -77,7 +77,7 @@ namespace RebarPosCommands
             m_SpacingList = new SortedDictionary<string, List<ObjectId>>();
             m_NoteList = new SortedDictionary<string, List<ObjectId>>();
             m_MultiplierList = new SortedDictionary<int, List<ObjectId>>();
-            m_ShapeList = new SortedDictionary<ObjectId, List<ObjectId>>();
+            m_ShapeList = new SortedDictionary<string, List<ObjectId>>();
 
             cbFindPosNumber.Items.Clear();
             cbFindCount.Items.Clear();
@@ -127,10 +127,10 @@ namespace RebarPosCommands
                                 list.Add(id);
                             else
                                 m_MultiplierList.Add(pos.Multiplier, new List<ObjectId>() { id });
-                            if (m_ShapeList.TryGetValue(pos.ShapeId, out list))
+                            if (m_ShapeList.TryGetValue(pos.Shape, out list))
                                 list.Add(id);
                             else
-                                m_ShapeList.Add(pos.ShapeId, new List<ObjectId>() { id });
+                                m_ShapeList.Add(pos.Shape, new List<ObjectId>() { id });
                         }
                     }
 
@@ -189,10 +189,10 @@ namespace RebarPosCommands
 
             if (m_ShapeList.Count > 0)
             {
-                foreach (ObjectId id in m_ShapeList.Keys)
+                foreach (string name in m_ShapeList.Keys)
                 {
-                    SetFindShape(id);
-                    SetReplaceShape(id);
+                    SetFindShape(name);
+                    SetReplaceShape(name);
                     break;
                 }
             }
@@ -205,17 +205,17 @@ namespace RebarPosCommands
             if (cbFindMultiplier.Items.Count > 0) cbFindMultiplier.SelectedIndex = 0;
         }
 
-        private void SetFindShape(ObjectId id)
+        private void SetFindShape(string name)
         {
             psvFind.Reset();
 
-            m_FindShape = id;
+            m_FindShape = name;
             Database db = HostApplicationServices.WorkingDatabase;
             using (Transaction tr = db.TransactionManager.StartTransaction())
             {
                 try
                 {
-                    PosShape shape = tr.GetObject(id, OpenMode.ForRead) as PosShape;
+                    PosShape shape = tr.GetObject(PosShape.GetShapeId(name), OpenMode.ForRead) as PosShape;
                     if (shape == null)
                         return;
 
@@ -270,17 +270,17 @@ namespace RebarPosCommands
             UpdateUI();
         }
 
-        private void SetReplaceShape(ObjectId id)
+        private void SetReplaceShape(string name)
         {
             psvReplace.Reset();
 
-            m_ReplaceShape = id;
+            m_ReplaceShape = name;
             Database db = HostApplicationServices.WorkingDatabase;
             using (Transaction tr = db.TransactionManager.StartTransaction())
             {
                 try
                 {
-                    PosShape shape = tr.GetObject(id, OpenMode.ForRead) as PosShape;
+                    PosShape shape = tr.GetObject(PosShape.GetShapeId(name), OpenMode.ForRead) as PosShape;
                     if (shape == null)
                         return;
 
@@ -592,7 +592,7 @@ namespace RebarPosCommands
                             continue;
                         if (rbFindMultiplier.Checked && cbFindMultiplier.SelectedIndex != -1 && (string)cbFindMultiplier.SelectedItem != pos.Multiplier.ToString())
                             continue;
-                        if (rbFindShape.Checked && m_FindShape != pos.ShapeId)
+                        if (rbFindShape.Checked && m_FindShape != pos.Shape)
                             continue;
                         if (rbFindShape.Checked && !string.IsNullOrEmpty(txtFindA.Text) && txtFindA.Text != pos.A)
                             continue;
@@ -695,7 +695,7 @@ namespace RebarPosCommands
                             continue;
                         if (rbFindMultiplier.Checked && cbFindMultiplier.SelectedIndex != -1 && (string)cbFindMultiplier.SelectedItem != pos.Multiplier.ToString())
                             continue;
-                        if (rbFindShape.Checked && m_FindShape != pos.ShapeId)
+                        if (rbFindShape.Checked && m_FindShape != pos.Shape)
                             continue;
                         if (rbFindShape.Checked && !string.IsNullOrEmpty(txtFindA.Text) && txtFindA.Text != pos.A)
                             continue;
@@ -724,7 +724,7 @@ namespace RebarPosCommands
                         if (rbReplaceSpacing.Checked) pos.Spacing = txtReplaceSpacing.Text;
                         if (rbReplaceNote.Checked) pos.Note = txtReplaceNote.Text;
                         if (rbReplaceMultiplier.Checked) pos.Multiplier = int.Parse(txtReplaceMultiplier.Text);
-                        if (rbReplaceShape.Checked && !m_ReplaceShape.IsNull) pos.ShapeId = m_ReplaceShape;
+                        if (rbReplaceShape.Checked && !string.IsNullOrEmpty(m_ReplaceShape)) pos.Shape = m_ReplaceShape;
                         if (rbReplaceShape.Checked && !string.IsNullOrEmpty(txtReplaceA.Text)) pos.A = txtReplaceA.Text;
                         if (rbReplaceShape.Checked && !string.IsNullOrEmpty(txtReplaceB.Text)) pos.B = txtReplaceB.Text;
                         if (rbReplaceShape.Checked && !string.IsNullOrEmpty(txtReplaceC.Text)) pos.C = txtReplaceC.Text;

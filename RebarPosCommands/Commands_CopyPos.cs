@@ -39,7 +39,7 @@ namespace RebarPosCommands
                             dest.Count = source.Count;
                             dest.Diameter = source.Diameter;
                             dest.Spacing = source.Spacing;
-                            dest.ShapeId = source.ShapeId;
+                            dest.Shape = source.Shape;
                             dest.A = source.A;
                             dest.B = source.B;
                             dest.C = source.C;
@@ -105,7 +105,7 @@ namespace RebarPosCommands
                             dest.Count = source.Count;
                             dest.Diameter = source.Diameter;
                             dest.Spacing = source.Spacing;
-                            dest.ShapeId = source.ShapeId;
+                            dest.Shape = source.Shape;
                             dest.A = source.A;
                             dest.B = source.B;
                             dest.C = source.C;

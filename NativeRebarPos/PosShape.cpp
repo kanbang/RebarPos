@@ -571,3 +571,23 @@ ACHAR* CPosShape::GetTableName()
 {
 	return Table_Name;
 }
+
+AcDbObjectId CPosShape::GetShapeId(const ACHAR* name)
+{
+	AcDbObjectId id = AcDbObjectId::kNull;
+
+	AcDbDictionary* pNamedObj = NULL;
+	AcDbDatabase *pDb = acdbHostApplicationServices()->workingDatabase();
+	pDb->getNamedObjectsDictionary(pNamedObj, AcDb::kForRead);
+
+	AcDbDictionary *pDict = NULL;
+	if (pNamedObj->getAt(GetTableName(), (AcDbObject*&) pDict, AcDb::kForRead) == Acad::eOk)
+	{
+		pDict->getAt(name, id);
+		pDict->close();
+	}
+
+	pNamedObj->close();
+
+	return id;
+}

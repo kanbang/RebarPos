@@ -117,7 +117,7 @@ namespace RebarPosCommands
                             RebarPos pos = tr.GetObject(it.Current, OpenMode.ForRead) as RebarPos;
                             if (pos != null)
                             {
-                                ShapeCopy copy = m_Copies.Find(p => p.id == pos.ShapeId);
+                                ShapeCopy copy = m_Copies.Find(p => p.name == pos.Shape);
                                 if (copy != null)
                                 {
                                     copy.isUsed = true;
@@ -584,7 +584,7 @@ namespace RebarPosCommands
                                 }
                             }
 
-                            DWGUtility.RefreshPosWithShape(copy.id);
+                            DWGUtility.RefreshPosWithShape(copy.name);
                         }
                     }
                     tr.Commit();

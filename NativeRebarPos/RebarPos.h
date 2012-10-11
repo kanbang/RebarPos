@@ -116,6 +116,7 @@ private:
     mutable AcGiTextStyle lastNoteStyle;
 	mutable Adesk::UInt16 lastCircleColor;
 	mutable AcDbObjectId defpointsLayer;
+	mutable AcDbObjectId shapeId;
 	mutable double lastNoteScale;
 	mutable std::vector<CShape*> lastShapes;
 	double circleRadius;
@@ -138,6 +139,7 @@ private:
 	Adesk::Boolean m_IncludeInBOQ;
 	Adesk::Int32 m_Multiplier;
 	ACHAR* m_Note;
+	ACHAR* m_Shape;
 	ACHAR* m_A;
 	ACHAR* m_B;
 	ACHAR* m_C;
@@ -146,8 +148,6 @@ private:
 	ACHAR* m_F;
 
 	DisplayStyle m_DisplayStyle;
-
-	AcDbHardPointerId m_ShapeID;
 
 	/// Locals
 	mutable bool geomInit;
@@ -246,6 +246,10 @@ public:
 	const DisplayStyle Display(void) const;
 	Acad::ErrorStatus setDisplay(const DisplayStyle newVal);
 
+	/// Gets or sets the shape name
+	const ACHAR* Shape(void) const;
+	Acad::ErrorStatus setShape(const ACHAR* newVal);
+
 	/// Gets or sets the A piece length
 	const ACHAR* A(void) const;
 	Acad::ErrorStatus setA(const ACHAR* newVal);
@@ -272,10 +276,6 @@ public:
 
 	/// Gets the total length
 	const ACHAR* Length(void) const;
-
-	/// Gets or sets the pos shape
-	const AcDbObjectId& ShapeId(void) const;
-	Acad::ErrorStatus setShapeId(const AcDbObjectId& newVal);
 
 	/// Gets calculated properties
 	const CCalculatedProperties& CalcProps(void) const;

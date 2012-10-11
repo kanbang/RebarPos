@@ -24,7 +24,7 @@ namespace RebarPosCommands
         }
 
         ObjectId m_Pos;
-        ObjectId m_Shape;
+        string m_Shape;
         List<int> m_StandardDiameters;
         Dictionary<string, ObjectId> m_Shapes;
         RebarPos.HitTestResult hit;
@@ -41,7 +41,7 @@ namespace RebarPosCommands
             InitializeComponent();
 
             m_Pos = ObjectId.Null;
-            m_Shape = ObjectId.Null;
+            m_Shape = string.Empty;
             m_StandardDiameters = new List<int>();
             m_Shapes = new Dictionary<string, ObjectId>();
 
@@ -63,7 +63,7 @@ namespace RebarPosCommands
                         return false;
                     }
 
-                    m_Shape = pos.ShapeId;
+                    m_Shape = pos.Shape;
 
                     m_Shapes = DWGUtility.GetShapes();
                     if (m_Shapes.Count == 0)
@@ -156,7 +156,7 @@ namespace RebarPosCommands
                     pos.IncludeInBOQ = chkIncludePos.Checked && (int.Parse(txtPosMultiplier.Text) > 0);
                     pos.Multiplier = int.Parse(txtPosMultiplier.Text);
                     pos.Note = txtPosNote.Text;
-                    pos.ShapeId = m_Shape;
+                    pos.Shape = m_Shape;
 
                     if (rbShowAll.Checked)
                         pos.Display = RebarPos.DisplayStyle.All;
@@ -352,7 +352,7 @@ namespace RebarPosCommands
             {
                 try
                 {
-                    PosShape shape = tr.GetObject(m_Shape, OpenMode.ForRead) as PosShape;
+                    PosShape shape = tr.GetObject(PosShape.GetShapeId(m_Shape), OpenMode.ForRead) as PosShape;
                     if (shape == null)
                         return false;
 
@@ -383,12 +383,12 @@ namespace RebarPosCommands
                         if (sh is PosShape.ShapeLine)
                         {
                             PosShape.ShapeLine line = sh as PosShape.ShapeLine;
-                            posShapeView.AddLine(color, (float)line.X1, (float)line.Y1, (float)line.X2, (float)line.Y2,line.Visible );
+                            posShapeView.AddLine(color, (float)line.X1, (float)line.Y1, (float)line.X2, (float)line.Y2, line.Visible);
                         }
                         else if (sh is PosShape.ShapeArc)
                         {
                             PosShape.ShapeArc arc = sh as PosShape.ShapeArc;
-                            posShapeView.AddArc(color, (float)arc.X, (float)arc.Y, (float)arc.R, (float)(arc.StartAngle * 180.0 / Math.PI), (float)(arc.EndAngle * 180.0 / Math.PI),arc.Visible );
+                            posShapeView.AddArc(color, (float)arc.X, (float)arc.Y, (float)arc.R, (float)(arc.StartAngle * 180.0 / Math.PI), (float)(arc.EndAngle * 180.0 / Math.PI), arc.Visible);
                         }
                         else if (sh is PosShape.ShapeText)
                         {
@@ -413,14 +413,14 @@ namespace RebarPosCommands
                                     vertical = StringAlignment.Far;
                                     break;
                             }
-                            posShapeView.AddText(color, (float)text.X, (float)text.Y, (float)text.Height, text.Text, horizontal, vertical,text.Visible );
+                            posShapeView.AddText(color, (float)text.X, (float)text.Y, (float)text.Height, text.Text, horizontal, vertical, text.Visible);
                         }
                     }
 
                     string shapename = "";
                     foreach (KeyValuePair<string, ObjectId> pair in m_Shapes)
                     {
-                        if (pair.Value == m_Shape)
+                        if (pair.Key == m_Shape)
                         {
                             shapename = pair.Key;
                             break;

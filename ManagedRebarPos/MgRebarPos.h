@@ -169,6 +169,7 @@ namespace OZOZ
 
 			property DisplayStyle Display { DisplayStyle get(); void set(DisplayStyle value); }
 
+			property String^ Shape { String^ get(); void set(String^ value); }
 			property String^ A { String^ get(); void set(String^ value); }
 			property String^ B { String^ get(); void set(String^ value); }
 			property String^ C { String^ get(); void set(String^ value); }
@@ -181,8 +182,6 @@ namespace OZOZ
 			property String^ Length { String^ get(); }
 
 			property String^ PosKey { String^ get(); }
-
-			property Autodesk::AutoCAD::DatabaseServices::ObjectId ShapeId { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
 
 			property array<PosShape::Shape^>^ Shapes { array<PosShape::Shape^>^ get(); }
 

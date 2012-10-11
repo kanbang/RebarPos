@@ -174,6 +174,7 @@ private:
 public:
 	/// Gets the table name
 	static ACHAR* GetTableName();
+
 	/// Gets the one and only group
 	static AcDbObjectId GetGroupId();
 

@@ -164,6 +164,15 @@ RebarPos::DisplayStyle RebarPos::Display::get()
 	return static_cast<RebarPos::DisplayStyle>(GetImpObj()->Display());
 }
 
+void RebarPos::Shape::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setShape(Marshal::StringToWchar(value)));
+}
+String^ RebarPos::Shape::get()
+{
+    return Marshal::WcharToString(GetImpObj()->Shape());
+}
+
 void RebarPos::A::set(String^ value)
 {
     Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setA(Marshal::StringToWchar(value)));
@@ -226,15 +235,6 @@ String^ RebarPos::Length::get()
 String^ RebarPos::PosKey::get()
 {
     return Marshal::WcharToString(GetImpObj()->PosKey());
-}
-
-void RebarPos::ShapeId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
-{
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setShapeId(Marshal::FromObjectId(value)));
-}
-Autodesk::AutoCAD::DatabaseServices::ObjectId RebarPos::ShapeId::get()
-{
-	return Marshal::ToObjectId(GetImpObj()->ShapeId());
 }
 
 array<PosShape::Shape^>^ RebarPos::Shapes::get()

@@ -35,8 +35,7 @@ CRebarPos::CRebarPos() :
 	m_DisplayStyle(CRebarPos::ALL), isModified(true), m_Length(NULL), m_Key(NULL),
 	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), 
 	m_IncludeInBOQ(Adesk::kTrue), m_Multiplier(1), m_DisplayedSpacing(NULL),
-	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), 
-	m_ShapeID(AcDbObjectId::kNull),
+	m_Shape(NULL), m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), 
 	circleRadius(1.125), partSpacing(0.15), 
 	defpointsLayer(AcDbObjectId::kNull),
 	m_CalcProps()
@@ -53,6 +52,7 @@ CRebarPos::~CRebarPos()
     acutDelString(m_DisplayedSpacing);
 	acutDelString(m_F);
     acutDelString(m_Note);
+	acutDelString(m_Shape);
     acutDelString(m_A);
     acutDelString(m_B);
     acutDelString(m_C);
@@ -380,6 +380,25 @@ Acad::ErrorStatus CRebarPos::setDisplay(const CRebarPos::DisplayStyle newVal)
 	return Acad::eOk;
 }
 
+const ACHAR* CRebarPos::Shape(void) const
+{
+	assertReadEnabled();
+	return m_Shape;
+}
+
+Acad::ErrorStatus CRebarPos::setShape(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+	acutDelString(m_Shape);
+    m_Shape = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_Shape);
+    }
+	isModified = true;
+	return Acad::eOk;
+}
+
 const ACHAR* CRebarPos::A(void) const
 {
 	assertReadEnabled();
@@ -498,20 +517,6 @@ const ACHAR* CRebarPos::Length(void) const
 {
 	assertReadEnabled();
 	return m_Length;
-}
-
-const AcDbObjectId& CRebarPos::ShapeId(void) const
-{
-	assertReadEnabled();
-	return m_ShapeID;
-}
-
-Acad::ErrorStatus CRebarPos::setShapeId(const AcDbObjectId& newVal)
-{
-	assertWriteEnabled();
-	m_ShapeID = newVal;
-	isModified = true;
-	return Acad::eOk;
 }
 
 const ACHAR* CRebarPos::PosKey() const
@@ -771,14 +776,9 @@ void CRebarPos::subList() const
 		acutPrintf(_T("%18s%16s %i (Not Included in BOQ)\n"), _T(/*MSG0*/""), _T("Multiplier:"), m_Multiplier);
 
 	// Shape
-	if(!m_ShapeID.isNull())
+	if ((m_Shape != NULL) && (m_Shape[0] != _T('\0')))
 	{
-		Acad::ErrorStatus es;
-		AcDbObjectPointer<CPosShape> pShape (m_ShapeID, AcDb::kForRead);
-		if((es = pShape.openStatus()) == Acad::eOk)
-		{
-			acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Shape:"), pShape->Name());
-		}
+		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Shape:"), m_Shape);
 	}
 
 	// Lengths
@@ -1157,6 +1157,8 @@ Acad::ErrorStatus CRebarPos::dwgOutFields(AcDbDwgFiler* pFiler) const
 	pFiler->writeBoolean(m_IncludeInBOQ);
 	pFiler->writeInt32(m_Multiplier);
 	pFiler->writeInt32(m_DisplayStyle);
+	if(m_Shape)
+		pFiler->writeString(m_Shape);
 	if(m_A)
 		pFiler->writeString(m_A);
 	else
@@ -1181,9 +1183,6 @@ Acad::ErrorStatus CRebarPos::dwgOutFields(AcDbDwgFiler* pFiler) const
 		pFiler->writeString(m_F);
 	else
 		pFiler->writeString(_T(""));
-
-	// Style
-	pFiler->writeHardPointerId(m_ShapeID);
 
 	return pFiler->filerStatus();
 }
@@ -1234,15 +1233,13 @@ Acad::ErrorStatus CRebarPos::dwgInFields(AcDbDwgFiler* pFiler)
 		Adesk::Int32 display = 0;
 		pFiler->readInt32(&display);
 		m_DisplayStyle = (CRebarPos::DisplayStyle)display;
+		pFiler->readString(&m_Shape);
 		pFiler->readString(&m_A);
 		pFiler->readString(&m_B);
 		pFiler->readString(&m_C);
 		pFiler->readString(&m_D);
 		pFiler->readString(&m_E);
 		pFiler->readString(&m_F);
-
-		// Styles
-		pFiler->readHardPointerId(&m_ShapeID);
 	}
 
 	return pFiler->filerStatus();
@@ -1295,6 +1292,10 @@ Acad::ErrorStatus CRebarPos::dxfOutFields(AcDbDxfFiler* pFiler) const
 	pFiler->writeBoolean(AcDb::kDxfBool, m_IncludeInBOQ);
 	pFiler->writeInt32(AcDb::kDxfInt32 + 1, m_Multiplier);
 	pFiler->writeInt32(AcDb::kDxfInt32 + 2, m_DisplayStyle);
+	if(m_Shape)
+		pFiler->writeString(AcDb::kDxfText + 1, m_Shape);
+	else
+		pFiler->writeString(AcDb::kDxfText + 1, _T(""));
 	if(m_A)
 		pFiler->writeString(AcDb::kDxfXTextString + 4, m_A);
 	else
@@ -1319,9 +1320,6 @@ Acad::ErrorStatus CRebarPos::dxfOutFields(AcDbDxfFiler* pFiler) const
 		pFiler->writeString(AcDb::kDxfXTextString + 9, m_F);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString + 9, _T(""));
-	
-    // Styles
-	pFiler->writeItem(AcDb::kDxfHardPointerId, m_ShapeID);
 
 	return pFiler->filerStatus();
 }
@@ -1360,13 +1358,13 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	Adesk::Boolean t_IncludeInBOQ = Adesk::kTrue;
 	Adesk::Int32 t_Multiplier = 0;
 	int t_Display = 0;
+	ACHAR* t_Shape = NULL;
 	ACHAR* t_A = NULL;
 	ACHAR* t_B = NULL;
 	ACHAR* t_C = NULL;
 	ACHAR* t_D = NULL;
 	ACHAR* t_E = NULL;
 	ACHAR* t_F = NULL;
-	AcDbObjectId t_ShapeID = AcDbObjectId::kNull;
 
     while ((es == Acad::eOk) && ((es = pFiler->readResBuf(&rb)) == Acad::eOk))
     {
@@ -1415,6 +1413,9 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
             t_Display = rb.resval.rlong;
             break;
 
+        case AcDb::kDxfText + 1:
+            acutUpdString(rb.resval.rstring, t_Shape);
+            break;
         case AcDb::kDxfXTextString + 4:
             acutUpdString(rb.resval.rstring, t_A);
             break;
@@ -1432,10 +1433,6 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
             break;
         case AcDb::kDxfXTextString + 9:
             acutUpdString(rb.resval.rstring, t_F);
-            break;
-
-        case AcDb::kDxfHardPointerId:
-            acdbGetObjectId(t_ShapeID, rb.resval.rlname);
             break;
 
         default:
@@ -1470,19 +1467,20 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	m_IncludeInBOQ = t_IncludeInBOQ;
 	m_Multiplier = t_Multiplier;
 	m_DisplayStyle = (CRebarPos::DisplayStyle)t_Display;
+	setShape(t_Shape);
 	setA(t_A);
 	setB(t_B);
 	setC(t_C);
 	setD(t_D);
 	setE(t_E);
 	setF(t_F);
-	m_ShapeID = t_ShapeID;
 
 	acutDelString(t_Pos);
 	acutDelString(t_Note);
 	acutDelString(t_Count);
 	acutDelString(t_Diameter);
 	acutDelString(t_Spacing);
+	acutDelString(t_Shape);
 	acutDelString(t_A);
 	acutDelString(t_B);
 	acutDelString(t_C);
@@ -1874,7 +1872,8 @@ const void CRebarPos::Calculate(void) const
 	m_CalcProps.Precision = pGroup->Precision();
 	m_CalcProps.DrawingUnit = pGroup->DrawingUnit();
 	m_CalcProps.DisplayUnit = pGroup->DisplayUnit();
-	AcDbObjectPointer<CPosShape> pShape (m_ShapeID, AcDb::kForRead);
+	shapeId = CPosShape::GetShapeId(m_Shape);
+	AcDbObjectPointer<CPosShape> pShape (shapeId, AcDb::kForRead);
 	const ACHAR* formula;
 	if((es = pShape.openStatus()) != Acad::eOk)
 	{
@@ -1993,7 +1992,7 @@ const void CRebarPos::Calculate(void) const
 	// Shape code
 	std::wstringstream oss;
 	oss << L"T" << m_Diameter;
-	oss << L":S" << m_ShapeID.handle().low() << L'_' << m_ShapeID.handle().high();
+	oss << L":S" << m_Shape;
 
 	if(m_CalcProps.FieldCount >= 1)
 		oss << L":A" << m_A;
