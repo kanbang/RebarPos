@@ -89,11 +89,11 @@ public:
 	/// Gets or sets item name
 	const ACHAR* Name(void) const;
 	Acad::ErrorStatus setName(const ACHAR* newVal);
-
+/*
 	/// Gets or sets the maximum bar length
     const double MaxBarLength(void) const;
 	Acad::ErrorStatus setMaxBarLength(const double newVal);
-
+*/
 	/// Gets or sets the display precision
     const Adesk::Int32 Precision(void) const;
 	Acad::ErrorStatus setPrecision(const Adesk::Int32 newVal);

@@ -2,9 +2,6 @@
 
 #include <string>
 
-// The following is part of the code used to export an API
-// and/or use the exported API.
-//
 #pragma warning( disable: 4275 4251 )
 #ifdef REBARPOS_MODULE
 #define DLLIMPEXP __declspec( dllexport )
