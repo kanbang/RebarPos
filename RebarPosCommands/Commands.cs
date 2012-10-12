@@ -6,6 +6,7 @@ using Autodesk.AutoCAD.DatabaseServices;
 using OZOZ.RebarPosWrapper;
 using System.Windows.Forms;
 using System.IO;
+using System;
 
 
 // This line is not mandatory, but improves loading performances
@@ -30,7 +31,6 @@ namespace RebarPosCommands
         // context menu.
         public MyCommands()
         {
-            DWGUtility.CreateDefaultShapes();
             DWGUtility.CreateDefaultBOQStyles();
             SetCurrentGroup();
 
@@ -331,40 +331,78 @@ namespace RebarPosCommands
 
                 using (StreamWriter sw = new StreamWriter(sfd.FileName))
                 {
-                    int i = 1;
                     foreach (DBDictionaryEntry entry in dict)
                     {
                         PosShape shape = (PosShape)tr.GetObject(entry.Value, OpenMode.ForRead);
 
-                        string n = "shape" + i.ToString();
-                        sw.WriteLine("PosShape " + n + " = new PosShape();");
-                        sw.WriteLine(n + ".Name = \"" + shape.Name + "\";");
-                        sw.WriteLine(n + ".Fields = " + shape.Fields.ToString() + ";");
-                        sw.WriteLine(n + ".Formula = \"" + shape.Formula + "\";");
-                        sw.WriteLine(n + ".FormulaBending = \"" + shape.FormulaBending + "\";");
+                        sw.WriteLine("BEGIN");
+                        sw.WriteLine("Name\t" + shape.Name);
+                        sw.WriteLine("Fields\t" + shape.Fields.ToString());
+                        sw.WriteLine("Formula\t" + shape.Formula);
+                        sw.WriteLine("FormulaBending\t" + shape.FormulaBending);
+                        sw.WriteLine("Count\t" + shape.Items.Count);
+                        double dx = double.MaxValue; double dy = double.MaxValue;
                         for (int j = 0; j < shape.Items.Count; j++)
                         {
                             PosShape.Shape s = shape.Items[j];
                             if (s is PosShape.ShapeLine)
                             {
                                 PosShape.ShapeLine x = s as PosShape.ShapeLine;
-                                sw.WriteLine(n + ".Items.AddLine(" + x.X1.ToString() + "," + x.Y1.ToString() + "," + x.X2.ToString() + "," + x.Y2.ToString() + ",Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci," + x.Color.ColorIndex.ToString() + ")," + (x.Visible ? "true" : "false") + ");");
+                                dx = Math.Min(dx, x.X1);
+                                dy = Math.Min(dy, x.Y1);
+                                dx = Math.Min(dx, x.X2);
+                                dy = Math.Min(dy, x.Y2);
                             }
                             else if (s is PosShape.ShapeArc)
                             {
                                 PosShape.ShapeArc x = s as PosShape.ShapeArc;
-                                sw.WriteLine(n + ".Items.AddArc(" + x.X.ToString() + "," + x.Y.ToString() + "," + x.R.ToString() + "," + x.StartAngle.ToString() + "," + x.EndAngle.ToString() + ",Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci," + x.Color.ColorIndex.ToString() + ")," + (x.Visible ? "true" : "false") + ");");
+                                dx = Math.Min(dx, x.X);
+                                dy = Math.Min(dy, x.Y);
                             }
                             else if (s is PosShape.ShapeText)
                             {
                                 PosShape.ShapeText x = s as PosShape.ShapeText;
-                                sw.WriteLine(n + ".Items.AddText(" + x.X.ToString() + "," + x.Y.ToString() + "," + x.Height.ToString() + ",\"" + x.Text + "\",Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci," + x.Color.ColorIndex.ToString() + ")," + "TextHorizontalMode." + x.HorizontalAlignment.ToString() + "," + "TextVerticalMode." + x.VerticalAlignment.ToString() + "," + (x.Visible ? "true" : "false") + ");");
+                                dx = Math.Min(dx, x.X);
+                                dy = Math.Min(dy, x.Y);
                             }
                         }
-                        sw.WriteLine("dict.SetAt(\"" + shape.Name + "\", " + n + ");");
-                        sw.WriteLine("tr.AddNewlyCreatedDBObject(" + n + ", true);");
+                        for (int j = 0; j < shape.Items.Count; j++)
+                        {
+                            PosShape.Shape s = shape.Items[j];
+                            string col = s.Color.ColorIndex.ToString();
+                            string vis = s.Visible ? "V" : "I";
+                            if (s is PosShape.ShapeLine)
+                            {
+                                PosShape.ShapeLine x = s as PosShape.ShapeLine;
+                                string x1 = (x.X1 - dx).ToString("F2");
+                                string y1 = (x.Y1 - dy).ToString("F2");
+                                string x2 = (x.X2 - dx).ToString("F2");
+                                string y2 = (x.Y2 - dy).ToString("F2");
+                                sw.WriteLine("LINE\t" + x1 + "\t" + y1 + "\t" + x2 + "\t" + y2 + "\t" + col + "\t" + vis);
+                            }
+                            else if (s is PosShape.ShapeArc)
+                            {
+                                PosShape.ShapeArc x = s as PosShape.ShapeArc;
+                                string x1 = (x.X - dx).ToString("F2");
+                                string y1 = (x.Y - dy).ToString("F2");
+                                string r = (x.R).ToString("F2");
+                                string a1 = (x.StartAngle).ToString("F2");
+                                string a2 = (x.EndAngle).ToString("F2");
+                                sw.WriteLine("ARC\t" + x1 + "\t" + y1 + "\t" + r + "\t" + a1 + "\t" + a2 + "\t" + col + "\t" + vis);
+                            }
+                            else if (s is PosShape.ShapeText)
+                            {
+                                PosShape.ShapeText x = s as PosShape.ShapeText;
+                                string x1 = (x.X - dx).ToString("F2");
+                                string y1 = (x.Y - dy).ToString("F2");
+                                string h = (x.Height).ToString("F2");
+                                string th = ((int)x.HorizontalAlignment).ToString();
+                                string tv = ((int)x.VerticalAlignment).ToString();
+                                sw.WriteLine("TEXT\t" + x1 + "\t" + y1 + "\t" + h + "\t" + x.Text + "\t" + col + "\t" + th + "\t" + tv + "\t" + vis);
+                            }
+                        }
+                        sw.WriteLine("END");
                         sw.WriteLine();
-                        i++;
                     }
                 }
             }

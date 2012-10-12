@@ -30,7 +30,7 @@ namespace RebarPosCommands
                         pos.Count = "XX";
                         pos.Diameter = "XX";
                         pos.Spacing = "XXX";
-                        pos.Shape = DWGUtility.CreateDefaultShapes();
+                        pos.Shape = "GENEL";
                         pos.A = "XXXX";
                         pos.Note = "XXXXXXXX";
 

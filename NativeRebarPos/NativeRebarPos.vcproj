@@ -333,6 +333,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\NativeRebarPos.rc"
+				>
+			</File>
+			<File
 				RelativePath=".\PosGroup.cpp"
 				>
 			</File>
@@ -438,6 +442,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\resource.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Shape.h"
 				>
 			</File>
@@ -458,6 +466,10 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe"
 			>
+			<File
+				RelativePath=".\Resources\Shapes.txt"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

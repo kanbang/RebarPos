@@ -115,6 +115,9 @@ public:
 	/// Gets the shape with the given name
 	static AcDbObjectId GetShapeId(const ACHAR* name);
 
+	/// Reads all shapes defined in the resource
+	static void MakeShapesFromResource(HINSTANCE hInstance);
+
 private:
     // These are here because otherwise dllexport tries to export the
     // private methods of AcDbObject.  They're private in AcDbObject

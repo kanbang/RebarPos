@@ -6,6 +6,7 @@
 
 #include "PosShape.h"
 #include "Utility.h"
+#include "resource.h"
 
 //-----------------------------------------------------------------------------
 Adesk::UInt32 CPosShape::kCurrentVersionNumber = 1;
@@ -590,4 +591,172 @@ AcDbObjectId CPosShape::GetShapeId(const ACHAR* name)
 	pNamedObj->close();
 
 	return id;
+}
+
+void CPosShape::MakeShapesFromResource(HINSTANCE hInstance)
+{
+	AcDbDictionary* pNamedObj = NULL;
+	AcDbDatabase *pDb = acdbHostApplicationServices()->workingDatabase();
+	pDb->getNamedObjectsDictionary(pNamedObj, AcDb::kForRead);
+
+	AcDbDictionary *pDict = NULL;
+	if (pNamedObj->getAt(GetTableName(), (AcDbObject*&) pDict, AcDb::kForWrite) == Acad::eKeyNotFound)
+	{
+        pDict = new AcDbDictionary();
+		pNamedObj->upgradeOpen();
+		AcDbObjectId pid;
+		pNamedObj->setAt(GetTableName(), pDict, pid);
+		pNamedObj->downgradeOpen();
+	}
+
+	HRSRC hResource = FindResource(hInstance, MAKEINTRESOURCE(IDR_SHAPELIST1), L"SHAPELIST");
+	if (!hResource)
+	{
+		pDict->close();
+		pNamedObj->close();
+		return;
+	}
+
+	HGLOBAL hLoadedResource = LoadResource(hInstance, hResource);
+	if (!hLoadedResource)
+	{
+		pDict->close();
+		pNamedObj->close();
+		return;
+	}
+
+	LPVOID pLockedResource = LockResource(hLoadedResource);
+	if (!pLockedResource)
+	{
+		pDict->close();
+		pNamedObj->close();
+		return;
+	}
+
+	DWORD dwResourceSize = SizeofResource(hInstance, hResource);
+	if (dwResourceSize == 0)
+	{
+		pDict->close();
+		pNamedObj->close();
+		return;
+	}
+
+	std::string casted_memory(static_cast<char*>(pLockedResource), dwResourceSize);
+	std::istringstream stream(casted_memory);
+	std::string   line;
+	
+	while(std::getline(stream, line))
+	{
+		while(!stream.eof() && line.compare(0, 5, "BEGIN") != 0)
+			std::getline(stream, line);
+
+		if(stream.eof())
+			break;
+
+		std::wstring wline;
+		std::wstringstream linestream;
+		std::wstring fieldname;
+		std::wstring name;
+		int fields;
+		std::wstring formula;
+		std::wstring formulabending;
+		int count;
+
+		// Name
+		std::getline(stream, line);
+		linestream.clear(); linestream.str(std::wstring());
+		wline.assign(line.begin(), line.end());
+		linestream << wline;
+		std::getline(linestream, fieldname, L'\t');
+		linestream >> name;
+		// Fields
+		std::getline(stream, line);
+		linestream.clear(); linestream.str(std::wstring());
+		wline.assign(line.begin(), line.end());
+		linestream << wline;
+		std::getline(linestream, fieldname, L'\t');
+		linestream >> fields;
+		// Formula
+		std::getline(stream, line);
+		linestream.clear(); linestream.str(std::wstring());
+		wline.assign(line.begin(), line.end());
+		linestream << wline;
+		std::getline(linestream, fieldname, L'\t');
+		linestream >> formula;
+		// FormulaBending
+		std::getline(stream, line);
+		linestream.clear(); linestream.str(std::wstring());
+		wline.assign(line.begin(), line.end());
+		linestream << wline;
+		std::getline(linestream, fieldname, L'\t');
+		linestream >> formulabending;
+		// Count
+		std::getline(stream, line);
+		linestream.clear(); linestream.str(std::wstring());
+		wline.assign(line.begin(), line.end());
+		linestream << wline;
+		std::getline(linestream, fieldname, L'\t');
+		linestream >> count;
+
+		// Create the shape
+		CPosShape *shape = new CPosShape();
+		shape->setName(name.c_str());
+		shape->setFields(fields);
+		shape->setFormula(formula.c_str());
+		shape->setFormulaBending(formulabending.c_str());
+		
+		// Read shapes
+		for(int i = 0; i < count; i++)
+		{
+			std::getline(stream, line);
+			linestream.clear(); linestream.str(std::wstring());
+			wline.assign(line.begin(), line.end());
+			linestream << wline;
+			std::getline(linestream, fieldname, L'\t');
+
+			if(fieldname.compare(L"LINE") == 0)
+			{
+				double x1, y1, x2, y2;
+				unsigned short color;
+				std::wstring visible;
+				linestream >> x1 >> y1 >> x2 >> y2 >> color >> visible;
+
+				CShapeLine *line = new CShapeLine(color, x1, y1, x2, y2, (visible.compare(L"V") == 0 ? Adesk::kTrue : Adesk::kFalse));
+				shape->AddShape(line);
+			}
+			else if(fieldname.compare(L"ARC") == 0)
+			{
+				double x, y, r, a1, a2;
+				unsigned short color;
+				std::wstring visible;
+				linestream >> x >> y >> r >> a1 >> a2 >> color >> visible;
+
+				CShapeArc *arc = new CShapeArc(color, x, y, r, a1, a2, (visible.compare(L"V") == 0 ? Adesk::kTrue : Adesk::kFalse));
+				shape->AddShape(arc);
+			}
+			else if(fieldname.compare(L"TEXT") == 0)
+			{
+				double x, y, h;
+				std::wstring str;
+				int ha, va;
+				unsigned short color;
+				std::wstring visible;
+				linestream >> x >> y >> h >> str >> ha >> va >> color >> visible;
+
+				CShapeText *text = new CShapeText(color, x, y, h, str.c_str(), static_cast<AcDb::TextHorzMode>(ha), static_cast<AcDb::TextVertMode>(va), (visible.compare(L"V") == 0 ? Adesk::kTrue : Adesk::kFalse));
+				shape->AddShape(text);
+			}
+		}
+
+		// Add the shape to the dictionary
+		if(!pDict->has(shape->Name()))
+		{
+			AcDbObjectId id;
+	        pDict->setAt(shape->Name(), shape, id);
+		}
+		shape->close();
+	}
+
+	pDict->close();
+	pNamedObj->close();
 }

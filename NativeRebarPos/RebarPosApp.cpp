@@ -9,6 +9,21 @@
 #include "TableCell.h"
 #include "GenericTable.h"
 #include "BOQTable.h"
+#include "resource.h"
+
+HINSTANCE _hdllInstance = NULL;
+
+/////////////////////////////////////////////////////////////////////////////
+// DLL Entry Point
+extern "C"
+BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpReserved*/)
+{
+    if (dwReason == DLL_PROCESS_ATTACH)
+    {
+		_hdllInstance = hInstance;
+    }
+    return TRUE;
+}
 
 // locally defined entry point invoked by Rx.
 extern "C" AcRx::AppRetCode __declspec(dllexport)
@@ -32,6 +47,9 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
         // Register a service using the class name.
         if (!acrxServiceIsRegistered(_T("CRebarPos")))
             acrxRegisterService(_T("CRebarPos"));
+
+		// Create default shapes
+		CPosShape::MakeShapesFromResource(_hdllInstance);
 
         break;
 
