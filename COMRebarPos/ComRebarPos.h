@@ -202,9 +202,5 @@ END_OPMPROP_MAP()
         /* [in] */ DISPID dispID, 
         /* [out] */ DWORD dwCookie, 
         /* [out] */ VARIANT *pVarOut);
-
-    protected:
-        AcDbObjectIdArray mShapeIdArray;
-		AcDbObjectIdArray mGroupIdArray;
 };
 

@@ -28,7 +28,6 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 			// create a new object factory array
 			static AcMgObjectFactoryBase* PEs[] = 
 			{
-				new AcMgObjectFactory<OZOZ::RebarPosWrapper::PosShape, CPosShape>(), 
 				new AcMgObjectFactory<OZOZ::RebarPosWrapper::PosGroup, CPosGroup>(), 
 				new AcMgObjectFactory<OZOZ::RebarPosWrapper::RebarPos, CRebarPos>(), 
 				new AcMgObjectFactory<OZOZ::RebarPosWrapper::BOQStyle, CBOQStyle>(), 

@@ -254,82 +254,79 @@ const std::vector<AcDbMText*> CTableCell::GetTexts() const
 	}
 	else if(HasShape())
 	{
-		Acad::ErrorStatus es;
-		AcDbObjectPointer<CPosShape> pShape (CPosShape::GetShapeId(m_Shape), AcDb::kForRead);
-		if((es = pShape.openStatus()) == Acad::eOk)
+		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
+
+		AcDbExtents ext = pShape->GetShapeExtents();
+		double maxwidth = 5.0 * m_TextHeight;
+		double maxheight = m_TextHeight;
+		double xscale = maxwidth / (ext.maxPoint().x - ext.minPoint().x);
+		double yscale = maxheight / (ext.maxPoint().y - ext.minPoint().y);
+		double scale = min(xscale, yscale);
+        double xoff = (maxwidth - scale * (ext.maxPoint().x - ext.minPoint().x)) / 2.0;
+        double yoff = (maxheight - scale * (ext.maxPoint().y - ext.minPoint().y)) / 2.0;
+
+		for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
 		{
-			AcDbExtents ext = pShape->GetShapeExtents();
-			double maxwidth = 5.0 * m_TextHeight;
-			double maxheight = m_TextHeight;
-			double xscale = maxwidth / (ext.maxPoint().x - ext.minPoint().x);
-			double yscale = maxheight / (ext.maxPoint().y - ext.minPoint().y);
-			double scale = min(xscale, yscale);
-            double xoff = (maxwidth - scale * (ext.maxPoint().x - ext.minPoint().x)) / 2.0;
-            double yoff = (maxheight - scale * (ext.maxPoint().y - ext.minPoint().y)) / 2.0;
-
-			for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
+			const CShape* shape = pShape->GetShape(i);
+			if(shape->type == CShape::Text && shape->visible == Adesk::kTrue)
 			{
-				const CShape* shape = pShape->GetShape(i);
-				if(shape->type == CShape::Text && shape->visible == Adesk::kTrue)
+				const CShapeText* text = dynamic_cast<const CShapeText*>(shape);
+
+				AcDbMText* mtext = new AcDbMText();
+
+				// Text style
+				mtext->setTextStyle(m_TextStyleId);
+				mtext->setTextHeight(text->height * scale);
+				mtext->setColorIndex(text->color);
+
+				// Location
+				double x = xoff + (text->x  - ext.minPoint().x) * scale;
+				double y = yoff + (text->y  - ext.minPoint().y) * scale;
+				double cx = m_Margin;
+				double cy = -m_Height + m_Margin;
+				mtext->setLocation(AcGePoint3d(x + cx, y + cy, 0));
+
+				// Text attachment
+				if(text->horizontalAlignment == AcDb::kTextLeft)
 				{
-					const CShapeText* text = dynamic_cast<const CShapeText*>(shape);
-
-					AcDbMText* mtext = new AcDbMText();
-
-					// Text style
-					mtext->setTextStyle(m_TextStyleId);
-					mtext->setTextHeight(text->height * scale);
-					mtext->setColorIndex(text->color);
-
-					// Location
-					double x = xoff + (text->x  - ext.minPoint().x) * scale;
-					double y = yoff + (text->y  - ext.minPoint().y) * scale;
-					double cx = m_Margin;
-					double cy = -m_Height + m_Margin;
-					mtext->setLocation(AcGePoint3d(x + cx, y + cy, 0));
-
-					// Text attachment
-					if(text->horizontalAlignment == AcDb::kTextLeft)
-					{
-						if(text->verticalAlignment == AcDb::kTextTop)
-							mtext->setAttachment(AcDbMText::kTopLeft);
-						else if(text->verticalAlignment == AcDb::kTextBase || text->verticalAlignment == AcDb::kTextBottom)
-							mtext->setAttachment(AcDbMText::kBottomLeft);
-						else
-							mtext->setAttachment(AcDbMText::kMiddleLeft);
-					}
-					else if(text->horizontalAlignment == AcDb::kTextRight)
-					{
-						if(text->verticalAlignment == AcDb::kTextTop)
-							mtext->setAttachment(AcDbMText::kTopRight);
-						else if(text->verticalAlignment == AcDb::kTextBase || text->verticalAlignment == AcDb::kTextBottom)
-							mtext->setAttachment(AcDbMText::kBottomRight);
-						else
-							mtext->setAttachment(AcDbMText::kMiddleRight);
-					}
+					if(text->verticalAlignment == AcDb::kTextTop)
+						mtext->setAttachment(AcDbMText::kTopLeft);
+					else if(text->verticalAlignment == AcDb::kTextBase || text->verticalAlignment == AcDb::kTextBottom)
+						mtext->setAttachment(AcDbMText::kBottomLeft);
 					else
-					{
-						if(text->verticalAlignment == AcDb::kTextTop)
-							mtext->setAttachment(AcDbMText::kTopCenter);
-						else if(text->verticalAlignment == AcDb::kTextBase || text->verticalAlignment == AcDb::kTextBottom)
-							mtext->setAttachment(AcDbMText::kBottomCenter);
-						else
-							mtext->setAttachment(AcDbMText::kMiddleCenter);
-					}
-
-					// Contents
-					std::wstring txt(text->text);
-					if(m_A != NULL) Utility::ReplaceString(txt, L"A", m_A);
-					if(m_B != NULL) Utility::ReplaceString(txt, L"B", m_B);
-					if(m_C != NULL) Utility::ReplaceString(txt, L"C", m_C);
-					if(m_D != NULL) Utility::ReplaceString(txt, L"D", m_D);
-					if(m_E != NULL) Utility::ReplaceString(txt, L"E", m_E);
-					if(m_F != NULL) Utility::ReplaceString(txt, L"F", m_F);
-					mtext->setContents(txt.c_str());
-
-					mtext->transformBy(trans);
-					texts.push_back(mtext);
+						mtext->setAttachment(AcDbMText::kMiddleLeft);
 				}
+				else if(text->horizontalAlignment == AcDb::kTextRight)
+				{
+					if(text->verticalAlignment == AcDb::kTextTop)
+						mtext->setAttachment(AcDbMText::kTopRight);
+					else if(text->verticalAlignment == AcDb::kTextBase || text->verticalAlignment == AcDb::kTextBottom)
+						mtext->setAttachment(AcDbMText::kBottomRight);
+					else
+						mtext->setAttachment(AcDbMText::kMiddleRight);
+				}
+				else
+				{
+					if(text->verticalAlignment == AcDb::kTextTop)
+						mtext->setAttachment(AcDbMText::kTopCenter);
+					else if(text->verticalAlignment == AcDb::kTextBase || text->verticalAlignment == AcDb::kTextBottom)
+						mtext->setAttachment(AcDbMText::kBottomCenter);
+					else
+						mtext->setAttachment(AcDbMText::kMiddleCenter);
+				}
+
+				// Contents
+				std::wstring txt(text->text);
+				if(m_A != NULL) Utility::ReplaceString(txt, L"A", m_A);
+				if(m_B != NULL) Utility::ReplaceString(txt, L"B", m_B);
+				if(m_C != NULL) Utility::ReplaceString(txt, L"C", m_C);
+				if(m_D != NULL) Utility::ReplaceString(txt, L"D", m_D);
+				if(m_E != NULL) Utility::ReplaceString(txt, L"E", m_E);
+				if(m_F != NULL) Utility::ReplaceString(txt, L"F", m_F);
+				mtext->setContents(txt.c_str());
+
+				mtext->transformBy(trans);
+				texts.push_back(mtext);
 			}
 		}
 	}
@@ -434,43 +431,39 @@ const std::vector<AcDbLine*> CTableCell::GetLines() const
 
 	if(HasShape())
 	{
-		Acad::ErrorStatus es;
-		AcDbObjectPointer<CPosShape> pShape (CPosShape::GetShapeId(m_Shape), AcDb::kForRead);
-		if((es = pShape.openStatus()) == Acad::eOk)
+		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
+		AcDbExtents ext = pShape->GetShapeExtents();
+		double maxwidth = 5.0 * m_TextHeight;
+		double maxheight = m_TextHeight;
+		double xscale = maxwidth / (ext.maxPoint().x - ext.minPoint().x);
+		double yscale = maxheight / (ext.maxPoint().y - ext.minPoint().y);
+		double scale = min(xscale, yscale);
+        double xoff = (maxwidth - scale * (ext.maxPoint().x - ext.minPoint().x)) / 2.0;
+        double yoff = (maxheight - scale * (ext.maxPoint().y - ext.minPoint().y)) / 2.0;
+
+		for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
 		{
-			AcDbExtents ext = pShape->GetShapeExtents();
-			double maxwidth = 5.0 * m_TextHeight;
-			double maxheight = m_TextHeight;
-			double xscale = maxwidth / (ext.maxPoint().x - ext.minPoint().x);
-			double yscale = maxheight / (ext.maxPoint().y - ext.minPoint().y);
-			double scale = min(xscale, yscale);
-            double xoff = (maxwidth - scale * (ext.maxPoint().x - ext.minPoint().x)) / 2.0;
-            double yoff = (maxheight - scale * (ext.maxPoint().y - ext.minPoint().y)) / 2.0;
-
-			for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
+			const CShape* shape = pShape->GetShape(i);
+			if(shape->type == CShape::Line && shape->visible == Adesk::kTrue)
 			{
-				const CShape* shape = pShape->GetShape(i);
-				if(shape->type == CShape::Line && shape->visible == Adesk::kTrue)
-				{
-					const CShapeLine* line = dynamic_cast<const CShapeLine*>(shape);
+				const CShapeLine* line = dynamic_cast<const CShapeLine*>(shape);
 
-					AcDbLine* mline = new AcDbLine();
+				AcDbLine* mline = new AcDbLine();
 
-					mline->setColorIndex(line->color);
+				mline->setColorIndex(line->color);
 
-					// Location
-					double x1 = xoff + (line->x1 - ext.minPoint().x) * scale;
-					double y1 = yoff + (line->y1 - ext.minPoint().y) * scale;
-					double x2 = xoff + (line->x2 - ext.minPoint().x) * scale;
-					double y2 = yoff + (line->y2 - ext.minPoint().y) * scale;
-					double cx = m_Margin;
-					double cy = -m_Height + m_Margin;
-					mline->setStartPoint(AcGePoint3d(x1 + cx, y1 + cy, 0));
-					mline->setEndPoint(AcGePoint3d(x2 + cx, y2 + cy, 0));
+				// Location
+				double x1 = xoff + (line->x1 - ext.minPoint().x) * scale;
+				double y1 = yoff + (line->y1 - ext.minPoint().y) * scale;
+				double x2 = xoff + (line->x2 - ext.minPoint().x) * scale;
+				double y2 = yoff + (line->y2 - ext.minPoint().y) * scale;
+				double cx = m_Margin;
+				double cy = -m_Height + m_Margin;
+				mline->setStartPoint(AcGePoint3d(x1 + cx, y1 + cy, 0));
+				mline->setEndPoint(AcGePoint3d(x2 + cx, y2 + cy, 0));
 
-					mline->transformBy(trans);
-					lines.push_back(mline);
-				}
+				mline->transformBy(trans);
+				lines.push_back(mline);
 			}
 		}
 	}

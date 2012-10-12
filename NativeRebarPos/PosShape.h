@@ -4,6 +4,7 @@
 #pragma once
 
 #include <vector>
+#include <map>
 
 #include "Shape.h"
 
@@ -25,28 +26,12 @@ typedef std::vector<CShape*>::const_iterator ShapeListConstIt;
 /// ---------------------------------------------------------------------------
 /// The CPosShape represents the shape definitions of rebar markers.
 /// ---------------------------------------------------------------------------
-class DLLIMPEXP CPosShape : public AcDbObject
+class DLLIMPEXP CPosShape
 {
-
-public:
-	/// Define additional RTT information for AcRxObject base type.
-	ACRX_DECLARE_MEMBERS(CPosShape);
-
-protected:
-	/// Object version number serialized in the drawing database.
-	static Adesk::UInt32 kCurrentVersionNumber;
 
 public:
 	CPosShape ();
 	virtual ~CPosShape ();
-
-public:
-	/// AcDbObject overrides: database
-	virtual Acad::ErrorStatus dwgOutFields(AcDbDwgFiler *pFiler) const;
-	virtual Acad::ErrorStatus dwgInFields(AcDbDwgFiler *pFiler);
-
-	virtual Acad::ErrorStatus dxfOutFields(AcDbDxfFiler *pFiler) const;
-	virtual Acad::ErrorStatus dxfInFields(AcDbDxfFiler *pFiler);
 
 protected:
 	/// Property backing fields
@@ -106,37 +91,21 @@ public:
 	const AcDbExtents GetShapeExtents() const;
 
 private:
-	static ACHAR* Table_Name;
+	static std::map<const ACHAR*, CPosShape*> m_PosShapes;
 
 public:
-	/// Gets the table name
-	static ACHAR* GetTableName();
-
 	/// Gets the shape with the given name
-	static AcDbObjectId GetShapeId(const ACHAR* name);
+	static CPosShape* GetPosShape(const ACHAR* name);
+
+	/// Gets the number of pos shapes
+	static std::map<const ACHAR*, CPosShape*>::size_type GetPosShapeCount();
+
+	/// Gets the underlying maps
+	static std::map<const ACHAR*, CPosShape*> GetMap();
 
 	/// Reads all shapes defined in the resource
-	static void MakeShapesFromResource(HINSTANCE hInstance);
+	static void MakePosShapesFromResource(HINSTANCE hInstance);
 
-private:
-    // These are here because otherwise dllexport tries to export the
-    // private methods of AcDbObject.  They're private in AcDbObject
-    // because vc5 and vc6 do not properly support array new and delete.
-    // The "vector deleting dtor" gets optimized into a scalar deleting
-    // dtor by the linker if the server dll does not call vector delete.
-    // The linker shouldn't do that, because it doesn't know that the
-    // object won't be passed to some other dll which *does* do vector
-    // delete.
-    //
-#ifdef MEM_DEBUG
-#undef new
-#undef delete
-#endif
-    void *operator new[](size_t /* nSize */) { return 0;}
-    void operator delete[](void* /* p */) {};
-    void *operator new[](size_t /* nSize */, const TCHAR* /* file*/ , int /* line */) { return 0;}
-#ifdef MEM_DEBUG
-#define new DEBUG_NEW
-#define delete DEBUG_DELETE
-#endif
+	/// Removes all shapes
+	static void ClearPosShapes();
 };

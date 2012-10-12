@@ -105,6 +105,10 @@ STDMETHODIMP CComRebarPos::Editable(
 			return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
 		}
 	}
+	else if(dispID == DISPID_SHAPE)
+	{
+		*bEditable = 0;
+	}
 
 	return IOPMPropertyExtensionImpl<CComRebarPos>::Editable(dispID, bEditable);
 }
@@ -315,56 +319,10 @@ STDMETHODIMP CComRebarPos::GetPredefinedStrings(DISPID dispID, CALPOLESTR *pCaSt
 {
 	USES_CONVERSION;
 
-	long size, i;
-	AcDbDatabase* pDb = NULL;
-	AcDbDictionary* pNamedObj = NULL;
-	AcDbDictionary* pDict = NULL;
-	AcDbDictionaryIterator* pIter = NULL;
+	long size;
 
 	switch(dispID)
 	{
-	case DISPID_SHAPE:
-		pDb = m_objRef.objectId().database();
-		if (NULL == pDb)
-			pDb = acdbHostApplicationServices()->workingDatabase();
-	    
-		if (pDb->getNamedObjectsDictionary(pNamedObj, AcDb::kForRead) == Acad::eOk)
-		{
-			if (pNamedObj->getAt(CPosShape::GetTableName(), (AcDbObject*&)pDict, AcDb::kForRead) == Acad::eOk)
-			{
-				size = pDict->numEntries();
-				if(size > 0)
-				{
-					pIter = pDict->newIterator();
-
-					mShapeIdArray.removeAll();
-
-					pCaStringsOut->pElems = (LPOLESTR *)::CoTaskMemAlloc(sizeof(LPOLESTR) * size);
-					pCaCookiesOut->pElems = (DWORD *)::CoTaskMemAlloc(sizeof(DWORD) * size);
-
-					i = 0;
-					for( ; !pIter->done(); pIter->next())
-					{
-						AcDbObjectPointer<CPosShape> pShape (pIter->objectId(), AcDb::kForRead);
-						if(pShape.openStatus() == Acad::eOk)
-						{
-							pCaStringsOut->pElems[i] = ::SysAllocString(CT2W(pShape->Name()));
-						}
-						pCaCookiesOut->pElems[i] = mShapeIdArray.append(pIter->objectId());
-						i++;
-					}
-					pCaStringsOut->cElems = i;
-					pCaCookiesOut->cElems = i;
-
-					if (pIter)
-						delete pIter;
-				}
-				pDict->close();
-			}
-			pNamedObj->close();
-		}
-		return S_OK;
-		break;
 	case DISPID_DISPLAY:
 		size = 3;
 
@@ -396,27 +354,8 @@ STDMETHODIMP CComRebarPos::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VAR
 {
 	USES_CONVERSION;
 
-	AcDbObjectId id = AcDbObjectId::kNull;
-	HRESULT hr = E_FAIL;
-
 	switch(dispID)
 	{
-	case DISPID_SHAPE:
-		{
-			assert((INT_PTR)dwCookie >= 0);
-			assert((INT_PTR)dwCookie < mShapeIdArray.length());
-			id = mShapeIdArray[dwCookie];
-
-			AcDbObjectPointer<CPosShape> pShape (id, AcDb::kForRead);
-			if(pShape.openStatus() == Acad::eOk)
-			{
-				hr = S_OK;
-				CComVariant var(CT2W(pShape->Name()));
-				VariantCopy(pVarOut, &var);
-			}	    
-			return hr;
-		}
-		break;
 	case DISPID_DISPLAY:
 	    assert((INT_PTR)dwCookie >= 0);
 		assert((INT_PTR)dwCookie < 3);

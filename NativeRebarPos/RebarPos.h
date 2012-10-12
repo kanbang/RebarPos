@@ -116,7 +116,6 @@ private:
     mutable AcGiTextStyle lastNoteStyle;
 	mutable Adesk::UInt16 lastCircleColor;
 	mutable AcDbObjectId defpointsLayer;
-	mutable AcDbObjectId shapeId;
 	mutable double lastNoteScale;
 	mutable std::vector<CShape*> lastShapes;
 	double circleRadius;

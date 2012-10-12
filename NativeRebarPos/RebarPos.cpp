@@ -1872,13 +1872,8 @@ const void CRebarPos::Calculate(void) const
 	m_CalcProps.Precision = pGroup->Precision();
 	m_CalcProps.DrawingUnit = pGroup->DrawingUnit();
 	m_CalcProps.DisplayUnit = pGroup->DisplayUnit();
-	shapeId = CPosShape::GetShapeId(m_Shape);
-	AcDbObjectPointer<CPosShape> pShape (shapeId, AcDb::kForRead);
+	CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
 	const ACHAR* formula;
-	if((es = pShape.openStatus()) != Acad::eOk)
-	{
-		return;
-	}
 	if(m_CalcProps.Bending)
 	{
 		formula = pShape->FormulaBending();

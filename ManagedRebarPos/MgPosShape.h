@@ -16,8 +16,7 @@ namespace OZOZ
 {
     namespace RebarPosWrapper 
     {
-        [Autodesk::AutoCAD::Runtime::Wrapper("CPosShape")]
-        public ref class PosShape :  public Autodesk::AutoCAD::DatabaseServices::DBObject
+        public ref class PosShape
         {
 		public:
 			ref struct ShapeLine;
@@ -225,10 +224,10 @@ namespace OZOZ
             PosShape();
 
         internal:
-            PosShape(System::IntPtr unmanagedPointer, bool autoDelete);
+            PosShape(System::IntPtr unmanagedPointer);
             inline CPosShape* GetImpObj()
             {
-                return static_cast<CPosShape*>(UnmanagedObject.ToPointer());
+                return static_cast<CPosShape*>(unmanagedPointer.ToPointer());
             }
 
         public:

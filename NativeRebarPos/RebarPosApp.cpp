@@ -36,7 +36,6 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
         acrxRegisterAppMDIAware(pkt);
 
 		// Register custom classes
-		CPosShape::rxInit();
 		CPosGroup::rxInit();
         CRebarPos::rxInit();
 		CBOQStyle::rxInit();
@@ -49,7 +48,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
             acrxRegisterService(_T("CRebarPos"));
 
 		// Create default shapes
-		CPosShape::MakeShapesFromResource(_hdllInstance);
+		CPosShape::MakePosShapesFromResource(_hdllInstance);
 
         break;
 
@@ -59,13 +58,15 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
         if (obj != NULL)
             delete obj;
 
+		// Remove shapes from memory
+		CPosShape::ClearPosShapes();
+
 		// Remove custom classes
 		deleteAcRxClass(CBOQTable::desc());
 		deleteAcRxClass(CGenericTable::desc());
 		deleteAcRxClass(CBOQStyle::desc());
         deleteAcRxClass(CRebarPos::desc());
 		deleteAcRxClass(CPosGroup::desc());
-        deleteAcRxClass(CPosShape::desc());
 
         break;
     }
