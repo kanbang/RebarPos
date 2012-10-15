@@ -320,7 +320,7 @@ void CPosShape::MakePosShapesFromResource(HINSTANCE hInstance)
 				int ha, va;
 				unsigned short color;
 				std::wstring visible;
-				linestream >> x >> y >> h >> str >> ha >> va >> color >> visible;
+				linestream >> x >> y >> h >> str >> va >> ha >> color >> visible;
 
 				CShapeText *text = new CShapeText(color, x, y, h, str.c_str(), static_cast<AcDb::TextHorzMode>(ha), static_cast<AcDb::TextVertMode>(va), (visible.compare(L"V") == 0 ? Adesk::kTrue : Adesk::kFalse));
 				shape->AddShape(text);
