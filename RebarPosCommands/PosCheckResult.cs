@@ -130,7 +130,7 @@ namespace RebarPosCommands
                             // Farkli cap kontrolu
                             if (x.diameter != y.diameter) err = CheckResult.DiameterError;
                             // Farkli sekil kontrolu
-                            if (x.shapeId != y.shapeId) err = CheckResult.ShapeError;
+                            if (x.shapename != y.shapename) err = CheckResult.ShapeError;
                             // Farkli boy kontrolu
                             if (x.length != y.length) err = CheckResult.LengthError;
                             // Farkli acilim kontrolu
@@ -245,7 +245,7 @@ namespace RebarPosCommands
                             // Farkli cap kontrolu
                             if (x.diameter != y.diameter) err = CheckResult.DiameterError;
                             // Farkli sekil kontrolu
-                            if (x.shapeId != y.shapeId) err = CheckResult.ShapeError;
+                            if (x.shapename != y.shapename) err = CheckResult.ShapeError;
                             // Farkli boy kontrolu
                             if (x.length != y.length) err = CheckResult.LengthError;
                             // Farkli acilim kontrolu

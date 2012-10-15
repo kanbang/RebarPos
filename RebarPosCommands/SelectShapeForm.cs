@@ -26,20 +26,7 @@ namespace RebarPosCommands
 
         public void SetShapes(string current)
         {
-            Dictionary<string, ObjectId> shapedict = DWGUtility.GetShapes();
-            List<KeyValuePair<string, ObjectId>> items = new List<KeyValuePair<string, ObjectId>>();
-            foreach (KeyValuePair<string, ObjectId> item in shapedict)
-            {
-                items.Add(item);
-            }
-            items.Sort(new CompareShapesForSort());
-            List<string> shapes = new List<string>();
-            foreach (KeyValuePair<string, ObjectId> item in items)
-            {
-                shapes.Add(item.Key);
-            }
-
-            SetShapes(current, shapes);
+            SetShapes(current, PosShape.GetAllPosShapes().Keys);
         }
 
         public void SetShapes(string current, IEnumerable<string> shapes)
@@ -58,7 +45,7 @@ namespace RebarPosCommands
                 {
                     foreach (string name in shapes)
                     {
-                        PosShape shape = tr.GetObject(PosShape.GetShapeId(name), OpenMode.ForRead) as PosShape;
+                        PosShape shape = PosShape.GetPosShape(name);
                         if (shape != null)
                         {
                             PosShapeView posShapeView = new PosShapeView();

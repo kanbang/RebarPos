@@ -215,7 +215,7 @@ namespace RebarPosCommands
             {
                 try
                 {
-                    PosShape shape = tr.GetObject(PosShape.GetShapeId(name), OpenMode.ForRead) as PosShape;
+                    PosShape shape = PosShape.GetPosShape(name);
                     if (shape == null)
                         return;
 
@@ -280,7 +280,7 @@ namespace RebarPosCommands
             {
                 try
                 {
-                    PosShape shape = tr.GetObject(PosShape.GetShapeId(name), OpenMode.ForRead) as PosShape;
+                    PosShape shape = PosShape.GetPosShape(name);
                     if (shape == null)
                         return;
 

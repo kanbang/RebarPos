@@ -323,87 +323,78 @@ namespace RebarPosCommands
                 return;
             }
 
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
+            using (StreamWriter sw = new StreamWriter(sfd.FileName))
             {
-                DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
-                DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosShape.TableName), OpenMode.ForRead);
-
-                using (StreamWriter sw = new StreamWriter(sfd.FileName))
+                foreach (PosShape shape in PosShape.GetAllPosShapes().Values)
                 {
-                    foreach (DBDictionaryEntry entry in dict)
+                    sw.WriteLine("BEGIN");
+                    sw.WriteLine("Name\t" + shape.Name);
+                    sw.WriteLine("Fields\t" + shape.Fields.ToString());
+                    sw.WriteLine("Formula\t" + shape.Formula);
+                    sw.WriteLine("FormulaBending\t" + shape.FormulaBending);
+                    sw.WriteLine("Count\t" + shape.Items.Count);
+                    double dx = double.MaxValue; double dy = double.MaxValue;
+                    for (int j = 0; j < shape.Items.Count; j++)
                     {
-                        PosShape shape = (PosShape)tr.GetObject(entry.Value, OpenMode.ForRead);
-
-                        sw.WriteLine("BEGIN");
-                        sw.WriteLine("Name\t" + shape.Name);
-                        sw.WriteLine("Fields\t" + shape.Fields.ToString());
-                        sw.WriteLine("Formula\t" + shape.Formula);
-                        sw.WriteLine("FormulaBending\t" + shape.FormulaBending);
-                        sw.WriteLine("Count\t" + shape.Items.Count);
-                        double dx = double.MaxValue; double dy = double.MaxValue;
-                        for (int j = 0; j < shape.Items.Count; j++)
+                        PosShape.Shape s = shape.Items[j];
+                        if (s is PosShape.ShapeLine)
                         {
-                            PosShape.Shape s = shape.Items[j];
-                            if (s is PosShape.ShapeLine)
-                            {
-                                PosShape.ShapeLine x = s as PosShape.ShapeLine;
-                                dx = Math.Min(dx, x.X1);
-                                dy = Math.Min(dy, x.Y1);
-                                dx = Math.Min(dx, x.X2);
-                                dy = Math.Min(dy, x.Y2);
-                            }
-                            else if (s is PosShape.ShapeArc)
-                            {
-                                PosShape.ShapeArc x = s as PosShape.ShapeArc;
-                                dx = Math.Min(dx, x.X);
-                                dy = Math.Min(dy, x.Y);
-                            }
-                            else if (s is PosShape.ShapeText)
-                            {
-                                PosShape.ShapeText x = s as PosShape.ShapeText;
-                                dx = Math.Min(dx, x.X);
-                                dy = Math.Min(dy, x.Y);
-                            }
+                            PosShape.ShapeLine x = s as PosShape.ShapeLine;
+                            dx = Math.Min(dx, x.X1);
+                            dy = Math.Min(dy, x.Y1);
+                            dx = Math.Min(dx, x.X2);
+                            dy = Math.Min(dy, x.Y2);
                         }
-                        for (int j = 0; j < shape.Items.Count; j++)
+                        else if (s is PosShape.ShapeArc)
                         {
-                            PosShape.Shape s = shape.Items[j];
-                            string col = s.Color.ColorIndex.ToString();
-                            string vis = s.Visible ? "V" : "I";
-                            if (s is PosShape.ShapeLine)
-                            {
-                                PosShape.ShapeLine x = s as PosShape.ShapeLine;
-                                string x1 = (x.X1 - dx).ToString("F2");
-                                string y1 = (x.Y1 - dy).ToString("F2");
-                                string x2 = (x.X2 - dx).ToString("F2");
-                                string y2 = (x.Y2 - dy).ToString("F2");
-                                sw.WriteLine("LINE\t" + x1 + "\t" + y1 + "\t" + x2 + "\t" + y2 + "\t" + col + "\t" + vis);
-                            }
-                            else if (s is PosShape.ShapeArc)
-                            {
-                                PosShape.ShapeArc x = s as PosShape.ShapeArc;
-                                string x1 = (x.X - dx).ToString("F2");
-                                string y1 = (x.Y - dy).ToString("F2");
-                                string r = (x.R).ToString("F2");
-                                string a1 = (x.StartAngle).ToString("F2");
-                                string a2 = (x.EndAngle).ToString("F2");
-                                sw.WriteLine("ARC\t" + x1 + "\t" + y1 + "\t" + r + "\t" + a1 + "\t" + a2 + "\t" + col + "\t" + vis);
-                            }
-                            else if (s is PosShape.ShapeText)
-                            {
-                                PosShape.ShapeText x = s as PosShape.ShapeText;
-                                string x1 = (x.X - dx).ToString("F2");
-                                string y1 = (x.Y - dy).ToString("F2");
-                                string h = (x.Height).ToString("F2");
-                                string th = ((int)x.HorizontalAlignment).ToString();
-                                string tv = ((int)x.VerticalAlignment).ToString();
-                                sw.WriteLine("TEXT\t" + x1 + "\t" + y1 + "\t" + h + "\t" + x.Text + "\t" + col + "\t" + th + "\t" + tv + "\t" + vis);
-                            }
+                            PosShape.ShapeArc x = s as PosShape.ShapeArc;
+                            dx = Math.Min(dx, x.X);
+                            dy = Math.Min(dy, x.Y);
                         }
-                        sw.WriteLine("END");
-                        sw.WriteLine();
+                        else if (s is PosShape.ShapeText)
+                        {
+                            PosShape.ShapeText x = s as PosShape.ShapeText;
+                            dx = Math.Min(dx, x.X);
+                            dy = Math.Min(dy, x.Y);
+                        }
                     }
+                    for (int j = 0; j < shape.Items.Count; j++)
+                    {
+                        PosShape.Shape s = shape.Items[j];
+                        string col = s.Color.ColorIndex.ToString();
+                        string vis = s.Visible ? "V" : "I";
+                        if (s is PosShape.ShapeLine)
+                        {
+                            PosShape.ShapeLine x = s as PosShape.ShapeLine;
+                            string x1 = (x.X1 - dx).ToString("F2");
+                            string y1 = (x.Y1 - dy).ToString("F2");
+                            string x2 = (x.X2 - dx).ToString("F2");
+                            string y2 = (x.Y2 - dy).ToString("F2");
+                            sw.WriteLine("LINE\t" + x1 + "\t" + y1 + "\t" + x2 + "\t" + y2 + "\t" + col + "\t" + vis);
+                        }
+                        else if (s is PosShape.ShapeArc)
+                        {
+                            PosShape.ShapeArc x = s as PosShape.ShapeArc;
+                            string x1 = (x.X - dx).ToString("F2");
+                            string y1 = (x.Y - dy).ToString("F2");
+                            string r = (x.R).ToString("F2");
+                            string a1 = (x.StartAngle).ToString("F2");
+                            string a2 = (x.EndAngle).ToString("F2");
+                            sw.WriteLine("ARC\t" + x1 + "\t" + y1 + "\t" + r + "\t" + a1 + "\t" + a2 + "\t" + col + "\t" + vis);
+                        }
+                        else if (s is PosShape.ShapeText)
+                        {
+                            PosShape.ShapeText x = s as PosShape.ShapeText;
+                            string x1 = (x.X - dx).ToString("F2");
+                            string y1 = (x.Y - dy).ToString("F2");
+                            string h = (x.Height).ToString("F2");
+                            string th = ((int)x.HorizontalAlignment).ToString();
+                            string tv = ((int)x.VerticalAlignment).ToString();
+                            sw.WriteLine("TEXT\t" + x1 + "\t" + y1 + "\t" + h + "\t" + x.Text + "\t" + col + "\t" + th + "\t" + tv + "\t" + vis);
+                        }
+                    }
+                    sw.WriteLine("END");
+                    sw.WriteLine();
                 }
             }
         }

@@ -91,17 +91,17 @@ public:
 	const AcDbExtents GetShapeExtents() const;
 
 private:
-	static std::map<const ACHAR*, CPosShape*> m_PosShapes;
+	static std::map<std::wstring, CPosShape*> m_PosShapes;
 
 public:
 	/// Gets the shape with the given name
-	static CPosShape* GetPosShape(const ACHAR* name);
+	static CPosShape* GetPosShape(std::wstring name);
 
 	/// Gets the number of pos shapes
-	static std::map<const ACHAR*, CPosShape*>::size_type GetPosShapeCount();
+	static std::map<std::wstring, CPosShape*>::size_type GetPosShapeCount();
 
 	/// Gets the underlying maps
-	static std::map<const ACHAR*, CPosShape*> GetMap();
+	static std::map<std::wstring, CPosShape*> GetMap();
 
 	/// Reads all shapes defined in the resource
 	static void MakePosShapesFromResource(HINSTANCE hInstance);

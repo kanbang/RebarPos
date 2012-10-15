@@ -34,6 +34,7 @@ namespace RebarPosCommands
                         pos.A = "XXXX";
                         pos.Note = "XXXXXXXX";
 
+#if DEBUG
                         pos.Pos = "1";
                         pos.Count = "2x3";
                         pos.Diameter = "12";
@@ -41,6 +42,7 @@ namespace RebarPosCommands
                         pos.Shape = "00";
                         pos.A = "1000";
                         pos.Note = "";
+#endif
 
                         pos.SetDatabaseDefaults(db);
 

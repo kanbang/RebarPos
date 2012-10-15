@@ -26,7 +26,6 @@ namespace RebarPosCommands
         ObjectId m_Pos;
         string m_Shape;
         List<int> m_StandardDiameters;
-        Dictionary<string, ObjectId> m_Shapes;
         RebarPos.HitTestResult hit;
         string m_Formula;
         bool m_Bending;
@@ -43,7 +42,6 @@ namespace RebarPosCommands
             m_Pos = ObjectId.Null;
             m_Shape = string.Empty;
             m_StandardDiameters = new List<int>();
-            m_Shapes = new Dictionary<string, ObjectId>();
 
             posShapeView.BackColor = DWGUtility.ModelBackgroundColor();
         }
@@ -64,12 +62,6 @@ namespace RebarPosCommands
                     }
 
                     m_Shape = pos.Shape;
-
-                    m_Shapes = DWGUtility.GetShapes();
-                    if (m_Shapes.Count == 0)
-                    {
-                        return false;
-                    }
 
                     txtPosMarker.Text = pos.Pos;
                     txtPosCount.Text = pos.Count;
@@ -352,7 +344,7 @@ namespace RebarPosCommands
             {
                 try
                 {
-                    PosShape shape = tr.GetObject(PosShape.GetShapeId(m_Shape), OpenMode.ForRead) as PosShape;
+                    PosShape shape = PosShape.GetPosShape(m_Shape);
                     if (shape == null)
                         return false;
 
@@ -417,16 +409,7 @@ namespace RebarPosCommands
                         }
                     }
 
-                    string shapename = "";
-                    foreach (KeyValuePair<string, ObjectId> pair in m_Shapes)
-                    {
-                        if (pair.Key == m_Shape)
-                        {
-                            shapename = pair.Key;
-                            break;
-                        }
-                    }
-                    lblPosShape.Text = shapename;
+                    lblPosShape.Text = m_Shape;
                 }
                 catch (System.Exception ex)
                 {

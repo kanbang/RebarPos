@@ -1872,6 +1872,10 @@ const void CRebarPos::Calculate(void) const
 	m_CalcProps.Precision = pGroup->Precision();
 	m_CalcProps.DrawingUnit = pGroup->DrawingUnit();
 	m_CalcProps.DisplayUnit = pGroup->DisplayUnit();
+	if(m_Shape == NULL || m_Shape[0] == _T('\0'))
+	{
+		return;
+	}
 	CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
 	const ACHAR* formula;
 	if(m_CalcProps.Bending)

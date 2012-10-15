@@ -328,36 +328,6 @@ namespace RebarPosCommands
             return list;
         }
 
-        // Returns all items in the dictionary.
-        public static Dictionary<string, ObjectId> GetShapes()
-        {
-            Dictionary<string, ObjectId> list = new Dictionary<string, ObjectId>();
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
-            {
-                try
-                {
-                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
-                    if (namedDict.Contains(PosShape.TableName))
-                    {
-                        DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(PosShape.TableName), OpenMode.ForRead);
-                        using (DbDictionaryEnumerator it = dict.GetEnumerator())
-                        {
-                            while (it.MoveNext())
-                            {
-                                list.Add(it.Key, it.Value);
-                            }
-                        }
-                    }
-                }
-                catch
-                {
-                    ;
-                }
-            }
-            return list;
-        }
-
         // Refreshes given items
         public static void RefreshPos(IEnumerable<ObjectId> ids)
         {

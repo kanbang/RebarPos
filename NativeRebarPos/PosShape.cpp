@@ -8,7 +8,7 @@
 #include "Utility.h"
 #include "resource.h"
 
-std::map<const ACHAR*, CPosShape*> CPosShape::m_PosShapes;
+std::map<std::wstring, CPosShape*> CPosShape::m_PosShapes;
 
 //-----------------------------------------------------------------------------
 CPosShape::CPosShape () : m_Name(NULL), m_Fields(1), m_Formula(NULL), m_FormulaBending(NULL), m_Priority(0)
@@ -175,19 +175,19 @@ const AcDbExtents CPosShape::GetShapeExtents() const
 //*************************************************************************
 // Common static dictionary methods
 //*************************************************************************
-CPosShape* CPosShape::GetPosShape(const ACHAR* name)
+CPosShape* CPosShape::GetPosShape(std::wstring name)
 {
 	assert(m_PosShapes.find(name) != m_PosShapes.end());
 
 	return m_PosShapes[name];
 }
 
-std::map<const ACHAR*, CPosShape*>::size_type CPosShape::GetPosShapeCount()
+std::map<std::wstring, CPosShape*>::size_type CPosShape::GetPosShapeCount()
 {
 	return m_PosShapes.size();
 }
 
-std::map<const ACHAR*, CPosShape*> CPosShape::GetMap()
+std::map<std::wstring, CPosShape*> CPosShape::GetMap()
 {
 	return m_PosShapes;
 }
@@ -328,13 +328,13 @@ void CPosShape::MakePosShapesFromResource(HINSTANCE hInstance)
 		}
 
 		// Add the shape to the dictionary
-		m_PosShapes[shape->Name()] = shape;
+		m_PosShapes[name] = shape;
 	}
 }
 
 void CPosShape::ClearPosShapes()
 {
-	for(std::map<const ACHAR*, CPosShape*>::iterator it = m_PosShapes.begin(); it != m_PosShapes.end(); it++)
+	for(std::map<std::wstring, CPosShape*>::iterator it = m_PosShapes.begin(); it != m_PosShapes.end(); it++)
 	{
 		delete it->second;
 	}

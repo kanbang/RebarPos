@@ -185,7 +185,7 @@ namespace OZOZ
 			ref class ShapeCollection
 			{
 			private:
-				PosShape^ m_Parent;
+				CPosShape* m_Parent;
 
 			private:
 				ShapeCollection() { }
@@ -193,58 +193,36 @@ namespace OZOZ
 				void operator=(ShapeCollection%) { }
 
 			internal:
-				ShapeCollection(PosShape^ parent);
+				ShapeCollection(CPosShape* parent);
 
 			public:
-				void AddLine(double x1, double y1, double x2, double y2, Autodesk::AutoCAD::Colors::Color^ color, bool visible);
-				void AddArc(double x, double y, double r, double startAngle, double endAngle, Autodesk::AutoCAD::Colors::Color^ color, bool visible);
-				void AddText(double x, double y, double height, String^ text, Autodesk::AutoCAD::Colors::Color^ color, TextHorizontalMode horizontalAlignment, TextVerticalMode verticalAlignment, bool visible);
-				void AddLine(double x1, double y1, double x2, double y2, Autodesk::AutoCAD::Colors::Color^ color)
-				{
-					AddLine(x1, y1, x2, y2, color, true);
-				}
-				void AddArc(double x, double y, double r, double startAngle, double endAngle, Autodesk::AutoCAD::Colors::Color^ color)
-				{
-					AddArc(x, y, r, startAngle, endAngle, color, true);
-				}
-				void AddText(double x, double y, double height, String^ text, Autodesk::AutoCAD::Colors::Color^ color, TextHorizontalMode horizontalAlignment, TextVerticalMode verticalAlignment)
-				{
-					AddText(x, y, height, text, color, horizontalAlignment, verticalAlignment, true);
-				}
 				property int Count { int get(); }
-				property Shape^ default[int] { Shape^ get(int index); void set(int index, Shape^ value); }
-				void Remove(int index);
-				void Clear();
+				property Shape^ default[int] { Shape^ get(int index); }
 			};
 
 		protected:
+			String^ m_Name;
+			int m_Fields;
+			String^ m_Formula;
+			String^ m_FormulaBending;
+			int m_Priority;
 			ShapeCollection^ m_Shapes;
 
-        public:
-            PosShape();
-
         internal:
-            PosShape(System::IntPtr unmanagedPointer);
-            inline CPosShape* GetImpObj()
-            {
-                return static_cast<CPosShape*>(unmanagedPointer.ToPointer());
-            }
+            PosShape(CPosShape* shape);
 
         public:
 			property ShapeCollection^ Items { ShapeCollection^ get(); }
 
-			property String^ Name           { String^ get(); void set(String^ value); }
-			property int Fields             { int get(); void set(int value); }
-			property String^ Formula        { String^ get(); void set(String^ value); }
-			property String^ FormulaBending { String^ get(); void set(String^ value); }
-
-			property int Priority { int get(); void set(int value); }
-
-		public:
-			property static String^ TableName        { String^ get(); }
+			property String^ Name           { String^ get(); }
+			property int Fields             { int get(); }
+			property String^ Formula        { String^ get(); }
+			property String^ FormulaBending { String^ get(); }
+			property int Priority { int get(); }
 
 		public:
-			static Autodesk::AutoCAD::DatabaseServices::ObjectId GetShapeId(String^ name);
+			static PosShape^ GetPosShape(String^ name);
+			static System::Collections::Generic::Dictionary<String^, PosShape^>^ GetAllPosShapes();
         };
     }
 

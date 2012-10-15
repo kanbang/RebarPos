@@ -39,17 +39,12 @@
             this.label2 = new System.Windows.Forms.Label();
             this.txtFormula = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lbShapes = new System.Windows.Forms.ListView();
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.lShapes = new System.Windows.Forms.ImageList(this.components);
-            this.btnRename = new System.Windows.Forms.Button();
-            this.btnRemove = new System.Windows.Forms.Button();
-            this.btnAdd = new System.Windows.Forms.Button();
             this.gbDisplay = new System.Windows.Forms.GroupBox();
-            this.btnSelectShape = new System.Windows.Forms.Button();
             this.posShapeView = new RebarPosCommands.PosShapeView();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.chkShowShapes = new System.Windows.Forms.CheckBox();
@@ -88,9 +83,9 @@
             0,
             0});
             this.udPriority.Name = "udPriority";
+            this.udPriority.ReadOnly = true;
             this.udPriority.Size = new System.Drawing.Size(166, 20);
             this.udPriority.TabIndex = 7;
-            this.udPriority.ValueChanged += new System.EventHandler(this.udPriority_ValueChanged);
             // 
             // label3
             // 
@@ -115,6 +110,7 @@
             0,
             0});
             this.udFields.Name = "udFields";
+            this.udFields.ReadOnly = true;
             this.udFields.Size = new System.Drawing.Size(166, 20);
             this.udFields.TabIndex = 1;
             this.udFields.Value = new decimal(new int[] {
@@ -122,7 +118,6 @@
             0,
             0,
             0});
-            this.udFields.ValueChanged += new System.EventHandler(this.udFields_ValueChanged);
             // 
             // label4
             // 
@@ -137,10 +132,9 @@
             // 
             this.txtFormulaBending.Location = new System.Drawing.Point(122, 100);
             this.txtFormulaBending.Name = "txtFormulaBending";
+            this.txtFormulaBending.ReadOnly = true;
             this.txtFormulaBending.Size = new System.Drawing.Size(166, 20);
             this.txtFormulaBending.TabIndex = 5;
-            this.txtFormulaBending.Validated += new System.EventHandler(this.txtFormulaBending_Validated);
-            this.txtFormulaBending.Validating += new System.ComponentModel.CancelEventHandler(this.txtFormulaBending_Validating);
             // 
             // label2
             // 
@@ -155,10 +149,9 @@
             // 
             this.txtFormula.Location = new System.Drawing.Point(122, 74);
             this.txtFormula.Name = "txtFormula";
+            this.txtFormula.ReadOnly = true;
             this.txtFormula.Size = new System.Drawing.Size(166, 20);
             this.txtFormula.TabIndex = 3;
-            this.txtFormula.Validated += new System.EventHandler(this.txtFormula_Validated);
-            this.txtFormula.Validating += new System.ComponentModel.CancelEventHandler(this.txtFormula_Validating);
             // 
             // label1
             // 
@@ -169,18 +162,6 @@
             this.label1.TabIndex = 2;
             this.label1.Text = "&Formül";
             // 
-            // btnOK
-            // 
-            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(461, 437);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 3;
-            this.btnOK.Text = "Tamam";
-            this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-            // 
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -189,7 +170,7 @@
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 4;
-            this.btnCancel.Text = "İptal";
+            this.btnCancel.Text = "Kapat";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
@@ -199,9 +180,6 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.lbShapes);
-            this.groupBox2.Controls.Add(this.btnRename);
-            this.groupBox2.Controls.Add(this.btnRemove);
-            this.groupBox2.Controls.Add(this.btnAdd);
             this.groupBox2.Location = new System.Drawing.Point(12, 12);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(288, 405);
@@ -217,18 +195,16 @@
             this.lbShapes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chName});
             this.lbShapes.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.lbShapes.LabelEdit = true;
             this.lbShapes.LabelWrap = false;
             this.lbShapes.LargeImageList = this.lShapes;
             this.lbShapes.Location = new System.Drawing.Point(15, 23);
             this.lbShapes.MultiSelect = false;
             this.lbShapes.Name = "lbShapes";
-            this.lbShapes.Size = new System.Drawing.Size(227, 363);
+            this.lbShapes.Size = new System.Drawing.Size(259, 363);
             this.lbShapes.SmallImageList = this.lShapes;
             this.lbShapes.TabIndex = 0;
             this.lbShapes.UseCompatibleStateImageBehavior = false;
             this.lbShapes.View = System.Windows.Forms.View.Details;
-            this.lbShapes.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.lbShapes_AfterLabelEdit);
             this.lbShapes.SelectedIndexChanged += new System.EventHandler(this.lbShapes_SelectedIndexChanged);
             // 
             // chName
@@ -246,44 +222,10 @@
             this.lShapes.Images.SetKeyName(3, "page_white_delete.png");
             this.lShapes.Images.SetKeyName(4, "page_go.png");
             // 
-            // btnRename
-            // 
-            this.btnRename.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRename.Image = global::RebarPosCommands.Properties.Resources.textfield;
-            this.btnRename.Location = new System.Drawing.Point(248, 83);
-            this.btnRename.Name = "btnRename";
-            this.btnRename.Size = new System.Drawing.Size(24, 24);
-            this.btnRename.TabIndex = 3;
-            this.btnRename.UseVisualStyleBackColor = true;
-            this.btnRename.Click += new System.EventHandler(this.btnRename_Click);
-            // 
-            // btnRemove
-            // 
-            this.btnRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRemove.Image = global::RebarPosCommands.Properties.Resources.delete;
-            this.btnRemove.Location = new System.Drawing.Point(248, 53);
-            this.btnRemove.Name = "btnRemove";
-            this.btnRemove.Size = new System.Drawing.Size(24, 24);
-            this.btnRemove.TabIndex = 2;
-            this.btnRemove.UseVisualStyleBackColor = true;
-            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
-            // 
-            // btnAdd
-            // 
-            this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAdd.Image = global::RebarPosCommands.Properties.Resources.add;
-            this.btnAdd.Location = new System.Drawing.Point(248, 23);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(24, 24);
-            this.btnAdd.TabIndex = 1;
-            this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
-            // 
             // gbDisplay
             // 
             this.gbDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.gbDisplay.Controls.Add(this.btnSelectShape);
             this.gbDisplay.Controls.Add(this.posShapeView);
             this.gbDisplay.Location = new System.Drawing.Point(306, 212);
             this.gbDisplay.Name = "gbDisplay";
@@ -291,18 +233,6 @@
             this.gbDisplay.TabIndex = 2;
             this.gbDisplay.TabStop = false;
             this.gbDisplay.Text = "&Görünüm";
-            // 
-            // btnSelectShape
-            // 
-            this.btnSelectShape.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectShape.Location = new System.Drawing.Point(20, 158);
-            this.btnSelectShape.Name = "btnSelectShape";
-            this.btnSelectShape.Size = new System.Drawing.Size(268, 23);
-            this.btnSelectShape.TabIndex = 1;
-            this.btnSelectShape.Text = "Çizimden &Al";
-            this.btnSelectShape.UseVisualStyleBackColor = true;
-            this.btnSelectShape.Click += new System.EventHandler(this.btnSelectShape_Click);
             // 
             // posShapeView
             // 
@@ -314,7 +244,7 @@
             this.posShapeView.ForeColor = System.Drawing.Color.White;
             this.posShapeView.Location = new System.Drawing.Point(20, 31);
             this.posShapeView.Name = "posShapeView";
-            this.posShapeView.Size = new System.Drawing.Size(268, 121);
+            this.posShapeView.Size = new System.Drawing.Size(268, 155);
             this.posShapeView.TabIndex = 0;
             // 
             // errorProvider
@@ -334,7 +264,6 @@
             // 
             // PosShapesForm
             // 
-            this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
@@ -343,7 +272,6 @@
             this.Controls.Add(this.gbDisplay);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnOK);
             this.Controls.Add(this.gbOptions);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -371,13 +299,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown udFields;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ListView lbShapes;
-        private System.Windows.Forms.Button btnRename;
-        private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.ColumnHeader chName;
         private System.Windows.Forms.ImageList lShapes;
         private System.Windows.Forms.GroupBox gbDisplay;
@@ -386,7 +310,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtFormulaBending;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button btnSelectShape;
         private PosShapeView posShapeView;
         private System.Windows.Forms.CheckBox chkShowShapes;
     }

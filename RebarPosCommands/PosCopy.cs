@@ -27,7 +27,6 @@ namespace RebarPosCommands
         public string e;
         public string f;
 
-        public ObjectId shapeId;
         public string shapename;
 
         public double x;
@@ -60,7 +59,6 @@ namespace RebarPosCommands
             e = string.Empty; 
             f = string.Empty;
 
-            shapeId = ObjectId.Null;
             shapename = string.Empty;
 
             x = double.MaxValue;
@@ -135,8 +133,7 @@ namespace RebarPosCommands
                             copy.x = pos.BasePoint.X;
                             copy.y = pos.BasePoint.Y;
                             copy.shapename = pos.Shape;
-                            copy.shapeId = PosShape.GetShapeId(copy.shapename);
-                            PosShape shape = tr.GetObject(copy.shapeId, OpenMode.ForRead) as PosShape;
+                            PosShape shape = PosShape.GetPosShape(copy.shapename);
                             if (shape != null)
                             {
                                 copy.priority = shape.Priority;

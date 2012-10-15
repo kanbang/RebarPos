@@ -16,16 +16,15 @@ using namespace OZOZ::RebarPosWrapper;
 //*************************************************************************
 // Constructors and destructors 
 //*************************************************************************
-PosShape::PosShape() 
-:Autodesk::AutoCAD::DatabaseServices::DBObject(IntPtr(new CPosShape()), true)
+PosShape::PosShape(CPosShape* shape) 
 {
-	m_Shapes = gcnew PosShape::ShapeCollection(this);
-}
+	m_Name = Marshal::WcharToString(shape->Name());
+	m_Fields = shape->Fields();
+	m_Formula = Marshal::WcharToString(shape->Formula());
+	m_FormulaBending = Marshal::WcharToString(shape->FormulaBending());
+	m_Priority = shape->Priority();
 
-PosShape::PosShape(System::IntPtr unmanagedPointer, bool autoDelete)
-: Autodesk::AutoCAD::DatabaseServices::DBObject(unmanagedPointer,autoDelete)
-{
-	m_Shapes = gcnew PosShape::ShapeCollection(this);
+	m_Shapes = gcnew PosShape::ShapeCollection(shape);
 }
 
 //*************************************************************************
@@ -33,38 +32,22 @@ PosShape::PosShape(System::IntPtr unmanagedPointer, bool autoDelete)
 //*************************************************************************
 String^ PosShape::Name::get()
 {
-	return Marshal::WcharToString(GetImpObj()->Name());
-}
-void PosShape::Name::set(String^ value)
-{
-	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setName(Marshal::StringToWchar(value)));
+	return m_Name;
 }
 
-void PosShape::Fields::set(int value)
-{
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFields(value));
-}
 int PosShape::Fields::get()
 {
-    return GetImpObj()->Fields();
+    return m_Fields;
 }
 
-void PosShape::Formula::set(String^ value)
-{
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormula(Marshal::StringToWchar(value)));
-}
 String^ PosShape::Formula::get()
 {
-    return Marshal::WcharToString(GetImpObj()->Formula());
+    return m_Formula;
 }
 
-void PosShape::FormulaBending::set(String^ value)
-{
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormulaBending(Marshal::StringToWchar(value)));
-}
 String^ PosShape::FormulaBending::get()
 {
-    return Marshal::WcharToString(GetImpObj()->FormulaBending());
+    return m_FormulaBending;
 }
 
 PosShape::ShapeCollection^ PosShape::Items::get()
@@ -72,77 +55,45 @@ PosShape::ShapeCollection^ PosShape::Items::get()
 	return m_Shapes;
 }
 
-void PosShape::Priority::set(int value)
-{
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setPriority(value));
-}
 int PosShape::Priority::get()
 {
-    return GetImpObj()->Priority();
+    return m_Priority;
 }
 
 //*************************************************************************
 // Shape Collection
 //*************************************************************************
-PosShape::ShapeCollection::ShapeCollection(PosShape^ parent)
+PosShape::ShapeCollection::ShapeCollection(CPosShape* parent)
 {
 	m_Parent = parent;
 }
 
-void PosShape::ShapeCollection::AddLine(double x1, double y1, double x2, double y2, Autodesk::AutoCAD::Colors::Color^ color, bool visible)
-{
-	m_Parent->GetImpObj()->AddShape(new CShapeLine(color->ColorIndex, x1, y1, x2, y2, (visible ? Adesk::kTrue : Adesk::kFalse)));
-}
-
-void PosShape::ShapeCollection::AddArc(double x, double y, double r, double startAngle, double endAngle, Autodesk::AutoCAD::Colors::Color^ color, bool visible)
-{
-	m_Parent->GetImpObj()->AddShape(new CShapeArc(color->ColorIndex, x, y, r, startAngle, endAngle, (visible ? Adesk::kTrue : Adesk::kFalse)));
-}
-
-void PosShape::ShapeCollection::AddText(double x, double y, double height, String^ str, Autodesk::AutoCAD::Colors::Color^ color, TextHorizontalMode horizontalAlignment, TextVerticalMode verticalAlignment, bool visible)
-{
-	m_Parent->GetImpObj()->AddShape(new CShapeText(color->ColorIndex, x, y, height, (wchar_t*)Marshal::StringToWchar(str),
-		static_cast<AcDb::TextHorzMode>(horizontalAlignment), static_cast<AcDb::TextVertMode>(verticalAlignment), (visible ? Adesk::kTrue : Adesk::kFalse)));
-}
-
 int PosShape::ShapeCollection::Count::get()
 {
-	return (int)m_Parent->GetImpObj()->GetShapeCount();
-}
-
-void PosShape::ShapeCollection::Remove(int index)
-{
-	m_Parent->GetImpObj()->RemoveShape((int)index);
-}
-
-void PosShape::ShapeCollection::Clear()
-{
-	m_Parent->GetImpObj()->ClearShapes();
+	return (int)m_Parent->GetShapeCount();
 }
 
 PosShape::Shape^ PosShape::ShapeCollection::default::get(int index)
 {
-	return Shape::FromNative(m_Parent->GetImpObj()->GetShape(index));
-}
-
-void PosShape::ShapeCollection::default::set(int index, PosShape::Shape^ value)
-{
-	m_Parent->GetImpObj()->SetShape(index, value->ToNative());
-}
-
-//*************************************************************************
-// Static Properties
-//*************************************************************************
-String^ PosShape::TableName::get()
-{
-	return Marshal::WcharToString(CPosShape::GetTableName());
+	return Shape::FromNative(m_Parent->GetShape(index));
 }
 
 //*************************************************************************
 // Static Methods
 //*************************************************************************
-Autodesk::AutoCAD::DatabaseServices::ObjectId PosShape::GetShapeId(String^ name)
+PosShape^ PosShape::GetPosShape(String^ name)
 {
-	AcDbObjectId id = CPosShape::GetShapeId(Marshal::StringToWchar(name));
-	return Marshal::ToObjectId(id);
+	CPosShape* shape = CPosShape::GetPosShape(Marshal::StringToWstring(name));
+	return gcnew PosShape(shape);
+}
+
+System::Collections::Generic::Dictionary<String^, PosShape^>^ PosShape::GetAllPosShapes()
+{
+	System::Collections::Generic::Dictionary<String^, PosShape^>^ dict = gcnew System::Collections::Generic::Dictionary<String^, PosShape^>();
+	std::map<std::wstring, CPosShape*> map = CPosShape::GetMap();
+	for(std::map<std::wstring, CPosShape*>::iterator it = map.begin(); it != map.end(); it++)
+	{
+		dict->Add(Marshal::WstringToString(it->first), gcnew PosShape(it->second));
+	}
+	return dict;
 }
