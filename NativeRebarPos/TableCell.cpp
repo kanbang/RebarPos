@@ -471,6 +471,57 @@ const std::vector<AcDbLine*> CTableCell::GetLines() const
 	return lines;
 }
 
+const std::vector<AcDbArc*> CTableCell::GetArcs() const
+{
+	std::vector<AcDbArc*> arcs;
+
+	// Transform to match orientation
+	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
+	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
+
+	if(HasShape())
+	{
+		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
+		AcDbExtents ext = pShape->GetShapeExtents();
+		double maxwidth = 5.0 * m_TextHeight;
+		double maxheight = m_TextHeight;
+		double xscale = maxwidth / (ext.maxPoint().x - ext.minPoint().x);
+		double yscale = maxheight / (ext.maxPoint().y - ext.minPoint().y);
+		double scale = min(xscale, yscale);
+        double xoff = (maxwidth - scale * (ext.maxPoint().x - ext.minPoint().x)) / 2.0;
+        double yoff = (maxheight - scale * (ext.maxPoint().y - ext.minPoint().y)) / 2.0;
+
+		for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
+		{
+			const CShape* shape = pShape->GetShape(i);
+			if(shape->type == CShape::Arc && shape->visible == Adesk::kTrue)
+			{
+				const CShapeArc* arc = dynamic_cast<const CShapeArc*>(shape);
+
+				AcDbArc* marc = new AcDbArc();
+
+				marc->setColorIndex(arc->color);
+
+				// Location
+				double x = xoff + (arc->x - ext.minPoint().x) * scale;
+				double y = yoff + (arc->y - ext.minPoint().y) * scale;
+				double r = arc->r * scale;
+				double cx = m_Margin;
+				double cy = -m_Height + m_Margin;
+				marc->setCenter(AcGePoint3d(x + cx, y + cy, 0));
+				marc->setRadius(r);
+				marc->setStartAngle(arc->startAngle);
+				marc->setEndAngle(arc->endAngle);
+
+				marc->transformBy(trans);
+				arcs.push_back(marc);
+			}
+		}
+	}
+
+	return arcs;
+}
+
 //*************************************************************************
 // Overridden methods from AcDbObject
 //*************************************************************************
@@ -860,6 +911,16 @@ void CTableCell::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 		delete line;
 	}
 	lines.clear();
+
+	// Draw arcs
+	std::vector<AcDbArc*> arcs = GetArcs();
+	for(std::vector<AcDbArc*>::iterator it = arcs.begin(); it != arcs.end(); it++)
+	{
+		AcDbArc* arc = (*it);
+		worldDraw->geometry().draw(arc);
+		delete arc;
+	}
+	arcs.clear();
 }
 
 //*************************************************************************
@@ -978,6 +1039,15 @@ Acad::ErrorStatus CTableCell::explode(AcDbVoidPtrArray& entitySet) const
 	}
 	lines.clear();
 
+	// Arcs
+	std::vector<AcDbArc*> arcs = GetArcs();
+	for(std::vector<AcDbArc*>::iterator it = arcs.begin(); it != arcs.end(); it++)
+	{
+		AcDbArc* arc = (*it);
+		entitySet.append(arc);
+	}
+	arcs.clear();
+
 	return Acad::eOk;
 }
 
@@ -1007,6 +1077,16 @@ Adesk::Boolean CTableCell::worldDraw(AcGiWorldDraw* worldDraw)
 		delete line;
 	}
 	lines.clear();
+
+	// Draw arcs
+	std::vector<AcDbArc*> arcs = GetArcs();
+	for(std::vector<AcDbArc*>::iterator it = arcs.begin(); it != arcs.end(); it++)
+	{
+		AcDbArc* arc = (*it);
+		worldDraw->geometry().draw(arc);
+		delete arc;
+	}
+	arcs.clear();
 
     return Adesk::kTrue; // Don't call viewportDraw()
 }

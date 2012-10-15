@@ -93,10 +93,16 @@ namespace RebarPosCommands
                     else if (shape is PosShape.ShapeArc)
                     {
                         PosShape.ShapeArc arc = shape as PosShape.ShapeArc;
-                        xmin = Math.Min(xmin, arc.X - arc.R);
-                        ymin = Math.Min(ymin, arc.Y - arc.R);
-                        xmax = Math.Max(xmax, arc.X + arc.R);
-                        ymax = Math.Max(ymax, arc.Y + arc.R);
+                        double da = (arc.EndAngle - arc.StartAngle) / 10.0;
+                        for (double a = arc.StartAngle; a <= arc.EndAngle; a += da)
+                        {
+                            double x = arc.X + (float)Math.Cos(a) * arc.R;
+                            double y = arc.Y + (float)Math.Sin(a) * arc.R;
+                            xmin = Math.Min(xmin, x);
+                            xmax = Math.Max(xmax, x);
+                            ymin = Math.Min(ymin, y);
+                            ymax = Math.Max(ymax, y);
+                        }
                     }
                     else if (shape is PosShape.ShapeText)
                     {

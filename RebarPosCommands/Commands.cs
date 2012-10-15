@@ -312,6 +312,44 @@ namespace RebarPosCommands
             PosGroups();
         }
 
+        [CommandMethod("RebarPos", "DUMPPOSSHAPES2", CommandFlags.Modal)]
+        public void CMD_DumpShapes2()
+        {
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                BlockTableRecord btr = (BlockTableRecord)tr.GetObject(db.CurrentSpaceId, OpenMode.ForWrite);
+                int i=1;
+                double y = 0;
+                foreach (string shape in PosShape.GetAllPosShapes().Keys)
+                {
+                    Point3d pt = new Point3d(0, y, 0);
+
+                    RebarPos pos = new RebarPos();
+                    pos.TransformBy(Matrix3d.Displacement(pt.GetAsVector()));
+                    pos.TransformBy(Matrix3d.Scaling(25.0, pt));
+
+                    pos.Pos = i.ToString();
+                    pos.Count = "1";
+                    pos.Diameter = "12";
+                    pos.Spacing = "";
+                    pos.Shape = shape;
+                    pos.A = "100"; pos.B = "100"; pos.C = "100"; pos.D = "100"; pos.E = "100"; pos.F = "100";
+                    pos.Note = "";
+
+                    pos.SetDatabaseDefaults(db);
+
+                    btr.AppendEntity(pos);
+                    tr.AddNewlyCreatedDBObject(pos, true);
+
+                    i++;
+                    y += 35;
+                }
+
+                tr.Commit();
+            }
+        }
+
         [CommandMethod("RebarPos", "DUMPPOSSHAPES", CommandFlags.Modal)]
         public void CMD_DumpShapes()
         {

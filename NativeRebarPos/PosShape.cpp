@@ -155,8 +155,13 @@ const AcDbExtents CPosShape::GetShapeExtents() const
 		case CShape::Arc:
 			{
 				CShapeArc* arc = dynamic_cast<CShapeArc*>(shape);
-				ext.addPoint(AcGePoint3d(arc->x - arc->r, arc->y - arc->r, 0));
-				ext.addPoint(AcGePoint3d(arc->x + arc->r, arc->y + arc->r, 0));
+				double da = (arc->endAngle - arc->startAngle) / 10.0;
+				for(double a = arc->startAngle; a <= arc->endAngle; a+= da)
+				{
+					double x = arc->x + cos(a) * arc->r;
+					double y = arc->y + sin(a) * arc->r;
+					ext.addPoint(AcGePoint3d(x, y, 0));
+				}
 			}
 			break;
 		case CShape::Text:

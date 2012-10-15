@@ -191,10 +191,16 @@ namespace RebarPosCommands
             foreach (DrawArc arc in darcs)
             {
                 hasEnt = true;
-                xmin = Math.Min(xmin, arc.X - arc.R);
-                xmax = Math.Max(xmax, arc.X + arc.R);
-                ymin = Math.Min(ymin, arc.Y - arc.R);
-                ymax = Math.Max(ymax, arc.Y + arc.R);
+                float da = (arc.EndAngle - arc.StartAngle) / 10.0f;
+                for (float a = arc.StartAngle; a <= arc.EndAngle; a += da)
+                {
+                    float x = arc.X + (float)Math.Cos(a * Math.PI / 180.0) * arc.R;
+                    float y = arc.Y + (float)Math.Sin(a * Math.PI / 180.0) * arc.R;
+                    xmin = Math.Min(xmin, x);
+                    xmax = Math.Max(xmax, x);
+                    ymin = Math.Min(ymin, y);
+                    ymax = Math.Max(ymax, y);
+                }
             }
             foreach (DrawText text in dtexts)
             {
@@ -345,7 +351,6 @@ namespace RebarPosCommands
 
                         // Draw
                         g.DrawString(text.Text, font, brush, text.X + txoff, -text.Y - tyoff - size.Height);
-                        //g.DrawRectangle(Pens.Green, text.X + txoff, -text.Y - tyoff - size.Height, size.Width, size.Height);
                     }
                 }
             }

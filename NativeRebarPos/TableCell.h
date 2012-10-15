@@ -175,6 +175,7 @@ private:
 	/// Helper methods
 	const std::vector<AcDbMText*> GetTexts() const;
 	const std::vector<AcDbLine*> GetLines() const;
+	const std::vector<AcDbArc*> GetArcs() const;
 
 public:
 	/// AcDbEntity overrides: database    
