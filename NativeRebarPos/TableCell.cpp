@@ -159,11 +159,14 @@ const AcGePoint2d CTableCell::MeasureContents() const
 	}
 	else if(HasShape())
 	{
-		pt.set(m_TextHeight * 5.0, m_TextHeight);
+		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
+		AcDbExtents ext = pShape->GetShapeExtents();
+		double w = (ext.maxPoint().x - ext.minPoint().x) * m_TextHeight / 25.0;
+		double h = (ext.maxPoint().y - ext.minPoint().y) * m_TextHeight / 25.0;
+		pt.set(w, h);
 	}
 
 	pt += AcGeVector2d(2.0 * m_Margin, 2.0 * m_Margin);
-	
 
 	return pt;
 }
@@ -257,8 +260,9 @@ const std::vector<AcDbMText*> CTableCell::GetTexts() const
 		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
 
 		AcDbExtents ext = pShape->GetShapeExtents();
-		double maxwidth = 5.0 * m_TextHeight;
-		double maxheight = m_TextHeight;
+
+		double maxwidth = (ext.maxPoint().x - ext.minPoint().x) * m_TextHeight / 25.0;
+		double maxheight = (ext.maxPoint().y - ext.minPoint().y) * m_TextHeight / 25.0;
 		double xscale = maxwidth / (ext.maxPoint().x - ext.minPoint().x);
 		double yscale = maxheight / (ext.maxPoint().y - ext.minPoint().y);
 		double scale = min(xscale, yscale);
@@ -433,8 +437,8 @@ const std::vector<AcDbLine*> CTableCell::GetLines() const
 	{
 		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
 		AcDbExtents ext = pShape->GetShapeExtents();
-		double maxwidth = 5.0 * m_TextHeight;
-		double maxheight = m_TextHeight;
+		double maxwidth = (ext.maxPoint().x - ext.minPoint().x) * m_TextHeight / 25.0;
+		double maxheight = (ext.maxPoint().y - ext.minPoint().y) * m_TextHeight / 25.0;
 		double xscale = maxwidth / (ext.maxPoint().x - ext.minPoint().x);
 		double yscale = maxheight / (ext.maxPoint().y - ext.minPoint().y);
 		double scale = min(xscale, yscale);
@@ -483,8 +487,8 @@ const std::vector<AcDbArc*> CTableCell::GetArcs() const
 	{
 		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
 		AcDbExtents ext = pShape->GetShapeExtents();
-		double maxwidth = 5.0 * m_TextHeight;
-		double maxheight = m_TextHeight;
+		double maxwidth = (ext.maxPoint().x - ext.minPoint().x) * m_TextHeight / 25.0;
+		double maxheight = (ext.maxPoint().y - ext.minPoint().y) * m_TextHeight / 25.0;
 		double xscale = maxwidth / (ext.maxPoint().x - ext.minPoint().x);
 		double yscale = maxheight / (ext.maxPoint().y - ext.minPoint().y);
 		double scale = min(xscale, yscale);
