@@ -24,7 +24,9 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 		case AcRx::kInitAppMsg: 
 		{
 			acrxDynamicLinker->registerAppMDIAware(pkt);
-
+			acrxDynamicLinker->loadApp(L"OZOZRebarPosNative", AcadApp::kOnLoadRequest, false);
+			acrxDynamicLinker->loadApp(L"OZOZRebarPosCOM", AcadApp::kOnLoadRequest, false);
+			
 			// create a new object factory array
 			static AcMgObjectFactoryBase* PEs[] = 
 			{

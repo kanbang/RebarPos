@@ -13,10 +13,10 @@ OutputBaseFilename=Setup64
 OutputDir=Bin
 
 [Files]
-Source: "..\x64\Release\NativeRebarPos.dbx"; DestDir: "{app}\Bin"
-Source: "..\x64\Release\COMRebarPos.dbx"; DestDir: "{app}\Bin"
-Source: "..\x64\Release\ManagedRebarPos.dll"; DestDir: "{app}\Bin"
-Source: "..\RebarPosCommands\bin\Release\RebarPos.dll"; DestDir: "{app}\Bin"
+Source: "..\x64\Release\NativeRebarPos.dbx"; DestDir: "{app}\Bin"; Flags: ignoreversion
+Source: "..\x64\Release\COMRebarPos.dbx"; DestDir: "{app}\Bin"; Flags: ignoreversion
+Source: "..\x64\Release\ManagedRebarPos.dll"; DestDir: "{app}\Bin"; Flags: ignoreversion
+Source: "..\RebarPosCommands\bin\Release\RebarPos.dll"; DestDir: "{app}\Bin"; Flags: ignoreversion
 
 [Code]
 var
@@ -149,25 +149,50 @@ begin
         // NativeRebarPos.dbx
         RegPath := Paths[I] + '\Applications\OZOZRebarPosNative';
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'DESCRIPTION', 'RebarPos Module');
-        RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADCTRLS', 2);
+        RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADCTRLS', 9);
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADER', ExpandConstant('{app}\Bin\NativeRebarPos.dbx'));
         // COMRebarPos.dbx
         RegPath := Paths[I] + '\Applications\OZOZRebarPosCOM';
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'DESCRIPTION', 'RebarPos COM Module');
-        RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADCTRLS', 2);
+        RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADCTRLS', 9);
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADER', ExpandConstant('{app}\Bin\COMRebarPos.dbx'));
         // ManagedRebarPos.dll
         RegPath := Paths[I] + '\Applications\OZOZRebarPosManaged';
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'DESCRIPTION', 'RebarPos Managed Module');
-        RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADCTRLS', 2);
+        RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADCTRLS', 9);
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADER', ExpandConstant('{app}\Bin\ManagedRebarPos.dll'));
         RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'MANAGED', 1);
         // RebarPos.dll
         RegPath := Paths[I] + '\Applications\OZOZRebarPos';
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'DESCRIPTION', 'RebarPos Commands');
-        RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADCTRLS', 2);
+        RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADCTRLS', 12);
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADER', ExpandConstant('{app}\Bin\RebarPos.dll'));
-        RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'MANAGED', 1);        
+        RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'MANAGED', 1);
+        RegPath := Paths[I] + '\Applications\OZOZRebarPos\Groups';
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'RebarPos', 'RebarPos');
+        RegPath := Paths[I] + '\Applications\OZOZRebarPos\Commands';
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'POS', 'POZ');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'POSEDIT', 'POZEDIT');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'BOQEDIT', 'METRAJEDIT');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'NEWPOS', 'POZEKLE');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'NUMBERPOS', 'POZNUM');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'EMPTYPOS', 'NUMARASIL');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'POSCHECK', 'POZKONTROL');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'COPYPOS', 'POZKOPYALA');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'COPYPOSDETAIL', 'POZKOPYALADETAY');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'COPYPOSNUMBER', 'POZBENZET');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'BOQ', 'METRAJ');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'POSFIND', 'POZBUL');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'POSSHAPES', 'ACILIMLAR');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'TOGGLESHAPES', 'SEKILGOSTERGIZLE');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'SHOWSHAPES', 'SEKILGOSTER');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'HIDESHAPES', 'SEKILSIL');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'TABLESTYLE', 'TABLOSTILI');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'POSLENGTH', 'BOYGOSTER');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'INCLUDEPOS', 'POZKATKI');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'LASTPOSNUMBER', 'SONPOZ');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'POSHELP', 'METRAJYARDIM');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'POSSETTINGS', 'POZAYAR');
       end;
     end;
   end;

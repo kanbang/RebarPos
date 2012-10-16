@@ -34,24 +34,26 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpReserved*/)
     {
         _Module.Init(ObjectMap, hInstance);
         DisableThreadLibraryCalls(hInstance);
+		
         // check if the arx app is loaded or not.
         // if not, load it as UI so that we won't have
         // proxy if this dll is unloaded by OS
-        if (!::acrxAppIsLoaded(_T("NativeRebarPos.dbx")))
+        if (!::acrxAppIsLoaded(_T("OZOZRebarPosNative")))
         {
-            if (!acrxLoadModule(_T("NativeRebarPos.dbx"), false, true))
+            if (!acrxLoadApp(_T("OZOZRebarPosNative"), true))
                 return FALSE; //this will trigger a DLL_PROCESS_DETACH right away
         }
         //bump the reference count 
-        acrxLoadModule(_T("NativeRebarPos.dbx"), false, false);
+        acrxLoadApp(_T("OZOZRebarPosNative"), false);
     }
     else if (dwReason == DLL_PROCESS_DETACH)
     {
         _Module.Term();
-
+/*
         //try to decrease the refcount on the dbx
         //if we couldn't load it then this a no op.
         acrxUnloadModule(_T("NativeRebarPos.dbx"));
+		*/
     }
     return TRUE;    // ok
 }

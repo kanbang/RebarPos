@@ -1,4 +1,7 @@
-﻿using Autodesk.AutoCAD.Runtime;
+﻿using System.Reflection;
+using System.IO;
+
+using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.GraphicsInterface;
 
