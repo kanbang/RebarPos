@@ -28,7 +28,7 @@ HKLM
 		{
 			NoRemove ObjectDBX
 			{
-				NoRemove R18.0
+				NoRemove R18.2
 				{
 					NoRemove ActiveXCLSID
 					{
