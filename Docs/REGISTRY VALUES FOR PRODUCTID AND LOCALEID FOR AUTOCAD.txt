@@ -1,0 +1,189 @@
+From AutoCAD 2006 forward, the structure is configured as "[n][r][pp]", where:
+[n] = Number representing AutoCAD base release (see below)
+[r] = Release number within AutoCAD base, reset to zero for every new “n”
+[pp] = Product based on AutoCAD (see below)
+ProductID Assignments (Assigned [n] Values)
+7 =    AutoCAD 2009
+6 =    AutoCAD 2008
+5 =    AutoCAD 2007 
+4 =    AutoCAD 2006
+3 =    AutoCAD 2005
+2 =    AutoCAD 2004
+1 =    AutoCAD 2002
+Product ID's for 2009 based products:
+R17.2\ACAD-7000: = Autodesk Civil 3D
+R17.2\ACAD-7001: = AutoCAD (Registry Cookies: ACAD-7001; ARD-7001)
+R17.2\ACAD-7001: = DwgViewer (Registry Cookie: DWGVIEWR-7001)
+R17.2\ACAD-700A: = AutoCAD OEM (Registry Cookie: AOEM-7001)
+R17.2\ACAD-7002: = Map
+R17.2\ACAD-7003: = Inventor Series (AIS)
+R17.2\ACAD-7004: = Architectural Desktop
+R17.2\ACAD-7005: = AutoCAD Mechanical (ACADM)
+R17.2\ACAD-7006: = Building Systems
+R17.2\ACAD-7007: = AutoCAD Electrical (ACADE)
+R17.2\ACAD-7008: = Land Desktop
+R17.2\ACAD-7009: = AutoCAD LT (Registry Cookie: ACLT-7001)
+R17.2\ACAD-7012: = ADT for Raster Design
+R17.2\ACAD-7013: = Inventor Professional (AIP)
+R17.2\ACAD-7014: = Inventor Professional for Routed Systems (AIPRS)
+R17.2\ACAD-7015: = Inventor Professional for Simulation (AIPSIM)
+R17.2\ACAD-7016: = AutoCAD P & ID - 2D
+R17.2\ACAD-7017: = AutoCAD Plant 3D
+R17.2\ACAD-7018: = Civil 3D Land Desktop Companion
+R17.2\ACAD-7022: = Autodesk Utility Design
+R17.2\ACAD-7023: = Autodesk Topobase Client
+R17.2\ACAD-7028: = DWG TrueView
+Product ID's for 2008 based products:
+R17.1\ACAD-6000: = Autodesk Civil 3D
+R17.1\ACAD-6001: = AutoCAD 
+R17.1\AOEM-600A: = AutoCAD OEM
+R17.1\ACAD-6002: = Autodesk Map 3D
+R17.1\ACAD-6003: = Mechanical Desktop for Autodesk Inventor Series
+R17.1\ACAD-6004: = AutoCAD Architecture
+R17.1\ACAD-6005: = AutoCAD Mechanical
+R17.1\ACAD-6006: = AutoCAD MEP
+R17.1\ACAD-6007: = AutoCAD Electrical
+R17.1\ACAD-6008: = Autodesk Land Desktop
+R17.1\ACAD-6009: = AutoCAD LT 
+R17.1\ACAD-6012: = Autodesk Architectural Desktop with Autodesk Raster Design
+R17.1\ACAD-6013: = Mechanical Desktop for Autodesk Inventor Professional
+R17.1\ACAD-6014: = Mechanical Desktop for Autodesk Inventor Professional Routed Systems
+R17.1\ACAD-6015: = Mechanical Desktop for Autodesk Inventor Professional Simulation
+R17.1\ACAD-6016: = AutoCAD P & ID
+R17.1\ACAD-6022: = Autodesk Utility Design
+R17.1\ACAD-6023: = Autodesk Topobase Client
+Product ID's for 2007 based products:
+R17.0\ACAD-5000: = Autodesk Civil 3D
+R17.0\ACAD-5001: = AutoCAD 
+R17.0\AOEM-500A: = AutoCAD OEM
+R17.0\ACAD-5002: = Autodesk Map 3D
+R17.0\ACAD-5003: = Mechanical Desktop for Autodesk Inventor Series
+R17.0\ACAD-5013: = Mechanical Desktop for Autodesk Inventor Professional
+R17.0\ACAD-5004: = Autodesk Architectural Desktop
+R17.0\ACAD-5005: = AutoCAD Mechanical
+R17.0\ACAD-5006: = Autodesk Building Systems
+R17.0\ACAD-5007: = AutoCAD Electrical
+R17.0\ACAD-5008: = Autodesk Land Desktop
+R17.0\ACAD-5009: = AutoCAD LT 
+R17.0\ACAD-5012: = Autodesk Architectural Desktop with Autodesk Raster Design
+R17.0\ACAD-5022: = Autodesk Utility Design
+Product ID's for 2006 based products: 
+
+R16.2\ACAD-4001: = AutoCAD (Reg Cookies: ACAD-4001)
+R16.2\ACAD-4002: = Map
+R16.2\ACAD-4003: = Mechanical Desktop for AIS
+R16.2\ACAD-4004: = Architectural Desktop
+R16.2\ACAD-4005: = AutoCAD Mechanical
+R16.2\ACAD-4006: = Building Systems
+R16.2\ACAD-4007: = AutoCAD Electrical
+R16.2\ACAD-4008: = Land Desktop
+R16.2\ACAD-4009: = AutoCAD LT (Reg Cookie: ACLT-4001)
+R16.2\AOEM-4001: = AutoCAD OEM 
+R16.2\ACAD-4013: = Mechanical Desktop for AIP
+R16.2\ACAD-4022: = Autodesk Utility Design
+R16.2\ACAD-4000: = Autodesk Civil 3D
+R16.2\ACAD-4012: = Architectural Desktop w/Raster Design
+Product ID's for 2005 based products:
+R16.1\ACAD-301: = AutoCAD (Reg Cookies: ACLT-301; AOEM-301; ARD-301)
+R16.1\ACAD-302: = Map
+R16.1\ACAD-303: = Mechanical Desktop for AIS
+R16.1\ACAD-304: = Architectural Desktop
+R16.1\ACAD-305: = AutoCAD Mechanical
+R16.1\ACAD-306: = Building Systems
+R16.1\ACAD-307: = AutoCAD Electrical
+R16.1\ACAD-308: = Land Desktop
+R16.1\ACAD-309: = AutoCAD LT (Reg Cookie: ACLT-301)
+R16.1\ACAD-30A: = AutoCAD OEM (Reg Cookie: AOEM-301)
+R16.1\ACAD-311: = AutoCAD Neo X1
+R16.1\ACAD-313: =  Mechanical Desktop for AIP
+Product ID's for 2004 based products:
+ACAD-201:: = AutoCAD
+ACAD-202:: = AutoCAD MAP 
+ACAD-203:: = AutoCAD Mechanical Desktop  
+ACAD-204:: = AutoCAD Architectural Desktop 
+ACAD-205:: = AutoCAD Mechanical 
+ACAD-206:: = Building Systems
+ACAD-207:: = AutoCAD Electrical  
+ACAD-208:: = Land Development Desktop 
+ACAD-213:: = Mechanical Desktop 2004 (Inventor)               
+ACAD-215:: = Mechanical 2004 DX English (Inventor)
+ACAD-218:: = Civil Series 2004 English:  
+ACAD-223:: = Mechanical 2004 DX English
+
+Civil Design 2004 English:  Same as LDDT
+Survey 2004 English:  Same as LDDT
+-----------------------------------------------------------
+Here is a listing  of the LocaleId which indicates the language. The LocaleId starts with the number 4, then it is immediately followed by a hexadecimal number indicating the language.
+HKEY_LOCAL_MACHINE\SOFTWARE\Autodesk\AutoCAD\R16.2\ACAD-ProductId:LocaleId
+FYI: The hex number is defined in winnt.h e.g.
+#define LANG_NEUTRAL 0x00
+#define LANG_AFRIKAANS 0x36
+#define LANG_ALBANIAN 0x1c
+#define LANG_ARABIC 0x01
+#define LANG_ARMENIAN 0x2b
+#define LANG_ASSAMESE 0x4d
+#define LANG_AZERI 0x2c
+#define LANG_BASQUE 0x2d
+#define LANG_BELARUSIAN 0x23
+#define LANG_BENGALI 0x45
+#define LANG_BULGARIAN 0x02
+#define LANG_CATALAN 0x03
+#define LANG_CHINESE 0x04
+#define LANG_CROATIAN 0x1a
+#define LANG_CZECH 0x05
+#define LANG_DANISH 0x06
+#define LANG_DUTCH 0x13
+#define LANG_ENGLISH 0x09
+#define LANG_ESTONIAN 0x25
+#define LANG_FAEROESE 0x38
+#define LANG_FARSI 0x29
+#define LANG_FINNISH 0x0b
+#define LANG_FRENCH 0x0c
+#define LANG_GEORGIAN 0x37
+#define LANG_GERMAN 0x07
+#define LANG_GREEK 0x08
+#define LANG_GUJARATI 0x47
+#define LANG_HEBREW 0x0d
+#define LANG_HINDI 0x39
+#define LANG_HUNGARIAN 0x0e
+#define LANG_ICELANDIC 0x0f
+#define LANG_INDONESIAN 0x21
+#define LANG_ITALIAN 0x10
+#define LANG_JAPANESE 0x11
+#define LANG_KANNADA 0x4b
+#define LANG_KASHMIRI 0x60
+#define LANG_KAZAK 0x3f
+#define LANG_KONKANI 0x57
+#define LANG_KOREAN 0x12
+#define LANG_LATVIAN 0x26
+#define LANG_LITHUANIAN 0x27
+#define LANG_MACEDONIAN 0x2f
+#define LANG_MALAY 0x3e
+#define LANG_MALAYALAM 0x4c
+#define LANG_MANIPURI 0x58
+#define LANG_MARATHI 0x4e
+#define LANG_NEPALI 0x61
+#define LANG_NORWEGIAN 0x14
+#define LANG_ORIYA 0x48
+#define LANG_POLISH 0x15
+#define LANG_PORTUGUESE 0x16
+#define LANG_PUNJABI 0x46
+#define LANG_ROMANIAN 0x18
+#define LANG_RUSSIAN 0x19
+#define LANG_SANSKRIT 0x4f
+#define LANG_SERBIAN 0x1a
+#define LANG_SINDHI 0x59
+#define LANG_SLOVAK 0x1b
+#define LANG_SLOVENIAN 0x24
+#define LANG_SPANISH 0x0a
+#define LANG_SWAHILI 0x41
+#define LANG_SWEDISH 0x1d
+#define LANG_TAMIL 0x49
+#define LANG_TATAR 0x44
+#define LANG_TELUGU 0x4a
+#define LANG_THAI 0x1e
+#define LANG_TURKISH 0x1f
+#define LANG_UKRAINIAN 0x22
+#define LANG_URDU 0x20
+#define LANG_UZBEK 0x43
+#define LANG_VIETNAMESE 0x2a
