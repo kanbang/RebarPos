@@ -10,6 +10,13 @@ AppPublisher=Þahin Ýnþaat
 AppPublisherURL=http://www.sahin-ins.com
 AppSupportPhone=+90 (212) 210 45 04
 OutputBaseFilename=Setup64
+OutputDir=Bin
+
+[Files]
+Source: "..\x64\Release\NativeRebarPos.dbx"; DestDir: "{app}\Bin"
+Source: "..\x64\Release\COMRebarPos.dbx"; DestDir: "{app}\Bin"
+Source: "..\x64\Release\ManagedRebarPos.dll"; DestDir: "{app}\Bin"
+Source: "..\RebarPosCommands\bin\Release\RebarPos.dll"; DestDir: "{app}\Bin"
 
 [Code]
 var
@@ -143,23 +150,23 @@ begin
         RegPath := Paths[I] + '\Applications\OZOZRebarPosNative';
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'DESCRIPTION', 'RebarPos Module');
         RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADCTRLS', 2);
-        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADER', ExpandConstant('{app}\NativeRebarPos.dbx'));
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADER', ExpandConstant('{app}\Bin\NativeRebarPos.dbx'));
         // COMRebarPos.dbx
         RegPath := Paths[I] + '\Applications\OZOZRebarPosCOM';
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'DESCRIPTION', 'RebarPos COM Module');
         RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADCTRLS', 2);
-        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADER', ExpandConstant('{app}\COMRebarPos.dbx'));
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADER', ExpandConstant('{app}\Bin\COMRebarPos.dbx'));
         // ManagedRebarPos.dll
         RegPath := Paths[I] + '\Applications\OZOZRebarPosManaged';
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'DESCRIPTION', 'RebarPos Managed Module');
         RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADCTRLS', 2);
-        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADER', ExpandConstant('{app}\ManagedRebarPos.dll'));
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADER', ExpandConstant('{app}\Bin\ManagedRebarPos.dll'));
         RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'MANAGED', 1);
         // RebarPos.dll
         RegPath := Paths[I] + '\Applications\OZOZRebarPos';
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'DESCRIPTION', 'RebarPos Commands');
         RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADCTRLS', 2);
-        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADER', ExpandConstant('{app}\RebarPos.dll'));
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADER', ExpandConstant('{app}\Bin\RebarPos.dll'));
         RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'MANAGED', 1);        
       end;
     end;
