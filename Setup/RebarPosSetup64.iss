@@ -1,6 +1,6 @@
 [Setup]
 ShowLanguageDialog=no
-AppName=RebarPos
+AppName=RebarPos x64
 AppVersion=1.0
 DefaultDirName={pf}\SahinInsaat\RebarPos
 ArchitecturesInstallIn64BitMode=x64
@@ -9,6 +9,7 @@ DisableProgramGroupPage=yes
 AppPublisher=Þahin Ýnþaat
 AppPublisherURL=http://www.sahin-ins.com
 AppSupportPhone=+90 (212) 210 45 04
+OutputBaseFilename=Setup64
 
 [Code]
 var
