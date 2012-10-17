@@ -23,6 +23,7 @@ var
   wpAcadSelect:  TInputOptionWizardPage;
   Opts: TArrayOfString;
   Paths: TArrayOfString;
+  ComPaths: TArrayOfString;
 
 // Chooses a string from the given options
 function ChooseString(const Value: string; const StringArray: array of string; const ResultArray: array of string): String;
@@ -74,8 +75,10 @@ begin
           N := N + 1;
           SetArrayLength(Opts, N);
           SetArrayLength(Paths, N);
+          SetArrayLength(ComPaths, N);
           Opts[N - 1] := GetAcadName(SubNames[J]);
           Paths[N - 1] := 'SOFTWARE\Autodesk\AutoCAD\' + Names[I] + '\' + SubNames[J];
+          ComPaths[N - 1] := 'SOFTWARE\Autodesk\ObjectDBX\' + Names[I] + '\ActiveXCLSID';
         end;
       end;
     end;
@@ -144,6 +147,20 @@ var
 begin
   if CurStep = ssPostInstall then begin
     // Set registry keys
+    
+    // COM classes
+    RegPath := 'CLSID\{97CAC17D-B1C7-49CA-8D57-D3FF491860FF}';
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', 'ComRebarPos Class');
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\Programmable', '', '');
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', '', ExpandConstant('{app}\Bin\COMRebarPos.dbx'));
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', 'ThreadingModel', 'Apartment');
+    
+    RegPath := 'CLSID\{BA77CFFF-0274-4D4C-BFE2-64A5731BAD37}';
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', 'ComBOQTable Class');
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\Programmable', '', '');
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', '', ExpandConstant('{app}\Bin\COMRebarPos.dbx'));
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', 'ThreadingModel', 'Apartment');
+    
     for I := 0 to wpAcadSelect.CheckListBox.Items.Count-1 do begin
       if wpAcadSelect.CheckListBox.Checked[I] then begin
         // NativeRebarPos.dbx
@@ -151,17 +168,25 @@ begin
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'DESCRIPTION', 'RebarPos Module');
         RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADCTRLS', 9);
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADER', ExpandConstant('{app}\Bin\NativeRebarPos.dbx'));
+        
         // COMRebarPos.dbx
         RegPath := Paths[I] + '\Applications\OZOZRebarPosCOM';
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'DESCRIPTION', 'RebarPos COM Module');
         RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADCTRLS', 9);
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADER', ExpandConstant('{app}\Bin\COMRebarPos.dbx'));
+        
+        // COM Classes
+        RegPath := ComPaths[I];
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'RebarPos', '{97CAC17D-B1C7-49CA-8D57-D3FF491860FF}');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'BOQTable', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD37}');
+        
         // ManagedRebarPos.dll
         RegPath := Paths[I] + '\Applications\OZOZRebarPosManaged';
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'DESCRIPTION', 'RebarPos Managed Module');
         RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADCTRLS', 9);
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'LOADER', ExpandConstant('{app}\Bin\ManagedRebarPos.dll'));
         RegWriteDWordValue(HKEY_LOCAL_MACHINE, RegPath, 'MANAGED', 1);
+        
         // RebarPos.dll
         RegPath := Paths[I] + '\Applications\OZOZRebarPos';
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'DESCRIPTION', 'RebarPos Commands');
