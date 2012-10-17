@@ -165,6 +165,9 @@
   <data name="POSLENGTH_Local" xml:space="preserve">
     <value>BOYGOSTER</value>
   </data>
+  <data name="POSMENU_Local" xml:space="preserve">
+    <value>POZMENU</value>
+  </data>
   <data name="POSSETTINGS_Local" xml:space="preserve">
     <value>POZAYAR</value>
   </data>

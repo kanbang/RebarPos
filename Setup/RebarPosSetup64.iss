@@ -223,6 +223,7 @@ begin
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'LASTPOSNUMBER', 'SONPOZ');
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'POSHELP', 'METRAJYARDIM');
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'POSSETTINGS', 'POZAYAR');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'POSMENU', 'POZMENU');
       end;
     end;
   end;

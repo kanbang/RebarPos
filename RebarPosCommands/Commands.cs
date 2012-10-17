@@ -312,6 +312,12 @@ namespace RebarPosCommands
             PosGroups();
         }
 
+        [CommandMethod("RebarPos", "POSMENU", "POSMENU_Local", CommandFlags.Modal)]
+        public void CMD_PosMenu()
+        {
+            MenuUtility.LoadPosMenu();
+        }
+
         [CommandMethod("RebarPos", "DUMPPOSSHAPES2", CommandFlags.Modal)]
         public void CMD_DumpShapes2()
         {

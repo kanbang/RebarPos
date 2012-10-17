@@ -23,9 +23,6 @@ namespace RebarPosCommands
             DrawableOverrule.Overruling = true;
             ObjectOverrule.AddOverrule(RXClass.GetClass(typeof(RebarPos)), CountOverrule.Instance, true);
             ObjectOverrule.AddOverrule(RXClass.GetClass(typeof(RebarPos)), ShowShapesOverrule.Instance, true);
-
-            // Add menu
-            MenuUtility.MakeRibbonTab();
         }
 
         void IExtensionApplication.Terminate()
