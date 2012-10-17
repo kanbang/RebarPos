@@ -9,7 +9,7 @@ DisableProgramGroupPage=yes
 AppPublisher=Þahin Ýnþaat
 AppPublisherURL=http://www.sahin-ins.com
 AppSupportPhone=+90 (212) 210 45 04
-OutputBaseFilename=Setup64
+OutputBaseFilename=RebarPosSetup64
 OutputDir=Bin
 
 [Files]
@@ -17,6 +17,9 @@ Source: "..\x64\Release\NativeRebarPos.dbx"; DestDir: "{app}\Bin"; Flags: ignore
 Source: "..\x64\Release\COMRebarPos.dbx"; DestDir: "{app}\Bin"; Flags: ignoreversion
 Source: "..\x64\Release\ManagedRebarPos.dll"; DestDir: "{app}\Bin"; Flags: ignoreversion
 Source: "..\RebarPosCommands\bin\Release\RebarPos.dll"; DestDir: "{app}\Bin"; Flags: ignoreversion
+
+[Registry]
+Root: "HKLM"; Subkey: "Software\Sahin Insaat\RebarPos"; ValueType: string; ValueName: "InstallPath"; ValueData: "{app}"; Flags: uninsdeletekey
 
 [Code]
 var
@@ -218,6 +221,46 @@ begin
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'LASTPOSNUMBER', 'SONPOZ');
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'POSHELP', 'METRAJYARDIM');
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'POSSETTINGS', 'POZAYAR');
+      end;
+    end;
+  end;
+end;
+
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+var
+  I: Integer;
+  J: Integer;
+  RegPath: String;
+  Names: TArrayOfString;
+  SubNames: TArrayOfString;
+begin
+  if CurUninstallStep = usPostUninstall then begin
+    // Remove registry keys
+    
+    // COM classes
+    RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, 'CLSID\{97CAC17D-B1C7-49CA-8D57-D3FF491860FF}');
+    RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, 'CLSID\{BA77CFFF-0274-4D4C-BFE2-64A5731BAD37}');
+    
+    // Read AutoCAD registry entries and build a list of all installations
+    if RegGetSubkeyNames(HKEY_LOCAL_MACHINE, 'SOFTWARE\Autodesk\AutoCAD', Names) then begin
+      for I := 0 to GetArrayLength(Names)-1 do begin
+        if RegGetSubkeyNames(HKEY_LOCAL_MACHINE, 'SOFTWARE\Autodesk\AutoCAD\' + Names[I], SubNames) then begin
+          for J := 0 to GetArrayLength(SubNames)-1 do begin
+            RegPath := 'SOFTWARE\Autodesk\AutoCAD\' + Names[I] + '\' + SubNames[J];
+            // NativeRebarPos.dbx
+            RegDeleteKeyIncludingSubkeys(HKEY_LOCAL_MACHINE, RegPath + '\Applications\OZOZRebarPosNative');
+            // COMRebarPos.dbx
+            RegDeleteKeyIncludingSubkeys(HKEY_LOCAL_MACHINE, RegPath + '\Applications\OZOZRebarPosCOM');
+            // ManagedRebarPos.dll
+            RegDeleteKeyIncludingSubkeys(HKEY_LOCAL_MACHINE, RegPath + '\Applications\OZOZRebarPosManaged');
+            // RebarPos.dll
+            RegDeleteKeyIncludingSubkeys(HKEY_LOCAL_MACHINE, RegPath + '\Applications\OZOZRebarPos');
+          end;
+        end;
+        // COM Classes
+        RegPath := 'SOFTWARE\Autodesk\ObjectDBX\' + Names[I] + '\ActiveXCLSID';
+        RegDeleteValue(HKEY_LOCAL_MACHINE, RegPath, 'RebarPos');
+        RegDeleteValue(HKEY_LOCAL_MACHINE, RegPath, 'BOQTable');        
       end;
     end;
   end;
