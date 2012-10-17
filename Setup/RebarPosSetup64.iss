@@ -17,6 +17,8 @@ Source: "..\x64\Release\NativeRebarPos.dbx"; DestDir: "{app}\Bin"; Flags: ignore
 Source: "..\x64\Release\COMRebarPos.dbx"; DestDir: "{app}\Bin"; Flags: ignoreversion
 Source: "..\x64\Release\ManagedRebarPos.dll"; DestDir: "{app}\Bin"; Flags: ignoreversion
 Source: "..\RebarPosCommands\bin\Release\RebarPos.dll"; DestDir: "{app}\Bin"; Flags: ignoreversion
+Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Menu";
+Source: "..\Menu\RebarPos.mnr"; DestDir: "{app}\Menu";
 
 [Registry]
 Root: "HKLM"; Subkey: "Software\Sahin Insaat\RebarPos"; ValueType: string; ValueName: "InstallPath"; ValueData: "{app}"; Flags: uninsdeletekey
