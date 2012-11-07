@@ -77,7 +77,7 @@ namespace RebarPosCommands
                             EmptyBalloons();
                             break;
                         case "Copy":
-                            CopyPos(true, false);
+                            CopyPos();
                             break;
                         case "Check":
                             PosCheck();
@@ -177,19 +177,19 @@ namespace RebarPosCommands
         [CommandMethod("RebarPos", "COPYPOS", "COPYPOS_Local", CommandFlags.Modal)]
         public void CMD_CopyPos()
         {
-            CopyPos(true, false);
+            CopyPos();
         }
 
         [CommandMethod("RebarPos", "COPYPOSDETAIL", "COPYPOSDETAIL_Local", CommandFlags.Modal)]
         public void CMD_CopyPosDetail()
         {
-            CopyPosDetail(true, false);
+            CopyPosDetail();
         }
 
         [CommandMethod("RebarPos", "COPYPOSNUMBER", "COPYPOSNUMBER_Local", CommandFlags.Modal)]
         public void CMD_CopyPosNumber()
         {
-            CopyPos(false, true);
+            CopyPosNumber();
         }
 
         [CommandMethod("RebarPos", "BOQ", "BOQ_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
