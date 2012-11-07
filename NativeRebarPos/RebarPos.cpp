@@ -1908,6 +1908,7 @@ const void CRebarPos::Calculate(void) const
 		Utility::MakeGiTextStyle(lastNoteStyle, pGroup->NoteStyleId());
 
 	// Calculate count
+	m_CalcProps.Count = 0;
 	if(m_Count != NULL && m_Count[0] != _T('\0'))
 	{
 		std::wstring countstring(m_Count);
