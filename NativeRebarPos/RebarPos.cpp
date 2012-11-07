@@ -760,6 +760,9 @@ void CRebarPos::subList() const
     acdbWcs2Ucs(asDblArray(pt), asDblArray(pt), false);
     acutPrintf(_T("X = %-9.16q0, Y = %-9.16q0, Z = %-9.16q0\n"), pt.x, pt.y, pt.z);
 
+	// Scale
+    acutPrintf(_T("%18s%16s %-9.16q0\n"), _T(/*MSG0*/""), _T("Scale:"), m_Direction.length());    
+
 	// List all properties
 	if (m_Pos != NULL)
 		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Pos Marker:"), m_Pos);
