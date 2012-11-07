@@ -156,9 +156,10 @@ namespace RebarPosCommands
                 }
 
                 // Scale
-                double xscale = 0.9 * w / (xmax - xmin);
-                double yscale = 0.9 * h / (ymax - ymin);
-                double scale = Math.Min(xscale, yscale);
+                // double xscale = 0.9 * w / (xmax - xmin);
+                // double yscale = 0.9 * h / (ymax - ymin);
+                // double scale = 2.0 * Math.Min(xscale, yscale);
+                double scale = 0.025;
                 // Client offsets
                 double xoff = (w - scale * (xmax - xmin)) / 2.0;
                 double yoff = 2.0 * h;//(h - scale * (ymax - ymin)) / 2.0;
