@@ -426,6 +426,9 @@ void CBOQTable::UpdateTable(void)
 		{
 			CBOQRow* row = *it;
 
+			unsigned short textCol = lastTextColor;
+			if(row->count == 0) textCol = 7;
+
 			if(!row->isEmpty && type == CBOQTable::SHAPE)
 			{
 				setCellShape(i, j, row->shape.c_str());
@@ -464,7 +467,7 @@ void CBOQTable::UpdateTable(void)
 					break;
 				}
 
-				setCellTextColor(i, j + doff, lastTextColor);
+				setCellTextColor(i, j + doff, textCol);
 				setCellTextStyleId(i, j + doff, lastTextStyleId);
 				setCellText(i, j + doff, text.c_str());
 			}
@@ -472,7 +475,7 @@ void CBOQTable::UpdateTable(void)
 			{
 				std::wstring text;
 				Utility::IntToStr(row->pos, text);
-				setCellTextColor(i, j, lastTextColor);
+				setCellTextColor(i, j, textCol);
 				setCellTextStyleId(i, j, lastTextStyleId);
 				setCellText(i, j, text.c_str());
 			}
