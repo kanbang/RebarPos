@@ -7,6 +7,7 @@ using Autodesk.AutoCAD.Interop;
 
 using OZOZ.RebarPosWrapper;
 using System.Windows.Forms;
+using Autodesk.AutoCAD.Geometry;
 
 namespace RebarPosCommands
 {
@@ -420,6 +421,43 @@ namespace RebarPosCommands
             {
                 return System.Drawing.Color.Black;
             }
+        }
+
+        // Zooms to given objects
+        public static void ZoomToObjects(IEnumerable<ObjectId> ids)
+        {
+            Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+
+            Extents3d outerext = new Extents3d();
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    foreach (ObjectId id in ids)
+                    {
+                        Entity ent = tr.GetObject(id, OpenMode.ForRead) as Entity;
+                        Extents3d ext = ent.GeometricExtents;
+                        outerext.AddExtents(ext);
+                    }
+                }
+                catch
+                {
+                    ;
+                }
+            }
+
+            outerext.TransformBy(ed.CurrentUserCoordinateSystem.Inverse());
+            Point2d min2d = new Point2d(outerext.MinPoint.X, outerext.MinPoint.Y);
+            Point2d max2d = new Point2d(outerext.MaxPoint.X, outerext.MaxPoint.Y);
+
+            ViewTableRecord view = new ViewTableRecord();
+
+            view.CenterPoint = min2d + ((max2d - min2d) / 2.0);
+            view.Height = max2d.Y - min2d.Y;
+            view.Width = max2d.X - min2d.X;
+
+            ed.SetCurrentView(view);
         }
     }
 }
