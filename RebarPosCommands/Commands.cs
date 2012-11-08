@@ -325,7 +325,7 @@ namespace RebarPosCommands
             using (Transaction tr = db.TransactionManager.StartTransaction())
             {
                 BlockTableRecord btr = (BlockTableRecord)tr.GetObject(db.CurrentSpaceId, OpenMode.ForWrite);
-                int i=1;
+                int i = 1;
                 double y = 0;
                 foreach (string shape in PosShape.GetAllPosShapes().Keys)
                 {
@@ -434,7 +434,7 @@ namespace RebarPosCommands
                             string h = (x.Height).ToString("F2");
                             string th = ((int)x.HorizontalAlignment).ToString();
                             string tv = ((int)x.VerticalAlignment).ToString();
-                            sw.WriteLine("TEXT\t" + x1 + "\t" + y1 + "\t" + h + "\t" + x.Text + "\t" + col + "\t" + th + "\t" + tv + "\t" + vis);
+                            sw.WriteLine("TEXT\t" + x1 + "\t" + y1 + "\t" + h + "\t" + x.Text + "\t" + th + "\t" + tv + "\t" + col + "\t" + vis);
                         }
                     }
                     sw.WriteLine("END");
@@ -468,6 +468,131 @@ namespace RebarPosCommands
 
                         sw.WriteLine("Name: " + group.Name);
                         sw.WriteLine();
+                    }
+                }
+            }
+        }
+
+        [CommandMethod("RebarPos", "MAKESHAPES", CommandFlags.Modal)]
+        public void CMD_MakeShapes()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Title = "Select Shape Dump File";
+            sfd.Filter = "Text Files (.txt)|*.txt|All Files (*.*)|*.*";
+            if (sfd.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            // Select shapes
+            TypedValue[] tvs = new TypedValue[] {
+                new TypedValue((int)DxfCode.Operator, "<OR"),
+                new TypedValue((int)DxfCode.Start, "LINE"),
+                new TypedValue((int)DxfCode.Start, "ARC"),
+                new TypedValue((int)DxfCode.Start, "TEXT"),
+                new TypedValue((int)DxfCode.Operator, "OR>")
+            };
+            SelectionFilter filter = new SelectionFilter(tvs);
+            Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+
+            bool flag = true;
+            System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> defs = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>>();
+            while (flag)
+            {
+                PromptSelectionResult result = ed.GetSelection(filter);
+                if (result.Status != PromptStatus.OK || result.Value.Count == 0) flag = false;
+
+                if (flag)
+                {
+                    string name = string.Empty;
+                    System.Collections.Generic.List<string> lines = new System.Collections.Generic.List<string>();
+
+                    Database db = HostApplicationServices.WorkingDatabase;
+                    using (Transaction tr = db.TransactionManager.StartTransaction())
+                    {
+                        try
+                        {
+                            foreach (SelectedObject sel in result.Value)
+                            {
+                                DBObject obj = tr.GetObject(sel.ObjectId, OpenMode.ForRead);
+
+                                bool visible = true;
+                                Entity en = obj as Entity;
+                                if (en != null)
+                                {
+                                    LayerTableRecord ltr = (LayerTableRecord)tr.GetObject(en.LayerId, OpenMode.ForRead);
+
+                                    if (ltr != null)
+                                    {
+                                        visible = ltr.IsPlottable;
+                                    }
+                                }
+
+                                if (obj is Line)
+                                {
+                                    Line line = obj as Line;
+                                    // LINE	0.00	75.00	475.00	75.00	7	I
+                                    string s = "LINE\t" + line.StartPoint.X.ToString("F2") + "\t" + line.StartPoint.Y.ToString("F2") + "\t" + line.EndPoint.X.ToString("F2") + "\t" + line.EndPoint.Y.ToString("F2") + "\t" + line.Color.ColorIndex.ToString() + "\t" + (visible ? "V" : "I");
+                                    lines.Add(s);
+                                }
+                                else if (obj is Arc)
+                                {
+                                    Arc arc = obj as Arc;
+                                    // ARC	346.00	58.86	6.50	0.00	3.14	4	V
+                                    string s = "ARC\t" + arc.Center.X.ToString("F2") + "\t" + arc.Center.Y.ToString("F2") + "\t" + arc.Radius.ToString("F2") + "\t" + arc.StartAngle.ToString("F2") + "\t" + arc.EndAngle.ToString("F2") + "\t" + arc.Color.ColorIndex.ToString() + "\t" + (visible ? "V" : "I");
+                                    lines.Add(s);
+                                }
+                                else if (obj is DBText)
+                                {
+                                    DBText text = obj as DBText;
+                                    if (text.Layer == "NAME")
+                                    {
+                                        name = text.TextString;
+                                    }
+                                    else
+                                    {
+                                        // TEXT	106.19	35.08	20.00	A	2	2	1	V
+                                        Point3d pt = text.AlignmentPoint;
+                                        if (pt.X == 0 && pt.Y == 0) pt = text.Position;
+                                        string s = "TEXT\t" + pt.X.ToString("F2") + "\t" + pt.Y.ToString("F2") + "\t" + text.Height.ToString("F2") + "\t" + text.TextString + "\t" + ((int)text.HorizontalMode).ToString() + "\t" + ((int)text.VerticalMode).ToString() + "\t" + text.Color.ColorIndex.ToString() + "\t" + (visible ? "V" : "I");
+                                        lines.Add(s);
+                                    }
+                                }
+                            }
+                        }
+                        catch (System.Exception ex)
+                        {
+                            System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                        }
+                    }
+
+                    defs.Add(name, lines);
+                }
+            }
+
+            // Overwrite
+            using (StreamWriter sw = new StreamWriter(sfd.FileName))
+            {
+                foreach (PosShape shape in PosShape.GetAllPosShapes().Values)
+                {
+                    if (defs.ContainsKey(shape.Name))
+                    {
+                        sw.WriteLine("BEGIN");
+                        sw.WriteLine("Name\t" + shape.Name);
+                        sw.WriteLine("Fields\t" + shape.Fields.ToString());
+                        sw.WriteLine("Formula\t" + shape.Formula);
+                        sw.WriteLine("FormulaBending\t" + shape.FormulaBending);
+                        sw.WriteLine("Count\t" + shape.Items.Count);
+                        foreach (string line in defs[shape.Name])
+                        {
+                            sw.WriteLine(line);
+                        }
+                        sw.WriteLine("END");
+                        sw.WriteLine();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Not Found!! " + shape.Name);
                     }
                 }
             }
