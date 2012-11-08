@@ -15,7 +15,7 @@ namespace RebarPosCommands
             PromptSelectionResult sel = DWGUtility.SelectAllPosUser();
             if (sel.Status != PromptStatus.OK) return false;
             ObjectId[] items = sel.Value.GetObjectIds();
-            List<PosCheckResult> check = PosCheckResult.CheckAllInSelection(items, PosCheckResult.CheckType.Errors);
+            List<PosCheckResult> check = PosCheckResult.CheckAllInSelection(items, true, false);
             if (check.Count != 0)
             {
                 PosCheckResult.ConsoleOut(check);

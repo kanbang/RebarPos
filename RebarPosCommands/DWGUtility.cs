@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Interop;
+using Autodesk.AutoCAD.Geometry;
 
 using OZOZ.RebarPosWrapper;
-using System.Windows.Forms;
-using Autodesk.AutoCAD.Geometry;
 
 namespace RebarPosCommands
 {
@@ -458,6 +459,59 @@ namespace RebarPosCommands
             view.Width = max2d.X - min2d.X;
 
             ed.SetCurrentView(view);
+        }
+
+        // Returns the list of standard diamaters
+        public static List<int> GetStandardDiameters()
+        {
+            List<int> standardDiameters = new List<int>();
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    PosGroup group = tr.GetObject(PosGroup.GroupId, OpenMode.ForRead) as PosGroup;
+                    if (group != null)
+                    {
+                        foreach (string ds in group.StandardDiameters.Split(new char[] { ' ', ',', ';', ':', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            int d;
+                            if (int.TryParse(ds, out d))
+                            {
+                                standardDiameters.Add(d);
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    ;
+                }
+            }
+            return standardDiameters;
+        }
+
+        // Returns the maximum bar length in m
+        public static double GetMaximumBarLength()
+        {
+            double len = 0;
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    PosGroup group = tr.GetObject(PosGroup.GroupId, OpenMode.ForRead) as PosGroup;
+                    if (group != null)
+                    {
+                        len = group.MaxBarLength;
+                    }
+                }
+                catch
+                {
+                    ;
+                }
+            }
+            return len;
         }
     }
 }

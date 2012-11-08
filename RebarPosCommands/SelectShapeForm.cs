@@ -13,6 +13,29 @@ namespace RebarPosCommands
 {
     public partial class SelectShapeForm : Form
     {
+        public class ShapeDisplay
+        {
+            public string Shape { get; private set; }
+            public string A { get; private set; }
+            public string B { get; private set; }
+            public string C { get; private set; }
+            public string D { get; private set; }
+            public string E { get; private set; }
+            public string F { get; private set; }
+
+            public ShapeDisplay(string shape, string a, string b, string c, string d, string e, string f)
+            {
+                Shape = shape;
+                A = a; B = b; C = c; D = d; E = e; F = f;
+            }
+
+            public ShapeDisplay(string shape)
+                : this(shape, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty)
+            {
+                ;
+            }
+        }
+
         string m_Current;
 
         public SelectShapeForm()
@@ -29,14 +52,24 @@ namespace RebarPosCommands
             SetShapes(current, PosShape.GetAllPosShapes().Keys);
         }
 
-        public void SetShapes(string current, IEnumerable<string> inshapes)
+        public void SetShapes(string current, IEnumerable<string> inshapenames)
+        {
+            List<ShapeDisplay> shapes = new List<ShapeDisplay>();
+            foreach (string name in inshapenames)
+            {
+                shapes.Add(new ShapeDisplay(name));
+            }
+            SetShapes(current, shapes);
+        }
+
+        public void SetShapes(string current, IEnumerable<ShapeDisplay> inshapes)
         {
             m_Current = current;
-            
+
             layoutPanel.Controls.Clear();
 
-            List<string> shapes = new List<string>();
-            foreach (string name in inshapes)
+            List<ShapeDisplay> shapes = new List<ShapeDisplay>();
+            foreach (ShapeDisplay name in inshapes)
             {
                 shapes.Add(name);
             }
@@ -47,9 +80,9 @@ namespace RebarPosCommands
 
             try
             {
-                foreach (string name in shapes)
+                foreach (ShapeDisplay name in shapes)
                 {
-                    PosShape shape = PosShape.GetPosShape(name);
+                    PosShape shape = PosShape.GetPosShape(name.Shape);
                     if (shape != null)
                     {
                         PosShapeView posShapeView = new PosShapeView();
@@ -100,7 +133,16 @@ namespace RebarPosCommands
                                         vertical = StringAlignment.Far;
                                         break;
                                 }
-                                posShapeView.AddText(color, (float)text.X, (float)text.Y, (float)text.Height, text.Text, horizontal, vertical, text.Visible);
+
+                                string str = text.Text;
+                                if (str == "A" && !string.IsNullOrEmpty(name.A)) str = name.A;
+                                if (str == "B" && !string.IsNullOrEmpty(name.B)) str = name.B;
+                                if (str == "C" && !string.IsNullOrEmpty(name.C)) str = name.C;
+                                if (str == "D" && !string.IsNullOrEmpty(name.D)) str = name.D;
+                                if (str == "E" && !string.IsNullOrEmpty(name.E)) str = name.E;
+                                if (str == "F" && !string.IsNullOrEmpty(name.F)) str = name.F;
+
+                                posShapeView.AddText(color, (float)text.X, (float)text.Y, (float)text.Height, str, horizontal, vertical, text.Visible);
                             }
                         }
                         layoutPanel.Controls.Add(posShapeView);
@@ -113,26 +155,26 @@ namespace RebarPosCommands
             }
         }
 
-        private class CompareShapesForSort : IComparer<string>
+        private class CompareShapesForSort : IComparer<ShapeDisplay>
         {
-            public int Compare(string p1, string p2)
+            public int Compare(ShapeDisplay p1, ShapeDisplay p2)
             {
                 if (p1 == p2) return 0;
 
-                if (p1 == "GENEL")
+                if (p1.Shape == "GENEL")
                     return -1;
-                else if (p2 == "GENEL")
+                else if (p2.Shape == "GENEL")
                     return 1;
                 else
                 {
                     int n1 = 0;
                     int n2 = 0;
-                    if (int.TryParse(p1, out n1) && int.TryParse(p2, out n2))
+                    if (int.TryParse(p1.Shape, out n1) && int.TryParse(p2.Shape, out n2))
                     {
                         return n1 < n2 ? -1 : n1 > n2 ? 1 : 0;
                     }
                     else
-                        return string.CompareOrdinal(p1, p2);
+                        return string.CompareOrdinal(p1.Shape, p2.Shape);
                 }
             }
         }
