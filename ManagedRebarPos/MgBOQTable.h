@@ -160,6 +160,7 @@ namespace OZOZ
 
 			property String^ Heading { String^ get(); void set(String^ value); }
 			property String^ Footing { String^ get(); void set(String^ value); }
+			property String^ Note    { String^ get(); void set(String^ value); }
 
 			property Autodesk::AutoCAD::DatabaseServices::ObjectId StyleId { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
 

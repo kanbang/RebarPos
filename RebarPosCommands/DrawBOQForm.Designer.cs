@@ -50,6 +50,8 @@
             this.txtTextHeight = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.label8 = new System.Windows.Forms.Label();
+            this.txtNote = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udMultiplier)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -62,6 +64,8 @@
             this.groupBox1.Controls.Add(this.udMultiplier);
             this.groupBox1.Controls.Add(this.txtFooter);
             this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.txtNote);
+            this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.txtHeader);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label4);
@@ -69,7 +73,7 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(417, 184);
+            this.groupBox1.Size = new System.Drawing.Size(417, 208);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "&Tablo Seçenekleri";
@@ -77,10 +81,10 @@
             // chkHideMissing
             // 
             this.chkHideMissing.AutoSize = true;
-            this.chkHideMissing.Location = new System.Drawing.Point(24, 146);
+            this.chkHideMissing.Location = new System.Drawing.Point(24, 172);
             this.chkHideMissing.Name = "chkHideMissing";
             this.chkHideMissing.Size = new System.Drawing.Size(172, 17);
-            this.chkHideMissing.TabIndex = 8;
+            this.chkHideMissing.TabIndex = 10;
             this.chkHideMissing.Text = "&Kullanılmayan Pozları Gösterme";
             this.chkHideMissing.UseVisualStyleBackColor = true;
             // 
@@ -108,34 +112,34 @@
             // 
             // txtFooter
             // 
-            this.txtFooter.Location = new System.Drawing.Point(159, 109);
+            this.txtFooter.Location = new System.Drawing.Point(159, 135);
             this.txtFooter.Name = "txtFooter";
             this.txtFooter.Size = new System.Drawing.Size(234, 20);
-            this.txtFooter.TabIndex = 7;
+            this.txtFooter.TabIndex = 9;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(21, 112);
+            this.label3.Location = new System.Drawing.Point(21, 138);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(37, 13);
-            this.label3.TabIndex = 6;
+            this.label3.TabIndex = 8;
             this.label3.Text = "&Altbilgi";
             // 
             // txtHeader
             // 
-            this.txtHeader.Location = new System.Drawing.Point(159, 83);
+            this.txtHeader.Location = new System.Drawing.Point(159, 109);
             this.txtHeader.Name = "txtHeader";
             this.txtHeader.Size = new System.Drawing.Size(234, 20);
-            this.txtHeader.TabIndex = 5;
+            this.txtHeader.TabIndex = 7;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(21, 86);
+            this.label2.Location = new System.Drawing.Point(21, 112);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(41, 13);
-            this.label2.TabIndex = 4;
+            this.label2.TabIndex = 6;
             this.label2.Text = "Ü&stbilgi";
             // 
             // label4
@@ -170,7 +174,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(357, 342);
+            this.btnCancel.Location = new System.Drawing.Point(357, 363);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 5;
@@ -182,7 +186,7 @@
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(276, 342);
+            this.btnOK.Location = new System.Drawing.Point(276, 363);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 4;
@@ -198,7 +202,7 @@
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.txtTextHeight);
             this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Location = new System.Drawing.Point(12, 202);
+            this.groupBox2.Location = new System.Drawing.Point(13, 226);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(419, 125);
             this.groupBox2.TabIndex = 3;
@@ -264,13 +268,29 @@
             this.errorProvider.ContainerControl = this;
             this.errorProvider.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProvider.Icon")));
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(21, 86);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(24, 13);
+            this.label8.TabIndex = 4;
+            this.label8.Text = "&Not";
+            // 
+            // txtNote
+            // 
+            this.txtNote.Location = new System.Drawing.Point(159, 83);
+            this.txtNote.Name = "txtNote";
+            this.txtNote.Size = new System.Drawing.Size(234, 20);
+            this.txtNote.TabIndex = 5;
+            // 
             // DrawBOQForm
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(444, 377);
+            this.ClientSize = new System.Drawing.Size(444, 398);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
@@ -314,5 +334,7 @@
         private System.Windows.Forms.TextBox txtTextHeight;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ErrorProvider errorProvider;
+        private System.Windows.Forms.TextBox txtNote;
+        private System.Windows.Forms.Label label8;
     }
 }

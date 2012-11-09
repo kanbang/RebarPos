@@ -26,7 +26,7 @@ ACRX_DXF_DEFINE_MEMBERS(CBOQTable, CGenericTable,
 //*************************************************************************
 
 CBOQTable::CBOQTable() :
-	m_Multiplier(1), m_StyleID(AcDbObjectId::kNull), m_Heading(NULL), m_Footing(NULL)
+	m_Multiplier(1), m_StyleID(AcDbObjectId::kNull), m_Heading(NULL), m_Footing(NULL), m_Note(NULL)
 {
 }
 
@@ -36,6 +36,7 @@ CBOQTable::~CBOQTable()
 
 	acutDelString(m_Heading);
 	acutDelString(m_Footing);
+	acutDelString(m_Note);
 }
 
 
@@ -87,6 +88,24 @@ Acad::ErrorStatus CBOQTable::setFooting(const ACHAR* newVal)
     if(newVal != NULL)
     {
         acutUpdString(newVal, m_Footing);
+    }
+	UpdateTable();
+	return Acad::eOk;
+}
+
+const ACHAR* CBOQTable::Note(void) const
+{
+	assertReadEnabled();
+	return m_Note;
+}
+Acad::ErrorStatus CBOQTable::setNote(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+    acutDelString(m_Note);
+    m_Note = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_Note);
     }
 	UpdateTable();
 	return Acad::eOk;
@@ -204,10 +223,13 @@ void CBOQTable::UpdateTable(void)
 	// Get texts
 	ACHAR* lastHeading = NULL;
 	ACHAR* lastFooting = NULL;
+	ACHAR* lastNote = NULL;
 	if(m_Heading != NULL && m_Heading[0] != _T('\0'))
 		acutUpdString(m_Heading, lastHeading);
 	if(m_Footing != NULL && m_Footing[0] != _T('\0'))
 		acutUpdString(m_Footing, lastFooting);
+	if(m_Note != NULL && m_Note[0] != _T('\0'))
+		acutUpdString(m_Note, lastNote);
 
 	// Get column and row labels
 	ACHAR* lastPosLabel = NULL;
@@ -275,7 +297,12 @@ void CBOQTable::UpdateTable(void)
 	int footingLines = 0;
 	if(lastFooting != NULL && lastFooting[0] != _T('\0'))
 	{
-		footingLines = 1;
+		footingLines += 1;
+	}
+	int noteLines = 0;
+	if(lastNote != NULL && lastNote[0] != _T('\0'))
+	{
+		noteLines = 1;
 	}
 
 	// Create base table
@@ -284,7 +311,7 @@ void CBOQTable::UpdateTable(void)
 	// + 4 for total row
 	// + 2 for gross total row (only if multiplier > 1)
 	int totalrows = hasdiameterlist ? (4 + (m_Multiplier > 1 ? 2 : 0)) : 0;
-	int rows = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() + totalrows + footingLines; 
+	int rows = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() + totalrows + footingLines + noteLines; 
 	int cols = (int)columns.size() + (hasdiameterlist ? (int)diameters.size() - 1 : 0);
 
 	SetSize(rows, cols);
@@ -292,7 +319,7 @@ void CBOQTable::UpdateTable(void)
 	setCellMargin(lastRowSpacing);
 
 	// Set cell properties
-	for(int i = headingLines + (m_Multiplier > 1 ? 1 : 0); i < headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() + totalrows; i++)
+	for(int i = headingLines + (m_Multiplier > 1 ? 1 : 0); i < headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() + totalrows + noteLines; i++)
 	{
 		for(int j = 0; j < Columns(); j++)
 		{
@@ -334,6 +361,13 @@ void CBOQTable::UpdateTable(void)
 			bi++;
 			if(bi >= 0 && bi < Rows()) setRowTopBorder(bi, true, lastLineColor, true);
 		}
+	}
+	if(noteLines > 0)
+	{
+		bi = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() + totalrows - 1;
+		if(bi >= 0 && bi < Rows()) setRowBottomBorder(bi, true, lastLineColor, true);
+		bi = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() + totalrows;
+		if(bi >= 0 && bi < Rows()) setRowTopBorder(bi, true, lastLineColor, true);
 	}
 
 	// Set column headers
@@ -636,10 +670,24 @@ void CBOQTable::UpdateTable(void)
 		}
 	}
 
+	// Set note
+	if(lastNote != NULL && lastNote[0] != _T('\0'))
+	{
+		int fi = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() + totalrows;
+		setCellTextColor(fi, 0, lastTextColor);
+		setCellTextStyleId(fi, 0, lastTextStyleId);
+		setCellHorizontalAlignment(fi, 0, CTableCell::eNEAR);
+		setCellVerticalAlignment(fi, 0, CTableCell::eCENTER);
+		setCellTextHeight(fi, 0, 1.0);
+		MergeAcross(fi, 0, cols);
+
+		setCellText(fi, 0, lastNote);
+	}
+
 	// Set footing
 	if(lastFooting != NULL && lastFooting[0] != _T('\0'))
 	{
-		int fi = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() + totalrows;
+		int fi = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() + totalrows + noteLines;
 		setCellTextColor(fi, 0, lastFootingColor);
 		setCellTextStyleId(fi, 0, lastFootingStyleId);
 		setCellHorizontalAlignment(fi, 0, CTableCell::eNEAR);
@@ -647,11 +695,7 @@ void CBOQTable::UpdateTable(void)
 		setCellTextHeight(fi, 0, lastFootingScale);
 		MergeAcross(fi, 0, cols);
 
-		std::wstring text(lastFooting);
-		std::wstring ntext;
-		Utility::IntToStr(m_Multiplier, ntext);
-		Utility::ReplaceString(text, L"[N]", ntext);
-		setCellText(fi, 0, text.c_str());
+		setCellText(fi, 0, lastFooting);
 	}
 
 	acutDelString(lastColumns);

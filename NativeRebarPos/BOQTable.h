@@ -67,6 +67,7 @@ private:
 
 	ACHAR* m_Heading;
 	ACHAR* m_Footing;
+	ACHAR* m_Note;
 
 	AcDbHardPointerId m_StyleID;
 
@@ -92,6 +93,10 @@ public:
 	/// Gets or sets heading text
 	const ACHAR* Footing(void) const;
 	Acad::ErrorStatus setFooting(const ACHAR* newVal);
+
+	/// Gets or sets note text
+	const ACHAR* Note(void) const;
+	Acad::ErrorStatus setNote(const ACHAR* newVal);
 
 	/// Gets or sets the BOQ style
 	const AcDbObjectId& StyleId(void) const;

@@ -12,6 +12,7 @@ namespace RebarPosCommands
         ObjectId m_CurrentStyle;
 
         public ObjectId TableStyle { get { return m_CurrentStyle; } }
+        public string TableNote { get { return txtNote.Text; } }
         public string TableHeader { get { return txtHeader.Text; } }
         public string TableFooter { get { return txtFooter.Text; } }
         public int Multiplier { get { return (int)udMultiplier.Value; } }

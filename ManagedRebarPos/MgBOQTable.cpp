@@ -119,6 +119,15 @@ void BOQTable::Footing::set(String^ value)
     Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFooting(Marshal::StringToWchar(value)));
 }
 
+String^ BOQTable::Note::get()
+{
+	return Marshal::WcharToString(GetImpObj()->Note());
+}
+void BOQTable::Note::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setNote(Marshal::StringToWchar(value)));
+}
+
 Autodesk::AutoCAD::DatabaseServices::ObjectId BOQTable::StyleId::get()
 {
 	return Marshal::ToObjectId(GetImpObj()->StyleId());
