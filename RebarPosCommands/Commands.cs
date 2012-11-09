@@ -486,6 +486,7 @@ namespace RebarPosCommands
                                         // TEXT	106.19	35.08	20.00	A	2	2	1	V
                                         Point3d pt = text.AlignmentPoint;
                                         if (pt.X == 0 && pt.Y == 0) pt = text.Position;
+                                        pt = new Point3d(pt.X, pt.Y + 6.666, pt.Z);
                                         string s = "TEXT\t" + pt.X.ToString("F2") + "\t" + pt.Y.ToString("F2") + "\t" + text.Height.ToString("F2") + "\t" + text.TextString + "\t" + ((int)text.HorizontalMode).ToString() + "\t" + ((int)text.VerticalMode).ToString() + "\t" + text.Color.ColorIndex.ToString() + "\t" + (visible ? "V" : "I");
                                         lines.Add(s);
                                     }
