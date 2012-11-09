@@ -221,6 +221,7 @@ void CBOQTable::UpdateTable(void)
 	ACHAR* lastUnitWeightLabel = NULL;
 	ACHAR* lastWeightLabel = NULL;
 	ACHAR* lastGrossWeightLabel = NULL;
+	ACHAR* lastMultiplierHeadingLabel = NULL;
 
 	acutUpdString(pStyle->PosLabel(), lastPosLabel);
 	acutUpdString(pStyle->CountLabel(), lastCountLabel);
@@ -233,6 +234,7 @@ void CBOQTable::UpdateTable(void)
 	acutUpdString(pStyle->UnitWeightLabel(), lastUnitWeightLabel);
 	acutUpdString(pStyle->WeightLabel(), lastWeightLabel);
 	acutUpdString(pStyle->GrossWeightLabel(), lastGrossWeightLabel);
+	acutUpdString(pStyle->MultiplierHeadingLabel(), lastMultiplierHeadingLabel);
 
 	// Get other styles
 	double lastHeadingScale = pStyle->HeadingScale();
@@ -242,7 +244,7 @@ void CBOQTable::UpdateTable(void)
 	Adesk::Int32 lastPrecision = pStyle->Precision();
 	CBOQStyle::DrawingUnits lastDisplayUnit = pStyle->DisplayUnit();
 
-	// Create diamater list
+	// Create diameter list
 	std::map<double, int> diameters;
 	for(RowListConstIt it = m_List.begin(); it != m_List.end(); it++)
 	{
@@ -277,19 +279,20 @@ void CBOQTable::UpdateTable(void)
 	}
 
 	// Create base table
+	// + 1 for gross total heading (only if multiplier > 1)
 	// + 2 for columns headers
 	// + 4 for total row
 	// + 2 for gross total row (only if multiplier > 1)
 	int totalrows = hasdiameterlist ? (4 + (m_Multiplier > 1 ? 2 : 0)) : 0;
-	int rows = headingLines + 2 + (int)m_List.size() + totalrows + footingLines; 
+	int rows = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() + totalrows + footingLines; 
 	int cols = (int)columns.size() + (hasdiameterlist ? (int)diameters.size() - 1 : 0);
 
 	SetSize(rows, cols);
-	setRowsToRepeat(headingLines + 2);
+	setRowsToRepeat(headingLines + (m_Multiplier > 1 ? 1 : 0) + 2);
 	setCellMargin(lastRowSpacing);
 
 	// Set cell properties
-	for(int i = headingLines; i < headingLines + 2 + (int)m_List.size() + totalrows; i++)
+	for(int i = headingLines + (m_Multiplier > 1 ? 1 : 0); i < headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() + totalrows; i++)
 	{
 		for(int j = 0; j < Columns(); j++)
 		{
@@ -307,26 +310,26 @@ void CBOQTable::UpdateTable(void)
 	{
 		for(int j = 0; j < Columns(); j++)
 		{
-			int k = i + headingLines + 2;
+			int k = i + headingLines + (m_Multiplier > 1 ? 1 : 0) + 2;
 			if(i > 0) setCellTopBorder(k, j, true, lastSeparatorColor);
 			if(i < (int)m_List.size() - 1) setCellBottomBorder(k, j, true, lastSeparatorColor);
 		}
 	}
 	// Double borders
 	int bi = 0;
-	bi = headingLines + 2 - 1;
+	bi = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 - 1;
 	if(bi >= 0 && bi < Rows()) setRowBottomBorder(bi, true, lastLineColor, true);
 	bi++;
 	if(bi >= 0 && bi < Rows()) setRowTopBorder(bi, true, lastLineColor, true);
 	if(hasdiameterlist)
 	{
-		bi = headingLines + 2 + (int)m_List.size() - 1;
+		bi = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() - 1;
 		if(bi >= 0 && bi < Rows()) setRowBottomBorder(bi, true, lastLineColor, true);
 		bi++;
 		if(bi >= 0 && bi < Rows()) setRowTopBorder(bi, true, lastLineColor, true);
 		if(m_Multiplier > 1)
 		{
-			bi = headingLines + 2 + (int)m_List.size() + 4 - 1;
+			bi = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() + 4 - 1;
 			if(bi >= 0 && bi < Rows()) setRowBottomBorder(bi, true, lastLineColor, true);
 			bi++;
 			if(bi >= 0 && bi < Rows()) setRowTopBorder(bi, true, lastLineColor, true);
@@ -337,7 +340,7 @@ void CBOQTable::UpdateTable(void)
 	int j = 0;
 	for(std::vector<CBOQTable::ColumnType>::iterator tit = columns.begin(); tit != columns.end(); tit++)
 	{
-		int i = headingLines;
+		int i = headingLines + (m_Multiplier > 1 ? 1 : 0);
 		CBOQTable::ColumnType type = *tit;
 		ACHAR* text = NULL;
 
@@ -419,7 +422,7 @@ void CBOQTable::UpdateTable(void)
 	j = 0;
 	for(std::vector<CBOQTable::ColumnType>::iterator tit = columns.begin(); tit != columns.end(); tit++)
 	{
-		int i = headingLines + 2;
+		int i = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2;
 		CBOQTable::ColumnType type = *tit;
 
 		for(RowListConstIt it = m_List.begin(); it != m_List.end(); it++)
@@ -496,10 +499,26 @@ void CBOQTable::UpdateTable(void)
 		setCellTextHeight(hi, 0, lastHeadingScale);
 		MergeAcross(hi, 0, cols);
 
-		std::wstring text(lastHeading);
+		setCellText(hi, 0, lastHeading);
+	}
+
+	// Set multiplier heading
+	if(m_Multiplier > 1 && lastMultiplierHeadingLabel != NULL && lastMultiplierHeadingLabel[0] != _T('\0'))
+	{
+		int hi = headingLines;
+		setCellTextColor(hi, 0, lastTextColor);
+		setCellTextStyleId(hi, 0, lastTextStyleId);
+
+		setCellHorizontalAlignment(hi, 0, CTableCell::eNEAR);
+		setCellVerticalAlignment(hi, 0, CTableCell::eCENTER);
+		setCellTextHeight(hi, 0, 1.0);
+		MergeAcross(hi, 0, cols);
+
+		std::wstring text(lastMultiplierHeadingLabel);
 		std::wstring ntext;
 		Utility::IntToStr(m_Multiplier, ntext);
 		Utility::ReplaceString(text, L"[N]", ntext);
+
 		setCellText(hi, 0, text.c_str());
 	}
 
@@ -520,7 +539,7 @@ void CBOQTable::UpdateTable(void)
 			unitweights[d] = pi * d * d / 4 * 1000.0 * 7850.0 / 1000.0 / 1000.0 / 1000.0;
 		}
 
-		int ti = headingLines + 2 + (int)m_List.size();
+		int ti = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size();
 		int mulcol = cols - (int)diameters.size() - 1;
 		for(int k = ti; k < ti + totalrows; k++)
 		{
@@ -620,7 +639,7 @@ void CBOQTable::UpdateTable(void)
 	// Set footing
 	if(lastFooting != NULL && lastFooting[0] != _T('\0'))
 	{
-		int fi = headingLines + 2 + (int)m_List.size() + totalrows;
+		int fi = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() + totalrows;
 		setCellTextColor(fi, 0, lastFootingColor);
 		setCellTextStyleId(fi, 0, lastFootingStyleId);
 		setCellHorizontalAlignment(fi, 0, CTableCell::eNEAR);

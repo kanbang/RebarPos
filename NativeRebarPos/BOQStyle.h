@@ -76,6 +76,7 @@ protected:
 	ACHAR* m_UnitWeightLabel;
 	ACHAR* m_WeightLabel;
 	ACHAR* m_GrossWeightLabel;
+	ACHAR* m_MultiplierHeadingLabel;
 
     AcDbHardPointerId m_TextStyleId;
     AcDbHardPointerId m_HeadingStyleId;
@@ -154,6 +155,10 @@ public:
 	Acad::ErrorStatus setUnitWeightLabel(const ACHAR* newVal);
 	Acad::ErrorStatus setWeightLabel(const ACHAR* newVal);
 	Acad::ErrorStatus setGrossWeightLabel(const ACHAR* newVal);
+
+	/// Gets or sets the heading for tables with multiplier > 1
+	const ACHAR* MultiplierHeadingLabel(void) const;
+	Acad::ErrorStatus setMultiplierHeadingLabel(const ACHAR* newVal);
 
 	/// Gets or sets pointer to the text style.
 	const AcDbObjectId& TextStyleId(void) const;

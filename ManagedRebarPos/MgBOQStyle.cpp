@@ -227,6 +227,15 @@ void BOQStyle::GrossWeightLabel::set(String^ value)
     Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setGrossWeightLabel(Marshal::StringToWchar(value)));
 }
 
+String^ BOQStyle::MultiplierHeadingLabel::get()
+{
+	return Marshal::WcharToString(GetImpObj()->MultiplierHeadingLabel());
+}
+void BOQStyle::MultiplierHeadingLabel::set(String^ value)
+{
+    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setMultiplierHeadingLabel(Marshal::StringToWchar(value)));
+}
+
 Autodesk::AutoCAD::DatabaseServices::ObjectId BOQStyle::TextStyleId::get()
 {
 	return Marshal::ToObjectId (GetImpObj()->TextStyleId());

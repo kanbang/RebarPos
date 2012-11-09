@@ -26,7 +26,7 @@ CBOQStyle::CBOQStyle () : m_Name(NULL), m_Precision(0),	m_DisplayUnit(CBOQStyle:
 	m_TextStyleId(AcDbObjectId::kNull), m_HeadingStyleId(AcDbObjectId::kNull), m_FootingStyleId(AcDbObjectId::kNull),
 	m_HeadingScale(1.5), m_FootingScale(1.0), m_RowSpacing(0.75),
 	m_PosLabel(NULL), m_CountLabel(NULL), m_DiameterLabel(NULL), m_LengthLabel(NULL), m_ShapeLabel(NULL),
-	m_TotalLengthLabel(NULL), m_DiameterListLabel(NULL), 
+	m_TotalLengthLabel(NULL), m_DiameterListLabel(NULL), m_MultiplierHeadingLabel(NULL),
 	m_DiameterLengthLabel(NULL), m_UnitWeightLabel(NULL), m_WeightLabel(NULL), m_GrossWeightLabel(NULL)
 { }
 
@@ -46,6 +46,7 @@ CBOQStyle::~CBOQStyle ()
 	acutDelString(m_UnitWeightLabel);
 	acutDelString(m_WeightLabel);
 	acutDelString(m_GrossWeightLabel);
+	acutDelString(m_MultiplierHeadingLabel);
 }
 
 //*************************************************************************
@@ -281,6 +282,7 @@ const ACHAR* CBOQStyle::DiameterLengthLabel(void) const { assertReadEnabled(); r
 const ACHAR* CBOQStyle::UnitWeightLabel(void) const     { assertReadEnabled(); return m_UnitWeightLabel; }
 const ACHAR* CBOQStyle::WeightLabel(void) const         { assertReadEnabled(); return m_WeightLabel; }
 const ACHAR* CBOQStyle::GrossWeightLabel(void) const    { assertReadEnabled(); return m_GrossWeightLabel; }
+const ACHAR* CBOQStyle::MultiplierHeadingLabel(void) const { assertReadEnabled(); return m_MultiplierHeadingLabel; }
 // Set labels
 Acad::ErrorStatus CBOQStyle::setPosLabel(const ACHAR* newVal)            { assertWriteEnabled(); acutDelString(m_PosLabel); acutUpdString(newVal, m_PosLabel); return Acad::eOk; }
 Acad::ErrorStatus CBOQStyle::setCountLabel(const ACHAR* newVal)          { assertWriteEnabled(); acutDelString(m_CountLabel); acutUpdString(newVal, m_CountLabel); return Acad::eOk; }
@@ -293,6 +295,7 @@ Acad::ErrorStatus CBOQStyle::setDiameterLengthLabel(const ACHAR* newVal) { asser
 Acad::ErrorStatus CBOQStyle::setUnitWeightLabel(const ACHAR* newVal)     { assertWriteEnabled(); acutDelString(m_UnitWeightLabel); acutUpdString(newVal, m_UnitWeightLabel); return Acad::eOk; }
 Acad::ErrorStatus CBOQStyle::setWeightLabel(const ACHAR* newVal)         { assertWriteEnabled(); acutDelString(m_WeightLabel); acutUpdString(newVal, m_WeightLabel); return Acad::eOk; }
 Acad::ErrorStatus CBOQStyle::setGrossWeightLabel(const ACHAR* newVal)    { assertWriteEnabled(); acutDelString(m_GrossWeightLabel); acutUpdString(newVal, m_GrossWeightLabel); return Acad::eOk; }
+Acad::ErrorStatus CBOQStyle::setMultiplierHeadingLabel(const ACHAR* newVal) { assertWriteEnabled(); acutDelString(m_MultiplierHeadingLabel); acutUpdString(newVal, m_MultiplierHeadingLabel); return Acad::eOk; }
 
 //*************************************************************************
 // Overrides
@@ -349,6 +352,7 @@ Acad::ErrorStatus CBOQStyle::dwgOutFields(AcDbDwgFiler *pFiler) const
 	if (m_UnitWeightLabel) pFiler->writeString(m_UnitWeightLabel); else pFiler->writeString(_T(""));
 	if (m_WeightLabel) pFiler->writeString(m_WeightLabel); else pFiler->writeString(_T(""));
 	if (m_GrossWeightLabel) pFiler->writeString(m_GrossWeightLabel); else pFiler->writeString(_T(""));
+	if (m_MultiplierHeadingLabel) pFiler->writeString(m_MultiplierHeadingLabel); else pFiler->writeString(_T(""));
 
     // Scales
     pFiler->writeDouble(m_HeadingScale);
@@ -415,6 +419,7 @@ Acad::ErrorStatus CBOQStyle::dwgInFields(AcDbDwgFiler *pFiler)
 		pFiler->readString(&m_UnitWeightLabel);
 		pFiler->readString(&m_WeightLabel);
 		pFiler->readString(&m_GrossWeightLabel);
+		pFiler->readString(&m_MultiplierHeadingLabel);
 
         pFiler->readDouble(&m_HeadingScale);
 		pFiler->readDouble(&m_FootingScale);
@@ -480,6 +485,7 @@ Acad::ErrorStatus CBOQStyle::dxfOutFields(AcDbDxfFiler *pFiler) const
 	if (m_UnitWeightLabel) pFiler->writeString(AcDb::kDxfXTextString, m_UnitWeightLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
 	if (m_WeightLabel) pFiler->writeString(AcDb::kDxfXTextString, m_WeightLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
 	if (m_GrossWeightLabel) pFiler->writeString(AcDb::kDxfXTextString, m_GrossWeightLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
+	if (m_MultiplierHeadingLabel) pFiler->writeString(AcDb::kDxfXTextString, m_MultiplierHeadingLabel); else pFiler->writeString(AcDb::kDxfXTextString, _T(""));
 
     // Scale
     pFiler->writeDouble(AcDb::kDxfXReal, m_HeadingScale);
@@ -540,6 +546,7 @@ Acad::ErrorStatus CBOQStyle::dxfInFields(AcDbDxfFiler *pFiler)
 	ACHAR* t_UnitWeightLabel = NULL;
 	ACHAR* t_WeightLabel = NULL;
 	ACHAR* t_GrossWeightLabel = NULL;
+	ACHAR* t_MultiplierHeadingLabel = NULL;
 	double t_HeadingScale = 0;
 	double t_FootingScale = 0;
 	double t_RowSpacing = 0;
@@ -571,6 +578,7 @@ Acad::ErrorStatus CBOQStyle::dxfInFields(AcDbDxfFiler *pFiler)
 	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("unit weight label"), t_UnitWeightLabel)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("weight label"), t_WeightLabel)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("gross weight label"), t_GrossWeightLabel)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("multiplier heading label"), t_MultiplierHeadingLabel)) != Acad::eOk) return es;
 
 	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("heading scale"), t_HeadingScale)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("footing scale"), t_FootingScale)) != Acad::eOk) return es;
@@ -609,6 +617,7 @@ Acad::ErrorStatus CBOQStyle::dxfInFields(AcDbDxfFiler *pFiler)
 	setUnitWeightLabel(t_UnitWeightLabel);
 	setWeightLabel(t_WeightLabel);
 	setGrossWeightLabel(t_GrossWeightLabel);
+	setMultiplierHeadingLabel(t_MultiplierHeadingLabel);
 
 	m_TextStyleId = t_TextStyleId;
 	m_HeadingStyleId = t_HeadingStyleId;
@@ -628,6 +637,7 @@ Acad::ErrorStatus CBOQStyle::dxfInFields(AcDbDxfFiler *pFiler)
 	acutDelString(t_UnitWeightLabel);
 	acutDelString(t_WeightLabel);
 	acutDelString(t_GrossWeightLabel);
+	acutDelString(t_MultiplierHeadingLabel);
 
 	return es;
 }

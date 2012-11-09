@@ -62,6 +62,7 @@ namespace OZOZ
 			property String^ UnitWeightLabel     { String^ get(); void set(String^ value); }
 			property String^ WeightLabel         { String^ get(); void set(String^ value); }
 			property String^ GrossWeightLabel    { String^ get(); void set(String^ value); }
+			property String^ MultiplierHeadingLabel { String^ get(); void set(String^ value); }
 
 			property Autodesk::AutoCAD::DatabaseServices::ObjectId TextStyleId    { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
 			property Autodesk::AutoCAD::DatabaseServices::ObjectId HeadingStyleId { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }

@@ -217,6 +217,7 @@ namespace RebarPosCommands
                         styleen.UnitWeightLabel = "UNIT WEIGHT (kg/m)";
                         styleen.WeightLabel = "WEIGHT (kg)";
                         styleen.GrossWeightLabel = "TOTAL WEIGHT (kg)";
+                        styleen.MultiplierHeadingLabel = "BOQ CALCULATED FOR [N] COMPLETES";
 
                         dict.UpgradeOpen();
                         id = dict.SetAt("*", styleen);
@@ -245,6 +246,7 @@ namespace RebarPosCommands
                         styletr.UnitWeightLabel = "BIRIM AGIRLIK (kg/m)";
                         styletr.WeightLabel = "TOPLAM AGIRLIK (kg)";
                         styletr.GrossWeightLabel = "GENEL TOPLAM (kg)";
+                        styletr.MultiplierHeadingLabel = "GENEL TOPLAM [N] ADET İÇİNDİR";
 
                         dict.UpgradeOpen();
                         id = dict.SetAt("*", styletr);
