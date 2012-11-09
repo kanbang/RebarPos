@@ -134,6 +134,7 @@ namespace RebarPosCommands
                 frmEdit.StartPosition = FormStartPosition.CenterParent;
                 frmEdit.MaximizeBox = false;
                 frmEdit.MinimizeBox = false;
+                frmEdit.ShowInTaskbar = false;
                 frmEdit.Name = "frmEdit";
                 frmEdit.Text = "Çap Seçimi";
 
@@ -464,6 +465,7 @@ namespace RebarPosCommands
                 frmEdit.StartPosition = FormStartPosition.CenterParent;
                 frmEdit.MaximizeBox = false;
                 frmEdit.MinimizeBox = false;
+                frmEdit.ShowInTaskbar = false;
                 frmEdit.Name = "frmEdit";
                 frmEdit.Text = "Çap Seçimi";
 
@@ -752,6 +754,7 @@ namespace RebarPosCommands
                 frmEdit.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
                 frmEdit.MaximizeBox = false;
                 frmEdit.MinimizeBox = false;
+                frmEdit.ShowInTaskbar = false;
                 frmEdit.Name = "frmEdit";
                 frmEdit.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
                 frmEdit.Text = "Çap Seçimi";
