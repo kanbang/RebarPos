@@ -287,7 +287,7 @@ namespace RebarPosCommands
             TableStyles();
         }
 
-        [CommandMethod("RebarPos", "POSLENGTH", "POSLENGTH_Local", CommandFlags.Modal)]
+        [CommandMethod("RebarPos", "POSLENGTH", "POSLENGTH_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_PosLength()
         {
             PromptSelectionResult selresult = DWGUtility.SelectAllPosUser();
@@ -311,7 +311,7 @@ namespace RebarPosCommands
             }
         }
 
-        [CommandMethod("RebarPos", "INCLUDEPOS", "INCLUDEPOS_Local", CommandFlags.Modal)]
+        [CommandMethod("RebarPos", "INCLUDEPOS", "INCLUDEPOS_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_IncludePos()
         {
             PromptSelectionResult selresult = DWGUtility.SelectAllPosUser();
@@ -335,7 +335,7 @@ namespace RebarPosCommands
             }
         }
 
-        [CommandMethod("RebarPos", "LASTPOSNUMBER", "LASTPOSNUMBER_Local", CommandFlags.Modal)]
+        [CommandMethod("RebarPos", "LASTPOSNUMBER", "LASTPOSNUMBER_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_LastPosNumber()
         {
             PromptSelectionResult sel = DWGUtility.SelectAllPosUser();

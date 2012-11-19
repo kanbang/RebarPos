@@ -24,7 +24,6 @@ namespace RebarPosCommands
         public void SetCurrentGroup()
         {
             Autodesk.AutoCAD.Colors.Color countColor = new Autodesk.AutoCAD.Colors.Color();
-            ObjectId defpointsLayer = ObjectId.Null;
 
             Database db = HostApplicationServices.WorkingDatabase;
             using (Transaction tr = db.TransactionManager.StartTransaction())
