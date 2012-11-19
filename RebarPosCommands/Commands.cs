@@ -196,7 +196,7 @@ namespace RebarPosCommands
             PromptEntityResult result = ed.GetEntity(opts);
             if (result.Status == PromptStatus.OK)
             {
-                ItemEdit(result.ObjectId, Point3d.Origin);
+                ItemEdit(result.ObjectId, result.PickedPoint);
             }
         }
 
