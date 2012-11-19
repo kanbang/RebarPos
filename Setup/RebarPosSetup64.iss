@@ -2,7 +2,7 @@
 ShowLanguageDialog=no
 AppName=RebarPos x64
 AppVersion=1.0
-DefaultDirName={pf}\SahinInsaat\RebarPos
+DefaultDirName={pf}\SahinEng\RebarPos
 ArchitecturesInstallIn64BitMode=x64
 AppCopyright=Þahin Inþaat
 DisableProgramGroupPage=yes
@@ -21,7 +21,7 @@ Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Menu";
 Source: "..\Menu\RebarPos.mnr"; DestDir: "{app}\Menu";
 
 [Registry]
-Root: "HKLM"; Subkey: "Software\Sahin Insaat\RebarPos"; ValueType: string; ValueName: "InstallPath"; ValueData: "{app}"; Flags: uninsdeletekey
+Root: "HKLM"; Subkey: "Software\SahinEng\RebarPos"; ValueType: string; ValueName: "InstallPath"; ValueData: "{app}"; Flags: uninsdeletekey
 
 [Code]
 var
