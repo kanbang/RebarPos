@@ -35,6 +35,10 @@ namespace RebarPosCommands
             SetCurrentGroup();
 
             ShowShapes = false;
+
+            Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+            ed.PointMonitor += new PointMonitorEventHandler(ed_PointMonitor);
+            MonitoredPoint = Point3d.Origin;
         }
 
         private bool ShowShapes
@@ -52,16 +56,30 @@ namespace RebarPosCommands
             }
         }
 
-        [CommandMethod("RebarPos", "POS", "POS_Local", CommandFlags.Modal)]
+        public Point3d MonitoredPoint { get; private set; }
+
+        [CommandMethod("RebarPos", "POS", "POS_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_Pos()
         {
+            Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+
+            // Edit entity if there is a pickset
+            PromptSelectionResult selectionRes = ed.SelectImplied();
+            if (selectionRes.Status != PromptStatus.Error && selectionRes.Value.Count > 0)
+            {
+                ObjectId id = selectionRes.Value[0].ObjectId;
+                ed.SetImpliedSelection(new ObjectId[0]);
+                ItemEdit(id, MonitoredPoint);
+                return;
+            }
+
             bool cont = true;
             while (cont)
             {
                 PromptEntityOptions opts = new PromptEntityOptions("Poz secin veya [Yeni/Numaralandir/Kopyala/kOntrol/Metraj/bul Degistir/numara Sil/Acilimlar/Tablo stili/ayaRlar]: ",
                     "New Numbering Copy Check BOQ Find Empty Shapes Table Preferences");
                 opts.AllowNone = false;
-                PromptEntityResult result = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetEntity(opts);
+                PromptEntityResult result = ed.GetEntity(opts);
 
                 if (result.Status == PromptStatus.Keyword)
                 {
@@ -112,6 +130,14 @@ namespace RebarPosCommands
             }
         }
 
+        void ed_PointMonitor(object sender, PointMonitorEventArgs e)
+        {
+            if (!e.Context.PointComputed)
+                return;
+
+            MonitoredPoint = e.Context.ComputedPoint;
+        }
+
         // Edits a pos or table
         private void ItemEdit(ObjectId id, Point3d pt)
         {
@@ -126,27 +152,51 @@ namespace RebarPosCommands
             }
         }
 
-        [CommandMethod("RebarPos", "POSEDIT", "POSEDIT_Local", CommandFlags.Modal)]
+        [CommandMethod("RebarPos", "POSEDIT", "POSEDIT_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_PosEdit()
         {
+            Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+
+            // Edit entity if there is a pickset
+            PromptSelectionResult selectionRes = ed.SelectImplied();
+            if (selectionRes.Status != PromptStatus.Error && selectionRes.Value.Count > 0)
+            {
+                ObjectId id = selectionRes.Value[0].ObjectId;
+                ed.SetImpliedSelection(new ObjectId[0]);
+                ItemEdit(id, MonitoredPoint);
+                return;
+            }
+
             PromptEntityOptions opts = new PromptEntityOptions("Select entity: ");
             opts.AllowNone = false;
-            PromptEntityResult result = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetEntity(opts);
+            PromptEntityResult result = ed.GetEntity(opts);
             if (result.Status == PromptStatus.OK)
             {
-                PosEdit(result.ObjectId, result.PickedPoint);
+                ItemEdit(result.ObjectId, result.PickedPoint);
             }
         }
 
-        [CommandMethod("RebarPos", "BOQEDIT", "BOQEDIT_Local", CommandFlags.Modal)]
+        [CommandMethod("RebarPos", "BOQEDIT", "BOQEDIT_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_BOQEdit()
         {
+            Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+
+            // Edit entity if there is a pickset
+            PromptSelectionResult selectionRes = ed.SelectImplied();
+            if (selectionRes.Status != PromptStatus.Error && selectionRes.Value.Count > 0)
+            {
+                ObjectId id = selectionRes.Value[0].ObjectId;
+                ed.SetImpliedSelection(new ObjectId[0]);
+                ItemEdit(id, MonitoredPoint);
+                return;
+            }
+
             PromptEntityOptions opts = new PromptEntityOptions("Select entity: ");
             opts.AllowNone = false;
-            PromptEntityResult result = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetEntity(opts);
+            PromptEntityResult result = ed.GetEntity(opts);
             if (result.Status == PromptStatus.OK)
             {
-                BOQEdit(result.ObjectId);
+                ItemEdit(result.ObjectId, Point3d.Origin);
             }
         }
 
