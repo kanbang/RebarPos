@@ -947,7 +947,7 @@ namespace RebarPosCommands
             List<PosCheckResult> results = new List<PosCheckResult>();
 
             // Read all pos objects
-            List<PosCopy> pliste = PosCopy.ReadAllInSelection(items, PosCopy.PosGrouping.None);
+            List<PosCopy> pliste = PosCopy.ReadAllInSelection(items, true, PosCopy.PosGrouping.None);
 
             if (checkErrors)
             {

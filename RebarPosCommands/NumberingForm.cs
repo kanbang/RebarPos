@@ -261,7 +261,7 @@ namespace RebarPosCommands
         {
             try
             {
-                m_PosList = PosCopy.ReadAllInSelection(items, PosCopy.PosGrouping.PosKey);
+                m_PosList = PosCopy.ReadAllInSelection(items, true, PosCopy.PosGrouping.PosKey);
                 AddMissing();
                 SortDisplayList();
             }

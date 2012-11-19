@@ -51,12 +51,12 @@ namespace RebarPosCommands
             priority = -1;
             diameter = string.Empty;
 
-            length = string.Empty; 
-            a = string.Empty; 
-            b = string.Empty; 
-            c = string.Empty; 
-            d = string.Empty; 
-            e = string.Empty; 
+            length = string.Empty;
+            a = string.Empty;
+            b = string.Empty;
+            c = string.Empty;
+            d = string.Empty;
+            e = string.Empty;
             f = string.Empty;
 
             shapename = string.Empty;
@@ -78,7 +78,7 @@ namespace RebarPosCommands
             PosMarker = 2
         }
 
-        public static List<PosCopy> ReadAllInSelection(IEnumerable<ObjectId> items, PosGrouping grouping)
+        public static List<PosCopy> ReadAllInSelection(IEnumerable<ObjectId> items, bool skipEmpty, PosGrouping grouping)
         {
             List<PosCopy> poslist = new List<PosCopy>();
 
@@ -90,6 +90,9 @@ namespace RebarPosCommands
                     RebarPos pos = tr.GetObject(id, OpenMode.ForRead) as RebarPos;
                     if (pos != null)
                     {
+                        // Skip empty pos numbers
+                        if (skipEmpty && string.IsNullOrEmpty(pos.Pos)) continue;
+
                         PosCopy copy = null;
                         if (grouping == PosGrouping.PosKey)
                         {
@@ -150,7 +153,7 @@ namespace RebarPosCommands
             return poslist;
         }
 
-        public static List<PosCopy> ReadAll(PosGrouping grouping)
+        public static List<PosCopy> ReadAll(PosGrouping grouping, bool skipEmpty)
         {
             List<ObjectId> items = new List<ObjectId>();
 
@@ -170,7 +173,7 @@ namespace RebarPosCommands
                 }
             }
 
-            return ReadAllInSelection(items, grouping);
+            return ReadAllInSelection(items, skipEmpty, grouping);
         }
     }
 }

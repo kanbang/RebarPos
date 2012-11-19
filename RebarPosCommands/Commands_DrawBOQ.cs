@@ -50,7 +50,7 @@ namespace RebarPosCommands
             List<PosCopy> posList = new List<PosCopy>();
             try
             {
-                posList = PosCopy.ReadAllInSelection(items, PosCopy.PosGrouping.PosMarker);
+                posList = PosCopy.ReadAllInSelection(items, true, PosCopy.PosGrouping.PosMarker);
             }
             catch (System.Exception ex)
             {
