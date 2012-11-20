@@ -26,13 +26,13 @@ namespace RebarPosCommands
                         pos.TransformBy(Matrix3d.Displacement(pt.GetAsVector()));
                         pos.TransformBy(Matrix3d.Scaling(25.0, pt));
 
-                        pos.Pos = "X";
-                        pos.Count = "XX";
-                        pos.Diameter = "XX";
-                        pos.Spacing = "XXX";
+                        pos.Pos = "";
+                        pos.Count = "1";
+                        pos.Diameter = "12";
+                        pos.Spacing = "";
                         pos.Shape = "GENEL";
-                        pos.A = "XXXX";
-                        pos.Note = "XXXXXXXX";
+                        pos.A = "1000";
+                        pos.Note = "";
 
 #if DEBUG
                         pos.Pos = "1";
