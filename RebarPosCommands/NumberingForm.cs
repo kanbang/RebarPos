@@ -280,7 +280,7 @@ namespace RebarPosCommands
         {
             try
             {
-                m_PosList = PosCopy.ReadAllInSelection(items, true, PosCopy.PosGrouping.PosKeyDifferentMarker);
+                m_PosList = PosCopy.ReadAllInSelection(items, false, PosCopy.PosGrouping.PosKeyDifferentMarker);
 
                 m_DetachedPosList = new Dictionary<string, List<ObjectId>>();
                 Database db = HostApplicationServices.WorkingDatabase;
