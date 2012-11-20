@@ -14,38 +14,46 @@ namespace RebarPosCommands
 {
     public static class DWGUtility
     {
+        private static SelectionFilter SSPosFilter(bool includeDetached)
+        {
+            if (includeDetached)
+            {
+                TypedValue[] tvs = new TypedValue[] {
+                    new TypedValue((int)DxfCode.Start, "REBARPOS")
+                };
+                return new SelectionFilter(tvs);
+            }
+            else
+            {
+                TypedValue[] tvs = new TypedValue[] {
+                    new TypedValue((int)DxfCode.Start, "REBARPOS"),
+                    new TypedValue((int)(DxfCode.Bool + 1), false)
+                };
+                return new SelectionFilter(tvs);
+            }
+        }
+
         private static SelectionFilter SSPosFilter()
         {
-            TypedValue[] tvs = new TypedValue[] {
-                new TypedValue((int)DxfCode.Start, "REBARPOS")
-            };
-            return new SelectionFilter(tvs);
+            return SSPosFilter(false);
+        }
+
+        public static PromptSelectionResult SelectAllPosUser(bool includeDetached)
+        {
+            try
+            {
+                return Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetSelection(SSPosFilter(includeDetached));
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
         }
 
         public static PromptSelectionResult SelectAllPosUser()
         {
-            try
-            {
-                return Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetSelection(SSPosFilter());
-            }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
-            }
-        }
-
-        public static PromptSelectionResult SelectAllPos()
-        {
-            try
-            {
-                return Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.SelectAll(SSPosFilter());
-            }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
-            }
+            return SelectAllPosUser(false);
         }
 
         public static ObjectId[] GetAllPos()

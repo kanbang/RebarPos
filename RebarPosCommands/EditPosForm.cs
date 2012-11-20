@@ -79,9 +79,7 @@ namespace RebarPosCommands
                     txtE.Text = pos.E;
                     txtF.Text = pos.F;
 
-                    rbShowAll.Checked = (pos.Display == RebarPos.DisplayStyle.All);
-                    rbWithoutLength.Checked = (pos.Display == RebarPos.DisplayStyle.WithoutLength);
-                    rbMarkerOnly.Checked = (pos.Display == RebarPos.DisplayStyle.MarkerOnly);
+                    chkShowLength.Checked = (pos.Display == RebarPos.DisplayStyle.All);
 
                     if (!SetGroup())
                     {
@@ -150,12 +148,10 @@ namespace RebarPosCommands
                     pos.Note = txtPosNote.Text;
                     pos.Shape = m_Shape;
 
-                    if (rbShowAll.Checked)
+                    if (chkShowLength.Checked)
                         pos.Display = RebarPos.DisplayStyle.All;
-                    else if (rbWithoutLength.Checked)
+                    else
                         pos.Display = RebarPos.DisplayStyle.WithoutLength;
-                    else if (rbMarkerOnly.Checked)
-                        pos.Display = RebarPos.DisplayStyle.MarkerOnly;
 
                     pos.A = txtA.Text;
                     pos.B = txtB.Text;

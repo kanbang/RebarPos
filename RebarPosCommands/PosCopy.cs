@@ -75,7 +75,8 @@ namespace RebarPosCommands
         {
             None = 0,
             PosKey = 1,
-            PosMarker = 2
+            PosMarker = 2,
+            PosKeyDifferentMarker = 3
         }
 
         public static List<PosCopy> ReadAllInSelection(IEnumerable<ObjectId> items, bool skipEmpty, PosGrouping grouping)
@@ -92,15 +93,21 @@ namespace RebarPosCommands
                     {
                         // Skip empty pos numbers
                         if (skipEmpty && string.IsNullOrEmpty(pos.Pos)) continue;
+                        // Skip detached pos
+                        if (pos.Detached) continue;
 
                         PosCopy copy = null;
                         if (grouping == PosGrouping.PosKey)
                         {
-                            copy = poslist.Find(p => p.key == pos.PosKey); ;
+                            copy = poslist.Find(p => p.key == pos.PosKey);
                         }
                         else if (grouping == PosGrouping.PosMarker)
                         {
-                            copy = poslist.Find(p => p.pos == pos.Pos); ;
+                            copy = poslist.Find(p => p.pos == pos.Pos);
+                        }
+                        else if (grouping == PosGrouping.PosKeyDifferentMarker)
+                        {
+                            copy = poslist.Find(p => p.key == pos.PosKey && p.pos == pos.Pos);
                         }
 
                         if (copy != null)

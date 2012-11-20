@@ -78,22 +78,19 @@
             this.label6 = new System.Windows.Forms.Label();
             this.txtA = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.rbMarkerOnly = new System.Windows.Forms.RadioButton();
-            this.rbWithoutLength = new System.Windows.Forms.RadioButton();
-            this.rbShowAll = new System.Windows.Forms.RadioButton();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.btnDetach = new System.Windows.Forms.Button();
+            this.chkShowLength = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.chkShowLength);
             this.groupBox1.Controls.Add(this.cbPosDiameter);
             this.groupBox1.Controls.Add(this.chkIncludePos);
             this.groupBox1.Controls.Add(this.btnPickSpacing);
@@ -111,7 +108,7 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(242, 235);
+            this.groupBox1.Size = new System.Drawing.Size(242, 339);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             // 
@@ -127,7 +124,7 @@
             // chkIncludePos
             // 
             this.chkIncludePos.AutoSize = true;
-            this.chkIncludePos.Location = new System.Drawing.Point(19, 135);
+            this.chkIncludePos.Location = new System.Drawing.Point(19, 171);
             this.chkIncludePos.Name = "chkIncludePos";
             this.chkIncludePos.Size = new System.Drawing.Size(88, 17);
             this.chkIncludePos.TabIndex = 10;
@@ -161,7 +158,7 @@
             // 
             this.txtPosMultiplier.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPosMultiplier.Location = new System.Drawing.Point(97, 158);
+            this.txtPosMultiplier.Location = new System.Drawing.Point(97, 194);
             this.txtPosMultiplier.Name = "txtPosMultiplier";
             this.txtPosMultiplier.Size = new System.Drawing.Size(100, 20);
             this.txtPosMultiplier.TabIndex = 12;
@@ -170,7 +167,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(40, 161);
+            this.label14.Location = new System.Drawing.Point(40, 197);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(41, 13);
             this.label14.TabIndex = 11;
@@ -180,18 +177,18 @@
             // 
             this.txtPosNote.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPosNote.Location = new System.Drawing.Point(97, 197);
+            this.txtPosNote.Location = new System.Drawing.Point(97, 307);
             this.txtPosNote.Name = "txtPosNote";
             this.txtPosNote.Size = new System.Drawing.Size(129, 20);
-            this.txtPosNote.TabIndex = 16;
+            this.txtPosNote.TabIndex = 15;
             // 
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(16, 200);
+            this.label15.Location = new System.Drawing.Point(16, 310);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(24, 13);
-            this.label15.TabIndex = 15;
+            this.label15.TabIndex = 14;
             this.label15.Text = "&Not";
             // 
             // txtPosSpacing
@@ -622,50 +619,6 @@
             this.label5.TabIndex = 1;
             this.label5.Text = "&A";
             // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.rbMarkerOnly);
-            this.groupBox3.Controls.Add(this.rbWithoutLength);
-            this.groupBox3.Controls.Add(this.rbShowAll);
-            this.groupBox3.Location = new System.Drawing.Point(12, 253);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(242, 98);
-            this.groupBox3.TabIndex = 2;
-            this.groupBox3.TabStop = false;
-            // 
-            // rbMarkerOnly
-            // 
-            this.rbMarkerOnly.AutoSize = true;
-            this.rbMarkerOnly.Location = new System.Drawing.Point(18, 65);
-            this.rbMarkerOnly.Name = "rbMarkerOnly";
-            this.rbMarkerOnly.Size = new System.Drawing.Size(172, 17);
-            this.rbMarkerOnly.TabIndex = 2;
-            this.rbMarkerOnly.TabStop = true;
-            this.rbMarkerOnly.Text = "Sadece Poz Numarasını Göster";
-            this.rbMarkerOnly.UseVisualStyleBackColor = true;
-            // 
-            // rbWithoutLength
-            // 
-            this.rbWithoutLength.AutoSize = true;
-            this.rbWithoutLength.Location = new System.Drawing.Point(18, 43);
-            this.rbWithoutLength.Name = "rbWithoutLength";
-            this.rbWithoutLength.Size = new System.Drawing.Size(113, 17);
-            this.rbWithoutLength.TabIndex = 1;
-            this.rbWithoutLength.TabStop = true;
-            this.rbWithoutLength.Text = "Toplam Boyu Gizle";
-            this.rbWithoutLength.UseVisualStyleBackColor = true;
-            // 
-            // rbShowAll
-            // 
-            this.rbShowAll.AutoSize = true;
-            this.rbShowAll.Location = new System.Drawing.Point(18, 20);
-            this.rbShowAll.Name = "rbShowAll";
-            this.rbShowAll.Size = new System.Drawing.Size(121, 17);
-            this.rbShowAll.TabIndex = 0;
-            this.rbShowAll.TabStop = true;
-            this.rbShowAll.Text = "Toplam Boyu Göster";
-            this.rbShowAll.UseVisualStyleBackColor = true;
-            // 
             // btnOK
             // 
             this.btnOK.Location = new System.Drawing.Point(483, 371);
@@ -702,6 +655,16 @@
             this.btnDetach.UseVisualStyleBackColor = true;
             this.btnDetach.Click += new System.EventHandler(this.btnDetach_Click);
             // 
+            // chkShowLength
+            // 
+            this.chkShowLength.AutoSize = true;
+            this.chkShowLength.Location = new System.Drawing.Point(19, 257);
+            this.chkShowLength.Name = "chkShowLength";
+            this.chkShowLength.Size = new System.Drawing.Size(122, 17);
+            this.chkShowLength.TabIndex = 13;
+            this.chkShowLength.Text = "Toplam Boyu Göster";
+            this.chkShowLength.UseVisualStyleBackColor = true;
+            // 
             // EditPosForm
             // 
             this.AcceptButton = this.btnOK;
@@ -712,7 +675,6 @@
             this.Controls.Add(this.btnDetach);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
-            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -727,8 +689,6 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
 
@@ -777,10 +737,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtB;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.RadioButton rbMarkerOnly;
-        private System.Windows.Forms.RadioButton rbWithoutLength;
-        private System.Windows.Forms.RadioButton rbShowAll;
         private System.Windows.Forms.TextBox txtPosNote;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Button btnOK;
@@ -792,5 +748,6 @@
         private System.Windows.Forms.ErrorProvider errorProvider;
         private System.Windows.Forms.ComboBox cbPosDiameter;
         private System.Windows.Forms.Button btnDetach;
+        private System.Windows.Forms.CheckBox chkShowLength;
     }
 }

@@ -12,7 +12,7 @@ namespace RebarPosCommands
         private bool NumberPos()
         {
             // Pos error check
-            PromptSelectionResult sel = DWGUtility.SelectAllPosUser();
+            PromptSelectionResult sel = DWGUtility.SelectAllPosUser(true);
             if (sel.Status != PromptStatus.OK) return false;
             ObjectId[] items = sel.Value.GetObjectIds();
 

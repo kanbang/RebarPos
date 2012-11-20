@@ -72,30 +72,34 @@ namespace RebarPosCommands
 
         private void PopulateList()
         {
+            lbItems.Items.Clear();
+
             if (m_PosList.Count == 0)
             {
                 lbItems.Enabled = false;
-                return;
+                lbItems.ShowGroups = false;
+
+                lbItems.Items.Add("Seçilen pozlarda hata bulunmadı.");
             }
             else
             {
                 lbItems.Enabled = true;
-            }
+                lbItems.ShowGroups = true;
 
-            lbItems.Items.Clear();
-            foreach (PosCheckResult check in m_PosList)
-            {
-                ListViewItem item = new ListViewItem(check.Pos);
-                ListViewGroup group = lbItems.Groups[check.Key];
-                if (group == null) group = lbItems.Groups.Add(check.Key, check.Description);
-                item.Group = group;
-                item.Tag = check;
-                item.SubItems.Add(check.ErrorMessage);
-                item.SubItems.Add(check.Items.Count.ToString() + " adet");
-                item.SubItems.Add("Düzelt");
-                item.SubItems.Add("Zoom");
-                item.SubItems.Add("Select");
-                lbItems.Items.Add(item);
+                foreach (PosCheckResult check in m_PosList)
+                {
+                    ListViewItem item = new ListViewItem(check.Pos);
+                    ListViewGroup group = lbItems.Groups[check.Key];
+                    if (group == null) group = lbItems.Groups.Add(check.Key, check.Description);
+                    item.Group = group;
+                    item.Tag = check;
+                    item.SubItems.Add(check.ErrorMessage);
+                    item.SubItems.Add(check.Items.Count.ToString() + " adet");
+                    item.SubItems.Add("Düzelt");
+                    item.SubItems.Add("Zoom");
+                    item.SubItems.Add("Select");
+                    lbItems.Items.Add(item);
+                }
             }
         }
 
@@ -262,7 +266,10 @@ namespace RebarPosCommands
 
             void lv_DrawItem(object sender, DrawListViewItemEventArgs e)
             {
-                ;
+                if (listView.Items.Count == 0)
+                {
+                    e.DrawDefault = true;
+                }
             }
 
             void lv_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)

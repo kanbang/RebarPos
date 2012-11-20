@@ -29,24 +29,32 @@ namespace RebarPosCommands
                 {
                     RebarPos source = tr.GetObject(result.ObjectId, OpenMode.ForRead) as RebarPos;
                     if (source == null) return;
+                    if (source.Detached) return;
 
                     RebarPos dest = tr.GetObject(destresult.ObjectId, OpenMode.ForWrite) as RebarPos;
                     if (dest != null)
                     {
-                        dest.Pos = source.Pos;
-                        dest.Count = source.Count;
-                        dest.Diameter = source.Diameter;
-                        dest.Spacing = source.Spacing;
-                        dest.Shape = source.Shape;
-                        dest.A = source.A;
-                        dest.B = source.B;
-                        dest.C = source.C;
-                        dest.D = source.D;
-                        dest.E = source.E;
-                        dest.F = source.F;
-                        dest.Display = source.Display;
-                        dest.Note = source.Note;
-                        dest.Multiplier = source.Multiplier;
+                        if (dest.Detached)
+                        {
+                            dest.Pos = source.Pos;
+                        }
+                        else
+                        {
+                            dest.Pos = source.Pos;
+                            dest.Count = source.Count;
+                            dest.Diameter = source.Diameter;
+                            dest.Spacing = source.Spacing;
+                            dest.Shape = source.Shape;
+                            dest.A = source.A;
+                            dest.B = source.B;
+                            dest.C = source.C;
+                            dest.D = source.D;
+                            dest.E = source.E;
+                            dest.F = source.F;
+                            dest.Display = source.Display;
+                            dest.Note = source.Note;
+                            dest.Multiplier = source.Multiplier;
+                        }
                     }
 
                     tr.Commit();
@@ -78,25 +86,13 @@ namespace RebarPosCommands
                 {
                     RebarPos source = tr.GetObject(result.ObjectId, OpenMode.ForRead) as RebarPos;
                     if (source == null) return;
+                    if (source.Detached) return;
 
                     RebarPos dest = tr.GetObject(destresult.ObjectId, OpenMode.ForWrite) as RebarPos;
                     if (dest != null)
                     {
                         dest.Pos = source.Pos;
-                        dest.Count = "";
-                        dest.Diameter = "";
-                        dest.Spacing = "";
-                        dest.Shape = "GENEL";
-                        dest.A = "";
-                        dest.B = "";
-                        dest.C = "";
-                        dest.D = "";
-                        dest.E = "";
-                        dest.F = "";
-                        dest.Display = RebarPos.DisplayStyle.MarkerOnly;
-                        dest.Note = "";
-                        dest.IncludeInBOQ = false;
-                        dest.Multiplier = 0;
+                        dest.Detached = true;
                     }
 
                     DBText text = tr.GetObject(destresult.ObjectId, OpenMode.ForWrite) as DBText;
@@ -139,6 +135,7 @@ namespace RebarPosCommands
                 {
                     RebarPos source = tr.GetObject(result.ObjectId, OpenMode.ForRead) as RebarPos;
                     if (source == null) return;
+                    if (source.Detached) return;
 
                     RebarPos dest = tr.GetObject(destresult.ObjectId, OpenMode.ForWrite) as RebarPos;
                     if (dest != null)

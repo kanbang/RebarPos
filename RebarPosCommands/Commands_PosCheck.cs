@@ -12,11 +12,11 @@ namespace RebarPosCommands
     {
         private void PosCheck()
         {
-            CheckForm form = new CheckForm();
-
-            PromptSelectionResult sel = DWGUtility.SelectAllPosUser();
+            PromptSelectionResult sel = DWGUtility.SelectAllPosUser(true);
             if (sel.Status != PromptStatus.OK) return;
             ObjectId[] items = sel.Value.GetObjectIds();
+
+            CheckForm form = new CheckForm();
 
             if (form.Init(items))
             {

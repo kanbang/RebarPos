@@ -41,7 +41,7 @@ namespace RebarPosCommands
                 }
             }
 
-            if (!form.Init(items))
+            if (!form.Init())
                 return false;
 
             if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) != System.Windows.Forms.DialogResult.OK)

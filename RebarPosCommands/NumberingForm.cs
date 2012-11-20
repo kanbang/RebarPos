@@ -19,12 +19,14 @@ namespace RebarPosCommands
         }
 
         List<PosCopy> m_PosList;
+        Dictionary<string, List<ObjectId>> m_DetachedPosList;
 
         public NumberingForm()
         {
             InitializeComponent();
 
             m_PosList = new List<PosCopy>();
+            m_DetachedPosList = new Dictionary<string, List<ObjectId>>();
         }
 
         public bool Init(ObjectId[] items)
@@ -222,6 +224,7 @@ namespace RebarPosCommands
         {
             int count = 0;
             int poscount = 0;
+            int detachedcount = 0;
 
             Database db = HostApplicationServices.WorkingDatabase;
             using (Transaction tr = db.TransactionManager.StartTransaction())
@@ -242,6 +245,19 @@ namespace RebarPosCommands
                                 }
                                 poscount++;
                             }
+                            if (m_DetachedPosList.ContainsKey(copy.pos))
+                            {
+                                foreach (ObjectId id in m_DetachedPosList[copy.pos])
+                                {
+                                    RebarPos pos = tr.GetObject(id, OpenMode.ForWrite) as RebarPos;
+                                    if (pos != null)
+                                    {
+                                        pos.Pos = num;
+                                    }
+                                    detachedcount++;
+                                }
+                            }
+
                             count++;
                         }
                     }
@@ -254,14 +270,36 @@ namespace RebarPosCommands
                 }
             }
 
-            MessageBox.Show(count.ToString() + " adet farklı numara verildi.\n" + poscount.ToString() + " adet poz nesnesi numaralandırıldı.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(
+                count.ToString() + " adet farklı numara verildi.\n" +
+                (poscount + detachedcount).ToString() + " adet poz nesnesi numaralandırıldı.",
+                "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void ReadPos(ObjectId[] items)
         {
             try
             {
-                m_PosList = PosCopy.ReadAllInSelection(items, true, PosCopy.PosGrouping.PosKey);
+                m_PosList = PosCopy.ReadAllInSelection(items, true, PosCopy.PosGrouping.PosKeyDifferentMarker);
+
+                m_DetachedPosList = new Dictionary<string, List<ObjectId>>();
+                Database db = HostApplicationServices.WorkingDatabase;
+                using (Transaction tr = db.TransactionManager.StartTransaction())
+                {
+                    foreach (ObjectId id in items)
+                    {
+                        RebarPos pos = tr.GetObject(id, OpenMode.ForRead) as RebarPos;
+                        if (pos == null) continue;
+                        if (!pos.Detached) continue;
+                        if (string.IsNullOrEmpty(pos.Pos)) continue;
+
+                        if (m_DetachedPosList.ContainsKey(pos.Pos))
+                            m_DetachedPosList[pos.Pos].Add(id);
+                        else
+                            m_DetachedPosList.Add(pos.Pos, new List<ObjectId>() { id });
+                    }
+                }
+
                 AddMissing();
                 SortDisplayList();
             }

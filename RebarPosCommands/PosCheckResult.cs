@@ -907,6 +907,7 @@ namespace RebarPosCommands
     {
         public string Pos { get; protected set; }
         public List<ObjectId> Items { get; private set; }
+        public List<ObjectId> DetachedItems { get; private set; }
         public abstract string ErrorMessage { get; }
         public abstract string Key { get; }
         public abstract string Description { get; }
@@ -923,6 +924,7 @@ namespace RebarPosCommands
         {
             Pos = pos;
             Items = new List<ObjectId>();
+            DetachedItems = new List<ObjectId>();
         }
 
         public override string ToString()

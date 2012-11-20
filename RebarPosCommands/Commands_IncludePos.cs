@@ -21,7 +21,7 @@ namespace RebarPosCommands
                     foreach (ObjectId id in list)
                     {
                         RebarPos pos = tr.GetObject(id, OpenMode.ForWrite) as RebarPos;
-                        if (pos != null)
+                        if (pos != null && !pos.Detached)
                         {
                             pos.IncludeInBOQ = include;
                         }

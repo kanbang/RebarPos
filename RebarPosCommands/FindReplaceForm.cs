@@ -107,6 +107,8 @@ namespace RebarPosCommands
                                 list.Add(id);
                             else
                                 m_PosList.Add(pos.Pos, new List<ObjectId>() { id });
+                            if (pos.Detached) continue;
+
                             if (m_CountList.TryGetValue(pos.Count, out list))
                                 list.Add(id);
                             else
@@ -156,33 +158,9 @@ namespace RebarPosCommands
                 cbFindMultiplier.Items.Add(mult.ToString());
 
             cbReplaceDiameter.Items.Clear();
-
-            using (Transaction tr = db.TransactionManager.StartTransaction())
+            foreach (int d in DWGUtility.GetStandardDiameters())
             {
-                try
-                {
-                    PosGroup group = tr.GetObject(PosGroup.GroupId, OpenMode.ForRead) as PosGroup;
-                    if (group != null)
-                    {
-                        string stdd = group.StandardDiameters;
-                        if (!string.IsNullOrEmpty(stdd))
-                        {
-                            foreach (string ds in stdd.Split(new char[] { ' ', ',', ';', ':', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries))
-                            {
-                                int d;
-                                if (int.TryParse(ds, out d))
-                                {
-                                    cbReplaceDiameter.Items.Add(d.ToString());
-                                }
-                            }
-                        }
-                    }
-
-                }
-                catch (System.Exception)
-                {
-                    ;
-                }
+                cbReplaceDiameter.Items.Add(d.ToString());
             }
 
             if (cbReplaceDiameter.Items.Count > 0) cbReplaceDiameter.SelectedIndex = 0;
@@ -718,6 +696,7 @@ namespace RebarPosCommands
                     {
                         RebarPos pos = tr.GetObject(id, OpenMode.ForWrite) as RebarPos;
                         if (pos == null) continue;
+                        if (pos.Detached) continue;
 
                         if (rbReplaceCount.Checked) pos.Count = txtReplaceCount.Text;
                         if (rbReplaceDiameter.Checked) pos.Diameter = (string)cbReplaceDiameter.SelectedItem;

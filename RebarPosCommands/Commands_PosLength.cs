@@ -21,9 +21,8 @@ namespace RebarPosCommands
                     foreach (ObjectId id in list)
                     {
                         RebarPos pos = tr.GetObject(id, OpenMode.ForWrite) as RebarPos;
-                        if (pos != null)
+                        if (pos != null && !pos.Detached && pos.Display != RebarPos.DisplayStyle.MarkerOnly)
                         {
-                            if (pos.Display == RebarPos.DisplayStyle.MarkerOnly) continue;
                             if (show)
                                 pos.Display = RebarPos.DisplayStyle.All;
                             else
