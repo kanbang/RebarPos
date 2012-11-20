@@ -37,7 +37,7 @@ CRebarPos::CRebarPos() :
 	m_IncludeInBOQ(Adesk::kTrue), m_Multiplier(1), m_DisplayedSpacing(NULL),
 	m_Shape(NULL), m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), 
 	circleRadius(1.125), partSpacing(0.15), 
-	defpointsLayer(AcDbObjectId::kNull),
+	defpointsLayer(AcDbObjectId::kNull), m_Detached(Adesk::kFalse),
 	m_CalcProps()
 {
 }
@@ -519,6 +519,44 @@ const ACHAR* CRebarPos::Length(void) const
 	return m_Length;
 }
 
+const Adesk::Boolean CRebarPos::Detached(void) const
+{
+	assertReadEnabled();
+	return m_Detached;
+}
+
+Acad::ErrorStatus CRebarPos::setDetached(const Adesk::Boolean newVal)
+{
+	assertWriteEnabled();
+	m_Detached = newVal;
+	if(newVal == Adesk::kTrue)
+	{
+		acutUpdString(_T(""), m_Key);
+		acutUpdString(_T(""), m_Length);
+		acutUpdString(_T(""), m_DisplayedSpacing);
+
+		acutUpdString(_T(""), m_Count);
+		acutUpdString(_T(""), m_Diameter);
+		acutUpdString(_T(""), m_Spacing);
+
+		m_IncludeInBOQ = Adesk::kFalse;
+		m_Multiplier = 0;
+
+		acutUpdString(_T(""), m_Note);
+		acutUpdString(_T(""), m_Shape);
+		acutUpdString(_T(""), m_A);
+		acutUpdString(_T(""), m_B);
+		acutUpdString(_T(""), m_C);
+		acutUpdString(_T(""), m_D);
+		acutUpdString(_T(""), m_E);
+		acutUpdString(_T(""), m_F);
+
+		m_DisplayStyle = CRebarPos::MARKERONLY;
+	}
+	isModified = true;
+	return Acad::eOk;
+}
+
 const ACHAR* CRebarPos::PosKey() const
 {
 	assertReadEnabled();
@@ -648,8 +686,8 @@ Acad::ErrorStatus CRebarPos::subGetGripPoints(
 {
 	assertReadEnabled();
 	gripPoints.append(m_BasePoint);
-	gripPoints.append(m_NoteGrip);
-	gripPoints.append(m_LengthGrip);
+	if(m_Detached == Adesk::kFalse && m_DisplayStyle != CRebarPos::MARKERONLY) gripPoints.append(m_NoteGrip);
+	if(m_Detached == Adesk::kFalse && m_DisplayStyle == CRebarPos::ALL) gripPoints.append(m_LengthGrip);
 	return Acad::eOk;
 }
 
@@ -766,37 +804,41 @@ void CRebarPos::subList() const
 	// List all properties
 	if (m_Pos != NULL)
 		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Pos Marker:"), m_Pos);
-	if (m_Count != NULL)
-		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Count:"), m_Count);
-	if (m_Diameter != NULL)
-		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Diameter:"), m_Diameter);
-	if (m_Spacing != NULL)
-		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Spacing:"), m_Spacing);
 
-	if(m_IncludeInBOQ == Adesk::kTrue)
-		acutPrintf(_T("%18s%16s %i\n"), _T(/*MSG0*/""), _T("Multiplier:"), m_Multiplier);
-	else
-		acutPrintf(_T("%18s%16s %i (Not Included in BOQ)\n"), _T(/*MSG0*/""), _T("Multiplier:"), m_Multiplier);
-
-	// Shape
-	if ((m_Shape != NULL) && (m_Shape[0] != _T('\0')))
+	if(m_Detached == Adesk::kFalse)
 	{
-		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Shape:"), m_Shape);
-	}
+		if (m_Count != NULL)
+			acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Count:"), m_Count);
+		if (m_Diameter != NULL)
+			acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Diameter:"), m_Diameter);
+		if (m_Spacing != NULL)
+			acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Spacing:"), m_Spacing);
 
-	// Lengths
-	if ((m_A != NULL) && (m_A[0] != _T('\0')))
-		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("A Length:"), m_A);
-	if ((m_B != NULL) && (m_B[0] != _T('\0')))
-		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("B Length:"), m_B);
-	if ((m_C != NULL) && (m_C[0] != _T('\0')))
-		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("C Length:"), m_C);
-	if ((m_D != NULL) && (m_D[0] != _T('\0')))
-		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("D Length:"), m_D);
-	if ((m_E != NULL) && (m_E[0] != _T('\0')))
-		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("E Length:"), m_E);
-	if ((m_F != NULL) && (m_F[0] != _T('\0')))
-		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("F Length:"), m_F);
+		if(m_IncludeInBOQ == Adesk::kTrue)
+			acutPrintf(_T("%18s%16s %i\n"), _T(/*MSG0*/""), _T("Multiplier:"), m_Multiplier);
+		else
+			acutPrintf(_T("%18s%16s %i (Not Included in BOQ)\n"), _T(/*MSG0*/""), _T("Multiplier:"), m_Multiplier);
+
+		// Shape
+		if ((m_Shape != NULL) && (m_Shape[0] != _T('\0')))
+		{
+			acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Shape:"), m_Shape);
+		}
+
+		// Lengths
+		if ((m_A != NULL) && (m_A[0] != _T('\0')))
+			acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("A Length:"), m_A);
+		if ((m_B != NULL) && (m_B[0] != _T('\0')))
+			acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("B Length:"), m_B);
+		if ((m_C != NULL) && (m_C[0] != _T('\0')))
+			acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("C Length:"), m_C);
+		if ((m_D != NULL) && (m_D[0] != _T('\0')))
+			acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("D Length:"), m_D);
+		if ((m_E != NULL) && (m_E[0] != _T('\0')))
+			acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("E Length:"), m_E);
+		if ((m_F != NULL) && (m_F[0] != _T('\0')))
+			acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("F Length:"), m_F);
+	}
 }
 
 Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
@@ -1160,8 +1202,10 @@ Acad::ErrorStatus CRebarPos::dwgOutFields(AcDbDwgFiler* pFiler) const
 	pFiler->writeBoolean(m_IncludeInBOQ);
 	pFiler->writeInt32(m_Multiplier);
 	pFiler->writeInt32(m_DisplayStyle);
+
 	if(m_Shape)
 		pFiler->writeString(m_Shape);
+
 	if(m_A)
 		pFiler->writeString(m_A);
 	else
@@ -1186,6 +1230,8 @@ Acad::ErrorStatus CRebarPos::dwgOutFields(AcDbDwgFiler* pFiler) const
 		pFiler->writeString(m_F);
 	else
 		pFiler->writeString(_T(""));
+
+	pFiler->writeBoolean(m_Detached);
 
 	return pFiler->filerStatus();
 }
@@ -1243,6 +1289,7 @@ Acad::ErrorStatus CRebarPos::dwgInFields(AcDbDwgFiler* pFiler)
 		pFiler->readString(&m_D);
 		pFiler->readString(&m_E);
 		pFiler->readString(&m_F);
+		pFiler->readBoolean(&m_Detached);
 	}
 
 	return pFiler->filerStatus();
@@ -1324,6 +1371,8 @@ Acad::ErrorStatus CRebarPos::dxfOutFields(AcDbDxfFiler* pFiler) const
 	else
 		pFiler->writeString(AcDb::kDxfXTextString + 9, _T(""));
 
+	pFiler->writeBoolean(AcDb::kDxfBool + 1, m_Detached);
+
 	return pFiler->filerStatus();
 }
 
@@ -1368,6 +1417,7 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	ACHAR* t_D = NULL;
 	ACHAR* t_E = NULL;
 	ACHAR* t_F = NULL;
+	Adesk::Boolean t_Detached = Adesk::kFalse;
 
     while ((es == Acad::eOk) && ((es = pFiler->readResBuf(&rb)) == Acad::eOk))
     {
@@ -1438,6 +1488,10 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
             acutUpdString(rb.resval.rstring, t_F);
             break;
 
+        case AcDb::kDxfBool + 1:
+			t_Detached = (rb.resval.rint == 0) ? Adesk::kFalse : Adesk::kTrue;
+            break;
+
         default:
             // An unrecognized group. Push it back so that
             // the subclass can read it again.
@@ -1477,6 +1531,7 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	setD(t_D);
 	setE(t_E);
 	setF(t_F);
+	setDetached(t_Detached);
 
 	acutDelString(t_Pos);
 	acutDelString(t_Note);
@@ -1870,180 +1925,199 @@ const void CRebarPos::Calculate(void) const
 	{
 		return;
 	}
-	m_CalcProps.Generation = m_CalcProps.Generation + 1;
-	m_CalcProps.Bending = (pGroup->Bending() == Adesk::kTrue);
-	m_CalcProps.Precision = pGroup->Precision();
-	m_CalcProps.DrawingUnit = pGroup->DrawingUnit();
-	m_CalcProps.DisplayUnit = pGroup->DisplayUnit();
-	if(m_Shape == NULL || m_Shape[0] == _T('\0'))
-	{
-		return;
-	}
-	CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
-	const ACHAR* formula;
-	if(m_CalcProps.Bending)
-	{
-		formula = pShape->FormulaBending();
-	}
-	else
-	{
-		formula = pShape->Formula();
-	}
-	m_CalcProps.FieldCount = pShape->Fields();
 
-	// Copy shapes
+	// Reset calculated properties
+	m_CalcProps.Reset();
+	m_CalcProps.Generation = m_CalcProps.Generation + 1;
+
+	// Reset shapes
 	lastShapes.clear();
 	for(ShapeListIt it = lastShapes.begin(); it != lastShapes.end(); it++)
 	{
 		delete *it;
 	}
-	for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
-	{
-		lastShapes.push_back(pShape->GetShape(i)->clone());
-	}
-
-	lastNoteScale = pGroup->NoteScale();
 
 	// Create text styles
 	if (pGroup->TextStyleId() != AcDbObjectId::kNull)
 		Utility::MakeGiTextStyle(lastTextStyle, pGroup->TextStyleId());
 	if (pGroup->NoteStyleId() != AcDbObjectId::kNull)
 		Utility::MakeGiTextStyle(lastNoteStyle, pGroup->NoteStyleId());
+	lastNoteScale = pGroup->NoteScale();
 
-	// Calculate count
-	m_CalcProps.Count = 0;
-	if(m_Count != NULL && m_Count[0] != _T('\0'))
+	if(m_Detached)
 	{
-		std::wstring countstring(m_Count);
-		try
+		acutUpdString(_T(""), m_Length);
+		acutUpdString(_T(""), m_DisplayedSpacing);
+		acutUpdString(_T(""), m_Key);
+
+		// Rebuild draw lists
+		lastDrawList.clear();
+		if(pGroup->FormulaPosOnly() != NULL)
 		{
-			Utility::ReplaceString(countstring, L"x", L"*");
-			Utility::ReplaceString(countstring, L"X", L"*");
-			m_CalcProps.Count = Utility::DoubleToInt(Calculator::Evaluate(countstring));
+			lastDrawList = ParseFormula(pGroup->FormulaPosOnly());
 		}
-		catch(...)
-		{
-			m_CalcProps.Count = 0;
-		}
-	}
 
-	// Calculate diameter
-	m_CalcProps.Diameter = 0;
-	if(m_Diameter != NULL && m_Diameter[0] != _T('\0'))
-		m_CalcProps.Diameter = Utility::StrToDouble(m_Diameter);
-
-	// Calculate piece lengths
-	m_CalcProps.MinA = 0; m_CalcProps.MinB = 0; m_CalcProps.MinC = 0; m_CalcProps.MinD = 0; m_CalcProps.MinE = 0; m_CalcProps.MinF = 0;
-	m_CalcProps.MaxA = 0; m_CalcProps.MaxB = 0; m_CalcProps.MaxC = 0; m_CalcProps.MaxD = 0; m_CalcProps.MaxE = 0; m_CalcProps.MaxF = 0;
-	m_CalcProps.IsVarA = false; m_CalcProps.IsVarB = false; m_CalcProps.IsVarC = false; m_CalcProps.IsVarD = false; m_CalcProps.IsVarE = false; m_CalcProps.IsVarF = false;
-	if(m_CalcProps.FieldCount >= 1)
-		GetLengths(m_A, m_CalcProps.Diameter, m_CalcProps.DrawingUnit, m_CalcProps.MinA, m_CalcProps.MaxA, m_CalcProps.IsVarA);
-	if(m_CalcProps.FieldCount >= 2)
-		GetLengths(m_B, m_CalcProps.Diameter, m_CalcProps.DrawingUnit, m_CalcProps.MinB, m_CalcProps.MaxB, m_CalcProps.IsVarB);
-	if(m_CalcProps.FieldCount >= 3)
-		GetLengths(m_C, m_CalcProps.Diameter, m_CalcProps.DrawingUnit, m_CalcProps.MinC, m_CalcProps.MaxC, m_CalcProps.IsVarC);
-	if(m_CalcProps.FieldCount >= 4)
-		GetLengths(m_D, m_CalcProps.Diameter, m_CalcProps.DrawingUnit, m_CalcProps.MinD, m_CalcProps.MaxD, m_CalcProps.IsVarD);
-	if(m_CalcProps.FieldCount >= 5)
-		GetLengths(m_E, m_CalcProps.Diameter, m_CalcProps.DrawingUnit, m_CalcProps.MinE, m_CalcProps.MaxE, m_CalcProps.IsVarE);
-	if(m_CalcProps.FieldCount >= 6)
-		GetLengths(m_F, m_CalcProps.Diameter, m_CalcProps.DrawingUnit, m_CalcProps.MinF, m_CalcProps.MaxF, m_CalcProps.IsVarF);
-
-	// Calculate total length
-	m_CalcProps.IsVarLength = m_CalcProps.IsVarA || m_CalcProps.IsVarB || m_CalcProps.IsVarC || m_CalcProps.IsVarD || m_CalcProps.IsVarE || m_CalcProps.IsVarF;
-	GetTotalLengths(formula, m_CalcProps);
-
-	// Calculate spacing
-	m_CalcProps.MinSpacing = 0; m_CalcProps.MaxSpacing = 0; m_CalcProps.IsVarSpacing = false;
-	GetLengths(m_Spacing, 0.0, m_CalcProps.DrawingUnit, m_CalcProps.MinSpacing, m_CalcProps.MaxSpacing, m_CalcProps.IsVarSpacing);
-
-	// Scale from MM to display units
-	double scale = ConvertLength(1.0, CPosGroup::MM, m_CalcProps.DisplayUnit);
-
-	// Set length text
-	std::wstring strL1;
-	Utility::DoubleToStr(m_CalcProps.MinLength * scale, m_CalcProps.Precision, strL1);
-	std::wstring strL2;
-	Utility::DoubleToStr(m_CalcProps.MaxLength * scale, m_CalcProps.Precision, strL2);
-	std::wstring strL;
-	if(m_CalcProps.IsVarLength)
-	{
-		strL = strL1 + L"~" + strL2;
-	}
-	else
-	{
-		strL = strL1;
-	}
-	acutUpdString(strL.c_str(), m_Length);
-
-	// Set spacing text
-	std::wstring strS1;
-	Utility::DoubleToStr(m_CalcProps.MinSpacing * scale, m_CalcProps.Precision, strS1);
-	std::wstring strS2;
-	Utility::DoubleToStr(m_CalcProps.MaxSpacing * scale, m_CalcProps.Precision, strS2);
-	std::wstring strS;
-	if(m_CalcProps.IsVarSpacing)
-	{
-		strS = strS1 + L"~" + strS2;
-	}
-	else
-	{
-		strS = strS1;
-	}
-	acutUpdString(strS.c_str(), m_DisplayedSpacing);
-
-	// Shape code
-	std::wstringstream oss;
-	oss << L"T" << m_Diameter;
-	oss << L":S" << m_Shape;
-
-	if(m_CalcProps.FieldCount >= 1)
-		oss << L":A" << m_A;
-	if(m_CalcProps.FieldCount >= 2)
-		oss << L":B" << m_B;
-	if(m_CalcProps.FieldCount >= 3)
-		oss << L":C" << m_C;
-	if(m_CalcProps.FieldCount >= 4)
-		oss << L":D" << m_D;
-	if(m_CalcProps.FieldCount >= 5)
-		oss << L":E" << m_E;
-	if(m_CalcProps.FieldCount >= 6)
-		oss << L":F" << m_F;
-	acutUpdString(oss.str().c_str(), m_Key);
-
-	// Rebuild draw lists
-	lastDrawList.clear();
-	if((m_DisplayStyle == CRebarPos::ALL || m_DisplayStyle == CRebarPos::WITHOUTLENGTH) && pGroup->Formula() != NULL)
-	{
-		lastDrawList = ParseFormula(pGroup->Formula());
-	}
-	else if(m_DisplayStyle == CRebarPos::MARKERONLY && pGroup->FormulaPosOnly() != NULL)
-	{
-		lastDrawList = ParseFormula(pGroup->FormulaPosOnly());
-	}
-
-	if(m_DisplayStyle != CRebarPos::MARKERONLY)
-		lastNoteDraw.text = m_Note;
-	else
 		lastNoteDraw.text = L"";
-
-	if(m_DisplayStyle == CRebarPos::ALL && pGroup->FormulaLengthOnly() != NULL)
-	{
-		DrawList lengthList = ParseFormula(pGroup->FormulaLengthOnly());
-		if(lengthList.size() == 0)
-			lastLengthDraw.text = L"";
-		else
-			lastLengthDraw = lengthList[0];
-	}
-	else
-	{
 		lastLengthDraw.text = L"";
-	}
-
-	if(m_Multiplier == 0)
 		lastMultiplierDraw.text = L"-";
+	}
 	else
-		Utility::IntToStr(m_Multiplier, lastMultiplierDraw.text);
+	{
+		m_CalcProps.Bending = (pGroup->Bending() == Adesk::kTrue);
+		m_CalcProps.Precision = pGroup->Precision();
+		m_CalcProps.DrawingUnit = pGroup->DrawingUnit();
+		m_CalcProps.DisplayUnit = pGroup->DisplayUnit();
+		if(m_Shape == NULL || m_Shape[0] == _T('\0'))
+		{
+			return;
+		}
+		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
+		const ACHAR* formula;
+		if(m_CalcProps.Bending)
+		{
+			formula = pShape->FormulaBending();
+		}
+		else
+		{
+			formula = pShape->Formula();
+		}
+		m_CalcProps.FieldCount = pShape->Fields();
+
+		// Copy shapes
+		for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
+		{
+			lastShapes.push_back(pShape->GetShape(i)->clone());
+		}
+
+		// Calculate count
+		if(m_Count != NULL && m_Count[0] != _T('\0'))
+		{
+			std::wstring countstring(m_Count);
+			try
+			{
+				Utility::ReplaceString(countstring, L"x", L"*");
+				Utility::ReplaceString(countstring, L"X", L"*");
+				m_CalcProps.Count = Utility::DoubleToInt(Calculator::Evaluate(countstring));
+			}
+			catch(...)
+			{
+				m_CalcProps.Count = 0;
+			}
+		}
+
+		// Calculate diameter
+		if(m_Diameter != NULL && m_Diameter[0] != _T('\0'))
+			m_CalcProps.Diameter = Utility::StrToDouble(m_Diameter);
+
+		// Calculate piece lengths
+		if(m_CalcProps.FieldCount >= 1)
+			GetLengths(m_A, m_CalcProps.Diameter, m_CalcProps.DrawingUnit, m_CalcProps.MinA, m_CalcProps.MaxA, m_CalcProps.IsVarA);
+		if(m_CalcProps.FieldCount >= 2)
+			GetLengths(m_B, m_CalcProps.Diameter, m_CalcProps.DrawingUnit, m_CalcProps.MinB, m_CalcProps.MaxB, m_CalcProps.IsVarB);
+		if(m_CalcProps.FieldCount >= 3)
+			GetLengths(m_C, m_CalcProps.Diameter, m_CalcProps.DrawingUnit, m_CalcProps.MinC, m_CalcProps.MaxC, m_CalcProps.IsVarC);
+		if(m_CalcProps.FieldCount >= 4)
+			GetLengths(m_D, m_CalcProps.Diameter, m_CalcProps.DrawingUnit, m_CalcProps.MinD, m_CalcProps.MaxD, m_CalcProps.IsVarD);
+		if(m_CalcProps.FieldCount >= 5)
+			GetLengths(m_E, m_CalcProps.Diameter, m_CalcProps.DrawingUnit, m_CalcProps.MinE, m_CalcProps.MaxE, m_CalcProps.IsVarE);
+		if(m_CalcProps.FieldCount >= 6)
+			GetLengths(m_F, m_CalcProps.Diameter, m_CalcProps.DrawingUnit, m_CalcProps.MinF, m_CalcProps.MaxF, m_CalcProps.IsVarF);
+
+		// Calculate total length
+		m_CalcProps.IsVarLength = m_CalcProps.IsVarA || m_CalcProps.IsVarB || m_CalcProps.IsVarC || m_CalcProps.IsVarD || m_CalcProps.IsVarE || m_CalcProps.IsVarF;
+		GetTotalLengths(formula, m_CalcProps);
+
+		// Calculate spacing
+		GetLengths(m_Spacing, 0.0, m_CalcProps.DrawingUnit, m_CalcProps.MinSpacing, m_CalcProps.MaxSpacing, m_CalcProps.IsVarSpacing);
+
+		// Scale from MM to display units
+		double scale = ConvertLength(1.0, CPosGroup::MM, m_CalcProps.DisplayUnit);
+
+		// Set length text
+		std::wstring strL1;
+		Utility::DoubleToStr(m_CalcProps.MinLength * scale, m_CalcProps.Precision, strL1);
+		std::wstring strL2;
+		Utility::DoubleToStr(m_CalcProps.MaxLength * scale, m_CalcProps.Precision, strL2);
+		std::wstring strL;
+		if(m_CalcProps.IsVarLength)
+		{
+			strL = strL1 + L"~" + strL2;
+		}
+		else
+		{
+			strL = strL1;
+		}
+		acutUpdString(strL.c_str(), m_Length);
+
+		// Set spacing text
+		std::wstring strS1;
+		Utility::DoubleToStr(m_CalcProps.MinSpacing * scale, m_CalcProps.Precision, strS1);
+		std::wstring strS2;
+		Utility::DoubleToStr(m_CalcProps.MaxSpacing * scale, m_CalcProps.Precision, strS2);
+		std::wstring strS;
+		if(m_CalcProps.IsVarSpacing)
+		{
+			strS = strS1 + L"~" + strS2;
+		}
+		else
+		{
+			strS = strS1;
+		}
+		acutUpdString(strS.c_str(), m_DisplayedSpacing);
+
+		// Shape code
+		std::wstringstream oss;
+		oss << L"T" << m_Diameter;
+		oss << L":S" << m_Shape;
+
+		if(m_CalcProps.FieldCount >= 1)
+			oss << L":A" << m_A;
+		if(m_CalcProps.FieldCount >= 2)
+			oss << L":B" << m_B;
+		if(m_CalcProps.FieldCount >= 3)
+			oss << L":C" << m_C;
+		if(m_CalcProps.FieldCount >= 4)
+			oss << L":D" << m_D;
+		if(m_CalcProps.FieldCount >= 5)
+			oss << L":E" << m_E;
+		if(m_CalcProps.FieldCount >= 6)
+			oss << L":F" << m_F;
+		acutUpdString(oss.str().c_str(), m_Key);
+
+		// Rebuild draw lists
+		lastDrawList.clear();
+		if((m_DisplayStyle == CRebarPos::ALL || m_DisplayStyle == CRebarPos::WITHOUTLENGTH) && pGroup->Formula() != NULL)
+		{
+			lastDrawList = ParseFormula(pGroup->Formula());
+		}
+		else if(m_DisplayStyle == CRebarPos::MARKERONLY && pGroup->FormulaPosOnly() != NULL)
+		{
+			lastDrawList = ParseFormula(pGroup->FormulaPosOnly());
+		}
+
+		if(m_DisplayStyle != CRebarPos::MARKERONLY)
+			lastNoteDraw.text = m_Note;
+		else
+			lastNoteDraw.text = L"";
+
+		if(m_DisplayStyle == CRebarPos::ALL && pGroup->FormulaLengthOnly() != NULL)
+		{
+			DrawList lengthList = ParseFormula(pGroup->FormulaLengthOnly());
+			if(lengthList.size() == 0)
+				lastLengthDraw.text = L"";
+			else
+				lastLengthDraw = lengthList[0];
+		}
+		else
+		{
+			lastLengthDraw.text = L"";
+		}
+
+		if(m_Multiplier == 0)
+			lastMultiplierDraw.text = L"-";
+		else
+			Utility::IntToStr(m_Multiplier, lastMultiplierDraw.text);
+	}
 
 	// Set colors
 	defpointsLayer = Utility::CreateHiddenLayer();
@@ -2102,7 +2176,7 @@ const void CRebarPos::Calculate(void) const
 		}
 		lastDrawList[i] = p;
 	}
-    // Measure multiplier text
+	// Measure multiplier text
 	AcGePoint2d mext = lastTextStyle.extents(lastMultiplierDraw.text.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
 	lastMultiplierDraw.x = 0;
 	lastMultiplierDraw.y = 1.4;

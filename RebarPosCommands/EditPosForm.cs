@@ -880,5 +880,41 @@ namespace RebarPosCommands
             }
             Show();
         }
+
+        private void btnDetach_Click(object sender, EventArgs e)
+        {
+            bool haserror = false;
+            if (!CheckPosMarker()) haserror = true;
+
+            if (haserror)
+            {
+                MessageBox.Show("Lütfen hatalı değerleri düzeltin.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    RebarPos pos = tr.GetObject(m_Pos, OpenMode.ForWrite) as RebarPos;
+                    if (pos == null) return;
+
+                    pos.Pos = txtPosMarker.Text;
+                    pos.Note = txtPosNote.Text;
+
+                    pos.Detached = true;
+
+                    tr.Commit();
+
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
     }
 }

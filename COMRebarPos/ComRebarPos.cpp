@@ -118,6 +118,32 @@ STDMETHODIMP CComRebarPos::ShowProperty(
 	/* [in] */ DISPID dispID, 
 	/* [out] */ BOOL *pShow)
 {
+	try
+	{
+		Acad::ErrorStatus es;
+		AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef, AcDb::kForRead, Adesk::kTrue);
+		if((es = pRebarPos.openStatus()) != Acad::eOk)
+			throw es;
+
+		if(pRebarPos->Detached() == Adesk::kFalse)
+		{
+			*pShow = TRUE;
+			return S_OK;
+		}
+		else
+		{
+			if(dispID == DISPID_BASEPOINT || dispID == DISPID_NOTEGRIP || dispID == DISPID_POS || 
+				dispID == DISPID_NOTE || dispID == DISPID_SCALE)
+				*pShow = TRUE;
+			else
+				*pShow = FALSE;
+		}
+	}
+	catch(const Acad::ErrorStatus)
+	{
+		return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
+	}
+
 	return IOPMPropertyExtensionImpl<CComRebarPos>::ShowProperty(dispID, pShow);
 }
 

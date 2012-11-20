@@ -85,6 +85,7 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.btnDetach = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -691,6 +692,16 @@
             this.errorProvider.ContainerControl = this;
             this.errorProvider.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProvider.Icon")));
             // 
+            // btnDetach
+            // 
+            this.btnDetach.Location = new System.Drawing.Point(12, 371);
+            this.btnDetach.Name = "btnDetach";
+            this.btnDetach.Size = new System.Drawing.Size(133, 23);
+            this.btnDetach.TabIndex = 5;
+            this.btnDetach.Text = "Boş Poz Bloğuna Çevir";
+            this.btnDetach.UseVisualStyleBackColor = true;
+            this.btnDetach.Click += new System.EventHandler(this.btnDetach_Click);
+            // 
             // EditPosForm
             // 
             this.AcceptButton = this.btnOK;
@@ -698,6 +709,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(653, 406);
+            this.Controls.Add(this.btnDetach);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.groupBox3);
@@ -779,5 +791,6 @@
         private System.Windows.Forms.Label lblPosShape;
         private System.Windows.Forms.ErrorProvider errorProvider;
         private System.Windows.Forms.ComboBox cbPosDiameter;
+        private System.Windows.Forms.Button btnDetach;
     }
 }

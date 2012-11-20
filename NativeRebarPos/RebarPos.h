@@ -104,6 +104,28 @@ public:
 			MinSpacing(0), MaxSpacing(0), IsVarSpacing(false),
 			DrawingUnit(CPosGroup::MM), DisplayUnit(CPosGroup::MM)
 		{ }
+
+		void Reset()
+		{
+			Count = 0;
+			Diameter = 0.0;
+			Precision = 0;
+			FieldCount = 0;
+			Bending = false;
+
+			MinA = 0; MinB = 0; MinC = 0; MinD = 0; MinE = 0; MinF = 0;
+			MaxA = 0; MaxB = 0; MaxC = 0; MaxD = 0; MaxE = 0; MaxF = 0;
+			IsVarA = false; IsVarB = false; IsVarC = false; IsVarD = false; IsVarE = false; IsVarF = false;
+
+			MinLength = 0; MaxLength = 0;
+			IsVarLength = false;
+
+			MinSpacing = 0; MaxSpacing = 0;
+			IsVarSpacing = false;
+
+			DrawingUnit = CPosGroup::MM;
+			DisplayUnit = CPosGroup::MM;
+		}
 	};
 
 private:
@@ -145,6 +167,7 @@ private:
 	ACHAR* m_D;
 	ACHAR* m_E;
 	ACHAR* m_F;
+	Adesk::Boolean m_Detached;
 
 	DisplayStyle m_DisplayStyle;
 
@@ -233,7 +256,7 @@ public:
 	const ACHAR* Spacing(void) const;
 	Acad::ErrorStatus setSpacing(const ACHAR* newVal);
 
-	/// Gets or sets the pos is included in the BOQ
+	/// Gets or sets whether the pos is included in the BOQ
 	const Adesk::Boolean IncludeInBOQ(void) const;
 	Acad::ErrorStatus setIncludeInBOQ(const Adesk::Boolean newVal);
 
@@ -275,6 +298,10 @@ public:
 
 	/// Gets the total length
 	const ACHAR* Length(void) const;
+
+	/// Gets or sets whether the pos is detached from shape definitions
+	const Adesk::Boolean Detached(void) const;
+	Acad::ErrorStatus setDetached(const Adesk::Boolean newVal);
 
 	/// Gets calculated properties
 	const CCalculatedProperties& CalcProps(void) const;

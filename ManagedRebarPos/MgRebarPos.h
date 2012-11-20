@@ -177,6 +177,8 @@ namespace OZOZ
 			property String^ E { String^ get(); void set(String^ value); }
 			property String^ F { String^ get(); void set(String^ value); }
 
+			property bool Detached { bool get(); void set(bool value); }
+
 			property CalculatedProperties^ CalcProperties { CalculatedProperties^ get(); }
 
 			property String^ Length { String^ get(); }

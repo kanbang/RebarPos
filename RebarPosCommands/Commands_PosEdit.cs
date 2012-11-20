@@ -10,13 +10,47 @@ namespace RebarPosCommands
     {
         private bool PosEdit(ObjectId id, Point3d pt)
         {
-            EditPosForm form = new EditPosForm();
+            bool detached = false;
 
-            if (form.Init(id, pt))
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
             {
-                if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
+                try
                 {
-                    return true;
+                    RebarPos pos = tr.GetObject(id, OpenMode.ForRead) as RebarPos;
+                    if (pos == null) return false;
+
+                    detached = pos.Detached;
+                }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+            }
+
+            if (detached)
+            {
+                EditDetachedPosForm form = new EditDetachedPosForm();
+
+                if (form.Init(id, pt))
+                {
+                    if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                EditPosForm form = new EditPosForm();
+
+                if (form.Init(id, pt))
+                {
+                    if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
+                    {
+                        return true;
+                    }
                 }
             }
 

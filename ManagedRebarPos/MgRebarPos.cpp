@@ -232,6 +232,15 @@ String^ RebarPos::Length::get()
     return Marshal::WcharToString(GetImpObj()->Length());
 }
 
+void RebarPos::Detached::set(bool value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setDetached(value ?  Adesk::kTrue :  Adesk::kFalse));
+}
+bool RebarPos::Detached::get()
+{
+    return (GetImpObj()->Detached() == Adesk::kTrue);
+}
+
 String^ RebarPos::PosKey::get()
 {
     return Marshal::WcharToString(GetImpObj()->PosKey());

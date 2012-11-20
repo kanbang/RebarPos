@@ -32,7 +32,8 @@ namespace RebarPosCommands
         {
             // Shade current group only
             RebarPos pos = overruledSubject as RebarPos;
-            return (!pos.IncludeInBOQ);
+            if (pos == null) return false;
+            return (!pos.IncludeInBOQ || pos.Detached);
         }
 
         public override bool WorldDraw(Drawable drawable, WorldDraw wd)
@@ -47,7 +48,7 @@ namespace RebarPosCommands
             {
                 return base.WorldDraw(drawable, wd);
             }
-            if (pos.IncludeInBOQ)
+            if (pos.IncludeInBOQ && !pos.Detached)
             {
                 return base.WorldDraw(drawable, wd);
             }
