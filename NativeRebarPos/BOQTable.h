@@ -11,7 +11,6 @@
 #include <vector>
 #include <map>
 #include "BOQRow.h"
-#include "BOQStyle.h"
 #include "DrawParams.h"
 #include "GenericTable.h"
 
@@ -61,6 +60,14 @@ public:
 		TOTALLENGTH = 7
 	};
 
+	enum DrawingUnits
+	{ 
+		MM = 0,
+		CM = 1,
+		DM = 2,
+		M = 3,
+	};
+
 private:
 	/// Property backing fields
 	Adesk::Int32 m_Multiplier;
@@ -69,7 +76,40 @@ private:
 	ACHAR* m_Footing;
 	ACHAR* m_Note;
 
-	AcDbHardPointerId m_StyleID;
+	Adesk::Int32 m_Precision;
+
+	DrawingUnits m_DisplayUnit;
+
+	ACHAR* m_Columns;
+
+	Adesk::UInt16 m_TextColor;
+	Adesk::UInt16 m_PosColor;
+	Adesk::UInt16 m_LineColor;
+	Adesk::UInt16 m_SeparatorColor;
+	Adesk::UInt16 m_BorderColor;
+	Adesk::UInt16 m_HeadingColor;
+	Adesk::UInt16 m_FootingColor;
+
+	ACHAR* m_PosLabel;
+	ACHAR* m_CountLabel;
+	ACHAR* m_DiameterLabel;
+	ACHAR* m_LengthLabel;
+	ACHAR* m_ShapeLabel;
+	ACHAR* m_TotalLengthLabel;
+	ACHAR* m_DiameterListLabel;
+	ACHAR* m_DiameterLengthLabel;
+	ACHAR* m_UnitWeightLabel;
+	ACHAR* m_WeightLabel;
+	ACHAR* m_GrossWeightLabel;
+	ACHAR* m_MultiplierHeadingLabel;
+
+    AcDbHardPointerId m_TextStyleId;
+    AcDbHardPointerId m_HeadingStyleId;
+    AcDbHardPointerId m_FootingStyleId;
+
+	double m_HeadingScale;
+	double m_FootingScale;
+	double m_RowSpacing;
 
 	RowList m_List;
 
@@ -98,9 +138,98 @@ public:
 	const ACHAR* Note(void) const;
 	Acad::ErrorStatus setNote(const ACHAR* newVal);
 
-	/// Gets or sets the BOQ style
-	const AcDbObjectId& StyleId(void) const;
-	Acad::ErrorStatus setStyleId(const AcDbObjectId& newVal);
+	/// Gets or sets the display precision
+    const Adesk::Int32 Precision(void) const;
+	Acad::ErrorStatus setPrecision(const Adesk::Int32 newVal);
+
+	/// Gets or sets the display unit
+    const DrawingUnits DisplayUnit(void) const;
+	Acad::ErrorStatus setDisplayUnit(const DrawingUnits newVal);
+
+	/// Gets or sets the column definition.
+    const ACHAR* ColumnDef(void) const;
+	Acad::ErrorStatus setColumnDef(const ACHAR* newVal);
+
+	/// Gets or sets the text color.
+	const Adesk::UInt16 TextColor(void) const;
+	Acad::ErrorStatus setTextColor(const Adesk::UInt16 newVal);
+
+	/// Gets or sets the pos text color.
+	const Adesk::UInt16 PosColor(void) const;
+	Acad::ErrorStatus setPosColor(const Adesk::UInt16 newVal);
+
+	/// Gets or sets the line color.
+	const Adesk::UInt16 LineColor(void) const;
+	Acad::ErrorStatus setLineColor(const Adesk::UInt16 newVal);
+
+	/// Gets or sets the separator line color.
+	const Adesk::UInt16 SeparatorColor(void) const;
+	Acad::ErrorStatus setSeparatorColor(const Adesk::UInt16 newVal);
+
+	/// Gets or sets the border color.
+	const Adesk::UInt16 BorderColor(void) const;
+	Acad::ErrorStatus setBorderColor(const Adesk::UInt16 newVal);
+
+	/// Gets or sets the heading text color.
+	const Adesk::UInt16 HeadingColor(void) const;
+	Acad::ErrorStatus setHeadingColor(const Adesk::UInt16 newVal);
+
+	/// Gets or sets the footing text color.
+	const Adesk::UInt16 FootingColor(void) const;
+	Acad::ErrorStatus setFootingColor(const Adesk::UInt16 newVal);
+
+	// Get labels
+	const ACHAR* PosLabel(void) const;
+	const ACHAR* CountLabel(void) const;
+	const ACHAR* DiameterLabel(void) const;
+	const ACHAR* LengthLabel(void) const;
+	const ACHAR* ShapeLabel(void) const;
+	const ACHAR* TotalLengthLabel(void) const;
+	const ACHAR* DiameterListLabel(void) const;
+	const ACHAR* DiameterLengthLabel(void) const;
+	const ACHAR* UnitWeightLabel(void) const;
+	const ACHAR* WeightLabel(void) const;
+	const ACHAR* GrossWeightLabel(void) const;
+	// Set labels
+	Acad::ErrorStatus setPosLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setCountLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setDiameterLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setLengthLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setShapeLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setTotalLengthLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setDiameterLengthLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setDiameterListLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setUnitWeightLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setWeightLabel(const ACHAR* newVal);
+	Acad::ErrorStatus setGrossWeightLabel(const ACHAR* newVal);
+
+	/// Gets or sets the heading for tables with multiplier > 1
+	const ACHAR* MultiplierHeadingLabel(void) const;
+	Acad::ErrorStatus setMultiplierHeadingLabel(const ACHAR* newVal);
+
+	/// Gets or sets pointer to the text style.
+	const AcDbObjectId& TextStyleId(void) const;
+	Acad::ErrorStatus setTextStyleId(const AcDbObjectId& newVal);
+
+	/// Gets or sets pointer to the heading style.
+	const AcDbObjectId& HeadingStyleId(void) const;
+	Acad::ErrorStatus setHeadingStyleId(const AcDbObjectId& newVal);
+
+	/// Gets or sets pointer to the footing style.
+	const AcDbObjectId& FootingStyleId(void) const;
+	Acad::ErrorStatus setFootingStyleId(const AcDbObjectId& newVal);
+
+	/// Gets or sets the heading scale relative to text height.
+	const double HeadingScale(void) const;
+	Acad::ErrorStatus setHeadingScale(const double newVal);
+
+	/// Gets or sets the footing scale relative to text height.
+	const double FootingScale(void) const;
+	Acad::ErrorStatus setFootingScale(const double newVal);
+
+	/// Gets or sets the row spacing.
+	const double RowSpacing(void) const;
+	Acad::ErrorStatus setRowSpacing(const double newVal);
 
 public:
 	/// Adds a row.

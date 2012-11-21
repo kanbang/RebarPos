@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
@@ -326,10 +326,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\MgBOQStyle.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\MgBOQTable.cpp"
 				>
 			</File>
@@ -396,10 +392,6 @@
 			>
 			<File
 				RelativePath=".\Marshal.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MgBOQStyle.h"
 				>
 			</File>
 			<File

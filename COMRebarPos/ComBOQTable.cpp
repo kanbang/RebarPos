@@ -20,7 +20,6 @@
 #include "COMBOQTable.h"
 
 #include "../NativeRebarPos/BOQTable.h"
-#include "../NativeRebarPos/BOQStyle.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CComBOQTable
@@ -228,59 +227,7 @@ STDMETHODIMP CComBOQTable::GetPredefinedStrings(DISPID dispID, CALPOLESTR *pCaSt
 {
 	USES_CONVERSION;
 
-	long size, i;
-	AcDbDatabase* pDb = NULL;
-	AcDbDictionary* pNamedObj = NULL;
-	AcDbDictionary* pDict = NULL;
-	AcDbDictionaryIterator* pIter = NULL;
-
-	switch(dispID)
-	{
-	case DISPID_TSTYLE:
-		pDb = m_objRef.objectId().database();
-		if (NULL == pDb)
-			pDb = acdbHostApplicationServices()->workingDatabase();
-	    
-		if (pDb->getNamedObjectsDictionary(pNamedObj, AcDb::kForRead) == Acad::eOk)
-		{
-			if (pNamedObj->getAt(CBOQStyle::GetTableName(), (AcDbObject*&)pDict, AcDb::kForRead) == Acad::eOk)
-			{
-				size = pDict->numEntries();
-				if(size > 0)
-				{
-					pIter = pDict->newIterator();
-
-					mStyleIdArray.removeAll();
-
-					pCaStringsOut->pElems = (LPOLESTR *)::CoTaskMemAlloc(sizeof(LPOLESTR) * size);
-					pCaCookiesOut->pElems = (DWORD *)::CoTaskMemAlloc(sizeof(DWORD) * size);
-
-					i = 0;
-					for( ; !pIter->done(); pIter->next())
-					{
-						AcDbObjectPointer<CBOQStyle> pShape (pIter->objectId(), AcDb::kForRead);
-						if(pShape.openStatus() == Acad::eOk)
-						{
-							pCaStringsOut->pElems[i] = ::SysAllocString(CT2W(pShape->Name()));
-						}
-						pCaCookiesOut->pElems[i] = mStyleIdArray.append(pIter->objectId());
-						i++;
-					}
-					pCaStringsOut->cElems = i;
-					pCaCookiesOut->cElems = i;
-
-					if (pIter)
-						delete pIter;
-				}
-				pDict->close();
-			}
-			pNamedObj->close();
-		}
-		return S_OK;
-		break;
-	default:
-        return IOPMPropertyExtensionImpl<CComBOQTable>::GetPredefinedStrings(dispID, pCaStringsOut, pCaCookiesOut);
-	}
+    return IOPMPropertyExtensionImpl<CComBOQTable>::GetPredefinedStrings(dispID, pCaStringsOut, pCaCookiesOut);
 }
 
 //OPM calls this function when the user selects an element from a drop down list. OPM provides
@@ -291,30 +238,7 @@ STDMETHODIMP CComBOQTable::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VAR
 {
 	USES_CONVERSION;
 
-	AcDbObjectId id = AcDbObjectId::kNull;
-	HRESULT hr = E_FAIL;
-
-	switch(dispID)
-	{
-	case DISPID_TSTYLE:
-		{
-			assert((INT_PTR)dwCookie >= 0);
-			assert((INT_PTR)dwCookie < mStyleIdArray.length());
-			id = mStyleIdArray[dwCookie];
-
-			AcDbObjectPointer<CBOQStyle> pShape (id, AcDb::kForRead);
-			if(pShape.openStatus() == Acad::eOk)
-			{
-				hr = S_OK;
-				CComVariant var(CT2W(pShape->Name()));
-				VariantCopy(pVarOut, &var);
-			}	    
-			return hr;
-		}
-		break;
-	default:
-		return IOPMPropertyExtensionImpl<CComBOQTable>::GetPredefinedValue(dispID, dwCookie, pVarOut);
-	}
+	return IOPMPropertyExtensionImpl<CComBOQTable>::GetPredefinedValue(dispID, dwCookie, pVarOut);
 }
 
 HRESULT CComBOQTable::CreateNewObject(AcDbObjectId& objId, AcDbObjectId& ownerId, TCHAR* keyName)
@@ -576,92 +500,6 @@ STDMETHODIMP CComBOQTable::put_TableSpacing(double newVal)
     catch(const Acad::ErrorStatus)
     {
         return Error(L"Failed to set property.", IID_IComBOQTable, E_FAIL);
-    }
-	return S_OK;
-}
-
-STDMETHODIMP CComBOQTable::get_Style(BSTR * pVal)
-{
-	CHECKOUTPARAM(pVal);
-    try
-    {
-        Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef, AcDb::kForRead, Adesk::kTrue);
-	    if((es = pBOQTable.openStatus()) != Acad::eOk)
-            throw es;
-
-		AcDbObjectPointer<CBOQStyle> pGroup (pBOQTable->StyleId(), AcDb::kForRead);
-		if((es = pGroup.openStatus()) != Acad::eOk)
-            throw es;
-
-		USES_CONVERSION;
-		*pVal = SysAllocString(CT2W(pGroup->Name()));
-    }
-    catch(const Acad::ErrorStatus)
-    {
-        return Error(L"Failed to open object.", IID_IComBOQTable, E_FAIL);
-    }
-    catch(const HRESULT hr)
-    {
-        return Error(L"Invalid argument.", IID_IComBOQTable, hr);
-    }
-	return S_OK;
-}
-
-STDMETHODIMP CComBOQTable::put_Style(BSTR newVal)
-{
-	try
-    {
-        AXEntityDocLockNoDbOk(m_objRef.objectId());
-
-        Acad::ErrorStatus es;
-        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef, AcDb::kForWrite, Adesk::kTrue);
-	    if((es = pBOQTable.openStatus()) != Acad::eOk)
-            throw es;
-
-		AcDbDatabase* pDb = NULL;
-		AcDbDictionary* pNamedObj = NULL;
-		AcDbDictionary* pDict = NULL;
-		AcDbDictionaryIterator* it = NULL;
-		AcDbObjectId id;
-
-		pDb = pBOQTable->database();
-		if (NULL == pDb)
-			pDb = acdbHostApplicationServices()->workingDatabase();
-	    
-		if (pDb->getNamedObjectsDictionary(pNamedObj, AcDb::kForRead) == Acad::eOk)
-		{
-			if (pNamedObj->getAt(CBOQStyle::GetTableName(), (AcDbObject*&)pDict, AcDb::kForRead) == Acad::eOk)
-			{
-				it = pDict->newIterator();
-				while(it->next())
-				{
-					AcDbObjectPointer<CBOQStyle> pGroup (it->objectId(), AcDb::kForRead);
-					if((es = pGroup.openStatus()) != Acad::eOk)
-						throw es;
-					if(wcscmp(W2T(newVal), pGroup->Name()) == 0)
-					{
-						if ((es = pBOQTable->setStyleId(it->objectId())) != Acad::eOk)
-							throw es;
-						else
-							Fire_Notification(DISPID_TSTYLE);
-						break;
-					}
-				}
-				if(it)
-					delete it;
-				pDict->close();
-			}
-			pNamedObj->close();
-		}
-    }
-    catch(const Acad::ErrorStatus)
-    {
-        return Error(L"Failed to set property.", IID_IComBOQTable, E_FAIL);
-    }
-    catch(const HRESULT hr)
-    {
-        return Error(L"Invalid argument.", IID_IComBOQTable, hr);
     }
 	return S_OK;
 }

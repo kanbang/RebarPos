@@ -10,6 +10,94 @@ namespace RebarPosCommands
 {
     public partial class MyCommands
     {
+        public class BOQStyle
+        {
+            public string Name;
+            public string Columns;
+
+            public ObjectId TextStyleId;
+            public ObjectId HeadingStyleId ;
+            public ObjectId FootingStyleId;
+
+            public string PosLabel;
+            public string CountLabel;
+            public string DiameterLabel;
+            public string LengthLabel;
+            public string ShapeLabel;
+            public string TotalLengthLabel;
+            public string DiameterListLabel;
+            public string DiameterLengthLabel;
+            public string UnitWeightLabel;
+            public string WeightLabel;
+            public string GrossWeightLabel;
+            public string MultiplierHeadingLabel;
+
+            private BOQStyle()
+            {
+                ;
+            }
+
+            public override string ToString()
+            {
+                return Name;
+            }
+
+            public static List<BOQStyle> GetStyles()
+            {
+                List<BOQStyle> list = new List<BOQStyle>();
+
+                BOQStyle styletr = new BOQStyle();
+
+                styletr.Name = "TableStyle - TR";
+                styletr.Columns = "[M][N][D][L][SH][TL]";
+
+                styletr.TextStyleId = PosUtility.CreateTextStyle("Rebar BOQ Style", "romanstw.shx", 0.7);
+                styletr.HeadingStyleId = PosUtility.CreateTextStyle("Rebar BOQ Heading Style", "Arial.ttf", 1.0);
+                styletr.FootingStyleId = PosUtility.CreateTextStyle("Rebar BOQ Footing Style", "simplxtw.shx", 1.0);
+
+                styletr.PosLabel = "POZ";
+                styletr.CountLabel = "ADET";
+                styletr.DiameterLabel = "ÇAP";
+                styletr.LengthLabel = "BOY\\P([U])";
+                styletr.ShapeLabel = "DEMİR ŞEKLİ";
+                styletr.TotalLengthLabel = "TOPLAM BOY (m)";
+                styletr.DiameterListLabel = "T[D]";
+                styletr.DiameterLengthLabel = "TOPLAM BOY (m)";
+                styletr.UnitWeightLabel = "BIRIM AGIRLIK (kg/m)";
+                styletr.WeightLabel = "TOPLAM AGIRLIK (kg)";
+                styletr.GrossWeightLabel = "GENEL TOPLAM (kg)";
+                styletr.MultiplierHeadingLabel = "GENEL TOPLAM [N] ADET İÇİNDİR";
+
+                list.Add(styletr);
+
+                BOQStyle styleen = new BOQStyle();
+
+                styleen.Name = "TableStyle - EN";
+                styleen.Columns = "[M][N][D][L][SH][TL]";
+
+                styleen.TextStyleId = PosUtility.CreateTextStyle("Rebar BOQ Style", "romanstw.shx", 0.7);
+                styleen.HeadingStyleId = PosUtility.CreateTextStyle("Rebar BOQ Heading Style", "Arial.ttf", 1.0);
+                styleen.FootingStyleId = PosUtility.CreateTextStyle("Rebar BOQ Footing Style", "simplxtw.shx", 1.0);
+
+                styleen.PosLabel = "POS";
+                styleen.CountLabel = "NO.";
+                styleen.DiameterLabel = "DIA";
+                styleen.LengthLabel = "LENGTH\\P([U])";
+                styleen.ShapeLabel = "SHAPE";
+                styleen.TotalLengthLabel = "TOTAL LENGTH (m)";
+                styleen.DiameterListLabel = "T[D]";
+                styleen.DiameterLengthLabel = "TOTAL LENGTH (m)";
+                styleen.UnitWeightLabel = "UNIT WEIGHT (kg/m)";
+                styleen.WeightLabel = "WEIGHT (kg)";
+                styleen.GrossWeightLabel = "TOTAL WEIGHT (kg)";
+                styleen.MultiplierHeadingLabel = "BOQ CALCULATED FOR [N] COMPLETES";
+
+                list.Add(styleen);
+
+                return list;
+            }
+        }
+
         private bool DrawBOQ()
         {
             DrawBOQForm form = new DrawBOQForm();
@@ -91,7 +179,27 @@ namespace RebarPosCommands
                     table.Heading = form.TableHeader;
                     table.Footing = form.TableFooter;
                     table.Multiplier = form.Multiplier;
-                    table.StyleId = form.TableStyle;
+
+                    BOQStyle style = form.TableStyle;
+                    table.ColumnDef = style.Columns;
+
+                    table.TextStyleId = style.TextStyleId;
+                    table.HeadingStyleId = style.HeadingStyleId;
+                    table.FootingStyleId = style.FootingStyleId;
+
+                    table.PosLabel = style.PosLabel;
+                    table.CountLabel = style.CountLabel;
+                    table.DiameterLabel = style.DiameterLabel;
+                    table.LengthLabel = style.LengthLabel;
+                    table.ShapeLabel = style.ShapeLabel;
+                    table.TotalLengthLabel = style.TotalLengthLabel;
+                    table.DiameterListLabel = style.DiameterListLabel;
+                    table.DiameterLengthLabel = style.DiameterLengthLabel;
+                    table.UnitWeightLabel = style.UnitWeightLabel;
+                    table.WeightLabel = style.WeightLabel;
+                    table.GrossWeightLabel = style.GrossWeightLabel;
+                    table.MultiplierHeadingLabel = style.MultiplierHeadingLabel;
+
                     table.MaxHeight = form.TableHeight;
                     table.TableSpacing = form.TableMargin;
 

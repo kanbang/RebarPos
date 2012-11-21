@@ -112,8 +112,6 @@ library COMREBARPOSLib
 		[propput, id(1), helpstring("property BasePoint"),helpcontext(IDH_TBASEPOINT)] HRESULT BasePoint([in] VARIANT newVal);
 		[propget, id(2), helpstring("property Multiplier"),helpcontext(IDH_TMULTIPLIER)] HRESULT Multiplier([out, retval] long *pVal);
 		[propput, id(2), helpstring("property Multiplier"),helpcontext(IDH_TMULTIPLIER)] HRESULT Multiplier([in] long newVal);
-		[propget, id(3), helpstring("property Style"),helpcontext(IDH_TSTYLE)] HRESULT Style([out, retval] BSTR *pVal);
-		[propput, id(3), helpstring("property Style"),helpcontext(IDH_TSTYLE)] HRESULT Style([in] BSTR newVal);
 		[propget, id(4), helpstring("property Scale"),helpcontext(IDH_TSCALE)] HRESULT Scale([out, retval] double *pVal);
 		[propput, id(4), helpstring("property Scale"),helpcontext(IDH_TSCALE)] HRESULT Scale([in] double newVal);
 		[propget, id(5), helpstring("property Heading"),helpcontext(IDH_THEADING)] HRESULT Heading([out, retval] BSTR *pVal);

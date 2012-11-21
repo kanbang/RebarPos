@@ -144,143 +144,6 @@ namespace RebarPosCommands
             return list.ToArray();
         }
 
-        public static ObjectId[] GetTableWithStyle(ObjectId styleId)
-        {
-            List<ObjectId> list = new List<ObjectId>();
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
-            {
-                try
-                {
-                    BlockTableRecord btr = (BlockTableRecord)tr.GetObject(db.CurrentSpaceId, OpenMode.ForRead);
-                    using (BlockTableRecordEnumerator it = btr.GetEnumerator())
-                    {
-                        while (it.MoveNext())
-                        {
-                            BOQTable table = tr.GetObject(it.Current, OpenMode.ForRead) as BOQTable;
-                            if (table != null)
-                            {
-                                if (table.StyleId == styleId)
-                                {
-                                    list.Add(it.Current);
-                                }
-                            }
-                        }
-                    }
-                }
-                catch (System.Exception)
-                {
-                    ;
-                }
-            }
-            return list.ToArray();
-        }
-
-        // Creates default BOQ styles
-        public static ObjectId CreateDefaultBOQStyles()
-        {
-            ObjectId id = ObjectId.Null;
-
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
-            {
-                try
-                {
-                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
-                    DBDictionary dict = null;
-                    if (!namedDict.Contains(BOQStyle.TableName))
-                    {
-                        dict = new DBDictionary();
-                        namedDict.UpgradeOpen();
-                        namedDict.SetAt(BOQStyle.TableName, dict);
-                        namedDict.DowngradeOpen();
-                        tr.AddNewlyCreatedDBObject(dict, true);
-                    }
-                    else
-                    {
-                        dict = (DBDictionary)tr.GetObject(namedDict.GetAt(BOQStyle.TableName), OpenMode.ForRead);
-                    }
-
-                    if (dict.Count == 0)
-                    {
-                        BOQStyle styleen = new BOQStyle();
-
-                        styleen.Name = "TableStyle - EN";
-                        styleen.Columns = "[M][N][D][L][SH][TL]";
-
-                        styleen.TextStyleId = PosUtility.CreateTextStyle("Rebar BOQ Style", "romanstw.shx", 0.7);
-                        styleen.HeadingStyleId = PosUtility.CreateTextStyle("Rebar BOQ Heading Style", "Arial.ttf", 1.0);
-                        styleen.FootingStyleId = PosUtility.CreateTextStyle("Rebar BOQ Footing Style", "simplxtw.shx", 1.0);
-
-                        styleen.Precision = 2;
-
-                        styleen.PosLabel = "POS";
-                        styleen.CountLabel = "NO.";
-                        styleen.DiameterLabel = "DIA";
-                        styleen.LengthLabel = "LENGTH\\P([U])";
-                        styleen.ShapeLabel = "SHAPE";
-                        styleen.TotalLengthLabel = "TOTAL LENGTH (m)";
-                        styleen.DiameterListLabel = "T[D]";
-                        styleen.DiameterLengthLabel = "TOTAL LENGTH (m)";
-                        styleen.UnitWeightLabel = "UNIT WEIGHT (kg/m)";
-                        styleen.WeightLabel = "WEIGHT (kg)";
-                        styleen.GrossWeightLabel = "TOTAL WEIGHT (kg)";
-                        styleen.MultiplierHeadingLabel = "BOQ CALCULATED FOR [N] COMPLETES";
-
-                        dict.UpgradeOpen();
-                        id = dict.SetAt("*", styleen);
-                        dict.DowngradeOpen();
-                        tr.AddNewlyCreatedDBObject(styleen, true);
-
-                        BOQStyle styletr = new BOQStyle();
-
-                        styletr.Name = "TableStyle - TR";
-                        styletr.Columns = "[M][N][D][L][SH][TL]";
-
-                        styletr.TextStyleId = PosUtility.CreateTextStyle("Rebar BOQ Style", "romanstw.shx", 0.7);
-                        styletr.HeadingStyleId = PosUtility.CreateTextStyle("Rebar BOQ Heading Style", "Arial.ttf", 1.0);
-                        styletr.FootingStyleId = PosUtility.CreateTextStyle("Rebar BOQ Footing Style", "simplxtw.shx", 1.0);
-
-                        styletr.Precision = 2;
-
-                        styletr.PosLabel = "POZ";
-                        styletr.CountLabel = "ADET";
-                        styletr.DiameterLabel = "ÇAP";
-                        styletr.LengthLabel = "BOY\\P([U])";
-                        styletr.ShapeLabel = "DEMİR ŞEKLİ";
-                        styletr.TotalLengthLabel = "TOPLAM BOY (m)";
-                        styletr.DiameterListLabel = "T[D]";
-                        styletr.DiameterLengthLabel = "TOPLAM BOY (m)";
-                        styletr.UnitWeightLabel = "BIRIM AGIRLIK (kg/m)";
-                        styletr.WeightLabel = "TOPLAM AGIRLIK (kg)";
-                        styletr.GrossWeightLabel = "GENEL TOPLAM (kg)";
-                        styletr.MultiplierHeadingLabel = "GENEL TOPLAM [N] ADET İÇİNDİR";
-
-                        dict.UpgradeOpen();
-                        id = dict.SetAt("*", styletr);
-                        dict.DowngradeOpen();
-                        tr.AddNewlyCreatedDBObject(styletr, true);
-                    }
-                    else
-                    {
-                        foreach (DBDictionaryEntry entry in dict)
-                        {
-                            id = entry.Value;
-                            break;
-                        }
-                    }
-
-                    tr.Commit();
-                }
-                catch (System.Exception ex)
-                {
-                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-                }
-
-                return id;
-            }
-        }
-
         // Returns all text styles
         public static Dictionary<string, ObjectId> GetTextStyles()
         {
@@ -306,37 +169,6 @@ namespace RebarPosCommands
                 }
             }
 
-            return list;
-        }
-
-        // Returns all items in the dictionary.
-        public static Dictionary<string, ObjectId> GetTableStyles()
-        {
-            Dictionary<string, ObjectId> list = new Dictionary<string, ObjectId>();
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
-            {
-                try
-                {
-                    DBDictionary namedDict = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
-                    if (namedDict.Contains(BOQStyle.TableName))
-                    {
-                        DBDictionary dict = (DBDictionary)tr.GetObject(namedDict.GetAt(BOQStyle.TableName), OpenMode.ForRead);
-                        using (DbDictionaryEnumerator it = dict.GetEnumerator())
-                        {
-                            while (it.MoveNext())
-                            {
-                                BOQStyle item = (BOQStyle)tr.GetObject(it.Value, OpenMode.ForRead);
-                                list.Add(item.Name, it.Value);
-                            }
-                        }
-                    }
-                }
-                catch
-                {
-                    ;
-                }
-            }
             return list;
         }
 
@@ -398,12 +230,6 @@ namespace RebarPosCommands
                     ;
                 }
             }
-        }
-
-        // Refreshes all items with given style
-        public static void RefreshTableWithStyle(ObjectId id)
-        {
-            RefreshTable(GetTableWithStyle(id));
         }
 
         // Refreshes all items

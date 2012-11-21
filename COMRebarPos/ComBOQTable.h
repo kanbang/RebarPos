@@ -10,7 +10,6 @@
 // DISPIDs for resources
 #define	DISPID_TBASEPOINT		0x00000001
 #define	DISPID_TMULTIPLIER		0x00000002
-#define	DISPID_TSTYLE		0x00000003
 #define	DISPID_TSCALE		0x00000004
 #define	DISPID_THEADING		0x00000005
 #define	DISPID_TFOOTING		0x00000006
@@ -81,8 +80,6 @@ public:
 	STDMETHOD(put_MaxHeight)(/*[in]*/ double newVal);
 	STDMETHOD(get_TableSpacing)(/*[out, retval]*/ double *pVal);
 	STDMETHOD(put_TableSpacing)(/*[in]*/ double newVal);
-	STDMETHOD(get_Style)(/*[out, retval]*/ BSTR *pVal);
-	STDMETHOD(put_Style)(/*[in]*/ BSTR newVal);
 	STDMETHOD(get_Scale)(/*[out, retval]*/ double *pVal);
 	STDMETHOD(put_Scale)(/*[in]*/ double newVal);
 	STDMETHOD(get_Heading)(/*[out, retval]*/ BSTR *pVal);
@@ -99,7 +96,6 @@ BEGIN_OPMPROP_MAP()
     OPMPROP_ENTRY(0, DISPID_TMULTIPLIER, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, DISPID_TMAXROWS, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, DISPID_TTABLESPACING, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_TSTYLE, PROPCAT_Misc, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, DISPID_TSCALE, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, DISPID_THEADING, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, DISPID_TFOOTING, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")

@@ -159,7 +159,6 @@
             this.cbStyle.Name = "cbStyle";
             this.cbStyle.Size = new System.Drawing.Size(100, 21);
             this.cbStyle.TabIndex = 1;
-            this.cbStyle.SelectedIndexChanged += new System.EventHandler(this.cbStyle_SelectedIndexChanged);
             // 
             // label1
             // 

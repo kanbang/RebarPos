@@ -34,9 +34,9 @@ namespace RebarPosCommands
                     table.Heading = form.TableHeader;
                     table.Footing = form.TableFooter;
                     table.Multiplier = form.Multiplier;
-                    table.StyleId = form.TableStyle;
                     table.MaxHeight = form.TableHeight;
                     table.TableSpacing = form.TableMargin;
+                    // TODO: Change table style
 
                     tr.Commit();
                 }

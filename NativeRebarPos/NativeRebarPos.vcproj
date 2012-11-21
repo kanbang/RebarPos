@@ -317,10 +317,6 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90"
 			>
 			<File
-				RelativePath=".\BOQStyle.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\BOQTable.cpp"
 				>
 			</File>
@@ -407,10 +403,6 @@
 			>
 			<File
 				RelativePath=".\BOQRow.h"
-				>
-			</File>
-			<File
-				RelativePath=".\BOQStyle.h"
 				>
 			</File>
 			<File

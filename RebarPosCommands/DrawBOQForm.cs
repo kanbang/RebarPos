@@ -8,10 +8,7 @@ namespace RebarPosCommands
 {
     public partial class DrawBOQForm : Form
     {
-        Dictionary<string, ObjectId> m_Styles;
-        ObjectId m_CurrentStyle;
-
-        public ObjectId TableStyle { get { return m_CurrentStyle; } }
+        public MyCommands.BOQStyle TableStyle { get { return (MyCommands.BOQStyle)cbStyle.SelectedItem; } }
         public string TableNote { get { return txtNote.Text; } }
         public string TableHeader { get { return txtHeader.Text; } }
         public string TableFooter { get { return txtFooter.Text; } }
@@ -24,43 +21,17 @@ namespace RebarPosCommands
         public DrawBOQForm()
         {
             InitializeComponent();
-
-            m_Styles = new Dictionary<string, ObjectId>();
         }
 
         public bool Init()
         {
-            m_Styles = DWGUtility.GetTableStyles();
-
-            if (m_Styles.Count == 0)
+            foreach (MyCommands.BOQStyle style in MyCommands.BOQStyle.GetStyles())
             {
-                return false;
-            }
-
-            int i = 0;
-            foreach (KeyValuePair<string, ObjectId> pair in m_Styles)
-            {
-                if (i == 0) m_CurrentStyle = pair.Value;
-                cbStyle.Items.Add(pair.Key);
-                i++;
+                cbStyle.Items.Add(style);
             }
             cbStyle.SelectedIndex = 0;
 
             return true;
-        }
-
-        private void cbStyle_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int i = 0;
-            foreach (ObjectId id in m_Styles.Values)
-            {
-                if (i == cbStyle.SelectedIndex)
-                {
-                    m_CurrentStyle = id;
-                    break;
-                }
-                i++;
-            }
         }
 
         private void btnOK_Click(object sender, EventArgs e)

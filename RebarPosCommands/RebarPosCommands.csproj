@@ -116,7 +116,6 @@
     <Compile Include="Commands_FindReplace.cs" />
     <Compile Include="Commands_DrawBOQ.cs" />
     <Compile Include="Commands_BOQEdit.cs" />
-    <Compile Include="Commands_TableStyles.cs" />
     <Compile Include="Commands_PosCheck.cs" />
     <Compile Include="CheckForm.cs">
       <SubType>Form</SubType>
@@ -136,12 +135,6 @@
     <Compile Include="CountOverrule.cs" />
     <Compile Include="MenuUtility.cs" />
     <Compile Include="PosCheckResult.cs" />
-    <Compile Include="TableStyleForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="TableStyleForm.Designer.cs">
-      <DependentUpon>TableStyleForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="EditBOQForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -228,9 +221,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EditDetachedPosForm.resx">
       <DependentUpon>EditDetachedPosForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TableStyleForm.resx">
-      <DependentUpon>TableStyleForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EditBOQForm.resx">
       <DependentUpon>EditBOQForm.cs</DependentUpon>
