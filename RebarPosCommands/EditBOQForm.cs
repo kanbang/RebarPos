@@ -8,6 +8,7 @@ namespace RebarPosCommands
 {
     public partial class EditBOQForm : Form
     {
+        public string TableNote { get { return txtNote.Text; } }
         public string TableHeader { get { return txtHeader.Text; } }
         public string TableFooter { get { return txtFooter.Text; } }
         public int Multiplier { get { return (int)udMultiplier.Value; } }
@@ -29,6 +30,7 @@ namespace RebarPosCommands
                 {
                     BOQTable table = tr.GetObject(tableid, OpenMode.ForRead) as BOQTable;
                     if (table == null) return false;
+                    txtNote.Text = table.Note;
                     txtHeader.Text = table.Heading;
                     txtFooter.Text = table.Footing;
                     udMultiplier.Value = table.Multiplier;

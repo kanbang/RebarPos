@@ -31,12 +31,12 @@ namespace RebarPosCommands
                     Point3d pt = table.BasePoint;
                     table.TransformBy(Matrix3d.Scaling(form.TextHeight / table.Scale, pt));
 
+                    table.Note = form.TableNote;
                     table.Heading = form.TableHeader;
                     table.Footing = form.TableFooter;
                     table.Multiplier = form.Multiplier;
                     table.MaxHeight = form.TableHeight;
                     table.TableSpacing = form.TableMargin;
-                    // TODO: Change table style
 
                     tr.Commit();
                 }
