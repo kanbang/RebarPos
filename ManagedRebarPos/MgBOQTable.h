@@ -5,6 +5,7 @@
 #pragma once
 
 #include "..\NativeRebarPos\BOQTable.h"
+#include "MgGenericTable.h"
 #include "Marshal.h"
 
 using namespace System;
@@ -17,7 +18,7 @@ namespace OZOZ
     namespace RebarPosWrapper 
     {
         [Autodesk::AutoCAD::Runtime::Wrapper("CBOQTable")]
-        public ref class BOQTable :  public Autodesk::AutoCAD::DatabaseServices::Entity
+        public ref class BOQTable :  public GenericTable
         {
 		public:
 			enum class DrawingUnits
@@ -142,27 +143,13 @@ namespace OZOZ
 
         internal:
             BOQTable(System::IntPtr unmanagedPointer, bool autoDelete);
-            inline CBOQTable* GetImpObj()
+            CBOQTable* GetImpObj() new
             {
                 return static_cast<CBOQTable*>(UnmanagedObject.ToPointer());
             }
 
         public:
 			property BOQRowCollection^ Items { BOQRowCollection^ get(); }
-
-			property Vector3d DirectionVector { Vector3d get(); }
-			property Vector3d UpVector        { Vector3d get(); }
-			property Vector3d NormalVector    { Vector3d get(); }
-
-			property double Scale { double get(); void set(double value); }
-
-			property double Width  { double get(); }
-			property double Height { double get(); }
-
-			property double MaxHeight    { double get(); void set(double value); }
-			property double TableSpacing { double get(); void set(double value); }
-
-			property Point3d BasePoint { Point3d get(); void set(Point3d value); }
 
 			property int Multiplier   { int get(); void set(int value); }
 

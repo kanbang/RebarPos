@@ -17,13 +17,13 @@ using namespace OZOZ::RebarPosWrapper;
 // Constructors and destructors 
 //*************************************************************************
 BOQTable::BOQTable() 
-:Autodesk::AutoCAD::DatabaseServices::Entity(IntPtr(new CBOQTable()), true)
+: GenericTable(IntPtr(new CBOQTable()), true)
 {
 	m_Rows = gcnew BOQTable::BOQRowCollection(this);
 }
 
 BOQTable::BOQTable(System::IntPtr unmanagedPointer, bool autoDelete)
-: Autodesk::AutoCAD::DatabaseServices::Entity(unmanagedPointer,autoDelete)
+: GenericTable(unmanagedPointer, autoDelete)
 {
 	m_Rows = gcnew BOQTable::BOQRowCollection(this);	
 }
@@ -31,67 +31,6 @@ BOQTable::BOQTable(System::IntPtr unmanagedPointer, bool autoDelete)
 //*************************************************************************
 // Properties
 //*************************************************************************
-Vector3d BOQTable::DirectionVector::get()
-{
-	return Marshal::ToVector3d (GetImpObj()->DirectionVector());
-}
-
-Vector3d BOQTable::UpVector::get()
-{
-	return Marshal::ToVector3d (GetImpObj()->UpVector());
-}
-
-Vector3d BOQTable::NormalVector::get()
-{
-	return Marshal::ToVector3d (GetImpObj()->NormalVector());
-}
-
-double BOQTable::Scale::get()
-{
-	return (GetImpObj()->Scale());
-}
-void BOQTable::Scale::set(double value)
-{
-	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setScale(value));
-}
-
-double BOQTable::Width::get()
-{
-	return (GetImpObj()->Width());
-}
-
-double BOQTable::Height::get()
-{
-	return (GetImpObj()->Height());
-}
-
-Point3d BOQTable::BasePoint::get()
-{
-    return Marshal::ToPoint3d (GetImpObj()->BasePoint());
-}
-void BOQTable::BasePoint::set(Point3d point)
-{
-	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setBasePoint(Marshal::FromPoint3d(point)));
-}
-
-double BOQTable::MaxHeight::get()
-{
-    return GetImpObj()->MaxHeight();
-}
-void BOQTable::MaxHeight::set(double value)
-{
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setMaxHeight(value));
-}
-
-double BOQTable::TableSpacing::get()
-{
-	return (GetImpObj()->TableSpacing());
-}
-void BOQTable::TableSpacing::set(double value)
-{
-	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setTableSpacing(value));
-}
-
 int BOQTable::Multiplier::get()
 {
     return GetImpObj()->Multiplier();
