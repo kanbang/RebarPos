@@ -5,7 +5,6 @@
 #include "PosShape.h"
 #include "PosGroup.h"
 #include "RebarPos.h"
-#include "BOQStyle.h"
 #include "TableCell.h"
 #include "GenericTable.h"
 #include "BOQTable.h"
@@ -38,7 +37,6 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 		// Register custom classes
 		CPosGroup::rxInit();
         CRebarPos::rxInit();
-		CBOQStyle::rxInit();
 		CGenericTable::rxInit();
 		CBOQTable::rxInit();
         acrxBuildClassHierarchy();
@@ -64,7 +62,6 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 		// Remove custom classes
 		deleteAcRxClass(CBOQTable::desc());
 		deleteAcRxClass(CGenericTable::desc());
-		deleteAcRxClass(CBOQStyle::desc());
         deleteAcRxClass(CRebarPos::desc());
 		deleteAcRxClass(CPosGroup::desc());
 

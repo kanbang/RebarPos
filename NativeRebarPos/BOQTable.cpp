@@ -5,7 +5,6 @@
 #include "StdAfx.h"
 
 #include "BOQTable.h"
-#include "BOQStyle.h"
 #include "Utility.h"
 
 Adesk::UInt32 CBOQTable::kCurrentVersionNumber = 1;
@@ -659,16 +658,16 @@ void CBOQTable::UpdateTable(void)
 			std::wstring utext;
 			switch(lastDisplayUnit)
 			{
-			case CBOQStyle::MM:
+			case CBOQTable::MM:
 				utext = L"mm";
 				break;
-			case CBOQStyle::CM:
+			case CBOQTable::CM:
 				utext = L"cm";
 				break;
-			case CBOQStyle::DM:
+			case CBOQTable::DM:
 				utext = L"dm";
 				break;
-			case CBOQStyle::M:
+			case CBOQTable::M:
 				utext = L"m";
 				break;
 			}
@@ -724,8 +723,8 @@ void CBOQTable::UpdateTable(void)
 					break;
 				case CBOQTable::LENGTH:
 					len = (row->length1 + row->length2) / 2.0;
-					if(lastDisplayUnit == CBOQStyle::CM) len /= 10.0;
-					Utility::DoubleToStr(len, lastPrecision, text);
+					if(lastDisplayUnit == CBOQTable::CM) len /= 10.0;
+					Utility::DoubleToStr(len, 0, text);
 					break;
 				case CBOQTable::TOTALLENGTH:
 					Utility::DoubleToStr((double)row->count * (row->length1 + row->length2) / 2.0 / 1000.0, lastPrecision, text);
