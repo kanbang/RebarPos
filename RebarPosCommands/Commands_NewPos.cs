@@ -11,7 +11,8 @@ namespace RebarPosCommands
     {
         private void NewPos()
         {
-            PromptPointResult result = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetPoint("Baz noktası: ");
+            Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+            PromptPointResult result = ed.GetPoint("Baz noktası: ");
             if (result.Status == PromptStatus.OK)
             {
                 Database db = HostApplicationServices.WorkingDatabase;

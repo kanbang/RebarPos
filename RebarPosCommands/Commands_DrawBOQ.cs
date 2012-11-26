@@ -16,7 +16,7 @@ namespace RebarPosCommands
             public string Columns;
 
             public ObjectId TextStyleId;
-            public ObjectId HeadingStyleId ;
+            public ObjectId HeadingStyleId;
             public ObjectId FootingStyleId;
 
             public string PosLabel;
@@ -107,19 +107,21 @@ namespace RebarPosCommands
             if (sel.Status != PromptStatus.OK) return false;
             ObjectId[] items = sel.Value.GetObjectIds();
 
-            List<PosCheckResult> check = PosCheckResult.CheckAllInSelection(items, true, false);
-            if (check.Count != 0)
+            List<PosCheckResult> errors = PosCheckResult.CheckAllInSelection(items, true, false);
+            List<PosCheckResult> warnings = PosCheckResult.CheckAllInSelection(items, false, true);
+
+            if (errors.Count != 0) PosCheckResult.ConsoleOut(errors);
+            if (warnings.Count != 0) PosCheckResult.ConsoleOut(warnings);
+
+            if (errors.Count != 0)
             {
-                PosCheckResult.ConsoleOut(check);
                 Autodesk.AutoCAD.ApplicationServices.Application.DisplayTextScreen = true;
                 return false;
             }
 
             // Pos similarity check
-            List<PosCheckResult> checks = PosCheckResult.CheckAllInSelection(items, false, true);
-            if (checks.Count != 0)
+            if (warnings.Count != 0)
             {
-                PosCheckResult.ConsoleOut(checks);
                 Autodesk.AutoCAD.ApplicationServices.Application.DisplayTextScreen = true;
                 PromptKeywordOptions opts = new PromptKeywordOptions("\nMetraja devam edilsin mi? [Evet/Hayir]", "Yes No");
                 PromptResult res = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetKeywords(opts);
