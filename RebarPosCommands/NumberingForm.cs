@@ -154,9 +154,9 @@ namespace RebarPosCommands
                             res = 0;
                             break;
                         case Ordering.Location:
-                            if (p1.y < p2.y)
+                            if (p1.y - p2.y > (p1.scale + p2.scale) * 2.0)
                                 res = -1;
-                            else if (p1.y < p2.y)
+                            else if (p2.y - p1.y > (p1.scale + p2.scale) * 2.0)
                                 res = 1;
                             else if (p1.x < p2.x)
                                 res = -1;

@@ -29,6 +29,8 @@ namespace RebarPosCommands
 
         public string shapename;
 
+        public double scale;
+
         public double x;
         public double y;
 
@@ -61,6 +63,7 @@ namespace RebarPosCommands
 
             shapename = string.Empty;
 
+            scale = 0;
             x = double.MaxValue;
             y = double.MaxValue;
 
@@ -117,6 +120,7 @@ namespace RebarPosCommands
                             {
                                 copy.count += pos.CalcProperties.Count * pos.Multiplier;
                             }
+                            copy.scale = Math.Max(copy.scale, pos.Scale);
                             copy.x = Math.Min(copy.x, pos.BasePoint.X);
                             copy.y = Math.Min(copy.y, pos.BasePoint.Y);
                         }
@@ -140,6 +144,7 @@ namespace RebarPosCommands
                             copy.d = pos.D;
                             copy.e = pos.E;
                             copy.f = pos.F;
+                            copy.scale = pos.Scale;
                             copy.x = pos.BasePoint.X;
                             copy.y = pos.BasePoint.Y;
                             copy.shapename = pos.Shape;
