@@ -247,22 +247,12 @@ namespace RebarPosCommands
             // Calculate scale
             float w = (float)ClientRectangle.Width;
             float h = (float)ClientRectangle.Height;
-            if (m_ShowName)
-            {
-                h -= 15.0f;
-            }
-            //float xscale = 0.9f * w / (xmax - xmin);
-            //float yscale = 0.9f * h / (ymax - ymin);
             float xscale = w / (xmax - xmin);
             float yscale = h / (ymax - ymin);
             float scale = Math.Min(xscale, yscale);
             // Client offsets
             float xoff = (w - scale * (xmax - xmin)) / 2.0f;
             float yoff = h - (h - scale * (ymax - ymin)) / 2.0f;
-            if (m_ShowName)
-            {
-                yoff += 15.0f;
-            }
 
             // Transform
             g.ResetTransform();

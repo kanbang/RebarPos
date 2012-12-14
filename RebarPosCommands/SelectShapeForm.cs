@@ -42,6 +42,12 @@ namespace RebarPosCommands
         {
             InitializeComponent();
 
+            // Set size
+            if (System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width > 1500)
+                this.Size = new Size(1366, 933);
+            else
+                this.Size = new Size(1040, 933);
+
             m_Current = string.Empty;
         }
 
@@ -85,14 +91,22 @@ namespace RebarPosCommands
                     PosShape shape = PosShape.GetPosShape(name.Shape);
                     if (shape != null)
                     {
+                        Panel panel = new Panel();
+                        panel.Size = new Size(50 * 475 / 75, 13 + 2 + 50);
+
+                        Label shapeLabel = new Label();
+                        shapeLabel.Size = new Size(50 * 475 / 75, 13);
+                        shapeLabel.Text = shape.Name;
+                        shapeLabel.Location = new Point(0, 0);
+                        panel.Controls.Add(shapeLabel);
+
                         PosShapeView posShapeView = new PosShapeView();
-                        posShapeView.ShapeName = shape.Name;
-                        posShapeView.ShowName = true;
                         posShapeView.Selected = (shape.Name == m_Current);
                         posShapeView.Visible = true;
-                        posShapeView.Size = new Size(200, 100);
+                        posShapeView.Size = new Size(50 * 475 / 75, 50);
                         posShapeView.Tag = shape.Name;
                         posShapeView.BackColor = backColor;
+                        posShapeView.Location = new Point(0, 15);
 
                         posShapeView.Click += new EventHandler(posShapeView_Click);
 
@@ -145,7 +159,9 @@ namespace RebarPosCommands
                                 posShapeView.AddText(color, (float)text.X, (float)text.Y, (float)text.Height, str, horizontal, vertical, text.Visible);
                             }
                         }
-                        layoutPanel.Controls.Add(posShapeView);
+
+                        panel.Controls.Add(posShapeView);
+                        layoutPanel.Controls.Add(panel);
                     }
                 }
             }
