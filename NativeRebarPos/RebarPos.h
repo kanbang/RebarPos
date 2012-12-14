@@ -130,19 +130,19 @@ public:
 
 private:
 	/// Used to cache last draw params
-	mutable DrawList lastDrawList;
-	mutable CDrawParams lastNoteDraw;
-	mutable CDrawParams lastMultiplierDraw;
-	mutable CDrawParams lastLengthDraw;
-    mutable AcGiTextStyle lastTextStyle;
-    mutable AcGiTextStyle lastNoteStyle;
-	mutable Adesk::UInt16 lastCircleColor;
-	mutable AcDbObjectId defpointsLayer;
-	mutable double lastNoteScale;
-	mutable std::vector<CShape*> lastShapes;
+	DrawList lastDrawList;
+	CDrawParams lastNoteDraw;
+	CDrawParams lastMultiplierDraw;
+	CDrawParams lastLengthDraw;
+    AcGiTextStyle lastTextStyle;
+    AcGiTextStyle lastNoteStyle;
+	Adesk::UInt16 lastCircleColor;
+	AcDbObjectId defpointsLayer;
+	double lastNoteScale;
+	std::vector<CShape*> lastShapes;
 	double circleRadius;
 	double partSpacing;
-	mutable CCalculatedProperties m_CalcProps;
+	CCalculatedProperties m_CalcProps;
 
 private:
 	/// Property backing fields
@@ -150,9 +150,9 @@ private:
 	AcGePoint3d m_BasePoint;
 	AcGePoint3d m_NoteGrip;
 	AcGePoint3d m_LengthGrip;
-	mutable ACHAR* m_Key;
-	mutable ACHAR* m_Length;
-	mutable ACHAR* m_DisplayedSpacing;
+	ACHAR* m_Key;
+	ACHAR* m_Length;
+	ACHAR* m_DisplayedSpacing;
 	ACHAR* m_Pos;
 	ACHAR* m_Count;
 	ACHAR* m_Diameter;
@@ -172,13 +172,12 @@ private:
 	DisplayStyle m_DisplayStyle;
 
 	/// Locals
-	mutable bool geomInit;
-	mutable AcGeMatrix3d ucs;
-	mutable bool isModified;
+	bool geomInit;
+	AcGeMatrix3d ucs;
 
 protected:
-	/// Calculates pos text when the pos is modified.
-	const void Calculate(void) const;
+	/// Calculates pos properties when the pos is modified.
+	void Calculate(void);
 
 	/// Parses formula text and creates the draw list
 	const DrawList ParseFormula(const ACHAR* formula) const;

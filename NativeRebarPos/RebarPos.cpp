@@ -32,7 +32,7 @@ ACRX_DXF_DEFINE_MEMBERS(CRebarPos, AcDbEntity,
 CRebarPos::CRebarPos() :
 	m_BasePoint(0, 0, 0), geomInit(false), ucs(AcGeMatrix3d::kIdentity), 
 	m_Direction(1, 0, 0), m_Up(0, 1, 0), m_NoteGrip(0, 2.0, 0), m_LengthGrip(0, -2.0, 0),
-	m_DisplayStyle(CRebarPos::ALL), isModified(true), m_Length(NULL), m_Key(NULL),
+	m_DisplayStyle(CRebarPos::ALL), m_Length(NULL), m_Key(NULL),
 	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), 
 	m_IncludeInBOQ(Adesk::kTrue), m_Multiplier(1), m_DisplayedSpacing(NULL),
 	m_Shape(NULL), m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), 
@@ -108,11 +108,6 @@ const double CRebarPos::Width(void) const
 {
     assertReadEnabled();
 
-	if(isModified)
-	{
-		Calculate();
-	}
-
 	if(lastDrawList.empty())
 	{
 		return 0.0;
@@ -137,11 +132,6 @@ const double CRebarPos::Height(void) const
 {
     assertReadEnabled();
 
-	if(isModified)
-	{
-		Calculate();
-	}
-
 	if(lastDrawList.empty())
 	{
 		return 0.0;
@@ -165,11 +155,6 @@ const double CRebarPos::Height(void) const
 const void CRebarPos::TextBox(AcGePoint3d& ptmin, AcGePoint3d& ptmax)
 {
     assertReadEnabled();
-
-	if(isModified)
-	{
-		Calculate();
-	}
 
 	if(lastDrawList.empty())
 	{
@@ -251,7 +236,7 @@ Acad::ErrorStatus CRebarPos::setPos(const ACHAR* newVal)
         acutUpdString(newVal, m_Pos);
     }
 
-	isModified = true;
+	Calculate();
 	return Acad::eOk;
 }
 
@@ -272,7 +257,7 @@ Acad::ErrorStatus CRebarPos::setNote(const ACHAR* newVal)
         acutUpdString(newVal, m_Note);
     }
 
-	isModified = true;
+	Calculate();
 	return Acad::eOk;
 }
 
@@ -291,7 +276,7 @@ Acad::ErrorStatus CRebarPos::setCount(const ACHAR* newVal)
     {
         acutUpdString(newVal, m_Count);
     }
-	isModified = true;
+	Calculate();
 	return Acad::eOk;
 }
 
@@ -310,7 +295,7 @@ Acad::ErrorStatus CRebarPos::setDiameter(const ACHAR* newVal)
     {
         acutUpdString(newVal, m_Diameter);
     }
-	isModified = true;
+	Calculate();
 	return Acad::eOk;
 }
 
@@ -329,7 +314,7 @@ Acad::ErrorStatus CRebarPos::setSpacing(const ACHAR* newVal)
     {
         acutUpdString(newVal, m_Spacing);
     }
-	isModified = true;
+	Calculate();
 	return Acad::eOk;
 }
 
@@ -343,7 +328,7 @@ Acad::ErrorStatus CRebarPos::setIncludeInBOQ(const Adesk::Boolean newVal)
 {
 	assertWriteEnabled();
 	m_IncludeInBOQ = newVal;
-	isModified = true;
+	Calculate();
 	return Acad::eOk;
 }
 
@@ -357,7 +342,7 @@ Acad::ErrorStatus CRebarPos::setMultiplier(const Adesk::Int32 newVal)
 {
 	assertWriteEnabled();
 	m_Multiplier = newVal;
-	isModified = true;
+	Calculate();
 	return Acad::eOk;
 }
 
@@ -376,7 +361,7 @@ Acad::ErrorStatus CRebarPos::setDisplay(const CRebarPos::DisplayStyle newVal)
 	if(m_DisplayStyle == CRebarPos::MARKERONLY)
 		m_IncludeInBOQ = Adesk::kFalse;
 
-	isModified = true;
+	Calculate();
 	return Acad::eOk;
 }
 
@@ -395,7 +380,7 @@ Acad::ErrorStatus CRebarPos::setShape(const ACHAR* newVal)
     {
         acutUpdString(newVal, m_Shape);
     }
-	isModified = true;
+	Calculate();
 	return Acad::eOk;
 }
 
@@ -414,7 +399,7 @@ Acad::ErrorStatus CRebarPos::setA(const ACHAR* newVal)
     {
         acutUpdString(newVal, m_A);
     }
-	isModified = true;
+	Calculate();
 	return Acad::eOk;
 }
 
@@ -433,7 +418,7 @@ Acad::ErrorStatus CRebarPos::setB(const ACHAR* newVal)
     {
         acutUpdString(newVal, m_B);
     }
-	isModified = true;
+	Calculate();
 	return Acad::eOk;
 }
 
@@ -452,7 +437,7 @@ Acad::ErrorStatus CRebarPos::setC(const ACHAR* newVal)
     {
         acutUpdString(newVal, m_C);
     }
-	isModified = true;
+	Calculate();
 	return Acad::eOk;
 }
 
@@ -471,7 +456,7 @@ Acad::ErrorStatus CRebarPos::setD(const ACHAR* newVal)
     {
         acutUpdString(newVal, m_D);
     }
-	isModified = true;
+	Calculate();
 	return Acad::eOk;
 }
 
@@ -490,7 +475,7 @@ Acad::ErrorStatus CRebarPos::setE(const ACHAR* newVal)
     {
         acutUpdString(newVal, m_E);
     }
-	isModified = true;
+	Calculate();
 	return Acad::eOk;
 }
 
@@ -509,7 +494,7 @@ Acad::ErrorStatus CRebarPos::setF(const ACHAR* newVal)
     {
         acutUpdString(newVal, m_F);
     }
-	isModified = true;
+	Calculate();
 	return Acad::eOk;
 }
 
@@ -553,21 +538,19 @@ Acad::ErrorStatus CRebarPos::setDetached(const Adesk::Boolean newVal)
 
 		m_DisplayStyle = CRebarPos::MARKERONLY;
 	}
-	isModified = true;
+	Calculate();
 	return Acad::eOk;
 }
 
 const ACHAR* CRebarPos::PosKey() const
 {
 	assertReadEnabled();
-	Calculate();
 	return m_Key;
 }
 
 const CRebarPos::CCalculatedProperties& CRebarPos::CalcProps() const
 {
 	assertReadEnabled();
-	Calculate();
 	return m_CalcProps;
 }
 
@@ -647,7 +630,7 @@ const void CRebarPos::Update(void)
 {
 	assertWriteEnabled();
 
-	isModified = true;
+	Calculate();
 }
 
 const std::vector<CShape*>& CRebarPos::GetShapes(void) const
@@ -719,11 +702,6 @@ Acad::ErrorStatus CRebarPos::subTransformBy(const AcGeMatrix3d& xform)
 {
 	assertWriteEnabled();
 	
-	if(isModified)
-	{
-		Calculate();
-	}
-
 	m_BasePoint.transformBy(xform);
 	m_NoteGrip.transformBy(xform);
 	m_LengthGrip.transformBy(xform);
@@ -780,7 +758,7 @@ Acad::ErrorStatus CRebarPos::subTransformBy(const AcGeMatrix3d& xform)
 	m_Direction = m_Direction.normal() * scale;
 	m_Up = m_Up.normal() * scale;
 
-	isModified = true;
+	Calculate();
 
 	return Acad::eOk;
 }
@@ -844,11 +822,6 @@ void CRebarPos::subList() const
 Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 {
     assertReadEnabled();
-
-	if(isModified)
-	{
-		Calculate();
-	}
 
 	if(lastDrawList.size() == 0)
 	{
@@ -951,12 +924,6 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
         return Adesk::kTrue;
     }
 
-	// Update if required
-	if(isModified)
-	{
-		Calculate();
-	}
-
 	// Quit if there is nothing to draw
 	if(lastDrawList.empty())
 	{
@@ -1028,12 +995,6 @@ void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
         return;
     }
 
-	// Update if required
-	if(isModified)
-	{
-		Calculate();
-	}
-
 	// Quit if there is nothing to draw
 	if(lastDrawList.empty())
 	{
@@ -1092,11 +1053,6 @@ void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 Acad::ErrorStatus CRebarPos::subGetGeomExtents(AcDbExtents& extents) const
 {
     assertReadEnabled();
-
-	if(isModified)
-	{
-		Calculate();
-	}
 
 	if(lastDrawList.empty())
 	{
@@ -1291,6 +1247,8 @@ Acad::ErrorStatus CRebarPos::dwgInFields(AcDbDwgFiler* pFiler)
 		pFiler->readString(&m_F);
 		pFiler->readBoolean(&m_Detached);
 	}
+
+	Calculate();
 
 	return pFiler->filerStatus();
 }
@@ -1545,6 +1503,8 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	acutDelString(t_D);
 	acutDelString(t_E);
 	acutDelString(t_F);
+
+	Calculate();
 
     return es;
 }
@@ -1903,12 +1863,9 @@ Acad::ErrorStatus CRebarPos::subGetClassID(CLSID* pClsid) const
 // Helper methods
 //*************************************************************************
 
-const void CRebarPos::Calculate(void) const
+void CRebarPos::Calculate(void)
 {
-	if(!isModified)
-		return;
-
-	assertReadEnabled();
+	assertWriteEnabled();
 
 	// Current UCS
 	if(!geomInit)
@@ -2067,20 +2024,22 @@ const void CRebarPos::Calculate(void) const
 
 		// Shape code
 		std::wstringstream oss;
-		oss << L"T" << m_Diameter;
-		oss << L":S" << m_Shape;
-
-		if(m_CalcProps.FieldCount >= 1)
+		if(m_Diameter != NULL && m_Diameter[0] != _T('\0'))
+			oss << L"T" << m_Diameter;
+		if(m_Shape != NULL && m_Shape[0] != _T('\0'))
+			oss << L":S" << m_Shape;
+	
+		if(m_CalcProps.FieldCount >= 1 && m_A != NULL && m_A[0] != _T('\0'))
 			oss << L":A" << m_A;
-		if(m_CalcProps.FieldCount >= 2)
+		if(m_CalcProps.FieldCount >= 2 && m_B != NULL && m_B[0] != _T('\0'))
 			oss << L":B" << m_B;
-		if(m_CalcProps.FieldCount >= 3)
+		if(m_CalcProps.FieldCount >= 3 && m_C != NULL && m_C[0] != _T('\0'))
 			oss << L":C" << m_C;
-		if(m_CalcProps.FieldCount >= 4)
+		if(m_CalcProps.FieldCount >= 4 && m_D != NULL && m_D[0] != _T('\0'))
 			oss << L":D" << m_D;
-		if(m_CalcProps.FieldCount >= 5)
+		if(m_CalcProps.FieldCount >= 5 && m_E != NULL && m_E[0] != _T('\0'))
 			oss << L":E" << m_E;
-		if(m_CalcProps.FieldCount >= 6)
+		if(m_CalcProps.FieldCount >= 6 && m_F != NULL && m_F[0] != _T('\0'))
 			oss << L":F" << m_F;
 		acutUpdString(oss.str().c_str(), m_Key);
 
@@ -2095,7 +2054,7 @@ const void CRebarPos::Calculate(void) const
 			lastDrawList = ParseFormula(pGroup->FormulaPosOnly());
 		}
 
-		if(m_DisplayStyle != CRebarPos::MARKERONLY)
+		if(m_DisplayStyle != CRebarPos::MARKERONLY && m_Note != NULL && m_Note[0] != _T('\0'))
 			lastNoteDraw.text = m_Note;
 		else
 			lastNoteDraw.text = L"";
@@ -2196,9 +2155,6 @@ const void CRebarPos::Calculate(void) const
 	lastLengthDraw.y = 0;
 	lastLengthDraw.w = lengthExt.x;
 	lastLengthDraw.h = lastTextStyle.textSize();
-
-	// Done update
-	isModified = false;
 }
 
 bool CRebarPos::GetLengths(const ACHAR* str, const double diameter, const CPosGroup::DrawingUnits inputUnit, double& minLength, double& maxLength, bool& isVar)
