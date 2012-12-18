@@ -173,6 +173,7 @@ namespace RebarPosCommands
                     BlockTableRecord btr = (BlockTableRecord)tr.GetObject(db.CurrentSpaceId, OpenMode.ForWrite);
 
                     BOQTable table = new BOQTable();
+                    table.SuspendUpdate();
 
                     Point3d pt = result.Value;
                     table.TransformBy(Matrix3d.Displacement(pt.GetAsVector()));
@@ -202,7 +203,7 @@ namespace RebarPosCommands
                     table.GrossWeightLabel = style.GrossWeightLabel;
                     table.MultiplierHeadingLabel = style.MultiplierHeadingLabel;
 
-                    table.MaxHeight = form.TableHeight;
+                    table.MaxRows = form.TableRows;
                     table.TableSpacing = form.TableMargin;
 
                     // Add rows
@@ -213,6 +214,8 @@ namespace RebarPosCommands
                         else
                             table.Items.Add(int.Parse(copy.pos));
                     }
+
+                    table.ResumeUpdate();
 
                     table.SetDatabaseDefaults(db);
 

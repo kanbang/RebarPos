@@ -57,37 +57,34 @@ private:
 	int m_Columns;
 	std::vector<CTableCell*> m_Cells;
 
-	mutable double m_Width;
-	mutable double m_Height;
-
-	double m_MaxHeight;
-	double m_TableSpacing;
-	int m_RowsToRepeat;
+	double m_Width;
+	double m_Height;
 
 	/// Locals
-	mutable std::vector<double> columnWidths;
-	mutable std::vector<double> rowHeights;
-	mutable std::vector<double> minColumnWidths;
-	mutable std::vector<double> minRowHeights;
+	std::vector<double> columnWidths;
+	std::vector<double> rowHeights;
+	std::vector<double> minColumnWidths;
+	std::vector<double> minRowHeights;
 
-	mutable bool geomInit;
-	mutable AcGeMatrix3d ucs;
+	bool geomInit;
+	AcGeMatrix3d ucs;
 
-	mutable bool isModified;
+private:
+	int suspendCount;
+	bool needsUpdate;
 
 protected:
 	/// Calculates draw params when the entity is modified.
-	const void Calculate(void) const;
+	void Calculate(void);
 
 	// Resets last draw parameters
-	const void ResetDrawParams(void) const;
-
-	// Returns the row index around the given height
-	// before which the table can be divided
-	const int DivideAt(double& y, int ntable) const;
+	void ResetDrawParams(void);
 
 public:
 	/// Methods
+	virtual void SuspendUpdate(void);
+	virtual void ResumeUpdate(void);
+
 	void SetSize(int rows, int columns);
 	void Clear();
 
@@ -98,10 +95,19 @@ public:
 	void setCellTextStyleId(const int i, const int j, const AcDbObjectId& newVal);
 	void setCellTextHeight(const int i, const int j, const double newVal);
 
+	void setCellTextColor(const unsigned short newVal);
+	void setCellTextStyleId(const AcDbObjectId& newVal);
+	void setCellTextHeight(const double newVal);
+
 	void setCellLeftBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor = 1, bool isdouble = false);
 	void setCellRightBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor = 1, bool isdouble = false);
 	void setCellTopBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor = 1, bool isdouble = false);
 	void setCellBottomBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor = 1, bool isdouble = false);
+
+	void setCellLeftBorder(const bool hasBorder, const unsigned short borderColor = 1, bool isdouble = false);
+	void setCellRightBorder(const bool hasBorder, const unsigned short borderColor = 1, bool isdouble = false);
+	void setCellTopBorder(const bool hasBorder, const unsigned short borderColor = 1, bool isdouble = false);
+	void setCellBottomBorder(const bool hasBorder, const unsigned short borderColor = 1, bool isdouble = false);
 
 	void setRowTopBorder(const int i, const bool hasBorder, const unsigned short borderColor = 1, bool isdouble = false);
 	void setRowBottomBorder(const int i, const bool hasBorder, const unsigned short borderColor = 1, bool isdouble = false);
@@ -112,11 +118,17 @@ public:
 	void setCellHorizontalAlignment(const int i, const int j, const CTableCell::Alignment newVal);
 	void setCellVerticalAlignment(const int i, const int j, const CTableCell::Alignment newVal);
 
+	void setCellHorizontalAlignment(const CTableCell::Alignment newVal);
+	void setCellVerticalAlignment(const CTableCell::Alignment newVal);
+
 	void MergeAcross(const int i, const int j, const int span = 0);
 	void MergeDown(const int i, const int j, const int span = 0);
 
 	void setMinimumColumnWidth(const int j, const double newVal);
 	void setMinimumRowHeight(const int i, const double newVal);
+
+	void setMinimumColumnWidth(const double newVal);
+	void setMinimumRowHeight(const double newVal);
 
 public:
 	/// Get direction vector
@@ -129,18 +141,6 @@ public:
 	/// Table size
 	const int Columns(void) const;
 	const int Rows(void) const;
-
-	/// Divide table at max height
-	const double MaxHeight(void) const;
-	Acad::ErrorStatus setMaxHeight(const double newVal);
-
-	/// Spacing between divided tables
-	const double TableSpacing(void) const;
-	Acad::ErrorStatus setTableSpacing(const double newVal);
-
-	/// Rows to repeat at top at divided tables
-	const int RowsToRepeat(void) const;
-	Acad::ErrorStatus setRowsToRepeat(const int newVal);
 
 	/// Object scale
 	const double Scale(void) const;

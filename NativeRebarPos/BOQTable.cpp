@@ -32,7 +32,9 @@ CBOQTable::CBOQTable() :
 	m_HeadingScale(1.5), m_FootingScale(1.0), m_RowSpacing(0.75),
 	m_PosLabel(NULL), m_CountLabel(NULL), m_DiameterLabel(NULL), m_LengthLabel(NULL), m_ShapeLabel(NULL),
 	m_TotalLengthLabel(NULL), m_DiameterListLabel(NULL), m_MultiplierHeadingLabel(NULL),
-	m_DiameterLengthLabel(NULL), m_UnitWeightLabel(NULL), m_WeightLabel(NULL), m_GrossWeightLabel(NULL)
+	m_DiameterLengthLabel(NULL), m_UnitWeightLabel(NULL), m_WeightLabel(NULL), m_GrossWeightLabel(NULL),
+	m_MaxRows(0), m_TableSpacing(0.2),
+	suspendCount(0), needsUpdate(false)
 {
 }
 
@@ -141,6 +143,7 @@ Acad::ErrorStatus CBOQTable::setPrecision(const Adesk::Int32 newVal)
 {
 	assertWriteEnabled();
 	m_Precision = newVal;
+	UpdateTable();
 	return Acad::eOk;
 }
 
@@ -153,6 +156,7 @@ Acad::ErrorStatus CBOQTable::setDisplayUnit(const CBOQTable::DrawingUnits newVal
 {
 	assertWriteEnabled();
 	m_DisplayUnit = newVal;
+	UpdateTable();
 	return Acad::eOk;
 }
 
@@ -174,6 +178,7 @@ Acad::ErrorStatus CBOQTable::setColumnDef(const ACHAR* newVal)
         acutUpdString(newVal, m_Columns);
     }
 
+	UpdateTable();
 	return Acad::eOk;
 }
 
@@ -186,6 +191,7 @@ Acad::ErrorStatus CBOQTable::setTextColor(const Adesk::UInt16 newVal)
 {
 	assertWriteEnabled();
 	m_TextColor = newVal;
+	UpdateTable();
 	return Acad::eOk;
 }
 
@@ -198,6 +204,7 @@ Acad::ErrorStatus CBOQTable::setPosColor(const Adesk::UInt16 newVal)
 {
 	assertWriteEnabled();
 	m_PosColor = newVal;
+	UpdateTable();
 	return Acad::eOk;
 }
 
@@ -210,6 +217,7 @@ Acad::ErrorStatus CBOQTable::setLineColor(const Adesk::UInt16 newVal)
 {
 	assertWriteEnabled();
 	m_LineColor = newVal;
+	UpdateTable();
 	return Acad::eOk;
 }
 
@@ -222,6 +230,7 @@ Acad::ErrorStatus CBOQTable::setSeparatorColor(const Adesk::UInt16 newVal)
 {
 	assertWriteEnabled();
 	m_SeparatorColor = newVal;
+	UpdateTable();
 	return Acad::eOk;
 }
 
@@ -234,6 +243,7 @@ Acad::ErrorStatus CBOQTable::setBorderColor(const Adesk::UInt16 newVal)
 {
 	assertWriteEnabled();
 	m_BorderColor = newVal;
+	UpdateTable();
 	return Acad::eOk;
 }
 
@@ -246,6 +256,7 @@ Acad::ErrorStatus CBOQTable::setHeadingColor(const Adesk::UInt16 newVal)
 {
 	assertWriteEnabled();
 	m_HeadingColor = newVal;
+	UpdateTable();
 	return Acad::eOk;
 }
 
@@ -258,6 +269,7 @@ Acad::ErrorStatus CBOQTable::setFootingColor(const Adesk::UInt16 newVal)
 {
 	assertWriteEnabled();
 	m_FootingColor = newVal;
+	UpdateTable();
 	return Acad::eOk;
 }
 
@@ -270,6 +282,7 @@ Acad::ErrorStatus CBOQTable::setTextStyleId(const AcDbObjectId& newVal)
 {
 	assertWriteEnabled();
 	m_TextStyleId = newVal;
+	UpdateTable();
 	return Acad::eOk;
 }
 
@@ -282,6 +295,7 @@ Acad::ErrorStatus CBOQTable::setHeadingStyleId(const AcDbObjectId& newVal)
 {
 	assertWriteEnabled();
 	m_HeadingStyleId = newVal;
+	UpdateTable();
 	return Acad::eOk;
 }
 
@@ -294,6 +308,7 @@ Acad::ErrorStatus CBOQTable::setFootingStyleId(const AcDbObjectId& newVal)
 {
 	assertWriteEnabled();
 	m_FootingStyleId = newVal;
+	UpdateTable();
 	return Acad::eOk;
 }
 
@@ -306,6 +321,7 @@ Acad::ErrorStatus CBOQTable::setHeadingScale(const double newVal)
 {
 	assertWriteEnabled();
 	m_HeadingScale = newVal;
+	UpdateTable();
 	return Acad::eOk;
 }
 
@@ -318,6 +334,7 @@ Acad::ErrorStatus CBOQTable::setFootingScale(const double newVal)
 {
 	assertWriteEnabled();
 	m_FootingScale = newVal;
+	UpdateTable();
 	return Acad::eOk;
 }
 
@@ -330,6 +347,7 @@ Acad::ErrorStatus CBOQTable::setRowSpacing(const double newVal)
 {
 	assertWriteEnabled();
 	m_RowSpacing = newVal;
+	UpdateTable();
 	return Acad::eOk;
 }
 
@@ -347,22 +365,68 @@ const ACHAR* CBOQTable::WeightLabel(void) const         { assertReadEnabled(); r
 const ACHAR* CBOQTable::GrossWeightLabel(void) const    { assertReadEnabled(); return m_GrossWeightLabel; }
 const ACHAR* CBOQTable::MultiplierHeadingLabel(void) const { assertReadEnabled(); return m_MultiplierHeadingLabel; }
 // Set labels
-Acad::ErrorStatus CBOQTable::setPosLabel(const ACHAR* newVal)            { assertWriteEnabled(); acutDelString(m_PosLabel); acutUpdString(newVal, m_PosLabel); return Acad::eOk; }
-Acad::ErrorStatus CBOQTable::setCountLabel(const ACHAR* newVal)          { assertWriteEnabled(); acutDelString(m_CountLabel); acutUpdString(newVal, m_CountLabel); return Acad::eOk; }
-Acad::ErrorStatus CBOQTable::setDiameterLabel(const ACHAR* newVal)       { assertWriteEnabled(); acutDelString(m_DiameterLabel); acutUpdString(newVal, m_DiameterLabel); return Acad::eOk; }
-Acad::ErrorStatus CBOQTable::setLengthLabel(const ACHAR* newVal)         { assertWriteEnabled(); acutDelString(m_LengthLabel); acutUpdString(newVal, m_LengthLabel); return Acad::eOk; }
-Acad::ErrorStatus CBOQTable::setShapeLabel(const ACHAR* newVal)          { assertWriteEnabled(); acutDelString(m_ShapeLabel); acutUpdString(newVal, m_ShapeLabel); return Acad::eOk; }
-Acad::ErrorStatus CBOQTable::setTotalLengthLabel(const ACHAR* newVal)    { assertWriteEnabled(); acutDelString(m_TotalLengthLabel); acutUpdString(newVal, m_TotalLengthLabel); return Acad::eOk; }
-Acad::ErrorStatus CBOQTable::setDiameterListLabel(const ACHAR* newVal)   { assertWriteEnabled(); acutDelString(m_DiameterListLabel); acutUpdString(newVal, m_DiameterListLabel); return Acad::eOk; }
-Acad::ErrorStatus CBOQTable::setDiameterLengthLabel(const ACHAR* newVal) { assertWriteEnabled(); acutDelString(m_DiameterLengthLabel); acutUpdString(newVal, m_DiameterLengthLabel); return Acad::eOk; }
-Acad::ErrorStatus CBOQTable::setUnitWeightLabel(const ACHAR* newVal)     { assertWriteEnabled(); acutDelString(m_UnitWeightLabel); acutUpdString(newVal, m_UnitWeightLabel); return Acad::eOk; }
-Acad::ErrorStatus CBOQTable::setWeightLabel(const ACHAR* newVal)         { assertWriteEnabled(); acutDelString(m_WeightLabel); acutUpdString(newVal, m_WeightLabel); return Acad::eOk; }
-Acad::ErrorStatus CBOQTable::setGrossWeightLabel(const ACHAR* newVal)    { assertWriteEnabled(); acutDelString(m_GrossWeightLabel); acutUpdString(newVal, m_GrossWeightLabel); return Acad::eOk; }
-Acad::ErrorStatus CBOQTable::setMultiplierHeadingLabel(const ACHAR* newVal) { assertWriteEnabled(); acutDelString(m_MultiplierHeadingLabel); acutUpdString(newVal, m_MultiplierHeadingLabel); return Acad::eOk; }
+Acad::ErrorStatus CBOQTable::setPosLabel(const ACHAR* newVal)            { assertWriteEnabled(); acutDelString(m_PosLabel); acutUpdString(newVal, m_PosLabel); UpdateTable(); return Acad::eOk; }
+Acad::ErrorStatus CBOQTable::setCountLabel(const ACHAR* newVal)          { assertWriteEnabled(); acutDelString(m_CountLabel); acutUpdString(newVal, m_CountLabel); UpdateTable(); return Acad::eOk; }
+Acad::ErrorStatus CBOQTable::setDiameterLabel(const ACHAR* newVal)       { assertWriteEnabled(); acutDelString(m_DiameterLabel); acutUpdString(newVal, m_DiameterLabel); UpdateTable(); return Acad::eOk; }
+Acad::ErrorStatus CBOQTable::setLengthLabel(const ACHAR* newVal)         { assertWriteEnabled(); acutDelString(m_LengthLabel); acutUpdString(newVal, m_LengthLabel); UpdateTable(); return Acad::eOk; }
+Acad::ErrorStatus CBOQTable::setShapeLabel(const ACHAR* newVal)          { assertWriteEnabled(); acutDelString(m_ShapeLabel); acutUpdString(newVal, m_ShapeLabel); UpdateTable(); return Acad::eOk; }
+Acad::ErrorStatus CBOQTable::setTotalLengthLabel(const ACHAR* newVal)    { assertWriteEnabled(); acutDelString(m_TotalLengthLabel); acutUpdString(newVal, m_TotalLengthLabel); UpdateTable(); return Acad::eOk; }
+Acad::ErrorStatus CBOQTable::setDiameterListLabel(const ACHAR* newVal)   { assertWriteEnabled(); acutDelString(m_DiameterListLabel); acutUpdString(newVal, m_DiameterListLabel); UpdateTable(); return Acad::eOk; }
+Acad::ErrorStatus CBOQTable::setDiameterLengthLabel(const ACHAR* newVal) { assertWriteEnabled(); acutDelString(m_DiameterLengthLabel); acutUpdString(newVal, m_DiameterLengthLabel); UpdateTable(); return Acad::eOk; }
+Acad::ErrorStatus CBOQTable::setUnitWeightLabel(const ACHAR* newVal)     { assertWriteEnabled(); acutDelString(m_UnitWeightLabel); acutUpdString(newVal, m_UnitWeightLabel); UpdateTable(); return Acad::eOk; }
+Acad::ErrorStatus CBOQTable::setWeightLabel(const ACHAR* newVal)         { assertWriteEnabled(); acutDelString(m_WeightLabel); acutUpdString(newVal, m_WeightLabel); UpdateTable(); return Acad::eOk; }
+Acad::ErrorStatus CBOQTable::setGrossWeightLabel(const ACHAR* newVal)    { assertWriteEnabled(); acutDelString(m_GrossWeightLabel); acutUpdString(newVal, m_GrossWeightLabel); UpdateTable(); return Acad::eOk; }
+Acad::ErrorStatus CBOQTable::setMultiplierHeadingLabel(const ACHAR* newVal) { assertWriteEnabled(); acutDelString(m_MultiplierHeadingLabel); acutUpdString(newVal, m_MultiplierHeadingLabel); UpdateTable(); return Acad::eOk; }
+
+const Adesk::UInt32 CBOQTable::MaxRows(void) const
+{
+	assertReadEnabled();
+	return m_MaxRows;
+}
+Acad::ErrorStatus CBOQTable::setMaxRows(const Adesk::UInt32 newVal)
+{
+	assertWriteEnabled();
+	m_MaxRows = newVal;
+	UpdateTable();
+	return Acad::eOk;
+}
+
+const double CBOQTable::TableSpacing(void) const
+{
+	assertReadEnabled();
+	return m_TableSpacing * Scale();
+}
+Acad::ErrorStatus CBOQTable::setTableSpacing(const double newVal)
+{
+	assertWriteEnabled();
+	m_TableSpacing = newVal / Scale();
+	UpdateTable();
+	return Acad::eOk;
+}
 
 //*************************************************************************
 // Class Methods
 //*************************************************************************
+void CBOQTable::SuspendUpdate(void)
+{
+	assertWriteEnabled();
+
+	CGenericTable::SuspendUpdate();
+
+	assert(suspendCount >= 0);
+	if (suspendCount == 0) needsUpdate = false;
+    suspendCount++;
+}
+void CBOQTable::ResumeUpdate(void)
+{
+	assertWriteEnabled();
+	CGenericTable::ResumeUpdate();
+
+	assert(suspendCount > 0);
+	suspendCount--;
+	if (needsUpdate) UpdateTable();
+}
+
 void CBOQTable::AddRow(CBOQRow* const row)
 {
 	assertWriteEnabled();
@@ -416,7 +480,14 @@ const RowListSize CBOQTable::GetRowCount() const
 
 void CBOQTable::UpdateTable(void)
 {
-	assertReadEnabled();
+	assertWriteEnabled();
+
+	if (suspendCount != 0)
+	{
+        needsUpdate = true;
+		return;
+	}
+	SuspendUpdate();
 
 	// Open style
 	ACHAR* lastColumns = NULL;
@@ -525,180 +596,350 @@ void CBOQTable::UpdateTable(void)
 	int footingLines = 0;
 	if(lastFooting != NULL && lastFooting[0] != _T('\0'))
 	{
-		footingLines += 1;
+		footingLines = 1;
 	}
 	int noteLines = 0;
 	if(lastNote != NULL && lastNote[0] != _T('\0'))
 	{
 		noteLines = 1;
 	}
-
-	// Create base table
-	// + 1 for gross total heading (only if multiplier > 1)
-	// + 2 for columns headers
-	// + 4 for total row
-	// + 2 for gross total row (only if multiplier > 1)
-	int totalrows = hasdiameterlist ? (4 + (m_Multiplier > 1 ? 2 : 0)) : 0;
-	int rows = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() + totalrows + footingLines + noteLines; 
-	int cols = (int)columns.size() + (hasdiameterlist ? (int)diameters.size() - 1 : 0);
-
-	SetSize(rows, cols);
-	setRowsToRepeat(headingLines + (m_Multiplier > 1 ? 1 : 0) + 2);
-	setCellMargin(lastRowSpacing);
-
-	// Set cell properties
-	for(int i = headingLines + (m_Multiplier > 1 ? 1 : 0); i < headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() + totalrows + noteLines; i++)
-	{
-		for(int j = 0; j < Columns(); j++)
-		{
-			setCellHorizontalAlignment(i, j, CTableCell::eCENTER);
-			setCellVerticalAlignment(i, j, CTableCell::eCENTER);
-			setCellTextHeight(i, j, 1.0);
-			setCellLeftBorder(i, j, true, lastLineColor);
-			setCellRightBorder(i, j, true, lastLineColor);
-			setCellTopBorder(i, j, true, lastLineColor);
-			setCellBottomBorder(i, j, true, lastLineColor);
-		}
-	}
-	// Separator lines
-	for(int i = 0; i < (int)m_List.size(); i++)
-	{
-		for(int j = 0; j < Columns(); j++)
-		{
-			int k = i + headingLines + (m_Multiplier > 1 ? 1 : 0) + 2;
-			if(i > 0) setCellTopBorder(k, j, true, lastSeparatorColor);
-			if(i < (int)m_List.size() - 1) setCellBottomBorder(k, j, true, lastSeparatorColor);
-		}
-	}
-	// Double borders
-	int bi = 0;
-	bi = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 - 1;
-	if(bi >= 0 && bi < Rows()) setRowBottomBorder(bi, true, lastLineColor, true);
-	bi++;
-	if(bi >= 0 && bi < Rows()) setRowTopBorder(bi, true, lastLineColor, true);
+	int totalrows = 0;
 	if(hasdiameterlist)
 	{
-		bi = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() - 1;
-		if(bi >= 0 && bi < Rows()) setRowBottomBorder(bi, true, lastLineColor, true);
+		// + 4 for total row		
+		// + 2 for gross total row (only if multiplier > 1)
+		totalrows = 4 + (m_Multiplier > 1 ? 2 : 0);
+	}
+	int grosstotalheadinglines = 0;
+	if(m_Multiplier > 1 && lastMultiplierHeadingLabel != NULL && lastMultiplierHeadingLabel[0] != _T('\0'))
+	{
+		// + 1 for gross total heading (only if multiplier > 1)
+		grosstotalheadinglines = 1;
+	}
+	// + 2 for columns headers
+	int columnheaderlines = 2;
+
+	// rows with boq information
+	int boqrows = 0;
+	if(m_MaxRows == 0)
+	{
+		boqrows = (int)m_List.size();
+	}
+	else
+	{
+		boqrows = m_MaxRows;
+	}
+	// rows with boq information for the last table
+	int lastboqrows = boqrows;
+
+	// number of tables
+	int ntables = 1;
+	std::vector<int> tablerows;
+	if(m_MaxRows > 0 && (int)m_List.size() > 0)
+	{
+		ntables = 0;
+		int i = (int)m_List.size();
+		while(i > 0)
+		{
+			ntables++;
+			i -= m_MaxRows;
+			tablerows.push_back(m_MaxRows);
+		}
+		lastboqrows = (int)m_List.size() - (ntables - 1) * boqrows;
+		tablerows[ntables - 1] = lastboqrows;
+	}
+	else
+	{
+		tablerows.push_back((int)m_List.size());
+	}
+
+	// total number of rows
+	int rows = headingLines + grosstotalheadinglines + columnheaderlines + 
+		max(boqrows, lastboqrows + totalrows + noteLines) + 
+		footingLines;
+	// columns per table excluding the separator column between tables
+	int tablecols = (int)columns.size() + (hasdiameterlist ? (int)diameters.size() - 1 : 0);
+	// total number of columns
+	int cols = ntables * tablecols + (ntables - 1);
+
+	SetSize(rows, cols);
+	setCellMargin(lastRowSpacing);
+
+	// Default cell properties
+	setCellHorizontalAlignment(CTableCell::eCENTER);
+	setCellVerticalAlignment(CTableCell::eCENTER);
+
+	setCellTextStyleId(lastTextStyleId);
+	setCellTextHeight(1.0);
+	setCellTextColor(lastTextColor);
+
+	setCellLeftBorder(true, lastLineColor);
+	setCellRightBorder(true, lastLineColor);
+	setCellTopBorder(true, lastLineColor);
+	setCellBottomBorder(true, lastLineColor);
+
+	// Set heading
+	for(int i = 0; i < headingLines; i++)
+	{
+		setCellTextColor(i, 0, lastHeadingColor);
+		setCellTextStyleId(i, 0, lastHeadingStyleId);
+		setCellTextHeight(i, 0, lastHeadingScale);
+		setRowTopBorder(i, false);
+		setRowBottomBorder(i, false);
+		setCellLeftBorder(i, 0, false);
+		setCellRightBorder(i, cols - 1, false);
+		MergeAcross(i, 0, cols);
+
+		setCellText(i, 0, lastHeading);
+	}
+
+	// Set multiplier heading
+	for(int i = headingLines; i < headingLines + grosstotalheadinglines; i++)
+	{
+		setCellHorizontalAlignment(i, 0, CTableCell::eNEAR);
+		MergeAcross(i, 0, cols);
+
+		std::wstring text(lastMultiplierHeadingLabel);
+		std::wstring ntext;
+		Utility::IntToStr(m_Multiplier, ntext);
+		Utility::ReplaceString(text, L"[N]", ntext);
+
+		setCellText(i, 0, text.c_str());
+	}
+
+	// Separator lines between boq rows
+	for(int k = 0; k < ntables; k++)
+	{
+		for(int i = 0; i < tablerows[k]; i++)
+		{
+			for(int j = 0; j < tablecols; j++)
+			{
+				int zi = i + headingLines + grosstotalheadinglines + columnheaderlines;
+				int zj = j + k * (tablecols + 1);
+				if(i > 0) setCellTopBorder(zi, zj, true, lastSeparatorColor);
+				if(i < tablerows[k] - 1) setCellBottomBorder(zi, zj, true, lastSeparatorColor);
+			}
+		}
+	}
+
+	// Double borders
+	int bi = 0;
+	bi = headingLines + grosstotalheadinglines + columnheaderlines - 1;
+	if(bi >= 0 && bi < rows) setRowBottomBorder(bi, true, lastLineColor, true);
+	bi++;
+	if(bi >= 0 && bi < rows) setRowTopBorder(bi, true, lastLineColor, true);
+	if(hasdiameterlist)
+	{
+		bi = headingLines + grosstotalheadinglines + columnheaderlines + tablerows[ntables - 1] - 1;
+		if(bi >= 0 && bi < rows)
+		{
+			for(int k = 0; k < tablecols; k++)
+			{
+				int bj = (ntables - 1) * (tablecols + 1) + k;
+				setCellBottomBorder(bi, bj, true, lastLineColor, true);
+			}
+		}
 		bi++;
-		if(bi >= 0 && bi < Rows()) setRowTopBorder(bi, true, lastLineColor, true);
+		if(bi >= 0 && bi < rows)
+		{
+			for(int k = 0; k < tablecols; k++)
+			{
+				int bj = (ntables - 1) * (tablecols + 1) + k;
+				setCellTopBorder(bi, bj, true, lastLineColor, true);
+			}
+		}
 		if(m_Multiplier > 1)
 		{
-			bi = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() + 4 - 1;
-			if(bi >= 0 && bi < Rows()) setRowBottomBorder(bi, true, lastLineColor, true);
+			bi = headingLines + grosstotalheadinglines + columnheaderlines + tablerows[ntables - 1] + 4 - 1;
+			if(bi >= 0 && bi < rows)
+			{
+				for(int k = 0; k < tablecols; k++)
+				{
+					int bj = (ntables - 1) * (tablecols + 1) + k;
+					setCellBottomBorder(bi, bj, true, lastLineColor, true);
+				}
+			}
 			bi++;
-			if(bi >= 0 && bi < Rows()) setRowTopBorder(bi, true, lastLineColor, true);
+			if(bi >= 0 && bi < rows)
+			{
+				for(int k = 0; k < tablecols; k++)
+				{
+					int bj = (ntables - 1) * (tablecols + 1) + k;
+					setCellTopBorder(bi, bj, true, lastLineColor, true);
+				}
+			}
 		}
 	}
 	if(noteLines > 0)
 	{
-		bi = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() + totalrows - 1;
-		if(bi >= 0 && bi < Rows()) setRowBottomBorder(bi, true, lastLineColor, true);
-		bi = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() + totalrows;
-		if(bi >= 0 && bi < Rows()) setRowTopBorder(bi, true, lastLineColor, true);
+		bi = headingLines + grosstotalheadinglines + columnheaderlines + tablerows[ntables - 1] + totalrows - 1;
+		if(bi >= 0 && bi < rows)
+		{
+			for(int k = 0; k < tablecols; k++)
+			{
+				int bj = (ntables - 1) * (tablecols + 1) + k;
+				setCellBottomBorder(bi, bj, true, lastLineColor, true);
+			}
+		}
+		bi++;
+		if(bi >= 0 && bi < rows)
+		{
+			for(int k = 0; k < tablecols; k++)
+			{
+				int bj = (ntables - 1) * (tablecols + 1) + k;
+				setCellTopBorder(bi, bj, true, lastLineColor, true);
+			}
+		}
+	}
+
+	// Clear borders between tables
+	for(int k = 0; k < ntables - 1; k++)
+	{
+		for(int i = 0; i < rows; i++)
+		{
+			int j = (k + 1) * (tablecols + 1) - 1;
+			setCellTopBorder(i, j, false);
+			setCellBottomBorder(i, j, false);
+			setCellLeftBorder(i, j, false);
+			setCellRightBorder(i, j, false);
+		}
+	}
+
+	// Clear borders below tables
+	for(int k = 0; k < ntables; k++)
+	{
+		for(int i = 0; ; i++)
+		{
+			int ti = headingLines + grosstotalheadinglines + columnheaderlines + tablerows[k] + i;
+			if(k == ntables - 1) ti += totalrows + noteLines;
+			if(ti > rows - footingLines - 1) break;
+
+			for(int j = 0; j < tablecols; j++)
+			{
+				int tj = k * (tablecols + 1) + j;
+				setCellTopBorder(ti, tj, false);
+				setCellBottomBorder(ti, tj, false);
+				setCellLeftBorder(ti, tj, false);
+				setCellRightBorder(ti, tj, false);
+			}
+		}
+	}
+
+	// Table spacing
+	for(int k = 0; k < ntables - 1; k++)
+	{
+		int j = (k + 1) * (tablecols + 1) - 1;
+		setMinimumColumnWidth(j, m_TableSpacing);
 	}
 
 	// Set column headers
-	int j = 0;
-	for(std::vector<CBOQTable::ColumnType>::iterator tit = columns.begin(); tit != columns.end(); tit++)
+	for(int k = 0; k < ntables; k++)
 	{
-		int i = headingLines + (m_Multiplier > 1 ? 1 : 0);
-		CBOQTable::ColumnType type = *tit;
-		ACHAR* text = NULL;
-
-		switch(type)
+		int j = k * (tablecols + 1);
+		for(std::vector<CBOQTable::ColumnType>::iterator tit = columns.begin(); tit != columns.end(); tit++)
 		{
-		case CBOQTable::POS:
-			text = lastPosLabel;
-			MergeDown(i, j, 2);
-			break;
-		case CBOQTable::POSDD:
-			text = lastPosLabel;
-			MergeDown(i, j, 2);
-			break;
-		case CBOQTable::COUNT:
-			text = lastCountLabel;
-			MergeDown(i, j, 2);
-			break;
-		case CBOQTable::DIAMETER:
-			text = lastDiameterLabel;
-			MergeDown(i, j, 2);
-			break;
-		case CBOQTable::LENGTH:
-			text = lastLengthLabel;
-			MergeDown(i, j, 2);
-			break;
-		case CBOQTable::SHAPE:
-			text = lastShapeLabel;
-			MergeDown(i, j, 2);
-			break;
-		case CBOQTable::TOTALLENGTH:
-			text = lastTotalLengthLabel;
-			MergeAcross(i, j, (int)diameters.size());
-			if(lastDiameterListLabel != NULL && lastDiameterListLabel[0] != _T('\0'))
+			int i = headingLines + grosstotalheadinglines;
+			CBOQTable::ColumnType type = *tit;
+			ACHAR* text = NULL;
+
+			switch(type)
 			{
-				for(std::map<double ,int>::iterator dit = diameters.begin(); dit != diameters.end(); dit++)
+			case CBOQTable::POS:
+				text = lastPosLabel;
+				MergeDown(i, j, 2);
+				break;
+			case CBOQTable::POSDD:
+				text = lastPosLabel;
+				MergeDown(i, j, 2);
+				break;
+			case CBOQTable::COUNT:
+				text = lastCountLabel;
+				MergeDown(i, j, 2);
+				break;
+			case CBOQTable::DIAMETER:
+				text = lastDiameterLabel;
+				MergeDown(i, j, 2);
+				break;
+			case CBOQTable::LENGTH:
+				text = lastLengthLabel;
+				MergeDown(i, j, 2);
+				break;
+			case CBOQTable::SHAPE:
+				text = lastShapeLabel;
+				MergeDown(i, j, 2);
+				break;
+			case CBOQTable::TOTALLENGTH:
+				text = lastTotalLengthLabel;
+				MergeAcross(i, j, (int)diameters.size());
+				if(lastDiameterListLabel != NULL && lastDiameterListLabel[0] != _T('\0'))
 				{
-					std::wstring dtext(lastDiameterListLabel);
-					std::wstring numtext;
-					Utility::IntToStr(Utility::DoubleToInt((*dit).first), numtext);
-					Utility::ReplaceString(dtext, L"[D]", numtext);
-					int k = j + (*dit).second;
-					setCellText(i + 1, k, dtext.c_str());
-					setCellTextColor(i + 1, k, lastPosColor);
-					setCellTextStyleId(i + 1, k, lastTextStyleId);
+					for(std::map<double ,int>::iterator dit = diameters.begin(); dit != diameters.end(); dit++)
+					{
+						std::wstring dtext(lastDiameterListLabel);
+						std::wstring numtext;
+						Utility::IntToStr(Utility::DoubleToInt((*dit).first), numtext);
+						Utility::ReplaceString(dtext, L"[D]", numtext);
+						int k = j + (*dit).second;
+						setCellText(i + 1, k, dtext.c_str());
+						setCellTextColor(i + 1, k, lastPosColor);
+						setCellTextStyleId(i + 1, k, lastTextStyleId);
+					}
 				}
+				break;
 			}
-			break;
-		}
 
-		if(text != NULL && text[0] != _T('\0'))
-		{
-			std::wstring ctext(text);
-			std::wstring utext;
-			switch(lastDisplayUnit)
+			if(text != NULL && text[0] != _T('\0'))
 			{
-			case CBOQTable::MM:
-				utext = L"mm";
-				break;
-			case CBOQTable::CM:
-				utext = L"cm";
-				break;
-			case CBOQTable::DM:
-				utext = L"dm";
-				break;
-			case CBOQTable::M:
-				utext = L"m";
-				break;
+				std::wstring ctext(text);
+				std::wstring utext;
+				switch(lastDisplayUnit)
+				{
+				case CBOQTable::MM:
+					utext = L"mm";
+					break;
+				case CBOQTable::CM:
+					utext = L"cm";
+					break;
+				case CBOQTable::DM:
+					utext = L"dm";
+					break;
+				case CBOQTable::M:
+					utext = L"m";
+					break;
+				}
+				Utility::ReplaceString(ctext, L"[U]", utext);
+				setCellText(i, j, ctext.c_str());
 			}
-			Utility::ReplaceString(ctext, L"[U]", utext);
-			setCellText(i, j, ctext.c_str());
-		}
-		setCellTextColor(i, j, lastPosColor);
-		setCellTextStyleId(i, j, lastTextStyleId);
+			setCellTextColor(i, j, lastPosColor);
+			setCellTextStyleId(i, j, lastTextStyleId);
 
-		j++;
+			j++;
+		}
 	}
 
 	// Set rows
-	j = 0;
+	int j = 0;
 	for(std::vector<CBOQTable::ColumnType>::iterator tit = columns.begin(); tit != columns.end(); tit++)
 	{
-		int i = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2;
+		int k = 0;
+		int i = 0;
 		CBOQTable::ColumnType type = *tit;
 
 		for(RowListConstIt it = m_List.begin(); it != m_List.end(); it++)
 		{
 			CBOQRow* row = *it;
 
+			int ri = headingLines + grosstotalheadinglines + columnheaderlines + i;
+			int rj = k * (tablecols + 1) + j;
+
 			unsigned short textCol = lastTextColor;
 			if(row->count == 0) textCol = 7;
 
 			if(!row->isEmpty && type == CBOQTable::SHAPE)
 			{
-				setCellShape(i, j, row->shape.c_str());
-				setCellTextStyleId(i, j, lastTextStyleId);
-				setCellShapeText(i, j, row->a.c_str(), row->b.c_str(), row->c.c_str(), row->d.c_str(), row->e.c_str(), row->f.c_str());
+				setCellShape(ri, rj, row->shape.c_str());
+				setCellTextStyleId(ri, rj, lastTextStyleId);
+				setCellShapeText(ri, rj, row->a.c_str(), row->b.c_str(), row->c.c_str(), row->d.c_str(), row->e.c_str(), row->f.c_str());
 			}
 			else if(!row->isEmpty)
 			{
@@ -732,58 +973,29 @@ void CBOQTable::UpdateTable(void)
 					break;
 				}
 
-				setCellTextColor(i, j + doff, textCol);
-				setCellTextStyleId(i, j + doff, lastTextStyleId);
-				setCellText(i, j + doff, text.c_str());
+				setCellTextColor(ri, rj + doff, textCol);
+				setCellTextStyleId(ri, rj + doff, lastTextStyleId);
+				setCellText(ri, rj + doff, text.c_str());
 			}
 			else if(type == CBOQTable::POS)
 			{
 				std::wstring text;
 				Utility::IntToStr(row->pos, text);
-				setCellTextColor(i, j, textCol);
-				setCellTextStyleId(i, j, lastTextStyleId);
-				setCellText(i, j, text.c_str());
+				setCellTextColor(ri, rj, textCol);
+				setCellTextStyleId(ri, rj, lastTextStyleId);
+				setCellText(ri, rj, text.c_str());
 			}
 
 			i++;
+			if(i == boqrows)
+			{
+				i = 0;
+				k++;
+			}
 		}
 		j++;
 	}
-
-	// Set heading
-	if(lastHeading != NULL && lastHeading[0] != _T('\0'))
-	{
-		int hi = 0;
-		setCellTextColor(hi, 0, lastHeadingColor);
-		setCellTextStyleId(hi, 0, lastHeadingStyleId);
-		setCellHorizontalAlignment(hi, 0, CTableCell::eCENTER);
-		setCellVerticalAlignment(hi, 0, CTableCell::eCENTER);
-		setCellTextHeight(hi, 0, lastHeadingScale);
-		MergeAcross(hi, 0, cols);
-
-		setCellText(hi, 0, lastHeading);
-	}
-
-	// Set multiplier heading
-	if(m_Multiplier > 1 && lastMultiplierHeadingLabel != NULL && lastMultiplierHeadingLabel[0] != _T('\0'))
-	{
-		int hi = headingLines;
-		setCellTextColor(hi, 0, lastTextColor);
-		setCellTextStyleId(hi, 0, lastTextStyleId);
-
-		setCellHorizontalAlignment(hi, 0, CTableCell::eNEAR);
-		setCellVerticalAlignment(hi, 0, CTableCell::eCENTER);
-		setCellTextHeight(hi, 0, 1.0);
-		MergeAcross(hi, 0, cols);
-
-		std::wstring text(lastMultiplierHeadingLabel);
-		std::wstring ntext;
-		Utility::IntToStr(m_Multiplier, ntext);
-		Utility::ReplaceString(text, L"[N]", ntext);
-
-		setCellText(hi, 0, text.c_str());
-	}
-
+	
 	// Set total rows
 	if(hasdiameterlist)
 	{
@@ -801,46 +1013,31 @@ void CBOQTable::UpdateTable(void)
 			unitweights[d] = pi * d * d / 4 * 1000.0 * 7850.0 / 1000.0 / 1000.0 / 1000.0;
 		}
 
-		int ti = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size();
+		int ti = headingLines + grosstotalheadinglines + columnheaderlines + tablerows[ntables - 1];
+		int tj = (ntables - 1) * (tablecols + 1);
 		int mulcol = cols - (int)diameters.size() - 1;
 		for(int k = ti; k < ti + totalrows; k++)
 		{
-			setCellTextColor(k, 0, lastPosColor);
-			setCellTextStyleId(k, 0, lastTextStyleId);
-			setCellHorizontalAlignment(k, 0, CTableCell::eNEAR);
-			setCellVerticalAlignment(k, 0, CTableCell::eCENTER);
-			MergeAcross(k, 0, cols - (int)diameters.size() - 1);
+			setCellTextColor(k, tj, lastPosColor);
+			setCellHorizontalAlignment(k, tj, CTableCell::eNEAR);
+			MergeAcross(k, tj, tablecols - (int)diameters.size() - 1);
 
 			setCellTextColor(k, mulcol, lastPosColor);
-			setCellTextStyleId(k, mulcol, lastTextStyleId);
 			setCellHorizontalAlignment(k, mulcol, CTableCell::eFAR);
-			setCellVerticalAlignment(k, mulcol, CTableCell::eCENTER);
 
 			setCellRightBorder(k, mulcol - 1, false);
 			setCellLeftBorder(k, mulcol, false);
 		}
 
 		if(lastDiameterLengthLabel != NULL && lastDiameterLengthLabel[0] != _T('\0'))
-			setCellText(ti, 0, lastDiameterLengthLabel);
+			setCellText(ti, tj, lastDiameterLengthLabel);
 		if(lastUnitWeightLabel != NULL && lastUnitWeightLabel[0] != _T('\0'))
-			setCellText(ti + 1, 0, lastUnitWeightLabel);
+			setCellText(ti + 1, tj, lastUnitWeightLabel);
 		if(lastWeightLabel != NULL && lastWeightLabel[0] != _T('\0'))
-			setCellText(ti + 2, 0, lastWeightLabel);
+			setCellText(ti + 2, tj, lastWeightLabel);
 		if(lastGrossWeightLabel != NULL && lastGrossWeightLabel[0] != _T('\0'))
-			setCellText(ti + 3, 0, lastGrossWeightLabel);
+			setCellText(ti + 3, tj, lastGrossWeightLabel);
 		MergeAcross(ti + 3, cols - (int)diameters.size(), (int)diameters.size());
-
-		for(int ki = ti; ki < ti + totalrows; ki++)
-		{
-			for(std::map<double, int>::iterator it = diameters.begin(); it != diameters.end(); it++)
-			{
-				int kj = cols - (int)diameters.size() + (*it).second;
-				setCellTextColor(ki, kj, lastTextColor);
-				setCellTextStyleId(ki, kj, lastTextStyleId);
-				setCellHorizontalAlignment(ki, kj, CTableCell::eCENTER);
-				setCellVerticalAlignment(ki, kj, CTableCell::eCENTER);
-			}
-		}
 
 		double grosstotal = 0;
 		for(std::map<double, int>::iterator it = diameters.begin(); it != diameters.end(); it++)
@@ -868,9 +1065,9 @@ void CBOQTable::UpdateTable(void)
 		if(m_Multiplier > 1)
 		{
 			if(lastWeightLabel != NULL && lastWeightLabel[0] != _T('\0'))
-				setCellText(ti + 4, 0, lastWeightLabel);
+				setCellText(ti + 4, tj, lastWeightLabel);
 			if(lastGrossWeightLabel != NULL && lastGrossWeightLabel[0] != _T('\0'))
-				setCellText(ti + 5, 0, lastGrossWeightLabel);
+				setCellText(ti + 5, tj, lastGrossWeightLabel);
 			std::wstring mtext(L"x1");
 			setCellText(ti + 2, mulcol, mtext.c_str());
 			setCellText(ti + 3, mulcol, mtext.c_str());
@@ -899,28 +1096,28 @@ void CBOQTable::UpdateTable(void)
 	}
 
 	// Set note
-	if(lastNote != NULL && lastNote[0] != _T('\0'))
+	if(noteLines > 0)
 	{
-		int fi = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() + totalrows;
-		setCellTextColor(fi, 0, lastTextColor);
-		setCellTextStyleId(fi, 0, lastTextStyleId);
-		setCellHorizontalAlignment(fi, 0, CTableCell::eNEAR);
-		setCellVerticalAlignment(fi, 0, CTableCell::eCENTER);
-		setCellTextHeight(fi, 0, 1.0);
-		MergeAcross(fi, 0, cols);
+		int fi = headingLines + grosstotalheadinglines + columnheaderlines + tablerows[ntables - 1] + totalrows;
+		int fj = (ntables - 1) * (tablecols + 1);
+		setCellHorizontalAlignment(fi, fj, CTableCell::eNEAR);
+		MergeAcross(fi, fj, tablecols);
 
-		setCellText(fi, 0, lastNote);
+		setCellText(fi, fj, lastNote);
 	}
 
 	// Set footing
-	if(lastFooting != NULL && lastFooting[0] != _T('\0'))
+	if(footingLines > 0)
 	{
-		int fi = headingLines + (m_Multiplier > 1 ? 1 : 0) + 2 + (int)m_List.size() + totalrows + noteLines;
+		int fi = rows - 1;
 		setCellTextColor(fi, 0, lastFootingColor);
 		setCellTextStyleId(fi, 0, lastFootingStyleId);
 		setCellHorizontalAlignment(fi, 0, CTableCell::eNEAR);
-		setCellVerticalAlignment(fi, 0, CTableCell::eCENTER);
 		setCellTextHeight(fi, 0, lastFootingScale);
+		setRowTopBorder(fi, false);
+		setRowBottomBorder(fi, false);
+		setCellLeftBorder(fi, 0, false);
+		setCellRightBorder(fi, cols - 1, false);
 		MergeAcross(fi, 0, cols);
 
 		setCellText(fi, 0, lastFooting);
@@ -941,6 +1138,8 @@ void CBOQTable::UpdateTable(void)
 	acutDelString(lastUnitWeightLabel);
 	acutDelString(lastWeightLabel);
 	acutDelString(lastGrossWeightLabel);
+
+	ResumeUpdate();
 }
 
 const void CBOQTable::Update(void)
@@ -1095,6 +1294,9 @@ Acad::ErrorStatus CBOQTable::dwgOutFields(AcDbDwgFiler* pFiler) const
     pFiler->writeHardPointerId(m_HeadingStyleId);
 	pFiler->writeHardPointerId(m_FootingStyleId);
 
+	pFiler->writeUInt32(m_MaxRows);
+	pFiler->writeDouble(m_TableSpacing);
+
 	// Rows
 	pFiler->writeInt32((int)m_List.size());
 	for(RowListConstIt it = m_List.begin(); it != m_List.end(); it++)
@@ -1195,6 +1397,9 @@ Acad::ErrorStatus CBOQTable::dwgInFields(AcDbDwgFiler* pFiler)
 	pFiler->readHardPointerId(&m_TextStyleId);
 	pFiler->readHardPointerId(&m_HeadingStyleId);
 	pFiler->readHardPointerId(&m_FootingStyleId);
+
+	pFiler->readUInt32(&m_MaxRows);
+	pFiler->readDouble(&m_TableSpacing);
 
 	// Rows
 	ClearRows();
@@ -1316,6 +1521,9 @@ Acad::ErrorStatus CBOQTable::dxfOutFields(AcDbDxfFiler* pFiler) const
     pFiler->writeItem(AcDb::kDxfHardPointerId, m_HeadingStyleId);
 	pFiler->writeItem(AcDb::kDxfHardPointerId, m_FootingStyleId);
 
+	pFiler->writeUInt32(AcDb::kDxfInt32, m_MaxRows);
+    pFiler->writeDouble(AcDb::kDxfXReal, m_TableSpacing);
+
 	// Rows
 	pFiler->writeInt32(AcDb::kDxfInt32 + 2, (int)m_List.size());
 	for(RowListConstIt it = m_List.begin(); it != m_List.end(); it++)
@@ -1397,6 +1605,8 @@ Acad::ErrorStatus CBOQTable::dxfInFields(AcDbDxfFiler* pFiler)
 	AcDbObjectId t_TextStyleId = AcDbObjectId::kNull;
 	AcDbObjectId t_HeadingStyleId = AcDbObjectId::kNull;
 	AcDbObjectId t_FootingStyleId = AcDbObjectId::kNull;
+	Adesk::UInt32 t_MaxRows;
+	double t_TableSpacing;
 
 	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32 + 1, _T("multiplier"), t_Multiplier)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("heading"), t_Heading)) != Acad::eOk) return es;
@@ -1434,6 +1644,9 @@ Acad::ErrorStatus CBOQTable::dxfInFields(AcDbDxfFiler* pFiler)
 	if((es = Utility::ReadDXFObjectId(pFiler, AcDb::kDxfHardPointerId, _T("text style"), t_TextStyleId)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFObjectId(pFiler, AcDb::kDxfHardPointerId, _T("heading style"), t_HeadingStyleId)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFObjectId(pFiler, AcDb::kDxfHardPointerId, _T("footing style"), t_FootingStyleId)) != Acad::eOk) return es;
+
+	if((es = Utility::ReadDXFULong(pFiler, AcDb::kDxfInt32, _T("max rows"), t_MaxRows)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("table spacing"), t_TableSpacing)) != Acad::eOk) return es;
 
 	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32 + 2, _T("row count"), count)) != Acad::eOk) return es;
 
@@ -1479,6 +1692,8 @@ Acad::ErrorStatus CBOQTable::dxfInFields(AcDbDxfFiler* pFiler)
     }
 
 	// Successfully read DXF codes; set object properties.
+	SuspendUpdate();
+
 	m_Multiplier = t_Multiplier;
 
 	setHeading(t_Heading);
@@ -1516,6 +1731,9 @@ Acad::ErrorStatus CBOQTable::dxfInFields(AcDbDxfFiler* pFiler)
 	m_HeadingStyleId = t_HeadingStyleId;
 	m_FootingStyleId = t_FootingStyleId;
 
+	m_MaxRows = t_MaxRows;
+	m_TableSpacing = t_TableSpacing;
+
 	ClearRows();
 	m_List.clear();
 	m_List = t_List;
@@ -1538,7 +1756,7 @@ Acad::ErrorStatus CBOQTable::dxfInFields(AcDbDxfFiler* pFiler)
 	acutDelString(t_GrossWeightLabel);
 	acutDelString(t_MultiplierHeadingLabel);
 
-	UpdateTable();
+	ResumeUpdate();
 
     return es;
 }

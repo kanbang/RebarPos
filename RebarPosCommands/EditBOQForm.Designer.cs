@@ -31,6 +31,8 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditBOQForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txtNote = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.udMultiplier = new System.Windows.Forms.NumericUpDown();
             this.txtFooter = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -42,13 +44,11 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.txtTableMargin = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.txtTableHeight = new System.Windows.Forms.TextBox();
+            this.txtTableRows = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.txtTextHeight = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.txtNote = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udMultiplier)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -71,6 +71,22 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "&Tablo Seçenekleri";
+            // 
+            // txtNote
+            // 
+            this.txtNote.Location = new System.Drawing.Point(159, 60);
+            this.txtNote.Name = "txtNote";
+            this.txtNote.Size = new System.Drawing.Size(234, 20);
+            this.txtNote.TabIndex = 3;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(21, 63);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(24, 13);
+            this.label8.TabIndex = 2;
+            this.label8.Text = "&Not";
             // 
             // udMultiplier
             // 
@@ -162,7 +178,7 @@
             // 
             this.groupBox2.Controls.Add(this.txtTableMargin);
             this.groupBox2.Controls.Add(this.label7);
-            this.groupBox2.Controls.Add(this.txtTableHeight);
+            this.groupBox2.Controls.Add(this.txtTableRows);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.txtTextHeight);
             this.groupBox2.Controls.Add(this.label5);
@@ -191,23 +207,23 @@
             this.label7.TabIndex = 4;
             this.label7.Text = "Tablo &Aralığı";
             // 
-            // txtTableHeight
+            // txtTableRows
             // 
-            this.txtTableHeight.Location = new System.Drawing.Point(158, 57);
-            this.txtTableHeight.Name = "txtTableHeight";
-            this.txtTableHeight.Size = new System.Drawing.Size(100, 20);
-            this.txtTableHeight.TabIndex = 3;
-            this.txtTableHeight.Text = "0";
-            this.txtTableHeight.Validating += new System.ComponentModel.CancelEventHandler(this.txtTableHeight_Validating);
+            this.txtTableRows.Location = new System.Drawing.Point(158, 57);
+            this.txtTableRows.Name = "txtTableRows";
+            this.txtTableRows.Size = new System.Drawing.Size(100, 20);
+            this.txtTableRows.TabIndex = 3;
+            this.txtTableRows.Text = "0";
+            this.txtTableRows.Validating += new System.ComponentModel.CancelEventHandler(this.txtTableRows_Validating);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(20, 60);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(85, 13);
+            this.label6.Size = new System.Drawing.Size(58, 13);
             this.label6.TabIndex = 2;
-            this.label6.Text = "Ta&blo Yüksekliği";
+            this.label6.Text = "&Satır Sayısı";
             // 
             // txtTextHeight
             // 
@@ -231,22 +247,6 @@
             // 
             this.errorProvider.ContainerControl = this;
             this.errorProvider.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProvider.Icon")));
-            // 
-            // txtNote
-            // 
-            this.txtNote.Location = new System.Drawing.Point(159, 60);
-            this.txtNote.Name = "txtNote";
-            this.txtNote.Size = new System.Drawing.Size(234, 20);
-            this.txtNote.TabIndex = 3;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(21, 63);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(24, 13);
-            this.label8.TabIndex = 2;
-            this.label8.Text = "&Not";
             // 
             // EditBOQForm
             // 
@@ -290,7 +290,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox txtTableMargin;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox txtTableHeight;
+        private System.Windows.Forms.TextBox txtTableRows;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtTextHeight;
         private System.Windows.Forms.Label label5;

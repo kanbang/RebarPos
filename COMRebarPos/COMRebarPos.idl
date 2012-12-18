@@ -118,8 +118,8 @@ library COMREBARPOSLib
 		[propput, id(5), helpstring("property Heading"),helpcontext(IDH_THEADING)] HRESULT Heading([in] BSTR newVal);
 		[propget, id(6), helpstring("property Footing"),helpcontext(IDH_TFOOTING)] HRESULT Footing([out, retval] BSTR *pVal);
 		[propput, id(6), helpstring("property Footing"),helpcontext(IDH_TFOOTING)] HRESULT Footing([in] BSTR newVal);
-		[propget, id(7), helpstring("property MaxHeight"),helpcontext(IDH_TMAXROWS)] HRESULT MaxHeight([out, retval] double *pVal);
-		[propput, id(7), helpstring("property MaxHeight"),helpcontext(IDH_TMAXROWS)] HRESULT MaxHeight([in] double newVal);
+		[propget, id(7), helpstring("property MaxRows"),helpcontext(IDH_TMAXROWS)] HRESULT MaxRows([out, retval] long *pVal);
+		[propput, id(7), helpstring("property MaxRows"),helpcontext(IDH_TMAXROWS)] HRESULT MaxRows([in] long newVal);
 		[propget, id(8), helpstring("property TableSpacing"),helpcontext(IDH_TTABLESPACING)] HRESULT TableSpacing([out, retval] double *pVal);
 		[propput, id(8), helpstring("property TableSpacing"),helpcontext(IDH_TTABLESPACING)] HRESULT TableSpacing([in] double newVal);
 	};

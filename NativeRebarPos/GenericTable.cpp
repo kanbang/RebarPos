@@ -30,9 +30,10 @@ CGenericTable::CGenericTable(void) :
 	m_BasePoint(0, 0, 0), geomInit(false), ucs(AcGeMatrix3d::kIdentity),
 	m_Direction(1, 0, 0), m_Up(0, 1, 0),
 	m_Rows(0), m_Columns(0), m_Cells(0),
-	columnWidths(), rowHeights(), isModified(true),
-	m_CellMargin(0.2), m_MaxHeight(0), m_TableSpacing(2.0), m_RowsToRepeat(0),
-	m_Width(0), m_Height(0)
+	columnWidths(), rowHeights(),
+	m_CellMargin(0.2), 
+	m_Width(0), m_Height(0),
+	suspendCount(0), needsUpdate(false)
 {
 }
 
@@ -88,45 +89,6 @@ const int CGenericTable::Rows(void) const
 	return m_Rows;
 }
 
-const double CGenericTable::MaxHeight(void) const
-{
-	assertReadEnabled();
-	return m_MaxHeight * m_Direction.length();
-}
-Acad::ErrorStatus CGenericTable::setMaxHeight(const double newVal)
-{
-	assertWriteEnabled();
-	m_MaxHeight = newVal / m_Direction.length();
-	isModified = true;
-	return Acad::eOk;
-}
-
-const double CGenericTable::TableSpacing(void) const
-{
-	assertReadEnabled();
-	return m_TableSpacing * m_Direction.length();
-}
-Acad::ErrorStatus CGenericTable::setTableSpacing(const double newVal)
-{
-	assertWriteEnabled();
-	m_TableSpacing = newVal / m_Direction.length();
-	isModified = true;
-	return Acad::eOk;
-}
-
-const int CGenericTable::RowsToRepeat(void) const
-{
-	assertReadEnabled();
-	return m_RowsToRepeat;
-}
-Acad::ErrorStatus CGenericTable::setRowsToRepeat(const int newVal)
-{
-	assertWriteEnabled();
-	m_RowsToRepeat = newVal;
-	isModified = true;
-	return Acad::eOk;
-}
-
 const double CGenericTable::CellMargin(void) const
 {
 	assertReadEnabled();
@@ -139,7 +101,7 @@ Acad::ErrorStatus CGenericTable::setCellMargin(const double newVal)
 	{
 		(*it)->setMargin(newVal);
 	}
-	isModified = true;
+	Calculate();
 	return Acad::eOk;
 }
 
@@ -158,26 +120,34 @@ Acad::ErrorStatus CGenericTable::setBasePoint(const AcGePoint3d& newVal)
 const double CGenericTable::Width(void) const
 {
 	assertReadEnabled();
-	if(isModified)
-	{
-		Calculate();
-	}
 	return m_Width * m_Direction.length();
 }
 
 const double CGenericTable::Height(void) const
 {
 	assertReadEnabled();
-	if(isModified)
-	{
-		Calculate();
-	}
 	return m_Height * m_Direction.length();
 }
 
 //*************************************************************************
 // Methods
 //*************************************************************************
+void CGenericTable::SuspendUpdate(void)
+{
+	assertWriteEnabled();
+
+	assert(suspendCount >= 0);
+	if (suspendCount == 0) needsUpdate = false;
+    suspendCount++;
+}
+void CGenericTable::ResumeUpdate(void)
+{
+	assertWriteEnabled();
+
+	assert(suspendCount > 0);
+	suspendCount--;
+    if (needsUpdate) Calculate();
+}
 
 void CGenericTable::SetSize(int rows, int columns)
 {
@@ -201,7 +171,7 @@ void CGenericTable::SetSize(int rows, int columns)
 	m_Rows = rows;
 	m_Columns = columns;
 
-	isModified = true;
+	Calculate();
 }
 
 void CGenericTable::Clear()
@@ -211,23 +181,45 @@ void CGenericTable::Clear()
 	for(std::vector<CTableCell*>::iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
 		delete (*it);
 
+	m_Rows = 0;
+	m_Columns = 0;
 	m_Cells.clear();
 
-	isModified = true;
+	Calculate();
 }
 
 void CGenericTable::setMinimumColumnWidth(const int j, const double newVal)
 {
 	assertWriteEnabled();
 	minColumnWidths[j] = newVal;
-	isModified = true;
+	Calculate();
 }
 
 void CGenericTable::setMinimumRowHeight(const int i, const double newVal)
 {
 	assertWriteEnabled();
 	minRowHeights[i] = newVal;
-	isModified = true;
+	Calculate();
+}
+
+void CGenericTable::setMinimumColumnWidth(const double newVal)
+{
+	assertWriteEnabled();
+	for(int i = 0; i < minColumnWidths.size(); i++)
+	{
+		minColumnWidths[i] = newVal;
+	}
+	Calculate();
+}
+
+void CGenericTable::setMinimumRowHeight(const double newVal)
+{
+	assertWriteEnabled();
+	for(int i = 0; i < minRowHeights.size(); i++)
+	{
+		minRowHeights[i] = newVal;
+	}
+	Calculate();
 }
 
 //*************************************************************************
@@ -235,76 +227,167 @@ void CGenericTable::setMinimumRowHeight(const int i, const double newVal)
 //*************************************************************************
 void CGenericTable::setCellText(const int i, const int j, const ACHAR* newVal)
 {
+	assertWriteEnabled();
 	CTableCell* cell = m_Cells[i * m_Columns + j];
 	cell->setText(newVal);
-	isModified = true;
+	Calculate();
 }
 void CGenericTable::setCellShape(const int i, const int j, const ACHAR* newVal)
 {
+	assertWriteEnabled();
 	CTableCell* cell = m_Cells[i * m_Columns + j];
 	cell->setShape(newVal);
-	isModified = true;
+	Calculate();
 }
 void CGenericTable::setCellShapeText(const int i, const int j, const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f)
 {
+	assertWriteEnabled();
 	CTableCell* cell = m_Cells[i * m_Columns + j];
 	cell->setShapeText(a, b, c, d, e, f);
-	isModified = true;
+	Calculate();
 }
 void CGenericTable::setCellTextColor(const int i, const int j, const unsigned short newVal)
 {
+	assertWriteEnabled();
 	CTableCell* cell = m_Cells[i * m_Columns + j];
 	cell->setTextColor(newVal);
-	isModified = true;
+	Calculate();
 }
 void CGenericTable::setCellTextStyleId(const int i, const int j, const AcDbObjectId& newVal)
 {
+	assertWriteEnabled();
 	CTableCell* cell = m_Cells[i * m_Columns + j];
 	cell->setTextStyleId(newVal);
-	isModified = true;
+	Calculate();
 }
 void CGenericTable::setCellTextHeight(const int i, const int j, const double newVal)
 {
+	assertWriteEnabled();
 	CTableCell* cell = m_Cells[i * m_Columns + j];
 	cell->setTextHeight(newVal);
-	isModified = true;
+	Calculate();
+}
+
+void CGenericTable::setCellTextColor(const unsigned short newVal)
+{
+	assertWriteEnabled();
+	for(std::vector<CTableCell*>::iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
+	{
+		CTableCell* cell = (*it);
+		cell->setTextColor(newVal);
+	}
+	Calculate();
+}
+void CGenericTable::setCellTextStyleId(const AcDbObjectId& newVal)
+{
+	assertWriteEnabled();
+	for(std::vector<CTableCell*>::iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
+	{
+		CTableCell* cell = (*it);
+		cell->setTextStyleId(newVal);
+	}
+	Calculate();
+}
+void CGenericTable::setCellTextHeight(const double newVal)
+{
+	assertWriteEnabled();
+	for(std::vector<CTableCell*>::iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
+	{
+		CTableCell* cell = (*it);
+		cell->setTextHeight(newVal);
+	}
+	Calculate();
 }
 
 void CGenericTable::setCellLeftBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor, bool isdouble)
 {
+	assertWriteEnabled();
 	CTableCell* cell = m_Cells[i * m_Columns + j];
 	cell->setLeftBorder(hasBorder);
 	cell->setLeftBorderColor(borderColor);
 	cell->setLeftBorderDouble(isdouble);
-	isModified = true;
+	Calculate();
 }
 void CGenericTable::setCellRightBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor, bool isdouble)
 {
+	assertWriteEnabled();
 	CTableCell* cell = m_Cells[i * m_Columns + j];
 	cell->setRightBorder(hasBorder);
 	cell->setRightBorderColor(borderColor);
 	cell->setRightBorderDouble(isdouble);
-	isModified = true;
+	Calculate();
 }
 void CGenericTable::setCellTopBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor, bool isdouble)
 {
+	assertWriteEnabled();
 	CTableCell* cell = m_Cells[i * m_Columns + j];
 	cell->setTopBorder(hasBorder);
 	cell->setTopBorderColor(borderColor);
 	cell->setTopBorderDouble(isdouble);
-	isModified = true;
+	Calculate();
 }
 void CGenericTable::setCellBottomBorder(const int i, const int j, const bool hasBorder, const unsigned short borderColor, bool isdouble)
 {
+	assertWriteEnabled();
 	CTableCell* cell = m_Cells[i * m_Columns + j];
 	cell->setBottomBorder(hasBorder);
 	cell->setBottomBorderColor(borderColor);
 	cell->setBottomBorderDouble(isdouble);
-	isModified = true;
+	Calculate();
+}
+
+void CGenericTable::setCellLeftBorder(const bool hasBorder, const unsigned short borderColor, bool isdouble)
+{
+	assertWriteEnabled();
+	for(std::vector<CTableCell*>::iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
+	{
+		CTableCell* cell = (*it);
+		cell->setLeftBorder(hasBorder);
+		cell->setLeftBorderColor(borderColor);
+		cell->setLeftBorderDouble(isdouble);
+	}
+	Calculate();
+}
+void CGenericTable::setCellRightBorder(const bool hasBorder, const unsigned short borderColor, bool isdouble)
+{
+	assertWriteEnabled();
+	for(std::vector<CTableCell*>::iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
+	{
+		CTableCell* cell = (*it);
+		cell->setRightBorder(hasBorder);
+		cell->setRightBorderColor(borderColor);
+		cell->setRightBorderDouble(isdouble);
+	}
+	Calculate();
+}
+void CGenericTable::setCellTopBorder(const bool hasBorder, const unsigned short borderColor, bool isdouble)
+{
+	assertWriteEnabled();
+	for(std::vector<CTableCell*>::iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
+	{
+		CTableCell* cell = (*it);
+		cell->setTopBorder(hasBorder);
+		cell->setTopBorderColor(borderColor);
+		cell->setTopBorderDouble(isdouble);
+	}
+	Calculate();
+}
+void CGenericTable::setCellBottomBorder(const bool hasBorder, const unsigned short borderColor, bool isdouble)
+{
+	assertWriteEnabled();
+	for(std::vector<CTableCell*>::iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
+	{
+		CTableCell* cell = (*it);
+		cell->setBottomBorder(hasBorder);
+		cell->setBottomBorderColor(borderColor);
+		cell->setBottomBorderDouble(isdouble);
+	}
+	Calculate();
 }
 
 void CGenericTable::setRowTopBorder(const int i, const bool hasBorder, const unsigned short borderColor, bool isdouble)
 {
+	assertWriteEnabled();
 	for(int j = 0; j < m_Columns; j++)
 	{
 		CTableCell* cell = m_Cells[i * m_Columns + j];
@@ -312,10 +395,11 @@ void CGenericTable::setRowTopBorder(const int i, const bool hasBorder, const uns
 		cell->setTopBorderColor(borderColor);
 		cell->setTopBorderDouble(isdouble);
 	}
-	isModified = true;
+	Calculate();
 }
 void CGenericTable::setRowBottomBorder(const int i, const bool hasBorder, const unsigned short borderColor, bool isdouble)
 {
+	assertWriteEnabled();
 	for(int j = 0; j < m_Columns; j++)
 	{
 		CTableCell* cell = m_Cells[i * m_Columns + j];
@@ -323,11 +407,12 @@ void CGenericTable::setRowBottomBorder(const int i, const bool hasBorder, const 
 		cell->setBottomBorderColor(borderColor);
 		cell->setBottomBorderDouble(isdouble);
 	}
-	isModified = true;
+	Calculate();
 }
 
 void CGenericTable::setColumnLeftBorder(const int j, const bool hasBorder, const unsigned short borderColor, bool isdouble)
 {
+	assertWriteEnabled();
 	for(int i = 0; i < m_Rows; i++)
 	{
 		CTableCell* cell = m_Cells[i * m_Columns + j];
@@ -335,10 +420,11 @@ void CGenericTable::setColumnLeftBorder(const int j, const bool hasBorder, const
 		cell->setLeftBorderColor(borderColor);
 		cell->setLeftBorderDouble(isdouble);
 	}
-	isModified = true;
+	Calculate();
 }
 void CGenericTable::setColumnRightBorder(const int j, const bool hasBorder, const unsigned short borderColor, bool isdouble)
 {
+	assertWriteEnabled();
 	for(int i = 0; i < m_Rows; i++)
 	{
 		CTableCell* cell = m_Cells[i * m_Columns + j];
@@ -346,24 +432,49 @@ void CGenericTable::setColumnRightBorder(const int j, const bool hasBorder, cons
 		cell->setRightBorderColor(borderColor);
 		cell->setRightBorderDouble(isdouble);
 	}
-	isModified = true;
+	Calculate();
 }
 
 void CGenericTable::setCellHorizontalAlignment(const int i, const int j, const CTableCell::Alignment newVal)
 {
+	assertWriteEnabled();
 	CTableCell* cell = m_Cells[i * m_Columns + j];
 	cell->setHorizontalAlignment(newVal);
-	isModified = true;
+	Calculate();
 }
 void CGenericTable::setCellVerticalAlignment(const int i, const int j, const CTableCell::Alignment newVal)
 {
+	assertWriteEnabled();
 	CTableCell* cell = m_Cells[i * m_Columns + j];
 	cell->setVerticalAlignment(newVal);
-	isModified = true;
+	Calculate();
+}
+
+void CGenericTable::setCellHorizontalAlignment(const CTableCell::Alignment newVal)
+{
+	assertWriteEnabled();
+	for(std::vector<CTableCell*>::iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
+	{
+		CTableCell* cell = (*it);
+		cell->setHorizontalAlignment(newVal);
+	}
+	Calculate();
+}
+void CGenericTable::setCellVerticalAlignment(const CTableCell::Alignment newVal)
+{
+	assertWriteEnabled();
+	for(std::vector<CTableCell*>::iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
+	{
+		CTableCell* cell = (*it);
+		cell->setVerticalAlignment(newVal);
+	}
+	Calculate();
 }
 
 void CGenericTable::MergeAcross(const int i, const int j, const int span)
 {
+	assertWriteEnabled();
+
 	CTableCell* cell = m_Cells[i * m_Columns + j];
 	cell->setMergeRight(span);
 	
@@ -384,10 +495,12 @@ void CGenericTable::MergeAcross(const int i, const int j, const int span)
 			m_Cells[i * m_Columns + k]->setRightBorder(false);
 		}
 	}
-	isModified = true;
+	Calculate();
 }
 void CGenericTable::MergeDown(const int i, const int j, const int span)
 {
+	assertWriteEnabled();
+
 	CTableCell* cell = m_Cells[i * m_Columns + j];
 	cell->setMergeDown(span);
 	
@@ -408,26 +521,27 @@ void CGenericTable::MergeDown(const int i, const int j, const int span)
 			m_Cells[k * m_Columns + j]->setBottomBorder(false);
 		}
 	}
-	isModified = true;
+	Calculate();
 }
 
 //*************************************************************************
 // Helper Methods
 //*************************************************************************
-const void CGenericTable::ResetDrawParams(void) const
+void CGenericTable::ResetDrawParams(void)
 {
 	columnWidths.clear();
 	rowHeights.clear();
 }
 
-const void CGenericTable::Calculate(void) const
+void CGenericTable::Calculate(void)
 {
-	if(!isModified)
+	assertWriteEnabled();
+
+	if (suspendCount != 0)
 	{
+        needsUpdate = true;
 		return;
 	}
-
-	assertReadEnabled();
 
 	// Current UCS
 	if(!geomInit)
@@ -519,49 +633,11 @@ const void CGenericTable::Calculate(void) const
 		m_Height += (*it);
 	}
 
-	// Calculate rows to divide table at
-	int ntables = 1;
-	std::vector<bool> dividers;
-	dividers.resize(m_Rows);
-	for(std::vector<bool>::iterator it = dividers.begin(); it != dividers.end(); it++)
-	{
-		(*it) = false;
-	}
-
-	int itable = 0;
-	if(m_MaxHeight > 0.001)
-	{
-		double y = m_MaxHeight;
-		int sr = DivideAt(y, itable);
-		while(sr > 0 && sr < m_Rows)
-		{
-			itable++;
-			dividers[sr] = true;
-			y += m_MaxHeight;
-			sr = DivideAt(y, itable);
-		}
-	}
-
 	// Set cell sizes and location
-	double tableoffset = 0;
 	double x = 0;
 	double y = 0;
-	double ytop = 0;
-	for(int i = 0; i < m_RowsToRepeat; i++)
-	{
-		ytop += rowHeights[i];
-	}
-
 	for(int i = 0; i < m_Rows; i++)
 	{
-		if(dividers[i])
-		{
-			ntables++;
-			tableoffset += m_Width + m_TableSpacing;
-			x = tableoffset;
-			y = -ytop;
-		}
-
 		for(int j = 0; j < m_Columns; j++)
 		{
 			CTableCell* cell = m_Cells[i * m_Columns + j];
@@ -597,7 +673,7 @@ const void CGenericTable::Calculate(void) const
 			x += columnWidths[j];
 		}
 
-		x = tableoffset;
+		x = 0;
 		y -= rowHeights[i];
 	}
 
@@ -611,7 +687,6 @@ const void CGenericTable::Calculate(void) const
 	}
 
 	// Recalculate table size
-	tableoffset = 0;
 	x = 0;
 	y = 0;
 	m_Width = 0;
@@ -619,14 +694,6 @@ const void CGenericTable::Calculate(void) const
 	for(int i = 0; i < m_Rows; i++)
 	{
 		double h = rowHeights[i];
-
-		if(dividers[i])
-		{
-			ntables++;
-			tableoffset += m_Width + m_TableSpacing;
-			x = tableoffset;
-			y = 0;
-		}
 
 		for(int j = 0; j < m_Columns; j++)
 		{
@@ -637,51 +704,9 @@ const void CGenericTable::Calculate(void) const
 
 			x += columnWidths[j];
 		}
-		x = tableoffset;
+		x = 0;
 		y -= rowHeights[i];
 	}
-
-	// Done update
-	isModified = false;
-}
-
-const int CGenericTable::DivideAt(double& y, int ntable) const
-{
-	int r = 0;
-
-	double yt = 0;
-	for(int i = 0; i < m_RowsToRepeat; i++)
-	{
-		yt += rowHeights[i];
-	}
-	yt *= (double)ntable;
-
-	for(int i = 0; i < (int)rowHeights.size(); i++)
-	{
-		yt += rowHeights[i];
-		if(yt > y)
-		{
-			if(i <= 1) return 0;
-			r = i - 1;
-			yt -= rowHeights[i];
-			break;
-		}
-	}
-	if(r > m_Rows - 1) return 0;
-	for(int j = 0; j < m_Columns; j++)
-	{
-		for(int i = 0; i < r; i++)
-		{
-			CTableCell* cell = m_Cells[i * m_Columns + j];
-			int span = cell->MergeDown();
-			if(span > 0)
-			{
-				if(i + span > r) r = i;
-			}
-		}
-	}
-	y = yt;
-	return r;
 }
 
 //*************************************************************************
@@ -697,11 +722,6 @@ Acad::ErrorStatus CGenericTable::subGetOsnapPoints(
     AcDbIntArray&         geomIds) const
 {
 	assertReadEnabled();
-
-	if(isModified)
-	{
-		Calculate();
-	}
 
 	if(osnapMode == AcDb::kOsModeIns)
 	{
@@ -808,11 +828,6 @@ Acad::ErrorStatus CGenericTable::subExplode(AcDbVoidPtrArray& entitySet) const
 {
     assertReadEnabled();
 
-	if(isModified)
-	{
-		Calculate();
-	}
-
 	for(std::vector<CTableCell*>::const_iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
 	{
 		CTableCell* cell = (*it);
@@ -831,12 +846,6 @@ Adesk::Boolean CGenericTable::subWorldDraw(AcGiWorldDraw* worldDraw)
         return Adesk::kTrue;
     }
 
-	// Update if modified
-	if(!worldDraw->isDragging() && isModified)
-	{
-		Calculate();
-	}
-
 	for(std::vector<CTableCell*>::iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
 	{
 		CTableCell* cell = (*it);
@@ -849,11 +858,6 @@ Adesk::Boolean CGenericTable::subWorldDraw(AcGiWorldDraw* worldDraw)
 Acad::ErrorStatus CGenericTable::subGetGeomExtents(AcDbExtents& extents) const
 {
     assertReadEnabled();
-
-	if(isModified)
-	{
-		Calculate();
-	}
 
 	// Get ECS extents
 	AcGePoint3d pt1(0, 0, 0);
@@ -885,11 +889,6 @@ Acad::ErrorStatus CGenericTable::dwgOutFields(AcDbDwgFiler* pFiler) const
 {
 	assertReadEnabled();
 
-	if(isModified)
-	{
-		Calculate();
-	}
-
 	// Save parent class information first.
 	Acad::ErrorStatus es;
 	if((es = AcDbEntity::dwgOutFields(pFiler)) != Acad::eOk)
@@ -906,10 +905,6 @@ Acad::ErrorStatus CGenericTable::dwgOutFields(AcDbDwgFiler* pFiler) const
 
 	pFiler->writeInt32(m_Rows);
 	pFiler->writeInt32(m_Columns);
-
-	pFiler->writeDouble(m_MaxHeight);
-	pFiler->writeDouble(m_TableSpacing);
-	pFiler->writeInt32(m_RowsToRepeat);
 
 	pFiler->writeDouble(m_Width);
 	pFiler->writeDouble(m_Height);
@@ -949,11 +944,6 @@ Acad::ErrorStatus CGenericTable::dwgInFields(AcDbDwgFiler* pFiler)
 	Adesk::Int32 columns;
 	pFiler->readInt32(&rows);
 	pFiler->readInt32(&columns);
-	pFiler->readDouble(&m_MaxHeight);
-	pFiler->readDouble(&m_TableSpacing);
-	Adesk::Int32 rowsToRepeat;
-	pFiler->readInt32(&rowsToRepeat);
-	m_RowsToRepeat = rowsToRepeat;
 
 	SetSize(rows, columns);
 
@@ -966,7 +956,7 @@ Acad::ErrorStatus CGenericTable::dwgInFields(AcDbDwgFiler* pFiler)
 		cell->dwgInFields(pFiler);
 	}
 
-	isModified = true;
+	Calculate();
 
 	return pFiler->filerStatus();
 }
@@ -974,11 +964,6 @@ Acad::ErrorStatus CGenericTable::dwgInFields(AcDbDwgFiler* pFiler)
 Acad::ErrorStatus CGenericTable::dxfOutFields(AcDbDxfFiler* pFiler) const
 {
 	assertReadEnabled();
-
-	if(isModified)
-	{
-		Calculate();
-	}
 
 	// Save parent class information first.
 	Acad::ErrorStatus es;
@@ -997,9 +982,6 @@ Acad::ErrorStatus CGenericTable::dxfOutFields(AcDbDxfFiler* pFiler) const
 
 	pFiler->writeInt32(AcDb::kDxfInt32, m_Rows);
 	pFiler->writeInt32(AcDb::kDxfInt32, m_Columns);
-	pFiler->writeDouble(AcDb::kDxfReal, m_MaxHeight);
-	pFiler->writeDouble(AcDb::kDxfReal, m_TableSpacing);
-	pFiler->writeInt32(AcDb::kDxfInt32, m_RowsToRepeat);
 
 	pFiler->writeDouble(AcDb::kDxfReal, m_Width);
 	pFiler->writeDouble(AcDb::kDxfReal, m_Height);
@@ -1042,9 +1024,6 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
 	double t_CellMargin;
 	int t_Rows;
 	int t_Columns;
-	double t_MaxHeight;
-	double t_TableSpacing;
-	int t_RowsToRepeat;
 	double t_Width;
 	double t_Height;
 	std::vector<CTableCell*> t_Cells;
@@ -1057,9 +1036,6 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
 
 	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("row count"), t_Rows)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("column count"), t_Columns)) != Acad::eOk) return es;
-	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("max height"), t_MaxHeight)) != Acad::eOk) return es;
-	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("table spacing"), t_TableSpacing)) != Acad::eOk) return es;
-	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("rows to repeat"), t_RowsToRepeat)) != Acad::eOk) return es;
 
 	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("table width"), t_Width)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFReal(pFiler, AcDb::kDxfReal, _T("table height"), t_Height)) != Acad::eOk) return es;
@@ -1077,14 +1053,11 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
 	m_Up = t_Up;
 	m_CellMargin = t_CellMargin;
 	SetSize(t_Rows, t_Columns);
-	m_MaxHeight = t_MaxHeight;
-	m_TableSpacing = t_TableSpacing;
-	m_RowsToRepeat = t_RowsToRepeat;
 	m_Width = t_Width;
 	m_Height = t_Height;
 	m_Cells = t_Cells;
 
-	isModified = true;
+	Calculate();
 
     return es;
 }
@@ -1098,12 +1071,6 @@ void CGenericTable::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 	{
         return;
     }
-
-	// Update if modified
-	if(isModified)
-	{
-		Calculate();
-	}
 
 	for(std::vector<CTableCell*>::const_iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
 	{

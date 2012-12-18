@@ -15,7 +15,7 @@ namespace RebarPosCommands
         public int Multiplier { get { return (int)udMultiplier.Value; } }
         public bool HideMissing { get { return chkHideMissing.Checked; } }
         public double TextHeight { get { return double.Parse(txtTextHeight.Text); } }
-        public double TableHeight { get { return double.Parse(txtTableHeight.Text); } }
+        public int TableRows { get { return int.Parse(txtTableRows.Text); } }
         public double TableMargin { get { return double.Parse(txtTableMargin.Text); } }
 
         public DrawBOQForm()
@@ -69,17 +69,17 @@ namespace RebarPosCommands
             }
         }
 
-        private void txtTableHeight_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        private void txtTableRows_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
             TextBox txt = sender as TextBox;
-            double val = 0;
-            if (string.IsNullOrEmpty(txt.Text) || double.TryParse(txt.Text, out val))
+            int val = 0;
+            if (string.IsNullOrEmpty(txt.Text) || int.TryParse(txt.Text, out val))
             {
                 errorProvider.SetError(txt, "");
             }
             else
             {
-                errorProvider.SetError(txt, "Lütfen bir reel sayı girin.");
+                errorProvider.SetError(txt, "Lütfen bir tam sayı girin.");
                 errorProvider.SetIconAlignment(txt, ErrorIconAlignment.MiddleLeft);
                 e.Cancel = true;
             }

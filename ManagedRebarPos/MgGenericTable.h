@@ -29,6 +29,10 @@ namespace OZOZ
                 return static_cast<CGenericTable*>(UnmanagedObject.ToPointer());
             }
 
+		public:
+			virtual void SuspendUpdate();
+			virtual void ResumeUpdate();
+
         public:
 			property Vector3d DirectionVector { Vector3d get(); }
 			property Vector3d UpVector        { Vector3d get(); }
@@ -38,9 +42,6 @@ namespace OZOZ
 
 			property double Width  { double get(); }
 			property double Height { double get(); }
-
-			property double MaxHeight    { double get(); void set(double value); }
-			property double TableSpacing { double get(); void set(double value); }
 
 			property Point3d BasePoint { Point3d get(); void set(Point3d value); }
         };

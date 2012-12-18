@@ -324,6 +324,24 @@ void BOQTable::RowSpacing::set(double value)
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setRowSpacing(value));
 }
 
+int BOQTable::MaxRows::get()
+{
+	return GetImpObj()->MaxRows();
+}
+void BOQTable::MaxRows::set(int value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setMaxRows(value));
+}
+
+double BOQTable::TableSpacing::get()
+{
+	return GetImpObj()->TableSpacing();
+}
+void BOQTable::TableSpacing::set(double value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setTableSpacing(value));
+}
+
 //*************************************************************************
 // Shape Collection
 //*************************************************************************
@@ -376,6 +394,14 @@ void BOQTable::BOQRowCollection::default::set(int index, BOQTable::BOQRow^ value
 //*************************************************************************
 // Methods
 //*************************************************************************
+void BOQTable::SuspendUpdate()
+{
+	GetImpObj()->SuspendUpdate();
+}
+void BOQTable::ResumeUpdate()
+{
+	GetImpObj()->ResumeUpdate();
+}
 void BOQTable::Update()
 {
 	GetImpObj()->Update();

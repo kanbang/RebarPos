@@ -76,8 +76,8 @@ public:
 	STDMETHOD(put_BasePoint)(/*[in]*/ VARIANT newVal);
 	STDMETHOD(get_Multiplier)(/*[out, retval]*/ long *pVal);
 	STDMETHOD(put_Multiplier)(/*[in]*/ long newVal);
-	STDMETHOD(get_MaxHeight)(/*[out, retval]*/ double *pVal);
-	STDMETHOD(put_MaxHeight)(/*[in]*/ double newVal);
+	STDMETHOD(get_MaxRows)(/*[out, retval]*/ long *pVal);
+	STDMETHOD(put_MaxRows)(/*[in]*/ long newVal);
 	STDMETHOD(get_TableSpacing)(/*[out, retval]*/ double *pVal);
 	STDMETHOD(put_TableSpacing)(/*[in]*/ double newVal);
 	STDMETHOD(get_Scale)(/*[out, retval]*/ double *pVal);

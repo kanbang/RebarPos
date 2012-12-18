@@ -27,6 +27,18 @@ GenericTable::GenericTable(System::IntPtr unmanagedPointer, bool autoDelete)
 }
 
 //*************************************************************************
+// Methods
+//*************************************************************************
+void GenericTable::SuspendUpdate()
+{
+	GetImpObj()->SuspendUpdate();
+}
+void GenericTable::ResumeUpdate()
+{
+	GetImpObj()->ResumeUpdate();
+}
+
+//*************************************************************************
 // Properties
 //*************************************************************************
 Vector3d GenericTable::DirectionVector::get()
@@ -71,22 +83,3 @@ void GenericTable::BasePoint::set(Point3d point)
 {
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setBasePoint(Marshal::FromPoint3d(point)));
 }
-
-double GenericTable::MaxHeight::get()
-{
-    return GetImpObj()->MaxHeight();
-}
-void GenericTable::MaxHeight::set(double value)
-{
-    Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setMaxHeight(value));
-}
-
-double GenericTable::TableSpacing::get()
-{
-	return (GetImpObj()->TableSpacing());
-}
-void GenericTable::TableSpacing::set(double value)
-{
-	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setTableSpacing(value));
-}
-

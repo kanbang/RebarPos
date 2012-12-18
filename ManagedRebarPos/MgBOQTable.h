@@ -148,6 +148,11 @@ namespace OZOZ
                 return static_cast<CBOQTable*>(UnmanagedObject.ToPointer());
             }
 
+		public:
+			virtual void SuspendUpdate() override;
+			virtual void ResumeUpdate() override;
+			void Update();
+
         public:
 			property BOQRowCollection^ Items { BOQRowCollection^ get(); }
 
@@ -191,8 +196,8 @@ namespace OZOZ
 			property double FootingScale { double get(); void set(double value); }
 			property double RowSpacing   { double get(); void set(double value); }
 
-		public:
-			void Update();
+			property int MaxRows         { int get(); void set(int value); }
+			property double TableSpacing { double get(); void set(double value); }
         };
     }
 }

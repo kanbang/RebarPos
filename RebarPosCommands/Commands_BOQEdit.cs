@@ -27,6 +27,7 @@ namespace RebarPosCommands
                     BOQTable table = tr.GetObject(tableid, OpenMode.ForWrite) as BOQTable;
                     if (table == null) return;
 
+                    table.SuspendUpdate();
 
                     Point3d pt = table.BasePoint;
                     table.TransformBy(Matrix3d.Scaling(form.TextHeight / table.Scale, pt));
@@ -35,8 +36,10 @@ namespace RebarPosCommands
                     table.Heading = form.TableHeader;
                     table.Footing = form.TableFooter;
                     table.Multiplier = form.Multiplier;
-                    table.MaxHeight = form.TableHeight;
+                    table.MaxRows = form.TableRows;
                     table.TableSpacing = form.TableMargin;
+
+                    table.ResumeUpdate();
 
                     tr.Commit();
                 }

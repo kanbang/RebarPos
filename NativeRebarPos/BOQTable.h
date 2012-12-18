@@ -111,7 +111,14 @@ private:
 	double m_FootingScale;
 	double m_RowSpacing;
 
+	Adesk::UInt32 m_MaxRows;
+	double m_TableSpacing;
+
 	RowList m_List;
+
+private:
+	int suspendCount;
+	bool needsUpdate;
 
 protected:
 	/// Calculates table when modified.
@@ -120,6 +127,10 @@ protected:
 private:
 	/// Parses column definition text
 	const std::vector<ColumnType> ParseColumns(const ACHAR* columns) const;
+
+public:
+	virtual void SuspendUpdate(void);
+	virtual void ResumeUpdate(void);
 
 public:
 	/// Gets or sets the BOQ multiplier
@@ -230,6 +241,14 @@ public:
 	/// Gets or sets the row spacing.
 	const double RowSpacing(void) const;
 	Acad::ErrorStatus setRowSpacing(const double newVal);
+
+	/// Gets or sets the maximum number of rows per table.
+    const Adesk::UInt32 MaxRows(void) const;
+	Acad::ErrorStatus setMaxRows(const Adesk::UInt32 newVal);
+
+	/// Gets or sets the spacing between tables.
+	const double TableSpacing(void) const;
+	Acad::ErrorStatus setTableSpacing(const double newVal);
 
 public:
 	/// Adds a row.

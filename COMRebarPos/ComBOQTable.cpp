@@ -418,7 +418,7 @@ STDMETHODIMP CComBOQTable::put_Multiplier(long newVal)
 	return S_OK;
 }
 
-STDMETHODIMP CComBOQTable::get_MaxHeight(double * pVal)
+STDMETHODIMP CComBOQTable::get_MaxRows(long * pVal)
 {
     CHECKOUTPARAM(pVal);
     try
@@ -428,7 +428,7 @@ STDMETHODIMP CComBOQTable::get_MaxHeight(double * pVal)
 	    if((es = pBOQTable.openStatus()) != Acad::eOk)
             throw es;
 
-        *pVal = pBOQTable->MaxHeight();
+        *pVal = pBOQTable->MaxRows();
     }
     catch(const Acad::ErrorStatus)
     {
@@ -437,7 +437,7 @@ STDMETHODIMP CComBOQTable::get_MaxHeight(double * pVal)
 	return S_OK;
 }
 
-STDMETHODIMP CComBOQTable::put_MaxHeight(double newVal)
+STDMETHODIMP CComBOQTable::put_MaxRows(long newVal)
 {
     try
     {
@@ -449,7 +449,7 @@ STDMETHODIMP CComBOQTable::put_MaxHeight(double newVal)
             throw es;
         
         USES_CONVERSION;
-        if ((es = pBOQTable->setMaxHeight(newVal)) != Acad::eOk)
+        if ((es = pBOQTable->setMaxRows(newVal)) != Acad::eOk)
             throw es;
         else 
             Fire_Notification(DISPID_TMAXROWS);
