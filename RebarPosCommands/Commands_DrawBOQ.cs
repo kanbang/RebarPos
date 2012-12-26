@@ -75,7 +75,7 @@ namespace RebarPosCommands
                 styleen.Name = "TableStyle - EN";
                 styleen.Columns = "[M][N][D][L][SH][TL]";
 
-                styleen.TextStyleId = PosUtility.CreateTextStyle("Rebar BOQ Style", "romanstw.shx", 0.7);
+                styleen.TextStyleId = PosUtility.CreateTextStyle("Rebar BOQ Style", "romanstw.shx", 0.65);
                 styleen.HeadingStyleId = PosUtility.CreateTextStyle("Rebar BOQ Heading Style", "Arial.ttf", 1.0);
                 styleen.FootingStyleId = PosUtility.CreateTextStyle("Rebar BOQ Footing Style", "simplxtw.shx", 1.0);
 

@@ -2111,15 +2111,13 @@ void CRebarPos::Calculate(void)
 	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
 	{
 		CDrawParams p = lastDrawList[i];
-		AcGePoint2d ext;
+		AcGePoint2d ext = lastTextStyle.extents(p.text.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
 		if(p.hasCircle)
 		{
-			ext = lastTextStyle.extents(p.text.c_str(), Adesk::kFalse, -1, Adesk::kFalse);
-			p.x = x + (2.0 * circleRadius - ext.x ) / 2.0;
+			p.x = x + (2.0 * circleRadius - ext.x) / 2.0;
 		}
 		else
 		{
-			ext = lastTextStyle.extents(p.text.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
 			p.x = x;
 		}
 		p.y = y;
