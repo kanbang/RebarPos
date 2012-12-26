@@ -2213,6 +2213,8 @@ bool CRebarPos::CalcConsLength(const ACHAR* str, const double diameter, const CP
 	Utility::DoubleToStr(r, strR);
 	Utility::ReplaceString(length, L"d", strD);
 	Utility::ReplaceString(length, L"r", strR);
+	Utility::ReplaceString(length, L"D", strD);
+	Utility::ReplaceString(length, L"R", strR);
 	
 	// Calculate length
 	try
@@ -2274,6 +2276,10 @@ bool CRebarPos::GetTotalLengths(const ACHAR* formula, CRebarPos::CCalculatedProp
 	Utility::ReplaceString(length2, L"d", strD);
 	Utility::ReplaceString(length1, L"r", strR);
 	Utility::ReplaceString(length2, L"r", strR);
+	Utility::ReplaceString(length1, L"D", strD);
+	Utility::ReplaceString(length2, L"D", strD);
+	Utility::ReplaceString(length1, L"R", strR);
+	Utility::ReplaceString(length2, L"R", strR);
 
 	// Calculate lengths
 	try
@@ -2358,6 +2364,10 @@ bool CRebarPos::GetTotalLengths(const ACHAR* formula, const int fieldCount, cons
 	Utility::ReplaceString(length2, L"d", strD);
 	Utility::ReplaceString(length1, L"r", strR);
 	Utility::ReplaceString(length2, L"r", strR);
+	Utility::ReplaceString(length1, L"D", strD);
+	Utility::ReplaceString(length2, L"D", strD);
+	Utility::ReplaceString(length1, L"R", strR);
+	Utility::ReplaceString(length2, L"R", strR);
 
 	// Calculate lengths
 	try
