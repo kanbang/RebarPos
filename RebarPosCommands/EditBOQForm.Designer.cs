@@ -67,14 +67,14 @@
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(417, 148);
+            this.groupBox1.Size = new System.Drawing.Size(417, 145);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "&Tablo Seçenekleri";
             // 
             // txtNote
             // 
-            this.txtNote.Location = new System.Drawing.Point(159, 60);
+            this.txtNote.Location = new System.Drawing.Point(158, 55);
             this.txtNote.Name = "txtNote";
             this.txtNote.Size = new System.Drawing.Size(234, 20);
             this.txtNote.TabIndex = 3;
@@ -82,7 +82,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(21, 63);
+            this.label8.Location = new System.Drawing.Point(20, 58);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(24, 13);
             this.label8.TabIndex = 2;
@@ -90,7 +90,7 @@
             // 
             // udMultiplier
             // 
-            this.udMultiplier.Location = new System.Drawing.Point(159, 34);
+            this.udMultiplier.Location = new System.Drawing.Point(158, 29);
             this.udMultiplier.Maximum = new decimal(new int[] {
             1410065408,
             2,
@@ -112,7 +112,7 @@
             // 
             // txtFooter
             // 
-            this.txtFooter.Location = new System.Drawing.Point(159, 112);
+            this.txtFooter.Location = new System.Drawing.Point(158, 107);
             this.txtFooter.Name = "txtFooter";
             this.txtFooter.Size = new System.Drawing.Size(234, 20);
             this.txtFooter.TabIndex = 7;
@@ -120,7 +120,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(21, 115);
+            this.label3.Location = new System.Drawing.Point(20, 110);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(37, 13);
             this.label3.TabIndex = 6;
@@ -128,7 +128,7 @@
             // 
             // txtHeader
             // 
-            this.txtHeader.Location = new System.Drawing.Point(159, 86);
+            this.txtHeader.Location = new System.Drawing.Point(158, 81);
             this.txtHeader.Name = "txtHeader";
             this.txtHeader.Size = new System.Drawing.Size(234, 20);
             this.txtHeader.TabIndex = 5;
@@ -136,7 +136,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(21, 89);
+            this.label2.Location = new System.Drawing.Point(20, 84);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(41, 13);
             this.label2.TabIndex = 4;
@@ -145,7 +145,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(21, 36);
+            this.label4.Location = new System.Drawing.Point(20, 31);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(41, 13);
             this.label4.TabIndex = 0;
@@ -155,7 +155,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(357, 307);
+            this.btnCancel.Location = new System.Drawing.Point(357, 303);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
@@ -166,7 +166,7 @@
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(276, 307);
+            this.btnOK.Location = new System.Drawing.Point(276, 303);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 2;
@@ -182,7 +182,7 @@
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.txtTextHeight);
             this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Location = new System.Drawing.Point(13, 166);
+            this.groupBox2.Location = new System.Drawing.Point(13, 163);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(419, 125);
             this.groupBox2.TabIndex = 1;
@@ -254,7 +254,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(444, 342);
+            this.ClientSize = new System.Drawing.Size(444, 338);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);

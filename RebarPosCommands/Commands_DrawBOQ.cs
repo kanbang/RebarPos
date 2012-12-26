@@ -181,6 +181,9 @@ namespace RebarPosCommands
                     table.Note = form.TableNote;
                     table.Heading = form.TableHeader;
                     table.Footing = form.TableFooter;
+
+                    table.DisplayUnit = form.DisplayUnit;
+
                     table.Multiplier = form.Multiplier;
 
                     BOQStyle style = form.TableStyle;

@@ -35,7 +35,9 @@ namespace RebarPosCommands
                     table.Note = form.TableNote;
                     table.Heading = form.TableHeader;
                     table.Footing = form.TableFooter;
+
                     table.Multiplier = form.Multiplier;
+
                     table.MaxRows = form.TableRows;
                     table.TableSpacing = form.TableMargin;
 
