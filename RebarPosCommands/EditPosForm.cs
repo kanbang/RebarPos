@@ -695,6 +695,8 @@ namespace RebarPosCommands
                     string oldstr = str;
                     oldstr = oldstr.Replace('d', '0');
                     oldstr = oldstr.Replace('r', '0');
+                    oldstr = oldstr.Replace('D', '0');
+                    oldstr = oldstr.Replace('R', '0');
                     oldstr = oldstr.Replace('x', '*');
                     oldstr = oldstr.Replace('X', '*');
 
