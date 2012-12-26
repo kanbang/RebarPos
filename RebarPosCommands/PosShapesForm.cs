@@ -102,9 +102,9 @@ namespace RebarPosCommands
                 if (p1.name == p2.name) return 0;
 
                 if (p1.name == "GENEL")
-                    return -1;
-                else if (p2.name == "GENEL")
                     return 1;
+                else if (p2.name == "GENEL")
+                    return -1;
                 else
                 {
                     int n1 = 0;
