@@ -206,13 +206,66 @@ namespace RebarPosCommands
                     table.MaxRows = form.TableRows;
                     table.TableSpacing = form.TableMargin;
 
+                    double lengthScale = 1.0;
+                    switch (table.DisplayUnit)
+                    {
+                        case BOQTable.DrawingUnits.Millimeter:
+                            lengthScale = 1.0;
+                            break;
+                        case BOQTable.DrawingUnits.Centimeter:
+                            lengthScale = 0.1;
+                            break;
+                        case BOQTable.DrawingUnits.Decimeter:
+                            lengthScale = 0.01;
+                            break;
+                        case BOQTable.DrawingUnits.Meter:
+                            lengthScale = 0.001;
+                            break;
+                    }
+
                     // Add rows
                     foreach (PosCopy copy in posList)
                     {
                         if (copy.existing)
-                            table.Items.Add(int.Parse(copy.pos), copy.count, double.Parse(copy.diameter), copy.length1, copy.length2, copy.isVarLength, copy.shapename, copy.a, copy.b, copy.c, copy.d, copy.e, copy.f);
+                        {
+                            string a = string.Empty;
+                            string b = string.Empty;
+                            string c = string.Empty;
+                            string d = string.Empty;
+                            string e = string.Empty;
+                            string f = string.Empty;
+
+                            if (copy.isVarA)
+                                a = (copy.minA * lengthScale).ToString("F0") + "~" + (copy.maxA * lengthScale).ToString("F0");
+                            else
+                                a = (copy.minA * lengthScale).ToString("F0");
+                            if (copy.isVarB)
+                                b = (copy.minB * lengthScale).ToString("F0") + "~" + (copy.maxB * lengthScale).ToString("F0");
+                            else
+                                b = (copy.minB * lengthScale).ToString("F0");
+                            if (copy.isVarC)
+                                c = (copy.minC * lengthScale).ToString("F0") + "~" + (copy.maxC * lengthScale).ToString("F0");
+                            else
+                                c = (copy.minC * lengthScale).ToString("F0");
+                            if (copy.isVarD)
+                                d = (copy.minD * lengthScale).ToString("F0") + "~" + (copy.maxD * lengthScale).ToString("F0");
+                            else
+                                d = (copy.minD * lengthScale).ToString("F0");
+                            if (copy.isVarE)
+                                e = (copy.minE * lengthScale).ToString("F0") + "~" + (copy.maxE * lengthScale).ToString("F0");
+                            else
+                                e = (copy.minE * lengthScale).ToString("F0");
+                            if (copy.isVarF)
+                                f = (copy.minF * lengthScale).ToString("F0") + "~" + (copy.maxF * lengthScale).ToString("F0");
+                            else
+                                f = (copy.minF * lengthScale).ToString("F0");
+
+                            table.Items.Add(int.Parse(copy.pos), copy.count, double.Parse(copy.diameter), copy.length1, copy.length2, copy.isVarLength, copy.shapename, a, b, c, d, e, f);
+                        }
                         else
+                        {
                             table.Items.Add(int.Parse(copy.pos));
+                        }
                     }
 
                     table.ResumeUpdate();

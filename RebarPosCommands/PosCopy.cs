@@ -34,6 +34,26 @@ namespace RebarPosCommands
         public double x;
         public double y;
 
+        public int fieldCount;
+        public bool isVarA;
+        public bool isVarB;
+        public bool isVarC;
+        public bool isVarD;
+        public bool isVarE;
+        public bool isVarF;
+        public double maxA;
+        public double maxB;
+        public double maxC;
+        public double maxD;
+        public double maxE;
+        public double maxF;
+        public double minA;
+        public double minB;
+        public double minC;
+        public double minD;
+        public double minE;
+        public double minF;
+
         public double length1;
         public double length2;
         public bool isVarLength;
@@ -138,12 +158,35 @@ namespace RebarPosCommands
                             }
                             copy.diameter = pos.Diameter;
                             copy.length = pos.Length;
+                            
                             copy.a = pos.A;
                             copy.b = pos.B;
                             copy.c = pos.C;
                             copy.d = pos.D;
                             copy.e = pos.E;
                             copy.f = pos.F;
+                            
+                            RebarPos.CalculatedProperties calc = pos.CalcProperties;
+                            copy.fieldCount = calc.FieldCount;
+                            copy.minA = calc.MinA;
+                            copy.minB = calc.MinB;
+                            copy.minC = calc.MinC;
+                            copy.minD = calc.MinD;
+                            copy.minE = calc.MinE;
+                            copy.minF = calc.MinF;
+                            copy.maxA = calc.MaxA;
+                            copy.maxB = calc.MaxB;
+                            copy.maxC = calc.MaxC;
+                            copy.maxD = calc.MaxD;
+                            copy.maxE = calc.MaxE;
+                            copy.maxF = calc.MaxF;
+                            copy.isVarA = calc.IsVarA;
+                            copy.isVarB = calc.IsVarB;
+                            copy.isVarC = calc.IsVarC;
+                            copy.isVarD = calc.IsVarD;
+                            copy.isVarE = calc.IsVarE;
+                            copy.isVarF = calc.IsVarF;
+
                             copy.scale = pos.Scale;
                             copy.x = pos.BasePoint.X;
                             copy.y = pos.BasePoint.Y;

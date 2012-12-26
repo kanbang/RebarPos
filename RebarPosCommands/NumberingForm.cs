@@ -67,6 +67,53 @@ namespace RebarPosCommands
                 btnOK.Enabled = true;
             }
 
+            PosGroup group = null;
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    group = tr.GetObject(PosGroup.GroupId, OpenMode.ForRead) as PosGroup;
+                    if (group == null) return;
+                }
+                catch
+                {
+                    return;
+                }
+            }
+
+            double lengthScale = 1.0;
+            switch (group.DrawingUnit)
+            {
+                case PosGroup.DrawingUnits.Millimeter:
+                    lengthScale = 1.0;
+                    break;
+                case PosGroup.DrawingUnits.Centimeter:
+                    lengthScale = 10.0;
+                    break;
+                case PosGroup.DrawingUnits.Decimeter:
+                    lengthScale = 100.0;
+                    break;
+                case PosGroup.DrawingUnits.Meter:
+                    lengthScale = 1000.0;
+                    break;
+            }
+            switch (group.DisplayUnit)
+            {
+                case PosGroup.DrawingUnits.Millimeter:
+                    lengthScale /= 1.0;
+                    break;
+                case PosGroup.DrawingUnits.Centimeter:
+                    lengthScale /= 10.0;
+                    break;
+                case PosGroup.DrawingUnits.Decimeter:
+                    lengthScale /= 100.0;
+                    break;
+                case PosGroup.DrawingUnits.Meter:
+                    lengthScale /= 1000.0;
+                    break;
+            }
+
             lbItems.Items.Clear();
             foreach (PosCopy copy in m_PosList)
             {
@@ -79,12 +126,45 @@ namespace RebarPosCommands
                     item.SubItems.Add(copy.diameter);
                     item.SubItems.Add(copy.shapename);
                     item.SubItems.Add(copy.length);
-                    item.SubItems.Add(copy.a);
-                    item.SubItems.Add(copy.b);
-                    item.SubItems.Add(copy.c);
-                    item.SubItems.Add(copy.d);
-                    item.SubItems.Add(copy.e);
-                    item.SubItems.Add(copy.f);
+
+                    string a = string.Empty;
+                    string b = string.Empty;
+                    string c = string.Empty;
+                    string d = string.Empty;
+                    string e = string.Empty;
+                    string f = string.Empty;
+
+                    if (copy.isVarA)
+                        a = (copy.minA * lengthScale).ToString("F0") + "~" + (copy.maxA * lengthScale).ToString("F0");
+                    else
+                        a = (copy.minA * lengthScale).ToString("F0");
+                    if (copy.isVarB)
+                        b = (copy.minB * lengthScale).ToString("F0") + "~" + (copy.maxB * lengthScale).ToString("F0");
+                    else
+                        b = (copy.minB * lengthScale).ToString("F0");
+                    if (copy.isVarC)
+                        c = (copy.minC * lengthScale).ToString("F0") + "~" + (copy.maxC * lengthScale).ToString("F0");
+                    else
+                        c = (copy.minC * lengthScale).ToString("F0");
+                    if (copy.isVarD)
+                        d = (copy.minD * lengthScale).ToString("F0") + "~" + (copy.maxD * lengthScale).ToString("F0");
+                    else
+                        d = (copy.minD * lengthScale).ToString("F0");
+                    if (copy.isVarE)
+                        e = (copy.minE * lengthScale).ToString("F0") + "~" + (copy.maxE * lengthScale).ToString("F0");
+                    else
+                        e = (copy.minE * lengthScale).ToString("F0");
+                    if (copy.isVarF)
+                        f = (copy.minF * lengthScale).ToString("F0") + "~" + (copy.maxF * lengthScale).ToString("F0");
+                    else
+                        f = (copy.minF * lengthScale).ToString("F0");
+
+                    item.SubItems.Add(a);
+                    item.SubItems.Add(b);
+                    item.SubItems.Add(c);
+                    item.SubItems.Add(d);
+                    item.SubItems.Add(e);
+                    item.SubItems.Add(f);
                 }
                 else
                 {
