@@ -207,6 +207,12 @@ namespace RebarPosCommands
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            if (chkShowShapes.Checked)
+                ShowShapesOverrule.Instance.Add();
+            else
+                ShowShapesOverrule.Instance.Remove();
+            DWGUtility.RefreshAllPos();
+
             Close();
         }
     }
