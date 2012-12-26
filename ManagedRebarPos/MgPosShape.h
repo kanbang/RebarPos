@@ -206,6 +206,8 @@ namespace OZOZ
 			String^ m_Formula;
 			String^ m_FormulaBending;
 			int m_Priority;
+			bool m_IsBuiltIn;
+			bool m_IsUnknown;
 			ShapeCollection^ m_Shapes;
 
         internal:
@@ -218,11 +220,15 @@ namespace OZOZ
 			property int Fields             { int get(); }
 			property String^ Formula        { String^ get(); }
 			property String^ FormulaBending { String^ get(); }
-			property int Priority { int get(); }
+			property int Priority           { int get(); }
+			property bool IsBuiltIn         { bool get(); }
+			property bool IsUnknown         { bool get(); }
 
 		public:
 			static PosShape^ GetPosShape(String^ name);
+			static PosShape^ GetUnknownPosShape();
 			static System::Collections::Generic::Dictionary<String^, PosShape^>^ GetAllPosShapes();
+			static void ReadPosShapesFromString(String^ source);
         };
     }
 

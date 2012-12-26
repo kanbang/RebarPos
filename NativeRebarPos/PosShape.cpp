@@ -11,7 +11,8 @@
 std::map<std::wstring, CPosShape*> CPosShape::m_PosShapes;
 
 //-----------------------------------------------------------------------------
-CPosShape::CPosShape () : m_Name(NULL), m_Fields(1), m_Formula(NULL), m_FormulaBending(NULL), m_Priority(0)
+CPosShape::CPosShape () : m_Name(NULL), m_Fields(1), m_Formula(NULL), m_FormulaBending(NULL), 
+	m_Priority(0), m_IsBuiltIn(Adesk::kTrue), m_IsUnknown(Adesk::kFalse)
 { }
 
 CPosShape::~CPosShape () 
@@ -94,6 +95,28 @@ const Adesk::Int32 CPosShape::Priority(void) const
 Acad::ErrorStatus CPosShape::setPriority(const Adesk::Int32 newVal)
 {
     m_Priority = newVal;
+	return Acad::eOk;
+}
+
+const Adesk::Boolean CPosShape::IsBuiltIn(void) const
+{
+	return m_IsBuiltIn;
+}
+
+Acad::ErrorStatus CPosShape::setIsBuiltIn(const Adesk::Boolean newVal)
+{
+	m_IsBuiltIn = newVal;
+	return Acad::eOk;
+}
+
+const Adesk::Boolean CPosShape::IsUnknown(void) const
+{
+	return m_IsUnknown;
+}
+
+Acad::ErrorStatus CPosShape::setIsUnknown(const Adesk::Boolean newVal)
+{
+	m_IsUnknown = newVal;
 	return Acad::eOk;
 }
 
@@ -182,9 +205,30 @@ const AcDbExtents CPosShape::GetShapeExtents() const
 //*************************************************************************
 CPosShape* CPosShape::GetPosShape(std::wstring name)
 {
-	assert(m_PosShapes.find(name) != m_PosShapes.end());
+	if(m_PosShapes.find(name) == m_PosShapes.end())
+	{
+		CPosShape* shape = CPosShape::GetUnknownPosShape();
+		shape->setName(name.c_str());
+		return shape;
+	}
+	else
+	{
+		return m_PosShapes[name];
+	}
+}
 
-	return m_PosShapes[name];
+CPosShape* CPosShape::GetUnknownPosShape()
+{
+	CPosShape* shape = new CPosShape();
+
+	shape->setName(_T("HATA"));
+	shape->setFields(1);
+	shape->setFormula(_T("A"));
+	shape->setFormulaBending(_T("A"));
+	shape->setIsBuiltIn(Adesk::kTrue);
+	shape->setIsUnknown(Adesk::kTrue);
+
+	return shape;
 }
 
 std::map<std::wstring, CPosShape*>::size_type CPosShape::GetPosShapeCount()
@@ -226,18 +270,25 @@ void CPosShape::MakePosShapesFromResource(HINSTANCE hInstance)
 	}
 
 	std::string casted_memory(static_cast<char*>(pLockedResource), dwResourceSize);
-	std::istringstream stream(casted_memory);
-	std::string   line;
+	std::wstring source;
+	source.assign(casted_memory.begin(), casted_memory.end());
+
+	ReadPosShapesFromString(source);
+}
+
+void CPosShape::ReadPosShapesFromString(std::wstring source)
+{
+	std::wistringstream stream(source);
+	std::wstring   line;
 	
 	while(std::getline(stream, line))
 	{
-		while(!stream.eof() && line.compare(0, 5, "BEGIN") != 0)
+		while(!stream.eof() && line.compare(0, 5, L"BEGIN") != 0)
 			std::getline(stream, line);
 
 		if(stream.eof())
 			break;
 
-		std::wstring wline;
 		std::wstringstream linestream;
 		std::wstring fieldname;
 		std::wstring name;
@@ -249,36 +300,31 @@ void CPosShape::MakePosShapesFromResource(HINSTANCE hInstance)
 		// Name
 		std::getline(stream, line);
 		linestream.clear(); linestream.str(std::wstring());
-		wline.assign(line.begin(), line.end());
-		linestream << wline;
+		linestream << line;
 		std::getline(linestream, fieldname, L'\t');
 		linestream >> name;
 		// Fields
 		std::getline(stream, line);
 		linestream.clear(); linestream.str(std::wstring());
-		wline.assign(line.begin(), line.end());
-		linestream << wline;
+		linestream << line;
 		std::getline(linestream, fieldname, L'\t');
 		linestream >> fields;
 		// Formula
 		std::getline(stream, line);
 		linestream.clear(); linestream.str(std::wstring());
-		wline.assign(line.begin(), line.end());
-		linestream << wline;
+		linestream << line;
 		std::getline(linestream, fieldname, L'\t');
 		linestream >> formula;
 		// FormulaBending
 		std::getline(stream, line);
 		linestream.clear(); linestream.str(std::wstring());
-		wline.assign(line.begin(), line.end());
-		linestream << wline;
+		linestream << line;
 		std::getline(linestream, fieldname, L'\t');
 		linestream >> formulabending;
 		// Count
 		std::getline(stream, line);
 		linestream.clear(); linestream.str(std::wstring());
-		wline.assign(line.begin(), line.end());
-		linestream << wline;
+		linestream << line;
 		std::getline(linestream, fieldname, L'\t');
 		linestream >> count;
 
@@ -288,14 +334,14 @@ void CPosShape::MakePosShapesFromResource(HINSTANCE hInstance)
 		shape->setFields(fields);
 		shape->setFormula(formula.c_str());
 		shape->setFormulaBending(formulabending.c_str());
+		shape->setIsBuiltIn(Adesk::kTrue);
 		
 		// Read shapes
 		for(int i = 0; i < count; i++)
 		{
 			std::getline(stream, line);
 			linestream.clear(); linestream.str(std::wstring());
-			wline.assign(line.begin(), line.end());
-			linestream << wline;
+			linestream << line;
 			std::getline(linestream, fieldname, L'\t');
 
 			if(fieldname.compare(L"LINE") == 0)

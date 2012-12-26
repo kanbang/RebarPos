@@ -23,6 +23,8 @@ PosShape::PosShape(CPosShape* shape)
 	m_Formula = Marshal::WcharToString(shape->Formula());
 	m_FormulaBending = Marshal::WcharToString(shape->FormulaBending());
 	m_Priority = shape->Priority();
+	m_IsBuiltIn = (shape->IsUnknown() == Adesk::kTrue);
+	m_IsUnknown = (shape->IsUnknown() == Adesk::kTrue);
 
 	m_Shapes = gcnew PosShape::ShapeCollection(shape);
 }
@@ -60,6 +62,15 @@ int PosShape::Priority::get()
     return m_Priority;
 }
 
+bool PosShape::IsBuiltIn::get()
+{
+    return m_IsBuiltIn;
+}
+
+bool PosShape::IsUnknown::get()
+{
+    return m_IsUnknown;
+}
 //*************************************************************************
 // Shape Collection
 //*************************************************************************
@@ -87,6 +98,12 @@ PosShape^ PosShape::GetPosShape(String^ name)
 	return gcnew PosShape(shape);
 }
 
+PosShape^ PosShape::GetUnknownPosShape()
+{
+	CPosShape* shape = CPosShape::GetUnknownPosShape();
+	return gcnew PosShape(shape);
+}
+
 System::Collections::Generic::Dictionary<String^, PosShape^>^ PosShape::GetAllPosShapes()
 {
 	System::Collections::Generic::Dictionary<String^, PosShape^>^ dict = gcnew System::Collections::Generic::Dictionary<String^, PosShape^>();
@@ -96,4 +113,9 @@ System::Collections::Generic::Dictionary<String^, PosShape^>^ PosShape::GetAllPo
 		dict->Add(Marshal::WstringToString(it->first), gcnew PosShape(it->second));
 	}
 	return dict;
+}
+
+void PosShape::ReadPosShapesFromString(String^ source)
+{
+	CPosShape::ReadPosShapesFromString(Marshal::StringToWstring(source));
 }

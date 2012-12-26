@@ -45,6 +45,9 @@ protected:
 
 	Adesk::Int32 m_Priority;
 
+	Adesk::Boolean m_IsBuiltIn;
+	Adesk::Boolean m_IsUnknown;
+
 	ShapeList m_List;
 
 public:
@@ -68,6 +71,14 @@ public:
 	/// Gets or sets the priority of the shape in BOM table.
 	const Adesk::Int32 Priority(void) const;
 	Acad::ErrorStatus setPriority(const Adesk::Int32 newVal);
+
+	/// Gets or sets whether this is a built-in shape
+	const Adesk::Boolean IsBuiltIn(void) const;
+	Acad::ErrorStatus setIsBuiltIn(const Adesk::Boolean newVal);
+
+	/// Gets or sets whether this is an unknown shape
+	const Adesk::Boolean IsUnknown(void) const;
+	Acad::ErrorStatus setIsUnknown(const Adesk::Boolean newVal);
 
 public:
 	/// Adds a shape.
@@ -98,14 +109,20 @@ public:
 	/// Gets the shape with the given name
 	static CPosShape* GetPosShape(std::wstring name);
 
+	/// Gets the shape representing an unkown shape
+	static CPosShape* GetUnknownPosShape();
+
 	/// Gets the number of pos shapes
 	static std::map<std::wstring, CPosShape*>::size_type GetPosShapeCount();
 
-	/// Gets the underlying maps
+	/// Gets the underlying map
 	static std::map<std::wstring, CPosShape*> GetMap();
 
 	/// Reads all shapes defined in the resource
 	static void MakePosShapesFromResource(HINSTANCE hInstance);
+
+	/// Reads all shapes defined in the string
+	static void ReadPosShapesFromString(std::wstring source);
 
 	/// Removes all shapes
 	static void ClearPosShapes();
