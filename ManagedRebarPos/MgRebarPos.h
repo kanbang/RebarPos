@@ -62,6 +62,8 @@ namespace OZOZ
 				int mPrecision;
 				int mFieldCount;
 				bool mBending;
+				int mMinCount, mMaxCount;
+				bool mIsMultiCount;
 				double mMinA, mMinB, mMinC, mMinD, mMinE, mMinF;
 				double mMaxA, mMaxB, mMaxC, mMaxD, mMaxE, mMaxF;
 				bool mIsVarA, mIsVarB, mIsVarC, mIsVarD, mIsVarE, mIsVarF;
@@ -76,6 +78,9 @@ namespace OZOZ
 				property int Precision   { int    get() { return mPrecision; } }
 				property int FieldCount  { int    get() { return mFieldCount; } }
 				property bool Bending    { bool   get() { return mBending; } }
+				property int MinCount    { int    get() { return mMinCount; } }
+				property int MaxCount    { int    get() { return mMaxCount; } }
+				property bool IsMultiCount    { bool    get() { return mIsMultiCount; } }
 				property double MinA     { double get() { return mMinA; } }
 				property double MinB     { double get() { return mMinB; } }
 				property double MinC     { double get() { return mMinC; } }
@@ -115,6 +120,9 @@ namespace OZOZ
 					mPrecision	 = source.Precision;
 					mFieldCount	 = source.FieldCount;
 					mBending	 = source.Bending;
+					mMinCount    = source.MinCount;
+					mMaxCount    = source.MaxCount;
+					mIsMultiCount = source.IsMultiCount;
 					mMinA		 = source.MinA;
 					mMinB		 = source.MinB;
 					mMinC		 = source.MinC;

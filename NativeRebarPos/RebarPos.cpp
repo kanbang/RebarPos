@@ -1950,15 +1950,34 @@ void CRebarPos::Calculate(void)
 		if(m_Count != NULL && m_Count[0] != _T('\0'))
 		{
 			std::wstring countstring(m_Count);
+			std::vector<std::wstring> countlist;
+			int minCount = 100000; int maxCount = 0; int totalCount = 0;
+			int currCount = 0;
 			try
 			{
+
 				Utility::ReplaceString(countstring, L"x", L"*");
 				Utility::ReplaceString(countstring, L"X", L"*");
-				m_CalcProps.Count = Utility::DoubleToInt(Calculator::Evaluate(countstring));
+				totalCount = Utility::DoubleToInt(Calculator::Evaluate(countstring));
+				countlist = Utility::SplitString(countstring, L'*');
+				for(std::vector<std::wstring>::iterator cit = countlist.begin(); cit != countlist.end(); cit++)
+				{
+					currCount = Utility::DoubleToInt(Calculator::Evaluate(*cit));
+					if(currCount > maxCount) maxCount = currCount;
+					if(currCount < minCount) minCount = currCount;
+				}
+
+				m_CalcProps.Count = totalCount;
+				m_CalcProps.MinCount = minCount;
+				m_CalcProps.MaxCount = maxCount;
+				m_CalcProps.IsMultiCount = (countlist.size() > 1);
 			}
 			catch(...)
 			{
 				m_CalcProps.Count = 0;
+				m_CalcProps.MinCount = 0;
+				m_CalcProps.MaxCount = 0;
+				m_CalcProps.IsMultiCount = false;
 			}
 		}
 
@@ -2045,7 +2064,11 @@ void CRebarPos::Calculate(void)
 
 		// Rebuild draw lists
 		lastDrawList.clear();
-		if((m_DisplayStyle == CRebarPos::ALL || m_DisplayStyle == CRebarPos::WITHOUTLENGTH) && pGroup->Formula() != NULL)
+		if((m_DisplayStyle == CRebarPos::ALL || m_DisplayStyle == CRebarPos::WITHOUTLENGTH) && m_CalcProps.IsVarLength && pGroup->FormulaVariableLength() != NULL)
+		{
+			lastDrawList = ParseFormula(pGroup->FormulaVariableLength());
+		}
+		else if((m_DisplayStyle == CRebarPos::ALL || m_DisplayStyle == CRebarPos::WITHOUTLENGTH) && pGroup->Formula() != NULL)
 		{
 			lastDrawList = ParseFormula(pGroup->Formula());
 		}
@@ -2531,6 +2554,20 @@ const DrawList CRebarPos::ParseFormula(const ACHAR* formula) const
 					{
 						p.type = CRebarPos::COUNT;
 						parts.push_back(m_Count);
+					}
+					else if(part == L"NM" && m_Count != NULL && m_Count[0] != _T('\0'))
+					{
+						p.type = CRebarPos::COUNT;
+						std::wstring countstr;
+						Utility::IntToStr(m_CalcProps.MinCount, countstr);
+						parts.push_back(countstr);
+					}
+					else if(part == L"NX" && m_Count != NULL && m_Count[0] != _T('\0'))
+					{
+						p.type = CRebarPos::COUNT;
+						std::wstring countstr;
+						Utility::IntToStr(m_CalcProps.MaxCount, countstr);
+						parts.push_back(countstr);
 					}
 					else if(part == L"D" && m_Diameter != NULL && m_Diameter[0] != _T('\0'))
 					{

@@ -23,7 +23,7 @@ ACRX_DXF_DEFINE_MEMBERS(CPosGroup, AcDbObject,
 //-----------------------------------------------------------------------------
 CPosGroup::CPosGroup () : m_Name(NULL), m_Bending(Adesk::kFalse), m_MaxBarLength(12), m_Precision(0),
 	m_DrawingUnit(CPosGroup::MM), m_DisplayUnit(CPosGroup::MM), 
-	m_Formula(NULL), m_FormulaLengthOnly(NULL), m_FormulaPosOnly(NULL), m_StandardDiameters(NULL),
+	m_Formula(NULL), m_FormulaVariableLength(NULL), m_FormulaLengthOnly(NULL), m_FormulaPosOnly(NULL), m_StandardDiameters(NULL),
 	m_TextColor(2), m_PosColor(4), m_CircleColor(1), m_MultiplierColor(33), m_GroupColor(9), 
 	m_NoteColor(30), m_CurrentGroupHighlightColor(8), m_CountColor(5), m_NoteScale(0.75), 
 	m_TextStyleID(AcDbObjectId::kNull), m_NoteStyleID(AcDbObjectId::kNull)
@@ -33,6 +33,7 @@ CPosGroup::~CPosGroup ()
 { 
 	acutDelString(m_Name);
 	acutDelString(m_Formula);
+	acutDelString(m_FormulaVariableLength);
 	acutDelString(m_FormulaLengthOnly);
 	acutDelString(m_FormulaPosOnly);
 }
@@ -133,6 +134,27 @@ Acad::ErrorStatus CPosGroup::setFormula(const ACHAR* newVal)
     if(newVal != NULL)
     {
         acutUpdString(newVal, m_Formula);
+    }
+
+	return Acad::eOk;
+}
+
+const ACHAR* CPosGroup::FormulaVariableLength(void) const
+{
+	assertReadEnabled();
+	return m_FormulaVariableLength;
+}
+
+Acad::ErrorStatus CPosGroup::setFormulaVariableLength(const ACHAR* newVal)
+{
+	assertWriteEnabled();
+
+	if(m_FormulaVariableLength != NULL)
+		acutDelString(m_FormulaVariableLength);
+    m_FormulaVariableLength = NULL;
+    if(newVal != NULL)
+    {
+        acutUpdString(newVal, m_FormulaVariableLength);
     }
 
 	return Acad::eOk;
@@ -380,6 +402,10 @@ Acad::ErrorStatus CPosGroup::dwgOutFields(AcDbDwgFiler *pFiler) const
 		pFiler->writeString(m_Formula);
 	else
 		pFiler->writeString(_T(""));
+	if (m_FormulaVariableLength)
+		pFiler->writeString(m_FormulaVariableLength);
+	else
+		pFiler->writeString(_T(""));
 	if (m_FormulaLengthOnly)
 		pFiler->writeString(m_FormulaLengthOnly);
 	else
@@ -450,6 +476,7 @@ Acad::ErrorStatus CPosGroup::dwgInFields(AcDbDwgFiler *pFiler)
 		m_DisplayUnit = (DrawingUnits)displayunit;
 
 		pFiler->readString(&m_Formula);
+		pFiler->readString(&m_FormulaVariableLength);
 		pFiler->readString(&m_FormulaLengthOnly);
 		pFiler->readString(&m_FormulaPosOnly);
 		pFiler->readString(&m_StandardDiameters);
@@ -505,18 +532,22 @@ Acad::ErrorStatus CPosGroup::dxfOutFields(AcDbDxfFiler *pFiler) const
 		pFiler->writeString(AcDb::kDxfXTextString + 1, m_Formula);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString + 1, _T(""));
-	if(m_FormulaLengthOnly)
-		pFiler->writeString(AcDb::kDxfXTextString + 2, m_FormulaLengthOnly);
+	if(m_FormulaVariableLength)
+		pFiler->writeString(AcDb::kDxfXTextString + 2, m_FormulaVariableLength);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString + 2, _T(""));
-	if(m_FormulaPosOnly)
-		pFiler->writeString(AcDb::kDxfXTextString + 3, m_FormulaPosOnly);
+	if(m_FormulaLengthOnly)
+		pFiler->writeString(AcDb::kDxfXTextString + 3, m_FormulaLengthOnly);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString + 3, _T(""));
-	if(m_StandardDiameters)
-		pFiler->writeString(AcDb::kDxfXTextString + 4, m_StandardDiameters);
+	if(m_FormulaPosOnly)
+		pFiler->writeString(AcDb::kDxfXTextString + 4, m_FormulaPosOnly);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString + 4, _T(""));
+	if(m_StandardDiameters)
+		pFiler->writeString(AcDb::kDxfXTextString + 5, m_StandardDiameters);
+	else
+		pFiler->writeString(AcDb::kDxfXTextString + 5, _T(""));
 
     // Colors
     pFiler->writeUInt16(AcDb::kDxfXInt16, m_TextColor);
@@ -569,6 +600,7 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
 	int t_DrawingUnit = 0;
 	int t_DisplayUnit = 0;
 	ACHAR* t_Formula = NULL;
+	ACHAR* t_FormulaVariableLength = NULL;
 	ACHAR* t_FormulaLengthOnly = NULL;
 	ACHAR* t_FormulaPosOnly = NULL;
 	ACHAR* t_StandardDiameters = NULL;
@@ -610,12 +642,15 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
 			acutUpdString(rb.resval.rstring, t_Formula);
 			break;
         case AcDb::kDxfXTextString + 2:
-			acutUpdString(rb.resval.rstring, t_FormulaLengthOnly);
+			acutUpdString(rb.resval.rstring, t_FormulaVariableLength);
 			break;
         case AcDb::kDxfXTextString + 3:
-			acutUpdString(rb.resval.rstring, t_FormulaPosOnly);
+			acutUpdString(rb.resval.rstring, t_FormulaLengthOnly);
 			break;
         case AcDb::kDxfXTextString + 4:
+			acutUpdString(rb.resval.rstring, t_FormulaPosOnly);
+			break;
+        case AcDb::kDxfXTextString + 5:
 			acutUpdString(rb.resval.rstring, t_StandardDiameters);
 			break;
 		case AcDb::kDxfXInt16:
@@ -678,6 +713,7 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
     m_DisplayUnit = (DrawingUnits)t_DisplayUnit;
 
 	setFormula(t_Formula);
+	setFormulaVariableLength(t_FormulaVariableLength);
 	setFormulaLengthOnly(t_FormulaLengthOnly);
 	setFormulaPosOnly(t_FormulaPosOnly);
 	setStandardDiameters(t_StandardDiameters);
@@ -698,6 +734,7 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
 
 	acutDelString(t_Name);
 	acutDelString(t_Formula);
+	acutDelString(t_FormulaVariableLength);
 	acutDelString(t_FormulaLengthOnly);
 	acutDelString(t_FormulaPosOnly);
 	acutDelString(t_StandardDiameters);
@@ -737,6 +774,7 @@ AcDbObjectId CPosGroup::GetGroupId()
         CPosGroup* group = new CPosGroup();
         group->setName(_T("0"));
         group->setFormula(_T("[M:C][N][\"T\":D][\"/\":S]"));
+		group->setFormulaVariableLength(_T("[M:C][N][\"T\":D][\"/\":S]"));
         group->setFormulaLengthOnly(_T("[\"L=\":L]"));
         group->setFormulaPosOnly(_T("[M:C]"));
         group->setStandardDiameters(_T("8 10 12 14 16 18 20 22 25 26 32 36"));

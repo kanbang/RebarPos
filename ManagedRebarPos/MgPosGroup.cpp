@@ -92,6 +92,15 @@ void PosGroup::Formula::set(String^ value)
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormula(Marshal::StringToWchar(value)));
 }
 
+String^ PosGroup::FormulaVariableLength::get()
+{
+	return Marshal::WcharToString(GetImpObj()->FormulaVariableLength());
+}
+void PosGroup::FormulaVariableLength::set(String^ value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setFormulaVariableLength(Marshal::StringToWchar(value)));
+}
+
 String^ PosGroup::FormulaLengthOnly::get()
 {
 	return Marshal::WcharToString(GetImpObj()->FormulaLengthOnly());

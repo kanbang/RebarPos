@@ -82,6 +82,10 @@ public:
 		int FieldCount;
 		bool Bending;
 
+		int MinCount;
+		int MaxCount;
+		bool IsMultiCount;
+
 		double MinA, MinB, MinC, MinD, MinE, MinF;
 		double MaxA, MaxB, MaxC, MaxD, MaxE, MaxF;
 		bool IsVarA, IsVarB, IsVarC, IsVarD, IsVarE, IsVarF;
@@ -97,6 +101,7 @@ public:
 
 	public:
 		CCalculatedProperties() : Generation(0), Count(0), Diameter(0), Precision(0), FieldCount(0), Bending(0),
+			MinCount(0), MaxCount(0), IsMultiCount(false),
 			MinA(0),  MinB(0),  MinC(0),  MinD(0),  MinE(0),  MinF(0),
 			MaxA(0),  MaxB(0),  MaxC(0),  MaxD(0),  MaxE(0),  MaxF(0),
 			IsVarA(false),  IsVarB(false),  IsVarC(false),  IsVarD(false),  IsVarE(false),  IsVarF(false), 
@@ -112,6 +117,9 @@ public:
 			Precision = 0;
 			FieldCount = 0;
 			Bending = false;
+
+			MinCount = 0; MaxCount = 0;
+			IsMultiCount = false;
 
 			MinA = 0; MinB = 0; MinC = 0; MinD = 0; MinE = 0; MinF = 0;
 			MaxA = 0; MaxB = 0; MaxC = 0; MaxD = 0; MaxE = 0; MaxF = 0;

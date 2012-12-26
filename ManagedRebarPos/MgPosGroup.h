@@ -44,11 +44,12 @@ namespace OZOZ
 			property PosGroup::DrawingUnits DrawingUnit { PosGroup::DrawingUnits get(); void set(PosGroup::DrawingUnits value); }
 			property PosGroup::DrawingUnits DisplayUnit { PosGroup::DrawingUnits get(); void set(PosGroup::DrawingUnits value); }
 
-			property String^ Formula              { String^ get(); void set(String^ value); }
-			property String^ FormulaLengthOnly    { String^ get(); void set(String^ value); }
-			property String^ FormulaPosOnly       { String^ get(); void set(String^ value); }
+			property String^ Formula               { String^ get(); void set(String^ value); }
+			property String^ FormulaVariableLength { String^ get(); void set(String^ value); }
+			property String^ FormulaLengthOnly     { String^ get(); void set(String^ value); }
+			property String^ FormulaPosOnly        { String^ get(); void set(String^ value); }
 			
-			property String^ StandardDiameters    { String^ get(); void set(String^ value); }
+			property String^ StandardDiameters     { String^ get(); void set(String^ value); }
 
 			property Autodesk::AutoCAD::Colors::Color^ TextColor       { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }
 			property Autodesk::AutoCAD::Colors::Color^ PosColor        { Autodesk::AutoCAD::Colors::Color^ get(); void set(Autodesk::AutoCAD::Colors::Color^ value); }

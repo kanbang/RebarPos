@@ -59,6 +59,7 @@ protected:
 	DrawingUnits m_DisplayUnit;
 
 	ACHAR* m_Formula;
+	ACHAR* m_FormulaVariableLength;
 	ACHAR* m_FormulaLengthOnly;
 	ACHAR* m_FormulaPosOnly;
 	ACHAR* m_StandardDiameters;
@@ -105,6 +106,10 @@ public:
 	/// Gets or sets the formula text.
     const ACHAR* Formula(void) const;
 	Acad::ErrorStatus setFormula(const ACHAR* newVal);
+
+	/// Gets or sets the formula text with only length displayed.
+    const ACHAR* FormulaVariableLength(void) const;
+	Acad::ErrorStatus setFormulaVariableLength(const ACHAR* newVal);
 
 	/// Gets or sets the formula text with only length displayed.
     const ACHAR* FormulaLengthOnly(void) const;
