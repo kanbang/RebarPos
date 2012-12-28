@@ -22,6 +22,10 @@ Source: "..\Menu\RebarPos.mnr"; DestDir: "{app}\Menu";
 
 [Registry]
 Root: "HKLM"; Subkey: "Software\SahinEng\RebarPos"; ValueType: string; ValueName: "InstallPath"; ValueData: "{app}"; Flags: uninsdeletekey
+Root: "HKCU"; Subkey: "Software\SahinEng\RebarPos";
+
+[Dirs]
+Name: "{userdocs}\RebarPos"
 
 [Code]
 var

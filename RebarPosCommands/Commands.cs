@@ -32,6 +32,7 @@ namespace RebarPosCommands
         public MyCommands()
         {
             SetCurrentGroup();
+            ReadUserPosShapes();
 
             ShowShapes = false;
 

@@ -46,6 +46,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
             acrxRegisterService(_T("CRebarPos"));
 
 		// Create default shapes
+		CPosShape::ClearPosShapes(true, true);
 		CPosShape::MakePosShapesFromResource(_hdllInstance);
 
         break;
@@ -57,7 +58,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
             delete obj;
 
 		// Remove shapes from memory
-		CPosShape::ClearPosShapes();
+		CPosShape::ClearPosShapes(true, true);
 
 		// Remove custom classes
 		deleteAcRxClass(CBOQTable::desc());

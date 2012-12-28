@@ -196,39 +196,44 @@ namespace OZOZ
 				ShapeCollection(CPosShape* parent);
 
 			public:
+				void Add(Shape^ value);
+				void RemoveAt(int index);
+				void Clear();
+
+			public:
 				property int Count { int get(); }
-				property Shape^ default[int] { Shape^ get(int index); }
+				property Shape^ default[int] { Shape^ get(int index); void set(int index, Shape^ value); }
 			};
 
 		protected:
-			String^ m_Name;
-			int m_Fields;
-			String^ m_Formula;
-			String^ m_FormulaBending;
-			int m_Priority;
-			bool m_IsBuiltIn;
-			bool m_IsUnknown;
+			CPosShape* m_PosShape;
 			ShapeCollection^ m_Shapes;
 
         internal:
             PosShape(CPosShape* shape);
+		public:
+            PosShape();
 
         public:
 			property ShapeCollection^ Items { ShapeCollection^ get(); }
 
-			property String^ Name           { String^ get(); }
-			property int Fields             { int get(); }
-			property String^ Formula        { String^ get(); }
-			property String^ FormulaBending { String^ get(); }
-			property int Priority           { int get(); }
-			property bool IsBuiltIn         { bool get(); }
-			property bool IsUnknown         { bool get(); }
+			property String^ Name           { String^ get(); void set(String^ value); }
+			property int Fields             { int get();     void set(int value); }
+			property String^ Formula        { String^ get(); void set(String^ value); }
+			property String^ FormulaBending { String^ get(); void set(String^ value); }
+			property int Priority           { int get();     void set(int value); }
+			property bool IsBuiltIn         { bool get();    void set(bool value); }
+			property bool IsUnknown         { bool get();    void set(bool value); }
 
 		public:
+			static void AddPosShape(PosShape^ shape);
 			static PosShape^ GetPosShape(String^ name);
 			static PosShape^ GetUnknownPosShape();
+			static int GetPosShapeCount();
 			static System::Collections::Generic::Dictionary<String^, PosShape^>^ GetAllPosShapes();
-			static void ReadPosShapesFromString(String^ source);
+			static void ClearPosShapes(bool builtin, bool custom);
+			static void ReadPosShapesFromFile(String^ source, bool builtin);
+			static void SavePosShapesToFile(String^ source, bool builtin, bool custom);
         };
     }
 

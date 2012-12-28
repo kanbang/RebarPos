@@ -18,15 +18,14 @@ using namespace OZOZ::RebarPosWrapper;
 //*************************************************************************
 PosShape::PosShape(CPosShape* shape) 
 {
-	m_Name = Marshal::WcharToString(shape->Name());
-	m_Fields = shape->Fields();
-	m_Formula = Marshal::WcharToString(shape->Formula());
-	m_FormulaBending = Marshal::WcharToString(shape->FormulaBending());
-	m_Priority = shape->Priority();
-	m_IsBuiltIn = (shape->IsUnknown() == Adesk::kTrue);
-	m_IsUnknown = (shape->IsUnknown() == Adesk::kTrue);
+	m_PosShape = shape;
+	m_Shapes = gcnew PosShape::ShapeCollection(m_PosShape);
+}
 
-	m_Shapes = gcnew PosShape::ShapeCollection(shape);
+PosShape::PosShape() 
+{
+	m_PosShape = new CPosShape();
+	m_Shapes = gcnew PosShape::ShapeCollection(m_PosShape);
 }
 
 //*************************************************************************
@@ -34,22 +33,38 @@ PosShape::PosShape(CPosShape* shape)
 //*************************************************************************
 String^ PosShape::Name::get()
 {
-	return m_Name;
+	return Marshal::WcharToString(m_PosShape->Name());
+}
+void PosShape::Name::set(String^ value)
+{
+	m_PosShape->setName(Marshal::StringToWchar(value));
 }
 
 int PosShape::Fields::get()
 {
-    return m_Fields;
+	return m_PosShape->Fields();
+}
+void PosShape::Fields::set(int value)
+{
+	m_PosShape->setFields(value);
 }
 
 String^ PosShape::Formula::get()
 {
-    return m_Formula;
+	return Marshal::WcharToString(m_PosShape->Formula());
+}
+void PosShape::Formula::set(String^ value)
+{
+	m_PosShape->setFormula(Marshal::StringToWchar(value));
 }
 
 String^ PosShape::FormulaBending::get()
 {
-    return m_FormulaBending;
+    return Marshal::WcharToString(m_PosShape->FormulaBending());
+}
+void PosShape::FormulaBending::set(String^ value)
+{
+	m_PosShape->setFormulaBending(Marshal::StringToWchar(value));
 }
 
 PosShape::ShapeCollection^ PosShape::Items::get()
@@ -59,24 +74,53 @@ PosShape::ShapeCollection^ PosShape::Items::get()
 
 int PosShape::Priority::get()
 {
-    return m_Priority;
+	return m_PosShape->Priority();
 }
+void PosShape::Priority::set(int value)
+{
+	m_PosShape->setPriority(value);
+}
+
 
 bool PosShape::IsBuiltIn::get()
 {
-    return m_IsBuiltIn;
+	return (m_PosShape->IsBuiltIn() == Adesk::kTrue);
+}
+void PosShape::IsBuiltIn::set(bool value)
+{
+	m_PosShape->setIsBuiltIn(value ? Adesk::kTrue : Adesk::kFalse);
 }
 
 bool PosShape::IsUnknown::get()
 {
-    return m_IsUnknown;
+    return (m_PosShape->IsUnknown() == Adesk::kTrue);
 }
+void PosShape::IsUnknown::set(bool value)
+{
+	m_PosShape->setIsUnknown(value ? Adesk::kTrue : Adesk::kFalse);
+}
+
 //*************************************************************************
 // Shape Collection
 //*************************************************************************
 PosShape::ShapeCollection::ShapeCollection(CPosShape* parent)
 {
 	m_Parent = parent;
+}
+
+void PosShape::ShapeCollection::Add(PosShape::Shape^ value)
+{
+	m_Parent->AddShape(value->ToNative());
+}
+
+void PosShape::ShapeCollection::RemoveAt(int index)
+{
+	m_Parent->RemoveShape(index);
+}
+
+void PosShape::ShapeCollection::Clear()
+{
+	m_Parent->ClearShapes();
 }
 
 int PosShape::ShapeCollection::Count::get()
@@ -88,10 +132,19 @@ PosShape::Shape^ PosShape::ShapeCollection::default::get(int index)
 {
 	return Shape::FromNative(m_Parent->GetShape(index));
 }
+void PosShape::ShapeCollection::default::set(int index, PosShape::Shape^ value)
+{
+	m_Parent->SetShape(index, value->ToNative());
+}
 
 //*************************************************************************
 // Static Methods
 //*************************************************************************
+void PosShape::AddPosShape(PosShape^ shape)
+{
+	CPosShape::AddPosShape(shape->m_PosShape);
+}
+
 PosShape^ PosShape::GetPosShape(String^ name)
 {
 	CPosShape* shape = CPosShape::GetPosShape(Marshal::StringToWstring(name));
@@ -102,6 +155,11 @@ PosShape^ PosShape::GetUnknownPosShape()
 {
 	CPosShape* shape = CPosShape::GetUnknownPosShape();
 	return gcnew PosShape(shape);
+}
+
+int PosShape::GetPosShapeCount()
+{
+	return (int)CPosShape::GetPosShapeCount();
 }
 
 System::Collections::Generic::Dictionary<String^, PosShape^>^ PosShape::GetAllPosShapes()
@@ -115,7 +173,17 @@ System::Collections::Generic::Dictionary<String^, PosShape^>^ PosShape::GetAllPo
 	return dict;
 }
 
-void PosShape::ReadPosShapesFromString(String^ source)
+void PosShape::ClearPosShapes(bool builtin, bool custom)
 {
-	CPosShape::ReadPosShapesFromString(Marshal::StringToWstring(source));
+	CPosShape::ClearPosShapes(builtin, custom);
+}
+
+void PosShape::ReadPosShapesFromFile(String^ source, bool builtin)
+{
+	CPosShape::ReadPosShapesFromFile(Marshal::StringToWstring(source), builtin);
+}
+
+void PosShape::SavePosShapesToFile(String^ source, bool builtin, bool custom)
+{
+	CPosShape::SavePosShapesToFile(Marshal::StringToWstring(source), builtin, custom);
 }

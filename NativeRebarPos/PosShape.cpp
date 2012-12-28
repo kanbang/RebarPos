@@ -8,6 +8,8 @@
 #include "Utility.h"
 #include "resource.h"
 
+#include <fstream>
+
 std::map<std::wstring, CPosShape*> CPosShape::m_PosShapes;
 
 //-----------------------------------------------------------------------------
@@ -203,7 +205,12 @@ const AcDbExtents CPosShape::GetShapeExtents() const
 //*************************************************************************
 // Common static dictionary methods
 //*************************************************************************
-CPosShape* CPosShape::GetPosShape(std::wstring name)
+void CPosShape::AddPosShape(CPosShape* shape)
+{
+	m_PosShapes[shape->Name()] = shape;
+}
+
+CPosShape* CPosShape::GetPosShape(const std::wstring name)
 {
 	if(m_PosShapes.find(name) == m_PosShapes.end())
 	{
@@ -243,8 +250,6 @@ std::map<std::wstring, CPosShape*> CPosShape::GetMap()
 
 void CPosShape::MakePosShapesFromResource(HINSTANCE hInstance)
 {
-	CPosShape::ClearPosShapes();
-
 	HRSRC hResource = FindResource(hInstance, MAKEINTRESOURCE(IDR_SHAPELIST1), L"SHAPELIST");
 	if (!hResource)
 	{
@@ -273,10 +278,18 @@ void CPosShape::MakePosShapesFromResource(HINSTANCE hInstance)
 	std::wstring source;
 	source.assign(casted_memory.begin(), casted_memory.end());
 
-	ReadPosShapesFromString(source);
+	ReadPosShapesFromString(source, true);
 }
 
-void CPosShape::ReadPosShapesFromString(std::wstring source)
+void CPosShape::ReadPosShapesFromFile(const std::wstring filename, const bool builtin)
+{
+	std::wifstream ifs(filename.c_str());
+	std::wstring content( (std::istreambuf_iterator<wchar_t>(ifs) ),
+                          (std::istreambuf_iterator<wchar_t>()    ) );
+	ReadPosShapesFromString(content, builtin);
+}
+
+void CPosShape::ReadPosShapesFromString(const std::wstring source, const bool builtin)
 {
 	std::wistringstream stream(source);
 	std::wstring   line;
@@ -334,7 +347,7 @@ void CPosShape::ReadPosShapesFromString(std::wstring source)
 		shape->setFields(fields);
 		shape->setFormula(formula.c_str());
 		shape->setFormulaBending(formulabending.c_str());
-		shape->setIsBuiltIn(Adesk::kTrue);
+		shape->setIsBuiltIn(builtin ? Adesk::kTrue : Adesk::kFalse);
 		
 		// Read shapes
 		for(int i = 0; i < count; i++)
@@ -383,11 +396,72 @@ void CPosShape::ReadPosShapesFromString(std::wstring source)
 	}
 }
 
-void CPosShape::ClearPosShapes()
+
+void CPosShape::SavePosShapesToFile(const std::wstring filename, const bool builtin, const bool custom)
 {
+	std::wofstream ofs(filename.c_str());
+
 	for(std::map<std::wstring, CPosShape*>::iterator it = m_PosShapes.begin(); it != m_PosShapes.end(); it++)
 	{
-		delete it->second;
+		CPosShape* posShape = (*it).second;
+		if(posShape->IsBuiltIn() == Adesk::kTrue && !builtin) continue;
+		if(posShape->IsBuiltIn() == Adesk::kFalse && !custom) continue;
+
+		ofs << L"BEGIN" << std::endl;
+
+		ofs << L"Name"           << L'\t' << posShape->Name()             << std::endl;
+		ofs << L"Fields"         << L'\t' << posShape->Fields()           << std::endl;
+		ofs << L"Formula"        << L'\t' << posShape->Formula()          << std::endl;
+		ofs << L"FormulaBending" << L'\t' << posShape->FormulaBending()   << std::endl;
+		ofs << L"Priority"       << L'\t' << posShape->Priority()         << std::endl;
+		ofs << L"Count"          << L'\t' << posShape->GetShapeCount()    << std::endl;
+
+		// Write shapes
+		for(int i = 0; i < posShape->GetShapeCount(); i++)
+		{
+			const CShape* shape = posShape->GetShape(i);
+			if(shape->type == CShape::Line)
+			{
+				const CShapeLine* line = dynamic_cast<const CShapeLine*>(shape);
+				ofs << L"LINE" << L'\t' << 
+					line->x1 << L'\t' << line->y1 << L'\t' << line->x2 << L'\t' << line->y2 << L'\t' << 
+					line->color << L'\t' << (line->visible == Adesk::kTrue ? L'V' : L'I') << std::endl;
+			}
+			else if(shape->type == CShape::Arc)
+			{
+				const CShapeArc* arc = dynamic_cast<const CShapeArc*>(shape);
+				ofs << L"ARC" << L'\t' << 
+					arc->x << L'\t' << arc->y << L'\t' << arc->r << L'\t' << 
+					arc->startAngle << L'\t' << arc->endAngle << L'\t' <<
+					arc->color << L'\t' << (arc->visible == Adesk::kTrue ? L'V' : L'I') << std::endl;
+			}
+			else if(shape->type == CShape::Text)
+			{
+				const CShapeText* text = dynamic_cast<const CShapeText*>(shape);
+				ofs << L"TEXT" << L'\t' << 
+					text->x << L'\t' << text->y << L'\t' << text->height << L'\t' << 
+					text->text << L'\t' << text->horizontalAlignment << L'\t' << text->verticalAlignment << L'\t' <<
+					text->color << L'\t' << (text->visible == Adesk::kTrue ? L'V' : L'I') << std::endl;
+			}
+		}
+
+		ofs << L"END" << std::endl;
+		ofs << std::endl;
 	}
-	m_PosShapes.clear();
+}
+
+void CPosShape::ClearPosShapes(const bool builtin, const bool custom)
+{
+	for(std::map<std::wstring, CPosShape*>::iterator it = m_PosShapes.begin(); it != m_PosShapes.end(); )
+	{
+		std::map<std::wstring, CPosShape*>::iterator current = it;
+		it++;
+
+		CPosShape* shape = (*current).second;
+		if((builtin && shape->IsBuiltIn()) || (custom && !shape->IsBuiltIn()))
+		{
+			delete shape;
+			m_PosShapes.erase(current);
+		}
+	}
 }

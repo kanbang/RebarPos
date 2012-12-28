@@ -106,8 +106,11 @@ private:
 	static std::map<std::wstring, CPosShape*> m_PosShapes;
 
 public:
+	/// Add a new shape
+	static void AddPosShape(CPosShape* shape);
+
 	/// Gets the shape with the given name
-	static CPosShape* GetPosShape(std::wstring name);
+	static CPosShape* GetPosShape(const std::wstring name);
 
 	/// Gets the shape representing an unkown shape
 	static CPosShape* GetUnknownPosShape();
@@ -118,12 +121,18 @@ public:
 	/// Gets the underlying map
 	static std::map<std::wstring, CPosShape*> GetMap();
 
+	/// Removes all shapes
+	static void ClearPosShapes(const bool builtin, const bool custom);
+
 	/// Reads all shapes defined in the resource
 	static void MakePosShapesFromResource(HINSTANCE hInstance);
 
-	/// Reads all shapes defined in the string
-	static void ReadPosShapesFromString(std::wstring source);
+	/// Reads all shapes defined in the given text file
+	static void ReadPosShapesFromFile(const std::wstring filename, const bool builtin);
 
-	/// Removes all shapes
-	static void ClearPosShapes();
+	/// Reads all shapes defined in the string
+	static void ReadPosShapesFromString(const std::wstring source, const bool builtin);
+
+	/// Saves all shapes to the given text file
+	static void SavePosShapesToFile(const std::wstring filename, const bool builtin, const bool custom);
 };

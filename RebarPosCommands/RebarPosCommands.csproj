@@ -126,6 +126,12 @@
     <Compile Include="Commands_PosLength.cs" />
     <Compile Include="Commands_IncludePos.cs" />
     <Compile Include="Commands_LastPosNumber.cs" />
+    <Compile Include="ConfimMessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfimMessageBox.Designer.cs">
+      <DependentUpon>ConfimMessageBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="EditDetachedPosForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -218,6 +224,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CheckForm.resx">
       <DependentUpon>CheckForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConfimMessageBox.resx">
+      <DependentUpon>ConfimMessageBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EditDetachedPosForm.resx">
       <DependentUpon>EditDetachedPosForm.cs</DependentUpon>

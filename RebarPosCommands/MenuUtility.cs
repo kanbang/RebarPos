@@ -14,7 +14,7 @@ namespace RebarPosCommands
     {
         public static bool LoadPosMenu()
         {
-            string cuifile = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Sahin Insaat\RebarPos", "InstallPath", "");
+            string cuifile = (string)Microsoft.Win32.Registry.LocalMachine.GetValue(@"SOFTWARE\SahinEng\RebarPos\InstallPath", "");
             if (string.IsNullOrEmpty(cuifile))
             {
                 return false;
