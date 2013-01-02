@@ -39,6 +39,7 @@ namespace RebarPosCommands
             form.lblMessage.Left = form.pbIcon.Left + bmp.Width + 7;
             form.lblMessage.MaximumSize = new Size(496 - bmp.Width, 0);
             form.lblMessage.Text = message;
+            form.chkConfirm.Left = form.lblMessage.Left;
 
             form.Height = Math.Max(bmp.Height, form.lblMessage.Height) + 134;
 

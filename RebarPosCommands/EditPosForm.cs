@@ -688,6 +688,7 @@ namespace RebarPosCommands
             }
             else
             {
+                source.Text = source.Text.Replace('-', '~');
                 string[] strparts = source.Text.Split(new char[] { '~' }, StringSplitOptions.RemoveEmptyEntries);
 
                 foreach (string str in strparts)

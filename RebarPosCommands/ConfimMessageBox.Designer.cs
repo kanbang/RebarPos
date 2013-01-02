@@ -89,7 +89,7 @@
             // 
             this.chkConfirm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.chkConfirm.AutoSize = true;
-            this.chkConfirm.Location = new System.Drawing.Point(13, 137);
+            this.chkConfirm.Location = new System.Drawing.Point(123, 136);
             this.chkConfirm.Name = "chkConfirm";
             this.chkConfirm.Size = new System.Drawing.Size(80, 17);
             this.chkConfirm.TabIndex = 3;

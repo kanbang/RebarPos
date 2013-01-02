@@ -455,6 +455,7 @@ namespace RebarPosCommands
             // Split var lengths
             if (!string.IsNullOrEmpty(source.Text))
             {
+                source.Text = source.Text.Replace('-', '~');
                 string[] strparts = source.Text.Split(new char[] { '~' }, StringSplitOptions.RemoveEmptyEntries);
 
                 foreach (string str in strparts)
