@@ -903,6 +903,374 @@ namespace RebarPosCommands
     }
     #endregion
 
+    #region UnknownShapeCheck
+    public class UnknownShapeCheck : PosCheckResult
+    {
+        public string UnkownShape { get; private set; }
+        public override string Key { get { return "shape"; } }
+        public override string Description { get { return "Bilinmeyen Açılım Hatası"; } }
+
+        public override string ErrorMessage
+        {
+            get
+            {
+                return UnkownShape;
+            }
+        }
+
+        public UnknownShapeCheck(string pos, string shape)
+            : base(pos)
+        {
+            UnkownShape = shape;
+        }
+
+        public override bool Fix()
+        {
+            SelectShapeForm frmEdit = new SelectShapeForm();
+            frmEdit.SetShapes();
+
+            if (frmEdit.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string selshape = frmEdit.Current;
+
+                Database db = HostApplicationServices.WorkingDatabase;
+                using (Transaction tr = db.TransactionManager.StartTransaction())
+                {
+                    try
+                    {
+                        foreach (ObjectId id in Items)
+                        {
+                            RebarPos pos = tr.GetObject(id, OpenMode.ForWrite) as RebarPos;
+                            if (pos == null) continue;
+
+                            pos.Shape = selshape;
+                        }
+                        tr.Commit();
+                    }
+                    catch (System.Exception ex)
+                    {
+                        MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+    }
+    #endregion
+
+    #region EmptyPieceLengthCheck
+    public class EmptyPieceLengthCheck : PosCheckResult
+    {
+        public override string Key { get { return "emptypiecelength"; } }
+        public override string Description { get { return "Boş Parça Boyu Hatası"; } }
+
+        public int FieldCount { get; private set; }
+        public string A { get; private set; }
+        public string B { get; private set; }
+        public string C { get; private set; }
+        public string D { get; private set; }
+        public string E { get; private set; }
+        public string F { get; private set; }
+
+        public override string ErrorMessage
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("[");
+                sb.Append(FieldCount);
+                sb.Append("] ");
+                if (FieldCount > 0)
+                {
+                    sb.Append(string.IsNullOrEmpty(A) ? "A=?" : A);
+                }
+                if (FieldCount > 1)
+                {
+                    sb.Append(", ");
+                    sb.Append(string.IsNullOrEmpty(B) ? "B=?" : B);
+                }
+                if (FieldCount > 2)
+                {
+                    sb.Append(", ");
+                    sb.Append(string.IsNullOrEmpty(C) ? "C=?" : C);
+                }
+                if (FieldCount > 3)
+                {
+                    sb.Append(", ");
+                    sb.Append(string.IsNullOrEmpty(D) ? "D=?" : D);
+                }
+                if (FieldCount > 4)
+                {
+                    sb.Append(", ");
+                    sb.Append(string.IsNullOrEmpty(E) ? "E=?" : E);
+                }
+                if (FieldCount > 5)
+                {
+                    sb.Append(", ");
+                    sb.Append(string.IsNullOrEmpty(F) ? "F=?" : F);
+                }
+                return sb.ToString();
+            }
+        }
+
+        public EmptyPieceLengthCheck(string pos, int fieldCount, string a, string b, string c, string d, string e, string f)
+            : base(pos)
+        {
+            FieldCount = fieldCount;
+
+            A = a; B = b; C = c; D = d; E = e; F = f;
+        }
+
+        public override bool Fix()
+        {
+            using (System.Windows.Forms.Form frmEdit = new System.Windows.Forms.Form())
+            {
+                System.Windows.Forms.Button btnCancel;
+                System.Windows.Forms.Button btnOK;
+                System.Windows.Forms.GroupBox groupBox;
+                System.Windows.Forms.TextBox txtF;
+                System.Windows.Forms.Label label10;
+                System.Windows.Forms.TextBox txtE;
+                System.Windows.Forms.Label label9;
+                System.Windows.Forms.TextBox txtD;
+                System.Windows.Forms.Label label8;
+                System.Windows.Forms.TextBox txtC;
+                System.Windows.Forms.Label label7;
+                System.Windows.Forms.TextBox txtB;
+                System.Windows.Forms.Label label6;
+                System.Windows.Forms.TextBox txtA;
+                System.Windows.Forms.Label label5;
+
+                btnCancel = new System.Windows.Forms.Button();
+                btnOK = new System.Windows.Forms.Button();
+                groupBox = new System.Windows.Forms.GroupBox();
+                txtF = new System.Windows.Forms.TextBox();
+                label10 = new System.Windows.Forms.Label();
+                txtE = new System.Windows.Forms.TextBox();
+                label9 = new System.Windows.Forms.Label();
+                txtD = new System.Windows.Forms.TextBox();
+                label8 = new System.Windows.Forms.Label();
+                txtC = new System.Windows.Forms.TextBox();
+                label7 = new System.Windows.Forms.Label();
+                txtB = new System.Windows.Forms.TextBox();
+                label6 = new System.Windows.Forms.Label();
+                txtA = new System.Windows.Forms.TextBox();
+                label5 = new System.Windows.Forms.Label();
+
+                groupBox.SuspendLayout();
+                frmEdit.SuspendLayout();
+                // 
+                // btnCancel
+                // 
+                btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+                btnCancel.Location = new System.Drawing.Point(227, 128);
+                btnCancel.Name = "btnCancel";
+                btnCancel.Size = new System.Drawing.Size(75, 23);
+                btnCancel.TabIndex = 2;
+                btnCancel.Text = "İptal";
+                btnCancel.UseVisualStyleBackColor = true;
+                // 
+                // btnOK
+                // 
+                btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+                btnOK.Location = new System.Drawing.Point(146, 128);
+                btnOK.Name = "btnOK";
+                btnOK.Size = new System.Drawing.Size(75, 23);
+                btnOK.TabIndex = 1;
+                btnOK.Text = "Tamam";
+                btnOK.UseVisualStyleBackColor = true;
+                // 
+                // groupBox
+                // 
+                groupBox.Controls.Add(txtF);
+                groupBox.Controls.Add(label10);
+                groupBox.Controls.Add(txtE);
+                groupBox.Controls.Add(label9);
+                groupBox.Controls.Add(txtD);
+                groupBox.Controls.Add(label8);
+                groupBox.Controls.Add(txtC);
+                groupBox.Controls.Add(label7);
+                groupBox.Controls.Add(txtB);
+                groupBox.Controls.Add(label6);
+                groupBox.Controls.Add(txtA);
+                groupBox.Controls.Add(label5);
+                groupBox.Location = new System.Drawing.Point(12, 8);
+                groupBox.Name = "groupBox";
+                groupBox.Size = new System.Drawing.Size(290, 114);
+                groupBox.TabIndex = 0;
+                groupBox.TabStop = false;
+                // 
+                // txtF
+                // 
+                txtF.Location = new System.Drawing.Point(193, 71);
+                txtF.Name = "txtF";
+                txtF.Size = new System.Drawing.Size(70, 20);
+                txtF.TabIndex = 11;
+                // 
+                // label10
+                // 
+                label10.AutoSize = true;
+                label10.Location = new System.Drawing.Point(160, 74);
+                label10.Name = "label10";
+                label10.Size = new System.Drawing.Size(13, 13);
+                label10.TabIndex = 10;
+                label10.Text = "&F";
+                // 
+                // txtE
+                // 
+                txtE.Location = new System.Drawing.Point(193, 45);
+                txtE.Name = "txtE";
+                txtE.Size = new System.Drawing.Size(70, 20);
+                txtE.TabIndex = 9;
+                // 
+                // label9
+                // 
+                label9.AutoSize = true;
+                label9.Location = new System.Drawing.Point(160, 48);
+                label9.Name = "label9";
+                label9.Size = new System.Drawing.Size(14, 13);
+                label9.TabIndex = 8;
+                label9.Text = "&E";
+                // 
+                // txtD
+                // 
+                txtD.Location = new System.Drawing.Point(193, 19);
+                txtD.Name = "txtD";
+                txtD.Size = new System.Drawing.Size(70, 20);
+                txtD.TabIndex = 7;
+                // 
+                // label8
+                // 
+                label8.AutoSize = true;
+                label8.Location = new System.Drawing.Point(160, 22);
+                label8.Name = "label8";
+                label8.Size = new System.Drawing.Size(15, 13);
+                label8.TabIndex = 6;
+                label8.Text = "&D";
+                // 
+                // txtC
+                // 
+                txtC.Location = new System.Drawing.Point(57, 71);
+                txtC.Name = "txtC";
+                txtC.Size = new System.Drawing.Size(70, 20);
+                txtC.TabIndex = 5;
+                // 
+                // label7
+                // 
+                label7.AutoSize = true;
+                label7.Location = new System.Drawing.Point(24, 74);
+                label7.Name = "label7";
+                label7.Size = new System.Drawing.Size(14, 13);
+                label7.TabIndex = 4;
+                label7.Text = "&C";
+                // 
+                // txtB
+                // 
+                txtB.Location = new System.Drawing.Point(57, 45);
+                txtB.Name = "txtB";
+                txtB.Size = new System.Drawing.Size(70, 20);
+                txtB.TabIndex = 3;
+                // 
+                // label6
+                // 
+                label6.AutoSize = true;
+                label6.Location = new System.Drawing.Point(24, 48);
+                label6.Name = "label6";
+                label6.Size = new System.Drawing.Size(14, 13);
+                label6.TabIndex = 2;
+                label6.Text = "&B";
+                // 
+                // txtA
+                // 
+                txtA.Location = new System.Drawing.Point(57, 19);
+                txtA.Name = "txtA";
+                txtA.Size = new System.Drawing.Size(70, 20);
+                txtA.TabIndex = 1;
+                // 
+                // label5
+                // 
+                label5.AutoSize = true;
+                label5.Location = new System.Drawing.Point(24, 22);
+                label5.Name = "label5";
+                label5.Size = new System.Drawing.Size(14, 13);
+                label5.TabIndex = 0;
+                label5.Text = "&A";
+                // 
+                // frmEdit
+                // 
+                frmEdit.AcceptButton = btnOK;
+                frmEdit.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+                frmEdit.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+                frmEdit.CancelButton = btnCancel;
+                frmEdit.ClientSize = new System.Drawing.Size(315, 162);
+                frmEdit.Controls.Add(groupBox);
+                frmEdit.Controls.Add(btnCancel);
+                frmEdit.Controls.Add(btnOK);
+                frmEdit.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+                frmEdit.MaximizeBox = false;
+                frmEdit.MinimizeBox = false;
+                frmEdit.ShowInTaskbar = false;
+                frmEdit.Name = "frmEdit";
+                frmEdit.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+                frmEdit.Text = "Çap Seçimi";
+
+                groupBox.ResumeLayout(false);
+                groupBox.PerformLayout();
+                frmEdit.ResumeLayout(false);
+
+                // Show dialog
+                txtA.Text = A;
+                txtB.Text = B;
+                txtC.Text = C;
+                txtD.Text = D;
+                txtE.Text = E;
+                txtF.Text = F;
+                txtA.Enabled = (FieldCount > 0);
+                txtB.Enabled = (FieldCount > 1);
+                txtC.Enabled = (FieldCount > 2);
+                txtD.Enabled = (FieldCount > 3);
+                txtE.Enabled = (FieldCount > 4);
+                txtF.Enabled = (FieldCount > 5);
+
+                if (frmEdit.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    Database db = HostApplicationServices.WorkingDatabase;
+                    using (Transaction tr = db.TransactionManager.StartTransaction())
+                    {
+                        try
+                        {
+                            foreach (ObjectId id in Items)
+                            {
+                                RebarPos pos = tr.GetObject(id, OpenMode.ForWrite) as RebarPos;
+                                if (pos == null) continue;
+
+                                pos.A = txtA.Text;
+                                pos.B = txtB.Text;
+                                pos.C = txtC.Text;
+                                pos.D = txtD.Text;
+                                pos.E = txtE.Text;
+                                pos.F = txtF.Text;
+                            }
+                            tr.Commit();
+                        }
+                        catch (System.Exception ex)
+                        {
+                            MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+
+                    return true;
+                }
+
+                return false;
+            }
+        }
+    }
+    #endregion
+
     public abstract class PosCheckResult
     {
         public string Pos { get; protected set; }
@@ -997,6 +1365,57 @@ namespace RebarPosCommands
                 foreach (List<PosCopy> list in maxcheck.Values)
                 {
                     MaximumLengthCheck check = new MaximumLengthCheck(list[0].pos, list[0].length1 / 1000.0, list[0].length2 / 1000.0, list[0].isVarLength, maxLength, list[0].a, list[0].b, list[0].c, list[0].d, list[0].e, list[0].f);
+                    foreach (PosCopy copy in list)
+                        check.Items.Add(copy.list[0]);
+                    results.Add(check);
+                }
+
+                // Check unknown shapes
+                Dictionary<string, List<PosCopy>> unknownshapecheck = new Dictionary<string, List<PosCopy>>();
+                foreach (PosCopy copy in pliste)
+                {
+                    if (PosShape.GetPosShape(copy.shapename).IsUnknown)
+                    {
+                        string key = copy.shapename;
+                        if (unknownshapecheck.ContainsKey(key))
+                            unknownshapecheck[key].Add(copy);
+                        else
+                            unknownshapecheck[key] = new List<PosCopy>() { copy };
+                    }
+                }
+                foreach (List<PosCopy> list in unknownshapecheck.Values)
+                {
+                    UnknownShapeCheck check = new UnknownShapeCheck(list[0].pos, list[0].shapename);
+                    foreach (PosCopy copy in list)
+                        check.Items.Add(copy.list[0]);
+                    results.Add(check);
+                }
+
+                // Check empty piece lengths
+                Dictionary<string, List<PosCopy>> emptypiecelengthcheck = new Dictionary<string, List<PosCopy>>();
+                foreach (PosCopy copy in pliste)
+                {
+                    bool err = false;
+                    int fieldCount = copy.fieldCount;
+                    if (!err && fieldCount > 0 && string.IsNullOrEmpty(copy.a)) err = true;
+                    if (!err && fieldCount > 1 && string.IsNullOrEmpty(copy.b)) err = true;
+                    if (!err && fieldCount > 2 && string.IsNullOrEmpty(copy.c)) err = true;
+                    if (!err && fieldCount > 3 && string.IsNullOrEmpty(copy.d)) err = true;
+                    if (!err && fieldCount > 4 && string.IsNullOrEmpty(copy.e)) err = true;
+                    if (!err && fieldCount > 5 && string.IsNullOrEmpty(copy.f)) err = true;
+
+                    if (err)
+                    {
+                        string key = copy.shapename + copy.a + copy.b + copy.c + copy.d + copy.e + copy.f;
+                        if (emptypiecelengthcheck.ContainsKey(key))
+                            emptypiecelengthcheck[key].Add(copy);
+                        else
+                            emptypiecelengthcheck[key] = new List<PosCopy>() { copy };
+                    }
+                }
+                foreach (List<PosCopy> list in emptypiecelengthcheck.Values)
+                {
+                    EmptyPieceLengthCheck check = new EmptyPieceLengthCheck(list[0].pos, list[0].fieldCount, list[0].a, list[0].b, list[0].c, list[0].d, list[0].e, list[0].f);
                     foreach (PosCopy copy in list)
                         check.Items.Add(copy.list[0]);
                     results.Add(check);

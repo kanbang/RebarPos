@@ -53,6 +53,11 @@ namespace RebarPosCommands
 
         public string Current { get { return m_Current; } }
 
+        public void SetShapes()
+        {
+            SetShapes("GENEL");
+        }
+
         public void SetShapes(string current)
         {
             SetShapes(current, PosShape.GetAllPosShapes().Keys);
