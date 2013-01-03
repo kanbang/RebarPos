@@ -773,8 +773,8 @@ AcDbObjectId CPosGroup::GetGroupId()
 	{
         CPosGroup* group = new CPosGroup();
         group->setName(_T("0"));
-        group->setFormula(_T("[M:C][N][\"T\":D][\"/\":S]"));
-		group->setFormulaVariableLength(_T("[M:C][N][\"T\":D][\"/\":S]"));
+        group->setFormula(_T("[M:C][N][TD][\"/\":S]"));
+		group->setFormulaVariableLength(_T("[M:C][N][TD][\"/\":S]"));
         group->setFormulaLengthOnly(_T("[\"L=\":L]"));
         group->setFormulaPosOnly(_T("[M:C]"));
         group->setStandardDiameters(_T("8 10 12 14 16 18 20 22 25 26 32 36"));

@@ -6,6 +6,8 @@
 
 #include <sstream>
 
+#include "dbelipse.h"
+
 #include "Utility.h"
 #include "Calculator.h"
 #include "RebarPos.h"
@@ -36,7 +38,7 @@ CRebarPos::CRebarPos() :
 	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), 
 	m_IncludeInBOQ(Adesk::kTrue), m_Multiplier(1), m_DisplayedSpacing(NULL),
 	m_Shape(NULL), m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), 
-	circleRadius(1.125), partSpacing(0.15), 
+	circleRadius(1.125), partSpacing(0.15), tauSize(0.6),
 	defpointsLayer(AcDbObjectId::kNull), m_Detached(Adesk::kFalse),
 	m_CalcProps()
 {
@@ -821,6 +823,8 @@ void CRebarPos::subList() const
 
 Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 {
+	const double PI = 4.0 * atan(1.0);
+
     assertReadEnabled();
 
 	if(lastDrawList.size() == 0)
@@ -875,6 +879,7 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 			}
 			entitySet.append(text);
 		}
+		// Circle
 		if(p.hasCircle)
 		{
 			AcDbCircle* circle;
@@ -885,6 +890,32 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 				return es;
 			}
 			entitySet.append(circle);
+		}
+		// Tau sign
+		if(p.hasTau)
+		{			
+			AcDbEllipse* ellipse;
+			ellipse = new AcDbEllipse();
+			AcGePoint3d centerpt(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0, 0);
+			ellipse->set(centerpt, AcGeVector3d::kZAxis, AcGeVector3d::kYAxis * 0.4, tauSize / 0.8);
+			ellipse->setColorIndex(p.color);
+			if((es = ellipse->transformBy(trans)) != Acad::eOk)
+			{
+				return es;
+			}
+			entitySet.append(ellipse);
+
+			AcDbLine* line;
+			AcGePoint3d linept[2];
+			linept[0] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 - 0.5, 0);
+			linept[1] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 + 0.5, 0);
+			line = new AcDbLine(linept[0], linept[1]);
+			line->setColorIndex(p.color);
+			if((es = line->transformBy(trans)) != Acad::eOk)
+			{
+				return es;
+			}
+			entitySet.append(line);
 		}
 	}
 	p = lastNoteDraw;
@@ -917,6 +948,8 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 
 Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 {
+	const double PI = 4.0 * atan(1.0);
+
     assertReadEnabled();
 
     if(worldDraw->regenAbort())
@@ -956,6 +989,20 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 			worldDraw->geometry().circle(circle, circleRadius, AcGeVector3d::kZAxis);
 		}
 
+		// Tau sign
+		if(p.hasTau)
+		{
+			worldDraw->subEntityTraits().setColor(p.color);
+
+			AcGePoint3d circle(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0, 0);
+			worldDraw->geometry().ellipticalArc(circle, AcGeVector3d::kZAxis, 0.4, tauSize * 0.5, 0.0, 2.0 * PI, 0.5 * PI);
+
+			AcGePoint3d line[2];
+			line[0] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 - 0.5, 0);
+			line[1] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 + 0.5, 0);
+			worldDraw->geometry().polyline(2, line);
+		}
+
 		// Text
 		worldDraw->subEntityTraits().setColor(p.color);
 		worldDraw->geometry().text(AcGePoint3d(p.x, p.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, p.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
@@ -988,6 +1035,8 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 
 void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 {
+	const double PI = 4.0 * atan(1.0);
+
     assertReadEnabled();
 
     if(worldDraw->regenAbort())
@@ -1025,6 +1074,20 @@ void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 
 			worldDraw->subEntityTraits().setColor(lastCircleColor);
 			worldDraw->geometry().circle(circlept, circleRadius * scale, NormalVector());
+		}
+
+		// Tau sign
+		if(p.hasTau)
+		{
+			worldDraw->subEntityTraits().setColor(p.color);
+
+			AcGePoint3d circle(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0, 0);
+			worldDraw->geometry().ellipticalArc(circle, AcGeVector3d::kZAxis, 0.4, tauSize * 0.5, 0.0, 2.0 * PI, 0.5 * PI);
+
+			AcGePoint3d line[2];
+			line[0] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 - 0.5, 0);
+			line[1] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 + 0.5, 0);
+			worldDraw->geometry().polyline(2, line);
 		}
 
 		// Text
@@ -2139,6 +2202,10 @@ void CRebarPos::Calculate(void)
 		{
 			p.x = x + (2.0 * circleRadius - ext.x) / 2.0;
 		}
+		else if(p.hasTau)
+		{
+			p.x = x + tauSize + partSpacing;
+		}
 		else
 		{
 			p.x = x;
@@ -2149,6 +2216,10 @@ void CRebarPos::Calculate(void)
 		if(p.hasCircle)
 		{
 			x += 2.0 * circleRadius + partSpacing;
+		}
+		else if(p.hasTau)
+		{
+			x += ext.x + tauSize + partSpacing;
 		}
 		else
 		{
@@ -2453,6 +2524,7 @@ const DrawList CRebarPos::ParseFormula(const ACHAR* formula) const
 	// [MM] Pos marker with double digits
 	// [N] Bar count
 	// [D] Bar diameter
+	// [TD] Bar diameter with Tau sign prepended
 	// [S] Spacing
 	// [L] Total length
 	// [M:C] Draw a circle around the item
@@ -2572,6 +2644,12 @@ const DrawList CRebarPos::ParseFormula(const ACHAR* formula) const
 					else if(part == L"D" && m_Diameter != NULL && m_Diameter[0] != _T('\0'))
 					{
 						p.type = CRebarPos::DIAMETER;
+						parts.push_back(m_Diameter);
+					}
+					else if(part == L"TD" && m_Diameter != NULL && m_Diameter[0] != _T('\0'))
+					{
+						p.type = CRebarPos::DIAMETER;
+						p.hasTau = true;
 						parts.push_back(m_Diameter);
 					}
 					else if(part == L"S" && m_DisplayedSpacing != NULL && m_DisplayedSpacing[0] != _T('\0') && m_DisplayedSpacing[0] != _T('0'))

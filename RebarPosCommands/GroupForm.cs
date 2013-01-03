@@ -503,8 +503,8 @@ namespace RebarPosCommands
 
         private void btnDisplayStandard_Click(object sender, EventArgs e)
         {
-            m_Copy.formula = "[M:C][N][\"T\":D][\"/\":S]";
-            m_Copy.formulaVariableLength = "[M:C][N][\"T\":D][\"/\":S]";
+            m_Copy.formula = "[M:C][N][TD][\"/\":S]";
+            m_Copy.formulaVariableLength = "[M:C][N][TD][\"/\":S]";
             m_Copy.formulaLengthOnly = "[\"L=\":L]";
             m_Copy.formulaPosOnly = "[M:C]";
             m_Copy.textColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 2);

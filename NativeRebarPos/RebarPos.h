@@ -149,6 +149,7 @@ private:
 	double lastNoteScale;
 	std::vector<CShape*> lastShapes;
 	double circleRadius;
+	double tauSize;
 	double partSpacing;
 	CCalculatedProperties m_CalcProps;
 
