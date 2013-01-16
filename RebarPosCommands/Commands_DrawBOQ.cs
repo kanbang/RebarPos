@@ -61,13 +61,13 @@ namespace RebarPosCommands
                 styletr.LengthLabel = "BOY\\P([U])";
                 styletr.ShapeLabel = "DEMİR ŞEKLİ";
                 styletr.TotalLengthLabel = "TOPLAM BOY (m)";
-                styletr.DiameterListLabel = "T[D]";
+                styletr.DiameterListLabel = "[TD]";
                 styletr.DiameterLengthLabel = "TOPLAM BOY (m)";
                 styletr.UnitWeightLabel = "BIRIM AGIRLIK (kg/m)";
                 styletr.WeightLabel = "TOPLAM AGIRLIK (kg)";
                 styletr.GrossWeightLabel = "GENEL TOPLAM (kg)";
                 styletr.MultiplierHeadingLabel = "GENEL TOPLAM [N] ADET İÇİNDİR";
-
+                
                 list.Add(styletr);
 
                 BOQStyle styleen = new BOQStyle();
@@ -85,7 +85,7 @@ namespace RebarPosCommands
                 styleen.LengthLabel = "LENGTH\\P([U])";
                 styleen.ShapeLabel = "SHAPE";
                 styleen.TotalLengthLabel = "TOTAL LENGTH (m)";
-                styleen.DiameterListLabel = "T[D]";
+                styleen.DiameterListLabel = "[TD]";
                 styleen.DiameterLengthLabel = "TOTAL LENGTH (m)";
                 styleen.UnitWeightLabel = "UNIT WEIGHT (kg/m)";
                 styleen.WeightLabel = "WEIGHT (kg)";
@@ -183,6 +183,7 @@ namespace RebarPosCommands
                     table.Footing = form.TableFooter;
 
                     table.DisplayUnit = form.DisplayUnit;
+                    table.Precision = form.Precision;
 
                     table.Multiplier = form.Multiplier;
 

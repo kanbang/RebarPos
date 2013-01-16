@@ -3,6 +3,7 @@ Name	00
 Fields	1
 Formula	A
 FormulaBending	A
+Priority	0
 Count	6
 TEXT	20832.33	6499.42	20.00	A	1	1	2	V
 LINE	20594.83	6534.69	21069.83	6534.69	256	I
@@ -17,6 +18,7 @@ Name	100
 Fields	5
 Formula	A+B+C+D
 FormulaBending	A+B+C+D-0.5*r-d
+Priority	0
 Count	24
 TEXT	20713.66	1799.46	20.00	A	2	1	2	V
 TEXT	20755.41	1821.43	20.00	B	2	1	2	V
@@ -49,6 +51,7 @@ Name	101
 Fields	3
 Formula	A+2*B+2*C
 FormulaBending	A+2*B+2*C-2*r-4*d
+Priority	0
 Count	12
 TEXT	20943.93	1689.41	20.00	A	0	1	2	V
 TEXT	20832.33	1666.88	20.00	B	1	1	2	V
@@ -69,6 +72,7 @@ Name	102
 Fields	4
 Formula	A+B+C+D
 FormulaBending	A+B+C+D-r-2*d
+Priority	0
 Count	12
 TEXT	20711.73	1537.03	20.00	A	2	1	2	V
 TEXT	20832.33	1567.95	20.00	B	1	1	2	V
@@ -89,6 +93,7 @@ Name	103
 Fields	5
 Formula	A+B+C+D
 FormulaBending	A+B+C+D-0.5*r-d
+Priority	0
 Count	24
 TEXT	20702.18	1428.85	20.00	A	2	1	2	V
 TEXT	20756.23	1411.72	20.00	B	0	1	2	V
@@ -121,6 +126,7 @@ Name	104
 Fields	6
 Formula	A+B+C+D+E+2*F
 FormulaBending	A+B+C+D+E+2*F-1.5*r-3*d
+Priority	0
 Count	17
 TEXT	20816.80	1278.14	20.00	A	1	1	2	V
 TEXT	20709.64	1280.10	20.00	B	2	1	2	V
@@ -146,6 +152,7 @@ Name	105
 Fields	5
 Formula	A+B+C+D+E
 FormulaBending	A+B+C+D+E-1.5*r-3*d
+Priority	0
 Count	14
 TEXT	20750.68	1148.60	20.00	C	0	1	2	V
 TEXT	20832.59	1123.92	20.00	A	1	1	2	V
@@ -168,6 +175,7 @@ Name	106
 Fields	5
 Formula	A+B+C+D+E
 FormulaBending	A+B+C+D+E-1.5*r-3*d
+Priority	0
 Count	14
 TEXT	20744.33	1014.03	20.00	C	0	1	2	V
 TEXT	20832.59	986.57	20.00	A	1	1	2	V
@@ -190,6 +198,7 @@ Name	107
 Fields	6
 Formula	A+B+C+D+E+F
 FormulaBending	A+B+C+D+E+F-1.5*r-3*d
+Priority	0
 Count	16
 TEXT	20750.68	875.78	20.00	C	0	1	2	V
 TEXT	20832.59	841.39	20.00	A	1	1	2	V
@@ -214,6 +223,7 @@ Name	108
 Fields	6
 Formula	A+B+C+D+E+F
 FormulaBending	A+B+C+D+E+F-1.5*r-3*d
+Priority	0
 Count	16
 TEXT	20744.33	731.51	20.00	C	0	1	2	V
 TEXT	20832.59	704.05	20.00	A	1	1	2	V
@@ -238,6 +248,7 @@ Name	109
 Fields	5
 Formula	A+B+C+D+E
 FormulaBending	A+B+C+D+E-1.5*r-3*d
+Priority	0
 Count	14
 TEXT	20784.46	569.53	20.00	A	0	1	2	V
 TEXT	20884.42	570.05	20.00	B	1	1	2	V
@@ -260,6 +271,7 @@ Name	11
 Fields	2
 Formula	A+B
 FormulaBending	A+B-0.5*r-d
+Priority	0
 Count	8
 TEXT	20832.33	6362.07	20.00	A	1	1	2	V
 TEXT	20953.95	6360.63	20.00	B	0	1	2	V
@@ -276,6 +288,7 @@ Name	110
 Fields	5
 Formula	A+B+C+D+E
 FormulaBending	A+B+C+D+E
+Priority	0
 Count	14
 TEXT	20738.66	432.18	20.00	A	0	1	2	V
 TEXT	20853.29	432.70	20.00	B	1	1	2	V
@@ -298,6 +311,7 @@ Name	14
 Fields	3
 Formula	A+C
 FormulaBending	A+C-4*d
+Priority	0
 Count	20
 TEXT	20907.41	6224.18	20.00	A	0	1	2	V
 TEXT	21039.74	6216.73	20.00	B	0	1	2	V
@@ -326,6 +340,7 @@ Name	15
 Fields	3
 Formula	A+C
 FormulaBending	A+C
+Priority	0
 Count	20
 TEXT	20921.45	6072.43	20.00	A	0	1	2	V
 TEXT	21039.74	6079.18	20.00	B	0	1	2	V
@@ -354,6 +369,7 @@ Name	21
 Fields	3
 Formula	A+B+C
 FormulaBending	A+B+C-r-2*d
+Priority	0
 Count	10
 TEXT	20710.17	5935.72	20.00	A	2	1	2	V
 TEXT	20832.74	5933.08	20.00	B	1	1	2	V
@@ -372,6 +388,7 @@ Name	23
 Fields	3
 Formula	A+B+C
 FormulaBending	A+B+C-r-2*d
+Priority	0
 Count	10
 TEXT	20710.17	5814.60	20.00	A	2	1	2	V
 TEXT	20833.37	5786.83	20.00	B	1	1	2	V
@@ -390,6 +407,7 @@ Name	24
 Fields	4
 Formula	A+B+C
 FormulaBending	A+B+C
+Priority	0
 Count	22
 TEXT	20783.67	5658.39	20.00	A	1	1	2	V
 TEXT	20885.71	5666.36	20.00	B	2	1	2	V
@@ -420,6 +438,7 @@ Name	25
 Fields	5
 Formula	A+B+E
 FormulaBending	A+B+E
+Priority	0
 Count	34
 TEXT	20726.89	5522.18	20.00	A	2	1	2	V
 TEXT	20933.19	5520.56	20.00	B	0	1	2	V
@@ -462,6 +481,7 @@ Name	26
 Fields	4
 Formula	A+B+C
 FormulaBending	A+B+C
+Priority	0
 Count	22
 TEXT	20773.87	5383.69	20.00	A	1	1	2	V
 TEXT	20863.23	5381.28	20.00	B	0	1	2	V
@@ -492,6 +512,7 @@ Name	27
 Fields	4
 Formula	A+B+C
 FormulaBending	A+B+C-0.5*r-d
+Priority	0
 Count	22
 TEXT	20756.23	5239.70	20.00	A	0	1	2	V
 TEXT	20858.35	5257.22	20.00	B	1	1	2	V
@@ -522,6 +543,7 @@ Name	28
 Fields	4
 Formula	A+B+C
 FormulaBending	A+B+C-0.5*r-d
+Priority	0
 Count	22
 TEXT	20757.13	5115.07	20.00	A	2	1	2	V
 TEXT	20867.10	5130.99	20.00	B	1	1	2	V
@@ -552,6 +574,7 @@ Name	29
 Fields	4
 Formula	A+B+C
 FormulaBending	A+B+C-r-2*d
+Priority	0
 Count	22
 TEXT	20819.12	4971.64	20.00	A	0	1	2	V
 TEXT	20922.58	4985.52	20.00	B	0	1	2	V
@@ -582,6 +605,7 @@ Name	31
 Fields	4
 Formula	A+B+C+D
 FormulaBending	A+B+C+D-1.5*r-3*d
+Priority	0
 Count	12
 TEXT	20751.53	4845.82	20.00	A	1	1	2	V
 TEXT	20710.17	4846.57	20.00	B	2	1	2	V
@@ -602,6 +626,7 @@ Name	32
 Fields	4
 Formula	A+B+C+D
 FormulaBending	A+B+C+D-1.5*r-3*d
+Priority	0
 Count	12
 TEXT	20750.90	4710.08	20.00	A	1	1	2	V
 TEXT	20710.17	4709.22	20.00	B	2	1	2	V
@@ -622,6 +647,7 @@ Name	34
 Fields	5
 Formula	A+B+C+E
 FormulaBending	A+B+C+E-0.5*r-d
+Priority	0
 Count	24
 TEXT	20741.49	4560.43	20.00	A	1	1	2	V
 TEXT	20814.34	4557.04	20.00	B	0	1	2	V
@@ -654,6 +680,7 @@ Name	35
 Fields	5
 Formula	A+B+C+E
 FormulaBending	A+B+C+E-0.5*r-d
+Priority	0
 Count	24
 TEXT	20759.80	4418.19	20.00	A	1	1	2	V
 TEXT	20824.46	4431.06	20.00	B	2	1	2	V
@@ -686,6 +713,7 @@ Name	36
 Fields	5
 Formula	A+B+C+D
 FormulaBending	A+B+C+D-r-2*d
+Priority	0
 Count	24
 TEXT	20924.34	4285.54	20.00	A	0	1	2	V
 TEXT	20815.17	4284.89	20.00	B	1	1	2	V
@@ -718,6 +746,7 @@ Name	41
 Fields	5
 Formula	A+B+C+D+E
 FormulaBending	A+B+C+D+E-2*r-4*d
+Priority	0
 Count	14
 TEXT	20750.15	4159.50	20.00	A	1	1	2	V
 TEXT	20709.64	4153.46	20.00	B	2	1	2	V
@@ -740,6 +769,7 @@ Name	44
 Fields	5
 Formula	A+B+C+D+E
 FormulaBending	A+B+C+D+E-2*r-4*d
+Priority	0
 Count	14
 TEXT	20738.82	4037.98	20.00	A	1	1	2	V
 TEXT	20754.90	4005.89	20.00	B	2	1	2	V
@@ -762,6 +792,7 @@ Name	46
 Fields	5
 Formula	A+2*B+C+E
 FormulaBending	A+2*B+C+E
+Priority	0
 Count	25
 TEXT	20738.82	3899.56	20.00	A	1	1	2	V
 TEXT	20764.06	3865.49	20.00	B	2	1	2	V
@@ -795,6 +826,7 @@ Name	47
 Fields	4
 Formula	2*A+B+C+D
 FormulaBending	2*A+B+C+D+1.5*r-3*d
+Priority	0
 Count	15
 TEXT	20710.17	3747.78	20.00	A	2	1	2	V
 TEXT	20832.74	3735.49	20.00	B	1	1	2	V
@@ -818,6 +850,7 @@ Name	51
 Fields	4
 Formula	2*A+2*B+C+D
 FormulaBending	2*A+2*B+C+D-2.5*r-5*d
+Priority	0
 Count	14
 TEXT	20832.74	3590.24	20.00	A	1	1	2	V
 TEXT	20709.64	3597.93	20.00	B	2	1	2	V
@@ -840,6 +873,7 @@ Name	56
 Fields	6
 Formula	A+B+C+D+E+F
 FormulaBending	A+B+C+D+E+F-2.5*r-5*d
+Priority	0
 Count	16
 TEXT	20832.74	3456.40	20.00	A	1	1	2	V
 TEXT	20710.17	3468.69	20.00	B	2	1	2	V
@@ -864,6 +898,7 @@ Name	63
 Fields	4
 Formula	2*A+3*B+C+D
 FormulaBending	2*A+3*B+C+D-3*r-6*d
+Priority	0
 Count	15
 TEXT	20705.02	3327.20	20.00	A	2	1	2	V
 TEXT	20833.57	3316.96	20.00	B	2	1	2	V
@@ -887,6 +922,7 @@ Name	64
 Fields	6
 Formula	A+B+C+2*D+E+F
 FormulaBending	A+B+C+2*D+E+F-3*r-6*d
+Priority	0
 Count	17
 TEXT	20759.38	3213.01	20.00	A	1	1	2	V
 TEXT	20710.17	3180.80	20.00	B	2	1	2	V
@@ -912,6 +948,7 @@ Name	67
 Fields	4
 Formula	A
 FormulaBending	A
+Priority	0
 Count	37
 TEXT	20819.36	3075.82	20.00	A	1	1	2	V
 TEXT	20815.14	3042.82	20.00	B	2	1	2	V
@@ -957,6 +994,7 @@ Name	75
 Fields	4
 Formula	3.14*A+B+C+D
 FormulaBending	3.14*A-3.14*d+B+C+D
+Priority	0
 Count	33
 TEXT	20910.59	2936.84	20.00	A	0	0	2	V
 TEXT	20813.20	2891.10	20.00	B	1	1	2	V
@@ -998,6 +1036,7 @@ Name	77
 Fields	5
 Formula	3.14*A*C+D+E
 FormulaBending	3.14*A*C-3.14*d*C+D+E
+Priority	0
 Count	52
 TEXT	20729.56	2787.51	20.00	A	1	0	2	V
 TEXT	20945.62	2786.94	20.00	B	0	1	2	V
@@ -1058,6 +1097,7 @@ Name	93
 Fields	4
 Formula	A+B+C+D
 FormulaBending	A+B+C+D-0.5*r-d
+Priority	0
 Count	12
 TEXT	20727.05	2646.32	20.00	D	2	1	2	V
 TEXT	20832.59	2634.77	20.00	A	1	1	2	V
@@ -1078,6 +1118,7 @@ Name	94
 Fields	3
 Formula	A+B+C
 FormulaBending	A+B+C-0.5*r-d
+Priority	0
 Count	10
 TEXT	20750.68	2522.10	20.00	C	0	1	2	V
 TEXT	20832.59	2497.42	20.00	A	1	1	2	V
@@ -1096,6 +1137,7 @@ Name	95
 Fields	4
 Formula	A+2*B+C+D
 FormulaBending	A+2*B+C+D-r-2*d
+Priority	0
 Count	13
 TEXT	20750.68	2384.75	20.00	C	0	1	2	V
 TEXT	20832.59	2360.07	20.00	A	1	1	2	V
@@ -1117,6 +1159,7 @@ Name	96
 Fields	3
 Formula	A+B+C
 FormulaBending	A+B+C-0.5*r-d
+Priority	0
 Count	10
 TEXT	20725.11	2235.06	20.00	A	2	1	2	V
 TEXT	20832.74	2224.64	20.00	B	1	1	2	V
@@ -1135,6 +1178,7 @@ Name	97
 Fields	3
 Formula	A+B+C
 FormulaBending	A+B+C
+Priority	0
 Count	10
 TEXT	20725.11	2097.71	20.00	A	2	1	2	V
 TEXT	20832.74	2087.29	20.00	B	1	1	2	V
@@ -1153,6 +1197,7 @@ Name	98
 Fields	4
 Formula	A+2*B+C+D
 FormulaBending	A+2*B+C+D-2*r-4*d
+Priority	0
 Count	13
 TEXT	20835.24	1961.93	20.00	A	1	1	2	V
 TEXT	20756.61	1965.34	20.00	B	2	1	2	V
@@ -1174,6 +1219,7 @@ Name	GENEL
 Fields	1
 Formula	A
 FormulaBending	A
+Priority	0
 Count	0
 LINE	20594.83	6672.04	21069.83	6672.04	256	I
 LINE	20594.83	6597.04	20594.83	6672.04	256	I

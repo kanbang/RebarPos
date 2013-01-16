@@ -18,8 +18,8 @@ namespace RebarPosCommands
             {
                 if (System.IO.File.Exists(userShapesFile))
                 {
-                    PosShape.ClearPosShapes(false, true);
-                    PosShape.ReadPosShapesFromFile(userShapesFile, false);
+                    PosShape.ClearPosShapes();
+                    PosShape.ReadPosShapesFromFile(userShapesFile);
                 }
             }
             catch (System.Exception ex)

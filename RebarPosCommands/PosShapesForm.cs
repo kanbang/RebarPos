@@ -479,7 +479,7 @@ namespace RebarPosCommands
             string userShapesFile = System.IO.Path.Combine(userFolder, "ShapeList.txt");
             string newShapesFile = System.IO.Path.Combine(userFolder, "ShapeList.new");
 
-            PosShape.ClearPosShapes(false, true);
+            PosShape.ClearPosShapes();
             foreach (ShapeCopy copy in m_Copies)
             {
                 if (!copy.builtin)
@@ -501,7 +501,7 @@ namespace RebarPosCommands
 
             try
             {
-                PosShape.SavePosShapesToFile(newShapesFile, false, true);
+                PosShape.SavePosShapesToFile(newShapesFile);
                 System.IO.File.Delete(userShapesFile);
                 System.IO.File.Move(newShapesFile, userShapesFile);
             }
@@ -510,7 +510,7 @@ namespace RebarPosCommands
                 System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
 
-            PosShape.ReadPosShapesFromFile(userShapesFile, false);
+            PosShape.ReadPosShapesFromFile(userShapesFile);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

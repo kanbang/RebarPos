@@ -253,6 +253,20 @@ void CGenericTable::setCellTextColor(const int i, const int j, const unsigned sh
 	cell->setTextColor(newVal);
 	Calculate();
 }
+void CGenericTable::setCellShapeTextColor(const int i, const int j, const unsigned short newVal)
+{
+	assertWriteEnabled();
+	CTableCell* cell = m_Cells[i * m_Columns + j];
+	cell->setShapeTextColor(newVal);
+	Calculate();
+}
+void CGenericTable::setCellShapeLineColor(const int i, const int j, const unsigned short newVal)
+{
+	assertWriteEnabled();
+	CTableCell* cell = m_Cells[i * m_Columns + j];
+	cell->setShapeLineColor(newVal);
+	Calculate();
+}
 void CGenericTable::setCellTextStyleId(const int i, const int j, const AcDbObjectId& newVal)
 {
 	assertWriteEnabled();

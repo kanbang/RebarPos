@@ -11,7 +11,8 @@
 // Constructors and destructors 
 //*************************************************************************
 CTableCell::CTableCell(void) : m_BasePoint(0, 0, 0), m_Direction(1, 0, 0), m_Up(0, 1, 0), m_Normal(0, 0, 1),
-	m_Text(NULL), m_TextColor(0), m_TopBorderColor(0), m_LeftBorderColor(0), m_BottomBorderColor(0), m_RightBorderColor(0),
+	m_Text(NULL), m_TextColor(0), m_ShapeTextColor(0), m_ShapeLineColor(0),
+	m_TopBorderColor(0), m_LeftBorderColor(0), m_BottomBorderColor(0), m_RightBorderColor(0),
 	m_TopBorder(Adesk::kFalse), m_LeftBorder(Adesk::kFalse), m_BottomBorder(Adesk::kFalse), m_RightBorder(Adesk::kFalse),
 	m_TopBorderDouble(Adesk::kFalse), m_LeftBorderDouble(Adesk::kFalse), m_BottomBorderDouble(Adesk::kFalse), m_RightBorderDouble(Adesk::kFalse),
 	m_MergeRight(0), m_MergeDown(0),
@@ -49,6 +50,12 @@ Acad::ErrorStatus CTableCell::setText(const ACHAR* newVal) { acutUpdString(newVa
 
 const Adesk::UInt16 CTableCell::TextColor() const         { return m_TextColor; }
 Acad::ErrorStatus CTableCell::setTextColor(const Adesk::UInt16 newVal) { m_TextColor = newVal; return Acad::eOk; }
+
+const Adesk::UInt16 CTableCell::ShapeTextColor() const         { return m_ShapeTextColor; }
+Acad::ErrorStatus CTableCell::setShapeTextColor(const Adesk::UInt16 newVal) { m_ShapeTextColor = newVal; return Acad::eOk; }
+
+const Adesk::UInt16 CTableCell::ShapeLineColor() const         { return m_ShapeLineColor; }
+Acad::ErrorStatus CTableCell::setShapeLineColor(const Adesk::UInt16 newVal) { m_ShapeLineColor = newVal; return Acad::eOk; }
 
 const Adesk::UInt16 CTableCell::TopBorderColor() const         { return m_TopBorderColor; }
 Acad::ErrorStatus CTableCell::setTopBorderColor(const Adesk::UInt16 newVal) { m_TopBorderColor = newVal; return Acad::eOk; }
@@ -258,16 +265,36 @@ const std::vector<AcDbMText*> CTableCell::GetTexts() const
 	else if(HasShape())
 	{
 		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
-
 		AcDbExtents ext = pShape->GetShapeExtents();
-
-		double maxwidth = (ext.maxPoint().x - ext.minPoint().x) * m_TextHeight / 25.0;
-		double maxheight = (ext.maxPoint().y - ext.minPoint().y) * m_TextHeight / 25.0;
-		double xscale = maxwidth / (ext.maxPoint().x - ext.minPoint().x);
-		double yscale = maxheight / (ext.maxPoint().y - ext.minPoint().y);
-		double scale = min(xscale, yscale);
-        double xoff = (maxwidth - scale * (ext.maxPoint().x - ext.minPoint().x)) / 2.0;
-        double yoff = (maxheight - scale * (ext.maxPoint().y - ext.minPoint().y)) / 2.0;
+		double maxwidth = (ext.maxPoint().x - ext.minPoint().x);
+		double maxheight = (ext.maxPoint().y - ext.minPoint().y);
+		double scale = m_TextHeight / 25.0;
+        double xoff = 0;
+        double yoff = 0;
+		if(m_HorizontalAlignment == CTableCell::eNEAR)
+		{
+			xoff = m_Margin;
+		}
+		else if(m_HorizontalAlignment == CTableCell::eFAR)
+		{
+			xoff = m_Width - m_Margin - maxwidth * scale;
+		}
+		else if(m_HorizontalAlignment == CTableCell::eCENTER)
+		{
+			xoff = (m_Width - maxwidth * scale) / 2.0;
+		}
+		if(m_VerticalAlignment == CTableCell::eNEAR)
+		{
+			yoff = m_Margin;
+		}
+		else if(m_VerticalAlignment == CTableCell::eFAR)
+		{
+			yoff = m_Height - m_Margin - maxheight * scale;
+		}
+		else if(m_VerticalAlignment == CTableCell::eCENTER)
+		{
+			yoff = (m_Height - maxheight * scale) / 2.0;
+		}
 
 		for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
 		{
@@ -281,14 +308,15 @@ const std::vector<AcDbMText*> CTableCell::GetTexts() const
 				// Text style
 				mtext->setTextStyle(m_TextStyleId);
 				mtext->setTextHeight(text->height * scale);
-				mtext->setColorIndex(text->color);
+				if(m_ShapeTextColor == 0)
+					mtext->setColorIndex(text->color);
+				else
+					mtext->setColorIndex(m_ShapeTextColor);
 
 				// Location
 				double x = xoff + (text->x  - ext.minPoint().x) * scale;
 				double y = yoff + (text->y  - ext.minPoint().y) * scale;
-				double cx = m_Margin;
-				double cy = -m_Height + m_Margin;
-				mtext->setLocation(AcGePoint3d(x + cx, y + cy, 0));
+				mtext->setLocation(AcGePoint3d(x, -m_Height + y, 0));
 
 				// Text attachment
 				if(text->horizontalAlignment == AcDb::kTextLeft)
@@ -437,13 +465,35 @@ const std::vector<AcDbLine*> CTableCell::GetLines() const
 	{
 		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
 		AcDbExtents ext = pShape->GetShapeExtents();
-		double maxwidth = (ext.maxPoint().x - ext.minPoint().x) * m_TextHeight / 25.0;
-		double maxheight = (ext.maxPoint().y - ext.minPoint().y) * m_TextHeight / 25.0;
-		double xscale = maxwidth / (ext.maxPoint().x - ext.minPoint().x);
-		double yscale = maxheight / (ext.maxPoint().y - ext.minPoint().y);
-		double scale = min(xscale, yscale);
-        double xoff = (maxwidth - scale * (ext.maxPoint().x - ext.minPoint().x)) / 2.0;
-        double yoff = (maxheight - scale * (ext.maxPoint().y - ext.minPoint().y)) / 2.0;
+		double maxwidth = (ext.maxPoint().x - ext.minPoint().x);
+		double maxheight = (ext.maxPoint().y - ext.minPoint().y);
+		double scale = m_TextHeight / 25.0;
+        double xoff = 0;
+        double yoff = 0;
+		if(m_HorizontalAlignment == CTableCell::eNEAR)
+		{
+			xoff = m_Margin;
+		}
+		else if(m_HorizontalAlignment == CTableCell::eFAR)
+		{
+			xoff = m_Width - m_Margin - maxwidth * scale;
+		}
+		else if(m_HorizontalAlignment == CTableCell::eCENTER)
+		{
+			xoff = (m_Width - maxwidth * scale) / 2.0;
+		}
+		if(m_VerticalAlignment == CTableCell::eNEAR)
+		{
+			yoff = m_Margin;
+		}
+		else if(m_VerticalAlignment == CTableCell::eFAR)
+		{
+			yoff = m_Height - m_Margin - maxheight * scale;
+		}
+		else if(m_VerticalAlignment == CTableCell::eCENTER)
+		{
+			yoff = (m_Height - maxheight * scale) / 2.0;
+		}
 
 		for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
 		{
@@ -454,17 +504,18 @@ const std::vector<AcDbLine*> CTableCell::GetLines() const
 
 				AcDbLine* mline = new AcDbLine();
 
-				mline->setColorIndex(line->color);
+				if(m_ShapeLineColor == 0)
+					mline->setColorIndex(line->color);
+				else
+					mline->setColorIndex(m_ShapeLineColor);
 
 				// Location
 				double x1 = xoff + (line->x1 - ext.minPoint().x) * scale;
 				double y1 = yoff + (line->y1 - ext.minPoint().y) * scale;
 				double x2 = xoff + (line->x2 - ext.minPoint().x) * scale;
 				double y2 = yoff + (line->y2 - ext.minPoint().y) * scale;
-				double cx = m_Margin;
-				double cy = -m_Height + m_Margin;
-				mline->setStartPoint(AcGePoint3d(x1 + cx, y1 + cy, 0));
-				mline->setEndPoint(AcGePoint3d(x2 + cx, y2 + cy, 0));
+				mline->setStartPoint(AcGePoint3d(x1, -m_Height + y1, 0));
+				mline->setEndPoint(AcGePoint3d(x2, -m_Height + y2, 0));
 
 				mline->transformBy(trans);
 				lines.push_back(mline);
@@ -487,13 +538,35 @@ const std::vector<AcDbArc*> CTableCell::GetArcs() const
 	{
 		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
 		AcDbExtents ext = pShape->GetShapeExtents();
-		double maxwidth = (ext.maxPoint().x - ext.minPoint().x) * m_TextHeight / 25.0;
-		double maxheight = (ext.maxPoint().y - ext.minPoint().y) * m_TextHeight / 25.0;
-		double xscale = maxwidth / (ext.maxPoint().x - ext.minPoint().x);
-		double yscale = maxheight / (ext.maxPoint().y - ext.minPoint().y);
-		double scale = min(xscale, yscale);
-        double xoff = (maxwidth - scale * (ext.maxPoint().x - ext.minPoint().x)) / 2.0;
-        double yoff = (maxheight - scale * (ext.maxPoint().y - ext.minPoint().y)) / 2.0;
+		double maxwidth = (ext.maxPoint().x - ext.minPoint().x);
+		double maxheight = (ext.maxPoint().y - ext.minPoint().y);
+		double scale = m_TextHeight / 25.0;
+        double xoff = 0;
+        double yoff = 0;
+		if(m_HorizontalAlignment == CTableCell::eNEAR)
+		{
+			xoff = m_Margin;
+		}
+		else if(m_HorizontalAlignment == CTableCell::eFAR)
+		{
+			xoff = m_Width - m_Margin - maxwidth * scale;
+		}
+		else if(m_HorizontalAlignment == CTableCell::eCENTER)
+		{
+			xoff = (m_Width - maxwidth * scale) / 2.0;
+		}
+		if(m_VerticalAlignment == CTableCell::eNEAR)
+		{
+			yoff = m_Margin;
+		}
+		else if(m_VerticalAlignment == CTableCell::eFAR)
+		{
+			yoff = m_Height - m_Margin - maxheight * scale;
+		}
+		else if(m_VerticalAlignment == CTableCell::eCENTER)
+		{
+			yoff = (m_Height - maxheight * scale) / 2.0;
+		}
 
 		for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
 		{
@@ -504,15 +577,16 @@ const std::vector<AcDbArc*> CTableCell::GetArcs() const
 
 				AcDbArc* marc = new AcDbArc();
 
-				marc->setColorIndex(arc->color);
+				if(m_ShapeLineColor == 0)
+					marc->setColorIndex(arc->color);
+				else
+					marc->setColorIndex(m_ShapeLineColor);
 
 				// Location
 				double x = xoff + (arc->x - ext.minPoint().x) * scale;
 				double y = yoff + (arc->y - ext.minPoint().y) * scale;
 				double r = arc->r * scale;
-				double cx = m_Margin;
-				double cy = -m_Height + m_Margin;
-				marc->setCenter(AcGePoint3d(x + cx, y + cy, 0));
+				marc->setCenter(AcGePoint3d(x, -m_Height + y, 0));
 				marc->setRadius(r);
 				marc->setStartAngle(arc->startAngle);
 				marc->setEndAngle(arc->endAngle);
@@ -572,6 +646,8 @@ Acad::ErrorStatus CTableCell::dwgOutFields(AcDbDwgFiler* pFiler) const
 		pFiler->writeString(_T(""));
 
 	pFiler->writeUInt16(m_TextColor);
+	pFiler->writeUInt16(m_ShapeTextColor);
+	pFiler->writeUInt16(m_ShapeLineColor);
 	pFiler->writeUInt16(m_TopBorderColor);
 	pFiler->writeUInt16(m_LeftBorderColor);
 	pFiler->writeUInt16(m_BottomBorderColor);
@@ -633,6 +709,8 @@ Acad::ErrorStatus CTableCell::dwgInFields(AcDbDwgFiler* pFiler)
 	pFiler->readString(&m_F);
 
 	pFiler->readUInt16(&m_TextColor);
+	pFiler->readUInt16(&m_ShapeTextColor);
+	pFiler->readUInt16(&m_ShapeLineColor);
 	pFiler->readUInt16(&m_TopBorderColor);
 	pFiler->readUInt16(&m_LeftBorderColor);
 	pFiler->readUInt16(&m_BottomBorderColor);
@@ -712,6 +790,8 @@ Acad::ErrorStatus CTableCell::dxfOutFields(AcDbDxfFiler* pFiler) const
 		pFiler->writeString(AcDb::kDxfText, _T(""));
 
 	pFiler->writeUInt16(AcDb::kDxfXInt16, m_TextColor);
+	pFiler->writeUInt16(AcDb::kDxfXInt16, m_ShapeTextColor);
+	pFiler->writeUInt16(AcDb::kDxfXInt16, m_ShapeLineColor);
 	pFiler->writeUInt16(AcDb::kDxfXInt16, m_TopBorderColor);
 	pFiler->writeUInt16(AcDb::kDxfXInt16, m_LeftBorderColor);
 	pFiler->writeUInt16(AcDb::kDxfXInt16, m_BottomBorderColor);
@@ -762,6 +842,8 @@ Acad::ErrorStatus CTableCell::dxfInFields(AcDbDxfFiler* pFiler)
 	ACHAR* t_F = NULL;
 	
 	Adesk::UInt16 t_TextColor;
+	Adesk::UInt16 t_ShapeTextColor;
+	Adesk::UInt16 t_ShapeLineColor;
 	Adesk::UInt16 t_TopBorderColor;
 	Adesk::UInt16 t_LeftBorderColor;
 	Adesk::UInt16 t_BottomBorderColor;
@@ -806,6 +888,8 @@ Acad::ErrorStatus CTableCell::dxfInFields(AcDbDxfFiler* pFiler)
 	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("text replacement F"), t_F)) != Acad::eOk) return es;
 
 	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("cell text color"), t_TextColor)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("cell shape text color"), t_ShapeTextColor)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("cell shape line color"), t_ShapeLineColor)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("cell top border color"), t_TopBorderColor)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("cell left border color"), t_LeftBorderColor)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("cell bottom border color"), t_BottomBorderColor)) != Acad::eOk) return es;
@@ -845,6 +929,8 @@ Acad::ErrorStatus CTableCell::dxfInFields(AcDbDxfFiler* pFiler)
 	setShapeText(t_A, t_B, t_C, t_D, t_E, t_F);
 
 	m_TextColor = t_TextColor;
+	m_ShapeTextColor = t_ShapeTextColor;
+	m_ShapeLineColor = t_ShapeLineColor;
 	m_TopBorderColor = t_TopBorderColor;
 	m_LeftBorderColor = t_LeftBorderColor;
 	m_BottomBorderColor = t_BottomBorderColor;

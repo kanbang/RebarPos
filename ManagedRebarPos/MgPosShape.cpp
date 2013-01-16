@@ -100,6 +100,14 @@ void PosShape::IsUnknown::set(bool value)
 	m_PosShape->setIsUnknown(value ? Adesk::kTrue : Adesk::kFalse);
 }
 
+bool PosShape::IsInternal::get()
+{
+    return (m_PosShape->IsInternal() == Adesk::kTrue);
+}
+void PosShape::IsInternal::set(bool value)
+{
+	m_PosShape->setIsInternal(value ? Adesk::kTrue : Adesk::kFalse);
+}
 //*************************************************************************
 // Shape Collection
 //*************************************************************************
@@ -159,7 +167,17 @@ PosShape^ PosShape::GetUnknownPosShape()
 
 int PosShape::GetPosShapeCount()
 {
-	return (int)CPosShape::GetPosShapeCount();
+	std::map<std::wstring, CPosShape*> map = CPosShape::GetMap();
+	int count = 0;
+	for(std::map<std::wstring, CPosShape*>::iterator it = map.begin(); it != map.end(); it++)
+	{
+		CPosShape* shape = it->second;
+		if(!shape->IsInternal())
+		{
+			count++;
+		}
+	}
+	return count;
 }
 
 System::Collections::Generic::Dictionary<String^, PosShape^>^ PosShape::GetAllPosShapes()
@@ -168,22 +186,26 @@ System::Collections::Generic::Dictionary<String^, PosShape^>^ PosShape::GetAllPo
 	std::map<std::wstring, CPosShape*> map = CPosShape::GetMap();
 	for(std::map<std::wstring, CPosShape*>::iterator it = map.begin(); it != map.end(); it++)
 	{
-		dict->Add(Marshal::WstringToString(it->first), gcnew PosShape(it->second));
+		CPosShape* shape = it->second;
+		if(!shape->IsInternal())
+		{
+			dict->Add(Marshal::WstringToString(it->first), gcnew PosShape(it->second));
+		}
 	}
 	return dict;
 }
 
-void PosShape::ClearPosShapes(bool builtin, bool custom)
+void PosShape::ClearPosShapes()
 {
-	CPosShape::ClearPosShapes(builtin, custom);
+	CPosShape::ClearPosShapes(false, true);
 }
 
-void PosShape::ReadPosShapesFromFile(String^ source, bool builtin)
+void PosShape::ReadPosShapesFromFile(String^ source)
 {
-	CPosShape::ReadPosShapesFromFile(Marshal::StringToWstring(source), builtin);
+	CPosShape::ReadPosShapesFromFile(Marshal::StringToWstring(source), true);
 }
 
-void PosShape::SavePosShapesToFile(String^ source, bool builtin, bool custom)
+void PosShape::SavePosShapesToFile(String^ source)
 {
-	CPosShape::SavePosShapesToFile(Marshal::StringToWstring(source), builtin, custom);
+	CPosShape::SavePosShapesToFile(Marshal::StringToWstring(source), false, true);
 }

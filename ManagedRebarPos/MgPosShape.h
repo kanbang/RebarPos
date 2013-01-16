@@ -224,6 +224,7 @@ namespace OZOZ
 			property int Priority           { int get();     void set(int value); }
 			property bool IsBuiltIn         { bool get();    void set(bool value); }
 			property bool IsUnknown         { bool get();    void set(bool value); }
+			property bool IsInternal        { bool get();    void set(bool value); }
 
 		public:
 			static void AddPosShape(PosShape^ shape);
@@ -231,9 +232,9 @@ namespace OZOZ
 			static PosShape^ GetUnknownPosShape();
 			static int GetPosShapeCount();
 			static System::Collections::Generic::Dictionary<String^, PosShape^>^ GetAllPosShapes();
-			static void ClearPosShapes(bool builtin, bool custom);
-			static void ReadPosShapesFromFile(String^ source, bool builtin);
-			static void SavePosShapesToFile(String^ source, bool builtin, bool custom);
+			static void ClearPosShapes();
+			static void ReadPosShapesFromFile(String^ source);
+			static void SavePosShapesToFile(String^ source);
         };
     }
 

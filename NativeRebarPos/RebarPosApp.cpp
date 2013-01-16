@@ -47,7 +47,8 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 
 		// Create default shapes
 		CPosShape::ClearPosShapes(true, true);
-		CPosShape::MakePosShapesFromResource(_hdllInstance);
+		CPosShape::ReadPosShapesFromResource(_hdllInstance, IDR_SHAPELIST1, false);
+		CPosShape::ReadPosShapesFromResource(_hdllInstance, IDR_SHAPELIST2, true);
 
         break;
 

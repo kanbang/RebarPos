@@ -83,6 +83,8 @@ private:
 	ACHAR* m_Columns;
 
 	Adesk::UInt16 m_TextColor;
+	Adesk::UInt16 m_ShapeTextColor;
+	Adesk::UInt16 m_ShapeLineColor;
 	Adesk::UInt16 m_PosColor;
 	Adesk::UInt16 m_LineColor;
 	Adesk::UInt16 m_SeparatorColor;
@@ -164,6 +166,14 @@ public:
 	/// Gets or sets the text color.
 	const Adesk::UInt16 TextColor(void) const;
 	Acad::ErrorStatus setTextColor(const Adesk::UInt16 newVal);
+
+	/// Gets or sets the shape text color.
+	const Adesk::UInt16 ShapeTextColor(void) const;
+	Acad::ErrorStatus setShapeTextColor(const Adesk::UInt16 newVal);
+
+	/// Gets or sets the shape line color.
+	const Adesk::UInt16 ShapeLineColor(void) const;
+	Acad::ErrorStatus setShapeLineColor(const Adesk::UInt16 newVal);
 
 	/// Gets or sets the pos text color.
 	const Adesk::UInt16 PosColor(void) const;

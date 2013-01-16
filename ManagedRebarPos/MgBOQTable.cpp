@@ -108,6 +108,24 @@ void BOQTable::TextColor::set(Autodesk::AutoCAD::Colors::Color^ value)
 	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setTextColor(value->ColorIndex));
 }
 
+Autodesk::AutoCAD::Colors::Color^ BOQTable::ShapeTextColor::get()
+{
+	return Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, GetImpObj()->ShapeTextColor());
+}
+void BOQTable::ShapeTextColor::set(Autodesk::AutoCAD::Colors::Color^ value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setShapeTextColor(value->ColorIndex));
+}
+
+Autodesk::AutoCAD::Colors::Color^ BOQTable::ShapeLineColor::get()
+{
+	return Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, GetImpObj()->ShapeLineColor());
+}
+void BOQTable::ShapeLineColor::set(Autodesk::AutoCAD::Colors::Color^ value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setShapeLineColor(value->ColorIndex));
+}
+
 Autodesk::AutoCAD::Colors::Color^ BOQTable::PosColor::get()
 {
 	return Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, GetImpObj()->PosColor());

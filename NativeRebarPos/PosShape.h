@@ -47,6 +47,7 @@ protected:
 
 	Adesk::Boolean m_IsBuiltIn;
 	Adesk::Boolean m_IsUnknown;
+	Adesk::Boolean m_IsInternal;
 
 	ShapeList m_List;
 
@@ -80,6 +81,9 @@ public:
 	const Adesk::Boolean IsUnknown(void) const;
 	Acad::ErrorStatus setIsUnknown(const Adesk::Boolean newVal);
 
+	/// Gets or sets whether this is an internal shape
+	const Adesk::Boolean IsInternal(void) const;
+	Acad::ErrorStatus setIsInternal(const Adesk::Boolean newVal);
 public:
 	/// Adds a shape.
 	void AddShape(CShape* const shape);
@@ -125,13 +129,13 @@ public:
 	static void ClearPosShapes(const bool builtin, const bool custom);
 
 	/// Reads all shapes defined in the resource
-	static void MakePosShapesFromResource(HINSTANCE hInstance);
+	static void ReadPosShapesFromResource(HINSTANCE hInstance, const int resid, const bool isinternal);
 
 	/// Reads all shapes defined in the given text file
 	static void ReadPosShapesFromFile(const std::wstring filename, const bool builtin);
 
 	/// Reads all shapes defined in the string
-	static void ReadPosShapesFromString(const std::wstring source, const bool builtin);
+	static void ReadPosShapesFromString(const std::wstring source, const bool builtin, const bool isinternal);
 
 	/// Saves all shapes to the given text file
 	static void SavePosShapesToFile(const std::wstring filename, const bool builtin, const bool custom);

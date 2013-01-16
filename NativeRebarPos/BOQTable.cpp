@@ -28,6 +28,7 @@ CBOQTable::CBOQTable() :
 	m_Multiplier(1), m_Heading(NULL), m_Footing(NULL), m_Note(NULL),
 	m_Precision(0), m_DisplayUnit(CBOQTable::MM), m_Columns(NULL),
 	m_TextColor(2), m_PosColor(3), m_LineColor(2), m_SeparatorColor(1), m_BorderColor(33), m_HeadingColor(9), m_FootingColor(9),
+	m_ShapeTextColor(2), m_ShapeLineColor(4),
 	m_TextStyleId(AcDbObjectId::kNull), m_HeadingStyleId(AcDbObjectId::kNull), m_FootingStyleId(AcDbObjectId::kNull),
 	m_HeadingScale(1.5), m_FootingScale(1.0), m_RowSpacing(0.75),
 	m_PosLabel(NULL), m_CountLabel(NULL), m_DiameterLabel(NULL), m_LengthLabel(NULL), m_ShapeLabel(NULL),
@@ -191,6 +192,32 @@ Acad::ErrorStatus CBOQTable::setTextColor(const Adesk::UInt16 newVal)
 {
 	assertWriteEnabled();
 	m_TextColor = newVal;
+	UpdateTable();
+	return Acad::eOk;
+}
+
+const Adesk::UInt16 CBOQTable::ShapeTextColor(void) const
+{
+	assertReadEnabled();
+	return m_ShapeTextColor;
+}
+Acad::ErrorStatus CBOQTable::setShapeTextColor(const Adesk::UInt16 newVal)
+{
+	assertWriteEnabled();
+	m_ShapeTextColor = newVal;
+	UpdateTable();
+	return Acad::eOk;
+}
+
+const Adesk::UInt16 CBOQTable::ShapeLineColor(void) const
+{
+	assertReadEnabled();
+	return m_ShapeLineColor;
+}
+Acad::ErrorStatus CBOQTable::setShapeLineColor(const Adesk::UInt16 newVal)
+{
+	assertWriteEnabled();
+	m_ShapeLineColor = newVal;
 	UpdateTable();
 	return Acad::eOk;
 }
@@ -512,6 +539,8 @@ void CBOQTable::UpdateTable(void)
 
 	// Set colors
 	Adesk::UInt16 lastTextColor = TextColor();
+	Adesk::UInt16 lastShapeTextColor = ShapeTextColor();
+	Adesk::UInt16 lastShapeLineColor = ShapeLineColor();
 	Adesk::UInt16 lastPosColor = PosColor();
 	Adesk::UInt16 lastLineColor = LineColor();
 	Adesk::UInt16 lastSeparatorColor = SeparatorColor();
@@ -875,12 +904,23 @@ void CBOQTable::UpdateTable(void)
 				{
 					for(std::map<double ,int>::iterator dit = diameters.begin(); dit != diameters.end(); dit++)
 					{
-						std::wstring dtext(lastDiameterListLabel);
 						std::wstring numtext;
 						Utility::IntToStr(Utility::DoubleToInt((*dit).first), numtext);
-						Utility::ReplaceString(dtext, L"[D]", numtext);
 						int k = j + (*dit).second;
-						setCellText(i + 1, k, dtext.c_str());
+						if(wcscmp(lastDiameterListLabel, L"[TD]") == 0)
+						{
+							setCellShape(i + 1, k, L"CAP");
+							setCellShapeText(i + 1, k, numtext.c_str(), L"", L"", L"", L"", L"");
+							setCellTextHeight(i + 1, k, 1.0 * 25.0 / 20.0);
+							setCellShapeTextColor(i + 1, k, lastPosColor);
+							setCellShapeLineColor(i + 1, k, lastPosColor);
+						}
+						else
+						{
+							std::wstring dtext(lastDiameterListLabel);
+							Utility::ReplaceString(dtext, L"[D]", numtext);
+							setCellText(i + 1, k, dtext.c_str());
+						}
 						setCellTextColor(i + 1, k, lastPosColor);
 						setCellTextStyleId(i + 1, k, lastTextStyleId);
 					}
@@ -940,6 +980,8 @@ void CBOQTable::UpdateTable(void)
 				setCellShape(ri, rj, row->shape.c_str());
 				setCellTextStyleId(ri, rj, lastTextStyleId);
 				setCellShapeText(ri, rj, row->a.c_str(), row->b.c_str(), row->c.c_str(), row->d.c_str(), row->e.c_str(), row->f.c_str());
+				setCellShapeTextColor(ri, rj, lastShapeTextColor);
+				setCellShapeLineColor(ri, rj, lastShapeLineColor);
 			}
 			else if(!row->isEmpty)
 			{
@@ -1263,6 +1305,8 @@ Acad::ErrorStatus CBOQTable::dwgOutFields(AcDbDwgFiler* pFiler) const
 
     // Colors
     pFiler->writeUInt16(m_TextColor);
+    pFiler->writeUInt16(m_ShapeTextColor);
+    pFiler->writeUInt16(m_ShapeLineColor);
     pFiler->writeUInt16(m_PosColor);
 	pFiler->writeUInt16(m_LineColor);
 	pFiler->writeUInt16(m_SeparatorColor);
@@ -1369,6 +1413,8 @@ Acad::ErrorStatus CBOQTable::dwgInFields(AcDbDwgFiler* pFiler)
 
 	// Columns
     pFiler->readUInt16(&m_TextColor);
+    pFiler->readUInt16(&m_ShapeTextColor);
+    pFiler->readUInt16(&m_ShapeLineColor);
     pFiler->readUInt16(&m_PosColor);
     pFiler->readUInt16(&m_LineColor);
 	pFiler->readUInt16(&m_SeparatorColor);
@@ -1490,6 +1536,8 @@ Acad::ErrorStatus CBOQTable::dxfOutFields(AcDbDxfFiler* pFiler) const
 
     // Colors
     pFiler->writeUInt16(AcDb::kDxfXInt16, m_TextColor);
+    pFiler->writeUInt16(AcDb::kDxfXInt16, m_ShapeTextColor);
+    pFiler->writeUInt16(AcDb::kDxfXInt16, m_ShapeLineColor);
     pFiler->writeUInt16(AcDb::kDxfXInt16, m_PosColor);
     pFiler->writeUInt16(AcDb::kDxfXInt16, m_LineColor);
 	pFiler->writeUInt16(AcDb::kDxfXInt16, m_SeparatorColor);
@@ -1581,6 +1629,8 @@ Acad::ErrorStatus CBOQTable::dxfInFields(AcDbDxfFiler* pFiler)
 	int t_DisplayUnit = 0;
 	ACHAR* t_Columns = NULL;
 	Adesk::UInt16 t_TextColor = 0;
+	Adesk::UInt16 t_ShapeTextColor = 0;
+	Adesk::UInt16 t_ShapeLineColor = 0;
 	Adesk::UInt16 t_PosColor = 0;
 	Adesk::UInt16 t_LineColor = 0;
 	Adesk::UInt16 t_SeparatorColor = 0;
@@ -1617,6 +1667,8 @@ Acad::ErrorStatus CBOQTable::dxfInFields(AcDbDxfFiler* pFiler)
 	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("columns"), t_Columns)) != Acad::eOk) return es;
 
 	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("text color"), t_TextColor)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("shape text color"), t_ShapeTextColor)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("shape line color"), t_ShapeLineColor)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("pos color"), t_PosColor)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("line color"), t_LineColor)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFUInt(pFiler, AcDb::kDxfXInt16, _T("separator color"), t_SeparatorColor)) != Acad::eOk) return es;
@@ -1703,6 +1755,8 @@ Acad::ErrorStatus CBOQTable::dxfInFields(AcDbDxfFiler* pFiler)
 	setColumnDef(t_Columns);
 
 	m_TextColor = t_TextColor;
+	m_ShapeTextColor = t_ShapeTextColor;
+	m_ShapeLineColor = t_ShapeLineColor;
 	m_PosColor = t_PosColor;
 	m_LineColor = t_LineColor;
 	m_SeparatorColor = t_SeparatorColor;

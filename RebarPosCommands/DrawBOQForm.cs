@@ -18,6 +18,7 @@ namespace RebarPosCommands
         public int TableRows { get { return int.Parse(txtTableRows.Text); } }
         public double TableMargin { get { return double.Parse(txtTableMargin.Text); } }
         public BOQTable.DrawingUnits DisplayUnit { get { return cbDisplayUnit.SelectedIndex == 0 ? BOQTable.DrawingUnits.Millimeter : BOQTable.DrawingUnits.Centimeter; } }
+        public int Precision { get { return cbPrecision.SelectedIndex; } }
 
         public DrawBOQForm()
         {
@@ -27,6 +28,7 @@ namespace RebarPosCommands
         public bool Init()
         {
             cbDisplayUnit.SelectedIndex = 0;
+            cbPrecision.SelectedIndex = 1;
             foreach (MyCommands.BOQStyle style in MyCommands.BOQStyle.GetStyles())
             {
                 cbStyle.Items.Add(style);

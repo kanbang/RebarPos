@@ -48,6 +48,8 @@ private:
 	ACHAR* m_F;
 
 	Adesk::UInt16 m_TextColor;
+	Adesk::UInt16 m_ShapeTextColor;
+	Adesk::UInt16 m_ShapeLineColor;
 	Adesk::UInt16 m_TopBorderColor;
 	Adesk::UInt16 m_LeftBorderColor;
 	Adesk::UInt16 m_BottomBorderColor;
@@ -100,6 +102,12 @@ public:
 
 	const Adesk::UInt16 TextColor() const;
 	Acad::ErrorStatus setTextColor(const Adesk::UInt16 newVal);
+
+	const Adesk::UInt16 ShapeTextColor() const;
+	Acad::ErrorStatus setShapeTextColor(const Adesk::UInt16 newVal);
+
+	const Adesk::UInt16 ShapeLineColor() const;
+	Acad::ErrorStatus setShapeLineColor(const Adesk::UInt16 newVal);
 
 	const Adesk::UInt16 TopBorderColor() const;
 	Acad::ErrorStatus setTopBorderColor(const Adesk::UInt16 newVal);

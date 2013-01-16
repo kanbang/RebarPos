@@ -31,6 +31,8 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DrawBOQForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cbDisplayUnit = new System.Windows.Forms.ComboBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.chkHideMissing = new System.Windows.Forms.CheckBox();
             this.udMultiplier = new System.Windows.Forms.NumericUpDown();
             this.txtFooter = new System.Windows.Forms.TextBox();
@@ -52,8 +54,8 @@
             this.txtTextHeight = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.cbDisplayUnit = new System.Windows.Forms.ComboBox();
-            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.cbPrecision = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udMultiplier)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -62,6 +64,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cbPrecision);
+            this.groupBox1.Controls.Add(this.label10);
             this.groupBox1.Controls.Add(this.cbDisplayUnit);
             this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.chkHideMissing);
@@ -77,24 +81,45 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(15, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(417, 263);
+            this.groupBox1.Size = new System.Drawing.Size(417, 296);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "&Tablo Seçenekleri";
             // 
+            // cbDisplayUnit
+            // 
+            this.cbDisplayUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbDisplayUnit.FormattingEnabled = true;
+            this.cbDisplayUnit.Items.AddRange(new object[] {
+            "Milimetre",
+            "Santimetre"});
+            this.cbDisplayUnit.Location = new System.Drawing.Point(156, 64);
+            this.cbDisplayUnit.Name = "cbDisplayUnit";
+            this.cbDisplayUnit.Size = new System.Drawing.Size(100, 21);
+            this.cbDisplayUnit.TabIndex = 3;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(18, 67);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(96, 13);
+            this.label9.TabIndex = 2;
+            this.label9.Text = "&Görüntülenen Birim";
+            // 
             // chkHideMissing
             // 
             this.chkHideMissing.AutoSize = true;
-            this.chkHideMissing.Location = new System.Drawing.Point(21, 220);
+            this.chkHideMissing.Location = new System.Drawing.Point(21, 263);
             this.chkHideMissing.Name = "chkHideMissing";
             this.chkHideMissing.Size = new System.Drawing.Size(172, 17);
-            this.chkHideMissing.TabIndex = 10;
+            this.chkHideMissing.TabIndex = 14;
             this.chkHideMissing.Text = "&Kullanılmayan Pozları Gösterme";
             this.chkHideMissing.UseVisualStyleBackColor = true;
             // 
             // udMultiplier
             // 
-            this.udMultiplier.Location = new System.Drawing.Point(156, 91);
+            this.udMultiplier.Location = new System.Drawing.Point(156, 134);
             this.udMultiplier.Maximum = new decimal(new int[] {
             1410065408,
             2,
@@ -107,7 +132,7 @@
             0});
             this.udMultiplier.Name = "udMultiplier";
             this.udMultiplier.Size = new System.Drawing.Size(100, 20);
-            this.udMultiplier.TabIndex = 3;
+            this.udMultiplier.TabIndex = 7;
             this.udMultiplier.Value = new decimal(new int[] {
             1,
             0,
@@ -116,59 +141,59 @@
             // 
             // txtFooter
             // 
-            this.txtFooter.Location = new System.Drawing.Point(156, 183);
+            this.txtFooter.Location = new System.Drawing.Point(156, 226);
             this.txtFooter.Name = "txtFooter";
             this.txtFooter.Size = new System.Drawing.Size(234, 20);
-            this.txtFooter.TabIndex = 9;
+            this.txtFooter.TabIndex = 13;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(18, 186);
+            this.label3.Location = new System.Drawing.Point(18, 229);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(37, 13);
-            this.label3.TabIndex = 8;
+            this.label3.TabIndex = 12;
             this.label3.Text = "&Altbilgi";
             // 
             // txtNote
             // 
-            this.txtNote.Location = new System.Drawing.Point(156, 131);
+            this.txtNote.Location = new System.Drawing.Point(156, 174);
             this.txtNote.Name = "txtNote";
             this.txtNote.Size = new System.Drawing.Size(234, 20);
-            this.txtNote.TabIndex = 5;
+            this.txtNote.TabIndex = 9;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(18, 134);
+            this.label8.Location = new System.Drawing.Point(18, 177);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(24, 13);
-            this.label8.TabIndex = 4;
+            this.label8.TabIndex = 8;
             this.label8.Text = "&Not";
             // 
             // txtHeader
             // 
-            this.txtHeader.Location = new System.Drawing.Point(156, 157);
+            this.txtHeader.Location = new System.Drawing.Point(156, 200);
             this.txtHeader.Name = "txtHeader";
             this.txtHeader.Size = new System.Drawing.Size(234, 20);
-            this.txtHeader.TabIndex = 7;
+            this.txtHeader.TabIndex = 11;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(18, 160);
+            this.label2.Location = new System.Drawing.Point(18, 203);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(41, 13);
-            this.label2.TabIndex = 6;
+            this.label2.TabIndex = 10;
             this.label2.Text = "Ü&stbilgi";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(18, 93);
+            this.label4.Location = new System.Drawing.Point(18, 136);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(41, 13);
-            this.label4.TabIndex = 2;
+            this.label4.TabIndex = 6;
             this.label4.Text = "Çarpa&n";
             // 
             // cbStyle
@@ -193,7 +218,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(357, 437);
+            this.btnCancel.Location = new System.Drawing.Point(357, 454);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 5;
@@ -205,7 +230,7 @@
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(276, 437);
+            this.btnOK.Location = new System.Drawing.Point(276, 454);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 4;
@@ -221,7 +246,7 @@
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.txtTextHeight);
             this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Location = new System.Drawing.Point(13, 291);
+            this.groupBox2.Location = new System.Drawing.Point(15, 314);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(419, 125);
             this.groupBox2.TabIndex = 3;
@@ -287,26 +312,31 @@
             this.errorProvider.ContainerControl = this;
             this.errorProvider.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProvider.Icon")));
             // 
-            // cbDisplayUnit
+            // label10
             // 
-            this.cbDisplayUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbDisplayUnit.FormattingEnabled = true;
-            this.cbDisplayUnit.Items.AddRange(new object[] {
-            "Milimetre",
-            "Santimetre"});
-            this.cbDisplayUnit.Location = new System.Drawing.Point(156, 64);
-            this.cbDisplayUnit.Name = "cbDisplayUnit";
-            this.cbDisplayUnit.Size = new System.Drawing.Size(100, 21);
-            this.cbDisplayUnit.TabIndex = 12;
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(18, 94);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(81, 13);
+            this.label10.TabIndex = 4;
+            this.label10.Text = "&Basamak Sayısı";
             // 
-            // label9
+            // cbPrecision
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(18, 67);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(96, 13);
-            this.label9.TabIndex = 11;
-            this.label9.Text = "&Görüntülenen Birim";
+            this.cbPrecision.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPrecision.FormattingEnabled = true;
+            this.cbPrecision.Items.AddRange(new object[] {
+            "0.",
+            "0.0",
+            "0.00",
+            "0.000",
+            "0.0000",
+            "0.00000",
+            "0.000000"});
+            this.cbPrecision.Location = new System.Drawing.Point(156, 91);
+            this.cbPrecision.Name = "cbPrecision";
+            this.cbPrecision.Size = new System.Drawing.Size(100, 21);
+            this.cbPrecision.TabIndex = 5;
             // 
             // DrawBOQForm
             // 
@@ -314,7 +344,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(444, 472);
+            this.ClientSize = new System.Drawing.Size(444, 489);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
@@ -362,5 +392,7 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox cbDisplayUnit;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ComboBox cbPrecision;
+        private System.Windows.Forms.Label label10;
     }
 }

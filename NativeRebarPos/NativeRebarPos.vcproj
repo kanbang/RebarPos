@@ -459,6 +459,10 @@
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe"
 			>
 			<File
+				RelativePath=".\Resources\InternalShapes.txt"
+				>
+			</File>
+			<File
 				RelativePath=".\Resources\Shapes.txt"
 				>
 			</File>

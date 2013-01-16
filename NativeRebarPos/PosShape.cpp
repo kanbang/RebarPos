@@ -6,7 +6,6 @@
 
 #include "PosShape.h"
 #include "Utility.h"
-#include "resource.h"
 
 #include <fstream>
 
@@ -14,7 +13,7 @@ std::map<std::wstring, CPosShape*> CPosShape::m_PosShapes;
 
 //-----------------------------------------------------------------------------
 CPosShape::CPosShape () : m_Name(NULL), m_Fields(1), m_Formula(NULL), m_FormulaBending(NULL), 
-	m_Priority(0), m_IsBuiltIn(Adesk::kTrue), m_IsUnknown(Adesk::kFalse)
+	m_Priority(0), m_IsBuiltIn(Adesk::kTrue), m_IsUnknown(Adesk::kFalse), m_IsInternal(Adesk::kFalse)
 { }
 
 CPosShape::~CPosShape () 
@@ -122,6 +121,16 @@ Acad::ErrorStatus CPosShape::setIsUnknown(const Adesk::Boolean newVal)
 	return Acad::eOk;
 }
 
+const Adesk::Boolean CPosShape::IsInternal(void) const
+{
+	return m_IsInternal;
+}
+
+Acad::ErrorStatus CPosShape::setIsInternal(const Adesk::Boolean newVal)
+{
+	m_IsInternal = newVal;
+	return Acad::eOk;
+}
 //*************************************************************************
 // Class Methods
 //*************************************************************************
@@ -181,11 +190,14 @@ const AcDbExtents CPosShape::GetShapeExtents() const
 			{
 				CShapeArc* arc = dynamic_cast<CShapeArc*>(shape);
 				double da = (arc->endAngle - arc->startAngle) / 10.0;
-				for(double a = arc->startAngle; a <= arc->endAngle; a+= da)
+				int i = 0;
+				double a = arc->startAngle;
+				for(i = 0; i < 10; i++)
 				{
 					double x = arc->x + cos(a) * arc->r;
 					double y = arc->y + sin(a) * arc->r;
 					ext.addPoint(AcGePoint3d(x, y, 0));
+					a += da;
 				}
 			}
 			break;
@@ -248,9 +260,9 @@ std::map<std::wstring, CPosShape*> CPosShape::GetMap()
 	return m_PosShapes;
 }
 
-void CPosShape::MakePosShapesFromResource(HINSTANCE hInstance)
+void CPosShape::ReadPosShapesFromResource(HINSTANCE hInstance, const int resid, const bool isinternal)
 {
-	HRSRC hResource = FindResource(hInstance, MAKEINTRESOURCE(IDR_SHAPELIST1), L"SHAPELIST");
+	HRSRC hResource = FindResource(hInstance, MAKEINTRESOURCE(resid), L"SHAPELIST");
 	if (!hResource)
 	{
 		return;
@@ -278,7 +290,7 @@ void CPosShape::MakePosShapesFromResource(HINSTANCE hInstance)
 	std::wstring source;
 	source.assign(casted_memory.begin(), casted_memory.end());
 
-	ReadPosShapesFromString(source, true);
+	ReadPosShapesFromString(source, true, isinternal);
 }
 
 void CPosShape::ReadPosShapesFromFile(const std::wstring filename, const bool builtin)
@@ -286,10 +298,10 @@ void CPosShape::ReadPosShapesFromFile(const std::wstring filename, const bool bu
 	std::wifstream ifs(filename.c_str());
 	std::wstring content( (std::istreambuf_iterator<wchar_t>(ifs) ),
                           (std::istreambuf_iterator<wchar_t>()    ) );
-	ReadPosShapesFromString(content, builtin);
+	ReadPosShapesFromString(content, builtin, false);
 }
 
-void CPosShape::ReadPosShapesFromString(const std::wstring source, const bool builtin)
+void CPosShape::ReadPosShapesFromString(const std::wstring source, const bool builtin, const bool isinternal)
 {
 	std::wistringstream stream(source);
 	std::wstring   line;
@@ -308,6 +320,7 @@ void CPosShape::ReadPosShapesFromString(const std::wstring source, const bool bu
 		int fields;
 		std::wstring formula;
 		std::wstring formulabending;
+		int priority;
 		int count;
 
 		// Name
@@ -334,6 +347,12 @@ void CPosShape::ReadPosShapesFromString(const std::wstring source, const bool bu
 		linestream << line;
 		std::getline(linestream, fieldname, L'\t');
 		linestream >> formulabending;
+		// Priority
+		std::getline(stream, line);
+		linestream.clear(); linestream.str(std::wstring());
+		linestream << line;
+		std::getline(linestream, fieldname, L'\t');
+		linestream >> priority;
 		// Count
 		std::getline(stream, line);
 		linestream.clear(); linestream.str(std::wstring());
@@ -348,6 +367,7 @@ void CPosShape::ReadPosShapesFromString(const std::wstring source, const bool bu
 		shape->setFormula(formula.c_str());
 		shape->setFormulaBending(formulabending.c_str());
 		shape->setIsBuiltIn(builtin ? Adesk::kTrue : Adesk::kFalse);
+		shape->setIsInternal(isinternal ? Adesk::kTrue : Adesk::kFalse);
 		
 		// Read shapes
 		for(int i = 0; i < count; i++)

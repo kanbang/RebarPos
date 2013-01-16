@@ -53,6 +53,7 @@ END
 //
 
 IDR_SHAPELIST1          SHAPELIST               "Resources\\Shapes.txt"
+IDR_SHAPELIST2          SHAPELIST               "Resources\\InternalShapes.txt"
 #endif    // Turkish resources
 /////////////////////////////////////////////////////////////////////////////
 
