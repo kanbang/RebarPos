@@ -27,19 +27,33 @@ namespace RebarPosCommands
 
         public bool Init()
         {
-            cbDisplayUnit.SelectedIndex = 0;
-            cbPrecision.SelectedIndex = 1;
             foreach (MyCommands.BOQStyle style in MyCommands.BOQStyle.GetStyles())
             {
                 cbStyle.Items.Add(style);
             }
-            cbStyle.SelectedIndex = 0;
+
+            // Read from settings
+            cbStyle.SelectedIndex = Properties.Settings.Default.DrawBOQ_TableStyle;
+            chkHideMissing.Checked = Properties.Settings.Default.DrawBOQ_HideMissing;
+            txtTextHeight.Text = Properties.Settings.Default.DrawBOQ_TextHeight.ToString();
+            txtTableMargin.Text = Properties.Settings.Default.DrawBOQ_TableMargin.ToString();
+            cbDisplayUnit.SelectedIndex = Properties.Settings.Default.DrawBOQ_DisplayUnit;
+            cbPrecision.SelectedIndex = Properties.Settings.Default.DrawBOQ_Precision;
 
             return true;
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
+            // Save to settings
+            Properties.Settings.Default.DrawBOQ_TableStyle = cbStyle.SelectedIndex;
+            Properties.Settings.Default.DrawBOQ_HideMissing = chkHideMissing.Checked;
+            Properties.Settings.Default.DrawBOQ_TextHeight = double.Parse(txtTextHeight.Text);
+            Properties.Settings.Default.DrawBOQ_TableMargin = double.Parse(txtTableMargin.Text);
+            Properties.Settings.Default.DrawBOQ_DisplayUnit = cbDisplayUnit.SelectedIndex;
+            Properties.Settings.Default.DrawBOQ_Precision = cbPrecision.SelectedIndex;
+            Properties.Settings.Default.Save();
+
             Close();
         }
 

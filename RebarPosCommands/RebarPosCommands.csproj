@@ -154,6 +154,11 @@
       <DependentUpon>DrawBOQForm.cs</DependentUpon>
     </Compile>
     <Compile Include="PosCopy.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="ShowShapesOverrule.cs" />
     <Compile Include="FindReplaceForm.cs">
       <SubType>Form</SubType>
@@ -431,6 +436,10 @@
     <None Include="Resources\help.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Resources\pencil.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
