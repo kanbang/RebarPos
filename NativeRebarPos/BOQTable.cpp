@@ -28,7 +28,7 @@ CBOQTable::CBOQTable() :
 	m_Multiplier(1), m_Heading(NULL), m_Footing(NULL), m_Note(NULL),
 	m_Precision(0), m_DisplayUnit(CBOQTable::MM), m_Columns(NULL),
 	m_TextColor(2), m_PosColor(3), m_LineColor(2), m_SeparatorColor(1), m_BorderColor(33), m_HeadingColor(9), m_FootingColor(9),
-	m_ShapeTextColor(2), m_ShapeLineColor(4),
+	m_ShapeTextColor(0), m_ShapeLineColor(0),
 	m_TextStyleId(AcDbObjectId::kNull), m_HeadingStyleId(AcDbObjectId::kNull), m_FootingStyleId(AcDbObjectId::kNull),
 	m_HeadingScale(1.5), m_FootingScale(1.0), m_RowSpacing(0.75),
 	m_PosLabel(NULL), m_CountLabel(NULL), m_DiameterLabel(NULL), m_LengthLabel(NULL), m_ShapeLabel(NULL),

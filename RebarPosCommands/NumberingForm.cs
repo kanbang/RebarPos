@@ -412,7 +412,7 @@ namespace RebarPosCommands
         private void btnAutoNumber_Click(object sender, EventArgs e)
         {
             bool keepcurrent = rbKeepExisting.Checked;
-            int startnum = 1;
+            int startnum = 0;
             if (keepcurrent)
             {
                 foreach (PosCopy copy in m_PosList)
@@ -423,6 +423,7 @@ namespace RebarPosCommands
                         startnum = Math.Max(startnum, num);
                     }
                 }
+                startnum++;
             }
             else
             {
@@ -441,8 +442,18 @@ namespace RebarPosCommands
             {
                 if (!keepcurrent || string.IsNullOrEmpty(copy.pos.Trim()))
                 {
-                    copy.newpos = startnum.ToString();
-                    startnum++;
+                    PosCopy original = m_PosList.Find(p => !string.IsNullOrEmpty(p.pos) && p.key == copy.key);
+                    if (original == null)
+                    {
+                        // Add a new number
+                        copy.newpos = startnum.ToString();
+                        startnum++;
+                    }
+                    else
+                    {
+                        // Use existing number
+                        copy.newpos = original.pos;
+                    }
                 }
             }
 
