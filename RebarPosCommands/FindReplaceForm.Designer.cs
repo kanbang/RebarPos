@@ -369,6 +369,7 @@
             this.cbFindPosNumber.Name = "cbFindPosNumber";
             this.cbFindPosNumber.Size = new System.Drawing.Size(117, 21);
             this.cbFindPosNumber.TabIndex = 1;
+            this.cbFindPosNumber.SelectedIndexChanged += new System.EventHandler(this.cbFindPosNumber_SelectedIndexChanged);
             // 
             // gbReplace
             // 

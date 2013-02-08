@@ -14,6 +14,48 @@ namespace RebarPosCommands
 {
     public partial class FindReplaceForm : Form
     {
+        private static string VarText = "*DEGISKEN*";
+
+        private class SelectedPos
+        {
+            public string Count;
+            public string Diameter;
+            public string Spacing;
+            public string Note;
+            public string Multiplier;
+            public string Shape;
+            public string A;
+            public string B;
+            public string C;
+            public string D;
+            public string E;
+            public string F;
+
+            public void SetFrom(RebarPos pos)
+            {
+                SetField(ref Count, pos.Count);
+                SetField(ref Diameter, pos.Diameter);
+                SetField(ref Spacing, pos.Spacing);
+                SetField(ref Note, pos.Note);
+                SetField(ref Multiplier, pos.Multiplier.ToString());
+                SetField(ref Shape, pos.Shape);
+                SetField(ref A, pos.A);
+                SetField(ref B, pos.B);
+                SetField(ref C, pos.C);
+                SetField(ref D, pos.D);
+                SetField(ref E, pos.E);
+                SetField(ref F, pos.F);
+            }
+
+            private void SetField(ref string field, string value)
+            {
+                if (string.IsNullOrEmpty(field))
+                    field = value;
+                else if (field != value)
+                    field = VarText;
+            }
+        }
+
         ObjectId[] m_Selection;
 
         SortedDictionary<string, List<ObjectId>> m_PosList;
@@ -23,6 +65,8 @@ namespace RebarPosCommands
         SortedDictionary<string, List<ObjectId>> m_NoteList;
         SortedDictionary<int, List<ObjectId>> m_MultiplierList;
         SortedDictionary<string, List<ObjectId>> m_ShapeList;
+
+        Dictionary<string, SelectedPos> m_PosProperties;
 
         string m_FindShape;
         string m_ReplaceShape;
@@ -44,6 +88,8 @@ namespace RebarPosCommands
             m_NoteList = new SortedDictionary<string, List<ObjectId>>();
             m_MultiplierList = new SortedDictionary<int, List<ObjectId>>();
             m_ShapeList = new SortedDictionary<string, List<ObjectId>>();
+
+            m_PosProperties = new Dictionary<string, SelectedPos>();
 
             m_FindShape = string.Empty;
             m_ReplaceShape = string.Empty;
@@ -78,6 +124,8 @@ namespace RebarPosCommands
             m_NoteList = new SortedDictionary<string, List<ObjectId>>();
             m_MultiplierList = new SortedDictionary<int, List<ObjectId>>();
             m_ShapeList = new SortedDictionary<string, List<ObjectId>>();
+
+            m_PosProperties = new Dictionary<string, SelectedPos>();
 
             cbFindPosNumber.Items.Clear();
             cbFindCount.Items.Clear();
@@ -133,6 +181,14 @@ namespace RebarPosCommands
                                 list.Add(id);
                             else
                                 m_ShapeList.Add(pos.Shape, new List<ObjectId>() { id });
+
+                            SelectedPos copy = null;
+                            if (!m_PosProperties.TryGetValue(pos.Pos, out copy))
+                            {
+                                copy = new SelectedPos();
+                                m_PosProperties.Add(pos.Pos, copy);
+                            }
+                            copy.SetFrom(pos);
                         }
                     }
 
@@ -370,6 +426,27 @@ namespace RebarPosCommands
             if (!txtReplaceD.Enabled) txtReplaceD.Text = "";
             if (!txtReplaceE.Enabled) txtReplaceE.Text = "";
             if (!txtReplaceF.Enabled) txtReplaceF.Text = "";
+        }
+
+        private void cbFindPosNumber_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string pos = (string)cbFindPosNumber.SelectedItem;
+            SelectedPos copy = null;
+            if (!m_PosProperties.TryGetValue(pos, out copy)) return;
+
+            txtReplaceCount.Text = copy.Count;
+            cbReplaceDiameter.SelectedItem = copy.Diameter;
+            txtReplaceSpacing.Text = copy.Spacing;
+            txtReplaceNote.Text = copy.Note;
+            txtReplaceMultiplier.Text = copy.Multiplier;
+
+            SetReplaceShape(copy.Shape);
+            txtReplaceA.Text = copy.A;
+            txtReplaceB.Text = copy.B;
+            txtReplaceC.Text = copy.C;
+            txtReplaceD.Text = copy.D;
+            txtReplaceE.Text = copy.E;
+            txtReplaceF.Text = copy.F;
         }
 
         private void rbFindOptions_CheckedChanged(object sender, EventArgs e)
