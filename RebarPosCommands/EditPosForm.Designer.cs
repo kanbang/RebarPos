@@ -31,6 +31,15 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditPosForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.rbAlignLengthRight = new System.Windows.Forms.RadioButton();
+            this.rbAlignLengthBottom = new System.Windows.Forms.RadioButton();
+            this.rbAlignLengthTop = new System.Windows.Forms.RadioButton();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.rbAlignNoteRight = new System.Windows.Forms.RadioButton();
+            this.rbAlignNoteBottom = new System.Windows.Forms.RadioButton();
+            this.rbAlignNoteTop = new System.Windows.Forms.RadioButton();
+            this.chkShowLength = new System.Windows.Forms.CheckBox();
             this.cbPosDiameter = new System.Windows.Forms.ComboBox();
             this.chkIncludePos = new System.Windows.Forms.CheckBox();
             this.btnPickSpacing = new System.Windows.Forms.Button();
@@ -39,7 +48,6 @@
             this.label14 = new System.Windows.Forms.Label();
             this.txtPosNote = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
-            this.txtPosSpacing = new RebarPosCommands.SpacingTextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.txtPosCount = new System.Windows.Forms.TextBox();
@@ -47,7 +55,6 @@
             this.txtPosMarker = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.posShapeView = new RebarPosCommands.PosShapeView();
             this.btnMeasureF = new System.Windows.Forms.Button();
             this.btnMeasureE = new System.Windows.Forms.Button();
             this.btnMeasureD = new System.Windows.Forms.Button();
@@ -82,14 +89,19 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.btnDetach = new System.Windows.Forms.Button();
-            this.chkShowLength = new System.Windows.Forms.CheckBox();
+            this.posShapeView = new RebarPosCommands.PosShapeView();
+            this.txtPosSpacing = new RebarPosCommands.SpacingTextBox();
             this.groupBox1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.panel2);
+            this.groupBox1.Controls.Add(this.panel1);
             this.groupBox1.Controls.Add(this.chkShowLength);
             this.groupBox1.Controls.Add(this.cbPosDiameter);
             this.groupBox1.Controls.Add(this.chkIncludePos);
@@ -112,6 +124,96 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.rbAlignLengthRight);
+            this.panel2.Controls.Add(this.rbAlignLengthBottom);
+            this.panel2.Controls.Add(this.rbAlignLengthTop);
+            this.panel2.Location = new System.Drawing.Point(182, 224);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(52, 50);
+            this.panel2.TabIndex = 16;
+            // 
+            // rbAlignLengthRight
+            // 
+            this.rbAlignLengthRight.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbAlignLengthRight.Image = global::RebarPosCommands.Properties.Resources.arrow_right;
+            this.rbAlignLengthRight.Location = new System.Drawing.Point(24, 10);
+            this.rbAlignLengthRight.Name = "rbAlignLengthRight";
+            this.rbAlignLengthRight.Size = new System.Drawing.Size(24, 24);
+            this.rbAlignLengthRight.TabIndex = 19;
+            this.rbAlignLengthRight.UseVisualStyleBackColor = true;
+            // 
+            // rbAlignLengthBottom
+            // 
+            this.rbAlignLengthBottom.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbAlignLengthBottom.Image = global::RebarPosCommands.Properties.Resources.arrow_down;
+            this.rbAlignLengthBottom.Location = new System.Drawing.Point(0, 24);
+            this.rbAlignLengthBottom.Name = "rbAlignLengthBottom";
+            this.rbAlignLengthBottom.Size = new System.Drawing.Size(24, 24);
+            this.rbAlignLengthBottom.TabIndex = 18;
+            this.rbAlignLengthBottom.UseVisualStyleBackColor = true;
+            // 
+            // rbAlignLengthTop
+            // 
+            this.rbAlignLengthTop.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbAlignLengthTop.Image = global::RebarPosCommands.Properties.Resources.arrow_up;
+            this.rbAlignLengthTop.Location = new System.Drawing.Point(0, 0);
+            this.rbAlignLengthTop.Name = "rbAlignLengthTop";
+            this.rbAlignLengthTop.Size = new System.Drawing.Size(24, 24);
+            this.rbAlignLengthTop.TabIndex = 17;
+            this.rbAlignLengthTop.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.rbAlignNoteRight);
+            this.panel1.Controls.Add(this.rbAlignNoteBottom);
+            this.panel1.Controls.Add(this.rbAlignNoteTop);
+            this.panel1.Location = new System.Drawing.Point(182, 278);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(52, 50);
+            this.panel1.TabIndex = 16;
+            // 
+            // rbAlignNoteRight
+            // 
+            this.rbAlignNoteRight.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbAlignNoteRight.Image = global::RebarPosCommands.Properties.Resources.arrow_right;
+            this.rbAlignNoteRight.Location = new System.Drawing.Point(24, 10);
+            this.rbAlignNoteRight.Name = "rbAlignNoteRight";
+            this.rbAlignNoteRight.Size = new System.Drawing.Size(24, 24);
+            this.rbAlignNoteRight.TabIndex = 19;
+            this.rbAlignNoteRight.UseVisualStyleBackColor = true;
+            // 
+            // rbAlignNoteBottom
+            // 
+            this.rbAlignNoteBottom.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbAlignNoteBottom.Image = global::RebarPosCommands.Properties.Resources.arrow_down;
+            this.rbAlignNoteBottom.Location = new System.Drawing.Point(0, 24);
+            this.rbAlignNoteBottom.Name = "rbAlignNoteBottom";
+            this.rbAlignNoteBottom.Size = new System.Drawing.Size(24, 24);
+            this.rbAlignNoteBottom.TabIndex = 18;
+            this.rbAlignNoteBottom.UseVisualStyleBackColor = true;
+            // 
+            // rbAlignNoteTop
+            // 
+            this.rbAlignNoteTop.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbAlignNoteTop.Image = global::RebarPosCommands.Properties.Resources.arrow_up;
+            this.rbAlignNoteTop.Location = new System.Drawing.Point(0, 0);
+            this.rbAlignNoteTop.Name = "rbAlignNoteTop";
+            this.rbAlignNoteTop.Size = new System.Drawing.Size(24, 24);
+            this.rbAlignNoteTop.TabIndex = 17;
+            this.rbAlignNoteTop.UseVisualStyleBackColor = true;
+            // 
+            // chkShowLength
+            // 
+            this.chkShowLength.AutoSize = true;
+            this.chkShowLength.Location = new System.Drawing.Point(19, 241);
+            this.chkShowLength.Name = "chkShowLength";
+            this.chkShowLength.Size = new System.Drawing.Size(122, 17);
+            this.chkShowLength.TabIndex = 13;
+            this.chkShowLength.Text = "Toplam Boyu Göster";
+            this.chkShowLength.UseVisualStyleBackColor = true;
+            // 
             // cbPosDiameter
             // 
             this.cbPosDiameter.FormattingEnabled = true;
@@ -124,7 +226,7 @@
             // chkIncludePos
             // 
             this.chkIncludePos.AutoSize = true;
-            this.chkIncludePos.Location = new System.Drawing.Point(19, 171);
+            this.chkIncludePos.Location = new System.Drawing.Point(19, 157);
             this.chkIncludePos.Name = "chkIncludePos";
             this.chkIncludePos.Size = new System.Drawing.Size(88, 17);
             this.chkIncludePos.TabIndex = 10;
@@ -158,7 +260,7 @@
             // 
             this.txtPosMultiplier.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPosMultiplier.Location = new System.Drawing.Point(97, 194);
+            this.txtPosMultiplier.Location = new System.Drawing.Point(97, 180);
             this.txtPosMultiplier.Name = "txtPosMultiplier";
             this.txtPosMultiplier.Size = new System.Drawing.Size(100, 20);
             this.txtPosMultiplier.TabIndex = 12;
@@ -167,7 +269,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(40, 197);
+            this.label14.Location = new System.Drawing.Point(40, 183);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(41, 13);
             this.label14.TabIndex = 11;
@@ -177,7 +279,7 @@
             // 
             this.txtPosNote.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPosNote.Location = new System.Drawing.Point(97, 307);
+            this.txtPosNote.Location = new System.Drawing.Point(43, 292);
             this.txtPosNote.Name = "txtPosNote";
             this.txtPosNote.Size = new System.Drawing.Size(129, 20);
             this.txtPosNote.TabIndex = 15;
@@ -185,21 +287,11 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(16, 310);
+            this.label15.Location = new System.Drawing.Point(13, 295);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(24, 13);
             this.label15.TabIndex = 14;
             this.label15.Text = "&Not";
-            // 
-            // txtPosSpacing
-            // 
-            this.txtPosSpacing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPosSpacing.Location = new System.Drawing.Point(97, 98);
-            this.txtPosSpacing.Name = "txtPosSpacing";
-            this.txtPosSpacing.Size = new System.Drawing.Size(100, 20);
-            this.txtPosSpacing.TabIndex = 8;
-            this.txtPosSpacing.Validating += new System.ComponentModel.CancelEventHandler(this.txtPosSpacing_Validating);
             // 
             // label4
             // 
@@ -295,23 +387,6 @@
             this.groupBox2.Size = new System.Drawing.Size(379, 339);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
-            // 
-            // posShapeView
-            // 
-            this.posShapeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.posShapeView.BackColor = System.Drawing.Color.Black;
-            this.posShapeView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.posShapeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.posShapeView.ForeColor = System.Drawing.Color.White;
-            this.posShapeView.Location = new System.Drawing.Point(22, 19);
-            this.posShapeView.Margin = new System.Windows.Forms.Padding(6);
-            this.posShapeView.Name = "posShapeView";
-            this.posShapeView.ShapeName = "posShapeView";
-            this.posShapeView.Size = new System.Drawing.Size(340, 137);
-            this.posShapeView.TabIndex = 0;
-            this.posShapeView.Click += new System.EventHandler(this.posShapeView_Click);
             // 
             // btnMeasureF
             // 
@@ -655,15 +730,32 @@
             this.btnDetach.UseVisualStyleBackColor = true;
             this.btnDetach.Click += new System.EventHandler(this.btnDetach_Click);
             // 
-            // chkShowLength
+            // posShapeView
             // 
-            this.chkShowLength.AutoSize = true;
-            this.chkShowLength.Location = new System.Drawing.Point(19, 257);
-            this.chkShowLength.Name = "chkShowLength";
-            this.chkShowLength.Size = new System.Drawing.Size(122, 17);
-            this.chkShowLength.TabIndex = 13;
-            this.chkShowLength.Text = "Toplam Boyu Göster";
-            this.chkShowLength.UseVisualStyleBackColor = true;
+            this.posShapeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.posShapeView.BackColor = System.Drawing.Color.Black;
+            this.posShapeView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.posShapeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.posShapeView.ForeColor = System.Drawing.Color.White;
+            this.posShapeView.Location = new System.Drawing.Point(22, 19);
+            this.posShapeView.Margin = new System.Windows.Forms.Padding(6);
+            this.posShapeView.Name = "posShapeView";
+            this.posShapeView.ShapeName = "posShapeView";
+            this.posShapeView.Size = new System.Drawing.Size(340, 137);
+            this.posShapeView.TabIndex = 0;
+            this.posShapeView.Click += new System.EventHandler(this.posShapeView_Click);
+            // 
+            // txtPosSpacing
+            // 
+            this.txtPosSpacing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPosSpacing.Location = new System.Drawing.Point(97, 98);
+            this.txtPosSpacing.Name = "txtPosSpacing";
+            this.txtPosSpacing.Size = new System.Drawing.Size(100, 20);
+            this.txtPosSpacing.TabIndex = 8;
+            this.txtPosSpacing.Validating += new System.ComponentModel.CancelEventHandler(this.txtPosSpacing_Validating);
             // 
             // EditPosForm
             // 
@@ -687,6 +779,8 @@
             this.Shown += new System.EventHandler(this.EditPosForm_Shown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
@@ -749,5 +843,13 @@
         private System.Windows.Forms.ComboBox cbPosDiameter;
         private System.Windows.Forms.Button btnDetach;
         private System.Windows.Forms.CheckBox chkShowLength;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.RadioButton rbAlignNoteRight;
+        private System.Windows.Forms.RadioButton rbAlignNoteBottom;
+        private System.Windows.Forms.RadioButton rbAlignNoteTop;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.RadioButton rbAlignLengthRight;
+        private System.Windows.Forms.RadioButton rbAlignLengthBottom;
+        private System.Windows.Forms.RadioButton rbAlignLengthTop;
     }
 }

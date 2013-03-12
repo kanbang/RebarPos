@@ -81,6 +81,22 @@ namespace RebarPosCommands
 
                     chkShowLength.Checked = (pos.Display == RebarPos.DisplayStyle.All);
 
+                    // Note text alignment
+                    rbAlignNoteTop.Checked = (Math.Abs(pos.NoteGrip.X - pos.BasePoint.X) < double.Epsilon &&
+                        Math.Abs(pos.NoteGrip.Y - (pos.BasePoint.Y + 2.0 * pos.Scale)) < double.Epsilon);
+                    rbAlignNoteBottom.Checked = (Math.Abs(pos.NoteGrip.X - pos.BasePoint.X) < double.Epsilon &&
+                        Math.Abs(pos.NoteGrip.Y - (pos.BasePoint.Y - 2.0 * pos.Scale)) < double.Epsilon);
+                    rbAlignNoteRight.Checked = (Math.Abs(pos.NoteGrip.X - (pos.BasePoint.X + pos.Width + 1.0 * pos.Scale)) < double.Epsilon &&
+                        Math.Abs(pos.NoteGrip.Y - pos.BasePoint.Y) < double.Epsilon);
+
+                    // Length text alignment
+                    rbAlignLengthTop.Checked = (Math.Abs(pos.LengthGrip.X - pos.BasePoint.X) < double.Epsilon &&
+                        Math.Abs(pos.LengthGrip.Y - (pos.BasePoint.Y + 2.0 * pos.Scale)) < double.Epsilon);
+                    rbAlignLengthBottom.Checked = (Math.Abs(pos.LengthGrip.X - pos.BasePoint.X) < double.Epsilon &&
+                        Math.Abs(pos.LengthGrip.Y - (pos.BasePoint.Y - 2.0 * pos.Scale)) < double.Epsilon);
+                    rbAlignLengthRight.Checked = (Math.Abs(pos.LengthGrip.X - (pos.BasePoint.X + pos.Width + 1.0 * pos.Scale)) < double.Epsilon &&
+                        Math.Abs(pos.LengthGrip.Y - pos.BasePoint.Y) < double.Epsilon);
+
                     if (!SetGroup())
                     {
                         return false;
@@ -159,6 +175,22 @@ namespace RebarPosCommands
                     pos.D = txtD.Text;
                     pos.E = txtE.Text;
                     pos.F = txtF.Text;
+
+                    // Note text alignment
+                    if (rbAlignNoteTop.Checked)
+                        pos.NoteGrip = new Point3d(pos.BasePoint.X, pos.BasePoint.Y + 2.0 * pos.Scale, 0.0);
+                    else if (rbAlignNoteBottom.Checked)
+                        pos.NoteGrip = new Point3d(pos.BasePoint.X, pos.BasePoint.Y - 2.0 * pos.Scale, 0.0);
+                    else if (rbAlignNoteRight.Checked)
+                        pos.NoteGrip = new Point3d(pos.BasePoint.X + pos.Width + 1.0 * pos.Scale, pos.BasePoint.Y, 0.0);
+
+                    // Length text alignment
+                    if (rbAlignLengthTop.Checked)
+                        pos.LengthGrip = new Point3d(pos.BasePoint.X, pos.BasePoint.Y + 2.0 * pos.Scale, 0.0);
+                    else if (rbAlignLengthBottom.Checked)
+                        pos.LengthGrip = new Point3d(pos.BasePoint.X, pos.BasePoint.Y - 2.0 * pos.Scale, 0.0);
+                    else if (rbAlignLengthRight.Checked)
+                        pos.LengthGrip = new Point3d(pos.BasePoint.X + pos.Width + 1.0 * pos.Scale, pos.BasePoint.Y, 0.0);
 
                     tr.Commit();
 
