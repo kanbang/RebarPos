@@ -894,17 +894,18 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 		// Tau sign
 		if(p.hasTau)
 		{			
+			// ellipse
 			AcDbEllipse* ellipse;
 			ellipse = new AcDbEllipse();
 			AcGePoint3d centerpt(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0, 0);
-			ellipse->set(centerpt, AcGeVector3d::kZAxis, AcGeVector3d::kYAxis * 0.4, tauSize / 0.8);
+			ellipse->set(centerpt, AcGeVector3d::kZAxis, AcGeVector3d::kYAxis * 0.35, tauSize / 0.8);
 			ellipse->setColorIndex(p.color);
 			if((es = ellipse->transformBy(trans)) != Acad::eOk)
 			{
 				return es;
 			}
 			entitySet.append(ellipse);
-
+			// vertical line
 			AcDbLine* line;
 			AcGePoint3d linept[2];
 			linept[0] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 - 0.5, 0);
@@ -916,6 +917,18 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 				return es;
 			}
 			entitySet.append(line);
+			// horizontal line
+			AcDbLine* cline;
+			AcGePoint3d clinept[2];
+			clinept[0] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0 - 0.2, p.y + p.h / 2.0 + 0.5, 0);
+			clinept[1] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0 + 0.2, p.y + p.h / 2.0 + 0.5, 0);
+			cline = new AcDbLine(clinept[0], clinept[1]);
+			cline->setColorIndex(p.color);
+			if((es = cline->transformBy(trans)) != Acad::eOk)
+			{
+				return es;
+			}
+			entitySet.append(cline);
 		}
 	}
 	p = lastNoteDraw;
@@ -995,12 +1008,17 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 			worldDraw->subEntityTraits().setColor(p.color);
 
 			AcGePoint3d circle(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0, 0);
-			worldDraw->geometry().ellipticalArc(circle, AcGeVector3d::kZAxis, 0.4, tauSize * 0.5, 0.0, 2.0 * PI, 0.5 * PI);
+			worldDraw->geometry().ellipticalArc(circle, AcGeVector3d::kZAxis, 0.35, tauSize * 0.5, 0.0, 2.0 * PI, 0.5 * PI);
 
 			AcGePoint3d line[2];
 			line[0] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 - 0.5, 0);
 			line[1] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 + 0.5, 0);
 			worldDraw->geometry().polyline(2, line);
+
+			AcGePoint3d cline[2];
+			cline[0] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0 - 0.2, p.y + p.h / 2.0 + 0.5, 0);
+			cline[1] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0 + 0.2, p.y + p.h / 2.0 + 0.5, 0);
+			worldDraw->geometry().polyline(2, cline);
 		}
 
 		// Text
@@ -1082,12 +1100,17 @@ void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 			worldDraw->subEntityTraits().setColor(p.color);
 
 			AcGePoint3d circle(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0, 0);
-			worldDraw->geometry().ellipticalArc(circle, AcGeVector3d::kZAxis, 0.4, tauSize * 0.5, 0.0, 2.0 * PI, 0.5 * PI);
+			worldDraw->geometry().ellipticalArc(circle, AcGeVector3d::kZAxis, 0.35, tauSize * 0.5, 0.0, 2.0 * PI, 0.5 * PI);
 
 			AcGePoint3d line[2];
 			line[0] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 - 0.5, 0);
 			line[1] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 + 0.5, 0);
 			worldDraw->geometry().polyline(2, line);
+
+			AcGePoint3d cline[2];
+			cline[0] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0 - 0.2, p.y + p.h / 2.0 + 0.5, 0);
+			cline[1] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0 + 0.2, p.y + p.h / 2.0 + 0.5, 0);
+			worldDraw->geometry().polyline(2, cline);
 		}
 
 		// Text
