@@ -182,11 +182,12 @@ namespace RebarPosCommands
             Hide();
             Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
             PromptEntityOptions opts = new PromptEntityOptions("\nSelect entity: ");
-            opts.SetRejectMessage("\nSelect a LINE, TEXT, MTEXT or DIMENSION entity.");
+            opts.SetRejectMessage("\nSelect a LINE, TEXT, MTEXT, POLYLINE or DIMENSION entity.");
             opts.AddAllowedClass(typeof(Line), false);
             opts.AddAllowedClass(typeof(DBText), false);
             opts.AddAllowedClass(typeof(MText), false);
             opts.AddAllowedClass(typeof(Dimension), false);
+            opts.AddAllowedClass(typeof(Polyline), false);
             PromptEntityResult per = ed.GetEntity(opts);
             Show();
             if (per.Status == PromptStatus.OK)
@@ -217,6 +218,11 @@ namespace RebarPosCommands
                         {
                             Dimension dobj = obj as Dimension;
                             txt.Text = dobj.Measurement.ToString();
+                        }
+                        else if (obj is Polyline)
+                        {
+                            Polyline dobj = obj as Polyline;
+                            txt.Text = dobj.Length.ToString();
                         }
                         CheckPosLength(txt);
                     }
