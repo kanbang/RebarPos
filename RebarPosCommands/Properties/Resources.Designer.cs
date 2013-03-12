@@ -179,6 +179,20 @@ namespace RebarPosCommands.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap NumVarLength1 {
+            get {
+                object obj = ResourceManager.GetObject("NumVarLength1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap NumVarLength2 {
+            get {
+                object obj = ResourceManager.GetObject("NumVarLength2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap POZBENZET {
             get {
                 object obj = ResourceManager.GetObject("POZBENZET", resourceCulture);

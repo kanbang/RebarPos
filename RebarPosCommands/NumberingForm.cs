@@ -18,6 +18,7 @@ namespace RebarPosCommands
             TotalLength = 4
         }
 
+        List<ObjectId> sourceItems;
         List<PosCopy> m_PosList;
         Dictionary<string, List<ObjectId>> m_DetachedPosList;
 
@@ -25,6 +26,7 @@ namespace RebarPosCommands
         {
             InitializeComponent();
 
+            sourceItems = new List<ObjectId>();
             m_PosList = new List<PosCopy>();
             m_DetachedPosList = new Dictionary<string, List<ObjectId>>();
         }
@@ -39,7 +41,9 @@ namespace RebarPosCommands
             txtStartNum.Text = "1";
             rbKeepExisting.Checked = true;
 
-            ReadPos(items);
+            sourceItems = new List<ObjectId>(items);
+
+            ReadPos();
             AddMissing();
             SortDisplayList();
             PopulateList();
@@ -356,17 +360,20 @@ namespace RebarPosCommands
                 "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void ReadPos(ObjectId[] items)
+        private void ReadPos()
         {
             try
             {
-                m_PosList = PosCopy.ReadAllInSelection(items, false, PosCopy.PosGrouping.PosKeyDifferentMarker);
+                if(rbGroupVarLength.Checked)
+                    m_PosList = PosCopy.ReadAllInSelection(sourceItems, false, PosCopy.PosGrouping.PosKeyDifferentMarker);
+                else
+                    m_PosList = PosCopy.ReadAllInSelection(sourceItems, false, PosCopy.PosGrouping.PosKeyDifferentMarkerVarLength);
 
                 m_DetachedPosList = new Dictionary<string, List<ObjectId>>();
                 Database db = HostApplicationServices.WorkingDatabase;
                 using (Transaction tr = db.TransactionManager.StartTransaction())
                 {
-                    foreach (ObjectId id in items)
+                    foreach (ObjectId id in sourceItems)
                     {
                         RebarPos pos = tr.GetObject(id, OpenMode.ForRead) as RebarPos;
                         if (pos == null) continue;
@@ -412,6 +419,8 @@ namespace RebarPosCommands
         private void btnAutoNumber_Click(object sender, EventArgs e)
         {
             bool keepcurrent = rbKeepExisting.Checked;
+            bool numberVarLength = rbNumberVarLength.Checked;
+
             int startnum = 0;
             if (keepcurrent)
             {
@@ -435,6 +444,7 @@ namespace RebarPosCommands
                 MessageBox.Show("Lütfen başlangıç numarasını girin.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
             RemoveEmpty();
             SortList();
 
@@ -443,7 +453,7 @@ namespace RebarPosCommands
                 if (!keepcurrent || string.IsNullOrEmpty(copy.pos.Trim()))
                 {
                     PosCopy original = m_PosList.Find(p => !string.IsNullOrEmpty(p.pos) && p.key == copy.key);
-                    if (original == null)
+                    if (original == null || (numberVarLength && copy.isVarLength))
                     {
                         // Add a new number
                         copy.newpos = startnum.ToString();
@@ -621,6 +631,26 @@ namespace RebarPosCommands
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void rbNumberVarLength_CheckedChanged(object sender, EventArgs e)
+        {
+            ReadPos();
+            AddMissing();
+            SortDisplayList();
+            PopulateList();
+
+            lbItems_SelectedIndexChanged(lbItems, new EventArgs());
+        }
+
+        private void rbGroupVarLength_CheckedChanged(object sender, EventArgs e)
+        {
+            ReadPos();
+            AddMissing();
+            SortDisplayList();
+            PopulateList();
+
+            lbItems_SelectedIndexChanged(lbItems, new EventArgs());
         }
     }
 }

@@ -98,8 +98,10 @@ namespace RebarPosCommands
         {
             None = 0,
             PosKey = 1,
-            PosMarker = 2,
-            PosKeyDifferentMarker = 3
+            PosKeyVarLength = 2,
+            PosMarker = 3,
+            PosKeyDifferentMarker = 4,
+            PosKeyDifferentMarkerVarLength = 5
         }
 
         public static List<PosCopy> ReadAllInSelection(IEnumerable<ObjectId> items, bool skipEmpty, PosGrouping grouping)
@@ -124,11 +126,19 @@ namespace RebarPosCommands
                         {
                             copy = poslist.Find(p => p.key == pos.PosKey);
                         }
+                        else if (grouping == PosGrouping.PosKeyVarLength && !pos.CalcProperties.IsVarLength)
+                        {
+                            copy = poslist.Find(p => p.key == pos.PosKey);
+                        }
                         else if (grouping == PosGrouping.PosMarker)
                         {
                             copy = poslist.Find(p => p.pos == pos.Pos);
                         }
                         else if (grouping == PosGrouping.PosKeyDifferentMarker)
+                        {
+                            copy = poslist.Find(p => p.key == pos.PosKey && p.pos == pos.Pos);
+                        }
+                        else if (grouping == PosGrouping.PosKeyDifferentMarkerVarLength && !pos.CalcProperties.IsVarLength)
                         {
                             copy = poslist.Find(p => p.key == pos.PosKey && p.pos == pos.Pos);
                         }
@@ -158,14 +168,14 @@ namespace RebarPosCommands
                             }
                             copy.diameter = pos.Diameter;
                             copy.length = pos.Length;
-                            
+
                             copy.a = pos.A;
                             copy.b = pos.B;
                             copy.c = pos.C;
                             copy.d = pos.D;
                             copy.e = pos.E;
                             copy.f = pos.F;
-                            
+
                             RebarPos.CalculatedProperties calc = pos.CalcProperties;
                             copy.fieldCount = calc.FieldCount;
                             copy.minA = calc.MinA;

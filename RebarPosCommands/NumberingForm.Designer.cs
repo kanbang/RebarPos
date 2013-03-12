@@ -55,6 +55,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txtStartNum = new System.Windows.Forms.TextBox();
+            this.rbNumberVarLength = new System.Windows.Forms.RadioButton();
             this.gbManualNumber = new System.Windows.Forms.GroupBox();
             this.btnApplyNumber = new System.Windows.Forms.Button();
             this.btnDeletePos = new System.Windows.Forms.Button();
@@ -65,8 +66,11 @@
             this.lblNumber = new System.Windows.Forms.Label();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.rbGroupVarLength = new System.Windows.Forms.RadioButton();
             this.gbAutoNumber.SuspendLayout();
             this.gbManualNumber.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // lbItems
@@ -90,11 +94,11 @@
             this.lbItems.FullRowSelect = true;
             this.lbItems.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lbItems.HideSelection = false;
-            this.lbItems.Location = new System.Drawing.Point(13, 13);
+            this.lbItems.Location = new System.Drawing.Point(13, 59);
             this.lbItems.MultiSelect = false;
             this.lbItems.Name = "lbItems";
-            this.lbItems.Size = new System.Drawing.Size(571, 453);
-            this.lbItems.TabIndex = 2;
+            this.lbItems.Size = new System.Drawing.Size(571, 423);
+            this.lbItems.TabIndex = 0;
             this.lbItems.UseCompatibleStateImageBehavior = false;
             this.lbItems.View = System.Windows.Forms.View.Details;
             this.lbItems.SelectedIndexChanged += new System.EventHandler(this.lbItems_SelectedIndexChanged);
@@ -174,8 +178,8 @@
             this.gbAutoNumber.Controls.Add(this.txtStartNum);
             this.gbAutoNumber.Location = new System.Drawing.Point(602, 13);
             this.gbAutoNumber.Name = "gbAutoNumber";
-            this.gbAutoNumber.Size = new System.Drawing.Size(262, 298);
-            this.gbAutoNumber.TabIndex = 3;
+            this.gbAutoNumber.Size = new System.Drawing.Size(262, 314);
+            this.gbAutoNumber.TabIndex = 1;
             this.gbAutoNumber.TabStop = false;
             this.gbAutoNumber.Text = "&Otomatik Numaralandırma";
             // 
@@ -185,7 +189,7 @@
             this.rbNumberAll.Location = new System.Drawing.Point(21, 178);
             this.rbNumberAll.Name = "rbNumberAll";
             this.rbNumberAll.Size = new System.Drawing.Size(187, 17);
-            this.rbNumberAll.TabIndex = 13;
+            this.rbNumberAll.TabIndex = 9;
             this.rbNumberAll.TabStop = true;
             this.rbNumberAll.Text = "&Tüm Pozları Yeniden Numaralandır";
             this.rbNumberAll.UseVisualStyleBackColor = true;
@@ -197,7 +201,7 @@
             this.rbKeepExisting.Location = new System.Drawing.Point(21, 155);
             this.rbKeepExisting.Name = "rbKeepExisting";
             this.rbKeepExisting.Size = new System.Drawing.Size(139, 17);
-            this.rbKeepExisting.TabIndex = 12;
+            this.rbKeepExisting.TabIndex = 8;
             this.rbKeepExisting.TabStop = true;
             this.rbKeepExisting.Text = "&Mevcut Numaraları Koru";
             this.rbKeepExisting.UseVisualStyleBackColor = true;
@@ -292,10 +296,10 @@
             // 
             // btnAutoNumber
             // 
-            this.btnAutoNumber.Location = new System.Drawing.Point(26, 255);
+            this.btnAutoNumber.Location = new System.Drawing.Point(25, 266);
             this.btnAutoNumber.Name = "btnAutoNumber";
             this.btnAutoNumber.Size = new System.Drawing.Size(211, 23);
-            this.btnAutoNumber.TabIndex = 14;
+            this.btnAutoNumber.TabIndex = 13;
             this.btnAutoNumber.Text = "Otomatik &Numaralandır";
             this.btnAutoNumber.UseVisualStyleBackColor = true;
             this.btnAutoNumber.Click += new System.EventHandler(this.btnAutoNumber_Click);
@@ -312,19 +316,35 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(21, 217);
+            this.label1.Location = new System.Drawing.Point(20, 226);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(100, 13);
-            this.label1.TabIndex = 10;
+            this.label1.TabIndex = 11;
             this.label1.Text = "&Başlangıç Numarası";
             // 
             // txtStartNum
             // 
-            this.txtStartNum.Location = new System.Drawing.Point(137, 214);
+            this.txtStartNum.Location = new System.Drawing.Point(136, 223);
             this.txtStartNum.Name = "txtStartNum";
             this.txtStartNum.Size = new System.Drawing.Size(100, 20);
-            this.txtStartNum.TabIndex = 11;
+            this.txtStartNum.TabIndex = 12;
             this.txtStartNum.Text = "1";
+            // 
+            // rbNumberVarLength
+            // 
+            this.rbNumberVarLength.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbNumberVarLength.AutoSize = true;
+            this.rbNumberVarLength.Checked = true;
+            this.rbNumberVarLength.Image = global::RebarPosCommands.Properties.Resources.NumVarLength1;
+            this.rbNumberVarLength.Location = new System.Drawing.Point(3, 3);
+            this.rbNumberVarLength.Name = "rbNumberVarLength";
+            this.rbNumberVarLength.Size = new System.Drawing.Size(250, 27);
+            this.rbNumberVarLength.TabIndex = 10;
+            this.rbNumberVarLength.TabStop = true;
+            this.rbNumberVarLength.Text = "&Değişken Boylu Pozlara Ayrı Numara Ver";
+            this.rbNumberVarLength.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.rbNumberVarLength.UseVisualStyleBackColor = true;
+            this.rbNumberVarLength.CheckedChanged += new System.EventHandler(this.rbNumberVarLength_CheckedChanged);
             // 
             // gbManualNumber
             // 
@@ -336,10 +356,10 @@
             this.gbManualNumber.Controls.Add(this.btnDecrementNumber);
             this.gbManualNumber.Controls.Add(this.txtNumber);
             this.gbManualNumber.Controls.Add(this.lblNumber);
-            this.gbManualNumber.Location = new System.Drawing.Point(603, 317);
+            this.gbManualNumber.Location = new System.Drawing.Point(603, 333);
             this.gbManualNumber.Name = "gbManualNumber";
             this.gbManualNumber.Size = new System.Drawing.Size(262, 149);
-            this.gbManualNumber.TabIndex = 4;
+            this.gbManualNumber.TabIndex = 2;
             this.gbManualNumber.TabStop = false;
             this.gbManualNumber.Text = "&Elle Numaralandırma";
             // 
@@ -422,10 +442,10 @@
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(709, 483);
+            this.btnOK.Location = new System.Drawing.Point(709, 496);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 5;
+            this.btnOK.TabIndex = 3;
             this.btnOK.Text = "Tamam";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -434,13 +454,36 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(790, 483);
+            this.btnCancel.Location = new System.Drawing.Point(790, 496);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 6;
+            this.btnCancel.TabIndex = 4;
             this.btnCancel.Text = "İptal";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.rbGroupVarLength);
+            this.panel1.Controls.Add(this.rbNumberVarLength);
+            this.panel1.Location = new System.Drawing.Point(13, 13);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(571, 40);
+            this.panel1.TabIndex = 11;
+            // 
+            // rbGroupVarLength
+            // 
+            this.rbGroupVarLength.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbGroupVarLength.AutoSize = true;
+            this.rbGroupVarLength.Image = global::RebarPosCommands.Properties.Resources.NumVarLength2;
+            this.rbGroupVarLength.Location = new System.Drawing.Point(277, 3);
+            this.rbGroupVarLength.Name = "rbGroupVarLength";
+            this.rbGroupVarLength.Size = new System.Drawing.Size(218, 27);
+            this.rbGroupVarLength.TabIndex = 10;
+            this.rbGroupVarLength.Text = "Değişken Boylu Pozları &Gruplandır";
+            this.rbGroupVarLength.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.rbGroupVarLength.UseVisualStyleBackColor = true;
+            this.rbGroupVarLength.CheckedChanged += new System.EventHandler(this.rbGroupVarLength_CheckedChanged);
             // 
             // NumberingForm
             // 
@@ -448,7 +491,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(877, 518);
+            this.ClientSize = new System.Drawing.Size(877, 531);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.gbManualNumber);
@@ -465,6 +509,8 @@
             this.gbAutoNumber.PerformLayout();
             this.gbManualNumber.ResumeLayout(false);
             this.gbManualNumber.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -508,5 +554,8 @@
         private System.Windows.Forms.ColumnHeader chLength;
         private System.Windows.Forms.RadioButton rbNumberAll;
         private System.Windows.Forms.RadioButton rbKeepExisting;
+        private System.Windows.Forms.RadioButton rbNumberVarLength;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.RadioButton rbGroupVarLength;
     }
 }
