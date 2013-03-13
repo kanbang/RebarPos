@@ -214,8 +214,9 @@ namespace RebarPosCommands
             Hide();
             Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
             PromptEntityOptions opts = new PromptEntityOptions("\nSelect entity: ");
-            opts.SetRejectMessage("\nSelect a LINE, TEXT, MTEXT, POLYLINE or DIMENSION entity.");
+            opts.SetRejectMessage("\nSelect a LINE, ARC, TEXT, MTEXT, POLYLINE or DIMENSION entity.");
             opts.AddAllowedClass(typeof(Line), false);
+            opts.AddAllowedClass(typeof(Arc), false);
             opts.AddAllowedClass(typeof(DBText), false);
             opts.AddAllowedClass(typeof(MText), false);
             opts.AddAllowedClass(typeof(Dimension), false);
@@ -234,6 +235,11 @@ namespace RebarPosCommands
                         if (obj is Line)
                         {
                             Line dobj = obj as Line;
+                            txt.Text = dobj.Length.ToString();
+                        }
+                        else if (obj is Arc)
+                        {
+                            Arc dobj = obj as Arc;
                             txt.Text = dobj.Length.ToString();
                         }
                         else if (obj is DBText)
@@ -952,6 +958,11 @@ namespace RebarPosCommands
                     MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void btnAlign_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
