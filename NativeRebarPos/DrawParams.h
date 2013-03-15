@@ -18,15 +18,16 @@ public:
 	double y;
 	double w;
 	double h;
+	double widthFactor;
 
 public:
-	CDrawParams() : type(0), text(L""), hasCircle(false), hasTau(false), color(0), x(0), y(0), w(0), h(0)
+	CDrawParams() : type(0), text(L""), hasCircle(false), hasTau(false), color(0), x(0), y(0), w(0), h(0), widthFactor(1.0)
 	{ }
 
-	CDrawParams(int _type, std::wstring _text, bool _hasCircle) : type(_type), text(_text), hasCircle(_hasCircle), hasTau(false), color(0), x(0), y(0), w(0), h(0)
+	CDrawParams(int _type, std::wstring _text, bool _hasCircle) : type(_type), text(_text), hasCircle(_hasCircle), hasTau(false), color(0), x(0), y(0), w(0), h(0), widthFactor(1.0)
 	{ }
 
-	CDrawParams(int _type, std::wstring _text) : type(_type), text(_text), hasCircle(false), hasTau(false), color(0), x(0), y(0), w(0), h(0)
+	CDrawParams(int _type, std::wstring _text) : type(_type), text(_text), hasCircle(false), hasTau(false), color(0), x(0), y(0), w(0), h(0), widthFactor(1.0)
 	{ }
 };
 

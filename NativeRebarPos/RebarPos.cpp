@@ -38,7 +38,7 @@ CRebarPos::CRebarPos() :
 	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), 
 	m_IncludeInBOQ(Adesk::kTrue), m_Multiplier(1), m_DisplayedSpacing(NULL),
 	m_Shape(NULL), m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), 
-	circleRadius(1.125), partSpacing(0.15), tauSize(0.6),
+	circleRadius(0.9), partSpacing(0.15), tauSize(0.6),
 	defpointsLayer(AcDbObjectId::kNull), m_Detached(Adesk::kFalse),
 	m_CalcProps()
 {
@@ -872,7 +872,7 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 		{
 			text = new AcDbText(AcGePoint3d(p.x, p.y, 0), p.text.c_str(), textStyle, 1.0);
 			text->setColorIndex(p.color);
-			text->setWidthFactor(pTextStyle->xScale());
+			text->setWidthFactor(p.widthFactor);
 			if((es = text->transformBy(trans)) != Acad::eOk)
 			{
 				return es;
@@ -936,7 +936,7 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 	{
 		text = new AcDbText(AcGePoint3d(p.x, p.y, 0), p.text.c_str(), noteStyle, 1.0 * pGroup->NoteScale());
 		text->setColorIndex(p.color);
-		text->setWidthFactor(pNoteStyle->xScale());
+		text->setWidthFactor(p.widthFactor);
 		if((es = text->transformBy(noteTrans)) != Acad::eOk)
 		{
 			return es;
@@ -948,7 +948,7 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 	{
 		text = new AcDbText(AcGePoint3d(p.x, p.y, 0), p.text.c_str(), textStyle, 1.0);
 		text->setColorIndex(p.color);
-		text->setWidthFactor(pTextStyle->xScale());
+		text->setWidthFactor(p.widthFactor);
 		if((es = text->transformBy(lengthTrans)) != Acad::eOk)
 		{
 			return es;
@@ -1022,6 +1022,11 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 		}
 
 		// Text
+		if(p.widthFactor != lastTextStyle.xScale())
+		{
+			lastTextStyle.setXScale(p.widthFactor);
+			lastNoteStyle.loadStyleRec();
+		}
 		worldDraw->subEntityTraits().setColor(p.color);
 		worldDraw->geometry().text(AcGePoint3d(p.x, p.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, p.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
 	}
@@ -1032,6 +1037,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	worldDraw->geometry().pushModelTransform(noteTrans);
 	// Draw note text
 	lastNoteStyle.setTextSize(lastNoteScale);
+	lastNoteStyle.setXScale(lastNoteDraw.widthFactor);
 	lastNoteStyle.loadStyleRec();
 	worldDraw->subEntityTraits().setSelectionMarker(2);
 	worldDraw->subEntityTraits().setColor(lastNoteDraw.color);
@@ -1041,7 +1047,9 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 
 	// Transform to match length orientation
 	worldDraw->geometry().pushModelTransform(lengthTrans);
-	// Draw note text
+	// Draw length text
+	lastTextStyle.setXScale(lastLengthDraw.widthFactor);
+	lastTextStyle.loadStyleRec();
 	worldDraw->subEntityTraits().setSelectionMarker(3);
 	worldDraw->subEntityTraits().setColor(lastLengthDraw.color);
 	worldDraw->geometry().text(AcGePoint3d(lastLengthDraw.x, lastLengthDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastLengthDraw.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
@@ -1117,12 +1125,18 @@ void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 		AcGePoint3d textpt(p.x, p.y, 0);
 		textpt.transformBy(trans);
 
+		if(p.widthFactor != lastTextStyle.xScale())
+		{
+			lastTextStyle.setXScale(p.widthFactor);
+			lastNoteStyle.loadStyleRec();
+		}
 		worldDraw->subEntityTraits().setColor(p.color);
 		worldDraw->geometry().text(textpt, NormalVector(), m_Direction, p.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
 	}
 
 	// Draw note text
 	lastNoteStyle.setTextSize(lastNoteScale * scale);
+	lastNoteStyle.setXScale(lastNoteDraw.widthFactor);
 	lastNoteStyle.loadStyleRec();
 	AcGePoint3d notept(lastNoteDraw.x, lastNoteDraw.y, 0);
 	notept.transformBy(noteTrans);
@@ -1130,6 +1144,8 @@ void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 	worldDraw->geometry().text(notept, NormalVector(), m_Direction, m_Note, -1, Adesk::kFalse, lastNoteStyle);
 
 	// Draw length text
+	lastTextStyle.setXScale(lastLengthDraw.widthFactor);
+	lastTextStyle.loadStyleRec();
 	AcGePoint3d lengthpt(lastLengthDraw.x, lastLengthDraw.y, 0);
 	lengthpt.transformBy(lengthTrans);
 	worldDraw->subEntityTraits().setColor(lastLengthDraw.color);
@@ -2187,6 +2203,23 @@ void CRebarPos::Calculate(void)
 			Utility::IntToStr(m_Multiplier, lastMultiplierDraw.text);
 	}
 
+	// Set width factors
+	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+	{
+		CDrawParams p = lastDrawList[i];
+		if(p.type == CRebarPos::POS && p.hasCircle && p.text.length() > 2)
+		{
+			p.widthFactor = 0.5;
+		}
+		else
+		{
+			p.widthFactor = lastTextStyle.xScale();
+		}
+		lastDrawList[i] = p;
+	}
+	lastNoteDraw.widthFactor = lastNoteStyle.xScale();
+	lastLengthDraw.widthFactor = lastTextStyle.xScale();
+
 	// Set colors
 	defpointsLayer = Utility::CreateHiddenLayer();
 	lastCircleColor = pGroup->CircleColor();
@@ -2212,14 +2245,19 @@ void CRebarPos::Calculate(void)
 
 	// Measure items
 	lastTextStyle.setTextSize(1.0);
-	lastNoteStyle.setTextSize(1.0 * lastNoteScale);
 	lastTextStyle.loadStyleRec();
+	lastNoteStyle.setTextSize(1.0 * lastNoteScale);
 	lastNoteStyle.loadStyleRec();
 	double x = 0;
 	double y = 0;
 	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
 	{
 		CDrawParams p = lastDrawList[i];
+		if(p.widthFactor != lastTextStyle.xScale())
+		{
+			lastTextStyle.setXScale(p.widthFactor);
+			lastTextStyle.loadStyleRec();
+		}
 		AcGePoint2d ext = lastTextStyle.extents(p.text.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
 		if(p.hasCircle)
 		{
@@ -2265,6 +2303,8 @@ void CRebarPos::Calculate(void)
 	lastNoteDraw.h = lastNoteStyle.textSize();
 
 	// Measure length text
+	lastTextStyle.setXScale(lastLengthDraw.widthFactor);
+	lastTextStyle.loadStyleRec();
 	AcGePoint2d lengthExt = lastTextStyle.extents(lastLengthDraw.text.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
 	lastLengthDraw.x = 0;
 	lastLengthDraw.y = 0;
