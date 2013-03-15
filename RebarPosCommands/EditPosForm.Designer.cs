@@ -48,6 +48,7 @@
             this.label14 = new System.Windows.Forms.Label();
             this.txtPosNote = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
+            this.txtPosSpacing = new RebarPosCommands.SpacingTextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.txtPosCount = new System.Windows.Forms.TextBox();
@@ -55,6 +56,7 @@
             this.txtPosMarker = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.posShapeView = new RebarPosCommands.PosShapeView();
             this.btnMeasureF = new System.Windows.Forms.Button();
             this.btnMeasureE = new System.Windows.Forms.Button();
             this.btnMeasureD = new System.Windows.Forms.Button();
@@ -89,8 +91,7 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.btnDetach = new System.Windows.Forms.Button();
-            this.posShapeView = new RebarPosCommands.PosShapeView();
-            this.txtPosSpacing = new RebarPosCommands.SpacingTextBox();
+            this.btnAlign = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -293,6 +294,16 @@
             this.label15.TabIndex = 14;
             this.label15.Text = "&Not";
             // 
+            // txtPosSpacing
+            // 
+            this.txtPosSpacing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPosSpacing.Location = new System.Drawing.Point(97, 98);
+            this.txtPosSpacing.Name = "txtPosSpacing";
+            this.txtPosSpacing.Size = new System.Drawing.Size(100, 20);
+            this.txtPosSpacing.TabIndex = 8;
+            this.txtPosSpacing.Validating += new System.ComponentModel.CancelEventHandler(this.txtPosSpacing_Validating);
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -387,6 +398,23 @@
             this.groupBox2.Size = new System.Drawing.Size(379, 339);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
+            // 
+            // posShapeView
+            // 
+            this.posShapeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.posShapeView.BackColor = System.Drawing.Color.Black;
+            this.posShapeView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.posShapeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.posShapeView.ForeColor = System.Drawing.Color.White;
+            this.posShapeView.Location = new System.Drawing.Point(22, 19);
+            this.posShapeView.Margin = new System.Windows.Forms.Padding(6);
+            this.posShapeView.Name = "posShapeView";
+            this.posShapeView.ShapeName = "posShapeView";
+            this.posShapeView.Size = new System.Drawing.Size(340, 137);
+            this.posShapeView.TabIndex = 0;
+            this.posShapeView.Click += new System.EventHandler(this.posShapeView_Click);
             // 
             // btnMeasureF
             // 
@@ -730,32 +758,15 @@
             this.btnDetach.UseVisualStyleBackColor = true;
             this.btnDetach.Click += new System.EventHandler(this.btnDetach_Click);
             // 
-            // posShapeView
+            // btnAlign
             // 
-            this.posShapeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.posShapeView.BackColor = System.Drawing.Color.Black;
-            this.posShapeView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.posShapeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.posShapeView.ForeColor = System.Drawing.Color.White;
-            this.posShapeView.Location = new System.Drawing.Point(22, 19);
-            this.posShapeView.Margin = new System.Windows.Forms.Padding(6);
-            this.posShapeView.Name = "posShapeView";
-            this.posShapeView.ShapeName = "posShapeView";
-            this.posShapeView.Size = new System.Drawing.Size(340, 137);
-            this.posShapeView.TabIndex = 0;
-            this.posShapeView.Click += new System.EventHandler(this.posShapeView_Click);
-            // 
-            // txtPosSpacing
-            // 
-            this.txtPosSpacing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPosSpacing.Location = new System.Drawing.Point(97, 98);
-            this.txtPosSpacing.Name = "txtPosSpacing";
-            this.txtPosSpacing.Size = new System.Drawing.Size(100, 20);
-            this.txtPosSpacing.TabIndex = 8;
-            this.txtPosSpacing.Validating += new System.ComponentModel.CancelEventHandler(this.txtPosSpacing_Validating);
+            this.btnAlign.Location = new System.Drawing.Point(151, 371);
+            this.btnAlign.Name = "btnAlign";
+            this.btnAlign.Size = new System.Drawing.Size(75, 23);
+            this.btnAlign.TabIndex = 3;
+            this.btnAlign.Text = "Hizala";
+            this.btnAlign.UseVisualStyleBackColor = true;
+            this.btnAlign.Click += new System.EventHandler(this.btnAlign_Click);
             // 
             // EditPosForm
             // 
@@ -766,6 +777,7 @@
             this.ClientSize = new System.Drawing.Size(653, 406);
             this.Controls.Add(this.btnDetach);
             this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.btnAlign);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -851,5 +863,6 @@
         private System.Windows.Forms.RadioButton rbAlignLengthRight;
         private System.Windows.Forms.RadioButton rbAlignLengthBottom;
         private System.Windows.Forms.RadioButton rbAlignLengthTop;
+        private System.Windows.Forms.Button btnAlign;
     }
 }

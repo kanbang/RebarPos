@@ -962,7 +962,88 @@ namespace RebarPosCommands
 
         private void btnAlign_Click(object sender, EventArgs e)
         {
+            Hide();
+            Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+            PromptEntityOptions opts = new PromptEntityOptions("\nSelect entity: ");
+            opts.AllowNone = false;
+            opts.SetRejectMessage("\nSelect a LINE, ARC or POLYLINE entity.");
+            opts.AddAllowedClass(typeof(Curve), false);
+            PromptEntityResult per = ed.GetEntity(opts);
+            if (per.Status == PromptStatus.OK)
+            {
+                Point3d pt = per.PickedPoint;
+                ObjectId id = per.ObjectId;
 
+                bool posUp = false;
+                Vector3d dir = new Vector3d(), up = new Vector3d(), normal = new Vector3d();
+                Database db = HostApplicationServices.WorkingDatabase;
+                using (Transaction tr = db.TransactionManager.StartTransaction())
+                {
+                    try
+                    {
+                        RebarPos pos = (RebarPos)tr.GetObject(m_Pos, OpenMode.ForRead);
+
+                        Curve curve = (Curve)tr.GetObject(id, OpenMode.ForRead);
+                        pt = curve.GetClosestPointTo(pt, curve.GetPlane().Normal, false);
+                        dir = curve.GetFirstDerivative(pt);
+                        dir = dir * pos.DirectionVector.Length / dir.Length;
+                        normal = pos.NormalVector;
+                        normal = normal * pos.DirectionVector.Length / normal.Length;
+                        up = dir.CrossProduct(normal);
+                        up = up * pos.DirectionVector.Length / up.Length;
+
+                        posUp = (dir.DotProduct(pos.UpVector) > 0);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                    }
+                }
+
+                double offset = 0.0;
+                double offset1 = -0.75, offset2 = 1.75;
+                if (posUp)
+                {
+                    AlignPos(pt + offset1 * up, dir, up, normal);
+                    offset = offset2;
+                }
+                else
+                {
+                    AlignPos(pt + offset2 * up, dir, up, normal);
+                    offset = offset1;
+                }
+
+                PromptKeywordOptions kopts = new PromptKeywordOptions("\nDiğer tarafa yerleştirilsin mi? [Evet/Hayır] <Hayir>: ", "Yes No");
+                kopts.AllowNone = true;
+                PromptResult kres = ed.GetKeywords(kopts);
+                if (kres.Status == PromptStatus.None || kres.StringResult == "Yes")
+                {
+                    AlignPos(pt + offset * up, dir, up, normal);
+                    ed.UpdateScreen();
+                }
+            }
+            Show();
+        }
+
+        private void AlignPos(Point3d pt, Vector3d direction, Vector3d up, Vector3d normal)
+        {
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    RebarPos pos = (RebarPos)tr.GetObject(m_Pos, OpenMode.ForWrite);
+
+                    pos.TransformBy(Matrix3d.Displacement(pt - (pos.BasePoint + pos.Width / 2 * pos.DirectionVector / pos.DirectionVector.Length)));
+                    pos.TransformBy(Matrix3d.Rotation(pos.DirectionVector.GetAngleTo(direction, normal), normal, pt));
+
+                    tr.Commit();
+                }
+                catch (System.Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                }
+            }
         }
     }
 }
