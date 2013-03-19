@@ -8,6 +8,7 @@
 #include "TableCell.h"
 #include "GenericTable.h"
 #include "BOQTable.h"
+#include "BOQStyle.h"
 #include "resource.h"
 
 HINSTANCE _hdllInstance = NULL;
@@ -50,6 +51,10 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 		CPosShape::ReadPosShapesFromResource(_hdllInstance, IDR_SHAPELIST1, false);
 		CPosShape::ReadPosShapesFromResource(_hdllInstance, IDR_SHAPELIST2, true);
 
+		// Create default table styles
+		CBOQStyle::ClearBOQStyles(true, true);
+		CBOQStyle::ReadBOQStylesFromResource(_hdllInstance, IDR_TABLESTYLE1);
+
         break;
 
     case AcRx::kUnloadAppMsg:
@@ -60,6 +65,9 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 
 		// Remove shapes from memory
 		CPosShape::ClearPosShapes(true, true);
+
+		// Remove table styles from memory
+		CBOQStyle::ClearBOQStyles(true, true);
 
 		// Remove custom classes
 		deleteAcRxClass(CBOQTable::desc());

@@ -317,6 +317,10 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90"
 			>
 			<File
+				RelativePath=".\BOQStyle.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\BOQTable.cpp"
 				>
 			</File>
@@ -406,6 +410,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\BOQStyle.h"
+				>
+			</File>
+			<File
 				RelativePath=".\BOQTable.h"
 				>
 			</File>
@@ -464,6 +472,10 @@
 			</File>
 			<File
 				RelativePath=".\Resources\Shapes.txt"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\TableStyles.txt"
 				>
 			</File>
 		</Filter>

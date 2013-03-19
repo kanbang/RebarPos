@@ -7,7 +7,6 @@
 
 #include "mgdinterop.h" 
 
-#include "MgPosShape.h"
 #include "MgPosGroup.h"
 #include "MgRebarPos.h"
 #include "MgBOQTable.h"

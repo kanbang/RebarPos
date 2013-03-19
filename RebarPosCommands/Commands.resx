@@ -180,6 +180,9 @@
   <data name="SHOWSHAPES_Local" xml:space="preserve">
     <value>SEKILGOSTER</value>
   </data>
+  <data name="TABLESTYLE_Local" xml:space="preserve">
+    <value>TABLOSTILI</value>
+  </data>
   <data name="TOGGLESHAPES_Local" xml:space="preserve">
     <value>SEKILGOSTERGIZLE</value>
   </data>

@@ -33,6 +33,7 @@ namespace RebarPosCommands
         {
             SetCurrentGroup();
             ReadUserPosShapes();
+            ReadUserTableStyles();
 
             ShowShapes = false;
 
@@ -76,8 +77,8 @@ namespace RebarPosCommands
             bool cont = true;
             while (cont)
             {
-                PromptEntityOptions opts = new PromptEntityOptions("Poz secin veya [Yeni/Numaralandir/Kopyala/kOntrol/Metraj/bul Degistir/numara Sil/Acilimlar/ayaRlar]: ",
-                    "New Numbering Copy Check BOQ Find Empty Shapes Preferences");
+                PromptEntityOptions opts = new PromptEntityOptions("Poz secin veya [Yeni/Numaralandir/Kopyala/kOntrol/Metraj/bul Degistir/numara Sil/Acilimlar/Tablo stili/ayaRlar]: ",
+                    "New Numbering Copy Check BOQ Find Empty Shapes Table Preferences");
                 opts.AllowNone = false;
                 PromptEntityResult result = ed.GetEntity(opts);
 
@@ -108,6 +109,9 @@ namespace RebarPosCommands
                             break;
                         case "Shapes":
                             PosShapes();
+                            break;
+                        case "Table":
+                            TableStyles();
                             break;
                         case "Preferences":
                             PosGroups();
@@ -276,6 +280,12 @@ namespace RebarPosCommands
         {
             ShowShapes = false;
             DWGUtility.RefreshAllPos();
+        }
+
+        [CommandMethod("RebarPos", "TABLESTYLE", "TABLESTYLE_Local", CommandFlags.Modal)]
+        public void CMD_TableStyle()
+        {
+            TableStyles();
         }
 
         [CommandMethod("RebarPos", "POSLENGTH", "POSLENGTH_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]

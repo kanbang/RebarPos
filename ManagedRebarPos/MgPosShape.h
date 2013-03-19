@@ -222,6 +222,7 @@ namespace OZOZ
 			property String^ Formula        { String^ get(); void set(String^ value); }
 			property String^ FormulaBending { String^ get(); void set(String^ value); }
 			property int Priority           { int get();     void set(int value); }
+
 			property bool IsBuiltIn         { bool get();    void set(bool value); }
 			property bool IsUnknown         { bool get();    void set(bool value); }
 			property bool IsInternal        { bool get();    void set(bool value); }

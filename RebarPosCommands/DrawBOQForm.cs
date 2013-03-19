@@ -8,7 +8,7 @@ namespace RebarPosCommands
 {
     public partial class DrawBOQForm : Form
     {
-        public MyCommands.BOQStyle TableStyle { get { return (MyCommands.BOQStyle)cbStyle.SelectedItem; } }
+        public BOQStyle TableStyle { get { return BOQStyle.GetBOQStyle((string)cbStyle.SelectedItem); } }
         public string TableNote { get { return txtNote.Text; } }
         public string TableHeader { get { return txtHeader.Text; } }
         public string TableFooter { get { return txtFooter.Text; } }
@@ -27,9 +27,9 @@ namespace RebarPosCommands
 
         public bool Init()
         {
-            foreach (MyCommands.BOQStyle style in MyCommands.BOQStyle.GetStyles())
+            foreach (KeyValuePair<string, BOQStyle> style in BOQStyle.GetAllBOQStyles())
             {
-                cbStyle.Items.Add(style);
+                cbStyle.Items.Add(style.Key);
             }
 
             // Read from settings

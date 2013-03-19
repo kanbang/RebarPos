@@ -220,6 +220,13 @@
     <Compile Include="SpacingTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="TableStyleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TableStyleForm.Designer.cs">
+      <DependentUpon>TableStyleForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Commands_TableStyles.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Commands.resx">
@@ -269,6 +276,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SelectShapeForm.resx">
       <DependentUpon>SelectShapeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TableStyleForm.resx">
+      <DependentUpon>TableStyleForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

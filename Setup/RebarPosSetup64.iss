@@ -221,6 +221,7 @@ begin
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'TOGGLESHAPES', 'SEKILGOSTERGIZLE');
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'SHOWSHAPES', 'SEKILGOSTER');
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'HIDESHAPES', 'SEKILSIL');
+        RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'TABLESTYLE', 'TABLOSTILI');        
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'POSLENGTH', 'BOYGOSTER');
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'INCLUDEPOS', 'POZKATKI');
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'LASTPOSNUMBER', 'SONPOZ');

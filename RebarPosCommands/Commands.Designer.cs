@@ -250,6 +250,15 @@ namespace RebarPosCommands {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TABLOSTILI.
+        /// </summary>
+        internal static string TABLESTYLE_Local {
+            get {
+                return ResourceManager.GetString("TABLESTYLE_Local", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SEKILGOSTERGIZLE.
         /// </summary>
         internal static string TOGGLESHAPES_Local {
