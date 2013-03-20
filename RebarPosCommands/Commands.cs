@@ -369,6 +369,48 @@ namespace RebarPosCommands
             MenuUtility.LoadPosMenu();
         }
 
+        [CommandMethod("RebarPos", "TESTNET", CommandFlags.Modal)]
+        public void CMD_Test()
+        {
+            Form form = new Form();
+            form.Text = "Test Form";
+            DrawingPreview pr = new DrawingPreview();
+            pr.BackColor = System.Drawing.Color.Black;
+            pr.Dock = DockStyle.Fill;
+            form.Controls.Add(pr);
+
+            {
+                Point3d pt = new Point3d(0.0, 0.0, 0.0);
+                RebarPos pos = new RebarPos();
+                pos.TransformBy(Matrix3d.Displacement(pt.GetAsVector()));
+                pos.TransformBy(Matrix3d.Scaling(25.0, pt));
+                pos.Pos = "1";
+                pos.Count = "2x3";
+                pos.Diameter = "12";
+                pos.Spacing = "200";
+                pos.Shape = "00";
+                pos.A = "1000";
+                pos.Note = "";
+                pr.AddItem(pos);
+            }
+            {
+                Point3d pt = new Point3d(0.0, 100.0, 0.0);
+                RebarPos pos = new RebarPos();
+                pos.TransformBy(Matrix3d.Displacement(pt.GetAsVector()));
+                pos.TransformBy(Matrix3d.Scaling(25.0, pt));
+                pos.Pos = "2";
+                pos.Count = "74";
+                pos.Diameter = "16";
+                pos.Spacing = "150";
+                pos.Shape = "00";
+                pos.A = "1200";
+                pos.Note = "";
+                pr.AddItem(pos);
+            }
+
+            Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false);
+        }
+
         [CommandMethod("RebarPos", "DUMPPOSSHAPES", CommandFlags.Modal)]
         public void CMD_DumpShapes()
         {

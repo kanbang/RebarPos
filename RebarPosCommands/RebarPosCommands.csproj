@@ -132,6 +132,12 @@
     <Compile Include="ConfimMessageBox.Designer.cs">
       <DependentUpon>ConfimMessageBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="DrawingPreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DrawingPreview.Designer.cs">
+      <DependentUpon>DrawingPreview.cs</DependentUpon>
+    </Compile>
     <Compile Include="EditDetachedPosForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -239,6 +245,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ConfimMessageBox.resx">
       <DependentUpon>ConfimMessageBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DrawingPreview.resx">
+      <DependentUpon>DrawingPreview.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EditDetachedPosForm.resx">
       <DependentUpon>EditDetachedPosForm.cs</DependentUpon>
