@@ -15,44 +15,44 @@ namespace RebarPosCommands
     {
         private class GroupCopy
         {
-            public PosGroup.DrawingUnits drawingUnits;
-            public PosGroup.DrawingUnits displayUnits;
-            public int precision;
-            public double maxLength;
-            public bool bending;
+            public PosGroup.DrawingUnits DrawingUnit;
+            public PosGroup.DrawingUnits DisplayUnit;
+            public int Precision;
+            public double MaxBarLength;
+            public bool Bending;
 
-            public string formula;
-            public string formulaVariableLength;
-            public string formulaLengthOnly;
-            public string formulaPosOnly;
+            public string Formula;
+            public string FormulaVariableLength;
+            public string FormulaLengthOnly;
+            public string FormulaPosOnly;
 
-            public string standardDiameters;
+            public string StandardDiameters;
 
-            public Autodesk.AutoCAD.Colors.Color textColor;
-            public Autodesk.AutoCAD.Colors.Color posColor;
-            public Autodesk.AutoCAD.Colors.Color circleColor;
-            public Autodesk.AutoCAD.Colors.Color multiplierColor;
-            public Autodesk.AutoCAD.Colors.Color groupColor;
-            public Autodesk.AutoCAD.Colors.Color noteColor;
-            public Autodesk.AutoCAD.Colors.Color currentGroupHighlightColor;
-            public Autodesk.AutoCAD.Colors.Color countColor;
+            public Autodesk.AutoCAD.Colors.Color TextColor;
+            public Autodesk.AutoCAD.Colors.Color PosColor;
+            public Autodesk.AutoCAD.Colors.Color CircleColor;
+            public Autodesk.AutoCAD.Colors.Color MultiplierColor;
+            public Autodesk.AutoCAD.Colors.Color GroupColor;
+            public Autodesk.AutoCAD.Colors.Color NoteColor;
+            public Autodesk.AutoCAD.Colors.Color CurrentGroupHighlightColor;
+            public Autodesk.AutoCAD.Colors.Color CountColor;
 
-            public ObjectId textStyleId;
-            public ObjectId noteStyleId;
+            public ObjectId TextStyleId;
+            public ObjectId NoteStyleId;
 
-            public double noteScale;
+            public double NoteScale;
         }
 
-        GroupCopy m_Copy;
-        Dictionary<string, ObjectId> m_TextStyles;
+        private GroupCopy mCopy;
+        private Dictionary<string, ObjectId> mTextStyles;
 
         public GroupForm()
         {
             InitializeComponent();
             Width = 425;
 
-            m_Copy = new GroupCopy();
-            m_TextStyles = new Dictionary<string, ObjectId>();
+            mCopy = new GroupCopy();
+            mTextStyles = new Dictionary<string, ObjectId>();
 
             posStylePreview.BackColor = DWGUtility.ModelBackgroundColor();
         }
@@ -67,31 +67,31 @@ namespace RebarPosCommands
                     PosGroup group = tr.GetObject(PosGroup.GroupId, OpenMode.ForRead) as PosGroup;
                     if (group == null) return false;
 
-                    m_Copy.drawingUnits = group.DrawingUnit;
-                    m_Copy.displayUnits = group.DisplayUnit;
-                    m_Copy.precision = group.Precision;
-                    m_Copy.maxLength = group.MaxBarLength;
-                    m_Copy.bending = group.Bending;
+                    mCopy.DrawingUnit = group.DrawingUnit;
+                    mCopy.DisplayUnit = group.DisplayUnit;
+                    mCopy.Precision = group.Precision;
+                    mCopy.MaxBarLength = group.MaxBarLength;
+                    mCopy.Bending = group.Bending;
 
-                    m_Copy.formula = group.Formula;
-                    m_Copy.formulaVariableLength = group.FormulaVariableLength;
-                    m_Copy.formulaLengthOnly = group.FormulaLengthOnly;
-                    m_Copy.formulaPosOnly = group.FormulaPosOnly;
+                    mCopy.Formula = group.Formula;
+                    mCopy.FormulaVariableLength = group.FormulaVariableLength;
+                    mCopy.FormulaLengthOnly = group.FormulaLengthOnly;
+                    mCopy.FormulaPosOnly = group.FormulaPosOnly;
 
-                    m_Copy.standardDiameters = group.StandardDiameters;
+                    mCopy.StandardDiameters = group.StandardDiameters;
 
-                    m_Copy.textColor = group.TextColor;
-                    m_Copy.posColor = group.PosColor;
-                    m_Copy.circleColor = group.CircleColor;
-                    m_Copy.multiplierColor = group.MultiplierColor;
-                    m_Copy.groupColor = group.GroupColor;
-                    m_Copy.noteColor = group.NoteColor;
-                    m_Copy.currentGroupHighlightColor = group.CurrentGroupHighlightColor;
-                    m_Copy.countColor = group.CountColor;
+                    mCopy.TextColor = group.TextColor;
+                    mCopy.PosColor = group.PosColor;
+                    mCopy.CircleColor = group.CircleColor;
+                    mCopy.MultiplierColor = group.MultiplierColor;
+                    mCopy.GroupColor = group.GroupColor;
+                    mCopy.NoteColor = group.NoteColor;
+                    mCopy.CurrentGroupHighlightColor = group.CurrentGroupHighlightColor;
+                    mCopy.CountColor = group.CountColor;
 
-                    m_Copy.textStyleId = group.TextStyleId;
-                    m_Copy.noteStyleId = group.NoteStyleId;
-                    m_Copy.noteScale = group.NoteScale;
+                    mCopy.TextStyleId = group.TextStyleId;
+                    mCopy.NoteStyleId = group.NoteStyleId;
+                    mCopy.NoteScale = group.NoteScale;
                 }
                 catch (System.Exception ex)
                 {
@@ -100,8 +100,8 @@ namespace RebarPosCommands
                 }
             }
 
-            m_TextStyles = DWGUtility.GetTextStyles();
-            foreach (string name in m_TextStyles.Keys)
+            mTextStyles = DWGUtility.GetTextStyles();
+            foreach (string name in mTextStyles.Keys)
             {
                 cbTextStyle.Items.Add(name);
                 cbNoteStyle.Items.Add(name);
@@ -114,85 +114,92 @@ namespace RebarPosCommands
 
         public void SetGroup()
         {
-            cbDrawingUnit.SelectedIndex = (m_Copy.drawingUnits == PosGroup.DrawingUnits.Millimeter ? 0 : 1);
-            cbDisplayUnit.SelectedIndex = (m_Copy.displayUnits == PosGroup.DrawingUnits.Millimeter ? 0 : 1);
-            udPrecision.Value = m_Copy.precision;
-            txtMaxLength.Text = m_Copy.maxLength.ToString();
-            chkBending.Checked = m_Copy.bending;
+            cbDrawingUnit.SelectedIndex = (mCopy.DrawingUnit == PosGroup.DrawingUnits.Millimeter ? 0 : 1);
+            cbDisplayUnit.SelectedIndex = (mCopy.DisplayUnit == PosGroup.DrawingUnits.Millimeter ? 0 : 1);
+            udPrecision.Value = mCopy.Precision;
+            txtMaxLength.Text = mCopy.MaxBarLength.ToString();
+            chkBending.Checked = mCopy.Bending;
 
-            txtFormula.Text = m_Copy.formula;
-            txtFormulaVariableLength.Text = m_Copy.formulaVariableLength;
-            txtFormulaWithoutLength.Text = m_Copy.formulaLengthOnly;
-            txtFormulaPosOnly.Text = m_Copy.formulaPosOnly;
-            posStylePreview.SetFormula(m_Copy.formula, m_Copy.formulaLengthOnly, m_Copy.formulaPosOnly);
+            txtFormula.Text = mCopy.Formula;
+            txtFormulaVariableLength.Text = mCopy.FormulaVariableLength;
+            txtFormulaLengthOnly.Text = mCopy.FormulaLengthOnly;
+            txtFormulaPosOnly.Text = mCopy.FormulaPosOnly;
 
-            txtDiameterList.Text = m_Copy.standardDiameters;
+            txtDiameterList.Text = mCopy.StandardDiameters;
 
-            btnPickTextColor.BackColor = m_Copy.textColor.ColorValue;
-            btnPickPosColor.BackColor = m_Copy.posColor.ColorValue;
-            btnPickCircleColor.BackColor = m_Copy.circleColor.ColorValue;
-            btnPickMultiplierColor.BackColor = m_Copy.multiplierColor.ColorValue;
-            btnPickGroupColor.BackColor = m_Copy.groupColor.ColorValue;
-            btnPickNoteColor.BackColor = m_Copy.noteColor.ColorValue;
-            btnPickCountColor.BackColor = m_Copy.countColor.ColorValue;
+            btnPickTextColor.BackColor = mCopy.TextColor.ColorValue;
+            btnPickPosColor.BackColor = mCopy.PosColor.ColorValue;
+            btnPickCircleColor.BackColor = mCopy.CircleColor.ColorValue;
+            btnPickMultiplierColor.BackColor = mCopy.MultiplierColor.ColorValue;
+            btnPickGroupColor.BackColor = mCopy.GroupColor.ColorValue;
+            btnPickNoteColor.BackColor = mCopy.NoteColor.ColorValue;
+            btnPickCountColor.BackColor = mCopy.CountColor.ColorValue;
 
-            posStylePreview.TextColor = m_Copy.textColor.ColorValue;
-            posStylePreview.PosColor = m_Copy.posColor.ColorValue;
-            posStylePreview.CircleColor = m_Copy.circleColor.ColorValue;
-            posStylePreview.MultiplierColor = m_Copy.multiplierColor.ColorValue;
-            posStylePreview.GroupColor = m_Copy.groupColor.ColorValue;
-            posStylePreview.NoteColor = m_Copy.noteColor.ColorValue;
-            posStylePreview.CurrentGroupHighlightColor = m_Copy.currentGroupHighlightColor.ColorValue;
+            posStylePreview.Formula = mCopy.Formula;
+            posStylePreview.FormulaVariableLength = mCopy.FormulaVariableLength;
+            posStylePreview.FormulaLengthOnly = mCopy.FormulaLengthOnly;
+            posStylePreview.FormulaPosOnly = mCopy.FormulaPosOnly;
 
-            if (m_Copy.displayUnits == PosGroup.DrawingUnits.Millimeter)
-                posStylePreview.SetPos("1", "2x4", "16", "200", "2400");
+            posStylePreview.TextColor = mCopy.TextColor.ColorValue;
+            posStylePreview.PosColor = mCopy.PosColor.ColorValue;
+            posStylePreview.CircleColor = mCopy.CircleColor.ColorValue;
+            posStylePreview.MultiplierColor = mCopy.MultiplierColor.ColorValue;
+            posStylePreview.GroupColor = mCopy.GroupColor.ColorValue;
+            posStylePreview.NoteColor = mCopy.NoteColor.ColorValue;
+            posStylePreview.CurrentGroupHighlightColor = mCopy.CurrentGroupHighlightColor.ColorValue;
+            posStylePreview.CountColor = mCopy.CountColor.ColorValue;
+
+            posStylePreview.SetGroup();
+
+            if (mCopy.DisplayUnit == PosGroup.DrawingUnits.Millimeter)
+                posStylePreview.SetPos("1", "2x4", "16", "200", "1000", "1200");
             else
-                posStylePreview.SetPos("1", "2x4", "16", "20", "240");
+                posStylePreview.SetPos("1", "2x4", "16", "20", "100", "120");
 
             int i = 0;
-            foreach (KeyValuePair<string, ObjectId> item in m_TextStyles)
+            foreach (KeyValuePair<string, ObjectId> item in mTextStyles)
             {
-                if (item.Value == m_Copy.textStyleId)
+                if (item.Value == mCopy.TextStyleId)
                 {
                     cbTextStyle.SelectedIndex = i;
                 }
-                if (item.Value == m_Copy.noteStyleId)
+                if (item.Value == mCopy.NoteStyleId)
                 {
                     cbNoteStyle.SelectedIndex = i;
                 }
                 i++;
             }
 
-            txtNoteScale.Text = m_Copy.noteScale.ToString();
+            txtNoteScale.Text = mCopy.NoteScale.ToString();
         }
 
         private void cbDrawingUnit_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
-            m_Copy.drawingUnits = (cbDrawingUnit.SelectedIndex == 0 ? PosGroup.DrawingUnits.Millimeter : PosGroup.DrawingUnits.Centimeter);
+            if (mCopy == null) return;
+            mCopy.DrawingUnit = (cbDrawingUnit.SelectedIndex == 0 ? PosGroup.DrawingUnits.Millimeter : PosGroup.DrawingUnits.Centimeter);
         }
 
         private void cbDisplayUnit_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
-            m_Copy.displayUnits = (cbDisplayUnit.SelectedIndex == 0 ? PosGroup.DrawingUnits.Millimeter : PosGroup.DrawingUnits.Centimeter);
+            if (mCopy == null) return;
+            mCopy.DisplayUnit = (cbDisplayUnit.SelectedIndex == 0 ? PosGroup.DrawingUnits.Millimeter : PosGroup.DrawingUnits.Centimeter);
 
-            if (m_Copy.displayUnits == PosGroup.DrawingUnits.Millimeter)
-                posStylePreview.SetPos("1", "2x4", "16", "200", "2400");
+            if (mCopy.DisplayUnit == PosGroup.DrawingUnits.Millimeter)
+                posStylePreview.SetPos("1", "2x4", "16", "200", "1000", "1200");
             else
-                posStylePreview.SetPos("1", "2x4", "16", "20", "240");
+                posStylePreview.SetPos("1", "2x4", "16", "20", "100", "120");
         }
 
         private void udPrecision_ValueChanged(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
-            m_Copy.precision = (int)udPrecision.Value;
+            if (mCopy == null) return;
+            mCopy.Precision = (int)udPrecision.Value;
         }
 
         private void chkBending_CheckedChanged(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
-            m_Copy.bending = chkBending.Checked;
+            if (mCopy == null) return;
+            mCopy.Bending = chkBending.Checked;
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -205,31 +212,31 @@ namespace RebarPosCommands
                 {
                     PosGroup group = tr.GetObject(PosGroup.GroupId, OpenMode.ForWrite) as PosGroup;
 
-                    group.DrawingUnit = m_Copy.drawingUnits;
-                    group.DisplayUnit = m_Copy.displayUnits;
-                    group.Precision = m_Copy.precision;
-                    group.MaxBarLength = m_Copy.maxLength;
-                    group.Bending = m_Copy.bending;
+                    group.DrawingUnit = mCopy.DrawingUnit;
+                    group.DisplayUnit = mCopy.DisplayUnit;
+                    group.Precision = mCopy.Precision;
+                    group.MaxBarLength = mCopy.MaxBarLength;
+                    group.Bending = mCopy.Bending;
 
-                    group.Formula = m_Copy.formula;
-                    group.FormulaVariableLength = m_Copy.formulaVariableLength;
-                    group.FormulaLengthOnly = m_Copy.formulaLengthOnly;
-                    group.FormulaPosOnly = m_Copy.formulaPosOnly;
+                    group.Formula = mCopy.Formula;
+                    group.FormulaVariableLength = mCopy.FormulaVariableLength;
+                    group.FormulaLengthOnly = mCopy.FormulaLengthOnly;
+                    group.FormulaPosOnly = mCopy.FormulaPosOnly;
 
-                    group.StandardDiameters = m_Copy.standardDiameters;
+                    group.StandardDiameters = mCopy.StandardDiameters;
 
-                    group.TextColor = m_Copy.textColor;
-                    group.PosColor = m_Copy.posColor;
-                    group.CircleColor = m_Copy.circleColor;
-                    group.MultiplierColor = m_Copy.multiplierColor;
-                    group.GroupColor = m_Copy.groupColor;
-                    group.NoteColor = m_Copy.noteColor;
-                    group.CurrentGroupHighlightColor = m_Copy.currentGroupHighlightColor;
-                    group.CountColor = m_Copy.countColor;
+                    group.TextColor = mCopy.TextColor;
+                    group.PosColor = mCopy.PosColor;
+                    group.CircleColor = mCopy.CircleColor;
+                    group.MultiplierColor = mCopy.MultiplierColor;
+                    group.GroupColor = mCopy.GroupColor;
+                    group.NoteColor = mCopy.NoteColor;
+                    group.CurrentGroupHighlightColor = mCopy.CurrentGroupHighlightColor;
+                    group.CountColor = mCopy.CountColor;
 
-                    group.TextStyleId = m_Copy.textStyleId;
-                    group.NoteStyleId = m_Copy.noteStyleId;
-                    group.NoteScale = m_Copy.noteScale;
+                    group.TextStyleId = mCopy.TextStyleId;
+                    group.NoteStyleId = mCopy.NoteStyleId;
+                    group.NoteScale = mCopy.NoteScale;
 
                     tr.Commit();
                 }
@@ -262,11 +269,11 @@ namespace RebarPosCommands
 
         private void txtMaxLength_Validated(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
+            if (mCopy == null) return;
             double val;
             if (double.TryParse(txtMaxLength.Text, out val))
             {
-                m_Copy.maxLength = val;
+                mCopy.MaxBarLength = val;
             }
         }
 
@@ -287,7 +294,7 @@ namespace RebarPosCommands
 
         private void txtDiameterList_Validated(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
+            if (mCopy == null) return;
             List<int> diameters = new List<int>();
             foreach (string ds in txtDiameterList.Text.Split(new char[] { ' ', ',', ';', ':', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries))
             {
@@ -297,7 +304,7 @@ namespace RebarPosCommands
                     diameters.Add(d);
                 }
             }
-            m_Copy.standardDiameters = string.Join(" ", diameters.ConvertAll<string>(p => p.ToString()).ToArray());
+            mCopy.StandardDiameters = string.Join(" ", diameters.ConvertAll<string>(p => p.ToString()).ToArray());
         }
 
         private void txtNoteScale_Validating(object sender, CancelEventArgs e)
@@ -314,61 +321,63 @@ namespace RebarPosCommands
 
         private void txtNoteScale_Validated(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
+            if (mCopy == null) return;
             double val;
             if (double.TryParse(txtNoteScale.Text, out val))
             {
-                m_Copy.noteScale = val;
+                mCopy.NoteScale = val;
             }
         }
 
         private void txtFormula_Validated(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
-            m_Copy.formula = txtFormula.Text;
-
-            posStylePreview.SetFormula(txtFormula.Text, txtFormulaWithoutLength.Text, txtFormulaPosOnly.Text);
+            if (mCopy == null) return;
+            mCopy.Formula = txtFormula.Text;
+            posStylePreview.Formula = txtFormula.Text;
+            posStylePreview.SetGroup();
         }
 
         private void txtFormulaVariableLength_Validated(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
-            m_Copy.formulaVariableLength = txtFormulaVariableLength.Text;
+            if (mCopy == null) return;
+            mCopy.FormulaVariableLength = txtFormulaVariableLength.Text;
+            posStylePreview.FormulaVariableLength = txtFormulaVariableLength.Text;
+            posStylePreview.SetGroup();
         }
 
-        private void txtFormulaWithoutLength_Validated(object sender, EventArgs e)
+        private void txtFormulaLengthOnly_Validated(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
-            m_Copy.formulaLengthOnly = txtFormulaWithoutLength.Text;
-
-            posStylePreview.SetFormula(txtFormula.Text, txtFormulaWithoutLength.Text, txtFormulaPosOnly.Text);
+            if (mCopy == null) return;
+            mCopy.FormulaLengthOnly = txtFormulaLengthOnly.Text;
+            posStylePreview.FormulaLengthOnly = txtFormulaLengthOnly.Text;
+            posStylePreview.SetGroup();
         }
 
         private void txtFormulaPosOnly_Validated(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
-            m_Copy.formulaPosOnly = txtFormulaPosOnly.Text;
-
-            posStylePreview.SetFormula(txtFormula.Text, txtFormulaWithoutLength.Text, txtFormulaPosOnly.Text);
+            if (mCopy == null) return;
+            mCopy.FormulaPosOnly = txtFormulaPosOnly.Text;
+            posStylePreview.FormulaPosOnly = txtFormulaPosOnly.Text;
+            posStylePreview.SetGroup();
         }
 
         private void cbTextStyle_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
-            ObjectId id = m_TextStyles[(string)cbTextStyle.SelectedItem];
-            m_Copy.textStyleId = id;
+            if (mCopy == null) return;
+            ObjectId id = mTextStyles[(string)cbTextStyle.SelectedItem];
+            mCopy.TextStyleId = id;
         }
 
         private void cbNoteStyle_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
-            ObjectId id = m_TextStyles[(string)cbNoteStyle.SelectedItem];
-            m_Copy.noteStyleId = id;
+            if (mCopy == null) return;
+            ObjectId id = mTextStyles[(string)cbNoteStyle.SelectedItem];
+            mCopy.NoteStyleId = id;
         }
 
         private void btnPickTextColor_Click(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
+            if (mCopy == null) return;
             Button btn = (Button)sender;
             Autodesk.AutoCAD.Windows.ColorDialog cd = new Autodesk.AutoCAD.Windows.ColorDialog();
             cd.SetDialogTabs(Autodesk.AutoCAD.Windows.ColorDialog.ColorTabs.ACITab);
@@ -376,15 +385,16 @@ namespace RebarPosCommands
             cd.IncludeByBlockByLayer = false;
             if (cd.ShowDialog() == DialogResult.OK)
             {
-                m_Copy.textColor = cd.Color;
+                mCopy.TextColor = cd.Color;
                 btn.BackColor = cd.Color.ColorValue;
-                posStylePreview.TextColor = m_Copy.textColor.ColorValue;
+                posStylePreview.TextColor = cd.Color.ColorValue;
+                posStylePreview.SetGroup();
             }
         }
 
         private void btnPickPosColor_Click(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
+            if (mCopy == null) return;
             Button btn = (Button)sender;
             Autodesk.AutoCAD.Windows.ColorDialog cd = new Autodesk.AutoCAD.Windows.ColorDialog();
             cd.SetDialogTabs(Autodesk.AutoCAD.Windows.ColorDialog.ColorTabs.ACITab);
@@ -392,15 +402,16 @@ namespace RebarPosCommands
             cd.IncludeByBlockByLayer = false;
             if (cd.ShowDialog() == DialogResult.OK)
             {
-                m_Copy.posColor = cd.Color;
+                mCopy.PosColor = cd.Color;
                 btn.BackColor = cd.Color.ColorValue;
-                posStylePreview.PosColor = m_Copy.posColor.ColorValue;
+                posStylePreview.PosColor = cd.Color.ColorValue;
+                posStylePreview.SetGroup();
             }
         }
 
         private void btnPickCircleColor_Click(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
+            if (mCopy == null) return;
             Button btn = (Button)sender;
             Autodesk.AutoCAD.Windows.ColorDialog cd = new Autodesk.AutoCAD.Windows.ColorDialog();
             cd.SetDialogTabs(Autodesk.AutoCAD.Windows.ColorDialog.ColorTabs.ACITab);
@@ -408,15 +419,16 @@ namespace RebarPosCommands
             cd.IncludeByBlockByLayer = false;
             if (cd.ShowDialog() == DialogResult.OK)
             {
-                m_Copy.circleColor = cd.Color;
+                mCopy.CircleColor = cd.Color;
                 btn.BackColor = cd.Color.ColorValue;
-                posStylePreview.CircleColor = m_Copy.circleColor.ColorValue;
+                posStylePreview.CircleColor = cd.Color.ColorValue;
+                posStylePreview.SetGroup();
             }
         }
 
         private void btnPickMultiplierColor_Click(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
+            if (mCopy == null) return;
             Button btn = (Button)sender;
             Autodesk.AutoCAD.Windows.ColorDialog cd = new Autodesk.AutoCAD.Windows.ColorDialog();
             cd.SetDialogTabs(Autodesk.AutoCAD.Windows.ColorDialog.ColorTabs.ACITab);
@@ -424,15 +436,17 @@ namespace RebarPosCommands
             cd.IncludeByBlockByLayer = false;
             if (cd.ShowDialog() == DialogResult.OK)
             {
-                m_Copy.multiplierColor = cd.Color;
+                mCopy.MultiplierColor = cd.Color;
                 btn.BackColor = cd.Color.ColorValue;
-                posStylePreview.MultiplierColor = m_Copy.multiplierColor.ColorValue;
+                posStylePreview.MultiplierColor = cd.Color.ColorValue;
+                posStylePreview.SetGroup();
+
             }
         }
 
         private void btnPickGroupColor_Click(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
+            if (mCopy == null) return;
             Button btn = (Button)sender;
             Autodesk.AutoCAD.Windows.ColorDialog cd = new Autodesk.AutoCAD.Windows.ColorDialog();
             cd.SetDialogTabs(Autodesk.AutoCAD.Windows.ColorDialog.ColorTabs.ACITab);
@@ -440,15 +454,16 @@ namespace RebarPosCommands
             cd.IncludeByBlockByLayer = false;
             if (cd.ShowDialog() == DialogResult.OK)
             {
-                m_Copy.groupColor = cd.Color;
+                mCopy.GroupColor = cd.Color;
                 btn.BackColor = cd.Color.ColorValue;
-                posStylePreview.GroupColor = m_Copy.groupColor.ColorValue;
+                posStylePreview.GroupColor = cd.Color.ColorValue;
+                posStylePreview.SetGroup();
             }
         }
 
         private void btnPickCurrentGroupColor_Click(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
+            if (mCopy == null) return;
             Button btn = (Button)sender;
             Autodesk.AutoCAD.Windows.ColorDialog cd = new Autodesk.AutoCAD.Windows.ColorDialog();
             cd.SetDialogTabs(Autodesk.AutoCAD.Windows.ColorDialog.ColorTabs.ACITab);
@@ -456,15 +471,16 @@ namespace RebarPosCommands
             cd.IncludeByBlockByLayer = false;
             if (cd.ShowDialog() == DialogResult.OK)
             {
-                m_Copy.currentGroupHighlightColor = cd.Color;
+                mCopy.CurrentGroupHighlightColor = cd.Color;
                 btn.BackColor = cd.Color.ColorValue;
-                posStylePreview.CurrentGroupHighlightColor = m_Copy.currentGroupHighlightColor.ColorValue;
+                posStylePreview.CurrentGroupHighlightColor = cd.Color.ColorValue;
+                posStylePreview.SetGroup();
             }
         }
 
         private void btnPickNoteColor_Click(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
+            if (mCopy == null) return;
             Button btn = (Button)sender;
             Autodesk.AutoCAD.Windows.ColorDialog cd = new Autodesk.AutoCAD.Windows.ColorDialog();
             cd.SetDialogTabs(Autodesk.AutoCAD.Windows.ColorDialog.ColorTabs.ACITab);
@@ -472,15 +488,16 @@ namespace RebarPosCommands
             cd.IncludeByBlockByLayer = false;
             if (cd.ShowDialog() == DialogResult.OK)
             {
-                m_Copy.noteColor = cd.Color;
+                mCopy.NoteColor = cd.Color;
                 btn.BackColor = cd.Color.ColorValue;
-                posStylePreview.NoteColor = m_Copy.noteColor.ColorValue;
+                posStylePreview.NoteColor = cd.Color.ColorValue;
+                posStylePreview.SetGroup();
             }
         }
 
         private void btnPickCountColor_Click(object sender, EventArgs e)
         {
-            if (m_Copy == null) return;
+            if (mCopy == null) return;
             Button btn = (Button)sender;
             Autodesk.AutoCAD.Windows.ColorDialog cd = new Autodesk.AutoCAD.Windows.ColorDialog();
             cd.SetDialogTabs(Autodesk.AutoCAD.Windows.ColorDialog.ColorTabs.ACITab);
@@ -488,8 +505,10 @@ namespace RebarPosCommands
             cd.IncludeByBlockByLayer = false;
             if (cd.ShowDialog() == DialogResult.OK)
             {
-                m_Copy.countColor = cd.Color;
+                mCopy.CountColor = cd.Color;
                 btn.BackColor = cd.Color.ColorValue;
+                posStylePreview.CountColor = cd.Color.ColorValue;
+                posStylePreview.SetGroup();
             }
         }
 
@@ -503,36 +522,36 @@ namespace RebarPosCommands
 
         private void btnDisplayStandard_Click(object sender, EventArgs e)
         {
-            m_Copy.formula = "[M:C][N][TD][\"/\":S]";
-            m_Copy.formulaVariableLength = "[M:C][N][TD][\"/\":S]";
-            m_Copy.formulaLengthOnly = "[\"L=\":L]";
-            m_Copy.formulaPosOnly = "[M:C]";
-            m_Copy.textColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 2);
-            m_Copy.posColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 4);
-            m_Copy.circleColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 1);
-            m_Copy.multiplierColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 33);
-            m_Copy.groupColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 9);
-            m_Copy.noteColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 30);
-            m_Copy.currentGroupHighlightColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 8);
-            m_Copy.countColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 5);
+            mCopy.Formula = "[M:C][N][TD][\"/\":S]";
+            mCopy.FormulaVariableLength = "[M:C][N][TD][\"/\":S]";
+            mCopy.FormulaLengthOnly = "[\"L=\":L]";
+            mCopy.FormulaPosOnly = "[M:C]";
+            mCopy.TextColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 2);
+            mCopy.PosColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 4);
+            mCopy.CircleColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 1);
+            mCopy.MultiplierColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 33);
+            mCopy.GroupColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 9);
+            mCopy.NoteColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 30);
+            mCopy.CurrentGroupHighlightColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 8);
+            mCopy.CountColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 5);
 
             SetGroup();
         }
 
         private void btnDisplayBS_Click(object sender, EventArgs e)
         {
-            m_Copy.formula = "[N] [\"T\":D] [MM] [S]";
-            m_Copy.formulaVariableLength = "[N] [\"T\":D] [MM] [\"(1-\":NX:\")\"] [S]";
-            m_Copy.formulaLengthOnly = "[\"L=\":L]";
-            m_Copy.formulaPosOnly = "[M]";
-            m_Copy.textColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 2);
-            m_Copy.posColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 4);
-            m_Copy.circleColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 1);
-            m_Copy.multiplierColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 33);
-            m_Copy.groupColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 9);
-            m_Copy.noteColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 30);
-            m_Copy.currentGroupHighlightColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 8);
-            m_Copy.countColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 5);
+            mCopy.Formula = "[N] [\"T\":D] [MM] [S]";
+            mCopy.FormulaVariableLength = "[N] [\"T\":D] [MM] [\"(1-\":NX:\")\"] [S]";
+            mCopy.FormulaLengthOnly = "[\"L=\":L]";
+            mCopy.FormulaPosOnly = "[M]";
+            mCopy.TextColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 2);
+            mCopy.PosColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 4);
+            mCopy.CircleColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 1);
+            mCopy.MultiplierColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 33);
+            mCopy.GroupColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 9);
+            mCopy.NoteColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 30);
+            mCopy.CurrentGroupHighlightColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 8);
+            mCopy.CountColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 5);
 
             SetGroup();
         }

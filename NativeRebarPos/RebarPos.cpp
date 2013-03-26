@@ -39,7 +39,7 @@ CRebarPos::CRebarPos() :
 	m_IncludeInBOQ(Adesk::kTrue), m_Multiplier(1), m_DisplayedSpacing(NULL),
 	m_Shape(NULL), m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), 
 	circleRadius(0.9), partSpacing(0.15), tauSize(0.6),
-	defpointsLayer(AcDbObjectId::kNull), m_Detached(Adesk::kFalse),
+	defpointsLayer(AcDbObjectId::kNull), m_Detached(Adesk::kFalse), m_GroupIdForDisplay(AcDbObjectId::kNull),
 	m_CalcProps()
 {
 }
@@ -554,6 +554,20 @@ const CRebarPos::CCalculatedProperties& CRebarPos::CalcProps() const
 {
 	assertReadEnabled();
 	return m_CalcProps;
+}
+
+const AcDbObjectId& CRebarPos::GroupIdForDisplay(void) const
+{
+	assertReadEnabled();
+	return m_GroupIdForDisplay;
+}
+
+Acad::ErrorStatus CRebarPos::setGroupIdForDisplay(const AcDbObjectId& newVal)
+{
+	assertWriteEnabled();
+	m_GroupIdForDisplay = newVal;
+	Calculate();
+	return Acad::eOk;
 }
 
 //*************************************************************************
@@ -1150,6 +1164,12 @@ void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 	lengthpt.transformBy(lengthTrans);
 	worldDraw->subEntityTraits().setColor(lastLengthDraw.color);
 	worldDraw->geometry().text(lengthpt, NormalVector(), m_Direction, lastLengthDraw.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
+}
+
+bool CRebarPos::bounds(AcDbExtents& bounds) const
+{
+	Acad::ErrorStatus es = subGetGeomExtents(bounds);
+	return (es == Acad::eOk ? true: false);
 }
 
 Acad::ErrorStatus CRebarPos::subGetGeomExtents(AcDbExtents& extents) const
@@ -1978,7 +1998,11 @@ void CRebarPos::Calculate(void)
 
 	// Open group and shape
 	Acad::ErrorStatus es;
-	AcDbObjectId groupId = CPosGroup::GetGroupId();
+	AcDbObjectId groupId = AcDbObjectId::kNull;
+	if(!m_GroupIdForDisplay.isNull())
+		groupId = m_GroupIdForDisplay;
+	else
+	groupId = CPosGroup::GetGroupId();
 	AcDbObjectPointer<CPosGroup> pGroup (groupId, AcDb::kForRead);
 	if((es = pGroup.openStatus()) != Acad::eOk)
 	{

@@ -13,6 +13,18 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
+            if (disposing)
+            {
+                if (mInit)
+                {
+                    mPos.Dispose();
+                    mVarLengthPos.Dispose();
+                    mPosOnlyPos.Dispose();
+                }
+
+                RemoveGroup();
+            }
+
             if (disposing && (components != null))
             {
                 components.Dispose();
@@ -34,10 +46,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.Black;
             this.Name = "PosStylePreview";
             this.Size = new System.Drawing.Size(338, 150);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.PosStylePreview_Paint);
             this.ResumeLayout(false);
 
         }

@@ -71,7 +71,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.txtFormulaVariableLength = new System.Windows.Forms.TextBox();
             this.label19 = new System.Windows.Forms.Label();
-            this.txtFormulaWithoutLength = new System.Windows.Forms.TextBox();
+            this.txtFormulaLengthOnly = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.txtFormula = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -280,7 +280,7 @@
             this.gbDisplay.Controls.Add(this.label7);
             this.gbDisplay.Controls.Add(this.txtFormulaVariableLength);
             this.gbDisplay.Controls.Add(this.label19);
-            this.gbDisplay.Controls.Add(this.txtFormulaWithoutLength);
+            this.gbDisplay.Controls.Add(this.txtFormulaLengthOnly);
             this.gbDisplay.Controls.Add(this.label6);
             this.gbDisplay.Controls.Add(this.txtFormula);
             this.gbDisplay.Controls.Add(this.label5);
@@ -296,21 +296,23 @@
             // 
             this.posStylePreview.BackColor = System.Drawing.Color.Black;
             this.posStylePreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.posStylePreview.CircleColor = System.Drawing.Color.Yellow;
-            this.posStylePreview.CurrentGroupHighlightColor = System.Drawing.Color.Silver;
+            this.posStylePreview.CircleColor = System.Drawing.Color.Empty;
+            this.posStylePreview.CountColor = System.Drawing.Color.Empty;
+            this.posStylePreview.CurrentGroupHighlightColor = System.Drawing.Color.Empty;
             this.posStylePreview.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.posStylePreview.Formula1 = "[M:C][N][\"T\":D][\"/\":S]";
-            this.posStylePreview.Formula2 = "[\" L=\":L]";
-            this.posStylePreview.Formula3 = "[M:C]";
-            this.posStylePreview.GroupColor = System.Drawing.Color.Gray;
+            this.posStylePreview.Formula = null;
+            this.posStylePreview.FormulaLengthOnly = null;
+            this.posStylePreview.FormulaPosOnly = null;
+            this.posStylePreview.FormulaVariableLength = null;
+            this.posStylePreview.GroupColor = System.Drawing.Color.Empty;
             this.posStylePreview.Location = new System.Drawing.Point(313, 218);
-            this.posStylePreview.MultiplierColor = System.Drawing.Color.Gray;
+            this.posStylePreview.MultiplierColor = System.Drawing.Color.Empty;
             this.posStylePreview.Name = "posStylePreview";
-            this.posStylePreview.NoteColor = System.Drawing.Color.Orange;
-            this.posStylePreview.PosColor = System.Drawing.Color.Red;
+            this.posStylePreview.NoteColor = System.Drawing.Color.Empty;
+            this.posStylePreview.PosColor = System.Drawing.Color.Empty;
             this.posStylePreview.Size = new System.Drawing.Size(268, 114);
             this.posStylePreview.TabIndex = 28;
-            this.posStylePreview.TextColor = System.Drawing.Color.Red;
+            this.posStylePreview.TextColor = System.Drawing.Color.Empty;
             // 
             // btnPickCountColor
             // 
@@ -542,13 +544,13 @@
             this.label19.TabIndex = 2;
             this.label19.Text = "Formül (&Değişken Boy)";
             // 
-            // txtFormulaWithoutLength
+            // txtFormulaLengthOnly
             // 
-            this.txtFormulaWithoutLength.Location = new System.Drawing.Point(186, 71);
-            this.txtFormulaWithoutLength.Name = "txtFormulaWithoutLength";
-            this.txtFormulaWithoutLength.Size = new System.Drawing.Size(395, 20);
-            this.txtFormulaWithoutLength.TabIndex = 5;
-            this.txtFormulaWithoutLength.Validated += new System.EventHandler(this.txtFormulaWithoutLength_Validated);
+            this.txtFormulaLengthOnly.Location = new System.Drawing.Point(186, 71);
+            this.txtFormulaLengthOnly.Name = "txtFormulaLengthOnly";
+            this.txtFormulaLengthOnly.Size = new System.Drawing.Size(395, 20);
+            this.txtFormulaLengthOnly.TabIndex = 5;
+            this.txtFormulaLengthOnly.Validated += new System.EventHandler(this.txtFormulaLengthOnly_Validated);
             // 
             // label6
             // 
@@ -661,7 +663,7 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.ImageList lGroups;
         private System.Windows.Forms.GroupBox gbDisplay;
-        private System.Windows.Forms.TextBox txtFormulaWithoutLength;
+        private System.Windows.Forms.TextBox txtFormulaLengthOnly;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtFormula;
         private System.Windows.Forms.Label label5;

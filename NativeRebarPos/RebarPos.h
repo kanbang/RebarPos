@@ -179,6 +179,8 @@ private:
 	Adesk::Boolean m_Detached;
 
 	DisplayStyle m_DisplayStyle;
+	
+	AcDbObjectId m_GroupIdForDisplay;
 
 	/// Locals
 	bool geomInit;
@@ -315,6 +317,11 @@ public:
 	const CCalculatedProperties& CalcProps(void) const;
 
 public:
+	/// Gets or sets the group to be used for displaying the object. (Not persisted, for temporary display only)
+	const AcDbObjectId& GroupIdForDisplay(void) const;
+	Acad::ErrorStatus setGroupIdForDisplay(const AcDbObjectId& newVal);
+
+public:
 	/// Gets a string key identifying a pos with a certain diameter,
 	/// shape and piece lengths
 	const ACHAR* PosKey() const;
@@ -360,6 +367,8 @@ protected:
     virtual Adesk::Boolean      subWorldDraw(AcGiWorldDraw*	mode);
     
 	virtual Acad::ErrorStatus   subGetGeomExtents(AcDbExtents& extents) const;
+
+    virtual bool                bounds(AcDbExtents& bounds) const;
 
 protected:
     /// Overridden methods from AcDbObject    

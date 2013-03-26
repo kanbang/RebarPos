@@ -46,18 +46,19 @@ namespace RebarPosCommands
 
         public void ClearItems()
         {
-            foreach (Drawable item in mItems)
-            {
-                item.Dispose();
-            }
             mItems.Clear();
-            mImage.Dispose();
+            if (mImage != null)
+            {
+                mImage.Dispose();
+            }
             mImage = null;
             UpdateView();
         }
 
         private void UpdateView()
         {
+            if (mItems.Count == 0) return;
+
             Size size = this.ClientSize;
             mImage = new Bitmap(size.Width, size.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
             mImage.SetResolution(200, 200);
@@ -112,6 +113,8 @@ namespace RebarPosCommands
 
         private void DrawingPreview_SizeChanged(object sender, EventArgs e)
         {
+            if (mItems.Count == 0) return;
+
             UpdateView();
         }
     }
