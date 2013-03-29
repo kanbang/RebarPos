@@ -101,8 +101,10 @@ namespace RebarPosCommands
                     lbShapes.Items.Add(lv);
                 }
             }
+
             if (lbShapes.Items.Count != 0)
                 lbShapes.SelectedIndices.Add(0);
+
             UpdateItemImages();
 
             SetShape();
