@@ -169,7 +169,7 @@ const void CRebarPos::TextBox(AcGePoint3d& ptmin, AcGePoint3d& ptmax)
 	{
 		p = lastDrawList[i];
 		xmin = min(xmin, p.x); xmax = max(xmax, p.x + p.w);
-		ymin = min(ymin, p.y); ymax = max(ymax, p.y + p.y);
+		ymin = min(ymin, p.y); ymax = max(ymax, p.y + p.h);
 		if(p.hasCircle)
 		{
 			xmin = min(xmin, p.x + p.w / 2 - circleRadius); xmax = max(xmax, p.x + p.w / 2 + circleRadius);
@@ -1039,11 +1039,12 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 		if(p.widthFactor != lastTextStyle.xScale())
 		{
 			lastTextStyle.setXScale(p.widthFactor);
-			lastNoteStyle.loadStyleRec();
+			lastTextStyle.loadStyleRec();
 		}
 		worldDraw->subEntityTraits().setColor(p.color);
 		worldDraw->geometry().text(AcGePoint3d(p.x, p.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, p.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
 	}
+
 	// Reset transform
 	worldDraw->geometry().popModelTransform();
 
@@ -1062,6 +1063,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	// Transform to match length orientation
 	worldDraw->geometry().pushModelTransform(lengthTrans);
 	// Draw length text
+	lastTextStyle.setTextSize(lastLengthDraw.h);
 	lastTextStyle.setXScale(lastLengthDraw.widthFactor);
 	lastTextStyle.loadStyleRec();
 	worldDraw->subEntityTraits().setSelectionMarker(3);
@@ -1070,7 +1072,8 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	// Reset transform
 	worldDraw->geometry().popModelTransform();
 
-    return Adesk::kTrue; // Don't call viewportDraw().
+	// Do not call viewportDraw()
+    return Adesk::kTrue; 
 }
 
 void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
@@ -1164,12 +1167,6 @@ void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 	lengthpt.transformBy(lengthTrans);
 	worldDraw->subEntityTraits().setColor(lastLengthDraw.color);
 	worldDraw->geometry().text(lengthpt, NormalVector(), m_Direction, lastLengthDraw.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
-}
-
-bool CRebarPos::bounds(AcDbExtents& bounds) const
-{
-	Acad::ErrorStatus es = subGetGeomExtents(bounds);
-	return (es == Acad::eOk ? true: false);
 }
 
 Acad::ErrorStatus CRebarPos::subGetGeomExtents(AcDbExtents& extents) const

@@ -47,7 +47,7 @@ namespace RebarPosCommands
         {
             chkShowShapes.Checked = showShapes;
 
-            Dictionary<string, PosShape> shapes = PosShape.GetAllPosShapes();
+            List<string> shapes = PosShape.GetAllPosShapes();
 
             if (shapes.Count == 0)
             {
@@ -56,20 +56,21 @@ namespace RebarPosCommands
 
             try
             {
-                foreach (KeyValuePair<string, PosShape> item in shapes)
+                foreach (string name in shapes)
                 {
+                    PosShape item = PosShape.GetPosShape(name);
                     ShapeCopy copy = new ShapeCopy();
 
-                    copy.name = item.Key;
-                    copy.fields = item.Value.Fields;
-                    copy.formula = item.Value.Formula;
-                    copy.formulaBending = item.Value.FormulaBending;
-                    copy.priority = item.Value.Priority;
-                    copy.builtin = item.Value.IsBuiltIn;
+                    copy.name = name;
+                    copy.fields = item.Fields;
+                    copy.formula = item.Formula;
+                    copy.formulaBending = item.FormulaBending;
+                    copy.priority = item.Priority;
+                    copy.builtin = item.IsBuiltIn;
 
-                    for (int j = 0; j < item.Value.Items.Count; j++)
+                    for (int j = 0; j < item.Items.Count; j++)
                     {
-                        copy.shapes.Add(item.Value.Items[j]);
+                        copy.shapes.Add(item.Items[j]);
                     }
 
                     m_Copies.Add(copy);
@@ -80,8 +81,6 @@ namespace RebarPosCommands
                 System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                 return false;
             }
-
-            m_Copies.Sort(new CompareShapesForSort());
 
             PopulateList();
 
@@ -109,31 +108,6 @@ namespace RebarPosCommands
             SetShape();
         }
 
-        private class CompareShapesForSort : IComparer<ShapeCopy>
-        {
-            public int Compare(ShapeCopy p1, ShapeCopy p2)
-            {
-                if (p1 == p2) return 0;
-                if (p1.name == p2.name) return 0;
-
-                if (p1.name == "GENEL")
-                    return 1;
-                else if (p2.name == "GENEL")
-                    return -1;
-                else
-                {
-                    int n1 = 0;
-                    int n2 = 0;
-                    if (int.TryParse(p1.name, out n1) && int.TryParse(p2.name, out n2))
-                    {
-                        return n1 < n2 ? -1 : n1 > n2 ? 1 : 0;
-                    }
-                    else
-                        return string.CompareOrdinal(p1.name, p2.name);
-                }
-            }
-        }
-
         public void SetShape()
         {
             ShapeCopy copy = GetSelected();
@@ -145,45 +119,7 @@ namespace RebarPosCommands
             txtFormulaBending.Text = copy.formulaBending;
             udPriority.Value = Math.Max(0, Math.Min(copy.priority, 99));
 
-            posShapeView.Reset();
-            foreach (PosShape.Shape draw in copy.shapes)
-            {
-                if (draw is PosShape.ShapeLine)
-                {
-                    PosShape.ShapeLine line = draw as PosShape.ShapeLine;
-                    posShapeView.AddLine(line.Color.ColorValue, (float)line.X1, (float)line.Y1, (float)line.X2, (float)line.Y2, line.Visible);
-                }
-                else if (draw is PosShape.ShapeArc)
-                {
-                    PosShape.ShapeArc arc = draw as PosShape.ShapeArc;
-                    posShapeView.AddArc(arc.Color.ColorValue, (float)arc.X, (float)arc.Y, (float)arc.R, (float)(arc.StartAngle * 180.0 / Math.PI), (float)(arc.EndAngle * 180.0 / Math.PI), arc.Visible);
-                }
-                else if (draw is PosShape.ShapeText)
-                {
-                    PosShape.ShapeText text = draw as PosShape.ShapeText;
-                    StringAlignment horizontal = StringAlignment.Near;
-                    StringAlignment vertical = StringAlignment.Near;
-                    switch (text.HorizontalAlignment)
-                    {
-                        case TextHorizontalMode.TextCenter:
-                            horizontal = StringAlignment.Center;
-                            break;
-                        case TextHorizontalMode.TextRight:
-                            horizontal = StringAlignment.Far;
-                            break;
-                    }
-                    switch (text.VerticalAlignment)
-                    {
-                        case TextVerticalMode.TextVerticalMid:
-                            vertical = StringAlignment.Center;
-                            break;
-                        case TextVerticalMode.TextTop:
-                            vertical = StringAlignment.Far;
-                            break;
-                    }
-                    posShapeView.AddText(text.Color.ColorValue, (float)text.X, (float)text.Y, (float)text.Height, text.Text, horizontal, vertical, text.Visible);
-                }
-            }
+            posShapeView.ShapeName = copy.name;
         }
 
         private void lbShapes_SelectedIndexChanged(object sender, EventArgs e)
@@ -401,7 +337,7 @@ namespace RebarPosCommands
                             if (text.TextString == "D" && fieldCount < 4) fieldCount = 4;
                             if (text.TextString == "E" && fieldCount < 5) fieldCount = 5;
                             if (text.TextString == "F" && fieldCount < 6) fieldCount = 6;
-                            copy.shapes.Add(new PosShape.ShapeText(text.Color, text.Position.X, text.Position.Y, text.Height, text.TextString, text.HorizontalMode, text.VerticalMode, visible));
+                            copy.shapes.Add(new PosShape.ShapeText(text.Color, text.Position.X, text.Position.Y, text.Height, text.WidthFactor, text.TextString, "romans.shx", text.HorizontalMode, text.VerticalMode, visible));
                         }
                     }
                 }
@@ -490,7 +426,6 @@ namespace RebarPosCommands
                     shape.Formula = copy.formula;
                     shape.FormulaBending = copy.formulaBending;
                     shape.Priority = copy.priority;
-                    shape.IsBuiltIn = copy.builtin;
                     foreach (PosShape.Shape sh in copy.shapes)
                     {
                         shape.Items.Add(sh);

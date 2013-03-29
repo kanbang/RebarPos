@@ -52,15 +52,15 @@ END
 // SHAPELIST
 //
 
-IDR_SHAPELIST1          SHAPELIST               "Resources\\Shapes.txt"
-IDR_SHAPELIST2          SHAPELIST               "Resources\\InternalShapes.txt"
+IDR_SHAPES              SHAPELIST               "Resources\\Shapes.txt"
+IDR_INTERNALSHAPES      SHAPELIST               "Resources\\InternalShapes.txt"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // TABLESTYLE
 //
 
-IDR_TABLESTYLE1         TABLESTYLE              "Resources\\TableStyles.txt"
+IDR_TABLESTYLES         TABLESTYLE              "Resources\\TableStyles.txt"
 #endif    // Turkish resources
 /////////////////////////////////////////////////////////////////////////////
 

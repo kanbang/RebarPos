@@ -16,16 +16,16 @@ using namespace OZOZ::RebarPosWrapper;
 //*************************************************************************
 // Constructors and destructors 
 //*************************************************************************
-PosShape::PosShape(CPosShape* shape) 
+PosShape::PosShape()
+: Autodesk::AutoCAD::GraphicsInterface::Drawable(IntPtr(new CPosShape()), true)
 {
-	m_PosShape = shape;
-	m_Shapes = gcnew PosShape::ShapeCollection(m_PosShape);
+	m_Shapes = gcnew PosShape::ShapeCollection(this);
 }
 
-PosShape::PosShape() 
+PosShape::PosShape(System::IntPtr unmanagedPointer, bool autoDelete)
+: Autodesk::AutoCAD::GraphicsInterface::Drawable(unmanagedPointer, autoDelete)
 {
-	m_PosShape = new CPosShape();
-	m_Shapes = gcnew PosShape::ShapeCollection(m_PosShape);
+	m_Shapes = gcnew PosShape::ShapeCollection(this);
 }
 
 //*************************************************************************
@@ -33,38 +33,38 @@ PosShape::PosShape()
 //*************************************************************************
 String^ PosShape::Name::get()
 {
-	return Marshal::WcharToString(m_PosShape->Name());
+	return Marshal::WcharToString(GetImpObj()->Name());
 }
 void PosShape::Name::set(String^ value)
 {
-	m_PosShape->setName(Marshal::StringToWchar(value));
+	GetImpObj()->setName(Marshal::StringToWchar(value));
 }
 
 int PosShape::Fields::get()
 {
-	return m_PosShape->Fields();
+	return GetImpObj()->Fields();
 }
 void PosShape::Fields::set(int value)
 {
-	m_PosShape->setFields(value);
+	GetImpObj()->setFields(value);
 }
 
 String^ PosShape::Formula::get()
 {
-	return Marshal::WcharToString(m_PosShape->Formula());
+	return Marshal::WcharToString(GetImpObj()->Formula());
 }
 void PosShape::Formula::set(String^ value)
 {
-	m_PosShape->setFormula(Marshal::StringToWchar(value));
+	GetImpObj()->setFormula(Marshal::StringToWchar(value));
 }
 
 String^ PosShape::FormulaBending::get()
 {
-    return Marshal::WcharToString(m_PosShape->FormulaBending());
+    return Marshal::WcharToString(GetImpObj()->FormulaBending());
 }
 void PosShape::FormulaBending::set(String^ value)
 {
-	m_PosShape->setFormulaBending(Marshal::StringToWchar(value));
+	GetImpObj()->setFormulaBending(Marshal::StringToWchar(value));
 }
 
 PosShape::ShapeCollection^ PosShape::Items::get()
@@ -74,75 +74,101 @@ PosShape::ShapeCollection^ PosShape::Items::get()
 
 int PosShape::Priority::get()
 {
-	return m_PosShape->Priority();
+	return GetImpObj()->Priority();
 }
 void PosShape::Priority::set(int value)
 {
-	m_PosShape->setPriority(value);
+	GetImpObj()->setPriority(value);
 }
-
 
 bool PosShape::IsBuiltIn::get()
 {
-	return (m_PosShape->IsBuiltIn() == Adesk::kTrue);
-}
-void PosShape::IsBuiltIn::set(bool value)
-{
-	m_PosShape->setIsBuiltIn(value ? Adesk::kTrue : Adesk::kFalse);
+	return (GetImpObj()->IsBuiltIn() == Adesk::kTrue);
 }
 
 bool PosShape::IsUnknown::get()
 {
-    return (m_PosShape->IsUnknown() == Adesk::kTrue);
-}
-void PosShape::IsUnknown::set(bool value)
-{
-	m_PosShape->setIsUnknown(value ? Adesk::kTrue : Adesk::kFalse);
+    return (GetImpObj()->IsUnknown() == Adesk::kTrue);
 }
 
 bool PosShape::IsInternal::get()
 {
-    return (m_PosShape->IsInternal() == Adesk::kTrue);
+    return (GetImpObj()->IsInternal() == Adesk::kTrue);
 }
-void PosShape::IsInternal::set(bool value)
+
+void PosShape::SetShapeTexts(String^ a, String^ b, String^ c, String^ d, String^ e, String^ f)
 {
-	m_PosShape->setIsInternal(value ? Adesk::kTrue : Adesk::kFalse);
+	GetImpObj()->setShapeTexts(Marshal::StringToWchar(a), Marshal::StringToWchar(b), Marshal::StringToWchar(c), Marshal::StringToWchar(d), Marshal::StringToWchar(e), Marshal::StringToWchar(f));
 }
+void PosShape::ClearShapeTexts(void)
+{
+	GetImpObj()->clearShapeTexts();
+}
+
+//*************************************************************************
+// Drawable implementation
+//*************************************************************************
+ObjectId PosShape::Id::get()
+{ 
+	return Marshal::ToObjectId(GetImpObj()->id()); 
+}
+bool PosShape::IsPersistent::get() 
+{ 
+	return (GetImpObj()->isPersistent() == Adesk::kTrue); 
+}
+
+int PosShape::SubSetAttributes(Autodesk::AutoCAD::GraphicsInterface::DrawableTraits^ traits) 
+{
+	return GetImpObj()->subSetAttributes(static_cast<AcGiDrawableTraits*>(traits->UnmanagedObject.ToPointer()));
+}
+void PosShape::SubViewportDraw(Autodesk::AutoCAD::GraphicsInterface::ViewportDraw^ vd) 
+{
+	GetImpObj()->subViewportDraw(static_cast<AcGiViewportDraw*>(vd->UnmanagedObject.ToPointer()));
+}
+int PosShape::SubViewportDrawLogicalFlags(Autodesk::AutoCAD::GraphicsInterface::ViewportDraw^ vd) 
+{
+	return GetImpObj()->subViewportDrawLogicalFlags(static_cast<AcGiViewportDraw*>(vd->UnmanagedObject.ToPointer()));
+}
+bool PosShape::SubWorldDraw(Autodesk::AutoCAD::GraphicsInterface::WorldDraw^ wd) 
+{
+	return (GetImpObj()->subWorldDraw(static_cast<AcGiWorldDraw*>(wd->UnmanagedObject.ToPointer())) == Adesk::kTrue);
+}
+
 //*************************************************************************
 // Shape Collection
 //*************************************************************************
-PosShape::ShapeCollection::ShapeCollection(CPosShape* parent)
+PosShape::ShapeCollection::ShapeCollection(PosShape^ parent)
 {
 	m_Parent = parent;
 }
 
 void PosShape::ShapeCollection::Add(PosShape::Shape^ value)
 {
-	m_Parent->AddShape(value->ToNative());
+	m_Parent->GetImpObj()->AddShape(value->ToNative());
 }
 
 void PosShape::ShapeCollection::RemoveAt(int index)
 {
-	m_Parent->RemoveShape(index);
+	m_Parent->GetImpObj()->RemoveShape(index);
 }
 
 void PosShape::ShapeCollection::Clear()
 {
-	m_Parent->ClearShapes();
+	m_Parent->GetImpObj()->ClearShapes();
 }
 
 int PosShape::ShapeCollection::Count::get()
 {
-	return (int)m_Parent->GetShapeCount();
+	return (int)m_Parent->GetImpObj()->GetShapeCount();
 }
 
 PosShape::Shape^ PosShape::ShapeCollection::default::get(int index)
 {
-	return Shape::FromNative(m_Parent->GetShape(index));
+	return Shape::FromNative(m_Parent->GetImpObj()->GetShape(index));
 }
 void PosShape::ShapeCollection::default::set(int index, PosShape::Shape^ value)
 {
-	m_Parent->SetShape(index, value->ToNative());
+	m_Parent->GetImpObj()->SetShape(index, value->ToNative());
 }
 
 //*************************************************************************
@@ -150,62 +176,50 @@ void PosShape::ShapeCollection::default::set(int index, PosShape::Shape^ value)
 //*************************************************************************
 void PosShape::AddPosShape(PosShape^ shape)
 {
-	CPosShape::AddPosShape(shape->m_PosShape);
+	assert(!shape->IsBuiltIn);
+	assert(!shape->IsInternal);
+	CPosShape::AddPosShape(shape->GetImpObj());
 }
 
 PosShape^ PosShape::GetPosShape(String^ name)
 {
 	CPosShape* shape = CPosShape::GetPosShape(Marshal::StringToWstring(name));
-	return gcnew PosShape(shape);
+	return gcnew PosShape(IntPtr(shape), false);
 }
 
 PosShape^ PosShape::GetUnknownPosShape()
 {
 	CPosShape* shape = CPosShape::GetUnknownPosShape();
-	return gcnew PosShape(shape);
+	return gcnew PosShape(IntPtr(shape), true);
 }
 
 int PosShape::GetPosShapeCount()
 {
-	std::map<std::wstring, CPosShape*> map = CPosShape::GetMap();
-	int count = 0;
-	for(std::map<std::wstring, CPosShape*>::iterator it = map.begin(); it != map.end(); it++)
-	{
-		CPosShape* shape = it->second;
-		if(!shape->IsInternal())
-		{
-			count++;
-		}
-	}
-	return count;
+	return CPosShape::GetPosShapeCount(true, false, true);
 }
 
-System::Collections::Generic::Dictionary<String^, PosShape^>^ PosShape::GetAllPosShapes()
+System::Collections::Generic::List<String^>^ PosShape::GetAllPosShapes()
 {
-	System::Collections::Generic::Dictionary<String^, PosShape^>^ dict = gcnew System::Collections::Generic::Dictionary<String^, PosShape^>();
-	std::map<std::wstring, CPosShape*> map = CPosShape::GetMap();
-	for(std::map<std::wstring, CPosShape*>::iterator it = map.begin(); it != map.end(); it++)
+	System::Collections::Generic::List<String^>^ dict = gcnew System::Collections::Generic::List<String^>();
+	std::vector<std::wstring> map = CPosShape::GetAllShapes(true, false, true);
+	for(std::vector<std::wstring>::iterator it = map.begin(); it != map.end(); it++)
 	{
-		CPosShape* shape = it->second;
-		if(!shape->IsInternal())
-		{
-			dict->Add(Marshal::WstringToString(it->first), gcnew PosShape(it->second));
-		}
+		dict->Add(Marshal::WstringToString((*it)));
 	}
 	return dict;
 }
 
 void PosShape::ClearPosShapes()
 {
-	CPosShape::ClearPosShapes(false, true);
+	CPosShape::ClearPosShapes(false, false, true);
 }
 
 void PosShape::ReadPosShapesFromFile(String^ source)
 {
-	CPosShape::ReadPosShapesFromFile(Marshal::StringToWstring(source), true);
+	CPosShape::ReadPosShapesFromFile(Marshal::StringToWstring(source));
 }
 
 void PosShape::SavePosShapesToFile(String^ source)
 {
-	CPosShape::SavePosShapesToFile(Marshal::StringToWstring(source), false, true);
+	CPosShape::SavePosShapesToFile(Marshal::StringToWstring(source));
 }

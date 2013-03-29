@@ -11,12 +11,14 @@
 using namespace System;
 using namespace Autodesk::AutoCAD::Geometry;
 using namespace Autodesk::AutoCAD::DatabaseServices;
+using namespace Autodesk::AutoCAD::GraphicsInterface;
 
 namespace OZOZ 
 {
     namespace RebarPosWrapper 
     {
-        public ref class PosShape
+        [Autodesk::AutoCAD::Runtime::Wrapper("CPosShape")]
+		public ref class PosShape :  public Autodesk::AutoCAD::GraphicsInterface::Drawable
         {
 		public:
 			ref struct ShapeLine;
@@ -82,7 +84,7 @@ namespace OZOZ
 				{
 					return gcnew ShapeText(
 						Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, text->color),
-						text->x, text->y, text->height, Marshal::WstringToString(text->text), 
+						text->x, text->y, text->height, text->width, Marshal::WstringToString(text->text), Marshal::WstringToString(text->font), 
 						static_cast<TextHorizontalMode>(text->horizontalAlignment), static_cast<TextVerticalMode>(text->verticalAlignment),
 						text->visible == Adesk::kTrue);
 				}
@@ -154,7 +156,9 @@ namespace OZOZ
 				property double X;
 				property double Y;
 				property double Height;
+				property double Width;
 				property String^ Text;
+				property String^ Font;
 				property TextHorizontalMode HorizontalAlignment;
 				property TextVerticalMode VerticalAlignment;
 
@@ -163,12 +167,14 @@ namespace OZOZ
 				{
 					;
 				}
-				ShapeText(Autodesk::AutoCAD::Colors::Color^ color, double x, double y, double height, String^ text, TextHorizontalMode horizontalAlignment, TextVerticalMode verticalAlignment, bool visible) : Shape(color, visible)
+				ShapeText(Autodesk::AutoCAD::Colors::Color^ color, double x, double y, double height, double width, String^ text, String^ font, TextHorizontalMode horizontalAlignment, TextVerticalMode verticalAlignment, bool visible) : Shape(color, visible)
 				{
 					X = x;
 					Y = y;
 					Height = height;
+					Width = width;
 					Text = text;
+					Font = font;
 					HorizontalAlignment = horizontalAlignment;
 					VerticalAlignment = verticalAlignment;
 				}
@@ -176,7 +182,7 @@ namespace OZOZ
 			internal:
 				virtual CShape* ToNative(void) override
 				{
-					return new CShapeText(Color->ColorIndex, X, Y, Height, Marshal::StringToWstring(Text),
+					return new CShapeText(Color->ColorIndex, X, Y, Height, Width, Marshal::StringToWstring(Text),  Marshal::StringToWstring(Font),
 						static_cast<AcDb::TextHorzMode>(HorizontalAlignment), static_cast<AcDb::TextVertMode>(VerticalAlignment), Visible ? Adesk::kTrue : Adesk::kFalse);
 				}
 			};
@@ -185,7 +191,7 @@ namespace OZOZ
 			ref class ShapeCollection
 			{
 			private:
-				CPosShape* m_Parent;
+				PosShape^ m_Parent;
 
 			private:
 				ShapeCollection() { }
@@ -193,7 +199,7 @@ namespace OZOZ
 				void operator=(ShapeCollection%) { }
 
 			internal:
-				ShapeCollection(CPosShape* parent);
+				ShapeCollection(PosShape^ parent);
 
 			public:
 				void Add(Shape^ value);
@@ -206,13 +212,17 @@ namespace OZOZ
 			};
 
 		protected:
-			CPosShape* m_PosShape;
 			ShapeCollection^ m_Shapes;
 
-        internal:
-            PosShape(CPosShape* shape);
 		public:
             PosShape();
+
+        internal:
+            PosShape(System::IntPtr unmanagedPointer, bool autoDelete);
+            inline CPosShape* GetImpObj()
+            {
+                return static_cast<CPosShape*>(UnmanagedObject.ToPointer());
+            }
 
         public:
 			property ShapeCollection^ Items { ShapeCollection^ get(); }
@@ -223,19 +233,32 @@ namespace OZOZ
 			property String^ FormulaBending { String^ get(); void set(String^ value); }
 			property int Priority           { int get();     void set(int value); }
 
-			property bool IsBuiltIn         { bool get();    void set(bool value); }
-			property bool IsUnknown         { bool get();    void set(bool value); }
-			property bool IsInternal        { bool get();    void set(bool value); }
+			property bool IsBuiltIn         { bool get(); }
+			property bool IsUnknown         { bool get(); }
+			property bool IsInternal        { bool get(); }
+
+			void SetShapeTexts(String^ a, String^ b, String^ c, String^ d, String^ e, String^ f);
+			void ClearShapeTexts(void);
 
 		public:
 			static void AddPosShape(PosShape^ shape);
 			static PosShape^ GetPosShape(String^ name);
 			static PosShape^ GetUnknownPosShape();
 			static int GetPosShapeCount();
-			static System::Collections::Generic::Dictionary<String^, PosShape^>^ GetAllPosShapes();
+			static System::Collections::Generic::List<String^>^ GetAllPosShapes();
 			static void ClearPosShapes();
 			static void ReadPosShapesFromFile(String^ source);
 			static void SavePosShapesToFile(String^ source);
+
+		public:
+			property ObjectId Id       { virtual ObjectId get() override; }
+			property bool IsPersistent { virtual bool get() override; }
+
+		protected:
+			virtual int SubSetAttributes(Autodesk::AutoCAD::GraphicsInterface::DrawableTraits^ traits) override;
+			virtual void SubViewportDraw(Autodesk::AutoCAD::GraphicsInterface::ViewportDraw^ vd) override;
+			virtual int SubViewportDrawLogicalFlags(Autodesk::AutoCAD::GraphicsInterface::ViewportDraw^ vd) override;
+			virtual bool SubWorldDraw(Autodesk::AutoCAD::GraphicsInterface::WorldDraw^ wd) override;
         };
     }
 

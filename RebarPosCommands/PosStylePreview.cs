@@ -5,9 +5,11 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
-using OZOZ.RebarPosWrapper;
+
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
+
+using OZOZ.RebarPosWrapper;
 
 namespace RebarPosCommands
 {

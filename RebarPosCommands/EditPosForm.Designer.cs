@@ -411,7 +411,6 @@
             this.posShapeView.Location = new System.Drawing.Point(22, 19);
             this.posShapeView.Margin = new System.Windows.Forms.Padding(6);
             this.posShapeView.Name = "posShapeView";
-            this.posShapeView.ShapeName = "posShapeView";
             this.posShapeView.Size = new System.Drawing.Size(340, 137);
             this.posShapeView.TabIndex = 0;
             this.posShapeView.Click += new System.EventHandler(this.posShapeView_Click);

@@ -30,10 +30,11 @@ CShapeText::CShapeText() : CShape(CShape::Text), x(0), y(0), height(0), text(L""
 	horizontalAlignment(AcDb::kTextLeft), verticalAlignment(AcDb::kTextBase)
 { }
 
-CShapeText::CShapeText(const Adesk::UInt16 Color, const double X, const double Y, const double Height, const std::wstring& Text, const AcDb::TextHorzMode HorizontalAlignment, const AcDb::TextVertMode VerticalAlignment, const Adesk::Boolean Visible)
-	: CShape(CShape::Text, Color, Visible), x(X), y(Y), height(Height), text(L""), horizontalAlignment(HorizontalAlignment), verticalAlignment(VerticalAlignment)
+CShapeText::CShapeText(const Adesk::UInt16 Color, const double X, const double Y, const double Height, const double Width, const std::wstring& Text, const std::wstring& Font, const AcDb::TextHorzMode HorizontalAlignment, const AcDb::TextVertMode VerticalAlignment, const Adesk::Boolean Visible)
+	: CShape(CShape::Text, Color, Visible), x(X), y(Y), height(Height), width(Width), text(L""), font(L""), horizontalAlignment(HorizontalAlignment), verticalAlignment(VerticalAlignment)
 {
 	text = Text;
+	font = Font;
 }
 
 void CShapeText::SetText(const std::wstring& Text)
@@ -44,6 +45,16 @@ void CShapeText::SetText(const std::wstring& Text)
 void CShapeText::SetText(const wchar_t* Text)
 {
 	text.assign(Text);
+}
+
+void CShapeText::SetFont(const std::wstring& Font)
+{
+	font.assign(Font);
+}
+
+void CShapeText::SetFont(const wchar_t* Font)
+{
+	font.assign(Font);
 }
 
 CShapeText* CShapeText::clone() const

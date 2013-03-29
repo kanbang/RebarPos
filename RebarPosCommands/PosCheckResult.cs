@@ -314,9 +314,10 @@ namespace RebarPosCommands
         public override bool Fix()
         {
             SelectShapeForm frmEdit = new SelectShapeForm();
-            List<SelectShapeForm.ShapeDisplay> list = new List<SelectShapeForm.ShapeDisplay>();
+            List<string> list = new List<string>();
             foreach (ShapeDefiniton def in Shapes)
-                list.Add(new SelectShapeForm.ShapeDisplay(def.Shape, def.A, def.B, def.C, def.D, def.E, def.F));
+                list.Add(def.Shape);
+            // TODO: Add piece lengths
             frmEdit.SetShapes(Shapes[0].Shape, list);
 
             if (frmEdit.ShowDialog() == System.Windows.Forms.DialogResult.OK)

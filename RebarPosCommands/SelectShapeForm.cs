@@ -13,28 +13,6 @@ namespace RebarPosCommands
 {
     public partial class SelectShapeForm : Form
     {
-        public class ShapeDisplay
-        {
-            public string Shape { get; private set; }
-            public string A { get; private set; }
-            public string B { get; private set; }
-            public string C { get; private set; }
-            public string D { get; private set; }
-            public string E { get; private set; }
-            public string F { get; private set; }
-
-            public ShapeDisplay(string shape, string a, string b, string c, string d, string e, string f)
-            {
-                Shape = shape;
-                A = a; B = b; C = c; D = d; E = e; F = f;
-            }
-
-            public ShapeDisplay(string shape)
-                : this(shape, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty)
-            {
-                ;
-            }
-        }
 
         string m_Current;
 
@@ -60,40 +38,25 @@ namespace RebarPosCommands
 
         public void SetShapes(string current)
         {
-            SetShapes(current, PosShape.GetAllPosShapes().Keys);
+            SetShapes(current, PosShape.GetAllPosShapes());
         }
 
-        public void SetShapes(string current, IEnumerable<string> inshapenames)
-        {
-            List<ShapeDisplay> shapes = new List<ShapeDisplay>();
-            foreach (string name in inshapenames)
-            {
-                shapes.Add(new ShapeDisplay(name));
-            }
-            SetShapes(current, shapes);
-        }
-
-        public void SetShapes(string current, IEnumerable<ShapeDisplay> inshapes)
+        public void SetShapes(string current, IEnumerable<string> inshapes)
         {
             m_Current = current;
 
             layoutPanel.Controls.Clear();
 
-            List<ShapeDisplay> shapes = new List<ShapeDisplay>();
-            foreach (ShapeDisplay name in inshapes)
-            {
-                shapes.Add(name);
-            }
-            shapes.Sort(new CompareShapesForSort());
+            List<string> shapes = new List<string>(inshapes);
 
             // Get AutoCad model background color
             Color backColor = DWGUtility.ModelBackgroundColor();
 
             try
             {
-                foreach (ShapeDisplay name in shapes)
+                foreach (string name in shapes)
                 {
-                    PosShape shape = PosShape.GetPosShape(name.Shape);
+                    PosShape shape = PosShape.GetPosShape(name);
                     if (shape != null)
                     {
                         Panel panel = new Panel();
@@ -106,64 +69,13 @@ namespace RebarPosCommands
                         panel.Controls.Add(shapeLabel);
 
                         PosShapeView posShapeView = new PosShapeView();
+                        posShapeView.ShapeName = shape.Name;
                         posShapeView.Selected = (shape.Name == m_Current);
                         posShapeView.Visible = true;
                         posShapeView.Size = new Size(50 * 475 / 75, 50);
-                        posShapeView.Tag = shape.Name;
                         posShapeView.BackColor = backColor;
                         posShapeView.Location = new Point(0, 15);
-
                         posShapeView.Click += new EventHandler(posShapeView_Click);
-
-                        for (int i = 0; i < shape.Items.Count; i++)
-                        {
-                            PosShape.Shape sh = shape.Items[i];
-                            Color color = sh.Color.ColorValue;
-                            if (sh is PosShape.ShapeLine)
-                            {
-                                PosShape.ShapeLine line = sh as PosShape.ShapeLine;
-                                posShapeView.AddLine(color, (float)line.X1, (float)line.Y1, (float)line.X2, (float)line.Y2, line.Visible);
-                            }
-                            else if (sh is PosShape.ShapeArc)
-                            {
-                                PosShape.ShapeArc arc = sh as PosShape.ShapeArc;
-                                posShapeView.AddArc(color, (float)arc.X, (float)arc.Y, (float)arc.R, (float)(arc.StartAngle * 180.0 / Math.PI), (float)(arc.EndAngle * 180.0 / Math.PI), arc.Visible);
-                            }
-                            else if (sh is PosShape.ShapeText)
-                            {
-                                PosShape.ShapeText text = sh as PosShape.ShapeText;
-                                StringAlignment horizontal = StringAlignment.Near;
-                                StringAlignment vertical = StringAlignment.Near;
-                                switch (text.HorizontalAlignment)
-                                {
-                                    case TextHorizontalMode.TextCenter:
-                                        horizontal = StringAlignment.Center;
-                                        break;
-                                    case TextHorizontalMode.TextRight:
-                                        horizontal = StringAlignment.Far;
-                                        break;
-                                }
-                                switch (text.VerticalAlignment)
-                                {
-                                    case TextVerticalMode.TextVerticalMid:
-                                        vertical = StringAlignment.Center;
-                                        break;
-                                    case TextVerticalMode.TextTop:
-                                        vertical = StringAlignment.Far;
-                                        break;
-                                }
-
-                                string str = text.Text;
-                                if (str == "A" && !string.IsNullOrEmpty(name.A)) str = name.A;
-                                if (str == "B" && !string.IsNullOrEmpty(name.B)) str = name.B;
-                                if (str == "C" && !string.IsNullOrEmpty(name.C)) str = name.C;
-                                if (str == "D" && !string.IsNullOrEmpty(name.D)) str = name.D;
-                                if (str == "E" && !string.IsNullOrEmpty(name.E)) str = name.E;
-                                if (str == "F" && !string.IsNullOrEmpty(name.F)) str = name.F;
-
-                                posShapeView.AddText(color, (float)text.X, (float)text.Y, (float)text.Height, str, horizontal, vertical, text.Visible);
-                            }
-                        }
 
                         panel.Controls.Add(posShapeView);
                         layoutPanel.Controls.Add(panel);
@@ -176,36 +88,12 @@ namespace RebarPosCommands
             }
         }
 
-        private class CompareShapesForSort : IComparer<ShapeDisplay>
-        {
-            public int Compare(ShapeDisplay p1, ShapeDisplay p2)
-            {
-                if (p1 == p2) return 0;
-
-                if (p1.Shape == "GENEL")
-                    return 1;
-                else if (p2.Shape == "GENEL")
-                    return -1;
-                else
-                {
-                    int n1 = 0;
-                    int n2 = 0;
-                    if (int.TryParse(p1.Shape, out n1) && int.TryParse(p2.Shape, out n2))
-                    {
-                        return n1 < n2 ? -1 : n1 > n2 ? 1 : 0;
-                    }
-                    else
-                        return string.CompareOrdinal(p1.Shape, p2.Shape);
-                }
-            }
-        }
-
         private void posShapeView_Click(object sender, EventArgs e)
         {
             PosShapeView ctrl = sender as PosShapeView;
             if (ctrl != null)
             {
-                m_Current = (string)ctrl.Tag;
+                m_Current = ctrl.ShapeName;
                 DialogResult = DialogResult.OK;
                 Close();
             }

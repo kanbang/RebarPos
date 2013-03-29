@@ -41,6 +41,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnRename = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.btnAdd = new System.Windows.Forms.Button();
             this.chkUserOnly = new System.Windows.Forms.CheckBox();
             this.lbShapes = new System.Windows.Forms.ListView();
             this.chName = new System.Windows.Forms.ColumnHeader();
@@ -49,14 +52,11 @@
             this.chFormulaBending = new System.Windows.Forms.ColumnHeader();
             this.lShapes = new System.Windows.Forms.ImageList(this.components);
             this.gbDisplay = new System.Windows.Forms.GroupBox();
+            this.btnSelectShapes = new System.Windows.Forms.Button();
+            this.posShapeView = new RebarPosCommands.PosShapeView();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.chkShowShapes = new System.Windows.Forms.CheckBox();
             this.btnOK = new System.Windows.Forms.Button();
-            this.btnSelectShapes = new System.Windows.Forms.Button();
-            this.btnRename = new System.Windows.Forms.Button();
-            this.btnDelete = new System.Windows.Forms.Button();
-            this.btnAdd = new System.Windows.Forms.Button();
-            this.posShapeView = new RebarPosCommands.PosShapeView();
             this.gbOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udPriority)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udFields)).BeginInit();
@@ -206,6 +206,39 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "&Donatı Açılımları";
             // 
+            // btnRename
+            // 
+            this.btnRename.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRename.Image = global::RebarPosCommands.Properties.Resources.textfield;
+            this.btnRename.Location = new System.Drawing.Point(347, 81);
+            this.btnRename.Name = "btnRename";
+            this.btnRename.Size = new System.Drawing.Size(24, 23);
+            this.btnRename.TabIndex = 7;
+            this.btnRename.UseVisualStyleBackColor = true;
+            this.btnRename.Click += new System.EventHandler(this.btnRename_Click);
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDelete.Image = global::RebarPosCommands.Properties.Resources.delete;
+            this.btnDelete.Location = new System.Drawing.Point(347, 52);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(24, 23);
+            this.btnDelete.TabIndex = 7;
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // btnAdd
+            // 
+            this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAdd.Image = global::RebarPosCommands.Properties.Resources.add;
+            this.btnAdd.Location = new System.Drawing.Point(347, 23);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(24, 23);
+            this.btnAdd.TabIndex = 7;
+            this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            // 
             // chkUserOnly
             // 
             this.chkUserOnly.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -268,12 +301,9 @@
             // lShapes
             // 
             this.lShapes.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("lShapes.ImageStream")));
-            this.lShapes.TransparentColor = System.Drawing.Color.Transparent;
-            this.lShapes.Images.SetKeyName(0, "page.png");
-            this.lShapes.Images.SetKeyName(1, "page_white.png");
-            this.lShapes.Images.SetKeyName(2, "page_white_add.png");
-            this.lShapes.Images.SetKeyName(3, "page_white_delete.png");
-            this.lShapes.Images.SetKeyName(4, "page_go.png");
+            this.lShapes.TransparentColor = System.Drawing.Color.Magenta;
+            this.lShapes.Images.SetKeyName(0, "bullet_black.png");
+            this.lShapes.Images.SetKeyName(1, "bullet_red.png");
             // 
             // gbDisplay
             // 
@@ -287,6 +317,32 @@
             this.gbDisplay.TabIndex = 2;
             this.gbDisplay.TabStop = false;
             this.gbDisplay.Text = "&Görünüm";
+            // 
+            // btnSelectShapes
+            // 
+            this.btnSelectShapes.Image = global::RebarPosCommands.Properties.Resources.select;
+            this.btnSelectShapes.Location = new System.Drawing.Point(20, 169);
+            this.btnSelectShapes.Name = "btnSelectShapes";
+            this.btnSelectShapes.Size = new System.Drawing.Size(268, 23);
+            this.btnSelectShapes.TabIndex = 1;
+            this.btnSelectShapes.Text = "Çizimden Al";
+            this.btnSelectShapes.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnSelectShapes.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnSelectShapes.UseVisualStyleBackColor = true;
+            this.btnSelectShapes.Click += new System.EventHandler(this.btnSelectShapes_Click);
+            // 
+            // posShapeView
+            // 
+            this.posShapeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.posShapeView.BackColor = System.Drawing.Color.Black;
+            this.posShapeView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.posShapeView.ForeColor = System.Drawing.Color.White;
+            this.posShapeView.Location = new System.Drawing.Point(20, 31);
+            this.posShapeView.Name = "posShapeView";
+            this.posShapeView.Size = new System.Drawing.Size(268, 132);
+            this.posShapeView.TabIndex = 0;
             // 
             // errorProvider
             // 
@@ -314,65 +370,6 @@
             this.btnOK.Text = "Tamam";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-            // 
-            // btnSelectShapes
-            // 
-            this.btnSelectShapes.Image = global::RebarPosCommands.Properties.Resources.select;
-            this.btnSelectShapes.Location = new System.Drawing.Point(20, 169);
-            this.btnSelectShapes.Name = "btnSelectShapes";
-            this.btnSelectShapes.Size = new System.Drawing.Size(268, 23);
-            this.btnSelectShapes.TabIndex = 1;
-            this.btnSelectShapes.Text = "Çizimden Al";
-            this.btnSelectShapes.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnSelectShapes.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnSelectShapes.UseVisualStyleBackColor = true;
-            this.btnSelectShapes.Click += new System.EventHandler(this.btnSelectShapes_Click);
-            // 
-            // btnRename
-            // 
-            this.btnRename.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRename.Image = global::RebarPosCommands.Properties.Resources.textfield;
-            this.btnRename.Location = new System.Drawing.Point(347, 81);
-            this.btnRename.Name = "btnRename";
-            this.btnRename.Size = new System.Drawing.Size(24, 23);
-            this.btnRename.TabIndex = 7;
-            this.btnRename.UseVisualStyleBackColor = true;
-            this.btnRename.Click += new System.EventHandler(this.btnRename_Click);
-            // 
-            // btnDelete
-            // 
-            this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDelete.Image = global::RebarPosCommands.Properties.Resources.delete;
-            this.btnDelete.Location = new System.Drawing.Point(347, 52);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(24, 23);
-            this.btnDelete.TabIndex = 7;
-            this.btnDelete.UseVisualStyleBackColor = true;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
-            // 
-            // btnAdd
-            // 
-            this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAdd.Image = global::RebarPosCommands.Properties.Resources.add;
-            this.btnAdd.Location = new System.Drawing.Point(347, 23);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(24, 23);
-            this.btnAdd.TabIndex = 7;
-            this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
-            // 
-            // posShapeView
-            // 
-            this.posShapeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.posShapeView.BackColor = System.Drawing.Color.Black;
-            this.posShapeView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.posShapeView.ForeColor = System.Drawing.Color.White;
-            this.posShapeView.Location = new System.Drawing.Point(20, 31);
-            this.posShapeView.Name = "posShapeView";
-            this.posShapeView.Size = new System.Drawing.Size(268, 132);
-            this.posShapeView.TabIndex = 0;
             // 
             // PosShapesForm
             // 

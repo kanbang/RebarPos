@@ -2,9 +2,10 @@
 // Microsoft Visual C++ generated include file.
 // Used by NativeRebarPos.rc
 //
-#define IDR_SHAPELIST1                  101
-#define IDR_SHAPELIST2                  103
+#define IDR_SHAPES                      101
+#define IDR_INTERNALSHAPES              103
 #define IDR_TABLESTYLE1                 106
+#define IDR_TABLESTYLES                 106
 
 // Next default values for new objects
 // 

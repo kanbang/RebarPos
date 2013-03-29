@@ -377,86 +377,33 @@ namespace RebarPosCommands
 
         private bool SetShape()
         {
-            posShapeView.Reset();
+            posShapeView.ShapeName = m_Shape;
 
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
-            {
-                try
-                {
-                    PosShape shape = PosShape.GetPosShape(m_Shape);
-                    if (shape == null)
-                        return false;
+            PosShape shape = PosShape.GetPosShape(m_Shape);
+            if (shape == null)
+                return false;
 
-                    if (m_Bending)
-                        m_Formula = shape.FormulaBending;
-                    else
-                        m_Formula = shape.Formula;
+            if (m_Bending)
+                m_Formula = shape.FormulaBending;
+            else
+                m_Formula = shape.Formula;
 
-                    m_Fields = shape.Fields;
-                    txtA.Enabled = btnSelectA.Enabled = btnMeasureA.Enabled = (m_Fields >= 1);
-                    txtB.Enabled = btnSelectB.Enabled = btnMeasureB.Enabled = (m_Fields >= 2);
-                    txtC.Enabled = btnSelectC.Enabled = btnMeasureC.Enabled = (m_Fields >= 3);
-                    txtD.Enabled = btnSelectD.Enabled = btnMeasureD.Enabled = (m_Fields >= 4);
-                    txtE.Enabled = btnSelectE.Enabled = btnMeasureE.Enabled = (m_Fields >= 5);
-                    txtF.Enabled = btnSelectF.Enabled = btnMeasureF.Enabled = (m_Fields >= 6);
+            m_Fields = shape.Fields;
+            txtA.Enabled = btnSelectA.Enabled = btnMeasureA.Enabled = (m_Fields >= 1);
+            txtB.Enabled = btnSelectB.Enabled = btnMeasureB.Enabled = (m_Fields >= 2);
+            txtC.Enabled = btnSelectC.Enabled = btnMeasureC.Enabled = (m_Fields >= 3);
+            txtD.Enabled = btnSelectD.Enabled = btnMeasureD.Enabled = (m_Fields >= 4);
+            txtE.Enabled = btnSelectE.Enabled = btnMeasureE.Enabled = (m_Fields >= 5);
+            txtF.Enabled = btnSelectF.Enabled = btnMeasureF.Enabled = (m_Fields >= 6);
 
-                    if (!txtA.Enabled) txtA.Text = "";
-                    if (!txtB.Enabled) txtB.Text = "";
-                    if (!txtC.Enabled) txtC.Text = "";
-                    if (!txtD.Enabled) txtD.Text = "";
-                    if (!txtE.Enabled) txtE.Text = "";
-                    if (!txtF.Enabled) txtF.Text = "";
+            if (!txtA.Enabled) txtA.Text = "";
+            if (!txtB.Enabled) txtB.Text = "";
+            if (!txtC.Enabled) txtC.Text = "";
+            if (!txtD.Enabled) txtD.Text = "";
+            if (!txtE.Enabled) txtE.Text = "";
+            if (!txtF.Enabled) txtF.Text = "";
 
-                    for (int i = 0; i < shape.Items.Count; i++)
-                    {
-                        PosShape.Shape sh = shape.Items[i];
-                        Color color = sh.Color.ColorValue;
-                        if (sh is PosShape.ShapeLine)
-                        {
-                            PosShape.ShapeLine line = sh as PosShape.ShapeLine;
-                            posShapeView.AddLine(color, (float)line.X1, (float)line.Y1, (float)line.X2, (float)line.Y2, line.Visible);
-                        }
-                        else if (sh is PosShape.ShapeArc)
-                        {
-                            PosShape.ShapeArc arc = sh as PosShape.ShapeArc;
-                            posShapeView.AddArc(color, (float)arc.X, (float)arc.Y, (float)arc.R, (float)(arc.StartAngle * 180.0 / Math.PI), (float)(arc.EndAngle * 180.0 / Math.PI), arc.Visible);
-                        }
-                        else if (sh is PosShape.ShapeText)
-                        {
-                            PosShape.ShapeText text = sh as PosShape.ShapeText;
-                            StringAlignment horizontal = StringAlignment.Near;
-                            StringAlignment vertical = StringAlignment.Near;
-                            switch (text.HorizontalAlignment)
-                            {
-                                case TextHorizontalMode.TextCenter:
-                                    horizontal = StringAlignment.Center;
-                                    break;
-                                case TextHorizontalMode.TextRight:
-                                    horizontal = StringAlignment.Far;
-                                    break;
-                            }
-                            switch (text.VerticalAlignment)
-                            {
-                                case TextVerticalMode.TextVerticalMid:
-                                    vertical = StringAlignment.Center;
-                                    break;
-                                case TextVerticalMode.TextTop:
-                                    vertical = StringAlignment.Far;
-                                    break;
-                            }
-                            posShapeView.AddText(color, (float)text.X, (float)text.Y, (float)text.Height, text.Text, horizontal, vertical, text.Visible);
-                        }
-                    }
-
-                    lblPosShape.Text = m_Shape;
-                }
-                catch (System.Exception ex)
-                {
-                    MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-            }
+            lblPosShape.Text = m_Shape;
 
             return true;
         }

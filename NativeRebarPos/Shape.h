@@ -64,17 +64,22 @@ struct DLLIMPEXP CShapeText : CShape
 {
 	double x;
 	double y;
+	std::wstring font;
 	double height;
+	double width;
 	std::wstring text;
 	AcDb::TextHorzMode horizontalAlignment;
 	AcDb::TextVertMode verticalAlignment;
 
 	CShapeText();
 
-	CShapeText(const Adesk::UInt16 Color, const double X, const double Y, const double Height, const std::wstring& Text, const AcDb::TextHorzMode HorizontalAlignment, const AcDb::TextVertMode VerticalAlignment, const Adesk::Boolean Visible = Adesk::kTrue);
+	CShapeText(const Adesk::UInt16 Color, const double X, const double Y, const double Height, const double Width, const std::wstring& Text, const std::wstring& Font, const AcDb::TextHorzMode HorizontalAlignment, const AcDb::TextVertMode VerticalAlignment, const Adesk::Boolean Visible = Adesk::kTrue);
 
 	void SetText(const std::wstring& Text);
 	void SetText(const wchar_t* Text);
+
+	void SetFont(const std::wstring& Font);
+	void SetFont(const wchar_t* Font);
 
 	virtual CShapeText* clone() const;
 };

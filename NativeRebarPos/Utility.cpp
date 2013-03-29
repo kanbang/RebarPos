@@ -6,6 +6,7 @@
 
 #include <sstream>
 #include <iomanip>
+#include <locale>
 
 #include "Utility.h"
 
@@ -55,33 +56,36 @@ AcDbObjectId Utility::CreateTextStyle(const ACHAR* name, const ACHAR* filename, 
 
 Acad::ErrorStatus Utility::MakeGiTextStyle(AcGiTextStyle &newStyle, const AcDbObjectId styleId)
 {
-    AcDbTextStyleTableRecord *oldStyle;
-    Acad::ErrorStatus es = acdbOpenAcDbObject((AcDbObject *&)oldStyle, styleId, AcDb::kForRead);
-    if (es == Acad::eOk) 
-	{
-        const ACHAR *tmpStr;
-        if ((es = oldStyle->fileName(tmpStr)) != Acad::eOk) 
-		{
-            oldStyle->close();
-            return es;
-        }
-        newStyle.setFileName(tmpStr);
+	Acad::ErrorStatus es;
+	AcDbObjectPointer<AcDbTextStyleTableRecord> oldStyle (styleId, AcDb::kForRead);
+	if((es = oldStyle.openStatus()) != Acad::eOk)
+		return es;
 
-        if ((es = oldStyle->bigFontFileName(tmpStr)) != Acad::eOk) 
-		{
-            oldStyle->close();
-            return es;
-        }
-        newStyle.setBigFontFileName(tmpStr);
+    ACHAR* filename = NULL;
+    if ((es = oldStyle->fileName(filename)) != Acad::eOk) 
+        return es;
+    ACHAR* bigfilename = NULL;
+    if ((es = oldStyle->bigFontFileName(bigfilename)) != Acad::eOk) 
+        return es;
 
-        newStyle.setTextSize(oldStyle->textSize());
-        newStyle.setXScale(oldStyle->xScale());
-        newStyle.setObliquingAngle(oldStyle->obliquingAngle());
+	Utility::MakeGiTextStyle(newStyle, filename, bigfilename, oldStyle->textSize(), oldStyle->xScale(), oldStyle->obliquingAngle());
 
-        oldStyle->close();
-        newStyle.loadStyleRec();
-    }
-    return es;
+	acutDelString(filename);
+	acutDelString(bigfilename);
+
+	return Acad::eOk;
+}
+
+void Utility::MakeGiTextStyle(AcGiTextStyle &newStyle, const ACHAR* filename, const ACHAR* bigFontFilename, const double textSize, const double widthFactor, const double obliquingAngle)
+{
+    newStyle.setFileName(filename);
+    newStyle.setBigFontFileName(bigFontFilename);
+
+    newStyle.setTextSize(textSize);
+    newStyle.setXScale(widthFactor);
+    newStyle.setObliquingAngle(obliquingAngle);
+
+    newStyle.loadStyleRec();
 }
 
 void Utility::ReplaceString(std::wstring& str, const std::wstring& oldStr, const std::wstring& newStr)
@@ -92,6 +96,14 @@ void Utility::ReplaceString(std::wstring& str, const std::wstring& oldStr, const
 		str.replace(pos, oldStr.length(), newStr);
 		pos += newStr.length();
 	}
+}
+
+bool Utility::IsNumeric(const std::wstring& str)
+{
+    std::wstring::const_iterator it = str.begin();
+	std::locale loc = std::locale::classic();
+	while (it != str.end() && std::isdigit(*it, loc)) ++it;
+    return !str.empty() && it == str.end();
 }
 
 void Utility::IntToStr(const int val, std::wstring& str)
@@ -355,4 +367,62 @@ std::vector<std::wstring> Utility::SplitString(const std::wstring& s, wchar_t de
 std::vector<std::wstring> Utility::SplitString(const std::wstring& s)
 {
 	return SplitString(s, L'\n');
+}
+
+void Utility::DrawLine(const AcGiWorldDraw* worldDraw, const AcGePoint3d& pt1, const AcGePoint3d& pt2, const Adesk::UInt16 color)
+{
+	worldDraw->subEntityTraits().setColor(color);
+	AcGePoint3d line[2];
+	line[0] = pt1;
+	line[1] = pt2;
+	worldDraw->geometry().polyline(2, line);
+}
+
+void Utility::DrawCircle(const AcGiWorldDraw* worldDraw, const AcGePoint3d& center, const double radius, const Adesk::UInt16 color)
+{
+	const double PI = 4.0 * atan(1.0);
+
+	worldDraw->subEntityTraits().setColor(color);
+	worldDraw->geometry().circle(center, radius, AcGeVector3d::kZAxis);
+}
+
+void Utility::DrawArc(const AcGiWorldDraw* worldDraw, const AcGePoint3d& center, const double radius, 
+					  const double startAngle, const double endAngle, const Adesk::UInt16 color)
+{
+	const double PI = 4.0 * atan(1.0);
+
+	worldDraw->subEntityTraits().setColor(color);
+	worldDraw->geometry().ellipticalArc(center, AcGeVector3d::kZAxis, radius, radius, startAngle, endAngle, 0);
+}
+
+void Utility::DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& position, const std::wstring& string,
+					   const AcGiTextStyle& textStyle, const Adesk::UInt16 color)
+{
+	worldDraw->subEntityTraits().setColor(color);
+	worldDraw->geometry().text(position, AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, string.c_str(), -1, Adesk::kFalse, textStyle);
+}
+
+void Utility::DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& position, const std::wstring& string, 
+					   const AcGiTextStyle& textStyle, const AcDb::TextHorzMode horizontalAlignment, const AcDb::TextVertMode verticalAlignment, 
+					   const Adesk::UInt16 color)
+{
+	AcGePoint2d ext = textStyle.extents(string.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
+
+	double xoff = 0.0; 
+	if(horizontalAlignment == AcDb::kTextLeft)
+		xoff = 0.0;
+	else if(horizontalAlignment == AcDb::kTextRight)
+		xoff = -ext.x;
+	else // horizontal center
+		xoff = -ext.x / 2.0;
+
+	double yoff = 0.0;
+	if(verticalAlignment == AcDb::kTextTop) 
+		yoff = -ext.y;
+	else if(verticalAlignment == AcDb::kTextBase || verticalAlignment == AcDb::kTextBottom)
+		yoff = 0.0;
+	else // vertical middle
+		yoff = -ext.y / 2.0;
+
+	DrawText(worldDraw, AcGePoint3d(position.x + xoff, position.y + yoff, 0), string, textStyle, color);
 }

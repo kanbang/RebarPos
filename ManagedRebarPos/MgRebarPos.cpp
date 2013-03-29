@@ -16,8 +16,8 @@ using namespace OZOZ::RebarPosWrapper;
 //*************************************************************************
 // Constructors and destructors 
 //*************************************************************************
-RebarPos::RebarPos() 
-:Autodesk::AutoCAD::DatabaseServices::Entity(IntPtr(new CRebarPos()), true)
+RebarPos::RebarPos()
+: Autodesk::AutoCAD::DatabaseServices::Entity(IntPtr(new CRebarPos()), true)
 {
 	mCalculatedProperties = gcnew RebarPos::CalculatedProperties();
 }

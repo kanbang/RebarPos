@@ -27,8 +27,11 @@ typedef std::vector<CShape*>::const_iterator ShapeListConstIt;
 /// ---------------------------------------------------------------------------
 /// The CPosShape represents the shape definitions of rebar markers.
 /// ---------------------------------------------------------------------------
-class DLLIMPEXP CPosShape
+class DLLIMPEXP CPosShape : public  AcGiDrawable
 {
+public:
+	/// Define additional RTT information for AcRxObject base type.
+    ACRX_DECLARE_MEMBERS(CPosShape);
 
 public:
 	CPosShape ();
@@ -50,6 +53,16 @@ protected:
 	Adesk::Boolean m_IsInternal;
 
 	ShapeList m_List;
+
+	AcGsNode* m_GsNode;
+
+	ACHAR* m_A;
+	ACHAR* m_B;
+	ACHAR* m_C;
+	ACHAR* m_D;
+	ACHAR* m_E;
+	ACHAR* m_F;
+	AcGiTextStyle m_Style;
 
 public:
 	/// Gets or sets item name
@@ -73,17 +86,24 @@ public:
 	const Adesk::Int32 Priority(void) const;
 	Acad::ErrorStatus setPriority(const Adesk::Int32 newVal);
 
-	/// Gets or sets whether this is a built-in shape
-	const Adesk::Boolean IsBuiltIn(void) const;
-	Acad::ErrorStatus setIsBuiltIn(const Adesk::Boolean newVal);
-
 	/// Gets or sets whether this is an unknown shape
+public:
 	const Adesk::Boolean IsUnknown(void) const;
+protected:
 	Acad::ErrorStatus setIsUnknown(const Adesk::Boolean newVal);
 
+	/// Gets or sets whether this is a built-in shape
+public:
+	const Adesk::Boolean IsBuiltIn(void) const;
+protected:
+	Acad::ErrorStatus setIsBuiltIn(const Adesk::Boolean newVal);
+
 	/// Gets or sets whether this is an internal shape
+public:
 	const Adesk::Boolean IsInternal(void) const;
+protected:
 	Acad::ErrorStatus setIsInternal(const Adesk::Boolean newVal);
+
 public:
 	/// Adds a shape.
 	void AddShape(CShape* const shape);
@@ -106,8 +126,14 @@ public:
 	/// Get shape extents
 	const AcDbExtents GetShapeExtents() const;
 
+	/// Replaces piece names with given strings
+	Acad::ErrorStatus setShapeTexts(const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f);
+	Acad::ErrorStatus clearShapeTexts(void);
+
 private:
-	static std::map<std::wstring, CPosShape*> m_PosShapes;
+	static std::map<std::wstring, CPosShape*> m_BuiltInPosShapes;
+	static std::map<std::wstring, CPosShape*> m_InternalPosShapes;
+	static std::map<std::wstring, CPosShape*> m_CustomPosShapes;
 
 public:
 	/// Add a new shape
@@ -120,23 +146,44 @@ public:
 	static CPosShape* GetUnknownPosShape();
 
 	/// Gets the number of pos shapes
-	static std::map<std::wstring, CPosShape*>::size_type GetPosShapeCount();
-
-	/// Gets the underlying map
-	static std::map<std::wstring, CPosShape*> GetMap();
+	static int GetPosShapeCount(const bool builtin, const bool isinternal, const bool custom);
 
 	/// Removes all shapes
-	static void ClearPosShapes(const bool builtin, const bool custom);
+	static void ClearPosShapes(const bool builtin, const bool isinternal, const bool custom);
+
+	/// Gets the names of all shapes
+	static std::vector<std::wstring> GetAllShapes(const bool builtin, const bool isinternal, const bool custom);
 
 	/// Reads all shapes defined in the resource
 	static void ReadPosShapesFromResource(HINSTANCE hInstance, const int resid, const bool isinternal);
 
 	/// Reads all shapes defined in the given text file
-	static void ReadPosShapesFromFile(const std::wstring filename, const bool builtin);
+	static void ReadPosShapesFromFile(const std::wstring filename);
+
+	/// Saves all shapes to the given text file
+	static void SavePosShapesToFile(const std::wstring filename);
 
 	/// Reads all shapes defined in the string
 	static void ReadPosShapesFromString(const std::wstring source, const bool builtin, const bool isinternal);
 
-	/// Saves all shapes to the given text file
-	static void SavePosShapesToFile(const std::wstring filename, const bool builtin, const bool custom);
+public:
+    // Drawable implementation
+    virtual Adesk::Boolean  isPersistent    (void) const;
+    virtual AcDbObjectId    id              (void) const;
+
+    virtual void            setGsNode       (AcGsNode* gsnode);
+    virtual AcGsNode*       gsNode          (void) const;
+
+    virtual bool            bounds          (AcDbExtents& bounds) const;
+
+public:
+	// Drawable implementation
+    virtual Adesk::UInt32   subSetAttributes   (AcGiDrawableTraits* traits);
+    virtual Adesk::Boolean  subWorldDraw       (AcGiWorldDraw* worldDraw);
+    virtual void            subViewportDraw    (AcGiViewportDraw* vd);
+	virtual Adesk::UInt32   subViewportDrawLogicalFlags (AcGiViewportDraw * vd);
+
+private:
+		// Helper functions
+	static bool SortShapeNames(const std::wstring p1, const std::wstring p2);
 };

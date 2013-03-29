@@ -36,24 +36,25 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
         acrxRegisterAppMDIAware(pkt);
 
 		// Register custom classes
+		CPosShape::rxInit();
 		CPosGroup::rxInit();
         CRebarPos::rxInit();
 		CGenericTable::rxInit();
 		CBOQTable::rxInit();
         acrxBuildClassHierarchy();
 
-        // Register a service using the class name.
-        if (!acrxServiceIsRegistered(_T("CRebarPos")))
-            acrxRegisterService(_T("CRebarPos"));
-
 		// Create default shapes
-		CPosShape::ClearPosShapes(true, true);
-		CPosShape::ReadPosShapesFromResource(_hdllInstance, IDR_SHAPELIST1, false);
-		CPosShape::ReadPosShapesFromResource(_hdllInstance, IDR_SHAPELIST2, true);
+		CPosShape::ClearPosShapes(true, true, true);
+		CPosShape::ReadPosShapesFromResource(_hdllInstance, IDR_SHAPES, false);
+		CPosShape::ReadPosShapesFromResource(_hdllInstance, IDR_INTERNALSHAPES, true);
 
 		// Create default table styles
 		CBOQStyle::ClearBOQStyles(true, true);
-		CBOQStyle::ReadBOQStylesFromResource(_hdllInstance, IDR_TABLESTYLE1);
+		CBOQStyle::ReadBOQStylesFromResource(_hdllInstance, IDR_TABLESTYLES);
+
+        // Register a service using the class name.
+        if (!acrxServiceIsRegistered(_T("CRebarPos")))
+            acrxRegisterService(_T("CRebarPos"));
 
         break;
 
@@ -64,7 +65,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
             delete obj;
 
 		// Remove shapes from memory
-		CPosShape::ClearPosShapes(true, true);
+		CPosShape::ClearPosShapes(true, true, true);
 
 		// Remove table styles from memory
 		CBOQStyle::ClearBOQStyles(true, true);
@@ -74,6 +75,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 		deleteAcRxClass(CGenericTable::desc());
         deleteAcRxClass(CRebarPos::desc());
 		deleteAcRxClass(CPosGroup::desc());
+		deleteAcRxClass(CPosShape::desc());
 
         break;
     }

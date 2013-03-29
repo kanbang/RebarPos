@@ -241,131 +241,27 @@ namespace RebarPosCommands
 
         private void SetFindShape(string name)
         {
-            psvFind.Reset();
+            psvFind.ShapeName = name;
 
             m_FindShape = name;
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
-            {
-                try
-                {
-                    PosShape shape = PosShape.GetPosShape(name);
-                    if (shape == null)
-                        return;
+            PosShape shape = PosShape.GetPosShape(name);
+            if (shape == null)
+                return;
+            m_FindFields = shape.Fields;
 
-                    m_FindFields = shape.Fields;
-
-                    for (int i = 0; i < shape.Items.Count; i++)
-                    {
-                        PosShape.Shape sh = shape.Items[i];
-                        Color color = sh.Color.ColorValue;
-                        if (sh is PosShape.ShapeLine)
-                        {
-                            PosShape.ShapeLine line = sh as PosShape.ShapeLine;
-                            psvFind.AddLine(color, (float)line.X1, (float)line.Y1, (float)line.X2, (float)line.Y2, line.Visible);
-                        }
-                        else if (sh is PosShape.ShapeArc)
-                        {
-                            PosShape.ShapeArc arc = sh as PosShape.ShapeArc;
-                            psvFind.AddArc(color, (float)arc.X, (float)arc.Y, (float)arc.R, (float)(arc.StartAngle * 180.0 / Math.PI), (float)(arc.EndAngle * 180.0 / Math.PI), arc.Visible);
-                        }
-                        else if (sh is PosShape.ShapeText)
-                        {
-                            PosShape.ShapeText text = sh as PosShape.ShapeText;
-                            StringAlignment horizontal = StringAlignment.Near;
-                            StringAlignment vertical = StringAlignment.Near;
-                            switch (text.HorizontalAlignment)
-                            {
-                                case TextHorizontalMode.TextCenter:
-                                    horizontal = StringAlignment.Center;
-                                    break;
-                                case TextHorizontalMode.TextRight:
-                                    horizontal = StringAlignment.Far;
-                                    break;
-                            }
-                            switch (text.VerticalAlignment)
-                            {
-                                case TextVerticalMode.TextVerticalMid:
-                                    vertical = StringAlignment.Center;
-                                    break;
-                                case TextVerticalMode.TextTop:
-                                    vertical = StringAlignment.Far;
-                                    break;
-                            }
-                            psvFind.AddText(color, (float)text.X, (float)text.Y, (float)text.Height, text.Text, horizontal, vertical, text.Visible);
-                        }
-                    }
-                }
-                catch (System.Exception)
-                {
-                    ;
-                }
-            }
             UpdateUI();
         }
 
         private void SetReplaceShape(string name)
         {
-            psvReplace.Reset();
+            psvReplace.ShapeName = name;
 
             m_ReplaceShape = name;
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
-            {
-                try
-                {
-                    PosShape shape = PosShape.GetPosShape(name);
-                    if (shape == null)
-                        return;
+            PosShape shape = PosShape.GetPosShape(name);
+            if (shape == null)
+                return;
+            m_ReplaceFields = shape.Fields;
 
-                    m_ReplaceFields = shape.Fields;
-
-                    for (int i = 0; i < shape.Items.Count; i++)
-                    {
-                        PosShape.Shape sh = shape.Items[i];
-                        Color color = sh.Color.ColorValue;
-                        if (sh is PosShape.ShapeLine)
-                        {
-                            PosShape.ShapeLine line = sh as PosShape.ShapeLine;
-                            psvReplace.AddLine(color, (float)line.X1, (float)line.Y1, (float)line.X2, (float)line.Y2, line.Visible);
-                        }
-                        else if (sh is PosShape.ShapeArc)
-                        {
-                            PosShape.ShapeArc arc = sh as PosShape.ShapeArc;
-                            psvReplace.AddArc(color, (float)arc.X, (float)arc.Y, (float)arc.R, (float)(arc.StartAngle * 180.0 / Math.PI), (float)(arc.EndAngle * 180.0 / Math.PI), arc.Visible);
-                        }
-                        else if (sh is PosShape.ShapeText)
-                        {
-                            PosShape.ShapeText text = sh as PosShape.ShapeText;
-                            StringAlignment horizontal = StringAlignment.Near;
-                            StringAlignment vertical = StringAlignment.Near;
-                            switch (text.HorizontalAlignment)
-                            {
-                                case TextHorizontalMode.TextCenter:
-                                    horizontal = StringAlignment.Center;
-                                    break;
-                                case TextHorizontalMode.TextRight:
-                                    horizontal = StringAlignment.Far;
-                                    break;
-                            }
-                            switch (text.VerticalAlignment)
-                            {
-                                case TextVerticalMode.TextVerticalMid:
-                                    vertical = StringAlignment.Center;
-                                    break;
-                                case TextVerticalMode.TextTop:
-                                    vertical = StringAlignment.Far;
-                                    break;
-                            }
-                            psvReplace.AddText(color, (float)text.X, (float)text.Y, (float)text.Height, text.Text, horizontal, vertical, text.Visible);
-                        }
-                    }
-                }
-                catch (System.Exception)
-                {
-                    ;
-                }
-            }
             UpdateUI();
         }
 

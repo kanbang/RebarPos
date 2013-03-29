@@ -39,8 +39,14 @@ public:
 	/// Create an AcGiTextStyle from the db id of an AcDbTextStyleTableRecord
 	static Acad::ErrorStatus MakeGiTextStyle(AcGiTextStyle &ts, const AcDbObjectId  styleId);
 
+	/// Create an AcGiTextStyle from the given parameters
+	static void MakeGiTextStyle(AcGiTextStyle &newStyle, const ACHAR* filename, const ACHAR* bigFontFilename, const double textSize, const double widthFactor = 1.0, const double obliquingAngle = 0.0);
+
 	/// Replace all occurences of string
-	static  void ReplaceString(std::wstring& str, const std::wstring& oldStr, const std::wstring& newStr);
+	static void ReplaceString(std::wstring& str, const std::wstring& oldStr, const std::wstring& newStr);
+
+	/// Determines if the given string contains numeric digits only (positive integers only)
+	static bool IsNumeric(const std::wstring& str);
 
 	/// Convert double to string
 	static  void DoubleToStr(const double val, const int digits, std::wstring& str);
@@ -81,4 +87,13 @@ public:
 	// Split string
 	static std::vector<std::wstring> SplitString(const std::wstring& s, wchar_t delim);
 	static std::vector<std::wstring> SplitString(const std::wstring& s);
+
+	// Worlddraw utilities
+	static void DrawLine(const AcGiWorldDraw* worldDraw, const AcGePoint3d& pt1, const AcGePoint3d& pt2, const Adesk::UInt16 color);
+	static void DrawCircle(const AcGiWorldDraw* worldDraw, const AcGePoint3d& center, const double radius, const Adesk::UInt16 color);
+	static void DrawArc(const AcGiWorldDraw* worldDraw, const AcGePoint3d& center, const double radius, const double startAngle, const double endAngle, const Adesk::UInt16 color);
+	static void DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& position, const std::wstring& string, const AcGiTextStyle& textStyle, const Adesk::UInt16 color);
+	static void DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& position, const std::wstring& string, 
+					   const AcGiTextStyle& textStyle, const AcDb::TextHorzMode horizontalAlignment, const AcDb::TextVertMode verticalAlignment, 
+					   const Adesk::UInt16 color);
 };

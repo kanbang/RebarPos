@@ -8,12 +8,25 @@
 #include "Utility.h"
 
 #include <fstream>
+#include <algorithm>
 
-std::map<std::wstring, CPosShape*> CPosShape::m_PosShapes;
+std::map<std::wstring, CPosShape*> CPosShape::m_BuiltInPosShapes;
+std::map<std::wstring, CPosShape*> CPosShape::m_InternalPosShapes;
+std::map<std::wstring, CPosShape*> CPosShape::m_CustomPosShapes;
 
-//-----------------------------------------------------------------------------
+//*************************************************************************
+// Code for the Class Body. 
+//*************************************************************************
+
+ACRX_CONS_DEFINE_MEMBERS(CPosShape, AcGiDrawable, 0);
+
+//*************************************************************************
+// Constructors and destructors 
+//*************************************************************************
 CPosShape::CPosShape () : m_Name(NULL), m_Fields(1), m_Formula(NULL), m_FormulaBending(NULL), 
-	m_Priority(0), m_IsBuiltIn(Adesk::kTrue), m_IsUnknown(Adesk::kFalse), m_IsInternal(Adesk::kFalse)
+	m_Priority(0), m_IsBuiltIn(Adesk::kFalse), m_IsUnknown(Adesk::kFalse), m_IsInternal(Adesk::kFalse),
+	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), m_Style(),
+	m_GsNode(NULL)
 { }
 
 CPosShape::~CPosShape () 
@@ -21,6 +34,13 @@ CPosShape::~CPosShape ()
 	acutDelString(m_Name);
 	acutDelString(m_Formula);
 	acutDelString(m_FormulaBending);
+
+	acutDelString(m_A);
+	acutDelString(m_B);
+	acutDelString(m_C);
+	acutDelString(m_D);
+	acutDelString(m_E);
+	acutDelString(m_F);
 
 	ClearShapes();
 }
@@ -213,27 +233,62 @@ const AcDbExtents CPosShape::GetShapeExtents() const
 	return ext;
 }
 
+Acad::ErrorStatus CPosShape::setShapeTexts(const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f)
+{
+	acutUpdString(a, m_A);
+	acutUpdString(b, m_B);
+	acutUpdString(c, m_C);
+	acutUpdString(d, m_D);
+	acutUpdString(e, m_E);
+	acutUpdString(f, m_F);
+
+	return Acad::eOk;
+}
+Acad::ErrorStatus CPosShape::clearShapeTexts(void)
+{
+	acutDelString(m_A);
+	acutDelString(m_B);
+	acutDelString(m_C);
+	acutDelString(m_D);
+	acutDelString(m_E);
+	acutDelString(m_F);
+
+	m_A = NULL;
+	m_B = NULL;
+	m_C = NULL;
+	m_D = NULL;
+	m_E = NULL;
+	m_F = NULL;
+
+	return Acad::eOk;
+}
 
 //*************************************************************************
 // Common static dictionary methods
 //*************************************************************************
 void CPosShape::AddPosShape(CPosShape* shape)
 {
-	m_PosShapes[shape->Name()] = shape;
+	if(shape->IsInternal())
+		m_InternalPosShapes[shape->Name()] = shape;
+	else if(shape->IsBuiltIn())
+		m_BuiltInPosShapes[shape->Name()] = shape;
+	else
+		m_CustomPosShapes[shape->Name()] = shape;
 }
 
 CPosShape* CPosShape::GetPosShape(const std::wstring name)
 {
-	if(m_PosShapes.find(name) == m_PosShapes.end())
-	{
-		CPosShape* shape = CPosShape::GetUnknownPosShape();
-		shape->setName(name.c_str());
-		return shape;
-	}
-	else
-	{
-		return m_PosShapes[name];
-	}
+	std::map<std::wstring, CPosShape*>::iterator it;
+	if((it = m_InternalPosShapes.find(name)) != m_InternalPosShapes.end())
+		return (*it).second;
+	else if((it = m_BuiltInPosShapes.find(name)) != m_BuiltInPosShapes.end())
+		return (*it).second;
+	else if((it = m_CustomPosShapes.find(name)) != m_CustomPosShapes.end())
+		return (*it).second;
+
+	CPosShape* shape = CPosShape::GetUnknownPosShape();
+	shape->setName(name.c_str());
+	return shape;
 }
 
 CPosShape* CPosShape::GetUnknownPosShape()
@@ -250,14 +305,107 @@ CPosShape* CPosShape::GetUnknownPosShape()
 	return shape;
 }
 
-std::map<std::wstring, CPosShape*>::size_type CPosShape::GetPosShapeCount()
+int CPosShape::GetPosShapeCount(const bool builtin, const bool isinternal, const bool custom)
 {
-	return m_PosShapes.size();
+	int count = 0;
+
+	if(isinternal) count += (int)m_InternalPosShapes.size();
+	if(builtin) count += (int)m_BuiltInPosShapes.size();
+	if(custom) count += (int)m_CustomPosShapes.size();
+
+	return count;
 }
 
-std::map<std::wstring, CPosShape*> CPosShape::GetMap()
+void CPosShape::ClearPosShapes(const bool builtin, const bool isinternal, const bool custom)
 {
-	return m_PosShapes;
+	if(isinternal)
+	{
+		for(std::map<std::wstring, CPosShape*>::iterator it = m_InternalPosShapes.begin(); it != m_InternalPosShapes.end(); it++)
+		{
+			std::map<std::wstring, CPosShape*>::iterator current = it;
+			it++;
+
+			CPosShape* shape = (*current).second;
+			delete shape;
+			m_InternalPosShapes.erase(current);
+		}
+	}
+	if(builtin)
+	{
+		for(std::map<std::wstring, CPosShape*>::iterator it = m_BuiltInPosShapes.begin(); it != m_BuiltInPosShapes.end(); it++)
+		{
+			std::map<std::wstring, CPosShape*>::iterator current = it;
+			it++;
+
+			CPosShape* shape = (*current).second;
+			delete shape;
+			m_BuiltInPosShapes.erase(current);
+		}
+	}
+	if(custom)
+	{
+		for(std::map<std::wstring, CPosShape*>::iterator it = m_CustomPosShapes.begin(); it != m_CustomPosShapes.end(); it++)
+		{
+			std::map<std::wstring, CPosShape*>::iterator current = it;
+			it++;
+
+			CPosShape* shape = (*current).second;
+			delete shape;
+			m_CustomPosShapes.erase(current);
+		}
+	}
+}
+
+std::vector<std::wstring> CPosShape::GetAllShapes(const bool builtin, const bool isinternal, const bool custom)
+{
+	std::vector<std::wstring> names;
+	if(isinternal)
+	{
+		for(std::map<std::wstring, CPosShape*>::iterator it = m_InternalPosShapes.begin(); it != m_InternalPosShapes.end(); it++)
+		{
+			names.push_back(std::wstring(it->first));
+		}
+	}
+	if(builtin)
+	{
+		for(std::map<std::wstring, CPosShape*>::iterator it = m_BuiltInPosShapes.begin(); it != m_BuiltInPosShapes.end(); it++)
+		{
+			names.push_back(std::wstring(it->first));
+		}
+	}
+	if(custom)
+	{
+		for(std::map<std::wstring, CPosShape*>::iterator it = m_CustomPosShapes.begin(); it != m_CustomPosShapes.end(); it++)
+		{
+			names.push_back(std::wstring(it->first));
+		}
+	}
+
+	std::sort(names.begin(), names.end(), CPosShape::SortShapeNames);
+	return names;
+}
+
+bool CPosShape::SortShapeNames(const std::wstring p1, const std::wstring p2)
+{
+	if (p1 == p2) return true;
+
+	if (p1 == L"GENEL")
+		return true;
+	else if (p2 == L"GENEL")
+		return false;
+	else
+	{
+		if(Utility::IsNumeric(p1) && Utility::IsNumeric(p2))
+		{
+			int n1 = Utility::StrToInt(p1);
+			int n2 = Utility::StrToInt(p2);
+			return n1 < n2;
+		}
+		else
+		{
+			return p1.compare(p2) < 0;
+		}
+	}
 }
 
 void CPosShape::ReadPosShapesFromResource(HINSTANCE hInstance, const int resid, const bool isinternal)
@@ -293,12 +441,12 @@ void CPosShape::ReadPosShapesFromResource(HINSTANCE hInstance, const int resid, 
 	ReadPosShapesFromString(source, true, isinternal);
 }
 
-void CPosShape::ReadPosShapesFromFile(const std::wstring filename, const bool builtin)
+void CPosShape::ReadPosShapesFromFile(const std::wstring filename)
 {
 	std::wifstream ifs(filename.c_str());
 	std::wstring content( (std::istreambuf_iterator<wchar_t>(ifs) ),
                           (std::istreambuf_iterator<wchar_t>()    ) );
-	ReadPosShapesFromString(content, builtin, false);
+	ReadPosShapesFromString(content, false, false);
 }
 
 void CPosShape::ReadPosShapesFromString(const std::wstring source, const bool builtin, const bool isinternal)
@@ -399,33 +547,37 @@ void CPosShape::ReadPosShapesFromString(const std::wstring source, const bool bu
 			}
 			else if(fieldname.compare(L"TEXT") == 0)
 			{
-				double x, y, h;
+				double x, y, h, w;
+				std::wstring font;
 				std::wstring str;
 				int ha, va;
 				unsigned short color;
 				std::wstring visible;
-				linestream >> x >> y >> h >> str >> ha >> va >> color >> visible;
+				linestream >> x >> y >> h >> w >> str >> font >> ha >> va >> color >> visible;
 
-				CShapeText *text = new CShapeText(color, x, y, h, str.c_str(), static_cast<AcDb::TextHorzMode>(ha), static_cast<AcDb::TextVertMode>(va), (visible.compare(L"V") == 0 ? Adesk::kTrue : Adesk::kFalse));
+				CShapeText *text = new CShapeText(color, x, y, h, w, str.c_str(), font.c_str(), static_cast<AcDb::TextHorzMode>(ha), static_cast<AcDb::TextVertMode>(va), (visible.compare(L"V") == 0 ? Adesk::kTrue : Adesk::kFalse));
 				shape->AddShape(text);
 			}
 		}
 
 		// Add the shape to the dictionary
-		m_PosShapes[name] = shape;
+		if(isinternal)
+			m_InternalPosShapes[name] = shape;
+		else if(builtin)
+			m_BuiltInPosShapes[name] = shape;
+		else
+			m_CustomPosShapes[name] = shape;
 	}
 }
 
 
-void CPosShape::SavePosShapesToFile(const std::wstring filename, const bool builtin, const bool custom)
+void CPosShape::SavePosShapesToFile(const std::wstring filename)
 {
 	std::wofstream ofs(filename.c_str());
 
-	for(std::map<std::wstring, CPosShape*>::iterator it = m_PosShapes.begin(); it != m_PosShapes.end(); it++)
+	for(std::map<std::wstring, CPosShape*>::iterator it = m_CustomPosShapes.begin(); it != m_CustomPosShapes.end(); it++)
 	{
 		CPosShape* posShape = (*it).second;
-		if(posShape->IsBuiltIn() == Adesk::kTrue && !builtin) continue;
-		if(posShape->IsBuiltIn() == Adesk::kFalse && !custom) continue;
 
 		ofs << L"BEGIN" << std::endl;
 
@@ -459,8 +611,9 @@ void CPosShape::SavePosShapesToFile(const std::wstring filename, const bool buil
 			{
 				const CShapeText* text = dynamic_cast<const CShapeText*>(shape);
 				ofs << L"TEXT" << L'\t' << 
-					text->x << L'\t' << text->y << L'\t' << text->height << L'\t' << 
-					text->text << L'\t' << text->horizontalAlignment << L'\t' << text->verticalAlignment << L'\t' <<
+					text->x << L'\t' << text->y << L'\t' << text->height << L'\t' << text->width << L'\t' << 
+					text->text << L'\t' << text->font << L'\t' << 
+					text->horizontalAlignment << L'\t' << text->verticalAlignment << L'\t' <<
 					text->color << L'\t' << (text->visible == Adesk::kTrue ? L'V' : L'I') << std::endl;
 			}
 		}
@@ -470,18 +623,108 @@ void CPosShape::SavePosShapesToFile(const std::wstring filename, const bool buil
 	}
 }
 
-void CPosShape::ClearPosShapes(const bool builtin, const bool custom)
+//*************************************************************************
+// Drawable implementation
+//*************************************************************************
+Adesk::Boolean CPosShape::isPersistent(void) const
 {
-	for(std::map<std::wstring, CPosShape*>::iterator it = m_PosShapes.begin(); it != m_PosShapes.end(); )
-	{
-		std::map<std::wstring, CPosShape*>::iterator current = it;
-		it++;
+	return Adesk::kFalse;
+}
 
-		CPosShape* shape = (*current).second;
-		if((builtin && shape->IsBuiltIn()) || (custom && !shape->IsBuiltIn()))
+AcDbObjectId CPosShape::id(void) const
+{
+	return AcDbObjectId::kNull;
+}
+
+void CPosShape::setGsNode(AcGsNode* gsnode)
+{
+	m_GsNode = gsnode;
+}
+
+AcGsNode* CPosShape::gsNode(void) const
+{
+	return m_GsNode;
+}
+
+bool CPosShape::bounds(AcDbExtents& bounds) const
+{
+	if(m_List.empty())
+	{
+		return false;
+	}
+	else
+	{
+		bounds = GetShapeExtents();
+		return true;
+	}
+}
+
+Adesk::UInt32 CPosShape::subSetAttributes(AcGiDrawableTraits* traits)
+{
+	return AcGiDrawable::kDrawableNone;
+}
+
+Adesk::Boolean CPosShape::subWorldDraw(AcGiWorldDraw* worldDraw)
+{
+    if(worldDraw->regenAbort())
+	{
+        return Adesk::kTrue;
+    }
+
+	for(ShapeListConstIt it = m_List.begin(); it != m_List.end(); it++)
+	{
+		CShape* shape = *it;
+		if(shape->visible == Adesk::kFalse) continue;
+
+		switch(shape->type)
 		{
-			delete shape;
-			m_PosShapes.erase(current);
+		case CShape::Line:
+			{
+				CShapeLine* line = dynamic_cast<CShapeLine*>(shape);
+				Utility::DrawLine(worldDraw, AcGePoint3d(line->x1, line->y1, 0), AcGePoint3d(line->x2, line->y2, 0), line->color);
+			}
+			break;
+		case CShape::Arc:
+			{
+				CShapeArc* arc = dynamic_cast<CShapeArc*>(shape);
+				Utility::DrawArc(worldDraw, AcGePoint3d(arc->x, arc->y, 0), arc->r, arc->startAngle, arc->endAngle, arc->color);
+			}
+			break;
+		case CShape::Text:
+			{
+				CShapeText* text = dynamic_cast<CShapeText*>(shape);
+
+				std::wstring txt(text->text);
+				if(m_A != NULL) Utility::ReplaceString(txt, L"A", m_A);
+				if(m_B != NULL) Utility::ReplaceString(txt, L"B", m_B);
+				if(m_C != NULL) Utility::ReplaceString(txt, L"C", m_C);
+				if(m_D != NULL) Utility::ReplaceString(txt, L"D", m_D);
+				if(m_E != NULL) Utility::ReplaceString(txt, L"E", m_E);
+				if(m_F != NULL) Utility::ReplaceString(txt, L"F", m_F);
+
+				if(text->height != m_Style.textSize() || text->width != m_Style.xScale() || text->font.compare(m_Style.fileName()) != 0)
+				{
+					m_Style.setFileName(text->font.c_str());
+					m_Style.setTextSize(text->height);
+					m_Style.setXScale(text->width);
+					m_Style.loadStyleRec();
+				}
+				Utility::DrawText(worldDraw, AcGePoint3d(text->x, text->y, 0), txt.c_str(), m_Style, text->horizontalAlignment, text->verticalAlignment, text->color);
+			}
+			break;
 		}
 	}
+
+	// Do not call viewportDraw()
+    return Adesk::kTrue; 
+}
+
+void CPosShape::subViewportDraw(AcGiViewportDraw* vd)
+{
+	;
+}
+
+Adesk::UInt32 CPosShape::subViewportDrawLogicalFlags(AcGiViewportDraw* vd)
+{
+	return 0;
 }

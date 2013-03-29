@@ -368,8 +368,6 @@ protected:
     
 	virtual Acad::ErrorStatus   subGetGeomExtents(AcDbExtents& extents) const;
 
-    virtual bool                bounds(AcDbExtents& bounds) const;
-
 protected:
     /// Overridden methods from AcDbObject    
     virtual Acad::ErrorStatus subDeepClone(AcDbObject* pOwnerObject,

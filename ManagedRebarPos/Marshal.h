@@ -57,13 +57,13 @@ namespace OZOZ
 			// Convert System::String to const std::wstring
 			static inline std::wstring StringToWstring(System::String^ value)
 			{
-				return std::wstring(StringToWchar(value));
+				return msclr::interop::marshal_as<std::wstring>(value);
 			}
 
 			// Convert const std::wstring to System::String
 			static inline System::String^ WstringToString(const std::wstring& value)
 			{
-				return WcharToString(value.c_str());
+				return msclr::interop::marshal_as<System::String^>(value);
 			}
 
 			// Convert const AcDbObjectId& to ObjectId
