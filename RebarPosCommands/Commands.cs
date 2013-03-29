@@ -368,14 +368,5 @@ namespace RebarPosCommands
         {
             MenuUtility.LoadPosMenu();
         }
-
-        [CommandMethod("RebarPos", "POSTEST", CommandFlags.Modal)]
-        public void CMD_PosTest()
-        {
-            System.Collections.Generic.List<string> names = PosShape.GetAllPosShapes();
-            PosShape sh = PosShape.GetPosShape("00");
-            sh.Name = "Hello";
-            int a = 1;
-        }
     }
 }
