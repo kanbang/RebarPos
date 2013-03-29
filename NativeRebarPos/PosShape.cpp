@@ -318,62 +318,50 @@ int CPosShape::GetPosShapeCount(const bool builtin, const bool isinternal, const
 
 void CPosShape::ClearPosShapes(const bool builtin, const bool isinternal, const bool custom)
 {
-	if(isinternal)
+	if(isinternal && !m_InternalPosShapes.empty())
 	{
 		for(std::map<std::wstring, CPosShape*>::iterator it = m_InternalPosShapes.begin(); it != m_InternalPosShapes.end(); it++)
 		{
-			std::map<std::wstring, CPosShape*>::iterator current = it;
-			it++;
-
-			CPosShape* shape = (*current).second;
-			delete shape;
-			m_InternalPosShapes.erase(current);
+			delete (*it).second;
 		}
+		m_InternalPosShapes.clear();
 	}
-	if(builtin)
+	if(builtin && !m_BuiltInPosShapes.empty())
 	{
 		for(std::map<std::wstring, CPosShape*>::iterator it = m_BuiltInPosShapes.begin(); it != m_BuiltInPosShapes.end(); it++)
 		{
-			std::map<std::wstring, CPosShape*>::iterator current = it;
-			it++;
-
-			CPosShape* shape = (*current).second;
-			delete shape;
-			m_BuiltInPosShapes.erase(current);
+			delete (*it).second;
 		}
+		m_BuiltInPosShapes.clear();
 	}
-	if(custom)
+	if(custom && !m_CustomPosShapes.empty())
 	{
 		for(std::map<std::wstring, CPosShape*>::iterator it = m_CustomPosShapes.begin(); it != m_CustomPosShapes.end(); it++)
 		{
-			std::map<std::wstring, CPosShape*>::iterator current = it;
-			it++;
-
-			CPosShape* shape = (*current).second;
-			delete shape;
-			m_CustomPosShapes.erase(current);
+			delete (*it).second;
 		}
+		m_CustomPosShapes.clear();
 	}
 }
 
 std::vector<std::wstring> CPosShape::GetAllShapes(const bool builtin, const bool isinternal, const bool custom)
 {
 	std::vector<std::wstring> names;
-	if(isinternal)
+	if(isinternal && !m_InternalPosShapes.empty())
 	{
 		for(std::map<std::wstring, CPosShape*>::iterator it = m_InternalPosShapes.begin(); it != m_InternalPosShapes.end(); it++)
 		{
 			names.push_back(std::wstring(it->first));
 		}
 	}
-	if(builtin)
+	if(builtin && !m_BuiltInPosShapes.empty())
 	{
 		for(std::map<std::wstring, CPosShape*>::iterator it = m_BuiltInPosShapes.begin(); it != m_BuiltInPosShapes.end(); it++)
 		{
 			names.push_back(std::wstring(it->first));
 		}
 	}
-	if(custom)
+	if(custom && !m_CustomPosShapes.empty())
 	{
 		for(std::map<std::wstring, CPosShape*>::iterator it = m_CustomPosShapes.begin(); it != m_CustomPosShapes.end(); it++)
 		{
@@ -574,6 +562,8 @@ void CPosShape::ReadPosShapesFromString(const std::wstring source, const bool bu
 void CPosShape::SavePosShapesToFile(const std::wstring filename)
 {
 	std::wofstream ofs(filename.c_str());
+
+	if(m_CustomPosShapes.empty()) return;
 
 	for(std::map<std::wstring, CPosShape*>::iterator it = m_CustomPosShapes.begin(); it != m_CustomPosShapes.end(); it++)
 	{

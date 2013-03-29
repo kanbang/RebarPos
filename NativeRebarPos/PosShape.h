@@ -184,6 +184,6 @@ public:
 	virtual Adesk::UInt32   subViewportDrawLogicalFlags (AcGiViewportDraw * vd);
 
 private:
-		// Helper functions
+	// Helper functions
 	static bool SortShapeNames(const std::wstring p1, const std::wstring p2);
 };
