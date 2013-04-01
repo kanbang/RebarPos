@@ -341,7 +341,14 @@ namespace RebarPosCommands
                             if (text.TextString == "D" && fieldCount < 4) fieldCount = 4;
                             if (text.TextString == "E" && fieldCount < 5) fieldCount = 5;
                             if (text.TextString == "F" && fieldCount < 6) fieldCount = 6;
-                            copy.shapes.Add(new PosShape.ShapeText(text.Color, text.Position.X, text.Position.Y, text.Height, text.WidthFactor, text.TextString, "romans.shx", text.HorizontalMode, text.VerticalMode, visible));
+                            double x=text.Position.X;
+                            double y=text.Position.Y;
+                            if (text.AlignmentPoint.X != 0.0 || text.AlignmentPoint.Y != 0.0)
+                            {
+                                x = text.AlignmentPoint.X;
+                                y = text.AlignmentPoint.Y;
+                            }
+                            copy.shapes.Add(new PosShape.ShapeText(text.Color, x, y, text.Height, text.WidthFactor, text.TextString, "romans.shx", text.HorizontalMode, text.VerticalMode, visible));
                         }
                     }
                 }
