@@ -8,8 +8,10 @@
 #include "Utility.h"
 
 #include <fstream>
+#include <algorithm>
 
-std::map<std::wstring, CBOQStyle*> CBOQStyle::m_BOQStyles;
+std::map<std::wstring, CBOQStyle*> CBOQStyle::m_BuiltInStyles;
+std::map<std::wstring, CBOQStyle*> CBOQStyle::m_CustomStyles;
 
 //-----------------------------------------------------------------------------
 CBOQStyle::CBOQStyle () : m_Name(NULL), m_Columns(NULL),
@@ -17,7 +19,7 @@ CBOQStyle::CBOQStyle () : m_Name(NULL), m_Columns(NULL),
 	m_PosLabel(NULL), m_CountLabel(NULL), m_DiameterLabel(NULL), m_LengthLabel(NULL), m_ShapeLabel(NULL),
 	m_TotalLengthLabel(NULL), m_DiameterListLabel(NULL), m_MultiplierHeadingLabel(NULL),
 	m_DiameterLengthLabel(NULL), m_UnitWeightLabel(NULL), m_WeightLabel(NULL), m_GrossWeightLabel(NULL),
-	m_IsBuiltIn(Adesk::kTrue)
+	m_IsBuiltIn(Adesk::kFalse)
 { }
 
 CBOQStyle::~CBOQStyle () 
@@ -148,22 +150,99 @@ Acad::ErrorStatus CBOQStyle::setIsBuiltIn(const Adesk::Boolean newVal)
 //*************************************************************************
 void CBOQStyle::AddBOQStyle(CBOQStyle* style)
 {
-	m_BOQStyles[style->Name()] = style;
+	if(style->IsBuiltIn())
+		m_BuiltInStyles[style->Name()] = style;
+	else
+		m_CustomStyles[style->Name()] = style;
 }
 
 CBOQStyle* CBOQStyle::GetBOQStyle(const std::wstring name)
 {
-	return m_BOQStyles[name];
+	std::map<std::wstring, CBOQStyle*>::iterator it;
+	if((it = m_BuiltInStyles.find(name)) != m_BuiltInStyles.end())
+		return (*it).second;
+	if((it = m_CustomStyles.find(name)) != m_CustomStyles.end())
+		return (*it).second;
+
+	CBOQStyle* style = CBOQStyle::GetUnknownBOQStyle();
+	style->setName(name.c_str());
+	return style;
 }
 
-std::map<std::wstring, CBOQStyle*>::size_type CBOQStyle::GetBOQStyleCount()
+CBOQStyle* CBOQStyle::GetUnknownBOQStyle()
 {
-	return m_BOQStyles.size();
+	CBOQStyle* style = new CBOQStyle();
+
+	style->setName(_T("HATA"));
+
+	return style;
 }
 
-std::map<std::wstring, CBOQStyle*> CBOQStyle::GetMap()
+bool CBOQStyle::HasBOQStyle(const std::wstring name)
 {
-	return m_BOQStyles;
+	if(m_BuiltInStyles.find(name) != m_BuiltInStyles.end())
+		return true;
+	else if(m_CustomStyles.find(name) != m_CustomStyles.end())
+		return true;
+
+	return false;
+}
+
+int CBOQStyle::GetBOQStyleCount(const bool builtin, const bool custom)
+{
+	int count = 0;
+
+	if(builtin) count += (int)m_BuiltInStyles.size();
+	if(custom) count += (int)m_CustomStyles.size();
+
+	return count;
+}
+
+void CBOQStyle::ClearBOQStyles(const bool builtin, const bool custom)
+{
+	if(builtin && !m_BuiltInStyles.empty())
+	{
+		for(std::map<std::wstring, CBOQStyle*>::iterator it = m_BuiltInStyles.begin(); it != m_BuiltInStyles.end(); it++)
+		{
+			delete (*it).second;
+		}
+		m_BuiltInStyles.clear();
+	}
+	if(custom && !m_CustomStyles.empty())
+	{
+		for(std::map<std::wstring, CBOQStyle*>::iterator it = m_CustomStyles.begin(); it != m_CustomStyles.end(); it++)
+		{
+			delete (*it).second;
+		}
+		m_CustomStyles.clear();
+	}
+}
+
+std::vector<std::wstring> CBOQStyle::GetAllStyles(const bool builtin, const bool custom)
+{
+	std::vector<std::wstring> names;
+	if(builtin && !m_BuiltInStyles.empty())
+	{
+		for(std::map<std::wstring, CBOQStyle*>::iterator it = m_BuiltInStyles.begin(); it != m_BuiltInStyles.end(); it++)
+		{
+			names.push_back(std::wstring(it->first));
+		}
+	}
+	if(custom && !m_CustomStyles.empty())
+	{
+		for(std::map<std::wstring, CBOQStyle*>::iterator it = m_CustomStyles.begin(); it != m_CustomStyles.end(); it++)
+		{
+			names.push_back(std::wstring(it->first));
+		}
+	}
+
+	std::sort(names.begin(), names.end(), CBOQStyle::SortStyleNames);
+	return names;
+}
+
+bool CBOQStyle::SortStyleNames(const std::wstring p1, const std::wstring p2)
+{
+	return p1.compare(p2) < 0;
 }
 
 void CBOQStyle::ReadBOQStylesFromResource(HINSTANCE hInstance, const int resid)
@@ -199,12 +278,12 @@ void CBOQStyle::ReadBOQStylesFromResource(HINSTANCE hInstance, const int resid)
 	ReadBOQStylesFromString(source, true);
 }
 
-void CBOQStyle::ReadBOQStylesFromFile(const std::wstring filename, const bool builtin)
+void CBOQStyle::ReadBOQStylesFromFile(const std::wstring filename)
 {
 	std::wifstream ifs(filename.c_str());
 	std::wstring content( (std::istreambuf_iterator<wchar_t>(ifs) ),
                           (std::istreambuf_iterator<wchar_t>()    ) );
-	ReadBOQStylesFromString(content, builtin);
+	ReadBOQStylesFromString(content, false);
 }
 
 void CBOQStyle::ReadBOQStylesFromString(const std::wstring source, const bool builtin)
@@ -250,7 +329,12 @@ void CBOQStyle::ReadBOQStylesFromString(const std::wstring source, const bool bu
 			linestream.clear(); linestream.str(std::wstring());
 			linestream << line;
 			std::getline(linestream, fieldname, L'\t');
-			linestream >> fielddata;
+			std::getline(linestream, fielddata);
+			if(fielddata.length() > 0)
+			{
+				if(fielddata[fielddata.length() - 1] == L'\r')
+					fielddata.erase(fielddata.length() - 1);
+			}
 
 			// Assign field data
 			if(fieldname == L"Name")
@@ -284,20 +368,26 @@ void CBOQStyle::ReadBOQStylesFromString(const std::wstring source, const bool bu
 			else if(fieldname == L"TextStyle")
 			{
 				linestream.clear(); linestream.str(std::wstring());
-				linestream << fielddata;		
-				linestream >> textStyleName >> textStyleFont >> textStyleWidth;
+				linestream << fielddata;
+				std::getline(linestream, textStyleName, L'\t');
+				std::getline(linestream, textStyleFont, L'\t');
+				linestream >> textStyleWidth;
 			}
 			else if(fieldname == L"HeadingStyle")
 			{
 				linestream.clear(); linestream.str(std::wstring());
-				linestream << fielddata;		
-				linestream >> headingStyleName >> headingStyleFont >> headingStyleWidth;
+				linestream << fielddata;
+				std::getline(linestream, headingStyleName, L'\t');
+				std::getline(linestream, headingStyleFont, L'\t');
+				linestream >> headingStyleWidth;
 			}
 			else if(fieldname == L"FootingStyle")
 			{
 				linestream.clear(); linestream.str(std::wstring());
 				linestream << fielddata;		
-				linestream >> footingStyleName >> footingStyleFont >> footingStyleWidth;
+				std::getline(linestream, footingStyleName, L'\t');
+				std::getline(linestream, footingStyleFont, L'\t');
+				linestream >> footingStyleWidth;
 			}
 		}
 
@@ -325,21 +415,24 @@ void CBOQStyle::ReadBOQStylesFromString(const std::wstring source, const bool bu
 
 		style->setIsBuiltIn(builtin ? Adesk::kTrue : Adesk::kFalse);
 
-		// Add the shape to the dictionary
-		m_BOQStyles[name] = style;
+		// Add the style to the dictionary
+		if(builtin)
+			m_BuiltInStyles[name] = style;
+		else
+			m_CustomStyles[name] = style;
 	}
 }
 
 
-void CBOQStyle::SaveBOQStylesToFile(const std::wstring filename, const bool builtin, const bool custom)
+void CBOQStyle::SaveBOQStylesToFile(const std::wstring filename)
 {
 	std::wofstream ofs(filename.c_str());
 
-	for(std::map<std::wstring, CBOQStyle*>::iterator it = m_BOQStyles.begin(); it != m_BOQStyles.end(); it++)
+	if(m_CustomStyles.empty()) return;
+
+	for(std::map<std::wstring, CBOQStyle*>::iterator it = m_CustomStyles.begin(); it != m_CustomStyles.end(); it++)
 	{
 		CBOQStyle* style = (*it).second;
-		if(style->IsBuiltIn() == Adesk::kTrue && !builtin) continue;
-		if(style->IsBuiltIn() == Adesk::kFalse && !custom) continue;
 
 		ofs << L"BEGIN" << std::endl;
 
@@ -379,21 +472,5 @@ void CBOQStyle::SaveBOQStylesToFile(const std::wstring filename, const bool buil
 
 		ofs << L"END" << std::endl;
 		ofs << std::endl;
-	}
-}
-
-void CBOQStyle::ClearBOQStyles(const bool builtin, const bool custom)
-{
-	for(std::map<std::wstring, CBOQStyle*>::iterator it = m_BOQStyles.begin(); it != m_BOQStyles.end(); )
-	{
-		std::map<std::wstring, CBOQStyle*>::iterator current = it;
-		it++;
-
-		CBOQStyle* shape = (*current).second;
-		if((builtin && shape->IsBuiltIn()) || (custom && !shape->IsBuiltIn()))
-		{
-			delete shape;
-			m_BOQStyles.erase(current);
-		}
 	}
 }

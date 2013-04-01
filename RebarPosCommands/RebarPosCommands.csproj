@@ -132,6 +132,12 @@
     <Compile Include="ConfimMessageBox.Designer.cs">
       <DependentUpon>ConfimMessageBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="TableStylePreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TableStylePreview.Designer.cs">
+      <DependentUpon>TableStylePreview.cs</DependentUpon>
+    </Compile>
     <Compile Include="DrawingPreview.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -245,6 +251,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ConfimMessageBox.resx">
       <DependentUpon>ConfimMessageBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TableStylePreview.resx">
+      <DependentUpon>TableStylePreview.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DrawingPreview.resx">
       <DependentUpon>DrawingPreview.cs</DependentUpon>

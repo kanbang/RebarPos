@@ -151,6 +151,8 @@ namespace RebarPosCommands
                 txtFormulaBending.ReadOnly = !enable;
                 udPriority.ReadOnly = !enable;
 
+                lbShapes.LabelEdit = enable;
+
                 SetShape();
             }
         }

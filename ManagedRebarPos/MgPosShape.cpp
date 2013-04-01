@@ -193,6 +193,11 @@ PosShape^ PosShape::GetUnknownPosShape()
 	return gcnew PosShape(IntPtr(shape), true);
 }
 
+bool PosShape::HasPosShape(String^ name)
+{
+	return CPosShape::HasPosShape(Marshal::StringToWstring(name));
+}
+
 int PosShape::GetPosShapeCount()
 {
 	return CPosShape::GetPosShapeCount(true, false, true);

@@ -27,9 +27,9 @@ namespace RebarPosCommands
 
         public bool Init()
         {
-            foreach (KeyValuePair<string, BOQStyle> style in BOQStyle.GetAllBOQStyles())
+            foreach (string style in BOQStyle.GetAllBOQStyles())
             {
-                cbStyle.Items.Add(style.Key);
+                cbStyle.Items.Add(style);
             }
 
             // Read from settings

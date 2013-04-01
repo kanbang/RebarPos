@@ -902,12 +902,13 @@ void CBOQTable::UpdateTable(void)
 				MergeAcross(i, j, (int)diameters.size());
 				if(lastDiameterListLabel != NULL && lastDiameterListLabel[0] != _T('\0'))
 				{
-					for(std::map<double ,int>::iterator dit = diameters.begin(); dit != diameters.end(); dit++)
+					for(std::map<double, int>::iterator dit = diameters.begin(); dit != diameters.end(); dit++)
 					{
 						std::wstring numtext;
 						Utility::IntToStr(Utility::DoubleToInt((*dit).first), numtext);
 						int k = j + (*dit).second;
-						if(wcscmp(lastDiameterListLabel, L"[TD]") == 0)
+						std::wstring dtext(lastDiameterListLabel);
+						if(dtext == L"[TD]")
 						{
 							setCellShape(i + 1, k, L"CAP");
 							setCellShapeText(i + 1, k, numtext.c_str(), L"", L"", L"", L"", L"");
@@ -917,7 +918,6 @@ void CBOQTable::UpdateTable(void)
 						}
 						else
 						{
-							std::wstring dtext(lastDiameterListLabel);
 							Utility::ReplaceString(dtext, L"[D]", numtext);
 							setCellText(i + 1, k, dtext.c_str());
 						}

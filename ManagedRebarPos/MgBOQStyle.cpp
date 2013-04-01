@@ -16,180 +16,184 @@ using namespace OZOZ::RebarPosWrapper;
 //*************************************************************************
 // Constructors and destructors 
 //*************************************************************************
-BOQStyle::BOQStyle(CBOQStyle* style) 
-{
-	m_BOQStyle = style;
-}
+BOQStyle::BOQStyle()
+: Autodesk::AutoCAD::Runtime::DisposableWrapper(IntPtr(new CBOQStyle()), true)
+{ }
 
-BOQStyle::BOQStyle() 
-{
-	m_BOQStyle = new CBOQStyle();
-}
-
+BOQStyle::BOQStyle(System::IntPtr unmanagedPointer, bool autoDelete)
+: Autodesk::AutoCAD::Runtime::DisposableWrapper(unmanagedPointer, autoDelete)
+{ }
 
 //*************************************************************************
 // Properties
 //*************************************************************************
 String^ BOQStyle::Name::get()
 {
-	return Marshal::WcharToString(m_BOQStyle->Name());
+	return Marshal::WcharToString(GetImpObj()->Name());
 }
 void BOQStyle::Name::set(String^ value)
 {
-    m_BOQStyle->setName(Marshal::StringToWchar(value));
+    GetImpObj()->setName(Marshal::StringToWchar(value));
 }
 
 String^ BOQStyle::Columns::get()
 {
-	return Marshal::WcharToString(m_BOQStyle->Columns());
+	return Marshal::WcharToString(GetImpObj()->Columns());
 }
 void BOQStyle::Columns::set(String^ value)
 {
-	m_BOQStyle->setColumns(Marshal::StringToWchar(value));
+	GetImpObj()->setColumns(Marshal::StringToWchar(value));
 }
 
 String^ BOQStyle::PosLabel::get()
 {
-	return Marshal::WcharToString(m_BOQStyle->PosLabel());
+	return Marshal::WcharToString(GetImpObj()->PosLabel());
 }
 void BOQStyle::PosLabel::set(String^ value)
 {
-    m_BOQStyle->setPosLabel(Marshal::StringToWchar(value));
+    GetImpObj()->setPosLabel(Marshal::StringToWchar(value));
 }
 
 String^ BOQStyle::CountLabel::get()
 {
-	return Marshal::WcharToString(m_BOQStyle->CountLabel());
+	return Marshal::WcharToString(GetImpObj()->CountLabel());
 }
 void BOQStyle::CountLabel::set(String^ value)
 {
-    m_BOQStyle->setCountLabel(Marshal::StringToWchar(value));
+    GetImpObj()->setCountLabel(Marshal::StringToWchar(value));
 }
 
 String^ BOQStyle::DiameterLabel::get()
 {
-	return Marshal::WcharToString(m_BOQStyle->DiameterLabel());
+	return Marshal::WcharToString(GetImpObj()->DiameterLabel());
 }
 void BOQStyle::DiameterLabel::set(String^ value)
 {
-    m_BOQStyle->setDiameterLabel(Marshal::StringToWchar(value));
+    GetImpObj()->setDiameterLabel(Marshal::StringToWchar(value));
 }
 
 String^ BOQStyle::LengthLabel::get()
 {
-	return Marshal::WcharToString(m_BOQStyle->LengthLabel());
+	return Marshal::WcharToString(GetImpObj()->LengthLabel());
 }
 void BOQStyle::LengthLabel::set(String^ value)
 {
-    m_BOQStyle->setLengthLabel(Marshal::StringToWchar(value));
+    GetImpObj()->setLengthLabel(Marshal::StringToWchar(value));
 }
 
 String^ BOQStyle::ShapeLabel::get()
 {
-	return Marshal::WcharToString(m_BOQStyle->ShapeLabel());
+	return Marshal::WcharToString(GetImpObj()->ShapeLabel());
 }
 void BOQStyle::ShapeLabel::set(String^ value)
 {
-    m_BOQStyle->setShapeLabel(Marshal::StringToWchar(value));
+    GetImpObj()->setShapeLabel(Marshal::StringToWchar(value));
 }
 
 String^ BOQStyle::TotalLengthLabel::get()
 {
-	return Marshal::WcharToString(m_BOQStyle->TotalLengthLabel());
+	return Marshal::WcharToString(GetImpObj()->TotalLengthLabel());
 }
 void BOQStyle::TotalLengthLabel::set(String^ value)
 {
-    m_BOQStyle->setTotalLengthLabel(Marshal::StringToWchar(value));
+    GetImpObj()->setTotalLengthLabel(Marshal::StringToWchar(value));
 }
 
 String^ BOQStyle::DiameterListLabel::get()
 {
-	return Marshal::WcharToString(m_BOQStyle->DiameterListLabel());
+	return Marshal::WcharToString(GetImpObj()->DiameterListLabel());
 }
 void BOQStyle::DiameterListLabel::set(String^ value)
 {
-    m_BOQStyle->setDiameterListLabel(Marshal::StringToWchar(value));
+    GetImpObj()->setDiameterListLabel(Marshal::StringToWchar(value));
 }
 
 String^ BOQStyle::DiameterLengthLabel::get()
 {
-	return Marshal::WcharToString(m_BOQStyle->DiameterLengthLabel());
+	return Marshal::WcharToString(GetImpObj()->DiameterLengthLabel());
 }
 void BOQStyle::DiameterLengthLabel::set(String^ value)
 {
-    m_BOQStyle->setDiameterLengthLabel(Marshal::StringToWchar(value));
+    GetImpObj()->setDiameterLengthLabel(Marshal::StringToWchar(value));
 }
 
 String^ BOQStyle::UnitWeightLabel::get()
 {
-	return Marshal::WcharToString(m_BOQStyle->UnitWeightLabel());
+	return Marshal::WcharToString(GetImpObj()->UnitWeightLabel());
 }
 void BOQStyle::UnitWeightLabel::set(String^ value)
 {
-    m_BOQStyle->setUnitWeightLabel(Marshal::StringToWchar(value));
+    GetImpObj()->setUnitWeightLabel(Marshal::StringToWchar(value));
 }
 
 String^ BOQStyle::WeightLabel::get()
 {
-	return Marshal::WcharToString(m_BOQStyle->WeightLabel());
+	return Marshal::WcharToString(GetImpObj()->WeightLabel());
 }
 void BOQStyle::WeightLabel::set(String^ value)
 {
-    m_BOQStyle->setWeightLabel(Marshal::StringToWchar(value));
+    GetImpObj()->setWeightLabel(Marshal::StringToWchar(value));
 }
 
 String^ BOQStyle::GrossWeightLabel::get()
 {
-	return Marshal::WcharToString(m_BOQStyle->GrossWeightLabel());
+	return Marshal::WcharToString(GetImpObj()->GrossWeightLabel());
 }
 void BOQStyle::GrossWeightLabel::set(String^ value)
 {
-    m_BOQStyle->setGrossWeightLabel(Marshal::StringToWchar(value));
+    GetImpObj()->setGrossWeightLabel(Marshal::StringToWchar(value));
 }
 
 String^ BOQStyle::MultiplierHeadingLabel::get()
 {
-	return Marshal::WcharToString(m_BOQStyle->MultiplierHeadingLabel());
+	return Marshal::WcharToString(GetImpObj()->MultiplierHeadingLabel());
 }
 void BOQStyle::MultiplierHeadingLabel::set(String^ value)
 {
-    m_BOQStyle->setMultiplierHeadingLabel(Marshal::StringToWchar(value));
+    GetImpObj()->setMultiplierHeadingLabel(Marshal::StringToWchar(value));
 }
 
 Autodesk::AutoCAD::DatabaseServices::ObjectId BOQStyle::TextStyleId::get()
 {
-	return Marshal::ToObjectId (m_BOQStyle->TextStyleId());
+	return Marshal::ToObjectId (GetImpObj()->TextStyleId());
 }
 void BOQStyle::TextStyleId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
 {
-	m_BOQStyle->setTextStyleId(Marshal::FromObjectId(value));
+	GetImpObj()->setTextStyleId(Marshal::FromObjectId(value));
 }
 
 Autodesk::AutoCAD::DatabaseServices::ObjectId BOQStyle::HeadingStyleId::get()
 {
-	return Marshal::ToObjectId (m_BOQStyle->HeadingStyleId());
+	return Marshal::ToObjectId (GetImpObj()->HeadingStyleId());
 }
 void BOQStyle::HeadingStyleId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
 {
-	m_BOQStyle->setHeadingStyleId(Marshal::FromObjectId(value));
+	GetImpObj()->setHeadingStyleId(Marshal::FromObjectId(value));
 }
 
 Autodesk::AutoCAD::DatabaseServices::ObjectId BOQStyle::FootingStyleId::get()
 {
-	return Marshal::ToObjectId (m_BOQStyle->FootingStyleId());
+	return Marshal::ToObjectId (GetImpObj()->FootingStyleId());
 }
 void BOQStyle::FootingStyleId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
 {
-	m_BOQStyle->setFootingStyleId(Marshal::FromObjectId(value));
+	GetImpObj()->setFootingStyleId(Marshal::FromObjectId(value));
 }
 
 bool BOQStyle::IsBuiltIn::get()
 {
-	return (m_BOQStyle->IsBuiltIn() == Adesk::kTrue);
+	return (GetImpObj()->IsBuiltIn() == Adesk::kTrue);
 }
-void BOQStyle::IsBuiltIn::set(bool value)
+
+//*************************************************************************
+// DisposableWrapper implementation
+//*************************************************************************
+void BOQStyle::DeleteUnmanagedObject(void)
 {
-	m_BOQStyle->setIsBuiltIn(value ? Adesk::kTrue : Adesk::kFalse);
+	if(AutoDelete)
+	{
+		delete GetImpObj();
+	}
 }
 
 //*************************************************************************
@@ -197,27 +201,39 @@ void BOQStyle::IsBuiltIn::set(bool value)
 //*************************************************************************
 void BOQStyle::AddBOQStyle(BOQStyle^ style)
 {
-	CBOQStyle::AddBOQStyle(style->m_BOQStyle);
+	assert(!style->IsBuiltIn);
+	CBOQStyle::AddBOQStyle(style->GetImpObj());
 }
 
 BOQStyle^ BOQStyle::GetBOQStyle(String^ name)
 {
 	CBOQStyle* style = CBOQStyle::GetBOQStyle(Marshal::StringToWstring(name));
-	return gcnew BOQStyle(style);
+	return gcnew BOQStyle(IntPtr(style), false);
+}
+
+BOQStyle^ BOQStyle::GetUnknownBOQStyle()
+{
+	CBOQStyle* style = CBOQStyle::GetUnknownBOQStyle();
+	return gcnew BOQStyle(IntPtr(style), true);
+}
+
+bool BOQStyle::HasBOQStyle(String^ name)
+{
+	return CBOQStyle::HasBOQStyle(Marshal::StringToWstring(name));
 }
 
 int BOQStyle::GetBOQStyleCount()
 {
-	return (int)CBOQStyle::GetBOQStyleCount();
+	return CBOQStyle::GetBOQStyleCount(true, true);
 }
 
-System::Collections::Generic::Dictionary<String^, BOQStyle^>^ BOQStyle::GetAllBOQStyles()
+System::Collections::Generic::List<String^>^ BOQStyle::GetAllBOQStyles()
 {
-	System::Collections::Generic::Dictionary<String^, BOQStyle^>^ dict = gcnew System::Collections::Generic::Dictionary<String^, BOQStyle^>();
-	std::map<std::wstring, CBOQStyle*> map = CBOQStyle::GetMap();
-	for(std::map<std::wstring, CBOQStyle*>::iterator it = map.begin(); it != map.end(); it++)
+	System::Collections::Generic::List<String^>^ dict = gcnew System::Collections::Generic::List<String^>();
+	std::vector<std::wstring> map = CBOQStyle::GetAllStyles(true, true);
+	for(std::vector<std::wstring>::iterator it = map.begin(); it != map.end(); it++)
 	{
-		dict->Add(Marshal::WstringToString(it->first), gcnew BOQStyle(it->second));
+		dict->Add(Marshal::WstringToString((*it)));
 	}
 	return dict;
 }
@@ -229,10 +245,10 @@ void BOQStyle::ClearBOQStyles()
 
 void BOQStyle::ReadBOQStylesFromFile(String^ source)
 {
-	CBOQStyle::ReadBOQStylesFromFile(Marshal::StringToWstring(source), true);
+	CBOQStyle::ReadBOQStylesFromFile(Marshal::StringToWstring(source));
 }
 
 void BOQStyle::SaveBOQStylesToFile(String^ source)
 {
-	CBOQStyle::SaveBOQStylesToFile(Marshal::StringToWstring(source), false, true);
+	CBOQStyle::SaveBOQStylesToFile(Marshal::StringToWstring(source));
 }

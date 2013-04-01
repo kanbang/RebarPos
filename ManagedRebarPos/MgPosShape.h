@@ -244,6 +244,7 @@ namespace OZOZ
 			static void AddPosShape(PosShape^ shape);
 			static PosShape^ GetPosShape(String^ name);
 			static PosShape^ GetUnknownPosShape();
+			static bool HasPosShape(String^ name);
 			static int GetPosShapeCount();
 			static System::Collections::Generic::List<String^>^ GetAllPosShapes();
 			static void ClearPosShapes();

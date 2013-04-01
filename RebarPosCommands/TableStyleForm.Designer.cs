@@ -33,6 +33,7 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.chkUserOnly = new System.Windows.Forms.CheckBox();
             this.lbStyles = new System.Windows.Forms.ListView();
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.lGroups = new System.Windows.Forms.ImageList(this.components);
@@ -43,6 +44,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.gbColumns = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
@@ -50,6 +52,7 @@
             this.label19 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.txtMultiplierHeadingLabel = new System.Windows.Forms.TextBox();
             this.txtDiameterListColumn = new System.Windows.Forms.TextBox();
             this.txtTotalLengthColumn = new System.Windows.Forms.TextBox();
             this.txtShapeColumn = new System.Windows.Forms.TextBox();
@@ -73,18 +76,21 @@
             this.cbHeadingStyle = new System.Windows.Forms.ComboBox();
             this.cbFootingStyle = new System.Windows.Forms.ComboBox();
             this.gbDisplay = new System.Windows.Forms.GroupBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.tableView = new RebarPosCommands.TableStylePreview();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.gbColumns.SuspendLayout();
             this.gbRows.SuspendLayout();
             this.gbDisplay.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnOK
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(553, 434);
+            this.btnOK.Location = new System.Drawing.Point(1059, 593);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 5;
@@ -96,7 +102,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(634, 434);
+            this.btnCancel.Location = new System.Drawing.Point(1140, 593);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 6;
@@ -106,16 +112,31 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox2.Controls.Add(this.chkUserOnly);
             this.groupBox2.Controls.Add(this.lbStyles);
             this.groupBox2.Controls.Add(this.btnRename);
             this.groupBox2.Controls.Add(this.btnRemove);
             this.groupBox2.Controls.Add(this.btnAdd);
             this.groupBox2.Location = new System.Drawing.Point(12, 12);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(286, 248);
+            this.groupBox2.Size = new System.Drawing.Size(286, 565);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Tablo &Stilleri";
+            // 
+            // chkUserOnly
+            // 
+            this.chkUserOnly.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.chkUserOnly.AutoSize = true;
+            this.chkUserOnly.Location = new System.Drawing.Point(15, 526);
+            this.chkUserOnly.Name = "chkUserOnly";
+            this.chkUserOnly.Size = new System.Drawing.Size(205, 17);
+            this.chkUserOnly.TabIndex = 7;
+            this.chkUserOnly.Text = "&Sadece Kullanıcı Tanımlı Stilleri Göster";
+            this.chkUserOnly.UseVisualStyleBackColor = true;
+            this.chkUserOnly.CheckedChanged += new System.EventHandler(this.chkUserOnly_CheckedChanged);
             // 
             // lbStyles
             // 
@@ -124,14 +145,16 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.lbStyles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chName});
-            this.lbStyles.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.lbStyles.FullRowSelect = true;
+            this.lbStyles.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lbStyles.HideSelection = false;
             this.lbStyles.LabelEdit = true;
             this.lbStyles.LabelWrap = false;
             this.lbStyles.LargeImageList = this.lGroups;
             this.lbStyles.Location = new System.Drawing.Point(15, 23);
             this.lbStyles.MultiSelect = false;
             this.lbStyles.Name = "lbStyles";
-            this.lbStyles.Size = new System.Drawing.Size(225, 206);
+            this.lbStyles.Size = new System.Drawing.Size(225, 490);
             this.lbStyles.SmallImageList = this.lGroups;
             this.lbStyles.TabIndex = 0;
             this.lbStyles.UseCompatibleStateImageBehavior = false;
@@ -141,18 +164,15 @@
             // 
             // chName
             // 
-            this.chName.Text = "Name";
-            this.chName.Width = 130;
+            this.chName.Text = "Tablo Stili Adı";
+            this.chName.Width = 200;
             // 
             // lGroups
             // 
             this.lGroups.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("lGroups.ImageStream")));
-            this.lGroups.TransparentColor = System.Drawing.Color.Transparent;
-            this.lGroups.Images.SetKeyName(0, "page.png");
-            this.lGroups.Images.SetKeyName(1, "page_white.png");
-            this.lGroups.Images.SetKeyName(2, "page_white_add.png");
-            this.lGroups.Images.SetKeyName(3, "page_white_delete.png");
-            this.lGroups.Images.SetKeyName(4, "page_go.png");
+            this.lGroups.TransparentColor = System.Drawing.Color.Magenta;
+            this.lGroups.Images.SetKeyName(0, "bullet_black.png");
+            this.lGroups.Images.SetKeyName(1, "bullet_red.png");
             // 
             // btnRename
             // 
@@ -211,6 +231,7 @@
             // 
             // gbColumns
             // 
+            this.gbColumns.Controls.Add(this.label1);
             this.gbColumns.Controls.Add(this.label23);
             this.gbColumns.Controls.Add(this.label22);
             this.gbColumns.Controls.Add(this.label21);
@@ -219,6 +240,7 @@
             this.gbColumns.Controls.Add(this.label17);
             this.gbColumns.Controls.Add(this.label7);
             this.gbColumns.Controls.Add(this.label5);
+            this.gbColumns.Controls.Add(this.txtMultiplierHeadingLabel);
             this.gbColumns.Controls.Add(this.txtDiameterListColumn);
             this.gbColumns.Controls.Add(this.txtTotalLengthColumn);
             this.gbColumns.Controls.Add(this.txtShapeColumn);
@@ -229,10 +251,19 @@
             this.gbColumns.Controls.Add(this.txtColumns);
             this.gbColumns.Location = new System.Drawing.Point(317, 13);
             this.gbColumns.Name = "gbColumns";
-            this.gbColumns.Size = new System.Drawing.Size(389, 248);
+            this.gbColumns.Size = new System.Drawing.Size(389, 284);
             this.gbColumns.TabIndex = 2;
             this.gbColumns.TabStop = false;
             this.gbColumns.Text = "&Sütunlar";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(18, 249);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(106, 13);
+            this.label1.TabIndex = 14;
+            this.label1.Text = "&Tablo Çarpanı Başlığı";
             // 
             // label23
             // 
@@ -296,6 +327,14 @@
             this.label7.Size = new System.Drawing.Size(25, 13);
             this.label7.TabIndex = 2;
             this.label7.Text = "&Poz";
+            // 
+            // txtMultiplierHeadingLabel
+            // 
+            this.txtMultiplierHeadingLabel.Location = new System.Drawing.Point(149, 246);
+            this.txtMultiplierHeadingLabel.Name = "txtMultiplierHeadingLabel";
+            this.txtMultiplierHeadingLabel.Size = new System.Drawing.Size(217, 20);
+            this.txtMultiplierHeadingLabel.TabIndex = 15;
+            this.txtMultiplierHeadingLabel.Validated += new System.EventHandler(this.txtMultiplierHeadingLabel_Validated);
             // 
             // txtDiameterListColumn
             // 
@@ -363,7 +402,7 @@
             this.gbRows.Controls.Add(this.txtWeightRow);
             this.gbRows.Controls.Add(this.txtUnitWeightRow);
             this.gbRows.Controls.Add(this.txtTotalLengthRow);
-            this.gbRows.Location = new System.Drawing.Point(317, 267);
+            this.gbRows.Location = new System.Drawing.Point(317, 303);
             this.gbRows.Name = "gbRows";
             this.gbRows.Size = new System.Drawing.Size(389, 150);
             this.gbRows.TabIndex = 3;
@@ -441,7 +480,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(27, 29);
+            this.label14.Location = new System.Drawing.Point(18, 29);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(46, 13);
             this.label14.TabIndex = 14;
@@ -450,7 +489,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(27, 56);
+            this.label15.Location = new System.Drawing.Point(18, 56);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(90, 13);
             this.label15.TabIndex = 16;
@@ -459,7 +498,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(27, 83);
+            this.label6.Location = new System.Drawing.Point(18, 83);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(86, 13);
             this.label6.TabIndex = 20;
@@ -471,7 +510,7 @@
             this.cbTextStyle.FormattingEnabled = true;
             this.cbTextStyle.Location = new System.Drawing.Point(149, 26);
             this.cbTextStyle.Name = "cbTextStyle";
-            this.cbTextStyle.Size = new System.Drawing.Size(100, 21);
+            this.cbTextStyle.Size = new System.Drawing.Size(217, 21);
             this.cbTextStyle.TabIndex = 15;
             this.cbTextStyle.SelectedIndexChanged += new System.EventHandler(this.cbTextStyle_SelectedIndexChanged);
             // 
@@ -481,7 +520,7 @@
             this.cbHeadingStyle.FormattingEnabled = true;
             this.cbHeadingStyle.Location = new System.Drawing.Point(149, 53);
             this.cbHeadingStyle.Name = "cbHeadingStyle";
-            this.cbHeadingStyle.Size = new System.Drawing.Size(100, 21);
+            this.cbHeadingStyle.Size = new System.Drawing.Size(217, 21);
             this.cbHeadingStyle.TabIndex = 17;
             this.cbHeadingStyle.SelectedIndexChanged += new System.EventHandler(this.cbHeadingStyle_SelectedIndexChanged);
             // 
@@ -491,7 +530,7 @@
             this.cbFootingStyle.FormattingEnabled = true;
             this.cbFootingStyle.Location = new System.Drawing.Point(149, 80);
             this.cbFootingStyle.Name = "cbFootingStyle";
-            this.cbFootingStyle.Size = new System.Drawing.Size(100, 21);
+            this.cbFootingStyle.Size = new System.Drawing.Size(217, 21);
             this.cbFootingStyle.TabIndex = 21;
             this.cbFootingStyle.SelectedIndexChanged += new System.EventHandler(this.cbFootingStyle_SelectedIndexChanged);
             // 
@@ -503,12 +542,51 @@
             this.gbDisplay.Controls.Add(this.label6);
             this.gbDisplay.Controls.Add(this.label15);
             this.gbDisplay.Controls.Add(this.label14);
-            this.gbDisplay.Location = new System.Drawing.Point(12, 267);
+            this.gbDisplay.Location = new System.Drawing.Point(317, 459);
             this.gbDisplay.Name = "gbDisplay";
-            this.gbDisplay.Size = new System.Drawing.Size(286, 118);
+            this.gbDisplay.Size = new System.Drawing.Size(389, 118);
             this.gbDisplay.TabIndex = 1;
             this.gbDisplay.TabStop = false;
             this.gbDisplay.Text = "Görünüm &Ayarları";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.tableView);
+            this.groupBox1.Location = new System.Drawing.Point(724, 13);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(491, 564);
+            this.groupBox1.TabIndex = 7;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Ön İzleme";
+            // 
+            // tableView
+            // 
+            this.tableView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableView.AutoSize = true;
+            this.tableView.BackColor = System.Drawing.Color.Black;
+            this.tableView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tableView.Columns = null;
+            this.tableView.CountLabel = null;
+            this.tableView.DiameterLabel = null;
+            this.tableView.DiameterLengthLabel = null;
+            this.tableView.DiameterListLabel = null;
+            this.tableView.GrossWeightLabel = null;
+            this.tableView.LengthLabel = null;
+            this.tableView.Location = new System.Drawing.Point(21, 33);
+            this.tableView.MultiplierHeadingLabel = null;
+            this.tableView.Name = "tableView";
+            this.tableView.PosLabel = null;
+            this.tableView.ShapeLabel = null;
+            this.tableView.Size = new System.Drawing.Size(451, 509);
+            this.tableView.TabIndex = 0;
+            this.tableView.TotalLengthLabel = null;
+            this.tableView.UnitWeightLabel = null;
+            this.tableView.WeightLabel = null;
             // 
             // TableStyleForm
             // 
@@ -516,7 +594,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(721, 472);
+            this.ClientSize = new System.Drawing.Size(1227, 631);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.gbRows);
             this.Controls.Add(this.gbColumns);
             this.Controls.Add(this.gbDisplay);
@@ -531,6 +610,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tablo Stilleri";
             this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.gbColumns.ResumeLayout(false);
             this.gbColumns.PerformLayout();
@@ -538,6 +618,8 @@
             this.gbRows.PerformLayout();
             this.gbDisplay.ResumeLayout(false);
             this.gbDisplay.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -587,5 +669,10 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox chkUserOnly;
+        private TableStylePreview tableView;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtMultiplierHeadingLabel;
     }
 }

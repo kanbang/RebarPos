@@ -305,6 +305,18 @@ CPosShape* CPosShape::GetUnknownPosShape()
 	return shape;
 }
 
+bool CPosShape::HasPosShape(const std::wstring name)
+{
+	if(m_InternalPosShapes.find(name) != m_InternalPosShapes.end())
+		return true;
+	else if(m_BuiltInPosShapes.find(name) != m_BuiltInPosShapes.end())
+		return true;
+	else if(m_CustomPosShapes.find(name) != m_CustomPosShapes.end())
+		return true;
+
+	return false;
+}
+
 int CPosShape::GetPosShapeCount(const bool builtin, const bool isinternal, const bool custom)
 {
 	int count = 0;

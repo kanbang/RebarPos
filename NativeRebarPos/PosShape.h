@@ -145,6 +145,9 @@ public:
 	/// Gets the shape representing an unkown shape
 	static CPosShape* GetUnknownPosShape();
 
+	/// Determines if the given shape exists
+	static bool HasPosShape(const std::wstring name);
+
 	/// Gets the number of pos shapes
 	static int GetPosShapeCount(const bool builtin, const bool isinternal, const bool custom);
 

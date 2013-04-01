@@ -14,20 +14,22 @@ namespace OZOZ
 {
     namespace RebarPosWrapper 
     {
-        public ref class BOQStyle
+		public ref class BOQStyle :  public Autodesk::AutoCAD::Runtime::DisposableWrapper
         {
-		protected:
-			CBOQStyle* m_BOQStyle;
-
-        internal:
-            BOQStyle(CBOQStyle* style);
 		public:
             BOQStyle();
 
-		public:
-			property String^ Name        { String^ get(); void set(String^ value); }
+        internal:
+            BOQStyle(System::IntPtr unmanagedPointer, bool autoDelete);
+            inline CBOQStyle* GetImpObj()
+            {
+                return static_cast<CBOQStyle*>(UnmanagedObject.ToPointer());
+            }
 
-			property String^ Columns              { String^ get(); void set(String^ value); }
+		public:
+			property String^ Name                { String^ get(); void set(String^ value); }
+
+			property String^ Columns             { String^ get(); void set(String^ value); }
 
 			property String^ PosLabel            { String^ get(); void set(String^ value); }
 			property String^ CountLabel          { String^ get(); void set(String^ value); }
@@ -46,16 +48,21 @@ namespace OZOZ
 			property Autodesk::AutoCAD::DatabaseServices::ObjectId HeadingStyleId { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
 			property Autodesk::AutoCAD::DatabaseServices::ObjectId FootingStyleId { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
 
-			property bool IsBuiltIn         { bool get();    void set(bool value); }
+			property bool IsBuiltIn         { bool get(); }
 
 		public:
 			static void AddBOQStyle(BOQStyle^ shape);
 			static BOQStyle^ GetBOQStyle(String^ name);
+			static BOQStyle^ GetUnknownBOQStyle();
+			static bool HasBOQStyle(String^ name);
 			static int GetBOQStyleCount();
-			static System::Collections::Generic::Dictionary<String^, BOQStyle^>^ GetAllBOQStyles();
+			static System::Collections::Generic::List<String^>^ GetAllBOQStyles();
 			static void ClearBOQStyles();
 			static void ReadBOQStylesFromFile(String^ source);
 			static void SaveBOQStylesToFile(String^ source);
+
+		protected:
+			virtual void DeleteUnmanagedObject(void) override;
 		};
 	}
 }

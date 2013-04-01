@@ -103,11 +103,14 @@ public:
 	Acad::ErrorStatus setFootingStyleId(const AcDbObjectId& newVal);
 
 	/// Gets or sets whether this is a built-in style
+public:
 	const Adesk::Boolean IsBuiltIn(void) const;
+protected:
 	Acad::ErrorStatus setIsBuiltIn(const Adesk::Boolean newVal);
 
 private:
-	static std::map<std::wstring, CBOQStyle*> m_BOQStyles;
+	static std::map<std::wstring, CBOQStyle*> m_BuiltInStyles;
+	static std::map<std::wstring, CBOQStyle*> m_CustomStyles;
 
 public:
 	/// Add a new style
@@ -116,24 +119,34 @@ public:
 	/// Gets the style with the given name
 	static CBOQStyle* GetBOQStyle(const std::wstring name);
 
-	/// Gets the number of styles
-	static std::map<std::wstring, CBOQStyle*>::size_type GetBOQStyleCount();
+	/// Gets the unknown style
+	static CBOQStyle* GetUnknownBOQStyle();
 
-	/// Gets the underlying map
-	static std::map<std::wstring, CBOQStyle*> GetMap();
+	/// Determines if the given style exists
+	static bool HasBOQStyle(const std::wstring name);
+
+	/// Gets the number of styles
+	static int GetBOQStyleCount(const bool builtin, const bool custom);
 
 	/// Removes all styles
 	static void ClearBOQStyles(const bool builtin, const bool custom);
+
+	/// Lists all style names
+	static std::vector<std::wstring> CBOQStyle::GetAllStyles(const bool builtin, const bool custom);
 
 	/// Reads all styles defined in the resource
 	static void ReadBOQStylesFromResource(HINSTANCE hInstance, const int resid);
 
 	/// Reads all styles defined in the given text file
-	static void ReadBOQStylesFromFile(const std::wstring filename, const bool builtin);
+	static void ReadBOQStylesFromFile(const std::wstring filename);
 
 	/// Reads all styles defined in the string
 	static void ReadBOQStylesFromString(const std::wstring source, const bool builtin);
 
 	/// Saves all styles to the given text file
-	static void SaveBOQStylesToFile(const std::wstring filename, const bool builtin, const bool custom);
+	static void SaveBOQStylesToFile(const std::wstring filename);
+
+private:
+	// Helper functions
+	static bool SortStyleNames(const std::wstring p1, const std::wstring p2);
 };

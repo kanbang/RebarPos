@@ -69,6 +69,7 @@ namespace RebarPosCommands
                         panel.Controls.Add(shapeLabel);
 
                         PosShapeView posShapeView = new PosShapeView();
+                        posShapeView.SuspendUpdate();
                         posShapeView.ShapeName = shape.Name;
                         posShapeView.Selected = (shape.Name == m_Current);
                         posShapeView.Visible = true;
@@ -76,6 +77,7 @@ namespace RebarPosCommands
                         posShapeView.BackColor = backColor;
                         posShapeView.Location = new Point(0, 15);
                         posShapeView.Click += new EventHandler(posShapeView_Click);
+                        posShapeView.ResumeUpdate();
 
                         panel.Controls.Add(posShapeView);
                         layoutPanel.Controls.Add(panel);

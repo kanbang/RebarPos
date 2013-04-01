@@ -12,12 +12,16 @@ namespace RebarPosCommands
 {
     public partial class DrawingPreview : UserControl
     {
+        private bool suspended;
+
         private Bitmap mImage;
         private List<Drawable> mItems;
 
         public DrawingPreview()
         {
             InitializeComponent();
+
+            suspended = false;
 
             mImage = null;
             mItems = new List<Drawable>();
@@ -55,8 +59,20 @@ namespace RebarPosCommands
             UpdateView();
         }
 
+        public void SuspendUpdate()
+        {
+            suspended = true;
+        }
+
+        public void ResumeUpdate()
+        {
+            suspended = false;
+            UpdateView();
+        }
+
         private void UpdateView()
         {
+            if (suspended) return;
             if (mItems.Count == 0) return;
 
             Size size = this.ClientSize;

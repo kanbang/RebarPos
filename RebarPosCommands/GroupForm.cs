@@ -135,6 +135,8 @@ namespace RebarPosCommands
             btnPickNoteColor.BackColor = mCopy.NoteColor.ColorValue;
             btnPickCountColor.BackColor = mCopy.CountColor.ColorValue;
 
+            posStylePreview.SuspendUpdate();
+
             posStylePreview.Formula = mCopy.Formula;
             posStylePreview.FormulaVariableLength = mCopy.FormulaVariableLength;
             posStylePreview.FormulaLengthOnly = mCopy.FormulaLengthOnly;
@@ -150,6 +152,7 @@ namespace RebarPosCommands
             posStylePreview.CountColor = mCopy.CountColor.ColorValue;
 
             posStylePreview.SetGroup();
+            posStylePreview.ResumeUpdate();
 
             if (mCopy.DisplayUnit == PosGroup.DrawingUnits.Millimeter)
                 posStylePreview.SetPos("1", "2x4", "16", "200", "1000", "1200");

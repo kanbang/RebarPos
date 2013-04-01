@@ -6,16 +6,16 @@ HeadingStyle	Rebar BOQ Heading Style	Arial.ttf	1.0
 FootingStyle	Rebar BOQ Footing Style	simplxtw.shx	1.0
 PosLabel	POZ
 CountLabel	ADET
-DiameterLabel	ÇAP
-LengthLabel	BOY\\P([U])
-ShapeLabel	DEMIR ÞEKLI
+DiameterLabel	CAP
+LengthLabel	BOY\P([U])
+ShapeLabel	DEMIR SEKLI
 TotalLengthLabel	TOPLAM BOY (m)
 DiameterListLabel	[TD]
 DiameterLengthLabel	TOPLAM BOY (m)
 UnitWeightLabel	BIRIM AGIRLIK (kg/m)
 WeightLabel	TOPLAM AGIRLIK (kg)
 GrossWeightLabel	GENEL TOPLAM (kg)
-MultiplierHeadingLabel	GENEL TOPLAM [N] ADET ÝÇÝNDÝR
+MultiplierHeadingLabel	GENEL TOPLAM [N] ADET ICINDIR
 END
 
 BEGIN
@@ -27,7 +27,7 @@ FootingStyle	Rebar BOQ Footing Style	simplxtw.shx	1.0
 PosLabel	POS
 CountLabel	NO.
 DiameterLabel	DIA
-LengthLabel	LENGTH\\P([U])
+LengthLabel	LENGTH\P([U])
 ShapeLabel	SHAPE
 TotalLengthLabel	TOTAL LENGTH (m)
 DiameterListLabel	[TD]

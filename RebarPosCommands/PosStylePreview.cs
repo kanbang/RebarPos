@@ -32,30 +32,18 @@ namespace RebarPosCommands
         private Color mCountColor;
         private string mFormula, mFormulaVariableLength, mFormulaLengthOnly, mFormulaPosOnly;
 
-        [Browsable(true)]
         public Color TextColor { get { return mTextColor; } set { mTextColor = value; Refresh(); } }
-        [Browsable(true)]
         public Color PosColor { get { return mPosColor; } set { mPosColor = value; Refresh(); } }
-        [Browsable(true)]
         public Color CircleColor { get { return mCircleColor; } set { mCircleColor = value; Refresh(); } }
-        [Browsable(true)]
         public Color MultiplierColor { get { return mMultiplierColor; } set { mMultiplierColor = value; Refresh(); } }
-        [Browsable(true)]
         public Color GroupColor { get { return mGroupColor; } set { mGroupColor = value; Refresh(); } }
-        [Browsable(true)]
         public Color NoteColor { get { return mNoteColor; } set { mNoteColor = value; Refresh(); } }
-        [Browsable(true)]
         public Color CurrentGroupHighlightColor { get { return mCurrentGroupHighlightColor; } set { mCurrentGroupHighlightColor = value; Refresh(); } }
-        [Browsable(true)]
         public Color CountColor { get { return mCountColor; } set { mCountColor = value; Refresh(); } }
 
-        [Browsable(true)]
         public string Formula { get { return mFormula; } set { mFormula = value; Refresh(); } }
-        [Browsable(true)]
         public string FormulaVariableLength { get { return mFormulaVariableLength; } set { mFormulaVariableLength = value; Refresh(); } }
-        [Browsable(true)]
         public string FormulaLengthOnly { get { return mFormulaLengthOnly; } set { mFormulaLengthOnly = value; Refresh(); } }
-        [Browsable(true)]
         public string FormulaPosOnly { get { return mFormulaPosOnly; } set { mFormulaPosOnly = value; Refresh(); } }
 
         public PosStylePreview()
