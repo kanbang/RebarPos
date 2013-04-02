@@ -410,43 +410,14 @@ bool CPosShape::SortShapeNames(const std::wstring p1, const std::wstring p2)
 
 void CPosShape::ReadPosShapesFromResource(HINSTANCE hInstance, const int resid, const bool isinternal)
 {
-	HRSRC hResource = FindResource(hInstance, MAKEINTRESOURCE(resid), L"SHAPELIST");
-	if (!hResource)
-	{
-		return;
-	}
-
-	HGLOBAL hLoadedResource = LoadResource(hInstance, hResource);
-	if (!hLoadedResource)
-	{
-		return;
-	}
-
-	LPVOID pLockedResource = LockResource(hLoadedResource);
-	if (!pLockedResource)
-	{
-		return;
-	}
-
-	DWORD dwResourceSize = SizeofResource(hInstance, hResource);
-	if (dwResourceSize == 0)
-	{
-		return;
-	}
-
-	std::string casted_memory(static_cast<char*>(pLockedResource), dwResourceSize);
-	std::wstring source;
-	source.assign(casted_memory.begin(), casted_memory.end());
-
+	std::wstring source = Utility::StringFromResource(hInstance, L"SHAPELIST", resid);
 	ReadPosShapesFromString(source, true, isinternal);
 }
 
 void CPosShape::ReadPosShapesFromFile(const std::wstring filename)
 {
-	std::wifstream ifs(filename.c_str());
-	std::wstring content( (std::istreambuf_iterator<wchar_t>(ifs) ),
-                          (std::istreambuf_iterator<wchar_t>()    ) );
-	ReadPosShapesFromString(content, false, false);
+	std::wstring source = Utility::StringFromFile(filename);
+	ReadPosShapesFromString(source, false, false);
 }
 
 void CPosShape::ReadPosShapesFromString(const std::wstring source, const bool builtin, const bool isinternal)

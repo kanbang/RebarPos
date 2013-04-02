@@ -7,6 +7,8 @@
 #include <sstream>
 #include <iomanip>
 #include <locale>
+#include <fstream>
+#include <algorithm>
 
 #include "Utility.h"
 
@@ -150,6 +152,37 @@ double Utility::StrToDouble(const std::wstring& str)
 double Utility::StrToDouble(const wchar_t* str)
 {
 	return _wtof(str);
+}
+
+std::wstring Utility::StringFromResource(const HINSTANCE hInstance, const std::wstring& resourceType, const int resid)
+{
+	HRSRC hResource = FindResource(hInstance, MAKEINTRESOURCE(resid), resourceType.c_str());
+	if (!hResource) return L"";
+
+	HGLOBAL hLoadedResource = LoadResource(hInstance, hResource);
+	if (!hLoadedResource) return L"";
+
+	DWORD dwResourceSize = SizeofResource(hInstance, hResource);
+	if (dwResourceSize == 0) return L"";
+
+	LPVOID pLockedResource = LockResource(hLoadedResource);
+	if (!pLockedResource) return L"";
+
+	std::string str(static_cast<char*>(pLockedResource), dwResourceSize);
+	std::wstring source(str.begin(), str.end());
+
+	FreeResource(hLoadedResource);
+
+	return source;
+}
+
+std::wstring Utility::StringFromFile(const std::wstring& filename)
+{
+	std::wifstream ifs(filename.c_str());
+	std::wstring source((std::istreambuf_iterator<wchar_t>(ifs)),
+                        (std::istreambuf_iterator<wchar_t>()));
+
+	return source;
 }
 
 Acad::ErrorStatus Utility::ReadDXFItem(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, resbuf* rb)

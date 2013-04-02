@@ -66,6 +66,10 @@ public:
 	static int StrToInt(const std::wstring& str);
 	static int StrToInt(const wchar_t* str);
 
+	// Read UTF-8 string resources
+	static std::wstring StringFromResource(const HINSTANCE hInstance, const std::wstring& resourceType, const int resid);
+	static std::wstring StringFromFile(const std::wstring& filename);
+
 	// Read DXF vals
 	static Acad::ErrorStatus ReadDXFItem(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, resbuf* val);
 	static Acad::ErrorStatus ReadDXFInt(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, short& val);

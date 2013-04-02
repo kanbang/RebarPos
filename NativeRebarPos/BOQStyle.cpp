@@ -247,43 +247,14 @@ bool CBOQStyle::SortStyleNames(const std::wstring p1, const std::wstring p2)
 
 void CBOQStyle::ReadBOQStylesFromResource(HINSTANCE hInstance, const int resid)
 {
-	HRSRC hResource = FindResource(hInstance, MAKEINTRESOURCE(resid), L"TABLESTYLE");
-	if (!hResource)
-	{
-		return;
-	}
-
-	HGLOBAL hLoadedResource = LoadResource(hInstance, hResource);
-	if (!hLoadedResource)
-	{
-		return;
-	}
-
-	LPVOID pLockedResource = LockResource(hLoadedResource);
-	if (!pLockedResource)
-	{
-		return;
-	}
-
-	DWORD dwResourceSize = SizeofResource(hInstance, hResource);
-	if (dwResourceSize == 0)
-	{
-		return;
-	}
-
-	std::string casted_memory(static_cast<char*>(pLockedResource), dwResourceSize);
-	std::wstring source;
-	source.assign(casted_memory.begin(), casted_memory.end());
-
+	std::wstring source = Utility::StringFromResource(hInstance, L"TABLESTYLE", resid);
 	ReadBOQStylesFromString(source, true);
 }
 
 void CBOQStyle::ReadBOQStylesFromFile(const std::wstring filename)
 {
-	std::wifstream ifs(filename.c_str());
-	std::wstring content( (std::istreambuf_iterator<wchar_t>(ifs) ),
-                          (std::istreambuf_iterator<wchar_t>()    ) );
-	ReadBOQStylesFromString(content, false);
+	std::wstring source = Utility::StringFromFile(filename);
+	ReadBOQStylesFromString(source, false);
 }
 
 void CBOQStyle::ReadBOQStylesFromString(const std::wstring source, const bool builtin)
