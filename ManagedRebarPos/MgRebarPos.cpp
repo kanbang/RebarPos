@@ -23,7 +23,7 @@ RebarPos::RebarPos()
 }
 
 RebarPos::RebarPos(System::IntPtr unmanagedPointer, bool autoDelete)
-: Autodesk::AutoCAD::DatabaseServices::Entity(unmanagedPointer,autoDelete)
+: Autodesk::AutoCAD::DatabaseServices::Entity(unmanagedPointer, autoDelete)
 {
 	mCalculatedProperties = gcnew RebarPos::CalculatedProperties();
 }

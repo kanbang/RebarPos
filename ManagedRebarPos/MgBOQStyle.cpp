@@ -17,11 +17,11 @@ using namespace OZOZ::RebarPosWrapper;
 // Constructors and destructors 
 //*************************************************************************
 BOQStyle::BOQStyle()
-: Autodesk::AutoCAD::Runtime::DisposableWrapper(IntPtr(new CBOQStyle()), true)
+: Autodesk::AutoCAD::Runtime::RXObject(IntPtr(new CBOQStyle()), true)
 { }
 
 BOQStyle::BOQStyle(System::IntPtr unmanagedPointer, bool autoDelete)
-: Autodesk::AutoCAD::Runtime::DisposableWrapper(unmanagedPointer, autoDelete)
+: Autodesk::AutoCAD::Runtime::RXObject(unmanagedPointer, autoDelete)
 { }
 
 //*************************************************************************
@@ -183,17 +183,6 @@ void BOQStyle::FootingStyleId::set(Autodesk::AutoCAD::DatabaseServices::ObjectId
 bool BOQStyle::IsBuiltIn::get()
 {
 	return (GetImpObj()->IsBuiltIn() == Adesk::kTrue);
-}
-
-//*************************************************************************
-// DisposableWrapper implementation
-//*************************************************************************
-void BOQStyle::DeleteUnmanagedObject(void)
-{
-	if(AutoDelete)
-	{
-		delete GetImpObj();
-	}
 }
 
 //*************************************************************************

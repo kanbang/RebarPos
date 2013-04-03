@@ -13,7 +13,15 @@
 std::map<std::wstring, CBOQStyle*> CBOQStyle::m_BuiltInStyles;
 std::map<std::wstring, CBOQStyle*> CBOQStyle::m_CustomStyles;
 
-//-----------------------------------------------------------------------------
+//*************************************************************************
+// Code for the Class Body. 
+//*************************************************************************
+
+ACRX_CONS_DEFINE_MEMBERS(CBOQStyle, AcRxObject, 0);
+
+//*************************************************************************
+// Constructors and destructors 
+//*************************************************************************
 CBOQStyle::CBOQStyle () : m_Name(NULL), m_Columns(NULL),
 	m_TextStyleId(AcDbObjectId::kNull), m_HeadingStyleId(AcDbObjectId::kNull), m_FootingStyleId(AcDbObjectId::kNull),
 	m_PosLabel(NULL), m_CountLabel(NULL), m_DiameterLabel(NULL), m_LengthLabel(NULL), m_ShapeLabel(NULL),

@@ -14,7 +14,8 @@ namespace OZOZ
 {
     namespace RebarPosWrapper 
     {
-		public ref class BOQStyle :  public Autodesk::AutoCAD::Runtime::DisposableWrapper
+        [Autodesk::AutoCAD::Runtime::Wrapper("CBOQStyle")]
+		public ref class BOQStyle :  public Autodesk::AutoCAD::Runtime::RXObject
         {
 		public:
             BOQStyle();
@@ -60,9 +61,6 @@ namespace OZOZ
 			static void ClearBOQStyles();
 			static void ReadBOQStylesFromFile(String^ source);
 			static void SaveBOQStylesToFile(String^ source);
-
-		protected:
-			virtual void DeleteUnmanagedObject(void) override;
 		};
 	}
 }

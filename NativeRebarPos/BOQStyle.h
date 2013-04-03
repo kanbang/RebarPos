@@ -21,8 +21,12 @@
 /// ---------------------------------------------------------------------------
 /// The CBOQStyle represents the settings for BOQ tables.
 /// ---------------------------------------------------------------------------
-class DLLIMPEXP CBOQStyle
+class DLLIMPEXP CBOQStyle : public  AcRxObject
 {
+public:
+	/// Define additional RTT information for AcRxObject base type.
+    ACRX_DECLARE_MEMBERS(CBOQStyle);
+
 public:
 	CBOQStyle ();
 	virtual ~CBOQStyle ();

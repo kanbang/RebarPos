@@ -40,6 +40,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 		CPosGroup::rxInit();
         CRebarPos::rxInit();
 		CGenericTable::rxInit();
+		CBOQStyle::rxInit();
 		CBOQTable::rxInit();
         acrxBuildClassHierarchy();
 
@@ -72,6 +73,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 
 		// Remove custom classes
 		deleteAcRxClass(CBOQTable::desc());
+		deleteAcRxClass(CBOQStyle::desc());
 		deleteAcRxClass(CGenericTable::desc());
         deleteAcRxClass(CRebarPos::desc());
 		deleteAcRxClass(CPosGroup::desc());
