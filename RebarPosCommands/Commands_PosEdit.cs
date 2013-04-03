@@ -31,25 +31,27 @@ namespace RebarPosCommands
 
             if (detached)
             {
-                EditDetachedPosForm form = new EditDetachedPosForm();
-
-                if (form.Init(id, pt))
+                using (EditDetachedPosForm form = new EditDetachedPosForm())
                 {
-                    if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
+                    if (form.Init(id, pt))
                     {
-                        return true;
+                        if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
+                        {
+                            return true;
+                        }
                     }
                 }
             }
             else
             {
-                EditPosForm form = new EditPosForm();
-
-                if (form.Init(id, pt))
+                using (EditPosForm form = new EditPosForm())
                 {
-                    if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
+                    if (form.Init(id, pt))
                     {
-                        return true;
+                        if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
+                        {
+                            return true;
+                        }
                     }
                 }
             }

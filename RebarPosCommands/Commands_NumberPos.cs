@@ -24,13 +24,14 @@ namespace RebarPosCommands
                 return false;
             }
 
-            NumberingForm form = new NumberingForm();
-
-            if (form.Init(items))
+            using (NumberingForm form = new NumberingForm())
             {
-                if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
+                if (form.Init(items))
                 {
-                    return true;
+                    if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
+                    {
+                        return true;
+                    }
                 }
             }
 

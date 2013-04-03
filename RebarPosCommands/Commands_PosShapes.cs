@@ -30,15 +30,16 @@ namespace RebarPosCommands
 
         private void PosShapes()
         {
-            PosShapesForm form = new PosShapesForm();
-
-            if (form.Init(ShowShapes))
+            using (PosShapesForm form = new PosShapesForm())
             {
-                if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == DialogResult.OK)
+                if (form.Init(ShowShapes))
                 {
-                    ShowShapes = form.ShowShapes;
+                    if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == DialogResult.OK)
+                    {
+                        ShowShapes = form.ShowShapes;
 
-                    DWGUtility.RefreshAllPos();
+                        DWGUtility.RefreshAllPos();
+                    }
                 }
             }
         }

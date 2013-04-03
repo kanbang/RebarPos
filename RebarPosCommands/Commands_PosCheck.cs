@@ -16,11 +16,12 @@ namespace RebarPosCommands
             if (sel.Status != PromptStatus.OK) return;
             ObjectId[] items = sel.Value.GetObjectIds();
 
-            CheckForm form = new CheckForm();
-
-            if (form.Init(items))
+            using (CheckForm form = new CheckForm())
             {
-                Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false);
+                if (form.Init(items))
+                {
+                    Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false);
+                }
             }
         }
     }

@@ -10,13 +10,14 @@ namespace RebarPosCommands
     {
         private void PosGroups()
         {
-            GroupForm form = new GroupForm();
-
-            if (form.Init())
+            using (GroupForm form = new GroupForm())
             {
-                if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == DialogResult.OK)
+                if (form.Init())
                 {
-                    SetCurrentGroup();
+                    if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == DialogResult.OK)
+                    {
+                        SetCurrentGroup();
+                    }
                 }
             }
         }

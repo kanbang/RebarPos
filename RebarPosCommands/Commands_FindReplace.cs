@@ -23,18 +23,19 @@ namespace RebarPosCommands
                 return false;
             }
 
-            FindReplaceForm form = new FindReplaceForm();
-
-            if (form.Init(items))
+            using (FindReplaceForm form = new FindReplaceForm())
             {
-                if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
+                if (form.Init(items))
                 {
-                    return true;
+                    if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
+                    {
+                        return true;
+                    }
                 }
-            }
-            else
-            {
-                MessageBox.Show("Çizimde poz bulunamadı.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                else
+                {
+                    MessageBox.Show("Çizimde poz bulunamadı.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
 
             return false;

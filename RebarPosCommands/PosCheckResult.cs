@@ -313,45 +313,46 @@ namespace RebarPosCommands
 
         public override bool Fix()
         {
-            SelectShapeForm frmEdit = new SelectShapeForm();
-            List<string> list = new List<string>();
-            foreach (ShapeDefiniton def in Shapes)
-                list.Add(def.Shape);
-            // TODO: Add piece lengths
-            frmEdit.SetShapes(Shapes[0].Shape, list);
-
-            if (frmEdit.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            using (SelectShapeForm frmEdit = new SelectShapeForm())
             {
-                ShapeDefiniton shape = Shapes.Find(p => p.Shape == frmEdit.Current);
-                if (shape == null) return false;
+                List<string> list = new List<string>();
+                foreach (ShapeDefiniton def in Shapes)
+                    list.Add(def.Shape);
+                // TODO: Add piece lengths
+                frmEdit.SetShapes(Shapes[0].Shape, list);
 
-                Database db = HostApplicationServices.WorkingDatabase;
-                using (Transaction tr = db.TransactionManager.StartTransaction())
+                if (frmEdit.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    try
+                    ShapeDefiniton shape = Shapes.Find(p => p.Shape == frmEdit.Current);
+                    if (shape == null) return false;
+
+                    Database db = HostApplicationServices.WorkingDatabase;
+                    using (Transaction tr = db.TransactionManager.StartTransaction())
                     {
-                        foreach (ObjectId id in Items)
+                        try
                         {
-                            RebarPos pos = tr.GetObject(id, OpenMode.ForWrite) as RebarPos;
-                            if (pos == null) continue;
+                            foreach (ObjectId id in Items)
+                            {
+                                RebarPos pos = tr.GetObject(id, OpenMode.ForWrite) as RebarPos;
+                                if (pos == null) continue;
 
-                            pos.Shape = shape.Shape;
-                            pos.A = shape.FieldCount > 0 ? shape.A : "";
-                            pos.B = shape.FieldCount > 1 ? shape.B : "";
-                            pos.C = shape.FieldCount > 2 ? shape.C : "";
-                            pos.D = shape.FieldCount > 3 ? shape.D : "";
-                            pos.E = shape.FieldCount > 4 ? shape.E : "";
-                            pos.F = shape.FieldCount > 5 ? shape.F : "";
+                                pos.Shape = shape.Shape;
+                                pos.A = shape.FieldCount > 0 ? shape.A : "";
+                                pos.B = shape.FieldCount > 1 ? shape.B : "";
+                                pos.C = shape.FieldCount > 2 ? shape.C : "";
+                                pos.D = shape.FieldCount > 3 ? shape.D : "";
+                                pos.E = shape.FieldCount > 4 ? shape.E : "";
+                                pos.F = shape.FieldCount > 5 ? shape.F : "";
+                            }
+                            tr.Commit();
                         }
-                        tr.Commit();
+                        catch (System.Exception ex)
+                        {
+                            MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
-                    catch (System.Exception ex)
-                    {
-                        MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    return true;
                 }
-
-                return true;
             }
 
             return false;
@@ -927,34 +928,36 @@ namespace RebarPosCommands
 
         public override bool Fix()
         {
-            SelectShapeForm frmEdit = new SelectShapeForm();
-            frmEdit.SetShapes();
-
-            if (frmEdit.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            using (SelectShapeForm frmEdit = new SelectShapeForm())
             {
-                string selshape = frmEdit.Current;
+                frmEdit.SetShapes();
 
-                Database db = HostApplicationServices.WorkingDatabase;
-                using (Transaction tr = db.TransactionManager.StartTransaction())
+                if (frmEdit.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    try
+                    string selshape = frmEdit.Current;
+
+                    Database db = HostApplicationServices.WorkingDatabase;
+                    using (Transaction tr = db.TransactionManager.StartTransaction())
                     {
-                        foreach (ObjectId id in Items)
+                        try
                         {
-                            RebarPos pos = tr.GetObject(id, OpenMode.ForWrite) as RebarPos;
-                            if (pos == null) continue;
+                            foreach (ObjectId id in Items)
+                            {
+                                RebarPos pos = tr.GetObject(id, OpenMode.ForWrite) as RebarPos;
+                                if (pos == null) continue;
 
-                            pos.Shape = selshape;
+                                pos.Shape = selshape;
+                            }
+                            tr.Commit();
                         }
-                        tr.Commit();
+                        catch (System.Exception ex)
+                        {
+                            MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
-                    catch (System.Exception ex)
-                    {
-                        MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
 
-                return true;
+                    return true;
+                }
             }
 
             return false;

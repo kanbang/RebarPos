@@ -12,51 +12,81 @@ namespace RebarPosCommands
 {
     public partial class DrawingPreview : UserControl
     {
+        private bool init;
+        private bool disposed;
         private bool suspended;
+        private Extents3d extents;
 
-        private Bitmap mImage;
-        private List<Drawable> mItems;
+        private Autodesk.AutoCAD.GraphicsSystem.Device device = null;
+        private Autodesk.AutoCAD.GraphicsSystem.View view = null;
+        private Autodesk.AutoCAD.GraphicsSystem.Model model = null;
 
         public DrawingPreview()
         {
             InitializeComponent();
 
+            init = false;
+            disposed = false;
             suspended = false;
-
-            mImage = null;
-            mItems = new List<Drawable>();
         }
 
-        protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
+        private void Init()
         {
-            e.Graphics.Clear(BackColor);
-            if (mImage != null)
+            if (!init && !disposed && !Disposing)
             {
-                e.Graphics.DrawImageUnscaled(mImage, (ClientRectangle.Width - mImage.Width) / 2, (ClientRectangle.Height - mImage.Height) / 2);
+                extents = new Extents3d();
+
+                Autodesk.AutoCAD.GraphicsSystem.Manager gsm = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.GraphicsManager;
+
+                device = gsm.CreateAutoCADDevice(this.Handle);
+                device.DeviceRenderType = RendererType.Default;
+                device.BackgroundColor = BackColor;
+
+                view = new Autodesk.AutoCAD.GraphicsSystem.View();
+                view.VisualStyle = new Autodesk.AutoCAD.GraphicsInterface.VisualStyle(Autodesk.AutoCAD.GraphicsInterface.VisualStyleType.Wireframe2D);
+
+                model = gsm.CreateAutoCADModel();
+
+                device.Add(view);
+                device.Update();
+
+                init = true;
             }
         }
 
         public void AddItem(Drawable item)
         {
-            mItems.Add(item);
-            UpdateView();
+            Init();
+            Extents3d? itemExtents = item.Bounds;
+            if (itemExtents.HasValue)
+            {
+                extents.AddExtents(itemExtents.Value);
+            }
+            view.Add(item, model);
+            view.SetView(new Point3d((extents.MinPoint.X + extents.MaxPoint.X) / 2.0, (extents.MinPoint.Y + extents.MaxPoint.Y) / 2.0, 1.0),
+                new Point3d((extents.MinPoint.X + extents.MaxPoint.X) / 2.0, (extents.MinPoint.Y + extents.MaxPoint.Y) / 2.0, 0.0),
+                new Vector3d(0.0, 1.0, 0.0),
+                Math.Abs(extents.MaxPoint.X - extents.MinPoint.X),
+                Math.Abs(extents.MaxPoint.Y - extents.MinPoint.Y));
         }
 
         public void AddItem(IEnumerable<Drawable> items)
         {
-            mItems.AddRange(items);
-            UpdateView();
+            Init();
+            SuspendUpdate();
+            foreach (Drawable item in items)
+            {
+                AddItem(item);
+            }
+            ResumeUpdate();
         }
 
         public void ClearItems()
         {
-            mItems.Clear();
-            if (mImage != null)
-            {
-                mImage.Dispose();
-            }
-            mImage = null;
-            UpdateView();
+            Init();
+            view.EraseAll();
+            extents = new Extents3d();
+            Refresh();
         }
 
         public void SuspendUpdate()
@@ -67,71 +97,62 @@ namespace RebarPosCommands
         public void ResumeUpdate()
         {
             suspended = false;
-            UpdateView();
-        }
-
-        private void UpdateView()
-        {
-            if (suspended) return;
-            if (mItems.Count == 0) return;
-
-            Size size = this.ClientSize;
-            mImage = new Bitmap(size.Width, size.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-            mImage.SetResolution(200, 200);
-
-            Manager gsm = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.GraphicsManager;
-
-            using (Autodesk.AutoCAD.GraphicsSystem.View view = new Autodesk.AutoCAD.GraphicsSystem.View())
-            {
-                view.EraseAll();
-                view.VisualStyle = new Autodesk.AutoCAD.GraphicsInterface.VisualStyle(Autodesk.AutoCAD.GraphicsInterface.VisualStyleType.Wireframe2D);
-
-                using (Model model = gsm.CreateAutoCADModel())
-                {
-                    // Add items to view
-                    Extents3d extents = new Extents3d();
-                    foreach (Drawable item in mItems)
-                    {
-                        view.Add(item, model);
-                        Extents3d? itemExtents = item.Bounds;
-                        if (itemExtents.HasValue)
-                        {
-                            extents.AddExtents(itemExtents.Value);
-                        }
-                    }
-
-                    // Set the view
-                    view.Viewport = new Rectangle(0, 0, size.Width, size.Height);
-                    view.SetView(new Point3d((extents.MinPoint.X + extents.MaxPoint.X) / 2.0, (extents.MinPoint.Y + extents.MaxPoint.Y) / 2.0, 1.0),
-                        new Point3d((extents.MinPoint.X + extents.MaxPoint.X) / 2.0, (extents.MinPoint.Y + extents.MaxPoint.Y) / 2.0, 0.0),
-                        new Vector3d(0.0, 1.0, 0.0),
-                        Math.Abs(extents.MaxPoint.X - extents.MinPoint.X),
-                        Math.Abs(extents.MaxPoint.Y - extents.MinPoint.Y));
-
-                    // Take the snapshot
-                    using (Device dev = gsm.CreateAutoCADOffScreenDevice())
-                    {
-                        dev.OnSize(gsm.DisplaySize);
-                        dev.DeviceRenderType = RendererType.Default;
-                        dev.BackgroundColor = BackColor;
-
-                        dev.Add(view);
-                        dev.Update();
-
-                        view.ZoomExtents(extents.MinPoint, extents.MaxPoint);
-                        mImage = view.GetSnapshot(view.Viewport);
-                        dev.Erase(view);
-                    }
-                }
-            }
             Refresh();
         }
 
-        private void DrawingPreview_SizeChanged(object sender, EventArgs e)
+        protected override void OnPaint(PaintEventArgs e)
         {
-            if (mItems.Count == 0) return;
+            if (!suspended && init && !disposed && !Disposing)
+            {
+                device.Update();
+            }
 
-            UpdateView();
+            base.OnPaint(e);
+        }
+
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            if (init && !disposed && !Disposing && this.Size.Width > 0 && this.Size.Height > 0)
+            {
+                device.OnSize(this.Size);
+            }
+
+            base.OnSizeChanged(e);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (components != null)
+                    components.Dispose();
+            }
+
+            base.Dispose(disposing);
+
+            if (device != null)
+            {
+                device.EraseAll();
+            }
+            if (view != null)
+            {
+                view.EraseAll();
+                view.Dispose();
+                view = null;
+            }
+            if (model != null)
+            {
+                model.Dispose();
+                model = null;
+            }
+            if (device != null)
+            {
+                device.Dispose();
+                device = null;
+            }
+
+            init = false;
+            disposed = true;
         }
     }
 }

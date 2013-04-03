@@ -326,13 +326,15 @@ namespace RebarPosCommands
 
         private void posShapeView_Click(object sender, EventArgs e)
         {
-            SelectShapeForm form = new SelectShapeForm();
-            form.SetShapes(m_Shape);
-            if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
+            using (SelectShapeForm form = new SelectShapeForm())
             {
-                m_Shape = form.Current;
-                SetShape();
-                UpdateLength();
+                form.SetShapes(m_Shape);
+                if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
+                {
+                    m_Shape = form.Current;
+                    SetShape();
+                    UpdateLength();
+                }
             }
         }
 

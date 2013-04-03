@@ -30,13 +30,14 @@ namespace RebarPosCommands
 
         private void TableStyles()
         {
-            TableStyleForm form = new TableStyleForm();
-
-            if (form.Init())
+            using (TableStyleForm form = new TableStyleForm())
             {
-                if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == DialogResult.OK)
+                if (form.Init())
                 {
-                    ;
+                    if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == DialogResult.OK)
+                    {
+                        ;
+                    }
                 }
             }
         }

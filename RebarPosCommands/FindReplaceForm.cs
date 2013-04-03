@@ -353,21 +353,25 @@ namespace RebarPosCommands
 
         private void psvFind_Click(object sender, EventArgs e)
         {
-            SelectShapeForm form = new SelectShapeForm();
-            form.SetShapes(m_FindShape, m_ShapeList.Keys);
-            if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
+            using (SelectShapeForm form = new SelectShapeForm())
             {
-                SetFindShape(form.Current);
+                form.SetShapes(m_FindShape, m_ShapeList.Keys);
+                if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
+                {
+                    SetFindShape(form.Current);
+                }
             }
         }
 
         private void psvReplace_Click(object sender, EventArgs e)
         {
-            SelectShapeForm form = new SelectShapeForm();
-            form.SetShapes(m_ReplaceShape);
-            if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
+            using (SelectShapeForm form = new SelectShapeForm())
             {
-                SetReplaceShape(form.Current);
+                form.SetShapes(m_ReplaceShape);
+                if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) == System.Windows.Forms.DialogResult.OK)
+                {
+                    SetReplaceShape(form.Current);
+                }
             }
         }
 
