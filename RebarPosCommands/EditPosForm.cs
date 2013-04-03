@@ -211,62 +211,64 @@ namespace RebarPosCommands
 
         private void GetLengthFromEntity(TextBox txt)
         {
-            Hide();
             Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
-            PromptEntityOptions opts = new PromptEntityOptions("\nSelect entity: ");
-            opts.SetRejectMessage("\nSelect a LINE, ARC, TEXT, MTEXT, POLYLINE or DIMENSION entity.");
-            opts.AddAllowedClass(typeof(Line), false);
-            opts.AddAllowedClass(typeof(Arc), false);
-            opts.AddAllowedClass(typeof(DBText), false);
-            opts.AddAllowedClass(typeof(MText), false);
-            opts.AddAllowedClass(typeof(Dimension), false);
-            opts.AddAllowedClass(typeof(Polyline), false);
-            PromptEntityResult per = ed.GetEntity(opts);
-            Show();
-            if (per.Status == PromptStatus.OK)
+            using (EditorUserInteraction UI = ed.StartUserInteraction(this))
             {
-                ObjectId id = per.ObjectId;
-                Database db = HostApplicationServices.WorkingDatabase;
-                using (Transaction tr = db.TransactionManager.StartTransaction())
+                PromptEntityOptions opts = new PromptEntityOptions("\nSelect entity: ");
+                opts.SetRejectMessage("\nSelect a LINE, ARC, TEXT, MTEXT, POLYLINE or DIMENSION entity.");
+                opts.AddAllowedClass(typeof(Line), false);
+                opts.AddAllowedClass(typeof(Arc), false);
+                opts.AddAllowedClass(typeof(DBText), false);
+                opts.AddAllowedClass(typeof(MText), false);
+                opts.AddAllowedClass(typeof(Dimension), false);
+                opts.AddAllowedClass(typeof(Polyline), false);
+                PromptEntityResult per = ed.GetEntity(opts);
+
+                if (per.Status == PromptStatus.OK)
                 {
-                    try
+                    ObjectId id = per.ObjectId;
+                    Database db = HostApplicationServices.WorkingDatabase;
+                    using (Transaction tr = db.TransactionManager.StartTransaction())
                     {
-                        DBObject obj = tr.GetObject(per.ObjectId, OpenMode.ForRead);
-                        if (obj is Line)
+                        try
                         {
-                            Line dobj = obj as Line;
-                            txt.Text = dobj.Length.ToString();
+                            DBObject obj = tr.GetObject(per.ObjectId, OpenMode.ForRead);
+                            if (obj is Line)
+                            {
+                                Line dobj = obj as Line;
+                                txt.Text = dobj.Length.ToString();
+                            }
+                            else if (obj is Arc)
+                            {
+                                Arc dobj = obj as Arc;
+                                txt.Text = dobj.Length.ToString();
+                            }
+                            else if (obj is DBText)
+                            {
+                                DBText dobj = obj as DBText;
+                                txt.Text = dobj.TextString;
+                            }
+                            else if (obj is MText)
+                            {
+                                MText dobj = obj as MText;
+                                txt.Text = dobj.Text;
+                            }
+                            else if (obj is Dimension)
+                            {
+                                Dimension dobj = obj as Dimension;
+                                txt.Text = dobj.Measurement.ToString();
+                            }
+                            else if (obj is Polyline)
+                            {
+                                Polyline dobj = obj as Polyline;
+                                txt.Text = dobj.Length.ToString();
+                            }
+                            CheckPosLength(txt);
                         }
-                        else if (obj is Arc)
+                        catch (System.Exception ex)
                         {
-                            Arc dobj = obj as Arc;
-                            txt.Text = dobj.Length.ToString();
+                            System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                         }
-                        else if (obj is DBText)
-                        {
-                            DBText dobj = obj as DBText;
-                            txt.Text = dobj.TextString;
-                        }
-                        else if (obj is MText)
-                        {
-                            MText dobj = obj as MText;
-                            txt.Text = dobj.Text;
-                        }
-                        else if (obj is Dimension)
-                        {
-                            Dimension dobj = obj as Dimension;
-                            txt.Text = dobj.Measurement.ToString();
-                        }
-                        else if (obj is Polyline)
-                        {
-                            Polyline dobj = obj as Polyline;
-                            txt.Text = dobj.Length.ToString();
-                        }
-                        CheckPosLength(txt);
-                    }
-                    catch (System.Exception ex)
-                    {
-                        System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                     }
                 }
             }
@@ -274,21 +276,23 @@ namespace RebarPosCommands
 
         private void GetLengthFromMeasurement(TextBox txt)
         {
-            Hide();
-            string length = "";
-            double length1 = 0;
-            if (GetDistance("\nFirst point: ", "\nSecond point: ", out length1) == PromptStatus.OK)
+            Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+            using (EditorUserInteraction UI = ed.StartUserInteraction(this))
             {
-                length = length1.ToString("F0");
-                double length2 = 0;
-                if (GetDistance("\n" + length + "-... First point: ", "\n" + length + "-... Second point: ", out length2, true) == PromptStatus.OK)
+                string length = "";
+                double length1 = 0;
+                if (GetDistance("\nFirst point: ", "\nSecond point: ", out length1) == PromptStatus.OK)
                 {
-                    length += "~" + length2.ToString("F0");
+                    length = length1.ToString("F0");
+                    double length2 = 0;
+                    if (GetDistance("\n" + length + "-... First point: ", "\n" + length + "-... Second point: ", out length2, true) == PromptStatus.OK)
+                    {
+                        length += "~" + length2.ToString("F0");
+                    }
+                    txt.Text = length;
+                    CheckPosLength(txt);
                 }
-                txt.Text = length;
-                CheckPosLength(txt);
             }
-            Show();
         }
 
         private PromptStatus GetDistance(string message1, string message2, out double length, bool allowEmpty)
@@ -800,56 +804,57 @@ namespace RebarPosCommands
 
         private void btnPickNumber_Click(object sender, EventArgs e)
         {
-            Hide();
             Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
-            TypedValue[] tvs = new TypedValue[] {
-                new TypedValue((int)DxfCode.Operator, "<OR"),
-                new TypedValue((int)DxfCode.Start, "TEXT"),
-                new TypedValue((int)DxfCode.Start, "MTEXT"),
-                new TypedValue((int)DxfCode.Operator, "OR>")
-            };
-            PromptSelectionResult res = ed.GetSelection(new SelectionFilter(tvs));
-            Show();
-            if (res.Status == PromptStatus.OK)
+            using (EditorUserInteraction UI = ed.StartUserInteraction(this))
             {
-                Database db = HostApplicationServices.WorkingDatabase;
-                using (Transaction tr = db.TransactionManager.StartTransaction())
+                TypedValue[] tvs = new TypedValue[] {
+                    new TypedValue((int)DxfCode.Operator, "<OR"),
+                    new TypedValue((int)DxfCode.Start, "TEXT"),
+                    new TypedValue((int)DxfCode.Start, "MTEXT"),
+                    new TypedValue((int)DxfCode.Operator, "OR>")
+                };
+                PromptSelectionResult res = ed.GetSelection(new SelectionFilter(tvs));
+                if (res.Status == PromptStatus.OK)
                 {
-                    try
+                    Database db = HostApplicationServices.WorkingDatabase;
+                    using (Transaction tr = db.TransactionManager.StartTransaction())
                     {
-                        int total = 0;
-                        foreach (SelectedObject sobj in res.Value)
+                        try
                         {
-                            string text = "";
-                            DBObject obj = tr.GetObject(sobj.ObjectId, OpenMode.ForRead);
-                            if (obj is DBText)
+                            int total = 0;
+                            foreach (SelectedObject sobj in res.Value)
                             {
-                                DBText dobj = obj as DBText;
-                                text = dobj.TextString;
-                            }
-                            else if (obj is MText)
-                            {
-                                MText dobj = obj as MText;
-                                text = dobj.Text;
-                            }
-                            if (!string.IsNullOrEmpty(text))
-                            {
-                                text = text.TrimStart('(').TrimEnd(')');
-                                int num = 0;
-                                if (int.TryParse(text, out num))
+                                string text = "";
+                                DBObject obj = tr.GetObject(sobj.ObjectId, OpenMode.ForRead);
+                                if (obj is DBText)
                                 {
-                                    total += num;
+                                    DBText dobj = obj as DBText;
+                                    text = dobj.TextString;
+                                }
+                                else if (obj is MText)
+                                {
+                                    MText dobj = obj as MText;
+                                    text = dobj.Text;
+                                }
+                                if (!string.IsNullOrEmpty(text))
+                                {
+                                    text = text.TrimStart('(').TrimEnd(')');
+                                    int num = 0;
+                                    if (int.TryParse(text, out num))
+                                    {
+                                        total += num;
+                                    }
                                 }
                             }
+                            if (total != 0)
+                            {
+                                txtPosCount.Text = total.ToString();
+                            }
                         }
-                        if (total != 0)
+                        catch (System.Exception ex)
                         {
-                            txtPosCount.Text = total.ToString();
+                            MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
-                    }
-                    catch (System.Exception ex)
-                    {
-                        MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -857,18 +862,20 @@ namespace RebarPosCommands
 
         private void btnPickSpacing_Click(object sender, EventArgs e)
         {
-            Hide();
-            double length;
-            if (GetDistance("\nStart point: ", "\nEnd point: ", out length) == PromptStatus.OK)
+            Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+            using (EditorUserInteraction UI = ed.StartUserInteraction(this))
             {
-                double spa = 0;
-                if (double.TryParse(txtPosSpacing.Text, out spa) && spa > double.Epsilon)
+                double length;
+                if (GetDistance("\nStart point: ", "\nEnd point: ", out length) == PromptStatus.OK)
                 {
-                    int num = 1 + (int)Math.Ceiling(length / spa);
-                    txtPosCount.Text = num.ToString();
+                    double spa = 0;
+                    if (double.TryParse(txtPosSpacing.Text, out spa) && spa > double.Epsilon)
+                    {
+                        int num = 1 + (int)Math.Ceiling(length / spa);
+                        txtPosCount.Text = num.ToString();
+                    }
                 }
             }
-            Show();
         }
 
         private void btnDetach_Click(object sender, EventArgs e)
@@ -909,67 +916,68 @@ namespace RebarPosCommands
 
         private void btnAlign_Click(object sender, EventArgs e)
         {
-            Hide();
             Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
-            PromptEntityOptions opts = new PromptEntityOptions("\nSelect entity: ");
-            opts.AllowNone = false;
-            opts.SetRejectMessage("\nSelect a LINE, ARC or POLYLINE entity.");
-            opts.AddAllowedClass(typeof(Curve), false);
-            PromptEntityResult per = ed.GetEntity(opts);
-            if (per.Status == PromptStatus.OK)
+            using (EditorUserInteraction UI = ed.StartUserInteraction(this))
             {
-                Point3d pt = per.PickedPoint;
-                ObjectId id = per.ObjectId;
-
-                bool posUp = false;
-                Vector3d dir = new Vector3d(), up = new Vector3d(), normal = new Vector3d();
-                Database db = HostApplicationServices.WorkingDatabase;
-                using (Transaction tr = db.TransactionManager.StartTransaction())
+                PromptEntityOptions opts = new PromptEntityOptions("\nSelect entity: ");
+                opts.AllowNone = false;
+                opts.SetRejectMessage("\nSelect a LINE, ARC or POLYLINE entity.");
+                opts.AddAllowedClass(typeof(Curve), false);
+                PromptEntityResult per = ed.GetEntity(opts);
+                if (per.Status == PromptStatus.OK)
                 {
-                    try
+                    Point3d pt = per.PickedPoint;
+                    ObjectId id = per.ObjectId;
+
+                    bool posUp = false;
+                    Vector3d dir = new Vector3d(), up = new Vector3d(), normal = new Vector3d();
+                    Database db = HostApplicationServices.WorkingDatabase;
+                    using (Transaction tr = db.TransactionManager.StartTransaction())
                     {
-                        RebarPos pos = (RebarPos)tr.GetObject(m_Pos, OpenMode.ForRead);
+                        try
+                        {
+                            RebarPos pos = (RebarPos)tr.GetObject(m_Pos, OpenMode.ForRead);
 
-                        Curve curve = (Curve)tr.GetObject(id, OpenMode.ForRead);
-                        pt = curve.GetClosestPointTo(pt, curve.GetPlane().Normal, false);
-                        dir = curve.GetFirstDerivative(pt);
-                        dir = dir * pos.DirectionVector.Length / dir.Length;
-                        normal = pos.NormalVector;
-                        normal = normal * pos.DirectionVector.Length / normal.Length;
-                        up = dir.CrossProduct(normal);
-                        up = up * pos.DirectionVector.Length / up.Length;
+                            Curve curve = (Curve)tr.GetObject(id, OpenMode.ForRead);
+                            pt = curve.GetClosestPointTo(pt, curve.GetPlane().Normal, false);
+                            dir = curve.GetFirstDerivative(pt);
+                            dir = dir * pos.DirectionVector.Length / dir.Length;
+                            normal = pos.NormalVector;
+                            normal = normal * pos.DirectionVector.Length / normal.Length;
+                            up = dir.CrossProduct(normal);
+                            up = up * pos.DirectionVector.Length / up.Length;
 
-                        posUp = (dir.DotProduct(pos.UpVector) > 0);
+                            posUp = (dir.DotProduct(pos.UpVector) > 0);
+                        }
+                        catch (System.Exception ex)
+                        {
+                            System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                        }
                     }
-                    catch (System.Exception ex)
+
+                    double offset = 0.0;
+                    double offset1 = -0.75, offset2 = 1.75;
+                    if (posUp)
                     {
-                        System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                        AlignPos(pt + offset1 * up, dir, up, normal);
+                        offset = offset2;
                     }
-                }
+                    else
+                    {
+                        AlignPos(pt + offset2 * up, dir, up, normal);
+                        offset = offset1;
+                    }
 
-                double offset = 0.0;
-                double offset1 = -0.75, offset2 = 1.75;
-                if (posUp)
-                {
-                    AlignPos(pt + offset1 * up, dir, up, normal);
-                    offset = offset2;
-                }
-                else
-                {
-                    AlignPos(pt + offset2 * up, dir, up, normal);
-                    offset = offset1;
-                }
-
-                PromptKeywordOptions kopts = new PromptKeywordOptions("\nDiğer tarafa yerleştirilsin mi? [Evet/Hayır] <Hayir>: ", "Yes No");
-                kopts.AllowNone = true;
-                PromptResult kres = ed.GetKeywords(kopts);
-                if (kres.Status == PromptStatus.None || kres.StringResult == "Yes")
-                {
-                    AlignPos(pt + offset * up, dir, up, normal);
-                    ed.UpdateScreen();
+                    PromptKeywordOptions kopts = new PromptKeywordOptions("\nDiğer tarafa yerleştirilsin mi? [Evet/Hayır] <Hayir>: ", "Yes No");
+                    kopts.AllowNone = true;
+                    PromptResult kres = ed.GetKeywords(kopts);
+                    if (kres.Status == PromptStatus.None || kres.StringResult == "Yes")
+                    {
+                        AlignPos(pt + offset * up, dir, up, normal);
+                        ed.UpdateScreen();
+                    }
                 }
             }
-            Show();
         }
 
         private void AlignPos(Point3d pt, Vector3d direction, Vector3d up, Vector3d normal)

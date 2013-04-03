@@ -9,6 +9,7 @@ using Autodesk.AutoCAD.DatabaseServices;
 using OZOZ.RebarPosWrapper;
 using Autodesk.AutoCAD.Interop;
 using Autodesk.AutoCAD.EditorInput;
+using Autodesk.AutoCAD.Geometry;
 
 namespace RebarPosCommands
 {
@@ -31,7 +32,8 @@ namespace RebarPosCommands
             }
         }
 
-        List<ShapeCopy> m_Copies;
+        private ObjectId m_Template;
+        private List<ShapeCopy> m_Copies;
 
         public bool ShowShapes { get { return chkShowShapes.Checked; } }
 
@@ -39,6 +41,7 @@ namespace RebarPosCommands
         {
             InitializeComponent();
 
+            m_Template = ObjectId.Null;
             m_Copies = new List<ShapeCopy>();
             posShapeView.BackColor = DWGUtility.ModelBackgroundColor();
         }
@@ -188,44 +191,67 @@ namespace RebarPosCommands
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            ShapeCopy org = GetSelected();
+            bool foundTemplate = (!m_Template.IsNull && m_Template.IsValid && !m_Template.IsErased);
 
-            int i = 1;
-            while (m_Copies.Exists(p => p.name.ToUpperInvariant() == "SHAPE" + i.ToString()))
+            if (foundTemplate)
             {
-                i++;
-            }
+                ShapeCopy org = GetSelected();
 
-            ShapeCopy copy = new ShapeCopy();
-
-            copy.name = "Shape" + i.ToString();
-
-            copy.fields = org != null ? org.fields : 1;
-            copy.formula = org != null ? org.formula : "A";
-            copy.formulaBending = org != null ? org.formulaBending : "A";
-            copy.priority = org != null ? org.priority : 0;
-
-            copy.builtin = false;
-
-            if (org != null)
-            {
-                foreach (PosShape.Shape draw in org.shapes)
+                int i = 1;
+                while (m_Copies.Exists(p => p.name.ToUpperInvariant() == "SHAPE" + i.ToString()))
                 {
-                    copy.shapes.Add(draw);
+                    i++;
+                }
+
+                ShapeCopy copy = new ShapeCopy();
+
+                copy.name = "Shape" + i.ToString();
+
+                copy.fields = org != null ? org.fields : 1;
+                copy.formula = org != null ? org.formula : "A";
+                copy.formulaBending = org != null ? org.formulaBending : "A";
+                copy.priority = org != null ? org.priority : 0;
+
+                copy.builtin = false;
+
+                if (org != null)
+                {
+                    foreach (PosShape.Shape draw in org.shapes)
+                    {
+                        copy.shapes.Add(draw);
+                    }
+                }
+
+                m_Copies.Add(copy);
+
+                ListViewItem lv = new ListViewItem(copy.name);
+                lv.SubItems.Add(copy.fields.ToString());
+                lv.SubItems.Add(copy.formula);
+                lv.SubItems.Add(copy.formulaBending);
+                lv.ImageIndex = 1;
+                lbShapes.Items.Add(lv);
+                lbShapes.SelectedIndices.Clear();
+                lbShapes.SelectedIndices.Add(lbShapes.Items.Count - 1);
+                lv.BeginEdit();
+            }
+            else
+            {
+                Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+                using (EditorUserInteraction UI = ed.StartUserInteraction(this))
+                {
+                    PromptPointResult result = ed.GetPoint("Açılımı şablonun çizileceği yer: ");
+                    if (result.Status == PromptStatus.OK)
+                    {
+                        ApplyChanges();
+
+                        Point3d insPt = result.Value;
+
+                        MessageBox.Show("Açılımı şablon çerçevesi içine çizin ve tekrar bu diyalog kutusuna dönüp ekle düğmesini tıklayın.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        Close();
+                    }
                 }
             }
-
-            m_Copies.Add(copy);
-
-            ListViewItem lv = new ListViewItem(copy.name);
-            lv.SubItems.Add(copy.fields.ToString());
-            lv.SubItems.Add(copy.formula);
-            lv.SubItems.Add(copy.formulaBending);
-            lv.ImageIndex = 1;
-            lbShapes.Items.Add(lv);
-            lbShapes.SelectedIndices.Clear();
-            lbShapes.SelectedIndices.Add(lbShapes.Items.Count - 1);
-            lv.BeginEdit();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -285,80 +311,84 @@ namespace RebarPosCommands
             if (copy == null) return;
 
             // Select shapes
-            Hide();
-            TypedValue[] tvs = new TypedValue[] {
-                new TypedValue((int)DxfCode.Operator, "<OR"),
-                new TypedValue((int)DxfCode.Start, "LINE"),
-                new TypedValue((int)DxfCode.Start, "ARC"),
-                new TypedValue((int)DxfCode.Start, "TEXT"),
-                new TypedValue((int)DxfCode.Operator, "OR>")
-            };
-            SelectionFilter filter = new SelectionFilter(tvs);
-            PromptSelectionResult result = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetSelection(filter);
-            Show();
-            if (result.Status != PromptStatus.OK || result.Value.Count == 0) return;
-
-            int fieldCount = 1;
-            copy.shapes.Clear();
-            Database db = HostApplicationServices.WorkingDatabase;
-            using (Transaction tr = db.TransactionManager.StartTransaction())
+            Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+            using (EditorUserInteraction UI = ed.StartUserInteraction(this))
             {
-                try
+                TypedValue[] tvs = new TypedValue[] {
+                    new TypedValue((int)DxfCode.Operator, "<OR"),
+                    new TypedValue((int)DxfCode.Start, "LINE"),
+                    new TypedValue((int)DxfCode.Start, "ARC"),
+                    new TypedValue((int)DxfCode.Start, "TEXT"),
+                    new TypedValue((int)DxfCode.Operator, "OR>")
+                };
+                SelectionFilter filter = new SelectionFilter(tvs);
+                PromptSelectionResult result = ed.GetSelection(filter);
+
+                if (result.Status != PromptStatus.OK || result.Value.Count == 0) return;
+
+                int fieldCount = 1;
+                copy.shapes.Clear();
+                Database db = HostApplicationServices.WorkingDatabase;
+                using (Transaction tr = db.TransactionManager.StartTransaction())
                 {
-                    foreach (SelectedObject sel in result.Value)
+                    try
                     {
-                        DBObject obj = tr.GetObject(sel.ObjectId, OpenMode.ForRead);
-
-                        bool visible = true;
-                        Entity en = obj as Entity;
-                        if (en != null)
+                        foreach (SelectedObject sel in result.Value)
                         {
-                            LayerTableRecord ltr = (LayerTableRecord)tr.GetObject(en.LayerId, OpenMode.ForRead);
+                            DBObject obj = tr.GetObject(sel.ObjectId, OpenMode.ForRead);
 
-                            if (ltr != null)
+                            bool visible = true;
+                            Entity en = obj as Entity;
+                            if (en != null)
                             {
-                                visible = ltr.IsPlottable;
+                                LayerTableRecord ltr = (LayerTableRecord)tr.GetObject(en.LayerId, OpenMode.ForRead);
+
+                                if (ltr != null)
+                                {
+                                    visible = ltr.IsPlottable;
+                                }
                             }
-                        }
 
-                        if (obj is Line)
-                        {
-                            Line line = obj as Line;
-
-                            copy.shapes.Add(new PosShape.ShapeLine(line.Color, line.StartPoint.X, line.StartPoint.Y, line.EndPoint.X, line.EndPoint.Y, visible));
-                        }
-                        else if (obj is Arc)
-                        {
-                            Arc arc = obj as Arc;
-                            copy.shapes.Add(new PosShape.ShapeArc(arc.Color, arc.Center.X, arc.Center.Y, arc.Radius, arc.StartAngle, arc.EndAngle, visible));
-                        }
-                        else if (obj is DBText)
-                        {
-                            DBText text = obj as DBText;
-                            if (text.TextString == "A" && fieldCount < 1) fieldCount = 1;
-                            if (text.TextString == "B" && fieldCount < 2) fieldCount = 2;
-                            if (text.TextString == "C" && fieldCount < 3) fieldCount = 3;
-                            if (text.TextString == "D" && fieldCount < 4) fieldCount = 4;
-                            if (text.TextString == "E" && fieldCount < 5) fieldCount = 5;
-                            if (text.TextString == "F" && fieldCount < 6) fieldCount = 6;
-                            double x=text.Position.X;
-                            double y=text.Position.Y;
-                            if (text.AlignmentPoint.X != 0.0 || text.AlignmentPoint.Y != 0.0)
+                            if (obj is Line)
                             {
-                                x = text.AlignmentPoint.X;
-                                y = text.AlignmentPoint.Y;
+                                Line line = obj as Line;
+
+                                copy.shapes.Add(new PosShape.ShapeLine(line.Color, line.StartPoint.X, line.StartPoint.Y, line.EndPoint.X, line.EndPoint.Y, visible));
                             }
-                            copy.shapes.Add(new PosShape.ShapeText(text.Color, x, y, text.Height, text.WidthFactor, text.TextString, "romans.shx", text.HorizontalMode, text.VerticalMode, visible));
+                            else if (obj is Arc)
+                            {
+                                Arc arc = obj as Arc;
+                                copy.shapes.Add(new PosShape.ShapeArc(arc.Color, arc.Center.X, arc.Center.Y, arc.Radius, arc.StartAngle, arc.EndAngle, visible));
+                            }
+                            else if (obj is DBText)
+                            {
+                                DBText text = obj as DBText;
+                                if (text.TextString == "A" && fieldCount < 1) fieldCount = 1;
+                                if (text.TextString == "B" && fieldCount < 2) fieldCount = 2;
+                                if (text.TextString == "C" && fieldCount < 3) fieldCount = 3;
+                                if (text.TextString == "D" && fieldCount < 4) fieldCount = 4;
+                                if (text.TextString == "E" && fieldCount < 5) fieldCount = 5;
+                                if (text.TextString == "F" && fieldCount < 6) fieldCount = 6;
+                                double x = text.Position.X;
+                                double y = text.Position.Y;
+                                if (text.AlignmentPoint.X != 0.0 || text.AlignmentPoint.Y != 0.0)
+                                {
+                                    x = text.AlignmentPoint.X;
+                                    y = text.AlignmentPoint.Y;
+                                }
+                                copy.shapes.Add(new PosShape.ShapeText(text.Color, x, y, text.Height, text.WidthFactor, text.TextString, "romans.shx", text.HorizontalMode, text.VerticalMode, visible));
+                            }
                         }
                     }
+                    catch (System.Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                    }
                 }
-                catch (System.Exception ex)
-                {
-                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-                }
-            }
 
-            udFields.Value = fieldCount;
+                udFields.Value = fieldCount;
+            }
+            
             SetShape();
         }
 
@@ -422,6 +452,16 @@ namespace RebarPosCommands
 
         private void btnOK_Click(object sender, EventArgs e)
         {
+            ApplyChanges();
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void ApplyChanges()
+        {
             string userFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "RebarPos");
             string userShapesFile = System.IO.Path.Combine(userFolder, "ShapeList.txt");
             string newShapesFile = System.IO.Path.Combine(userFolder, "ShapeList.new");
@@ -457,11 +497,6 @@ namespace RebarPosCommands
             }
 
             PosShape.ReadPosShapesFromFile(userShapesFile);
-        }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            Close();
         }
     }
 }
