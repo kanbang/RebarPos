@@ -6,6 +6,7 @@
 
 #using <mscorlib.dll>
 #using <system.dll>
+#using <system.drawing.dll>
 #using <acdbmgd.dll>
 
 #include <use_ansi.h>

@@ -105,6 +105,16 @@ void PosShape::ClearShapeTexts(void)
 	GetImpObj()->clearShapeTexts();
 }
 
+System::Drawing::Bitmap^ PosShape::ToBitmap(System::Drawing::Color backColor, int width, int height)
+{
+	AcGsColor color;
+	color.m_red = backColor.R;
+	color.m_green = backColor.G;
+	color.m_blue = backColor.B;
+	color.m_filler = backColor.A;
+	return System::Drawing::Bitmap::FromHbitmap(System::IntPtr(GetImpObj()->ToBitmap(color, width, height)));
+}
+
 //*************************************************************************
 // Drawable implementation
 //*************************************************************************

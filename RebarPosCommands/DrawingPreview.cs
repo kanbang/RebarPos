@@ -16,7 +16,6 @@ namespace RebarPosCommands
         private bool disposed;
         private bool suspended;
         private Extents3d extents;
-
         private Autodesk.AutoCAD.GraphicsSystem.Device device = null;
         private Autodesk.AutoCAD.GraphicsSystem.View view = null;
         private Autodesk.AutoCAD.GraphicsSystem.Model model = null;
@@ -106,7 +105,7 @@ namespace RebarPosCommands
             {
                 device.Update();
             }
-
+            
             base.OnPaint(e);
         }
 

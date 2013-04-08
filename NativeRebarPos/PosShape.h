@@ -9,6 +9,14 @@
 #include "Shape.h"
 #include "Utility.h"
 
+#pragma warning( push )
+#pragma warning( disable : 4100 )
+#include "gs.h"
+#include "acgi.h"
+#include "acgsmanager.h"
+#include "acgs.h"
+#pragma warning( pop )
+
 // The following is part of the code used to export an API
 // and/or use the exported API.
 //
@@ -63,6 +71,17 @@ protected:
 	ACHAR* m_E;
 	ACHAR* m_F;
 	AcGiTextStyle m_Style;
+
+public:
+	/// Converts the shape image to a HBITMAP
+	HBITMAP ToBitmap(const AcGsColor backColor, const int width, const int height);
+	/// Saves the shape image to the given file
+	void SaveImage(const ACHAR* fileName, const AcGsColor backColor, const int width, const int height);
+
+private:
+	Atil::Image* ATILGetImage(const AcGsColor backColor, const int width, const int height);
+	void ATILSaveImage(Atil::Image* pImage, const ACHAR* fileName);
+	HBITMAP ATILConvertToBitmap(Atil::Image* pImage);
 
 public:
 	/// Gets or sets item name

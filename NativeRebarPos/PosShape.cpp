@@ -7,6 +7,16 @@
 #include "PosShape.h"
 #include "Utility.h"
 
+#include "FileWriteDescriptor.h"
+#include "RowProviderInterface.h"
+#include "FileSpecifier.h"
+#include "DataModelAttributes.h"
+#include "DataModel.h"
+#include "RgbModel.h"
+#include "Image.h"
+#include "BmpFormatCodec.h"
+#include "FormatCodecPropertySetIterator.h"
+
 #include <fstream>
 #include <algorithm>
 
@@ -151,6 +161,123 @@ Acad::ErrorStatus CPosShape::setIsInternal(const Adesk::Boolean newVal)
 	m_IsInternal = newVal;
 	return Acad::eOk;
 }
+
+HBITMAP CPosShape::ToBitmap(const AcGsColor backColor, const int width, const int height)
+{
+	Atil::Image* image = ATILGetImage(backColor, width, height);
+	HBITMAP hBmp = ATILConvertToBitmap(image);
+	delete image;
+	return hBmp;
+}
+
+void CPosShape::SaveImage(const ACHAR* fileName, const AcGsColor backColor, const int width, const int height)
+{
+	Atil::Image* image = ATILGetImage(backColor, width, height);
+	ATILSaveImage(image, fileName);
+	delete image;
+}
+
+Atil::Image* CPosShape::ATILGetImage(const AcGsColor backColor, const int width, const int height)
+{
+	AcGsManager* manager = acgsGetGsManager();
+	AcGsClassFactory* factory = manager->getGSClassFactory();
+
+	AcGsDevice* device = manager->createAutoCADOffScreenDevice();
+	device->onSize(width, height);
+	device->setDeviceRenderer(AcGsDevice::kDefault);
+	device->setBackgroundColor(backColor);
+
+	AcGsView* view = factory->createView();
+	view->setVisualStyle(AcGiVisualStyle::k2DWireframe);
+
+	AcGsModel* model = manager->createAutoCADModel();
+
+	device->add(view);
+
+	AcDbExtents extents;
+	bounds(extents);
+	AcGePoint3d pt1 = extents.minPoint();
+	AcGePoint3d pt2 = extents.maxPoint();
+	AcGePoint3d ptm((pt1.x + pt2.x) / 2.0, (pt1.y + pt2.y) / 2.0, 0.0);
+	AcGePoint3d ptc(ptm.x, ptm.y, 1.0);
+	double fw = abs(pt2.x - pt1.x);
+	double fh = abs(pt2.y - pt1.y);
+	view->setView(ptc, ptm, AcGeVector3d::kYAxis, fw, fh);
+
+	view->add(this, model);
+	view->update();
+	
+	Atil::RgbModel* datamodel = new Atil::RgbModel(Atil::RgbModelAttributes::k3Channels, Atil::DataModelAttributes::kRedGreenBlueAlpha);
+	Atil::ImagePixel initialColor;
+	initialColor.type = Atil::DataModelAttributes::kRgba;
+	initialColor.value.rgba = Atil::RgbColor(backColor.m_red, backColor.m_green, backColor.m_blue);
+	Atil::Image* image = new Atil::Image(Atil::Size(width, height), datamodel, initialColor);
+
+	view->getSnapShot(image, AcGsDCPoint(0,0));
+
+	device->eraseAll();
+	view->eraseAll();
+
+	manager->destroyAutoCADView(view);
+	manager->destroyAutoCADModel(model);
+	manager->destroyAutoCADDevice(device);
+
+	return image;
+}
+
+void CPosShape::ATILSaveImage(Atil::Image* pImage, const ACHAR* fileName)
+{
+	Atil::RowProviderInterface *pPipe = pImage->read(pImage->size(), Atil::Offset(0,0), Atil::kBottomUpLeftRight);
+	Atil::ImageFormatCodec *pCodec = new BmpFormatCodec();
+
+	Atil::FileWriteDescriptor fileWriter(pCodec);
+
+	int nchars = (int)wcslen(fileName);
+	Atil::FileSpecifier fs(Atil::StringBuffer((nchars + 1) * sizeof(ACHAR), (const Atil::Byte *)fileName, Atil::StringBuffer::kUTF_16), Atil::FileSpecifier::kFilePath);
+	fileWriter.setFileSpecifier(fs);
+
+	fileWriter.createImageFrame(pPipe->dataModel(), pPipe->size());
+
+	fileWriter.writeImageFrame(pPipe);
+
+	delete pCodec;
+}
+
+HBITMAP CPosShape::ATILConvertToBitmap(Atil::Image* pImage)
+{
+	BITMAPINFOHEADER bih;
+	ZeroMemory(&bih, sizeof(BITMAPINFOHEADER));
+	bih.biSize = sizeof(BITMAPINFOHEADER);
+	bih.biWidth = pImage->size().width;
+	bih.biHeight = pImage->size().height;
+	bih.biPlanes = 1;
+	bih.biBitCount = 32;
+	bih.biCompression = BI_RGB;
+	BITMAPINFO bi;
+	ZeroMemory(&bi, sizeof(BITMAPINFO));
+	bi.bmiHeader = bih;
+
+	// Fill in bitmap data
+	DWORD* pPixels = (DWORD*)malloc(bih.biWidth * bih.biHeight * sizeof(DWORD));
+	Atil::Size size = pImage->size();
+	Atil::ImageContext* imgContext = pImage->createContext(Atil::ImageContext::kRead, size, Atil::Offset(0, 0));
+	for (int x = 0; x < size.width; ++x)
+	{
+		for (int y = 0; y < size.height; ++y)
+		{
+			Atil::RgbColor col(imgContext->get32(x, y));
+			pPixels[y * size.width + x] = RGB(col.rgba.blue, col.rgba.green, col.rgba.red);
+		}
+	}
+	delete imgContext;
+
+	char* ppvBits = NULL;
+	HBITMAP hBitmap = CreateDIBSection(NULL, &bi, DIB_RGB_COLORS, (void**) &ppvBits, NULL, 0);
+	SetDIBits(NULL, hBitmap, 0, bih.biHeight, pPixels, &bi, DIB_RGB_COLORS);
+
+	return hBitmap;
+}
+
 //*************************************************************************
 // Class Methods
 //*************************************************************************

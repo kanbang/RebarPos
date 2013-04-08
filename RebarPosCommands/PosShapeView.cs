@@ -11,11 +11,14 @@ using OZOZ.RebarPosWrapper;
 
 namespace RebarPosCommands
 {
-    public partial class PosShapeView : DrawingPreview
+    public partial class PosShapeView : UserControl
     {
         private string m_ShapeName;
         private bool m_Selected;
         private Color m_SelectionColor;
+        private Bitmap bmp = null;
+        PosShape shape = null;
+        private bool suspended;
 
         [Browsable(true), Category("Appearance"), DefaultValue("")]
         public string ShapeName
@@ -29,11 +32,11 @@ namespace RebarPosCommands
                 if (m_ShapeName != value)
                 {
                     m_ShapeName = value;
-                    ClearItems();
+                    //ClearItems();
                     if (!string.IsNullOrEmpty(m_ShapeName))
                     {
-                        PosShape shape = PosShape.GetPosShape(m_ShapeName);
-                        AddItem(shape);
+                        shape = PosShape.GetPosShape(m_ShapeName);
+                        bmp = shape.ToBitmap(BackColor, ClientRectangle.Width, ClientRectangle.Height);
                     }
                 }
             }
@@ -47,23 +50,68 @@ namespace RebarPosCommands
         {
             InitializeComponent();
 
+            BackColor = DWGUtility.ModelBackgroundColor();
+
             m_ShapeName = "";
             m_Selected = false;
             m_SelectionColor = SystemColors.Highlight;
+
+            suspended = false;
         }
 
-        private void PosShapeView_Paint(object sender, PaintEventArgs e)
+        protected override void OnPaint(PaintEventArgs e)
         {
-            // Selection mark
-            if (m_Selected)
+            if (!suspended)
             {
-                using (Pen pen = new Pen(m_SelectionColor, 2.0f))
+                if (bmp != null)
                 {
-                    Rectangle rec = ClientRectangle;
-                    rec.Inflate(-2, -2);
-                    e.Graphics.DrawRectangle(pen, rec);
+                    e.Graphics.DrawImageUnscaled(bmp, 0, 0);
+                }
+
+                if (m_Selected)
+                {
+                    using (Pen pen = new Pen(m_SelectionColor, 2.0f))
+                    {
+                        Rectangle rec = ClientRectangle;
+                        rec.Inflate(-2, -2);
+                        e.Graphics.DrawRectangle(pen, rec);
+                    }
                 }
             }
+
+            base.OnPaint(e);
+        }
+
+        public void SuspendUpdate()
+        {
+            suspended = true;
+        }
+
+        public void ResumeUpdate()
+        {
+            suspended = false;
+            Refresh();
+        }
+
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            if (bmp != null) { bmp.Dispose(); bmp = null; }
+            if (shape != null) bmp = shape.ToBitmap(BackColor, ClientRectangle.Width, ClientRectangle.Height);
+
+            base.OnSizeChanged(e);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (components != null)
+                    components.Dispose();
+            }
+
+            base.Dispose(disposing);
+
+            if (bmp != null) { bmp.Dispose(); bmp = null; }
         }
     }
 }

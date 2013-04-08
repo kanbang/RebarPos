@@ -44,7 +44,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\..\..\..\inc;..\..\..\inc"
+				AdditionalIncludeDirectories="..\..\..\..\inc;..\..\..\inc;..\..\..\..\utils\Atil\Inc;..\..\..\..\utils\Atil\Inc\format_codecs;..\..\..\..\utils\Atil\Inc\codec_properties"
 				PreprocessorDefinitions="ACRXAPP;RADPACK;REBARPOS_MODULE;"
 				UsePrecompiledHeader="2"
 				WarningLevel="4"
@@ -63,7 +63,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/ignore:4099"
-				AdditionalLibraryDirectories="..\..\..\..\lib;..\..\..\lib"
+				AdditionalDependencies="AdImaging.lib acad.lib"
+				AdditionalLibraryDirectories="..\..\..\..\lib;..\..\..\lib;..\..\..\..\utils\Atil\Lib-$(PlatformName)"
 				ModuleDefinitionFile=""
 				TypeLibraryFile="$(OutDir)\$(TargetName).tlb"
 			/>
@@ -116,7 +117,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\..\..\..\inc;..\..\..\inc"
+				AdditionalIncludeDirectories="..\..\..\..\inc;..\..\..\inc;..\..\..\..\utils\Atil\Inc;..\..\..\..\utils\Atil\Inc\format_codecs;..\..\..\..\utils\Atil\Inc\codec_properties"
 				PreprocessorDefinitions="ACRXAPP;RADPACK;REBARPOS_MODULE;"
 				UsePrecompiledHeader="2"
 				WarningLevel="4"
@@ -135,7 +136,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/ignore:4099"
-				AdditionalLibraryDirectories="..\..\..\..\lib;..\..\..\lib"
+				AdditionalDependencies="AdImaging.lib acad.lib"
+				AdditionalLibraryDirectories="..\..\..\..\lib;..\..\..\lib;..\..\..\..\utils\Atil\Lib-$(PlatformName)"
 				ModuleDefinitionFile=""
 				TypeLibraryFile="$(OutDir)\$(TargetName).tlb"
 				TargetMachine="17"
@@ -190,7 +192,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\..\..\inc;..\..\..\inc"
+				AdditionalIncludeDirectories="..\..\..\..\inc;..\..\..\inc;..\..\..\..\utils\Atil\Inc;..\..\..\..\utils\Atil\Inc\format_codecs;..\..\..\..\utils\Atil\Inc\codec_properties"
 				PreprocessorDefinitions="ACRXAPP;RADPACK;REBARPOS_MODULE;"
 				UsePrecompiledHeader="2"
 				WarningLevel="4"
@@ -208,7 +210,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/ignore:4099"
-				AdditionalLibraryDirectories="..\..\..\..\lib;..\..\..\lib"
+				AdditionalDependencies="AdImaging.lib acad.lib"
+				AdditionalLibraryDirectories="..\..\..\..\lib;..\..\..\lib;..\..\..\..\utils\Atil\Lib-$(PlatformName)"
 				ModuleDefinitionFile=""
 				TypeLibraryFile="$(OutDir)\$(TargetName).tlb"
 			/>
@@ -262,7 +265,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\..\..\inc;..\..\..\inc"
+				AdditionalIncludeDirectories="..\..\..\..\inc;..\..\..\inc;..\..\..\..\utils\Atil\Inc;..\..\..\..\utils\Atil\Inc\format_codecs;..\..\..\..\utils\Atil\Inc\codec_properties"
 				PreprocessorDefinitions="ACRXAPP;RADPACK;REBARPOS_MODULE;"
 				UsePrecompiledHeader="2"
 				WarningLevel="4"
@@ -280,7 +283,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/ignore:4099"
-				AdditionalLibraryDirectories="..\..\..\..\lib;..\..\..\lib"
+				AdditionalDependencies="AdImaging.lib acad.lib"
+				AdditionalLibraryDirectories="..\..\..\..\lib;..\..\..\lib;..\..\..\..\utils\Atil\Lib-$(PlatformName)"
 				ModuleDefinitionFile=""
 				TypeLibraryFile="$(OutDir)\$(TargetName).tlb"
 				TargetMachine="17"
