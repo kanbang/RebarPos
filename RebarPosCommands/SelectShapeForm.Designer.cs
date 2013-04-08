@@ -37,17 +37,17 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.layoutPanel.AutoScroll = true;
-            this.layoutPanel.Location = new System.Drawing.Point(12, 12);
+            this.layoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.layoutPanel.Location = new System.Drawing.Point(13, 13);
             this.layoutPanel.Name = "layoutPanel";
-            this.layoutPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.layoutPanel.Size = new System.Drawing.Size(730, 409);
+            this.layoutPanel.Size = new System.Drawing.Size(1225, 714);
             this.layoutPanel.TabIndex = 0;
             // 
             // SelectShapeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(754, 433);
+            this.ClientSize = new System.Drawing.Size(1250, 739);
             this.Controls.Add(this.layoutPanel);
             this.KeyPreview = true;
             this.MaximizeBox = false;
@@ -65,5 +65,7 @@
         #endregion
 
         private System.Windows.Forms.FlowLayoutPanel layoutPanel;
+
+
     }
 }

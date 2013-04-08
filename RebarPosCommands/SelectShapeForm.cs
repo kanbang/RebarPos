@@ -20,12 +20,6 @@ namespace RebarPosCommands
         {
             InitializeComponent();
 
-            // Set size
-            if (System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width > 1500)
-                this.Size = new Size(1366, 933);
-            else
-                this.Size = new Size(1040, 933);
-
             m_Current = string.Empty;
         }
 
@@ -45,13 +39,12 @@ namespace RebarPosCommands
         {
             m_Current = current;
 
-            layoutPanel.Controls.Clear();
-
             List<string> shapes = new List<string>(inshapes);
+
+            layoutPanel.Controls.Clear();
 
             // Get AutoCad model background color
             Color backColor = DWGUtility.ModelBackgroundColor();
-
             try
             {
                 foreach (string name in shapes)
@@ -60,10 +53,10 @@ namespace RebarPosCommands
                     if (shape != null)
                     {
                         Panel panel = new Panel();
-                        panel.Size = new Size(50 * 475 / 75, 13 + 2 + 50);
+                        panel.Size = new Size(145, 110);
 
                         Label shapeLabel = new Label();
-                        shapeLabel.Size = new Size(50 * 475 / 75, 13);
+                        shapeLabel.Size = new Size(145, 13);
                         shapeLabel.Text = shape.Name;
                         shapeLabel.Location = new Point(0, 0);
                         panel.Controls.Add(shapeLabel);
@@ -73,13 +66,14 @@ namespace RebarPosCommands
                         posShapeView.ShapeName = shape.Name;
                         posShapeView.Selected = (shape.Name == m_Current);
                         posShapeView.Visible = true;
-                        posShapeView.Size = new Size(50 * 475 / 75, 50);
+                        posShapeView.Size = new Size(145, 90);
                         posShapeView.BackColor = backColor;
                         posShapeView.Location = new Point(0, 15);
                         posShapeView.Click += new EventHandler(posShapeView_Click);
                         posShapeView.ResumeUpdate();
 
                         panel.Controls.Add(posShapeView);
+                        
                         layoutPanel.Controls.Add(panel);
                     }
                 }
@@ -100,7 +94,7 @@ namespace RebarPosCommands
                 Close();
             }
         }
-
+        
         private void SelectShapeForm_KeyDown(object sender, KeyEventArgs e)
         {
             if ((e.KeyCode & Keys.Escape) != Keys.None)

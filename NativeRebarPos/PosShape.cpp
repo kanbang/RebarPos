@@ -517,9 +517,9 @@ bool CPosShape::SortShapeNames(const std::wstring p1, const std::wstring p2)
 	if (p1 == p2) return true;
 
 	if (p1 == L"GENEL")
-		return true;
-	else if (p2 == L"GENEL")
 		return false;
+	else if (p2 == L"GENEL")
+		return true;
 	else
 	{
 		if(Utility::IsNumeric(p1) && Utility::IsNumeric(p2))
