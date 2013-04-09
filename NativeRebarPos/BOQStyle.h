@@ -150,6 +150,10 @@ public:
 	/// Saves all styles to the given text file
 	static void SaveBOQStylesToFile(const std::wstring filename);
 
+public:
+    // RXObject implementation
+	virtual Acad::ErrorStatus copyFrom(const AcRxObject* other);
+
 private:
 	// Helper functions
 	static bool SortStyleNames(const std::wstring p1, const std::wstring p2);

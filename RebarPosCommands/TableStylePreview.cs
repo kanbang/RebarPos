@@ -57,11 +57,14 @@ namespace RebarPosCommands
 
         public TableStylePreview()
         {
-            InitializeComponent();
+            this.Name = "PosStylePreview";
+            this.Size = new System.Drawing.Size(300, 150);
         }
 
         public void SetTable()
         {
+            SuspendUpdate();
+
             mTable = new BOQTable();
             mTable.SuspendUpdate();
 
@@ -100,6 +103,15 @@ namespace RebarPosCommands
             AddItem(mTable);
 
             Refresh();
+            ResumeUpdate();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            ClearItems();
+            mTable.Dispose();
+
+            base.Dispose(disposing);
         }
     }
 }

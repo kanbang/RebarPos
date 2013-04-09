@@ -453,3 +453,37 @@ void CBOQStyle::SaveBOQStylesToFile(const std::wstring filename)
 		ofs << std::endl;
 	}
 }
+
+//*************************************************************************
+// RXObject implementation
+//*************************************************************************
+Acad::ErrorStatus CBOQStyle::copyFrom(const AcRxObject* other)
+{
+	if(!other->isKindOf(CBOQStyle::desc())) return Acad::eNotThatKindOfClass;
+	CBOQStyle* org = CBOQStyle::cast(other);
+
+	setName(org->Name());
+
+	setColumns(org->Columns());
+
+	setPosLabel(org->PosLabel());
+	setCountLabel(org->CountLabel());
+	setDiameterLabel(org->DiameterLabel());
+	setLengthLabel(org->LengthLabel());
+	setShapeLabel(org->ShapeLabel());
+	setTotalLengthLabel(org->TotalLengthLabel());
+	setDiameterListLabel(org->DiameterListLabel());
+	setDiameterLengthLabel(org->DiameterLengthLabel());
+	setUnitWeightLabel(org->UnitWeightLabel());
+	setWeightLabel(org->WeightLabel());
+	setGrossWeightLabel(org->GrossWeightLabel());
+	setMultiplierHeadingLabel(org->MultiplierHeadingLabel());
+
+    setTextStyleId(org->TextStyleId());
+    setHeadingStyleId(org->HeadingStyleId());
+    setFootingStyleId(org->FootingStyleId());
+
+	setIsBuiltIn(org->IsBuiltIn());
+
+	return Acad::eOk;
+}
