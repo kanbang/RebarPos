@@ -15,25 +15,7 @@ namespace RebarPosCommands
 {
     public partial class PosShapesForm : Form
     {
-        private class ShapeCopy
-        {
-            public string name;
-            public int fields;
-            public string formula;
-            public string formulaBending;
-            public int priority;
-            public bool builtin;
-
-            public List<PosShape.Shape> shapes;
-
-            public ShapeCopy()
-            {
-                shapes = new List<PosShape.Shape>();
-            }
-        }
-
-        private ObjectId m_Template;
-        private List<ShapeCopy> m_Copies;
+        private List<PosShape> m_Copies;
 
         public bool ShowShapes { get { return chkShowShapes.Checked; } }
 
@@ -41,8 +23,7 @@ namespace RebarPosCommands
         {
             InitializeComponent();
 
-            m_Template = ObjectId.Null;
-            m_Copies = new List<ShapeCopy>();
+            m_Copies = new List<PosShape>();
             posShapeView.BackColor = DWGUtility.ModelBackgroundColor();
         }
 
@@ -61,22 +42,7 @@ namespace RebarPosCommands
             {
                 foreach (string name in shapes)
                 {
-                    PosShape item = PosShape.GetPosShape(name);
-                    ShapeCopy copy = new ShapeCopy();
-
-                    copy.name = name;
-                    copy.fields = item.Fields;
-                    copy.formula = item.Formula;
-                    copy.formulaBending = item.FormulaBending;
-                    copy.priority = item.Priority;
-                    copy.builtin = item.IsBuiltIn;
-
-                    for (int j = 0; j < item.Items.Count; j++)
-                    {
-                        copy.shapes.Add(item.Items[j]);
-                    }
-
-                    m_Copies.Add(copy);
+                    m_Copies.Add((PosShape)PosShape.GetPosShape(name).Clone());
                 }
             }
             catch (System.Exception ex)
@@ -93,14 +59,14 @@ namespace RebarPosCommands
         private void PopulateList()
         {
             lbShapes.Items.Clear();
-            foreach (ShapeCopy copy in m_Copies)
+            foreach (PosShape copy in m_Copies)
             {
-                if (!chkUserOnly.Checked || (chkUserOnly.Checked && !copy.builtin))
+                if (!chkUserOnly.Checked || (chkUserOnly.Checked && !copy.IsBuiltIn))
                 {
-                    ListViewItem lv = new ListViewItem(copy.name);
-                    lv.SubItems.Add(copy.fields.ToString());
-                    lv.SubItems.Add(copy.formula);
-                    lv.SubItems.Add(copy.formulaBending);
+                    ListViewItem lv = new ListViewItem(copy.Name);
+                    lv.SubItems.Add(copy.Fields.ToString());
+                    lv.SubItems.Add(copy.Formula);
+                    lv.SubItems.Add(copy.FormulaBending);
                     lbShapes.Items.Add(lv);
                 }
             }
@@ -115,16 +81,18 @@ namespace RebarPosCommands
 
         public void SetShape()
         {
-            ShapeCopy copy = GetSelected();
-            if (copy == null)
-                return;
+            PosShape copy = GetSelected();
+            if (copy == null) return;
 
-            udFields.Value = copy.fields;
-            txtFormula.Text = copy.formula;
-            txtFormulaBending.Text = copy.formulaBending;
-            udPriority.Value = Math.Max(0, Math.Min(copy.priority, 99));
+            udFields.Value = copy.Fields;
+            txtFormula.Text = copy.Formula;
+            txtFormulaBending.Text = copy.FormulaBending;
+            udPriority.Value = Math.Max(0, Math.Min(copy.Priority, 99));
 
-            posShapeView.ShapeName = copy.name;
+            posShapeView.SuspendUpdate();
+            posShapeView.ClearItems();
+            posShapeView.AddItem(copy);
+            posShapeView.ResumeUpdate();
         }
 
         private void lbShapes_SelectedIndexChanged(object sender, EventArgs e)
@@ -132,21 +100,22 @@ namespace RebarPosCommands
             if (lbShapes.SelectedIndices.Count == 0)
             {
                 gbOptions.Enabled = false;
-                gbDisplay.Enabled = false;
 
                 btnDelete.Enabled = false;
                 btnRename.Enabled = false;
+                btnDrawShapes.Enabled = false;
                 btnSelectShapes.Enabled = false;
             }
             else
             {
                 gbOptions.Enabled = true;
-                gbDisplay.Enabled = true;
 
-                ShapeCopy copy = GetSelected();
-                bool enable = (copy != null) && !copy.builtin;
+                PosShape copy = GetSelected();
+                bool enable = (copy != null) && !copy.IsBuiltIn;
+
                 btnDelete.Enabled = enable;
                 btnRename.Enabled = enable;
+                btnDrawShapes.Enabled = true;
                 btnSelectShapes.Enabled = enable;
 
                 udFields.ReadOnly = !enable;
@@ -165,18 +134,18 @@ namespace RebarPosCommands
             for (int i = 0; i < lbShapes.Items.Count; i++)
             {
                 ListViewItem lv = lbShapes.Items[i];
-                ShapeCopy copy = m_Copies.Find(p => p.name == lv.Text);
-                if (copy.builtin)
+                PosShape copy = m_Copies.Find(p => p.Name == lv.Text);
+                if (copy.IsBuiltIn)
                     lv.ImageIndex = 0;
                 else
                     lv.ImageIndex = 1;
             }
         }
 
-        private ShapeCopy GetSelected()
+        private PosShape GetSelected()
         {
             if (lbShapes.SelectedIndices.Count == 0) return null;
-            return m_Copies.Find(p => p.name == lbShapes.SelectedItems[0].Text);
+            return m_Copies.Find(p => p.Name == lbShapes.SelectedItems[0].Text);
         }
 
         private bool ShowEditMessage()
@@ -191,67 +160,43 @@ namespace RebarPosCommands
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            bool foundTemplate = (!m_Template.IsNull && m_Template.IsValid && !m_Template.IsErased);
+            PosShape org = GetSelected();
 
-            if (foundTemplate)
+            int i = 1;
+            while (m_Copies.Exists(p => p.Name.ToUpperInvariant() == "SHAPE" + i.ToString()))
             {
-                ShapeCopy org = GetSelected();
-
-                int i = 1;
-                while (m_Copies.Exists(p => p.name.ToUpperInvariant() == "SHAPE" + i.ToString()))
-                {
-                    i++;
-                }
-
-                ShapeCopy copy = new ShapeCopy();
-
-                copy.name = "Shape" + i.ToString();
-
-                copy.fields = org != null ? org.fields : 1;
-                copy.formula = org != null ? org.formula : "A";
-                copy.formulaBending = org != null ? org.formulaBending : "A";
-                copy.priority = org != null ? org.priority : 0;
-
-                copy.builtin = false;
-
-                if (org != null)
-                {
-                    foreach (PosShape.Shape draw in org.shapes)
-                    {
-                        copy.shapes.Add(draw);
-                    }
-                }
-
-                m_Copies.Add(copy);
-
-                ListViewItem lv = new ListViewItem(copy.name);
-                lv.SubItems.Add(copy.fields.ToString());
-                lv.SubItems.Add(copy.formula);
-                lv.SubItems.Add(copy.formulaBending);
-                lv.ImageIndex = 1;
-                lbShapes.Items.Add(lv);
-                lbShapes.SelectedIndices.Clear();
-                lbShapes.SelectedIndices.Add(lbShapes.Items.Count - 1);
-                lv.BeginEdit();
+                i++;
             }
-            else
+
+            PosShape copy = new PosShape();
+
+            copy.Name = "Shape" + i.ToString();
+
+            copy.Fields = org != null ? org.Fields : 1;
+            copy.Formula = org != null ? org.Formula : "A";
+            copy.FormulaBending = org != null ? org.FormulaBending : "A";
+            copy.Priority = org != null ? org.Priority : 0;
+
+            if (org != null)
             {
-                Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
-                using (EditorUserInteraction UI = ed.StartUserInteraction(this))
+                for (int k = 0; k < org.Items.Count; k++)
                 {
-                    PromptPointResult result = ed.GetPoint("Açılımı şablonun çizileceği yer: ");
-                    if (result.Status == PromptStatus.OK)
-                    {
-                        ApplyChanges();
-
-                        Point3d insPt = result.Value;
-
-                        MessageBox.Show("Açılımı şablon çerçevesi içine çizin ve tekrar bu diyalog kutusuna dönüp ekle düğmesini tıklayın.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                        Close();
-                    }
+                    PosShape.Shape draw = org.Items[k];
+                    copy.Items.Add(draw.Clone());
                 }
             }
+
+            m_Copies.Add(copy);
+
+            ListViewItem lv = new ListViewItem(copy.Name);
+            lv.SubItems.Add(copy.Fields.ToString());
+            lv.SubItems.Add(copy.Formula);
+            lv.SubItems.Add(copy.FormulaBending);
+            lv.ImageIndex = 1;
+            lbShapes.Items.Add(lv);
+            lbShapes.SelectedIndices.Clear();
+            lbShapes.SelectedIndices.Add(lbShapes.Items.Count - 1);
+            lv.BeginEdit();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -260,9 +205,9 @@ namespace RebarPosCommands
 
             if (lbShapes.SelectedIndices.Count == 0) return;
 
-            ShapeCopy copy = GetSelected();
+            PosShape copy = GetSelected();
             if (copy == null) return;
-            if (copy.builtin) return;
+            if (copy.IsBuiltIn) return;
 
             m_Copies.Remove(copy);
             lbShapes.Items.Remove(lbShapes.SelectedItems[0]);
@@ -270,8 +215,12 @@ namespace RebarPosCommands
 
         private void btnRename_Click(object sender, EventArgs e)
         {
-            if (!ShowEditMessage()) return;
             if (lbShapes.SelectedIndices.Count == 0) return;
+            PosShape copy = GetSelected();
+            if (copy.IsBuiltIn) return;
+
+            if (!ShowEditMessage()) return;
+
             lbShapes.SelectedItems[0].BeginEdit();
         }
 
@@ -296,19 +245,19 @@ namespace RebarPosCommands
                     return;
                 }
             }
-            ShapeCopy copy = m_Copies.Find(p => p.name == lbShapes.Items[e.Item].Text);
-            if (copy == null)
+            PosShape copy = m_Copies.Find(p => p.Name == lbShapes.Items[e.Item].Text);
+            if (copy == null || copy.IsBuiltIn)
             {
                 e.CancelEdit = true;
                 return;
             }
-            copy.name = e.Label;
+            copy.Name = e.Label;
         }
 
         private void btnSelectShapes_Click(object sender, EventArgs e)
         {
-            ShapeCopy copy = GetSelected();
-            if (copy == null) return;
+            PosShape copy = GetSelected();
+            if (copy == null || copy.IsBuiltIn) return;
 
             // Select shapes
             Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
@@ -327,7 +276,7 @@ namespace RebarPosCommands
                 if (result.Status != PromptStatus.OK || result.Value.Count == 0) return;
 
                 int fieldCount = 1;
-                copy.shapes.Clear();
+                copy.Items.Clear();
                 Database db = HostApplicationServices.WorkingDatabase;
                 using (Transaction tr = db.TransactionManager.StartTransaction())
                 {
@@ -353,12 +302,12 @@ namespace RebarPosCommands
                             {
                                 Line line = obj as Line;
 
-                                copy.shapes.Add(new PosShape.ShapeLine(line.Color, line.StartPoint.X, line.StartPoint.Y, line.EndPoint.X, line.EndPoint.Y, visible));
+                                copy.Items.Add(new PosShape.ShapeLine(line.Color, line.StartPoint.X, line.StartPoint.Y, line.EndPoint.X, line.EndPoint.Y, visible));
                             }
                             else if (obj is Arc)
                             {
                                 Arc arc = obj as Arc;
-                                copy.shapes.Add(new PosShape.ShapeArc(arc.Color, arc.Center.X, arc.Center.Y, arc.Radius, arc.StartAngle, arc.EndAngle, visible));
+                                copy.Items.Add(new PosShape.ShapeArc(arc.Color, arc.Center.X, arc.Center.Y, arc.Radius, arc.StartAngle, arc.EndAngle, visible));
                             }
                             else if (obj is DBText)
                             {
@@ -376,7 +325,7 @@ namespace RebarPosCommands
                                     x = text.AlignmentPoint.X;
                                     y = text.AlignmentPoint.Y;
                                 }
-                                copy.shapes.Add(new PosShape.ShapeText(text.Color, x, y, text.Height, text.WidthFactor, text.TextString, "romans.shx", text.HorizontalMode, text.VerticalMode, visible));
+                                copy.Items.Add(new PosShape.ShapeText(text.Color, x, y, text.Height, text.WidthFactor, text.TextString, "romans.shx", text.HorizontalMode, text.VerticalMode, visible));
                             }
                         }
                     }
@@ -388,16 +337,16 @@ namespace RebarPosCommands
 
                 udFields.Value = fieldCount;
             }
-            
+
             SetShape();
         }
 
         private void udFields_ValueChanged(object sender, EventArgs e)
         {
-            ShapeCopy copy = GetSelected();
+            PosShape copy = GetSelected();
             if (copy == null) return;
-            if (copy.builtin) return;
-            copy.fields = (int)udFields.Value;
+            if (copy.IsBuiltIn) return;
+            copy.Fields = (int)udFields.Value;
         }
 
         private void txtFormula_Validating(object sender, CancelEventArgs e)
@@ -415,10 +364,10 @@ namespace RebarPosCommands
 
         private void txtFormula_Validated(object sender, EventArgs e)
         {
-            ShapeCopy copy = GetSelected();
+            PosShape copy = GetSelected();
             if (copy == null) return;
-            if (copy.builtin) return;
-            copy.formula = txtFormula.Text;
+            if (copy.IsBuiltIn) return;
+            copy.Formula = txtFormula.Text;
         }
 
         private void txtFormulaBending_Validating(object sender, CancelEventArgs e)
@@ -436,18 +385,18 @@ namespace RebarPosCommands
 
         private void txtFormulaBending_Validated(object sender, EventArgs e)
         {
-            ShapeCopy copy = GetSelected();
+            PosShape copy = GetSelected();
             if (copy == null) return;
-            if (copy.builtin) return;
-            copy.formulaBending = txtFormulaBending.Text;
+            if (copy.IsBuiltIn) return;
+            copy.FormulaBending = txtFormulaBending.Text;
         }
 
         private void udPriority_ValueChanged(object sender, EventArgs e)
         {
-            ShapeCopy copy = GetSelected();
+            PosShape copy = GetSelected();
             if (copy == null) return;
-            if (copy.builtin) return;
-            copy.priority = (int)udPriority.Value;
+            if (copy.IsBuiltIn) return;
+            copy.Priority = (int)udPriority.Value;
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -466,22 +415,27 @@ namespace RebarPosCommands
             string userShapesFile = System.IO.Path.Combine(userFolder, "ShapeList.txt");
             string newShapesFile = System.IO.Path.Combine(userFolder, "ShapeList.new");
 
-            PosShape.ClearPosShapes();
-            foreach (ShapeCopy copy in m_Copies)
+            foreach (PosShape copy in m_Copies)
             {
-                if (!copy.builtin)
+                if (!copy.IsBuiltIn)
                 {
-                    PosShape shape = new PosShape();
-                    shape.Name = copy.name;
-                    shape.Fields = copy.fields;
-                    shape.Formula = copy.formula;
-                    shape.FormulaBending = copy.formulaBending;
-                    shape.Priority = copy.priority;
-                    foreach (PosShape.Shape sh in copy.shapes)
+                    if (PosShape.HasPosShape(copy.Name))
                     {
-                        shape.Items.Add(sh);
+                        PosShape org = PosShape.GetPosShape(copy.Name);
+                        org.Fields = copy.Fields;
+                        org.Formula = copy.Formula;
+                        org.FormulaBending = copy.FormulaBending;
+                        org.Priority = copy.Priority;
+                        org.Items.Clear();
+                        for (int i=0;i<copy.Items.Count;i++)
+                        {
+                            org.Items.Add(copy.Items[i].Clone());
+                        }
                     }
-                    PosShape.AddPosShape(shape);
+                    else
+                    {
+                        PosShape.AddPosShape(copy);
+                    }
                 }
             }
 
@@ -497,6 +451,109 @@ namespace RebarPosCommands
             }
 
             PosShape.ReadPosShapesFromFile(userShapesFile);
+        }
+
+        private void btnDrawShapes_Click(object sender, EventArgs e)
+        {
+            Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+            PromptPointResult result;
+            using (EditorUserInteraction UI = ed.StartUserInteraction(this))
+            {
+                result = ed.GetPoint("Açılım şablonun çizileceği yer: ");
+            }
+            if (result.Status == PromptStatus.OK)
+            {
+                Point3d inspt = result.Value;
+
+                Database db = HostApplicationServices.WorkingDatabase;
+                using (Transaction tr = db.TransactionManager.StartTransaction())
+                {
+                    try
+                    {
+                        BlockTableRecord btr = (BlockTableRecord)tr.GetObject(db.CurrentSpaceId, OpenMode.ForWrite);
+
+                        Point3dCollection vertices = new Point3dCollection(new Point3d[]{
+                            new Point3d(0, 0, 0),
+                            new Point3d(475, 0, 0),
+                            new Point3d(475, 75, 0),
+                            new Point3d(0, 75, 0),
+                        });
+                        Polyline2d rec = new Polyline2d(Poly2dType.SimplePoly, vertices, 0, true, 0, 0, null);
+                        rec.ColorIndex = 256;
+                        rec.TransformBy(Matrix3d.Displacement(inspt.GetAsVector()));
+                        rec.SetDatabaseDefaults(db);
+                        btr.AppendEntity(rec);
+                        tr.AddNewlyCreatedDBObject(rec, true);
+
+                        PosShape shape = GetSelected();
+                        Point3d ext = shape.Bounds.Value.MinPoint;
+                        Matrix3d offset = Matrix3d.Displacement(new Vector3d(-ext.X, -ext.Y, 0));
+                        for (int i = 0; i < shape.Items.Count; i++)
+                        {
+                            PosShape.Shape item = shape.Items[i];
+                            int col = item.Color.ColorIndex;
+                            if (!item.Visible) col = 8;
+                            ObjectId hiddenLayer = PosUtility.DefpointsLayer;
+                            if (item is PosShape.ShapeLine)
+                            {
+                                PosShape.ShapeLine line = (PosShape.ShapeLine)item;
+                                Line dbobj = new Line(new Point3d(line.X1, line.Y1, 0), new Point3d(line.X2, line.Y2, 0));
+                                dbobj.ColorIndex = col;
+                                if (!item.Visible) dbobj.LayerId = hiddenLayer;
+                                dbobj.TransformBy(offset);
+                                dbobj.TransformBy(Matrix3d.Displacement(inspt.GetAsVector()));
+
+                                dbobj.SetDatabaseDefaults(db);
+                                btr.AppendEntity(dbobj);
+                                tr.AddNewlyCreatedDBObject(dbobj, true);
+                            }
+                            if (item is PosShape.ShapeArc)
+                            {
+                                PosShape.ShapeArc arc = (PosShape.ShapeArc)item;
+                                Arc dbobj = new Arc(new Point3d(arc.X, arc.Y, 0), arc.R, arc.StartAngle, arc.EndAngle);
+                                dbobj.ColorIndex = col;
+                                if (!item.Visible) dbobj.LayerId = hiddenLayer;
+                                dbobj.TransformBy(offset);
+                                dbobj.TransformBy(Matrix3d.Displacement(inspt.GetAsVector()));
+
+                                dbobj.SetDatabaseDefaults(db);
+                                btr.AppendEntity(dbobj);
+                                tr.AddNewlyCreatedDBObject(dbobj, true);
+                            }
+                            if (item is PosShape.ShapeText)
+                            {
+                                PosShape.ShapeText text = (PosShape.ShapeText)item;
+                                DBText dbobj = new DBText();
+                                dbobj.Position = new Point3d(text.X, text.Y, 0);
+                                dbobj.TextStyleId = PosUtility.CreateTextStyle("", text.Font, text.Width);
+                                dbobj.Height = text.Height;
+                                dbobj.WidthFactor = text.Width;
+                                dbobj.HorizontalMode = text.HorizontalAlignment;
+                                dbobj.VerticalMode = text.VerticalAlignment;
+                                dbobj.AlignmentPoint = new Point3d(text.X, text.Y, 0);
+                                dbobj.TextString = text.Text;
+                                dbobj.ColorIndex = col;
+                                if (!item.Visible) dbobj.LayerId = hiddenLayer;
+                                dbobj.TransformBy(offset);
+                                dbobj.TransformBy(Matrix3d.Displacement(inspt.GetAsVector()));
+
+                                dbobj.SetDatabaseDefaults(db);
+                                btr.AppendEntity(dbobj);
+                                tr.AddNewlyCreatedDBObject(dbobj, true);
+                            }
+                        }
+
+                        tr.Commit();
+                    }
+                    catch (System.Exception)
+                    {
+                        ;
+                    }
+                }
+
+                MessageBox.Show("Açılımı şablon çerçevesi içine çizin ve tekrar bu diyalog kutusuna dönüp çizimden al düğmesini tıklayın.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
         }
     }
 }

@@ -120,11 +120,13 @@ System::Drawing::Bitmap^ PosShape::ToBitmap(System::Drawing::Color backColor, in
 //*************************************************************************
 ObjectId PosShape::Id::get()
 { 
-	return Marshal::ToObjectId(GetImpObj()->id()); 
+	//return Marshal::ToObjectId(GetImpObj()->id()); 
+	return ObjectId::Null;
 }
 bool PosShape::IsPersistent::get() 
 { 
-	return (GetImpObj()->isPersistent() == Adesk::kTrue); 
+	//return (GetImpObj()->isPersistent() == Adesk::kTrue); 
+	return false;
 }
 
 int PosShape::SubSetAttributes(Autodesk::AutoCAD::GraphicsInterface::DrawableTraits^ traits) 

@@ -52,6 +52,7 @@
             this.chFormulaBending = new System.Windows.Forms.ColumnHeader();
             this.lShapes = new System.Windows.Forms.ImageList(this.components);
             this.gbDisplay = new System.Windows.Forms.GroupBox();
+            this.btnDrawShapes = new System.Windows.Forms.Button();
             this.btnSelectShapes = new System.Windows.Forms.Button();
             this.posShapeView = new RebarPosCommands.PosShapeView();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
@@ -184,7 +185,7 @@
             this.btnCancel.Location = new System.Drawing.Point(631, 437);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 4;
+            this.btnCancel.TabIndex = 5;
             this.btnCancel.Text = "İptal";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -246,7 +247,7 @@
             this.chkUserOnly.Location = new System.Drawing.Point(15, 369);
             this.chkUserOnly.Name = "chkUserOnly";
             this.chkUserOnly.Size = new System.Drawing.Size(218, 17);
-            this.chkUserOnly.TabIndex = 6;
+            this.chkUserOnly.TabIndex = 1;
             this.chkUserOnly.Text = "&Sadece Kullanıcı Tanımlı Açılımları Göster";
             this.chkUserOnly.UseVisualStyleBackColor = true;
             this.chkUserOnly.CheckedChanged += new System.EventHandler(this.chkUserOnly_CheckedChanged);
@@ -309,6 +310,7 @@
             // 
             this.gbDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbDisplay.Controls.Add(this.btnDrawShapes);
             this.gbDisplay.Controls.Add(this.btnSelectShapes);
             this.gbDisplay.Controls.Add(this.posShapeView);
             this.gbDisplay.Location = new System.Drawing.Point(395, 212);
@@ -318,13 +320,24 @@
             this.gbDisplay.TabStop = false;
             this.gbDisplay.Text = "&Görünüm";
             // 
+            // btnDrawShapes
+            // 
+            this.btnDrawShapes.Location = new System.Drawing.Point(20, 169);
+            this.btnDrawShapes.Name = "btnDrawShapes";
+            this.btnDrawShapes.Size = new System.Drawing.Size(131, 23);
+            this.btnDrawShapes.TabIndex = 1;
+            this.btnDrawShapes.Text = "Açılım Çiz";
+            this.btnDrawShapes.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnDrawShapes.UseVisualStyleBackColor = true;
+            this.btnDrawShapes.Click += new System.EventHandler(this.btnDrawShapes_Click);
+            // 
             // btnSelectShapes
             // 
             this.btnSelectShapes.Image = global::RebarPosCommands.Properties.Resources.select;
-            this.btnSelectShapes.Location = new System.Drawing.Point(20, 169);
+            this.btnSelectShapes.Location = new System.Drawing.Point(157, 169);
             this.btnSelectShapes.Name = "btnSelectShapes";
-            this.btnSelectShapes.Size = new System.Drawing.Size(268, 23);
-            this.btnSelectShapes.TabIndex = 1;
+            this.btnSelectShapes.Size = new System.Drawing.Size(131, 23);
+            this.btnSelectShapes.TabIndex = 2;
             this.btnSelectShapes.Text = "Çizimden Al";
             this.btnSelectShapes.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSelectShapes.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -336,9 +349,9 @@
             this.posShapeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.posShapeView.BackColor = System.Drawing.Color.Black;
+            this.posShapeView.BackColor = System.Drawing.SystemColors.Control;
             this.posShapeView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.posShapeView.ForeColor = System.Drawing.Color.White;
+            this.posShapeView.ForeColor = System.Drawing.SystemColors.ControlText;
             this.posShapeView.Location = new System.Drawing.Point(20, 31);
             this.posShapeView.Name = "posShapeView";
             this.posShapeView.Size = new System.Drawing.Size(268, 132);
@@ -355,7 +368,7 @@
             this.chkShowShapes.Location = new System.Drawing.Point(12, 441);
             this.chkShowShapes.Name = "chkShowShapes";
             this.chkShowShapes.Size = new System.Drawing.Size(172, 17);
-            this.chkShowShapes.TabIndex = 5;
+            this.chkShowShapes.TabIndex = 3;
             this.chkShowShapes.Text = "Poz Açılımlarını Ekranda Göster";
             this.chkShowShapes.UseVisualStyleBackColor = true;
             // 
@@ -366,7 +379,7 @@
             this.btnOK.Location = new System.Drawing.Point(550, 437);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 6;
+            this.btnOK.TabIndex = 4;
             this.btnOK.Text = "Tamam";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -433,5 +446,6 @@
         private System.Windows.Forms.ColumnHeader chFields;
         private System.Windows.Forms.ColumnHeader chFormulaBending;
         private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.Button btnDrawShapes;
     }
 }

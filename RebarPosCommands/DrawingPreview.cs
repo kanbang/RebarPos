@@ -7,11 +7,15 @@ using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.GraphicsSystem;
 using Autodesk.AutoCAD.GraphicsInterface;
+using System.ComponentModel;
 
 namespace RebarPosCommands
 {
-    public partial class DrawingPreview : UserControl
+    public partial class DrawingPreview : Panel
     {
+        private bool m_Selected;
+        private Color m_SelectionColor;
+
         private bool init;
         private bool disposed;
         private bool suspended;
@@ -20,9 +24,31 @@ namespace RebarPosCommands
         private Autodesk.AutoCAD.GraphicsSystem.View view = null;
         private Autodesk.AutoCAD.GraphicsSystem.Model model = null;
 
+        [Browsable(true), Category("Appearance"), DefaultValue(false)]
+        public bool Selected { get { return m_Selected; } set { m_Selected = value; Refresh(); } }
+        [Browsable(true), Category("Appearance"), DefaultValue(typeof(Color), "Highlight")]
+        public Color SelectionColor { get { return m_SelectionColor; } set { m_SelectionColor = value; Refresh(); } }
+
+        protected bool IsDesigner
+        {
+            get
+            {
+                return (System.Diagnostics.Process.GetCurrentProcess().ProcessName.ToLower() == "devenv");
+            }
+        }
+
         public DrawingPreview()
         {
-            InitializeComponent();
+            if (IsDesigner)
+                this.BackColor = System.Drawing.SystemColors.Control;
+            else
+                this.BackColor = DWGUtility.ModelBackgroundColor();
+            this.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Name = "DrawingPreview";
+            this.Size = new System.Drawing.Size(600, 400);
+
+            m_Selected = false;
+            m_SelectionColor = SystemColors.Highlight;
 
             init = false;
             disposed = false;
@@ -31,7 +57,7 @@ namespace RebarPosCommands
 
         private void Init()
         {
-            if (!init && !disposed && !Disposing)
+            if (!init && !disposed && !Disposing && !IsDesigner)
             {
                 extents = new Extents3d();
 
@@ -55,6 +81,8 @@ namespace RebarPosCommands
 
         public void AddItem(Drawable item)
         {
+            if (IsDesigner) return;
+
             Init();
             Extents3d? itemExtents = item.Bounds;
             if (itemExtents.HasValue)
@@ -67,10 +95,13 @@ namespace RebarPosCommands
                 new Vector3d(0.0, 1.0, 0.0),
                 Math.Abs(extents.MaxPoint.X - extents.MinPoint.X),
                 Math.Abs(extents.MaxPoint.Y - extents.MinPoint.Y));
+            Refresh();
         }
 
         public void AddItem(IEnumerable<Drawable> items)
         {
+            if (IsDesigner) return;
+
             Init();
             SuspendUpdate();
             foreach (Drawable item in items)
@@ -82,6 +113,8 @@ namespace RebarPosCommands
 
         public void ClearItems()
         {
+            if (IsDesigner) return;
+
             Init();
             view.EraseAll();
             extents = new Extents3d();
@@ -101,17 +134,25 @@ namespace RebarPosCommands
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (!suspended && init && !disposed && !Disposing)
+            if (!suspended && init && !disposed && !Disposing && !IsDesigner)
             {
                 device.Update();
+
+                if (m_Selected)
+                {
+                    using (Pen pen = new Pen(m_SelectionColor, 2.0f))
+                    {
+                        Rectangle rec = ClientRectangle;
+                        rec.Inflate(-2, -2);
+                        e.Graphics.DrawRectangle(pen, rec);
+                    }
+                }
             }
-            
-            base.OnPaint(e);
         }
 
         protected override void OnSizeChanged(EventArgs e)
         {
-            if (init && !disposed && !Disposing && this.Size.Width > 0 && this.Size.Height > 0)
+            if (init && !disposed && !Disposing && !IsDesigner && this.Size.Width > 0 && this.Size.Height > 0)
             {
                 device.OnSize(this.Size);
             }
@@ -121,12 +162,6 @@ namespace RebarPosCommands
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                if (components != null)
-                    components.Dispose();
-            }
-
             base.Dispose(disposing);
 
             if (device != null)

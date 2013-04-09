@@ -133,16 +133,13 @@
       <DependentUpon>ConfimMessageBox.cs</DependentUpon>
     </Compile>
     <Compile Include="TableStylePreview.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="TableStylePreview.Designer.cs">
       <DependentUpon>TableStylePreview.cs</DependentUpon>
     </Compile>
     <Compile Include="DrawingPreview.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="DrawingPreview.Designer.cs">
-      <DependentUpon>DrawingPreview.cs</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="EditDetachedPosForm.cs">
       <SubType>Form</SubType>
@@ -206,13 +203,10 @@
       <DependentUpon>NumberingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="PosShapeView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="PosShapeView.Designer.cs">
-      <DependentUpon>PosShapeView.cs</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="PosStylePreview.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="PosStylePreview.Designer.cs">
       <DependentUpon>PosStylePreview.cs</DependentUpon>
@@ -255,9 +249,6 @@
     <EmbeddedResource Include="TableStylePreview.resx">
       <DependentUpon>TableStylePreview.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DrawingPreview.resx">
-      <DependentUpon>DrawingPreview.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="EditDetachedPosForm.resx">
       <DependentUpon>EditDetachedPosForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -281,9 +272,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="NumberingForm.resx">
       <DependentUpon>NumberingForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PosShapeView.resx">
-      <DependentUpon>PosShapeView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PosStylePreview.resx">
       <DependentUpon>PosStylePreview.cs</DependentUpon>

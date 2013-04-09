@@ -35,7 +35,7 @@ ACRX_CONS_DEFINE_MEMBERS(CPosShape, AcGiDrawable, 0);
 //*************************************************************************
 CPosShape::CPosShape () : m_Name(NULL), m_Fields(1), m_Formula(NULL), m_FormulaBending(NULL), 
 	m_Priority(0), m_IsBuiltIn(Adesk::kFalse), m_IsUnknown(Adesk::kFalse), m_IsInternal(Adesk::kFalse),
-	m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), m_Style(),
+	m_List(), m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), m_Style(),
 	m_GsNode(NULL)
 { }
 
@@ -721,6 +721,33 @@ void CPosShape::SavePosShapesToFile(const std::wstring filename)
 		ofs << L"END" << std::endl;
 		ofs << std::endl;
 	}
+}
+
+//*************************************************************************
+// RXObject implementation
+//*************************************************************************
+Acad::ErrorStatus CPosShape::copyFrom(const AcRxObject* other)
+{
+	if(!other->isKindOf(CPosShape::desc())) return Acad::eNotThatKindOfClass;
+	CPosShape* org = CPosShape::cast(other);
+
+	setName(org->Name());
+	setFields(org->Fields());
+	setFormula(org->Formula());
+	setFormulaBending(org->FormulaBending());
+	setPriority(org->Priority());
+
+	setIsUnknown(org->IsUnknown());
+	setIsBuiltIn(org->IsBuiltIn());
+	setIsInternal(org->IsInternal());
+
+	ClearShapes();
+	for(ShapeSize i = 0; i < org->GetShapeCount(); i++)
+	{
+		AddShape(org->GetShape(i)->clone());
+	}
+
+	return Acad::eOk;
 }
 
 //*************************************************************************

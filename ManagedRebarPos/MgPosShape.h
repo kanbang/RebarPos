@@ -32,6 +32,9 @@ namespace OZOZ
 				property Autodesk::AutoCAD::Colors::Color^ Color;
 				property bool Visible;
 
+			public:
+				virtual Shape^ Clone() = 0;
+
 			protected:
 				Shape()
 				{
@@ -100,6 +103,12 @@ namespace OZOZ
 				property double Y2;
 
 			public:
+				virtual Shape^ Clone() override
+				{
+					return gcnew ShapeLine(Color, X1, Y1, X2, Y2, Visible);
+				}
+
+			public:
 				ShapeLine() : Shape()
 				{
 					;
@@ -128,6 +137,12 @@ namespace OZOZ
 				property double R;
 				property double StartAngle;
 				property double EndAngle;
+
+			public:
+				virtual Shape^ Clone() override
+				{
+					return gcnew ShapeArc(Color, X, Y, R, StartAngle, EndAngle, Visible);
+				}
 
 			public:
 				ShapeArc() : Shape()
@@ -162,6 +177,12 @@ namespace OZOZ
 				property String^ Font;
 				property TextHorizontalMode HorizontalAlignment;
 				property TextVerticalMode VerticalAlignment;
+
+			public:
+				virtual Shape^ Clone() override
+				{
+					return gcnew ShapeText(Color, X, Y, Height, Width, Text, Font, HorizontalAlignment, VerticalAlignment, Visible);
+				}
 
 			public:
 				ShapeText() : Shape()

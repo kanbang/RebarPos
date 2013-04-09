@@ -189,6 +189,9 @@ public:
 	static void ReadPosShapesFromString(const std::wstring source, const bool builtin, const bool isinternal);
 
 public:
+    // RXObject implementation
+	virtual Acad::ErrorStatus copyFrom(const AcRxObject* other);
+
     // Drawable implementation
     virtual Adesk::Boolean  isPersistent    (void) const;
     virtual AcDbObjectId    id              (void) const;
