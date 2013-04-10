@@ -112,7 +112,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
         break;
     case AcRx::kOleUnloadAppMsg :
         //respond to this message according to our current state
-        return DllCanUnloadNow()==S_OK?AcRx::kRetOK:AcRx::kRetError;
+        return (DllCanUnloadNow() == S_OK ? AcRx::kRetOK : AcRx::kRetError);
     }
     return AcRx::kRetOK;
 }
