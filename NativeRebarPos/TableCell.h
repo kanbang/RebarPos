@@ -193,8 +193,6 @@ public:
     Acad::ErrorStatus	dxfInFields(AcDbDxfFiler* filer);
     Acad::ErrorStatus	dxfOutFields(AcDbDxfFiler* filer) const;
 
-	void saveAs(AcGiWorldDraw *pWd, AcDb::SaveType saveType);
-
 public:
 	/// AcDbEntity overrides: geometry
     Acad::ErrorStatus getOsnapPoints(

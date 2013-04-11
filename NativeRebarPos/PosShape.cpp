@@ -318,48 +318,6 @@ const ShapeSize CPosShape::GetShapeCount() const
 	return m_List.size();
 }
 
-const AcDbExtents CPosShape::GetShapeExtents() const
-{
-	AcDbExtents ext;
-	for(ShapeListConstIt it = m_List.begin(); it != m_List.end(); it++)
-	{
-		CShape* shape = *it;
-		switch(shape->type)
-		{
-		case CShape::Line:
-			{
-				CShapeLine* line = dynamic_cast<CShapeLine*>(shape);
-				ext.addPoint(AcGePoint3d(line->x1, line->y1, 0));
-				ext.addPoint(AcGePoint3d(line->x2, line->y2, 0));
-			}
-			break;
-		case CShape::Arc:
-			{
-				CShapeArc* arc = dynamic_cast<CShapeArc*>(shape);
-				double da = (arc->endAngle - arc->startAngle) / 10.0;
-				int i = 0;
-				double a = arc->startAngle;
-				for(i = 0; i < 10; i++)
-				{
-					double x = arc->x + cos(a) * arc->r;
-					double y = arc->y + sin(a) * arc->r;
-					ext.addPoint(AcGePoint3d(x, y, 0));
-					a += da;
-				}
-			}
-			break;
-		case CShape::Text:
-			{
-				CShapeText* text = dynamic_cast<CShapeText*>(shape);
-				ext.addPoint(AcGePoint3d(text->x - 2.0 * text->height, text->y, 0));
-				ext.addPoint(AcGePoint3d(text->x + 2.0 * text->height, text->y + text->height, 0));
-			}
-			break;
-		}
-	}
-	return ext;
-}
-
 Acad::ErrorStatus CPosShape::setShapeTexts(const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f)
 {
 	acutUpdString(a, m_A);
@@ -773,7 +731,7 @@ AcGsNode* CPosShape::gsNode(void) const
 	return m_GsNode;
 }
 
-bool CPosShape::bounds(AcDbExtents& bounds) const
+bool CPosShape::bounds(AcDbExtents& ext) const
 {
 	if(m_List.empty())
 	{
@@ -781,7 +739,64 @@ bool CPosShape::bounds(AcDbExtents& bounds) const
 	}
 	else
 	{
-		bounds = GetShapeExtents();
+		for(ShapeListConstIt it = m_List.begin(); it != m_List.end(); it++)
+		{
+			CShape* shape = *it;
+			switch(shape->type)
+			{
+			case CShape::Line:
+				{
+					CShapeLine* line = dynamic_cast<CShapeLine*>(shape);
+					ext.addPoint(AcGePoint3d(line->x1, line->y1, 0));
+					ext.addPoint(AcGePoint3d(line->x2, line->y2, 0));
+				}
+				break;
+			case CShape::Arc:
+				{
+					CShapeArc* arc = dynamic_cast<CShapeArc*>(shape);
+					double da = (arc->endAngle - arc->startAngle) / 10.0;
+					int i = 0;
+					double a = arc->startAngle;
+					for(i = 0; i < 10; i++)
+					{
+						double x = arc->x + cos(a) * arc->r;
+						double y = arc->y + sin(a) * arc->r;
+						ext.addPoint(AcGePoint3d(x, y, 0));
+						a += da;
+					}
+				}
+				break;
+			case CShape::Text:
+				{
+					CShapeText* text = dynamic_cast<CShapeText*>(shape);
+
+					AcGiTextStyle style(text->font.c_str(), NULL, text->height, text->width, 0, 0, Adesk::kFalse, Adesk::kFalse, Adesk::kFalse, Adesk::kFalse, Adesk::kFalse);
+					style.loadStyleRec();
+					AcGePoint2d size = style.extents(text->text.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
+
+					double xoff = 0.0; 
+					if(text->horizontalAlignment == AcDb::kTextLeft)
+						xoff = 0.0;
+					else if(text->horizontalAlignment == AcDb::kTextRight)
+						xoff = -size.x;
+					else // horizontal center
+						xoff = -size.x / 2.0;
+
+					double yoff = 0.0;
+					if(text->verticalAlignment == AcDb::kTextTop) 
+						yoff = -size.y;
+					else if(text->verticalAlignment == AcDb::kTextBase || text->verticalAlignment == AcDb::kTextBottom)
+						yoff = 0.0;
+					else // vertical middle
+						yoff = -size.y / 2.0;
+					
+					ext.addPoint(AcGePoint3d(text->x + xoff, text->y + yoff, 0));
+					ext.addPoint(AcGePoint3d(text->x + xoff + size.x, text->y + yoff + size.y, 0));
+				}
+				break;
+			}
+		}
+
 		return true;
 	}
 }
@@ -797,6 +812,17 @@ Adesk::Boolean CPosShape::subWorldDraw(AcGiWorldDraw* worldDraw)
 	{
         return Adesk::kTrue;
     }
+
+	AcDbExtents ext;
+	if(!bounds(ext))
+	{
+		return Adesk::kTrue;
+	}
+
+	// Transform to make min extents at origin
+	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
+	trans.setCoordSystem(AcGePoint3d(-ext.minPoint().x, -ext.minPoint().y, -ext.minPoint().z), AcGeVector3d::kXAxis, AcGeVector3d::kYAxis, AcGeVector3d::kZAxis);
+	worldDraw->geometry().pushModelTransform(trans);
 
 	for(ShapeListConstIt it = m_List.begin(); it != m_List.end(); it++)
 	{
@@ -841,6 +867,9 @@ Adesk::Boolean CPosShape::subWorldDraw(AcGiWorldDraw* worldDraw)
 			break;
 		}
 	}
+
+	// Reset transform
+	worldDraw->geometry().popModelTransform();
 
 	// Do not call viewportDraw()
     return Adesk::kTrue; 

@@ -39,7 +39,7 @@ CRebarPos::CRebarPos() :
 	m_IncludeInBOQ(Adesk::kTrue), m_Multiplier(1), m_DisplayedSpacing(NULL),
 	m_Shape(NULL), m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), 
 	circleRadius(0.9), partSpacing(0.15), tauSize(0.6),
-	defpointsLayer(AcDbObjectId::kNull), m_Detached(Adesk::kFalse), m_GroupIdForDisplay(AcDbObjectId::kNull),
+	defpointsLayer(AcDbObjectId::kNull), m_Detached(Adesk::kFalse), m_GroupForDisplay(NULL),
 	m_CalcProps()
 {
 }
@@ -556,16 +556,10 @@ const CRebarPos::CCalculatedProperties& CRebarPos::CalcProps() const
 	return m_CalcProps;
 }
 
-const AcDbObjectId& CRebarPos::GroupIdForDisplay(void) const
-{
-	assertReadEnabled();
-	return m_GroupIdForDisplay;
-}
-
-Acad::ErrorStatus CRebarPos::setGroupIdForDisplay(const AcDbObjectId& newVal)
+Acad::ErrorStatus CRebarPos::setGroupForDisplay(const CPosGroup* newVal)
 {
 	assertWriteEnabled();
-	m_GroupIdForDisplay = newVal;
+	m_GroupForDisplay = const_cast<CPosGroup*>(newVal);
 	Calculate();
 	return Acad::eOk;
 }
@@ -1011,28 +1005,25 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 		// Circle
 		if(p.hasCircle)
 		{
-			AcGePoint3d circle(p.x + p.w / 2.0, p.y + p.h / 2.0, 0);
-			worldDraw->subEntityTraits().setColor(lastCircleColor);
-			worldDraw->geometry().circle(circle, circleRadius, AcGeVector3d::kZAxis);
+			Utility::DrawCircle(worldDraw, AcGePoint3d(p.x + p.w / 2.0, p.y + p.h / 2.0, 0), circleRadius, lastCircleColor);
 		}
 
 		// Tau sign
 		if(p.hasTau)
 		{
-			worldDraw->subEntityTraits().setColor(p.color);
+			Utility::DrawEllipticalArc(worldDraw, 
+				AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0, 0),
+				0.35, tauSize * 0.5, 2.0 * PI, 0.5 * PI, p.color);
 
-			AcGePoint3d circle(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0, 0);
-			worldDraw->geometry().ellipticalArc(circle, AcGeVector3d::kZAxis, 0.35, tauSize * 0.5, 0.0, 2.0 * PI, 0.5 * PI);
+			Utility::DrawLine(worldDraw,
+				AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 - 0.5, 0),
+				AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 + 0.5, 0),
+				p.color);
 
-			AcGePoint3d line[2];
-			line[0] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 - 0.5, 0);
-			line[1] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 + 0.5, 0);
-			worldDraw->geometry().polyline(2, line);
-
-			AcGePoint3d cline[2];
-			cline[0] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0 - 0.2, p.y + p.h / 2.0 + 0.5, 0);
-			cline[1] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0 + 0.2, p.y + p.h / 2.0 + 0.5, 0);
-			worldDraw->geometry().polyline(2, cline);
+			Utility::DrawLine(worldDraw,
+				AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0 - 0.2, p.y + p.h / 2.0 + 0.5, 0),
+				AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0 + 0.2, p.y + p.h / 2.0 + 0.5, 0),
+				p.color);
 		}
 
 		// Text
@@ -1041,8 +1032,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 			lastTextStyle.setXScale(p.widthFactor);
 			lastTextStyle.loadStyleRec();
 		}
-		worldDraw->subEntityTraits().setColor(p.color);
-		worldDraw->geometry().text(AcGePoint3d(p.x, p.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, p.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
+		Utility::DrawText(worldDraw, AcGePoint3d(p.x, p.y, 0), p.text, lastTextStyle, p.color);
 	}
 
 	// Reset transform
@@ -1055,8 +1045,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	lastNoteStyle.setXScale(lastNoteDraw.widthFactor);
 	lastNoteStyle.loadStyleRec();
 	worldDraw->subEntityTraits().setSelectionMarker(2);
-	worldDraw->subEntityTraits().setColor(lastNoteDraw.color);
-	worldDraw->geometry().text(AcGePoint3d(lastNoteDraw.x, lastNoteDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastNoteDraw.text.c_str(), -1, Adesk::kFalse, lastNoteStyle);
+	Utility::DrawText(worldDraw, AcGePoint3d(lastNoteDraw.x, lastNoteDraw.y, 0), lastNoteDraw.text, lastNoteStyle, lastNoteDraw.color);
 	// Reset transform
 	worldDraw->geometry().popModelTransform();
 
@@ -1067,8 +1056,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	lastTextStyle.setXScale(lastLengthDraw.widthFactor);
 	lastTextStyle.loadStyleRec();
 	worldDraw->subEntityTraits().setSelectionMarker(3);
-	worldDraw->subEntityTraits().setColor(lastLengthDraw.color);
-	worldDraw->geometry().text(AcGePoint3d(lastLengthDraw.x, lastLengthDraw.y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, lastLengthDraw.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
+	Utility::DrawText(worldDraw, AcGePoint3d(lastLengthDraw.x, lastLengthDraw.y, 0), lastLengthDraw.text, lastTextStyle, lastLengthDraw.color);
 	// Reset transform
 	worldDraw->geometry().popModelTransform();
 
@@ -1995,27 +1983,32 @@ void CRebarPos::Calculate(void)
 
 	// Open group and shape
 	Acad::ErrorStatus es;
-	AcDbObjectId groupId = AcDbObjectId::kNull;
-	if(!m_GroupIdForDisplay.isNull())
-		groupId = m_GroupIdForDisplay;
-	else
-	groupId = CPosGroup::GetGroupId();
-	AcDbObjectPointer<CPosGroup> pGroup (groupId, AcDb::kForRead);
-	if((es = pGroup.openStatus()) != Acad::eOk)
+	const CPosGroup* pGroup = NULL;
+	if(m_GroupForDisplay != NULL)
 	{
-		return;
+		pGroup = m_GroupForDisplay;
 	}
+	else
+	{
+		AcDbObjectPointer<CPosGroup> pGroupPointer (CPosGroup::GetGroupId(), AcDb::kForRead);
+		if((es = pGroupPointer.openStatus()) != Acad::eOk)
+		{
+			return;
+		}
+		pGroup = pGroupPointer;
+	}
+	if(pGroup == NULL) return;
 
 	// Reset calculated properties
 	m_CalcProps.Reset();
 	m_CalcProps.Generation = m_CalcProps.Generation + 1;
 
 	// Reset shapes
-	lastShapes.clear();
 	for(ShapeListIt it = lastShapes.begin(); it != lastShapes.end(); it++)
 	{
 		delete *it;
 	}
+	lastShapes.clear();
 
 	// Create text styles
 	if (pGroup->TextStyleId() != AcDbObjectId::kNull)

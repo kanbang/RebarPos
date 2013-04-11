@@ -3,6 +3,8 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
+#include <vector>
+
 // The following is part of the code used to export an API
 // and/or use the exported API.
 //
@@ -12,6 +14,8 @@
 #else
 #define DLLIMPEXP
 #endif
+
+class CRebarPos;
 
 /// ---------------------------------------------------------------------------
 /// The CPosGroup represents the settings for groups of rebar markers.
@@ -77,6 +81,8 @@ protected:
 
     AcDbHardPointerId m_TextStyleID;
     AcDbHardPointerId m_NoteStyleID;
+
+	AcGsNode* m_GsNode;
 
 public:
 	/// Gets or sets item name
@@ -176,6 +182,23 @@ public:
 
 	/// Gets the one and only group
 	static AcDbObjectId GetGroupId();
+
+public:
+	// Drawable implementation
+    virtual AcGiDrawable*       drawable();
+
+    virtual void            setGsNode       (AcGsNode* gsnode);
+    virtual AcGsNode*       gsNode          (void) const;
+
+    virtual bool            bounds          (AcDbExtents& bounds) const;
+
+    virtual Adesk::UInt32   subSetAttributes   (AcGiDrawableTraits* traits);
+    virtual Adesk::Boolean  subWorldDraw       (AcGiWorldDraw* worldDraw);
+    virtual void            subViewportDraw    (AcGiViewportDraw* vd);
+	virtual Adesk::UInt32   subViewportDrawLogicalFlags (AcGiViewportDraw * vd);
+
+private:
+	const std::vector<CRebarPos*> GetDisplayedPos(void) const;
 
 private:
     // These are here because otherwise dllexport tries to export the

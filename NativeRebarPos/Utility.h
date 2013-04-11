@@ -89,13 +89,16 @@ public:
 	static Acad::ErrorStatus ReadDXFObjectId(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, AcDbObjectId& val);
 
 	// Split string
-	static std::vector<std::wstring> SplitString(const std::wstring& s, wchar_t delim);
-	static std::vector<std::wstring> SplitString(const std::wstring& s);
+	static std::vector<std::wstring> SplitString(const std::wstring& s, const std::wstring& delim, const bool skipEmpty = false);
+	static std::vector<std::wstring> SplitString(const std::wstring& s, const wchar_t delim, const bool skipEmpty = false);
+	static std::vector<std::wstring> SplitString(const std::wstring& s, const bool skipEmpty = false);
 
 	// Worlddraw utilities
 	static void DrawLine(const AcGiWorldDraw* worldDraw, const AcGePoint3d& pt1, const AcGePoint3d& pt2, const Adesk::UInt16 color);
+	static void DrawDoubleLine(const AcGiWorldDraw* worldDraw, const AcGePoint3d& pt1, const AcGePoint3d& pt2, const double offset, const Adesk::UInt16 color);
 	static void DrawCircle(const AcGiWorldDraw* worldDraw, const AcGePoint3d& center, const double radius, const Adesk::UInt16 color);
 	static void DrawArc(const AcGiWorldDraw* worldDraw, const AcGePoint3d& center, const double radius, const double startAngle, const double endAngle, const Adesk::UInt16 color);
+	static void DrawEllipticalArc(const AcGiWorldDraw* worldDraw, const AcGePoint3d& center, const double majorAxisLength, const double minorAxisLength, const double startAngle, const double endAngle, const Adesk::UInt16 color);
 	static void DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& position, const std::wstring& string, const AcGiTextStyle& textStyle, const Adesk::UInt16 color);
 	static void DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& position, const std::wstring& string, 
 					   const AcGiTextStyle& textStyle, const AcDb::TextHorzMode horizontalAlignment, const AcDb::TextVertMode verticalAlignment, 

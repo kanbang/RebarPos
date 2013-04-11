@@ -39,8 +39,12 @@ CGenericTable::CGenericTable(void) :
 
 CGenericTable::~CGenericTable(void)
 {
-	Clear();
-	ResetDrawParams();
+	for(std::vector<CTableCell*>::iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
+		delete (*it);
+	m_Cells.clear();
+
+	m_Rows = 0;
+	m_Columns = 0;
 }
 
 //*************************************************************************
@@ -180,10 +184,10 @@ void CGenericTable::Clear()
 
 	for(std::vector<CTableCell*>::iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
 		delete (*it);
+	m_Cells.clear();
 
 	m_Rows = 0;
 	m_Columns = 0;
-	m_Cells.clear();
 
 	Calculate();
 }
@@ -1076,19 +1080,3 @@ Acad::ErrorStatus CGenericTable::dxfInFields(AcDbDxfFiler* pFiler)
     return es;
 }
 
-
-void CGenericTable::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
-{
-    assertReadEnabled();
-
-    if(worldDraw->regenAbort())
-	{
-        return;
-    }
-
-	for(std::vector<CTableCell*>::const_iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
-	{
-		CTableCell* cell = (*it);
-		cell->saveAs(worldDraw, saveType);
-	}
-}

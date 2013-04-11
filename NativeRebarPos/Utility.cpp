@@ -383,7 +383,35 @@ Acad::ErrorStatus Utility::ReadDXFObjectId(AcDbDxfFiler* pFiler, const short cod
 	return es;
 }
 
-std::vector<std::wstring> Utility::SplitString(const std::wstring& s, wchar_t delim)
+std::vector<std::wstring> Utility::SplitString(const std::wstring& s, const std::wstring& delim, const bool skipEmpty)
+{
+	std::vector<std::wstring> elems;
+
+    size_t start = 0, end = 0;
+
+    while(end != std::wstring::npos)
+    {
+        end = s.find(delim, start);
+
+		std::wstring item;
+		if(end == std::wstring::npos)
+			item = s.substr(start, std::wstring::npos);
+		else
+			item = s.substr(start, end - start);
+
+		if(!skipEmpty || item.size() > 0)
+			elems.push_back(item);
+
+		if(end > std::wstring::npos - delim.size())
+			start =  std::wstring::npos;
+		else
+			start = end + delim.size();
+    }
+
+	return elems;
+}
+
+std::vector<std::wstring> Utility::SplitString(const std::wstring& s, const wchar_t delim, const bool skipEmpty)
 {
 	std::vector<std::wstring> elems;
 
@@ -391,15 +419,16 @@ std::vector<std::wstring> Utility::SplitString(const std::wstring& s, wchar_t de
 	std::wstring item;
 	while(std::getline(ss, item, delim)) 
 	{
-		elems.push_back(item);
+		if(!skipEmpty || item.size() > 0)
+			elems.push_back(item);
 	}
 
 	return elems;
 }
 
-std::vector<std::wstring> Utility::SplitString(const std::wstring& s)
+std::vector<std::wstring> Utility::SplitString(const std::wstring& s, const bool skipEmpty)
 {
-	return SplitString(s, L'\n');
+	return SplitString(s, L'\n', skipEmpty);
 }
 
 void Utility::DrawLine(const AcGiWorldDraw* worldDraw, const AcGePoint3d& pt1, const AcGePoint3d& pt2, const Adesk::UInt16 color)
@@ -411,10 +440,15 @@ void Utility::DrawLine(const AcGiWorldDraw* worldDraw, const AcGePoint3d& pt1, c
 	worldDraw->geometry().polyline(2, line);
 }
 
+void Utility::DrawDoubleLine(const AcGiWorldDraw* worldDraw, const AcGePoint3d& pt1, const AcGePoint3d& pt2, const double offset, const Adesk::UInt16 color)
+{
+	AcGeVector3d offVec = (pt2 - pt1).perpVector().normalize() * offset / 2.0;
+	DrawLine(worldDraw, pt1 + offVec, pt2 + offVec, color);
+	DrawLine(worldDraw, pt1 - offVec, pt2 - offVec, color);
+}
+
 void Utility::DrawCircle(const AcGiWorldDraw* worldDraw, const AcGePoint3d& center, const double radius, const Adesk::UInt16 color)
 {
-	const double PI = 4.0 * atan(1.0);
-
 	worldDraw->subEntityTraits().setColor(color);
 	worldDraw->geometry().circle(center, radius, AcGeVector3d::kZAxis);
 }
@@ -422,40 +456,78 @@ void Utility::DrawCircle(const AcGiWorldDraw* worldDraw, const AcGePoint3d& cent
 void Utility::DrawArc(const AcGiWorldDraw* worldDraw, const AcGePoint3d& center, const double radius, 
 					  const double startAngle, const double endAngle, const Adesk::UInt16 color)
 {
-	const double PI = 4.0 * atan(1.0);
-
 	worldDraw->subEntityTraits().setColor(color);
 	worldDraw->geometry().ellipticalArc(center, AcGeVector3d::kZAxis, radius, radius, startAngle, endAngle, 0);
+}
+
+void Utility::DrawEllipticalArc(const AcGiWorldDraw* worldDraw, const AcGePoint3d& center, const double majorAxisLength, const double minorAxisLength, const double startAngle, const double endAngle, const Adesk::UInt16 color)
+{
+	worldDraw->subEntityTraits().setColor(color);
+	worldDraw->geometry().ellipticalArc(center, AcGeVector3d::kZAxis, majorAxisLength, minorAxisLength, 0.0, startAngle, endAngle);
 }
 
 void Utility::DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& position, const std::wstring& string,
 					   const AcGiTextStyle& textStyle, const Adesk::UInt16 color)
 {
-	worldDraw->subEntityTraits().setColor(color);
-	worldDraw->geometry().text(position, AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, string.c_str(), -1, Adesk::kFalse, textStyle);
+	DrawText(worldDraw, position, string, textStyle, AcDb::kTextLeft, AcDb::kTextBottom, color);
 }
 
 void Utility::DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& position, const std::wstring& string, 
 					   const AcGiTextStyle& textStyle, const AcDb::TextHorzMode horizontalAlignment, const AcDb::TextVertMode verticalAlignment, 
 					   const Adesk::UInt16 color)
 {
-	AcGePoint2d ext = textStyle.extents(string.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
+	double lineSpacing = 0.2 * textStyle.textSize();
 
-	double xoff = 0.0; 
-	if(horizontalAlignment == AcDb::kTextLeft)
-		xoff = 0.0;
-	else if(horizontalAlignment == AcDb::kTextRight)
-		xoff = -ext.x;
-	else // horizontal center
-		xoff = -ext.x / 2.0;
+	// Split into lines
+	std::vector<std::wstring> lines = SplitString(string, std::wstring(L"\\P"));
+	if(lines.size() == 0) return;
 
-	double yoff = 0.0;
-	if(verticalAlignment == AcDb::kTextTop) 
-		yoff = -ext.y;
+	// Measure text lines
+	std::vector<double> widths;
+	std::vector<double> heights;
+	double totalHeight = 0.0;
+	double totalWidth = 0.0;
+	double lineHeight = 0.0;
+	for(std::vector<std::wstring>::iterator it = lines.begin(); it != lines.end(); ++it)
+	{
+		std::wstring line = (*it);
+		AcGePoint2d ext = textStyle.extents(line.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
+		widths.push_back(ext.x);
+		heights.push_back(ext.y);
+		lineHeight = max(lineHeight, ext.y);
+		totalWidth = max(totalWidth, ext.x);
+	}
+	totalHeight = lineHeight * (double)lines.size() + lineSpacing * (double)(lines.size() - 1);
+
+	// Vertical location of first line
+	double y = 0.0;
+	if(verticalAlignment == AcDb::kTextTop)
+		y = 0.0;
 	else if(verticalAlignment == AcDb::kTextBase || verticalAlignment == AcDb::kTextBottom)
-		yoff = 0.0;
+		y = totalHeight;
 	else // vertical middle
-		yoff = -ext.y / 2.0;
+		y = totalHeight / 2.0;
 
-	DrawText(worldDraw, AcGePoint3d(position.x + xoff, position.y + yoff, 0), string, textStyle, color);
+	// Draw lines
+	worldDraw->subEntityTraits().setColor(color);
+	size_t i = 0;
+	for(std::vector<std::wstring>::iterator it = lines.begin(); it != lines.end(); ++it)
+	{
+		std::wstring line = (*it);
+
+		y -= lineHeight;
+		double x = 0.0; 
+		if(horizontalAlignment == AcDb::kTextLeft)
+			x = 0.0;
+		else if(horizontalAlignment == AcDb::kTextRight)
+			x = totalWidth - widths[i];
+		else // horizontal center
+			x = -widths[i] / 2.0;
+
+		worldDraw->geometry().text(AcGePoint3d(position.x + x, position.y + y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kXAxis, line.c_str(), -1, Adesk::kFalse, textStyle);
+
+		// Next line
+		y -= lineSpacing;
+		i++;
+	}
 }

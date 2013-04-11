@@ -4,6 +4,7 @@
 
 #include "StdAfx.h"
 
+#include "RebarPos.h"
 #include "PosGroup.h"
 #include "Utility.h"
 
@@ -26,7 +27,8 @@ CPosGroup::CPosGroup () : m_Name(NULL), m_Bending(Adesk::kFalse), m_MaxBarLength
 	m_Formula(NULL), m_FormulaVariableLength(NULL), m_FormulaLengthOnly(NULL), m_FormulaPosOnly(NULL), m_StandardDiameters(NULL),
 	m_TextColor(2), m_PosColor(4), m_CircleColor(1), m_MultiplierColor(33), m_GroupColor(9), 
 	m_NoteColor(30), m_CurrentGroupHighlightColor(8), m_CountColor(5), m_NoteScale(0.75), 
-	m_TextStyleID(AcDbObjectId::kNull), m_NoteStyleID(AcDbObjectId::kNull)
+	m_TextStyleID(AcDbObjectId::kNull), m_NoteStyleID(AcDbObjectId::kNull),
+	m_GsNode(NULL)
 { }
 
 CPosGroup::~CPosGroup () 
@@ -740,6 +742,131 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
 	acutDelString(t_StandardDiameters);
 
 	return es;
+}
+
+//*************************************************************************
+// Drawable implementation
+//*************************************************************************
+AcGiDrawable* CPosGroup::drawable()
+{
+	return this;
+}
+
+void CPosGroup::setGsNode(AcGsNode* gsnode)
+{
+	m_GsNode = gsnode;
+}
+
+AcGsNode* CPosGroup::gsNode(void) const
+{
+	return m_GsNode;
+}
+
+bool CPosGroup::bounds(AcDbExtents& ext) const
+{
+	std::vector<CRebarPos*> items = GetDisplayedPos();
+	for(std::vector<CRebarPos*>::iterator it = items.begin(); it != items.end(); ++it)
+	{
+		CRebarPos* pos = (*it);
+		AcDbExtents extent;
+		pos->getGeomExtents(extent);
+		ext.addExt(extent);
+		delete pos;
+	}
+	items.clear();
+
+	return true;
+}
+
+Adesk::UInt32 CPosGroup::subSetAttributes(AcGiDrawableTraits* traits)
+{
+	return AcGiDrawable::kDrawableNone;
+}
+
+Adesk::Boolean CPosGroup::subWorldDraw(AcGiWorldDraw* worldDraw)
+{
+    if(worldDraw->regenAbort())
+	{
+        return Adesk::kTrue;
+    }
+
+	std::vector<CRebarPos*> items = GetDisplayedPos();
+	for(std::vector<CRebarPos*>::iterator it = items.begin(); it != items.end(); ++it)
+	{
+		CRebarPos* pos = (*it);
+		worldDraw->geometry().draw(pos);
+		delete pos;
+	}
+	items.clear();
+
+	// Do not call viewportDraw()
+    return Adesk::kTrue; 
+}
+
+
+void CPosGroup::subViewportDraw(AcGiViewportDraw* vd)
+{
+	;
+}
+
+Adesk::UInt32 CPosGroup::subViewportDrawLogicalFlags(AcGiViewportDraw* vd)
+{
+	return 0;
+}
+
+const std::vector<CRebarPos*> CPosGroup::GetDisplayedPos(void) const
+{
+	std::vector<CRebarPos*> items;
+
+    CRebarPos* pos = new CRebarPos();
+	pos->setGroupForDisplay(this);
+	pos->setDisplay(CRebarPos::ALL);
+	pos->setPos(L"1");
+	pos->setCount(L"2x4");
+	pos->setDiameter(L"16");
+	pos->setSpacing(L"200");
+	pos->setShape(L"GENEL");
+	pos->setA(L"1000");
+    pos->setLengthGrip(AcGePoint3d(9.25, 0.0, 0.0));
+    pos->setNoteGrip(AcGePoint3d(0.0, 2.0, 0));
+    AcGePoint3d ptpos(0.0, 0.0, 0.0);
+	pos->transformBy(AcGeMatrix3d::translation(ptpos.asVector()));
+	pos->transformBy(AcGeMatrix3d::scaling(25.0, ptpos));
+	items.push_back(pos);
+
+    CRebarPos* varLengthPos = new CRebarPos();
+	varLengthPos->setGroupForDisplay(this);
+	varLengthPos->setDisplay(CRebarPos::ALL);
+	varLengthPos->setPos(L"1");
+	varLengthPos->setCount(L"2x4");
+	varLengthPos->setDiameter(L"16");
+	varLengthPos->setSpacing(L"200");
+	varLengthPos->setShape(L"GENEL");
+	varLengthPos->setA(L"1000~2000");
+	varLengthPos->setLengthGrip(AcGePoint3d(9.25, 0.0, 0.0));
+    varLengthPos->setNoteGrip(AcGePoint3d(0.0, 0.0, 0));
+    AcGePoint3d ptvar(0.0, -50.0, 0.0);
+	varLengthPos->transformBy(AcGeMatrix3d::translation(ptvar.asVector()));
+	varLengthPos->transformBy(AcGeMatrix3d::scaling(25.0, ptvar));
+	items.push_back(varLengthPos);
+
+    CRebarPos* posOnlyPos = new CRebarPos();
+	posOnlyPos->setGroupForDisplay(this);
+	posOnlyPos->setDisplay(CRebarPos::MARKERONLY);
+	posOnlyPos->setPos(L"1");
+	posOnlyPos->setCount(L"2x4");
+	posOnlyPos->setDiameter(L"16");
+	posOnlyPos->setSpacing(L"200");
+	posOnlyPos->setShape(L"GENEL");
+	posOnlyPos->setA(L"1000");
+	posOnlyPos->setLengthGrip(AcGePoint3d(9.25, 0.0, 0.0));
+    posOnlyPos->setNoteGrip(AcGePoint3d(0.0, -2.0, 0));
+    AcGePoint3d ptposonly(0.0, -100.0, 0.0);
+	posOnlyPos->transformBy(AcGeMatrix3d::translation(ptposonly.asVector()));
+	posOnlyPos->transformBy(AcGeMatrix3d::scaling(25.0, ptposonly));
+	items.push_back(posOnlyPos);
+
+	return items;
 }
 
 //*************************************************************************

@@ -15,30 +15,30 @@ namespace RebarPosCommands
     {
         private class TableStyleCopy
         {
-            public string name;
+            public string Name;
 
-            public bool isBuiltin;
+            public bool IsBuiltin;
 
-            public string columns;
+            public string Columns;
 
-            public string posColumn;
-            public string countColumn;
-            public string diameterColumn;
-            public string lengthColumn;
-            public string shapeColumn;
-            public string totalLengthColumn;
-            public string diameterListColumn;
+            public string PosColumn;
+            public string CountColumn;
+            public string DiameterColumn;
+            public string LengthColumn;
+            public string ShapeColumn;
+            public string TotalLengthColumn;
+            public string DiameterListColumn;
 
-            public string totalLengthRow;
-            public string unitWeightRow;
-            public string weightRow;
-            public string grossWeightRow;
+            public string TotalLengthRow;
+            public string UnitWeightRow;
+            public string WeightRow;
+            public string GrossWeightRow;
 
-            public string multiplierHeadingLabel;
+            public string MultiplierHeadingLabel;
 
-            public ObjectId textStyleId;
-            public ObjectId headingStyleId;
-            public ObjectId footingStyleId;
+            public ObjectId TextStyleId;
+            public ObjectId HeadingStyleId;
+            public ObjectId FootingStyleId;
         }
 
         List<TableStyleCopy> m_Copies;
@@ -70,30 +70,30 @@ namespace RebarPosCommands
                 TableStyleCopy copy = new TableStyleCopy();
                 BOQStyle style = BOQStyle.GetBOQStyle(item);
 
-                copy.name = item;
+                copy.Name = item;
 
-                copy.isBuiltin = style.IsBuiltIn;
+                copy.IsBuiltin = style.IsBuiltIn;
 
-                copy.columns = style.Columns;
+                copy.Columns = style.Columns;
 
-                copy.posColumn = style.PosLabel;
-                copy.countColumn = style.CountLabel;
-                copy.diameterColumn = style.DiameterLabel;
-                copy.lengthColumn = style.LengthLabel;
-                copy.shapeColumn = style.ShapeLabel;
-                copy.totalLengthColumn = style.TotalLengthLabel;
-                copy.diameterListColumn = style.DiameterListLabel;
+                copy.PosColumn = style.PosLabel;
+                copy.CountColumn = style.CountLabel;
+                copy.DiameterColumn = style.DiameterLabel;
+                copy.LengthColumn = style.LengthLabel;
+                copy.ShapeColumn = style.ShapeLabel;
+                copy.TotalLengthColumn = style.TotalLengthLabel;
+                copy.DiameterListColumn = style.DiameterListLabel;
 
-                copy.totalLengthRow = style.DiameterLengthLabel;
-                copy.unitWeightRow = style.UnitWeightLabel;
-                copy.weightRow = style.WeightLabel;
-                copy.grossWeightRow = style.GrossWeightLabel;
+                copy.TotalLengthRow = style.DiameterLengthLabel;
+                copy.UnitWeightRow = style.UnitWeightLabel;
+                copy.WeightRow = style.WeightLabel;
+                copy.GrossWeightRow = style.GrossWeightLabel;
 
-                copy.multiplierHeadingLabel = style.MultiplierHeadingLabel;
+                copy.MultiplierHeadingLabel = style.MultiplierHeadingLabel;
 
-                copy.textStyleId = style.TextStyleId;
-                copy.headingStyleId = style.HeadingStyleId;
-                copy.footingStyleId = style.FootingStyleId;
+                copy.TextStyleId = style.TextStyleId;
+                copy.HeadingStyleId = style.HeadingStyleId;
+                copy.FootingStyleId = style.FootingStyleId;
 
                 m_Copies.Add(copy);
             }
@@ -116,9 +116,9 @@ namespace RebarPosCommands
             lbStyles.Items.Clear();
             foreach (TableStyleCopy copy in m_Copies)
             {
-                if (!chkUserOnly.Checked || (chkUserOnly.Checked && !copy.isBuiltin))
+                if (!chkUserOnly.Checked || (chkUserOnly.Checked && !copy.IsBuiltin))
                 {
-                    ListViewItem lv = new ListViewItem(copy.name);
+                    ListViewItem lv = new ListViewItem(copy.Name);
                     lbStyles.Items.Add(lv);
                 }
             }
@@ -136,35 +136,35 @@ namespace RebarPosCommands
             TableStyleCopy copy = GetSelected();
             if (copy == null) return;
 
-            txtColumns.Text = copy.columns;
+            txtColumns.Text = copy.Columns;
 
-            txtPosColumn.Text = copy.posColumn;
-            txtCountCoumn.Text = copy.countColumn;
-            txtDiameterColumn.Text = copy.diameterColumn;
-            txtLengthColumn.Text = copy.lengthColumn;
-            txtShapeColumn.Text = copy.shapeColumn;
-            txtTotalLengthColumn.Text = copy.totalLengthColumn;
-            txtDiameterListColumn.Text = copy.diameterListColumn;
+            txtPosColumn.Text = copy.PosColumn;
+            txtCountCoumn.Text = copy.CountColumn;
+            txtDiameterColumn.Text = copy.DiameterColumn;
+            txtLengthColumn.Text = copy.LengthColumn;
+            txtShapeColumn.Text = copy.ShapeColumn;
+            txtTotalLengthColumn.Text = copy.TotalLengthColumn;
+            txtDiameterListColumn.Text = copy.DiameterListColumn;
 
-            txtTotalLengthRow.Text = copy.totalLengthRow;
-            txtUnitWeightRow.Text = copy.unitWeightRow;
-            txtWeightRow.Text = copy.weightRow;
-            txtGrossWeightRow.Text = copy.grossWeightRow;
+            txtTotalLengthRow.Text = copy.TotalLengthRow;
+            txtUnitWeightRow.Text = copy.UnitWeightRow;
+            txtWeightRow.Text = copy.WeightRow;
+            txtGrossWeightRow.Text = copy.GrossWeightRow;
 
-            txtMultiplierHeadingLabel.Text = copy.multiplierHeadingLabel;
+            txtMultiplierHeadingLabel.Text = copy.MultiplierHeadingLabel;
 
             int i = 0;
             foreach (KeyValuePair<string, ObjectId> item in m_TextStyles)
             {
-                if (item.Value == copy.textStyleId)
+                if (item.Value == copy.TextStyleId)
                 {
                     cbTextStyle.SelectedIndex = i;
                 }
-                if (item.Value == copy.headingStyleId)
+                if (item.Value == copy.HeadingStyleId)
                 {
                     cbHeadingStyle.SelectedIndex = i;
                 }
-                if (item.Value == copy.footingStyleId)
+                if (item.Value == copy.FootingStyleId)
                 {
                     cbFootingStyle.SelectedIndex = i;
                 }
@@ -173,26 +173,26 @@ namespace RebarPosCommands
 
             tableView.SuspendUpdate();
 
-            tableView.Columns = copy.columns;
+            tableView.Columns = copy.Columns;
 
-            tableView.PosLabel = copy.posColumn;
-            tableView.CountLabel = copy.countColumn;
-            tableView.DiameterLabel = copy.diameterColumn;
-            tableView.LengthLabel = copy.lengthColumn;
-            tableView.ShapeLabel = copy.shapeColumn;
-            tableView.TotalLengthLabel = copy.totalLengthColumn;
-            tableView.DiameterListLabel = copy.diameterListColumn;
+            tableView.PosLabel = copy.PosColumn;
+            tableView.CountLabel = copy.CountColumn;
+            tableView.DiameterLabel = copy.DiameterColumn;
+            tableView.LengthLabel = copy.LengthColumn;
+            tableView.ShapeLabel = copy.ShapeColumn;
+            tableView.TotalLengthLabel = copy.TotalLengthColumn;
+            tableView.DiameterListLabel = copy.DiameterListColumn;
 
-            tableView.DiameterLengthLabel = copy.totalLengthRow;
-            tableView.UnitWeightLabel = copy.unitWeightRow;
-            tableView.WeightLabel = copy.weightRow;
-            tableView.GrossWeightLabel = copy.grossWeightRow;
+            tableView.DiameterLengthLabel = copy.TotalLengthRow;
+            tableView.UnitWeightLabel = copy.UnitWeightRow;
+            tableView.WeightLabel = copy.WeightRow;
+            tableView.GrossWeightLabel = copy.GrossWeightRow;
 
-            tableView.MultiplierHeadingLabel = copy.multiplierHeadingLabel;
+            tableView.MultiplierHeadingLabel = copy.MultiplierHeadingLabel;
 
-            tableView.TextStyleId = copy.textStyleId;
-            tableView.HeadingStyleId = copy.headingStyleId;
-            tableView.FootingStyleId = copy.footingStyleId;
+            tableView.TextStyleId = copy.TextStyleId;
+            tableView.HeadingStyleId = copy.HeadingStyleId;
+            tableView.FootingStyleId = copy.FootingStyleId;
 
             tableView.SetTable();
             tableView.ResumeUpdate();
@@ -204,41 +204,41 @@ namespace RebarPosCommands
             if (org == null) return;
 
             int i = 1;
-            while (m_Copies.Exists(p => p.name.ToUpperInvariant() == "TABLESTYLE" + i.ToString()))
+            while (m_Copies.Exists(p => p.Name.ToUpperInvariant() == "TABLESTYLE" + i.ToString()))
             {
                 i++;
             }
 
             TableStyleCopy copy = new TableStyleCopy();
 
-            copy.name = "TableStyle" + i.ToString();
+            copy.Name = "TableStyle" + i.ToString();
 
-            copy.isBuiltin = false;
+            copy.IsBuiltin = false;
 
-            copy.columns = org.columns;
+            copy.Columns = org.Columns;
 
-            copy.posColumn = org.posColumn;
-            copy.countColumn = org.countColumn;
-            copy.diameterColumn = org.diameterColumn;
-            copy.lengthColumn = org.lengthColumn;
-            copy.shapeColumn = org.shapeColumn;
-            copy.totalLengthColumn = org.totalLengthColumn;
-            copy.diameterListColumn = org.diameterListColumn;
+            copy.PosColumn = org.PosColumn;
+            copy.CountColumn = org.CountColumn;
+            copy.DiameterColumn = org.DiameterColumn;
+            copy.LengthColumn = org.LengthColumn;
+            copy.ShapeColumn = org.ShapeColumn;
+            copy.TotalLengthColumn = org.TotalLengthColumn;
+            copy.DiameterListColumn = org.DiameterListColumn;
 
-            copy.totalLengthRow = org.totalLengthRow;
-            copy.unitWeightRow = org.unitWeightRow;
-            copy.weightRow = org.weightRow;
-            copy.grossWeightRow = org.grossWeightRow;
+            copy.TotalLengthRow = org.TotalLengthRow;
+            copy.UnitWeightRow = org.UnitWeightRow;
+            copy.WeightRow = org.WeightRow;
+            copy.GrossWeightRow = org.GrossWeightRow;
 
-            copy.multiplierHeadingLabel = org.multiplierHeadingLabel;
+            copy.MultiplierHeadingLabel = org.MultiplierHeadingLabel;
 
-            copy.textStyleId = org.textStyleId;
-            copy.headingStyleId = org.headingStyleId;
-            copy.footingStyleId = org.footingStyleId;
+            copy.TextStyleId = org.TextStyleId;
+            copy.HeadingStyleId = org.HeadingStyleId;
+            copy.FootingStyleId = org.FootingStyleId;
 
             m_Copies.Add(copy);
 
-            ListViewItem lv = new ListViewItem(copy.name);
+            ListViewItem lv = new ListViewItem(copy.Name);
             lv.ImageIndex = 1;
             lbStyles.Items.Add(lv);
             lbStyles.SelectedIndices.Clear();
@@ -250,7 +250,7 @@ namespace RebarPosCommands
         {
             TableStyleCopy copy = GetSelected();
             if (copy == null) return;
-            if (copy.isBuiltin) return;
+            if (copy.IsBuiltin) return;
 
             m_Copies.Remove(copy);
             lbStyles.Items.Remove(lbStyles.SelectedItems[0]);
@@ -282,13 +282,13 @@ namespace RebarPosCommands
                     return;
                 }
             }
-            TableStyleCopy copy = m_Copies.Find(p => p.name == lbStyles.Items[e.Item].Text);
+            TableStyleCopy copy = m_Copies.Find(p => p.Name == lbStyles.Items[e.Item].Text);
             if (copy == null)
             {
                 e.CancelEdit = true;
                 return;
             }
-            copy.name = e.Label;
+            copy.Name = e.Label;
         }
 
         private void lbStyles_SelectedIndexChanged(object sender, EventArgs e)
@@ -305,7 +305,7 @@ namespace RebarPosCommands
             else
             {
                 TableStyleCopy copy = GetSelected();
-                bool enable = (copy != null) && !copy.isBuiltin;
+                bool enable = (copy != null) && !copy.IsBuiltin;
 
                 gbColumns.Enabled = enable;
                 gbRows.Enabled = enable;
@@ -325,8 +325,8 @@ namespace RebarPosCommands
             for (int i = 0; i < lbStyles.Items.Count; i++)
             {
                 ListViewItem lv = lbStyles.Items[i];
-                TableStyleCopy copy = m_Copies.Find(p => p.name == lv.Text);
-                if (copy.isBuiltin)
+                TableStyleCopy copy = m_Copies.Find(p => p.Name == lv.Text);
+                if (copy.IsBuiltin)
                     lv.ImageIndex = 0;
                 else
                     lv.ImageIndex = 1;
@@ -336,7 +336,7 @@ namespace RebarPosCommands
         private TableStyleCopy GetSelected()
         {
             if (lbStyles.SelectedIndices.Count == 0) return null;
-            return m_Copies.Find(p => p.name == lbStyles.SelectedItems[0].Text);
+            return m_Copies.Find(p => p.Name == lbStyles.SelectedItems[0].Text);
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -348,32 +348,32 @@ namespace RebarPosCommands
             BOQStyle.ClearBOQStyles();
             foreach (TableStyleCopy copy in m_Copies)
             {
-                if (!copy.isBuiltin)
+                if (!copy.IsBuiltin)
                 {
                     BOQStyle style = new BOQStyle();
 
-                    style.Name = copy.name;
+                    style.Name = copy.Name;
 
-                    style.Columns = copy.columns;
+                    style.Columns = copy.Columns;
 
-                    style.PosLabel = copy.posColumn;
-                    style.CountLabel = copy.countColumn;
-                    style.DiameterLabel = copy.diameterColumn;
-                    style.LengthLabel = copy.lengthColumn;
-                    style.ShapeLabel = copy.shapeColumn;
-                    style.TotalLengthLabel = copy.totalLengthColumn;
-                    style.DiameterListLabel = copy.diameterListColumn;
+                    style.PosLabel = copy.PosColumn;
+                    style.CountLabel = copy.CountColumn;
+                    style.DiameterLabel = copy.DiameterColumn;
+                    style.LengthLabel = copy.LengthColumn;
+                    style.ShapeLabel = copy.ShapeColumn;
+                    style.TotalLengthLabel = copy.TotalLengthColumn;
+                    style.DiameterListLabel = copy.DiameterListColumn;
 
-                    style.DiameterLengthLabel = copy.totalLengthRow;
-                    style.UnitWeightLabel = copy.unitWeightRow;
-                    style.WeightLabel = copy.weightRow;
-                    style.GrossWeightLabel = copy.grossWeightRow;
+                    style.DiameterLengthLabel = copy.TotalLengthRow;
+                    style.UnitWeightLabel = copy.UnitWeightRow;
+                    style.WeightLabel = copy.WeightRow;
+                    style.GrossWeightLabel = copy.GrossWeightRow;
 
-                    style.MultiplierHeadingLabel = copy.multiplierHeadingLabel;
+                    style.MultiplierHeadingLabel = copy.MultiplierHeadingLabel;
 
-                    style.TextStyleId = copy.textStyleId;
-                    style.HeadingStyleId = copy.headingStyleId;
-                    style.FootingStyleId = copy.headingStyleId;
+                    style.TextStyleId = copy.TextStyleId;
+                    style.HeadingStyleId = copy.HeadingStyleId;
+                    style.FootingStyleId = copy.HeadingStyleId;
 
                     BOQStyle.AddBOQStyle(style);
                 }
@@ -416,7 +416,7 @@ namespace RebarPosCommands
         {
             TableStyleCopy copy = GetSelected();
             if (copy == null) return;
-            copy.columns = txtColumns.Text;
+            copy.Columns = txtColumns.Text;
             tableView.Columns = txtColumns.Text;
             tableView.SetTable();
         }
@@ -426,7 +426,7 @@ namespace RebarPosCommands
             TableStyleCopy copy = GetSelected();
             if (copy == null) return;
             ObjectId id = m_TextStyles[(string)cbTextStyle.SelectedItem];
-            copy.textStyleId = id;
+            copy.TextStyleId = id;
             tableView.TextStyleId = id;
             tableView.SetTable();
         }
@@ -436,7 +436,7 @@ namespace RebarPosCommands
             TableStyleCopy copy = GetSelected();
             if (copy == null) return;
             ObjectId id = m_TextStyles[(string)cbHeadingStyle.SelectedItem];
-            copy.headingStyleId = id;
+            copy.HeadingStyleId = id;
             tableView.HeadingStyleId = id;
             tableView.SetTable();
         }
@@ -446,7 +446,7 @@ namespace RebarPosCommands
             TableStyleCopy copy = GetSelected();
             if (copy == null) return;
             ObjectId id = m_TextStyles[(string)cbFootingStyle.SelectedItem];
-            copy.footingStyleId = id;
+            copy.FootingStyleId = id;
             tableView.FootingStyleId = id;
             tableView.SetTable();
         }
@@ -455,7 +455,7 @@ namespace RebarPosCommands
         {
             TableStyleCopy copy = GetSelected();
             if (copy == null) return;
-            copy.posColumn = ((TextBox)sender).Text;
+            copy.PosColumn = ((TextBox)sender).Text;
             tableView.PosLabel = ((TextBox)sender).Text;
             tableView.SetTable();
         }
@@ -464,7 +464,7 @@ namespace RebarPosCommands
         {
             TableStyleCopy copy = GetSelected();
             if (copy == null) return;
-            copy.countColumn = ((TextBox)sender).Text;
+            copy.CountColumn = ((TextBox)sender).Text;
             tableView.CountLabel = ((TextBox)sender).Text;
             tableView.SetTable();
 
@@ -474,7 +474,7 @@ namespace RebarPosCommands
         {
             TableStyleCopy copy = GetSelected();
             if (copy == null) return;
-            copy.diameterColumn = ((TextBox)sender).Text;
+            copy.DiameterColumn = ((TextBox)sender).Text;
             tableView.DiameterLabel = ((TextBox)sender).Text;
             tableView.SetTable();
         }
@@ -483,7 +483,7 @@ namespace RebarPosCommands
         {
             TableStyleCopy copy = GetSelected();
             if (copy == null) return;
-            copy.lengthColumn = ((TextBox)sender).Text;
+            copy.LengthColumn = ((TextBox)sender).Text;
             tableView.LengthLabel = ((TextBox)sender).Text;
             tableView.SetTable();
         }
@@ -492,7 +492,7 @@ namespace RebarPosCommands
         {
             TableStyleCopy copy = GetSelected();
             if (copy == null) return;
-            copy.shapeColumn = ((TextBox)sender).Text;
+            copy.ShapeColumn = ((TextBox)sender).Text;
             tableView.ShapeLabel = ((TextBox)sender).Text;
             tableView.SetTable();
         }
@@ -501,7 +501,7 @@ namespace RebarPosCommands
         {
             TableStyleCopy copy = GetSelected();
             if (copy == null) return;
-            copy.totalLengthColumn = ((TextBox)sender).Text;
+            copy.TotalLengthColumn = ((TextBox)sender).Text;
             tableView.TotalLengthLabel = ((TextBox)sender).Text;
             tableView.SetTable();
         }
@@ -510,7 +510,7 @@ namespace RebarPosCommands
         {
             TableStyleCopy copy = GetSelected();
             if (copy == null) return;
-            copy.diameterListColumn = ((TextBox)sender).Text;
+            copy.DiameterListColumn = ((TextBox)sender).Text;
             tableView.DiameterListLabel = ((TextBox)sender).Text;
             tableView.SetTable();
         }
@@ -519,7 +519,7 @@ namespace RebarPosCommands
         {
             TableStyleCopy copy = GetSelected();
             if (copy == null) return;
-            copy.multiplierHeadingLabel = ((TextBox)sender).Text;
+            copy.MultiplierHeadingLabel = ((TextBox)sender).Text;
             tableView.MultiplierHeadingLabel = ((TextBox)sender).Text;
             tableView.SetTable();
         }
@@ -528,7 +528,7 @@ namespace RebarPosCommands
         {
             TableStyleCopy copy = GetSelected();
             if (copy == null) return;
-            copy.totalLengthRow = ((TextBox)sender).Text;
+            copy.TotalLengthRow = ((TextBox)sender).Text;
             tableView.DiameterLengthLabel = ((TextBox)sender).Text;
             tableView.SetTable();
         }
@@ -537,7 +537,7 @@ namespace RebarPosCommands
         {
             TableStyleCopy copy = GetSelected();
             if (copy == null) return;
-            copy.unitWeightRow = ((TextBox)sender).Text;
+            copy.UnitWeightRow = ((TextBox)sender).Text;
             tableView.UnitWeightLabel = ((TextBox)sender).Text;
             tableView.SetTable();
         }
@@ -546,7 +546,7 @@ namespace RebarPosCommands
         {
             TableStyleCopy copy = GetSelected();
             if (copy == null) return;
-            copy.weightRow = ((TextBox)sender).Text;
+            copy.WeightRow = ((TextBox)sender).Text;
             tableView.WeightLabel = ((TextBox)sender).Text;
             tableView.SetTable();
         }
@@ -555,7 +555,7 @@ namespace RebarPosCommands
         {
             TableStyleCopy copy = GetSelected();
             if (copy == null) return;
-            copy.grossWeightRow = ((TextBox)sender).Text;
+            copy.GrossWeightRow = ((TextBox)sender).Text;
             tableView.GrossWeightLabel = ((TextBox)sender).Text;
             tableView.SetTable();
         }

@@ -41,7 +41,11 @@ CBOQTable::CBOQTable() :
 
 CBOQTable::~CBOQTable()
 {
-	ClearRows();
+	for(RowListIt it = m_List.begin(); it != m_List.end(); it++)
+	{
+		delete *it;
+	}
+	m_List.clear();
 
 	acutDelString(m_Heading);
 	acutDelString(m_Footing);

@@ -153,24 +153,23 @@ const AcGePoint2d CTableCell::MeasureContents() const
 
 	if(HasText())
 	{
-		AcDbMText* mtext = new AcDbMText();
+		AcGiTextStyle textStyle;
+		Utility::MakeGiTextStyle(textStyle, m_TextStyleId);
+		textStyle.setTextSize(m_TextHeight);
+		textStyle.loadStyleRec();
 
-		// Text style
-		mtext->setTextStyle(m_TextStyleId);
-		mtext->setTextHeight(m_TextHeight);
-		mtext->setContents(m_Text);
-
-		pt.set(mtext->actualWidth(), mtext->actualHeight());
-
-		delete mtext;
+		pt = textStyle.extents(m_Text, Adesk::kTrue, -1, Adesk::kFalse);
 	}
 	else if(HasShape())
 	{
 		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
-		AcDbExtents ext = pShape->GetShapeExtents();
-		double w = (ext.maxPoint().x - ext.minPoint().x) * m_TextHeight / 25.0;
-		double h = (ext.maxPoint().y - ext.minPoint().y) * m_TextHeight / 25.0;
-		pt.set(w, h);
+		AcDbExtents ext;
+		if(pShape->bounds(ext))
+		{
+			double w = (ext.maxPoint().x - ext.minPoint().x) * m_TextHeight / 25.0;
+			double h = (ext.maxPoint().y - ext.minPoint().y) * m_TextHeight / 25.0;
+			pt.set(w, h);
+		}
 	}
 
 	pt += AcGeVector2d(2.0 * m_Margin, 2.0 * m_Margin);
@@ -265,7 +264,8 @@ const std::vector<AcDbMText*> CTableCell::GetTexts() const
 	else if(HasShape())
 	{
 		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
-		AcDbExtents ext = pShape->GetShapeExtents();
+		AcDbExtents ext;
+		pShape->bounds(ext);
 		double maxwidth = (ext.maxPoint().x - ext.minPoint().x);
 		double maxheight = (ext.maxPoint().y - ext.minPoint().y);
 		double scale = m_TextHeight / 25.0;
@@ -464,7 +464,8 @@ const std::vector<AcDbLine*> CTableCell::GetLines() const
 	if(HasShape())
 	{
 		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
-		AcDbExtents ext = pShape->GetShapeExtents();
+		AcDbExtents ext;
+		pShape->bounds(ext);
 		double maxwidth = (ext.maxPoint().x - ext.minPoint().x);
 		double maxheight = (ext.maxPoint().y - ext.minPoint().y);
 		double scale = m_TextHeight / 25.0;
@@ -537,7 +538,8 @@ const std::vector<AcDbArc*> CTableCell::GetArcs() const
 	if(HasShape())
 	{
 		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
-		AcDbExtents ext = pShape->GetShapeExtents();
+		AcDbExtents ext;
+		pShape->bounds(ext);
 		double maxwidth = (ext.maxPoint().x - ext.minPoint().x);
 		double maxheight = (ext.maxPoint().y - ext.minPoint().y);
 		double scale = m_TextHeight / 25.0;
@@ -971,48 +973,6 @@ Acad::ErrorStatus CTableCell::dxfInFields(AcDbDxfFiler* pFiler)
 	return Acad::eOk;
 }
 
-void CTableCell::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
-{
-    if(worldDraw->regenAbort())
-	{
-        return;
-    }
-
-	// Transform to match orientation
-	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
-	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
-
-	// Draw texts
-	std::vector<AcDbMText*> texts = GetTexts();
-	for(std::vector<AcDbMText*>::iterator it = texts.begin(); it != texts.end(); it++)
-	{
-		AcDbMText* text = (*it);
-		worldDraw->geometry().draw(text);
-		delete text;
-	}
-	texts.clear();
-
-	// Draw lines
-	std::vector<AcDbLine*> lines = GetLines();
-	for(std::vector<AcDbLine*>::iterator it = lines.begin(); it != lines.end(); it++)
-	{
-		AcDbLine* line = (*it);
-		worldDraw->geometry().draw(line);
-		delete line;
-	}
-	lines.clear();
-
-	// Draw arcs
-	std::vector<AcDbArc*> arcs = GetArcs();
-	for(std::vector<AcDbArc*>::iterator it = arcs.begin(); it != arcs.end(); it++)
-	{
-		AcDbArc* arc = (*it);
-		worldDraw->geometry().draw(arc);
-		delete arc;
-	}
-	arcs.clear();
-}
-
 //*************************************************************************
 // Overridden methods from AcDbEntity
 //*************************************************************************
@@ -1025,58 +985,34 @@ Acad::ErrorStatus CTableCell::getOsnapPoints(
     AcGePoint3dArray&     snapPoints,
     AcDbIntArray&         /*geomIds*/) const
 {
-	if(osnapMode == AcDb::kOsModeIns)
-	{
-		std::vector<AcDbMText*> texts = GetTexts();
-		for(std::vector<AcDbMText*>::iterator it = texts.begin(); it != texts.end(); it++)
-		{
-			AcDbMText* text = (*it);
-			snapPoints.append(text->location());
-			delete text;
-		}
-		texts.clear();
-	}
-	else if(osnapMode == AcDb::kOsModeEnd)
+	if(osnapMode == AcDb::kOsModeEnd)
 	{
 		AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
 		trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
 
-		if(m_TopBorder)
+		if(m_TopBorder == Adesk::kTrue || m_LeftBorder == Adesk::kTrue)
 		{
-
-			AcGePoint3d pt1(0, 0, 0);
-			AcGePoint3d pt2(m_Width, 0, 0);
-			pt1.transformBy(trans);
-			pt2.transformBy(trans);
-			snapPoints.append(pt1);
-			snapPoints.append(pt2);
+			AcGePoint3d pt(0, 0, 0);
+			pt.transformBy(trans);
+			snapPoints.append(pt);
 		}
-		if(m_BottomBorder)
+		if(m_TopBorder == Adesk::kTrue || m_RightBorder == Adesk::kTrue)
 		{
-			AcGePoint3d pt1(0, -m_Height, 0);
-			AcGePoint3d pt2(m_Width, -m_Height, 0);
-			pt1.transformBy(trans);
-			pt2.transformBy(trans);
-			snapPoints.append(pt1);
-			snapPoints.append(pt2);
+			AcGePoint3d pt(m_Width, 0, 0);
+			pt.transformBy(trans);
+			snapPoints.append(pt);
 		}
-		if(m_LeftBorder)
+		if(m_BottomBorder == Adesk::kTrue || m_LeftBorder == Adesk::kTrue)
 		{
-			AcGePoint3d pt1(0, 0, 0);
-			AcGePoint3d pt2(0, - m_Height, 0);
-			pt1.transformBy(trans);
-			pt2.transformBy(trans);
-			snapPoints.append(pt1);
-			snapPoints.append(pt2);
+			AcGePoint3d pt(0, -m_Height, 0);
+			pt.transformBy(trans);
+			snapPoints.append(pt);
 		}
-		if(m_RightBorder)
+		if(m_BottomBorder == Adesk::kTrue || m_RightBorder == Adesk::kTrue)
 		{
-			AcGePoint3d pt1(m_Width, 0, 0);
-			AcGePoint3d pt2(m_Width, -m_Height, 0);
-			pt1.transformBy(trans);
-			pt2.transformBy(trans);
-			snapPoints.append(pt1);
-			snapPoints.append(pt2);
+			AcGePoint3d pt(m_Width, -m_Height, 0);
+			pt.transformBy(trans);
+			snapPoints.append(pt);
 		}
 	}
 
@@ -1148,35 +1084,130 @@ Adesk::Boolean CTableCell::worldDraw(AcGiWorldDraw* worldDraw)
         return Adesk::kTrue;
     }
 
+	// Transform to match orientation
+	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
+	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
+	worldDraw->geometry().pushModelTransform(trans);
+
 	// Draw texts
-	std::vector<AcDbMText*> texts = GetTexts();
-	for(std::vector<AcDbMText*>::iterator it = texts.begin(); it != texts.end(); it++)
+	if(HasText())
 	{
-		AcDbMText* text = (*it);
-		worldDraw->geometry().draw(text);
-		delete text;
+		AcGiTextStyle textStyle;
+		Utility::MakeGiTextStyle(textStyle, m_TextStyleId);
+		textStyle.setTextSize(m_TextHeight);
+		textStyle.loadStyleRec();
+
+		double cx = 0;
+		double cy = 0;
+		AcDb::TextHorzMode horz = AcDb::kTextLeft;
+		AcDb::TextVertMode vert = AcDb::kTextBottom;
+		if(m_HorizontalAlignment == CTableCell::eNEAR)
+		{
+			cx = m_Margin;
+			horz = AcDb::kTextLeft;
+		}
+		else if(m_HorizontalAlignment == CTableCell::eFAR)
+		{
+			cx = m_Width - m_Margin;
+			horz = AcDb::kTextRight;
+		}
+		else if(m_HorizontalAlignment == CTableCell::eCENTER)
+		{
+			cx = m_Width / 2.0;
+			horz = AcDb::kTextCenter;
+		}
+		if(m_VerticalAlignment == CTableCell::eNEAR)
+		{
+			cy = -m_Height + m_Margin;
+			vert = AcDb::kTextBottom;
+		}
+		else if(m_VerticalAlignment == CTableCell::eFAR)
+		{
+			cy = m_Margin;
+			vert = AcDb::kTextTop;
+		}
+		else if(m_VerticalAlignment == CTableCell::eCENTER)
+		{
+			cy = -m_Height / 2.0;
+			vert = AcDb::kTextVertMid;
+		}
+
+		Utility::DrawText(worldDraw, AcGePoint3d(cx, cy, 0.0), m_Text, textStyle, horz, vert, m_TextColor);
 	}
-	texts.clear();
 
 	// Draw lines
-	std::vector<AcDbLine*> lines = GetLines();
-	for(std::vector<AcDbLine*>::iterator it = lines.begin(); it != lines.end(); it++)
-	{
-		AcDbLine* line = (*it);
-		worldDraw->geometry().draw(line);
-		delete line;
-	}
-	lines.clear();
+	double doublelineoffset = 0.125;
 
-	// Draw arcs
-	std::vector<AcDbArc*> arcs = GetArcs();
-	for(std::vector<AcDbArc*>::iterator it = arcs.begin(); it != arcs.end(); it++)
+	if(m_TopBorder)
 	{
-		AcDbArc* arc = (*it);
-		worldDraw->geometry().draw(arc);
-		delete arc;
+		if(m_TopBorderDouble)
+			Utility::DrawDoubleLine(worldDraw, AcGePoint3d(0, 0, 0), AcGePoint3d(m_Width, 0, 0), doublelineoffset, m_TopBorderColor);
+		else
+			Utility::DrawLine(worldDraw, AcGePoint3d(0, 0, 0), AcGePoint3d(m_Width, 0, 0), m_TopBorderColor);
 	}
-	arcs.clear();
+	if(m_BottomBorder)
+	{
+		if(m_BottomBorderDouble)
+			Utility::DrawDoubleLine(worldDraw, AcGePoint3d(0, -m_Height, 0), AcGePoint3d(m_Width, -m_Height, 0), doublelineoffset, m_TopBorderColor);
+		else
+			Utility::DrawLine(worldDraw, AcGePoint3d(0, -m_Height, 0), AcGePoint3d(m_Width, -m_Height, 0), m_BottomBorderColor);
+	}
+	if(m_LeftBorder)
+	{
+		if(m_LeftBorderDouble)
+			Utility::DrawDoubleLine(worldDraw, AcGePoint3d(0, 0, 0), AcGePoint3d(0, -m_Height, 0), doublelineoffset, m_TopBorderColor);
+		else
+			Utility::DrawLine(worldDraw, AcGePoint3d(0, 0, 0), AcGePoint3d(0, -m_Height, 0), m_LeftBorderColor);
+	}
+	if(m_RightBorder)
+	{
+		if(m_RightBorderDouble)
+			Utility::DrawDoubleLine(worldDraw, AcGePoint3d(m_Width, 0, 0), AcGePoint3d(m_Width, -m_Height, 0), doublelineoffset, m_TopBorderColor);
+		else
+			Utility::DrawLine(worldDraw, AcGePoint3d(m_Width, 0, 0), AcGePoint3d(m_Width, -m_Height, 0), m_RightBorderColor);
+	}
+
+	// Draw shape
+	if(HasShape())
+	{
+		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
+		AcDbExtents ext;
+		if(pShape->bounds(ext))
+		{
+			pShape->setShapeTexts(m_A, m_B, m_C, m_D, m_E, m_F);
+
+			double maxwidth = (ext.maxPoint().x - ext.minPoint().x);
+			double maxheight = (ext.maxPoint().y - ext.minPoint().y);
+			double scale = m_TextHeight / 25.0;
+
+			double xoff = 0;
+			double yoff = 0;
+			if(m_HorizontalAlignment == CTableCell::eNEAR)
+				xoff = m_Margin;
+			else if(m_HorizontalAlignment == CTableCell::eFAR)
+				xoff = m_Width - m_Margin - maxwidth * scale;
+			else if(m_HorizontalAlignment == CTableCell::eCENTER)
+				xoff = (m_Width - maxwidth * scale) / 2.0;
+
+			if(m_VerticalAlignment == CTableCell::eNEAR)
+				yoff = m_Margin;
+			else if(m_VerticalAlignment == CTableCell::eFAR)
+				yoff = m_Height - m_Margin - maxheight * scale;
+			else if(m_VerticalAlignment == CTableCell::eCENTER)
+				yoff = (m_Height - maxheight * scale) / 2.0;
+
+			AcGeMatrix3d shapeTrans = AcGeMatrix3d::kIdentity;
+			shapeTrans.setCoordSystem(AcGePoint3d(xoff, -m_Height + yoff, 0.0), AcGeVector3d::kXAxis * scale, AcGeVector3d::kYAxis * scale, AcGeVector3d::kZAxis * scale);
+			worldDraw->geometry().pushModelTransform(shapeTrans);
+			worldDraw->geometry().draw(pShape);
+			worldDraw->geometry().popModelTransform();
+
+			pShape->clearShapeTexts();
+		}
+	}
+
+	// Reset transform
+	worldDraw->geometry().popModelTransform();
 
     return Adesk::kTrue; // Don't call viewportDraw()
 }

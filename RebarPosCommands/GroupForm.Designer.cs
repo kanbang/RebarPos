@@ -300,6 +300,7 @@
             this.posStylePreview.CountColor = System.Drawing.Color.Empty;
             this.posStylePreview.CurrentGroupHighlightColor = System.Drawing.Color.Empty;
             this.posStylePreview.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.posStylePreview.ForeColor = System.Drawing.SystemColors.ControlText;
             this.posStylePreview.Formula = null;
             this.posStylePreview.FormulaLengthOnly = null;
             this.posStylePreview.FormulaPosOnly = null;
@@ -309,6 +310,7 @@
             this.posStylePreview.MultiplierColor = System.Drawing.Color.Empty;
             this.posStylePreview.Name = "posStylePreview";
             this.posStylePreview.NoteColor = System.Drawing.Color.Empty;
+            this.posStylePreview.NoteScale = 0;
             this.posStylePreview.PosColor = System.Drawing.Color.Empty;
             this.posStylePreview.Size = new System.Drawing.Size(268, 114);
             this.posStylePreview.TabIndex = 28;

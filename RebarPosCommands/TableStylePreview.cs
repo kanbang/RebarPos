@@ -63,7 +63,9 @@ namespace RebarPosCommands
 
         public void SetTable()
         {
-            SuspendUpdate();
+            ClearItems();
+
+            if (mTable != null) mTable.Dispose();
 
             mTable = new BOQTable();
             mTable.SuspendUpdate();
@@ -77,7 +79,7 @@ namespace RebarPosCommands
             mTable.Items.Add(1, 12, 16, 320, shape, "200", "120", "", "", "", "");
 
             mTable.Multiplier = 2;
-
+            mTable.Precision = 2;
             mTable.ColumnDef = Columns;
 
             mTable.PosLabel = PosLabel;
@@ -99,17 +101,13 @@ namespace RebarPosCommands
 
             mTable.ResumeUpdate();
 
-            ClearItems();
             AddItem(mTable);
-
-            Refresh();
-            ResumeUpdate();
         }
 
         protected override void Dispose(bool disposing)
         {
             ClearItems();
-            mTable.Dispose();
+            if (mTable != null) mTable.Dispose();
 
             base.Dispose(disposing);
         }

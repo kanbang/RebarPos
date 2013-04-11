@@ -180,7 +180,7 @@ private:
 
 	DisplayStyle m_DisplayStyle;
 	
-	AcDbObjectId m_GroupIdForDisplay;
+	CPosGroup* m_GroupForDisplay;
 
 	/// Locals
 	bool geomInit;
@@ -317,9 +317,8 @@ public:
 	const CCalculatedProperties& CalcProps(void) const;
 
 public:
-	/// Gets or sets the group to be used for displaying the object. (Not persisted, for temporary display only)
-	const AcDbObjectId& GroupIdForDisplay(void) const;
-	Acad::ErrorStatus setGroupIdForDisplay(const AcDbObjectId& newVal);
+	/// Sets the group to be used for displaying the object. (Not persisted, for temporary display only)
+	Acad::ErrorStatus setGroupForDisplay(const CPosGroup* newVal);
 
 public:
 	/// Gets a string key identifying a pos with a certain diameter,

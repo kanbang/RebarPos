@@ -268,15 +268,6 @@ RebarPos::CalculatedProperties^ RebarPos::CalcProperties::get()
 	return mCalculatedProperties; 
 }
 
-Autodesk::AutoCAD::DatabaseServices::ObjectId RebarPos::GroupIdForDisplay::get()
-{
-	return Marshal::ToObjectId (GetImpObj()->GroupIdForDisplay());
-}
-void RebarPos::GroupIdForDisplay::set(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
-{
-	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setGroupIdForDisplay(Marshal::FromObjectId(value)));
-}
-
 //*************************************************************************
 // Methods
 //*************************************************************************

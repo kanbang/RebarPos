@@ -142,9 +142,6 @@ public:
 	/// Clears all shapes.
 	void ClearShapes();
 
-	/// Get shape extents
-	const AcDbExtents GetShapeExtents() const;
-
 	/// Replaces piece names with given strings
 	Acad::ErrorStatus setShapeTexts(const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f);
 	Acad::ErrorStatus clearShapeTexts(void);
@@ -201,8 +198,6 @@ public:
 
     virtual bool            bounds          (AcDbExtents& bounds) const;
 
-public:
-	// Drawable implementation
     virtual Adesk::UInt32   subSetAttributes   (AcGiDrawableTraits* traits);
     virtual Adesk::Boolean  subWorldDraw       (AcGiWorldDraw* worldDraw);
     virtual void            subViewportDraw    (AcGiViewportDraw* vd);

@@ -151,13 +151,12 @@ namespace RebarPosCommands
             posStylePreview.CurrentGroupHighlightColor = mCopy.CurrentGroupHighlightColor.ColorValue;
             posStylePreview.CountColor = mCopy.CountColor.ColorValue;
 
+            posStylePreview.TextStyleId = mCopy.TextStyleId;
+            posStylePreview.NoteStyleId = mCopy.NoteStyleId;
+            posStylePreview.NoteScale = mCopy.NoteScale;
+
             posStylePreview.SetGroup();
             posStylePreview.ResumeUpdate();
-
-            if (mCopy.DisplayUnit == PosGroup.DrawingUnits.Millimeter)
-                posStylePreview.SetPos("1", "2x4", "16", "200", "1000", "1200");
-            else
-                posStylePreview.SetPos("1", "2x4", "16", "20", "100", "120");
 
             int i = 0;
             foreach (KeyValuePair<string, ObjectId> item in mTextStyles)
@@ -186,11 +185,6 @@ namespace RebarPosCommands
         {
             if (mCopy == null) return;
             mCopy.DisplayUnit = (cbDisplayUnit.SelectedIndex == 0 ? PosGroup.DrawingUnits.Millimeter : PosGroup.DrawingUnits.Centimeter);
-
-            if (mCopy.DisplayUnit == PosGroup.DrawingUnits.Millimeter)
-                posStylePreview.SetPos("1", "2x4", "16", "200", "1000", "1200");
-            else
-                posStylePreview.SetPos("1", "2x4", "16", "20", "100", "120");
         }
 
         private void udPrecision_ValueChanged(object sender, EventArgs e)

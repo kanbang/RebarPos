@@ -195,8 +195,6 @@ namespace OZOZ
 
 			property array<PosShape::Shape^>^ Shapes { array<PosShape::Shape^>^ get(); }
 
-			property Autodesk::AutoCAD::DatabaseServices::ObjectId GroupIdForDisplay { Autodesk::AutoCAD::DatabaseServices::ObjectId get(); void set(Autodesk::AutoCAD::DatabaseServices::ObjectId value); }
-
 		public:
 			void Update();
 			HitTestResult HitTest(Point3d pt);
