@@ -65,6 +65,7 @@ namespace RebarPosCommands
                 try
                 {
                     PosGroup group = tr.GetObject(PosGroup.GroupId, OpenMode.ForRead) as PosGroup;
+                    
                     if (group == null) return false;
 
                     mCopy.DrawingUnit = group.DrawingUnit;
@@ -99,16 +100,16 @@ namespace RebarPosCommands
                     return false;
                 }
             }
-
+            
             mTextStyles = DWGUtility.GetTextStyles();
             foreach (string name in mTextStyles.Keys)
             {
                 cbTextStyle.Items.Add(name);
                 cbNoteStyle.Items.Add(name);
             }
-
+            
             SetGroup();
-
+            
             return true;
         }
 
@@ -323,6 +324,8 @@ namespace RebarPosCommands
             if (double.TryParse(txtNoteScale.Text, out val))
             {
                 mCopy.NoteScale = val;
+                posStylePreview.NoteScale = val;
+                posStylePreview.SetGroup();
             }
         }
 
@@ -363,6 +366,8 @@ namespace RebarPosCommands
             if (mCopy == null) return;
             ObjectId id = mTextStyles[(string)cbTextStyle.SelectedItem];
             mCopy.TextStyleId = id;
+            posStylePreview.TextStyleId = id;
+            posStylePreview.SetGroup();
         }
 
         private void cbNoteStyle_SelectedIndexChanged(object sender, EventArgs e)
@@ -370,6 +375,8 @@ namespace RebarPosCommands
             if (mCopy == null) return;
             ObjectId id = mTextStyles[(string)cbNoteStyle.SelectedItem];
             mCopy.NoteStyleId = id;
+            posStylePreview.NoteStyleId = id;
+            posStylePreview.SetGroup();
         }
 
         private void btnPickTextColor_Click(object sender, EventArgs e)
