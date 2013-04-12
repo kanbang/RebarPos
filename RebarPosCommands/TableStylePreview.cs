@@ -106,10 +106,15 @@ namespace RebarPosCommands
 
         protected override void Dispose(bool disposing)
         {
-            ClearItems();
-            if (mTable != null) mTable.Dispose();
-
-            base.Dispose(disposing);
+            try
+            {
+                ClearItems();
+                if (mTable != null) mTable.Dispose();
+            }
+            finally
+            {
+                base.Dispose(disposing);
+            }
         }
     }
 }

@@ -13,7 +13,7 @@ using OZOZ.RebarPosWrapper;
 
 namespace RebarPosCommands
 {
-    public partial class PosStylePreview : DrawingPreview
+    public class PosStylePreview : DrawingPreview
     {
         private PosGroup mGroup;
 
@@ -82,8 +82,15 @@ namespace RebarPosCommands
 
         protected override void Dispose(bool disposing)
         {
-            ClearItems();
-            if (mGroup != null) mGroup.Dispose();
+            try
+            {
+                ClearItems();
+                if (mGroup != null) mGroup.Dispose();
+            }
+            finally
+            {
+                base.Dispose(disposing);
+            }
         }
     }
 }

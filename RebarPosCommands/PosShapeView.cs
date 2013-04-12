@@ -11,7 +11,7 @@ using OZOZ.RebarPosWrapper;
 
 namespace RebarPosCommands
 {
-    public partial class PosShapeView : DrawingPreview
+    public class PosShapeView : DrawingPreview
     {
         private string m_ShapeName = "";
 

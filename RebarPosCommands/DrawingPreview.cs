@@ -11,7 +11,7 @@ using System.ComponentModel;
 
 namespace RebarPosCommands
 {
-    public partial class DrawingPreview : Panel
+    public class DrawingPreview : Panel
     {
         private bool m_Selected;
         private Color m_SelectionColor;
@@ -162,31 +162,36 @@ namespace RebarPosCommands
 
         protected override void Dispose(bool disposing)
         {
-            base.Dispose(disposing);
+            try
+            {
+                if (device != null)
+                {
+                    device.EraseAll();
+                }
+                if (view != null)
+                {
+                    view.EraseAll();
+                    view.Dispose();
+                    view = null;
+                }
+                if (model != null)
+                {
+                    model.Dispose();
+                    model = null;
+                }
+                if (device != null)
+                {
+                    device.Dispose();
+                    device = null;
+                }
 
-            if (device != null)
-            {
-                device.EraseAll();
+                init = false;
+                disposed = true;
             }
-            if (view != null)
+            finally
             {
-                view.EraseAll();
-                view.Dispose();
-                view = null;
+                base.Dispose(disposing);
             }
-            if (model != null)
-            {
-                model.Dispose();
-                model = null;
-            }
-            if (device != null)
-            {
-                device.Dispose();
-                device = null;
-            }
-
-            init = false;
-            disposed = true;
         }
     }
 }
