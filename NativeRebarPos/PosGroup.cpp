@@ -4,16 +4,28 @@
 
 #include "StdAfx.h"
 
+#include "dbdictdflt.h"
+
 #include "RebarPos.h"
 #include "PosGroup.h"
 #include "Utility.h"
 
-//-----------------------------------------------------------------------------
+//*************************************************************************
+// Constants
+//*************************************************************************
 Adesk::UInt32 CPosGroup::kCurrentVersionNumber = 1;
 
 ACHAR* CPosGroup::Table_Name = _T("OZOZ_REBAR_GROUPS");
+ACHAR* CPosGroup::TextStyle_Name  = _T("Rebar Text Style");
+ACHAR* CPosGroup::TextStyle_Font  = _T("romans.shx");
+double CPosGroup::TextStyle_Width = 0.65;
+ACHAR* CPosGroup::NoteStyle_Name  = _T("Rebar Note Style");
+ACHAR* CPosGroup::NoteStyle_Font  = _T("simplxtw.shx");
+double CPosGroup::NoteStyle_Width = 0.9;
 
-//-----------------------------------------------------------------------------
+//*************************************************************************
+// Code for the class body
+//*************************************************************************
 ACRX_DXF_DEFINE_MEMBERS(CPosGroup, AcDbObject,
 	AcDb::kDHL_CURRENT, AcDb::kMReleaseCurrent,
 	AcDbProxyObject::kEraseAllowed, POSGROUP,
@@ -21,7 +33,9 @@ ACRX_DXF_DEFINE_MEMBERS(CPosGroup, AcDbObject,
 	|Product Desc:     PosGroup Entity\
 	|Company:          OZOZ");
 
-//-----------------------------------------------------------------------------
+//*************************************************************************
+// Constructors and destructors 
+//*************************************************************************
 CPosGroup::CPosGroup () : m_Name(NULL), m_Bending(Adesk::kFalse), m_MaxBarLength(12), m_Precision(0),
 	m_DrawingUnit(CPosGroup::MM), m_DisplayUnit(CPosGroup::MM), 
 	m_Formula(NULL), m_FormulaVariableLength(NULL), m_FormulaLengthOnly(NULL), m_FormulaPosOnly(NULL), m_StandardDiameters(NULL),
@@ -749,7 +763,9 @@ Acad::ErrorStatus CPosGroup::dxfInFields(AcDbDxfFiler *pFiler)
 //*************************************************************************
 AcGiDrawable* CPosGroup::drawable()
 {
-	return this;
+	if(m_GsNode == NULL) return NULL;
+
+	return m_GsNode->drawable();
 }
 
 void CPosGroup::setGsNode(AcGsNode* gsnode)
@@ -878,43 +894,81 @@ ACHAR* CPosGroup::GetTableName()
 	return Table_Name;
 }
 
-AcDbObjectId CPosGroup::GetGroupId()
+Acad::ErrorStatus CPosGroup::GetGroupId(AcDbObjectId& id)
 {
-	AcDbObjectId id = AcDbObjectId::kNull;
+	id = AcDbObjectId::kNull;
 
-	AcDbDictionary* pNamedObj = NULL;
-	AcDbDatabase *pDb = acdbHostApplicationServices()->workingDatabase();
-	pDb->getNamedObjectsDictionary(pNamedObj, AcDb::kForRead);
+	Acad::ErrorStatus es;
+	
+	AcDbDictionaryPointer pNamedObj(acdbHostApplicationServices()->workingDatabase()->namedObjectsDictionaryId(), AcDb::kForRead);
+	if((es = pNamedObj.openStatus()) != Acad::eOk)
+		return es;
 
-	AcDbDictionary *pDict = NULL;
-	if (pNamedObj->getAt(GetTableName(), (AcDbObject*&) pDict, AcDb::kForRead) == Acad::eKeyNotFound)
+	AcDbObjectId groupDictId;
+	if((es = pNamedObj->getAt(GetTableName(), groupDictId)) != Acad::eOk)
+		return es;
+
+	AcDbObjectPointer<AcDbDictionaryWithDefault> pGroupDict(groupDictId, AcDb::kForRead);
+	if((es = pGroupDict.openStatus()) != Acad::eOk)
+		return es;
+
+	id = pGroupDict->defaultId();
+	if(id.isNull())
+		return Acad::eNullObjectId;
+	if(id.isErased())
+		return Acad::eWasErased;
+	if(!id.isValid())
+		return Acad::eInvalidObjectId;
+
+	return Acad::eOk;
+}
+
+Acad::ErrorStatus CPosGroup::CreateGroup(void)
+{
+	Acad::ErrorStatus es;
+	
+	AcDbDictionaryPointer pNamedObj(acdbHostApplicationServices()->workingDatabase()->namedObjectsDictionaryId(), AcDb::kForRead);
+	if((es = pNamedObj.openStatus()) != Acad::eOk)
+		return es;
+
+	AcDbObjectId groupDictId;
+	if (pNamedObj->getAt(GetTableName(), groupDictId) == Acad::eKeyNotFound)
 	{
-        pDict = new AcDbDictionary();
+		AcDbDictionaryWithDefault *pDict = new AcDbDictionaryWithDefault();
 		pNamedObj->upgradeOpen();
-		AcDbObjectId pid;
-		pNamedObj->setAt(GetTableName(), pDict, pid);
+		pNamedObj->setAt(GetTableName(), pDict, groupDictId);
+		pDict->close();
 		pNamedObj->downgradeOpen();
 	}
 
-	if(pDict->getAt(_T("0"), id) == Acad::eKeyNotFound)
+	AcDbObjectPointer<AcDbDictionaryWithDefault> pGroupDict(groupDictId, AcDb::kForRead);
+	if((es = pGroupDict.openStatus()) != Acad::eOk)
+		return es;
+
+	if(pGroupDict->defaultId().isNull())
 	{
-        CPosGroup* group = new CPosGroup();
-        group->setName(_T("0"));
-        group->setFormula(_T("[M:C][N][TD][\"/\":S]"));
+		CPosGroup* group = new CPosGroup();
+		group->setName(_T("0"));
+		group->setFormula(_T("[M:C][N][TD][\"/\":S]"));
 		group->setFormulaVariableLength(_T("[M:C][N][TD][\"/\":S]"));
-        group->setFormulaLengthOnly(_T("[\"L=\":L]"));
-        group->setFormulaPosOnly(_T("[M:C]"));
-        group->setStandardDiameters(_T("8 10 12 14 16 18 20 22 25 26 32 36"));
-		group->setTextStyleId(Utility::CreateTextStyle(_T("Rebar Text Style"), _T("romans.shx"), 0.65));
-		group->setNoteStyleId(Utility::CreateTextStyle(_T("Rebar Note Style"), _T("simplxtw.shx"), 0.9));
-        pDict->upgradeOpen();
-        pDict->setAt(_T("0"), group, id);
+		group->setFormulaLengthOnly(_T("[\"L=\":L]"));
+		group->setFormulaPosOnly(_T("[M:C]"));
+		group->setStandardDiameters(_T("8 10 12 14 16 18 20 22 25 26 32 36"));
+
+		AcDbObjectId textStyleId;
+		AcDbObjectId noteStyleId;
+		Utility::CreateTextStyle(textStyleId, TextStyle_Name, TextStyle_Font, TextStyle_Width);
+		Utility::CreateTextStyle(noteStyleId, NoteStyle_Name, NoteStyle_Font, NoteStyle_Width);
+		group->setTextStyleId(textStyleId);
+		group->setNoteStyleId(noteStyleId);
+
+		AcDbObjectId id;
+		pGroupDict->upgradeOpen();
+		pGroupDict->setAt(_T("0"), group, id);
+		pGroupDict->setDefaultId(id);
 		group->close();
-        pDict->downgradeOpen();
+		pGroupDict->downgradeOpen();
 	}
 
-	pDict->close();
-	pNamedObj->close();
-
-	return id;
+	return Acad::eOk;
 }

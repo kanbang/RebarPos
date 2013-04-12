@@ -31,13 +31,13 @@ private:
 
 public:
 	/// Creates a hidden (non-plotted) layer
-	static AcDbObjectId CreateHiddenLayer();
+	static Acad::ErrorStatus CreateHiddenLayer(AcDbObjectId& id);
 
 	/// Creates a text style
-	static AcDbObjectId CreateTextStyle(const ACHAR* name, const ACHAR* filename, const double scale);
+	static Acad::ErrorStatus CreateTextStyle(AcDbObjectId& id, const ACHAR* name, const ACHAR* filename, const double scale);
 
 	/// Create an AcGiTextStyle from the db id of an AcDbTextStyleTableRecord
-	static Acad::ErrorStatus MakeGiTextStyle(AcGiTextStyle &ts, const AcDbObjectId  styleId);
+	static Acad::ErrorStatus MakeGiTextStyle(AcGiTextStyle &ts, const AcDbObjectId& styleId);
 
 	/// Create an AcGiTextStyle from the given parameters
 	static void MakeGiTextStyle(AcGiTextStyle &newStyle, const ACHAR* filename, const ACHAR* bigFontFilename, const double textSize, const double widthFactor = 1.0, const double obliquingAngle = 0.0);

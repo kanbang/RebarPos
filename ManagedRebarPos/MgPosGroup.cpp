@@ -22,7 +22,7 @@ PosGroup::PosGroup()
 }
 
 PosGroup::PosGroup(System::IntPtr unmanagedPointer, bool autoDelete)
-: Autodesk::AutoCAD::DatabaseServices::DBObject(unmanagedPointer,autoDelete)
+: Autodesk::AutoCAD::DatabaseServices::DBObject(unmanagedPointer, autoDelete)
 {
 }
 
@@ -237,6 +237,7 @@ String^ PosGroup::TableName::get()
 
 Autodesk::AutoCAD::DatabaseServices::ObjectId PosGroup::GroupId::get()
 {
-	AcDbObjectId id = CPosGroup::GetGroupId();
+	AcDbObjectId id;
+	CPosGroup::GetGroupId(id);
 	return Marshal::ToObjectId(id);
 }

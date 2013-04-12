@@ -44,6 +44,9 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 		CBOQTable::rxInit();
         acrxBuildClassHierarchy();
 
+		// Create default group
+		CPosGroup::CreateGroup();
+
 		// Create default shapes
 		CPosShape::ClearPosShapes(true, true, true);
 		CPosShape::ReadPosShapesFromResource(_hdllInstance, IDR_SHAPES, false);

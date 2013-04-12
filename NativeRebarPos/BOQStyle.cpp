@@ -388,9 +388,15 @@ void CBOQStyle::ReadBOQStylesFromString(const std::wstring source, const bool bu
 		style->setGrossWeightLabel(grossWeightLabel.c_str());
 		style->setMultiplierHeadingLabel(multiplierHeadingLabel.c_str());
 
-		style->setTextStyleId(Utility::CreateTextStyle(textStyleName.c_str(), textStyleFont.c_str(), textStyleWidth));
-		style->setHeadingStyleId(Utility::CreateTextStyle(headingStyleName.c_str(), headingStyleFont.c_str(), headingStyleWidth));
-		style->setFootingStyleId(Utility::CreateTextStyle(footingStyleName.c_str(), footingStyleFont.c_str(), footingStyleWidth));
+		AcDbObjectId textStyleId;
+		AcDbObjectId headingStyleId;
+		AcDbObjectId footingStyleId;
+		Utility::CreateTextStyle(textStyleId, textStyleName.c_str(), textStyleFont.c_str(), textStyleWidth);
+		Utility::CreateTextStyle(headingStyleId, headingStyleName.c_str(), headingStyleFont.c_str(), headingStyleWidth);
+		Utility::CreateTextStyle(footingStyleId, footingStyleName.c_str(), footingStyleFont.c_str(), footingStyleWidth);
+		style->setTextStyleId(textStyleId);
+		style->setHeadingStyleId(headingStyleId);
+		style->setFootingStyleId(footingStyleId);
 
 		style->setIsBuiltIn(builtin ? Adesk::kTrue : Adesk::kFalse);
 

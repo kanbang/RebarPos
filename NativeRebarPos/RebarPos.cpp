@@ -69,7 +69,6 @@ CRebarPos::~CRebarPos()
 	lastShapes.clear();
 }
 
-
 //*************************************************************************
 // Properties
 //*************************************************************************
@@ -843,7 +842,8 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 	Acad::ErrorStatus es;
 
 	// Open the one and only group
-	AcDbObjectId groupId = CPosGroup::GetGroupId();
+	AcDbObjectId groupId;
+	CPosGroup::GetGroupId(groupId);
 	AcDbObjectPointer<CPosGroup> pGroup (groupId, AcDb::kForRead);
 	if((es = pGroup.openStatus()) != Acad::eOk)
 	{
@@ -1984,13 +1984,16 @@ void CRebarPos::Calculate(void)
 	// Open group and shape
 	Acad::ErrorStatus es;
 	const CPosGroup* pGroup = NULL;
+	AcDbObjectPointer<CPosGroup> pGroupPointer;
 	if(m_GroupForDisplay != NULL)
 	{
 		pGroup = m_GroupForDisplay;
 	}
 	else
 	{
-		AcDbObjectPointer<CPosGroup> pGroupPointer (CPosGroup::GetGroupId(), AcDb::kForRead);
+		AcDbObjectId groupId;
+		CPosGroup::GetGroupId(groupId);
+		pGroupPointer.open(groupId, AcDb::kForRead);
 		if((es = pGroupPointer.openStatus()) != Acad::eOk)
 		{
 			return;
@@ -2011,9 +2014,9 @@ void CRebarPos::Calculate(void)
 	lastShapes.clear();
 
 	// Create text styles
-	if (pGroup->TextStyleId() != AcDbObjectId::kNull)
+	if (!pGroup->TextStyleId().isNull())
 		Utility::MakeGiTextStyle(lastTextStyle, pGroup->TextStyleId());
-	if (pGroup->NoteStyleId() != AcDbObjectId::kNull)
+	if (!pGroup->NoteStyleId().isNull())
 		Utility::MakeGiTextStyle(lastNoteStyle, pGroup->NoteStyleId());
 	lastNoteScale = pGroup->NoteScale();
 
@@ -2235,7 +2238,7 @@ void CRebarPos::Calculate(void)
 	lastLengthDraw.widthFactor = lastTextStyle.xScale();
 
 	// Set colors
-	defpointsLayer = Utility::CreateHiddenLayer();
+	Utility::CreateHiddenLayer(defpointsLayer);
 	lastCircleColor = pGroup->CircleColor();
 	lastMultiplierDraw.color = pGroup->MultiplierColor();
 	for(DrawListSize i = 0; i < lastDrawList.size(); i++)

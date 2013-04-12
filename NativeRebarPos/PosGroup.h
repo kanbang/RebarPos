@@ -175,13 +175,22 @@ public:
 
 private:
 	static ACHAR* Table_Name;
+	static ACHAR* TextStyle_Name;
+	static ACHAR* TextStyle_Font;
+	static double TextStyle_Width;
+	static ACHAR* NoteStyle_Name;
+	static ACHAR* NoteStyle_Font;
+	static double NoteStyle_Width;
 
 public:
 	/// Gets the table name
 	static ACHAR* GetTableName();
 
 	/// Gets the one and only group
-	static AcDbObjectId GetGroupId();
+	static Acad::ErrorStatus GetGroupId(AcDbObjectId& id);
+
+	/// Creates the one and only group
+	static Acad::ErrorStatus CreateGroup(void);
 
 public:
 	// Drawable implementation

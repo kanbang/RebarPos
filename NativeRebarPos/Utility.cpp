@@ -10,36 +10,38 @@
 #include <fstream>
 #include <algorithm>
 
+#include "acgiutil.h"
+
 #include "Utility.h"
 
-AcDbObjectId Utility::CreateHiddenLayer()
+Acad::ErrorStatus Utility::CreateHiddenLayer(AcDbObjectId& id)
 {
-    AcDbObjectId id;
+	Acad::ErrorStatus es;
+	AcDbLayerTablePointer pLayerTbl(acdbHostApplicationServices()->workingDatabase()->layerTableId(), AcDb::kForRead);
+	if((es = pLayerTbl.openStatus()) != Acad::eOk)
+		return es;
 
-	AcDbLayerTable *pLayerTbl = NULL;
-	AcDbDatabase *pDb = acdbHostApplicationServices()->workingDatabase();
-	pDb->getSymbolTable(pLayerTbl, AcDb::kForRead);
 	if (pLayerTbl->getAt(_T("Defpoints"), id, AcDb::kForRead) == Acad::eKeyNotFound)
 	{
-		pLayerTbl->upgradeOpen();
 		AcDbLayerTableRecord* pLayer = new AcDbLayerTableRecord();
 		pLayer->setName(_T("Defpoints"));
+		pLayerTbl->upgradeOpen();
 		pLayerTbl->add(id, pLayer);
 		pLayer->close();
 		pLayerTbl->downgradeOpen();
 	}
 	pLayerTbl->close();
 
-	return id;
+	return Acad::eOk;
 }
 
-AcDbObjectId Utility::CreateTextStyle(const ACHAR* name, const ACHAR* filename, const double scale)
+Acad::ErrorStatus Utility::CreateTextStyle(AcDbObjectId& id, const ACHAR* name, const ACHAR* filename, const double scale)
 {
-	AcDbObjectId id;
+	Acad::ErrorStatus es;
+	AcDbTextStyleTablePointer pStyleTbl(acdbHostApplicationServices()->workingDatabase()->textStyleTableId(), AcDb::kForRead);
+	if((es = pStyleTbl.openStatus()) != Acad::eOk)
+		return es;
 
-	AcDbTextStyleTable *pStyleTbl = NULL;
-	AcDbDatabase *pDb = acdbHostApplicationServices()->workingDatabase();
-	pDb->getSymbolTable(pStyleTbl, AcDb::kForRead);
 	if (pStyleTbl->getAt(name, id, AcDb::kForRead) == Acad::eKeyNotFound)
 	{
 		pStyleTbl->upgradeOpen();
@@ -51,31 +53,17 @@ AcDbObjectId Utility::CreateTextStyle(const ACHAR* name, const ACHAR* filename, 
 		pText->close();
 		pStyleTbl->downgradeOpen();
 	}
-	pStyleTbl->close();
-
-	return id;
-}
-
-Acad::ErrorStatus Utility::MakeGiTextStyle(AcGiTextStyle &newStyle, const AcDbObjectId styleId)
-{
-	Acad::ErrorStatus es;
-	AcDbObjectPointer<AcDbTextStyleTableRecord> oldStyle (styleId, AcDb::kForRead);
-	if((es = oldStyle.openStatus()) != Acad::eOk)
-		return es;
-
-    ACHAR* filename = NULL;
-    if ((es = oldStyle->fileName(filename)) != Acad::eOk) 
-        return es;
-    ACHAR* bigfilename = NULL;
-    if ((es = oldStyle->bigFontFileName(bigfilename)) != Acad::eOk) 
-        return es;
-
-	Utility::MakeGiTextStyle(newStyle, filename, bigfilename, oldStyle->textSize(), oldStyle->xScale(), oldStyle->obliquingAngle());
-
-	acutDelString(filename);
-	acutDelString(bigfilename);
 
 	return Acad::eOk;
+}
+
+Acad::ErrorStatus Utility::MakeGiTextStyle(AcGiTextStyle &newStyle, const AcDbObjectId& styleId)
+{
+	Acad::ErrorStatus es;
+	es = fromAcDbTextStyle(newStyle, styleId);
+	if(es == Acad::eOk) 
+		newStyle.loadStyleRec();
+	return es;
 }
 
 void Utility::MakeGiTextStyle(AcGiTextStyle &newStyle, const ACHAR* filename, const ACHAR* bigFontFilename, const double textSize, const double widthFactor, const double obliquingAngle)

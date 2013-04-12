@@ -58,10 +58,14 @@ bool PosUtility::ValidateFormula(System::String^ formula)
 
 Autodesk::AutoCAD::DatabaseServices::ObjectId PosUtility::CreateTextStyle(System::String^ name, System::String^ filename, double scale)
 {
-	return Marshal::ToObjectId(Utility::CreateTextStyle(Marshal::StringToWchar(name), Marshal::StringToWchar(filename), scale));
+	AcDbObjectId id;
+	Utility::CreateTextStyle(id, Marshal::StringToWchar(name), Marshal::StringToWchar(filename), scale);
+	return Marshal::ToObjectId(id);
 }
 
 Autodesk::AutoCAD::DatabaseServices::ObjectId PosUtility::DefpointsLayer::get()
 {
-	return Marshal::ToObjectId(Utility::CreateHiddenLayer());
+	AcDbObjectId id;
+	Utility::CreateHiddenLayer(id);
+	return Marshal::ToObjectId(id);
 }
