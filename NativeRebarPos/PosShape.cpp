@@ -819,11 +819,6 @@ Adesk::Boolean CPosShape::subWorldDraw(AcGiWorldDraw* worldDraw)
 		return Adesk::kTrue;
 	}
 
-	// Transform to make min extents at origin
-	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
-	trans.setCoordSystem(AcGePoint3d(-ext.minPoint().x, -ext.minPoint().y, -ext.minPoint().z), AcGeVector3d::kXAxis, AcGeVector3d::kYAxis, AcGeVector3d::kZAxis);
-	worldDraw->geometry().pushModelTransform(trans);
-
 	for(ShapeListConstIt it = m_List.begin(); it != m_List.end(); it++)
 	{
 		CShape* shape = *it;
@@ -867,9 +862,6 @@ Adesk::Boolean CPosShape::subWorldDraw(AcGiWorldDraw* worldDraw)
 			break;
 		}
 	}
-
-	// Reset transform
-	worldDraw->geometry().popModelTransform();
 
 	// Do not call viewportDraw()
     return Adesk::kTrue; 

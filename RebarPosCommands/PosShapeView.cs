@@ -26,12 +26,14 @@ namespace RebarPosCommands
 
         public void SetShape(string shapeName)
         {
+            SuspendUpdate();
             ClearItems();
             mShapeName = shapeName;
             if (!string.IsNullOrEmpty(mShapeName))
             {
                 AddItem(PosShape.GetPosShape(shapeName));
             }
+            ResumeUpdate();
         }
     }
 }

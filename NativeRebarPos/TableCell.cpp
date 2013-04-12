@@ -1197,7 +1197,7 @@ Adesk::Boolean CTableCell::worldDraw(AcGiWorldDraw* worldDraw)
 				yoff = (m_Height - maxheight * scale) / 2.0;
 
 			AcGeMatrix3d shapeTrans = AcGeMatrix3d::kIdentity;
-			shapeTrans.setCoordSystem(AcGePoint3d(xoff, -m_Height + yoff, 0.0), AcGeVector3d::kXAxis * scale, AcGeVector3d::kYAxis * scale, AcGeVector3d::kZAxis * scale);
+			shapeTrans.setCoordSystem(AcGePoint3d(xoff - ext.minPoint().x * scale, -m_Height + yoff - ext.minPoint().y * scale, 0.0), AcGeVector3d::kXAxis * scale, AcGeVector3d::kYAxis * scale, AcGeVector3d::kZAxis * scale);
 			worldDraw->geometry().pushModelTransform(shapeTrans);
 			worldDraw->geometry().draw(pShape);
 			worldDraw->geometry().popModelTransform();
