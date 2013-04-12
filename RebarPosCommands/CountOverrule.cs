@@ -44,46 +44,37 @@ namespace RebarPosCommands
             }
 
             RebarPos pos = drawable as RebarPos;
-            if (pos == null)
+            if (pos == null || (pos.IncludeInBOQ && !pos.Detached))
             {
                 return base.WorldDraw(drawable, wd);
             }
-            if (pos.IncludeInBOQ && !pos.Detached)
-            {
-                return base.WorldDraw(drawable, wd);
-            }
-
-            WorldGeometry g = wd.Geometry;
 
             // Get geometry
-            Point3d pt = pos.BasePoint;
-            Vector3d dir = pos.DirectionVector;
-            Vector3d up = pos.UpVector;
-            Vector3d norm = pos.NormalVector;
-
             Point3d minpt;
             Point3d maxpt;
             pos.TextBox(out minpt, out maxpt);
-            minpt = minpt.DivideBy(dir.Length);
-            maxpt = maxpt.DivideBy(dir.Length);
+            minpt = minpt.DivideBy(pos.Scale);
+            maxpt = maxpt.DivideBy(pos.Scale);
 
-            // Transform to object orientation
-            Matrix3d trans = Matrix3d.AlignCoordinateSystem(Point3d.Origin, Vector3d.XAxis, Vector3d.YAxis, Vector3d.ZAxis, pt, dir, up, norm);
+            using (Solid solid = new Solid())
+            {
+                solid.SetPointAt(0, new Point3d(minpt.X - 0.15, minpt.Y - 0.15, 0));
+                solid.SetPointAt(1, new Point3d(maxpt.X + 0.15, minpt.Y - 0.15, 0));
+                solid.SetPointAt(2, new Point3d(minpt.X - 0.15, maxpt.Y + 0.15, 0));
+                solid.SetPointAt(3, new Point3d(maxpt.X + 0.15, maxpt.Y + 0.15, 0));
+                solid.Color = mColor;
+                solid.LayerId = PosUtility.DefpointsLayer;
 
-            Solid solid = new Solid();
-            solid.SetPointAt(0, new Point3d(minpt.X - 0.15, minpt.Y - 0.15, 0));
-            solid.SetPointAt(1, new Point3d(maxpt.X + 0.15, minpt.Y - 0.15, 0));
-            solid.SetPointAt(2, new Point3d(minpt.X - 0.15, maxpt.Y + 0.15, 0));
-            solid.SetPointAt(3, new Point3d(maxpt.X + 0.15, maxpt.Y + 0.15, 0));
-            solid.Color = mColor;
-            solid.LayerId = PosUtility.DefpointsLayer;
-            solid.TransformBy(trans);
-            g.Draw(solid);
+                Matrix3d trans = Matrix3d.AlignCoordinateSystem(
+                    Point3d.Origin, Vector3d.XAxis, Vector3d.YAxis, Vector3d.ZAxis,
+                    pos.BasePoint, pos.DirectionVector, pos.UpVector, pos.NormalVector);
+
+                solid.TransformBy(trans);
+                wd.Geometry.Draw(solid);
+            }
 
             // Draw the entity over shading
-            base.WorldDraw(drawable, wd);
-
-            return true;
+            return base.WorldDraw(drawable, wd);
         }
     }
 }
