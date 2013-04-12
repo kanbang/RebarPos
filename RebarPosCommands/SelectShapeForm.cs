@@ -49,33 +49,29 @@ namespace RebarPosCommands
             {
                 foreach (string name in shapes)
                 {
-                    PosShape shape = PosShape.GetPosShape(name);
-                    if (shape != null)
-                    {
-                        Panel panel = new Panel();
-                        panel.Size = new Size(145, 110);
+                    Panel panel = new Panel();
+                    panel.Size = new Size(145, 110);
 
-                        Label shapeLabel = new Label();
-                        shapeLabel.Size = new Size(145, 13);
-                        shapeLabel.Text = shape.Name;
-                        shapeLabel.Location = new Point(0, 0);
-                        panel.Controls.Add(shapeLabel);
+                    Label shapeLabel = new Label();
+                    shapeLabel.Size = new Size(145, 13);
+                    shapeLabel.Text = name;
+                    shapeLabel.Location = new Point(0, 0);
+                    panel.Controls.Add(shapeLabel);
 
-                        PosShapeView posShapeView = new PosShapeView();
-                        posShapeView.SuspendUpdate();
-                        posShapeView.ShapeName = shape.Name;
-                        posShapeView.Selected = (shape.Name == m_Current);
-                        posShapeView.Visible = true;
-                        posShapeView.Size = new Size(145, 90);
-                        posShapeView.BackColor = backColor;
-                        posShapeView.Location = new Point(0, 15);
-                        posShapeView.Click += new EventHandler(posShapeView_Click);
-                        posShapeView.ResumeUpdate();
+                    PosShapeView posShapeView = new PosShapeView();
+                    posShapeView.SuspendUpdate();
+                    posShapeView.SetShape(name);
+                    posShapeView.Selected = (name == m_Current);
+                    posShapeView.Visible = true;
+                    posShapeView.Size = new Size(145, 90);
+                    posShapeView.BackColor = backColor;
+                    posShapeView.Location = new Point(0, 15);
+                    posShapeView.Click += new EventHandler(posShapeView_Click);
+                    posShapeView.ResumeUpdate();
 
-                        panel.Controls.Add(posShapeView);
-                        
-                        layoutPanel.Controls.Add(panel);
-                    }
+                    panel.Controls.Add(posShapeView);
+
+                    layoutPanel.Controls.Add(panel);
                 }
             }
             catch (System.Exception ex)
@@ -94,7 +90,7 @@ namespace RebarPosCommands
                 Close();
             }
         }
-        
+
         private void SelectShapeForm_KeyDown(object sender, KeyEventArgs e)
         {
             if ((e.KeyCode & Keys.Escape) != Keys.None)

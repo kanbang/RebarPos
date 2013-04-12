@@ -241,7 +241,7 @@ namespace RebarPosCommands
 
         private void SetFindShape(string name)
         {
-            psvFind.ShapeName = name;
+            psvFind.SetShape(name);
 
             m_FindShape = name;
             PosShape shape = PosShape.GetPosShape(name);
@@ -254,7 +254,7 @@ namespace RebarPosCommands
 
         private void SetReplaceShape(string name)
         {
-            psvReplace.ShapeName = name;
+            psvReplace.SetShape(name);
 
             m_ReplaceShape = name;
             PosShape shape = PosShape.GetPosShape(name);

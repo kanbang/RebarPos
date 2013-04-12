@@ -383,7 +383,7 @@ namespace RebarPosCommands
 
         private bool SetShape()
         {
-            posShapeView.ShapeName = m_Shape;
+            posShapeView.SetShape(m_Shape);
 
             PosShape shape = PosShape.GetPosShape(m_Shape);
             if (shape == null)

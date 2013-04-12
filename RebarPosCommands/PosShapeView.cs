@@ -13,36 +13,25 @@ namespace RebarPosCommands
 {
     public class PosShapeView : DrawingPreview
     {
-        private string m_ShapeName = "";
-
-        [Browsable(true), Category("Appearance"), DefaultValue("")]
-        public string ShapeName
-        {
-            get
-            {
-                return m_ShapeName;
-            }
-            set
-            {
-                if (m_ShapeName != value)
-                {
-                    m_ShapeName = value;
-                    if (!IsDesigner) SetShape();
-                }
-            }
-        }
+        private string mShapeName;
+        public string ShapeName { get { return mShapeName; } }
 
         public PosShapeView()
         {
             this.Name = "PosShapeView";
+            this.Size = new System.Drawing.Size(300, 150);
 
-            m_ShapeName = "";
+            mShapeName = string.Empty;
         }
 
-        private void SetShape()
+        public void SetShape(string shapeName)
         {
             ClearItems();
-            AddItem(PosShape.GetPosShape(m_ShapeName));
+            mShapeName = shapeName;
+            if (!string.IsNullOrEmpty(mShapeName))
+            {
+                AddItem(PosShape.GetPosShape(shapeName));
+            }
         }
     }
 }
