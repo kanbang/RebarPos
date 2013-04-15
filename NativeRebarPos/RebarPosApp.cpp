@@ -18,32 +18,39 @@ HINSTANCE _hdllInstance = NULL;
 extern "C"
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpReserved*/)
 {
-    if (dwReason == DLL_PROCESS_ATTACH)
-    {
+	if (dwReason == DLL_PROCESS_ATTACH)
+	{
 		_hdllInstance = hInstance;
-    }
-    return TRUE;
+	}
+	return TRUE;
 }
 
 // locally defined entry point invoked by Rx.
 extern "C" AcRx::AppRetCode __declspec(dllexport)
 acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 {
-    switch(msg) 
+	switch(msg) 
 	{
-    case AcRx::kInitAppMsg:
-        acrxUnlockApplication(pkt);     // Try to allow unloading
-        acrxRegisterAppMDIAware(pkt);
+	case AcRx::kInitAppMsg:
+		acrxUnlockApplication(pkt);     // Try to allow unloading
+		acrxRegisterAppMDIAware(pkt);
 
 		// Register custom classes
 		CPosShape::rxInit();
 		CPosGroup::rxInit();
-        CRebarPos::rxInit();
+		CRebarPos::rxInit();
 		CGenericTable::rxInit();
 		CBOQStyle::rxInit();
 		CBOQTable::rxInit();
-        acrxBuildClassHierarchy();
+		acrxBuildClassHierarchy();
 		
+		// Register a service using the class name.
+		if (!acrxServiceIsRegistered(_T("CRebarPos")))
+			acrxRegisterService(_T("CRebarPos"));
+
+		break;
+
+	case AcRx::kLoadDwgMsg:
 		// Create default group
 		CPosGroup::CreateGroup();
 
@@ -55,24 +62,24 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 		// Create default table styles
 		CBOQStyle::ClearBOQStyles(true, true);
 		CBOQStyle::ReadBOQStylesFromResource(_hdllInstance, IDR_TABLESTYLES);
-		
-        // Register a service using the class name.
-        if (!acrxServiceIsRegistered(_T("CRebarPos")))
-            acrxRegisterService(_T("CRebarPos"));
 
-        break;
+		break;
 
-    case AcRx::kUnloadAppMsg:
-        // Unregister the service
-        AcRxObject *obj = acrxServiceDictionary->remove(_T("CRebarPos"));
-        if (obj != NULL)
-            delete obj;
+	case AcRx::kUnloadDwgMsg:
 
+		break;
+
+	case AcRx::kUnloadAppMsg:
 		// Remove shapes from memory
 		CPosShape::ClearPosShapes(true, true, true);
 
 		// Remove table styles from memory
 		CBOQStyle::ClearBOQStyles(true, true);
+
+		// Unregister the service
+		AcRxObject *obj = acrxServiceDictionary->remove(_T("CRebarPos"));
+		if (obj != NULL)
+			delete obj;
 
 		// Remove custom classes
 		deleteAcRxClass(CBOQTable::desc());
@@ -82,7 +89,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 		deleteAcRxClass(CPosGroup::desc());
 		deleteAcRxClass(CPosShape::desc());
 
-        break;
-    }
-    return AcRx::kRetOK;
+		break;
+	}
+	return AcRx::kRetOK;
 }

@@ -36,11 +36,8 @@ namespace RebarPosCommands
             MonitoredPoint = Point3d.Origin;
 
             SetCurrentGroup();
-            ed.WriteMessage("Group set");
             ReadUserPosShapes();
-            ed.WriteMessage("Shapes in");
             ReadUserTableStyles();
-            ed.WriteMessage("Tables in");
 
             ShowShapes = false;
         }
