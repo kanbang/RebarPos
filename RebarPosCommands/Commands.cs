@@ -31,15 +31,18 @@ namespace RebarPosCommands
         // context menu.
         public MyCommands()
         {
-            SetCurrentGroup();
-            ReadUserPosShapes();
-            ReadUserTableStyles();
-
-            ShowShapes = false;
-
             Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
             ed.PointMonitor += new PointMonitorEventHandler(ed_PointMonitor);
             MonitoredPoint = Point3d.Origin;
+
+            SetCurrentGroup();
+            ed.WriteMessage("Group set");
+            ReadUserPosShapes();
+            ed.WriteMessage("Shapes in");
+            ReadUserTableStyles();
+            ed.WriteMessage("Tables in");
+
+            ShowShapes = false;
         }
 
         private bool ShowShapes
