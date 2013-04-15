@@ -427,7 +427,7 @@ namespace RebarPosCommands
                         org.FormulaBending = copy.FormulaBending;
                         org.Priority = copy.Priority;
                         org.Items.Clear();
-                        for (int i=0;i<copy.Items.Count;i++)
+                        for (int i = 0; i < copy.Items.Count; i++)
                         {
                             org.Items.Add(copy.Items[i].Clone());
                         }
