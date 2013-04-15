@@ -1,17 +1,24 @@
 (defun C:LL (/ path)
-  (if (findfile "C:/Users/Ozgur/Documents/Visual Studio 2008/Projects/ObjectARX 2010/samples/entity/RebarPos/x64/Debug")
-    (setq path "C:/Users/Ozgur/Documents/Visual Studio 2008/Projects/ObjectARX 2010/samples/entity/RebarPos/x64/Debug")
-    (setq path "C:/ObjectARX 2010/samples/entity/RebarPos/win32/Debug")
-  )
+  (setq path "C:/Users/Ozgur/Documents/Visual Studio 2008/Projects/ObjectARX 2010/samples/entity/RebarPos/x64/Debug")
   (LoadArx path "NativeRebarPos.dbx")
   (LoadArx path "COMRebarPos.dbx")
 
   (LoadNet path "ManagedRebarPos.dll")
 
-  (if (findfile "C:/Users/Ozgur/Documents/Visual Studio 2008/Projects/ObjectARX 2010/samples/entity/RebarPos/RebarPosCommands/bin/Debug")
-    (setq path "C:/Users/Ozgur/Documents/Visual Studio 2008/Projects/ObjectARX 2010/samples/entity/RebarPos/RebarPosCommands/bin/Debug")
-    (setq path "C:/ObjectARX 2010/samples/entity/RebarPos/RebarPosCommands/bin/Debug")
-  )
+  (setq path "C:/Users/Ozgur/Documents/Visual Studio 2008/Projects/ObjectARX 2010/samples/entity/RebarPos/RebarPosCommands/bin/Debug")
+  (LoadNet path "RebarPos.dll")
+  
+  (princ)
+)
+
+(defun C:LLR (/ path)
+  (setq path "C:/Users/Ozgur/Documents/Visual Studio 2008/Projects/ObjectARX 2010/samples/entity/RebarPos/x64/Release")
+  (LoadArx path "NativeRebarPos.dbx")
+  (LoadArx path "COMRebarPos.dbx")
+
+  (LoadNet path "ManagedRebarPos.dll")
+
+  (setq path "C:/Users/Ozgur/Documents/Visual Studio 2008/Projects/ObjectARX 2010/samples/entity/RebarPos/RebarPosCommands/bin/Release")
   (LoadNet path "RebarPos.dll")
   
   (princ)
