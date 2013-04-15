@@ -24,8 +24,12 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 		case AcRx::kInitAppMsg: 
 		{
 			acrxDynamicLinker->registerAppMDIAware(pkt);
-			acrxDynamicLinker->loadApp(L"OZOZRebarPosNative", AcadApp::kOnLoadRequest, false);
-			acrxDynamicLinker->loadApp(L"OZOZRebarPosCOM", AcadApp::kOnLoadRequest, false);
+
+			AcadApp::LoadReasons reason = (AcadApp::LoadReasons)(AcadApp::kOnProxyDetection | AcadApp::kOnLoadRequest);
+			if(!acrxDynamicLinker->loadApp(L"OZOZRebarPosNative", reason, true, true))
+				return AcRx::kRetError;
+			if(!acrxDynamicLinker->loadApp(L"OZOZRebarPosCOM", reason, true, true))
+				return AcRx::kRetError;
 			
 			// create a new object factory array
 			static AcMgObjectFactoryBase* PEs[] = 
@@ -41,16 +45,17 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 
 			g_PEs = PEs;
 			
-		}break;
+		}
+		break;
 
 		case AcRx::kPreQuitMsg:
 		{
 			// clean up
-			int i=0;
-			while (g_PEs[i]!=NULL)
+			int i = 0;
+			while(g_PEs[i] != NULL)
 				delete g_PEs[i++];
-
-		}break;
+		}
+		break;
 	}
 
 	return AcRx::kRetOK;

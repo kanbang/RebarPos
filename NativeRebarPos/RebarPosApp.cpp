@@ -43,7 +43,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 		CBOQStyle::rxInit();
 		CBOQTable::rxInit();
         acrxBuildClassHierarchy();
-
+		
 		// Create default group
 		CPosGroup::CreateGroup();
 
@@ -51,11 +51,11 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 		CPosShape::ClearPosShapes(true, true, true);
 		CPosShape::ReadPosShapesFromResource(_hdllInstance, IDR_SHAPES, false);
 		CPosShape::ReadPosShapesFromResource(_hdllInstance, IDR_INTERNALSHAPES, true);
-
+		
 		// Create default table styles
 		CBOQStyle::ClearBOQStyles(true, true);
 		CBOQStyle::ReadBOQStylesFromResource(_hdllInstance, IDR_TABLESTYLES);
-
+		
         // Register a service using the class name.
         if (!acrxServiceIsRegistered(_T("CRebarPos")))
             acrxRegisterService(_T("CRebarPos"));
