@@ -192,7 +192,7 @@
     <Compile Include="GroupForm.Designer.cs">
       <DependentUpon>GroupForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="myPlugin.cs" />
+    <Compile Include="RebarPosPlugin.cs" />
     <Compile Include="NumberingForm.cs">
       <SubType>Form</SubType>
     </Compile>
