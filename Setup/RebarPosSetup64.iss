@@ -99,8 +99,13 @@ begin
     'Select AutoCAD installations on your computer to apply RebarPos settings, then click Next.',
     False, True);
     
-  for I := 0 to GetArrayLength(Opts)-1 do
+  for I := 0 to GetArrayLength(Opts)-1 do begin
     wpAcadSelect.Add(Opts[I]);
+  end;
+  
+  if GetArrayLength(Opts) > 0 then begin
+    wpAcadSelect.Values[0] := True;
+  end;
 end;
 
 function NextButtonClick(CurPageID: Integer): Boolean;
@@ -120,7 +125,7 @@ begin
     // Make sure at least one AutoCAD installation is checked
     CheckedCount := 0;
     for I := 0 to wpAcadSelect.CheckListBox.Items.Count-1 do
-      if wpAcadSelect.CheckListBox.Checked[I] then CheckedCount := CheckedCount + 1;
+      if wpAcadSelect.Values[I] then CheckedCount := CheckedCount + 1;
       
     if CheckedCount = 0 then begin
       MsgBox('Please select an AutoCAD installation from the list.', mbError, MB_OK);
@@ -171,7 +176,7 @@ begin
     RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', 'ThreadingModel', 'Apartment');
     
     for I := 0 to wpAcadSelect.CheckListBox.Items.Count-1 do begin
-      if wpAcadSelect.CheckListBox.Checked[I] then begin
+      if wpAcadSelect.Values[I] then begin
         // NativeRebarPos.dbx
         RegPath := Paths[I] + '\Applications\OZOZRebarPosNative';
         RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'DESCRIPTION', 'RebarPos Module');
