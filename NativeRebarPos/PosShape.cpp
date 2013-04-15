@@ -351,7 +351,7 @@ Acad::ErrorStatus CPosShape::clearShapeTexts(void)
 //*************************************************************************
 // Common static dictionary methods
 //*************************************************************************
-void CPosShape::AddPosShape(CPosShape* shape)
+void CPosShape::AddPosShape(CPosShape* const shape)
 {
 	if(shape->IsInternal())
 		m_InternalPosShapes[shape->Name()] = shape;
@@ -361,7 +361,7 @@ void CPosShape::AddPosShape(CPosShape* shape)
 		m_CustomPosShapes[shape->Name()] = shape;
 }
 
-CPosShape* CPosShape::GetPosShape(const std::wstring name)
+CPosShape* CPosShape::GetPosShape(const std::wstring& name)
 {
 	std::map<std::wstring, CPosShape*>::iterator it;
 	if((it = m_InternalPosShapes.find(name)) != m_InternalPosShapes.end())
@@ -376,7 +376,7 @@ CPosShape* CPosShape::GetPosShape(const std::wstring name)
 	return shape;
 }
 
-CPosShape* CPosShape::GetUnknownPosShape()
+CPosShape* CPosShape::GetUnknownPosShape(void)
 {
 	CPosShape* shape = new CPosShape();
 
@@ -390,7 +390,7 @@ CPosShape* CPosShape::GetUnknownPosShape()
 	return shape;
 }
 
-bool CPosShape::HasPosShape(const std::wstring name)
+bool CPosShape::HasPosShape(const std::wstring& name)
 {
 	if(m_InternalPosShapes.find(name) != m_InternalPosShapes.end())
 		return true;
@@ -470,7 +470,7 @@ std::vector<std::wstring> CPosShape::GetAllShapes(const bool builtin, const bool
 	return names;
 }
 
-bool CPosShape::SortShapeNames(const std::wstring p1, const std::wstring p2)
+bool CPosShape::SortShapeNames(const std::wstring& p1, const std::wstring& p2)
 {
 	if (p1 == p2) return true;
 
@@ -493,19 +493,19 @@ bool CPosShape::SortShapeNames(const std::wstring p1, const std::wstring p2)
 	}
 }
 
-void CPosShape::ReadPosShapesFromResource(HINSTANCE hInstance, const int resid, const bool isinternal)
+void CPosShape::ReadPosShapesFromResource(const HINSTANCE hInstance, const int resid, const bool isinternal)
 {
 	std::wstring source = Utility::StringFromResource(hInstance, L"SHAPELIST", resid);
 	ReadPosShapesFromString(source, true, isinternal);
 }
 
-void CPosShape::ReadPosShapesFromFile(const std::wstring filename)
+void CPosShape::ReadPosShapesFromFile(const std::wstring& filename)
 {
 	std::wstring source = Utility::StringFromFile(filename);
 	ReadPosShapesFromString(source, false, false);
 }
 
-void CPosShape::ReadPosShapesFromString(const std::wstring source, const bool builtin, const bool isinternal)
+void CPosShape::ReadPosShapesFromString(const std::wstring& source, const bool builtin, const bool isinternal)
 {
 	std::wistringstream stream(source);
 	std::wstring   line;
@@ -627,7 +627,7 @@ void CPosShape::ReadPosShapesFromString(const std::wstring source, const bool bu
 }
 
 
-void CPosShape::SavePosShapesToFile(const std::wstring filename)
+void CPosShape::SavePosShapesToFile(const std::wstring& filename)
 {
 	std::wofstream ofs(filename.c_str());
 

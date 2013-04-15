@@ -153,16 +153,16 @@ private:
 
 public:
 	/// Add a new shape
-	static void AddPosShape(CPosShape* shape);
+	static void AddPosShape(CPosShape* const shape);
 
 	/// Gets the shape with the given name
-	static CPosShape* GetPosShape(const std::wstring name);
+	static CPosShape* GetPosShape(const std::wstring& name);
 
 	/// Gets the shape representing an unkown shape
-	static CPosShape* GetUnknownPosShape();
+	static CPosShape* GetUnknownPosShape(void);
 
 	/// Determines if the given shape exists
-	static bool HasPosShape(const std::wstring name);
+	static bool HasPosShape(const std::wstring& name);
 
 	/// Gets the number of pos shapes
 	static int GetPosShapeCount(const bool builtin, const bool isinternal, const bool custom);
@@ -174,16 +174,16 @@ public:
 	static std::vector<std::wstring> GetAllShapes(const bool builtin, const bool isinternal, const bool custom);
 
 	/// Reads all shapes defined in the resource
-	static void ReadPosShapesFromResource(HINSTANCE hInstance, const int resid, const bool isinternal);
+	static void ReadPosShapesFromResource(const HINSTANCE hInstance, const int resid, const bool isinternal);
 
 	/// Reads all shapes defined in the given text file
-	static void ReadPosShapesFromFile(const std::wstring filename);
+	static void ReadPosShapesFromFile(const std::wstring& filename);
 
 	/// Saves all shapes to the given text file
-	static void SavePosShapesToFile(const std::wstring filename);
+	static void SavePosShapesToFile(const std::wstring& filename);
 
 	/// Reads all shapes defined in the string
-	static void ReadPosShapesFromString(const std::wstring source, const bool builtin, const bool isinternal);
+	static void ReadPosShapesFromString(const std::wstring& source, const bool builtin, const bool isinternal);
 
 public:
     // RXObject implementation
@@ -205,5 +205,5 @@ public:
 
 private:
 	// Helper functions
-	static bool SortShapeNames(const std::wstring p1, const std::wstring p2);
+	static bool SortShapeNames(const std::wstring& p1, const std::wstring& p2);
 };
