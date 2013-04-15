@@ -29,7 +29,7 @@ namespace OZOZ
 			public:
 				StringToWchar(System::String^ value)
 				{
-					if(System::String::IsNullOrEmpty(value))
+					if(value == nullptr)
 						value = System::String::Empty;
 
 					context = gcnew msclr::interop::marshal_context();
@@ -55,7 +55,7 @@ namespace OZOZ
 			}
 
 			// Convert System::String to const std::wstring
-			static inline std::wstring StringToWstring(System::String^ value)
+			static inline const std::wstring StringToWstring(System::String^ value)
 			{
 				return msclr::interop::marshal_as<std::wstring>(value);
 			}
@@ -79,7 +79,7 @@ namespace OZOZ
 			}
 
 			// Convert ObjectId to const AcDbObjectId&
-			static inline AcDbObjectId FromObjectId(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
+			static inline const AcDbObjectId FromObjectId(Autodesk::AutoCAD::DatabaseServices::ObjectId value)
 			{
 				if(value.IsNull)
 					return AcDbObjectId::kNull;
@@ -97,7 +97,7 @@ namespace OZOZ
 			}
 
 			// Convert Vector3d to const AcGeVector3d&
-			static inline AcGeVector3d FromVector3d(Autodesk::AutoCAD::Geometry::Vector3d value)
+			static inline const AcGeVector3d FromVector3d(Autodesk::AutoCAD::Geometry::Vector3d value)
 			{
 				return *reinterpret_cast<AcGeVector3d*>(&(value));
 			}
@@ -112,7 +112,7 @@ namespace OZOZ
 			}
 
 			// Convert Point3d to const AcGePoint3d&
-			static inline AcGePoint3d FromPoint3d(Autodesk::AutoCAD::Geometry::Point3d value)
+			static inline const AcGePoint3d FromPoint3d(Autodesk::AutoCAD::Geometry::Point3d value)
 			{
 				return *reinterpret_cast<AcGePoint3d*>(&(value));
 			}
