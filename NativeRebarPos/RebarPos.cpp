@@ -61,12 +61,6 @@ CRebarPos::~CRebarPos()
     acutDelString(m_D);
     acutDelString(m_E);
     acutDelString(m_F);
-
-	for(ShapeListIt it = lastShapes.begin(); it != lastShapes.end(); it++)
-	{
-		delete *it;
-	}
-	lastShapes.clear();
 }
 
 //*************************************************************************
@@ -640,11 +634,6 @@ const void CRebarPos::Update(void)
 	assertWriteEnabled();
 
 	Calculate();
-}
-
-const std::vector<CShape*>& CRebarPos::GetShapes(void) const
-{
-	return lastShapes;
 }
 
 //*************************************************************************
@@ -2006,13 +1995,6 @@ void CRebarPos::Calculate(void)
 	m_CalcProps.Reset();
 	m_CalcProps.Generation = m_CalcProps.Generation + 1;
 
-	// Reset shapes
-	for(ShapeListIt it = lastShapes.begin(); it != lastShapes.end(); it++)
-	{
-		delete *it;
-	}
-	lastShapes.clear();
-
 	// Create text styles
 	if (!pGroup->TextStyleId().isNull())
 		Utility::MakeGiTextStyle(lastTextStyle, pGroup->TextStyleId());
@@ -2058,12 +2040,6 @@ void CRebarPos::Calculate(void)
 			formula = pShape->Formula();
 		}
 		m_CalcProps.FieldCount = pShape->Fields();
-
-		// Copy shapes
-		for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
-		{
-			lastShapes.push_back(pShape->GetShape(i)->clone());
-		}
 
 		// Calculate count
 		if(m_Count != NULL && m_Count[0] != _T('\0'))

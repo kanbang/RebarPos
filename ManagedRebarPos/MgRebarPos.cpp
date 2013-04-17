@@ -246,21 +246,6 @@ String^ RebarPos::PosKey::get()
     return Marshal::WcharToString(GetImpObj()->PosKey());
 }
 
-array<PosShape::Shape^>^ RebarPos::Shapes::get()
-{
-	std::vector<CShape*> shapes = GetImpObj()->GetShapes();
-	array<PosShape::Shape^>^ list = gcnew array<PosShape::Shape^>((int)shapes.size());
-
-	int i = 0;
-	for(ShapeListIt it = shapes.begin(); it != shapes.end(); it++)
-	{
-		list[i] = PosShape::Shape::FromNative(*it);
-		i++;
-	}
-
-	return list;
-}
-
 RebarPos::CalculatedProperties^ RebarPos::CalcProperties::get()
 {
 	if(mCalculatedProperties->mGeneration < GetImpObj()->CalcProps().Generation)

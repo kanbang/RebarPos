@@ -193,8 +193,6 @@ namespace OZOZ
 
 			property String^ PosKey { String^ get(); }
 
-			property array<PosShape::Shape^>^ Shapes { array<PosShape::Shape^>^ get(); }
-
 		public:
 			void Update();
 			HitTestResult HitTest(Point3d pt);

@@ -147,7 +147,6 @@ private:
 	Adesk::UInt16 lastCircleColor;
 	AcDbObjectId defpointsLayer;
 	double lastNoteScale;
-	std::vector<CShape*> lastShapes;
 	double circleRadius;
 	double tauSize;
 	double partSpacing;
@@ -227,9 +226,6 @@ public:
 	const double Width(void) const;
 	const double Height(void) const;
 	const void TextBox(AcGePoint3d& ptmin, AcGePoint3d& ptmax);
-
-	/// Get shapes
-	const std::vector<CShape*>& GetShapes(void) const;
 
 	/// Determines which part is under the given point
 	const CRebarPos::PosSubEntityType HitTest(const AcGePoint3d& pt0) const;
