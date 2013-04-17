@@ -1,6 +1,6 @@
 BEGIN
 Name	TR
-Columns	[M][N][D][L][SH][TL]
+Columns	[M][D][N][L][SH][TL]
 TextStyle	Rebar BOQ Style	romanstw.shx	0.7
 HeadingStyle	Rebar BOQ Heading Style	Arial.ttf	1.0
 FootingStyle	Rebar BOQ Footing Style	simplxtw.shx	1.0
@@ -20,7 +20,7 @@ END
 
 BEGIN
 Name	EN
-Columns	[M][N][D][L][SH][TL]
+Columns	[M][D][N][L][SH][TL]
 TextStyle	Rebar BOQ Style	romanstw.shx	0.65
 HeadingStyle	Rebar BOQ Heading Style	Arial.ttf	1.0
 FootingStyle	Rebar BOQ Footing Style	simplxtw.shx	1.0
