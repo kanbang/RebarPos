@@ -39,6 +39,8 @@ namespace RebarPosCommands
         private Size mCellSize;
         private Color mSelectionColor;
 
+        private Dictionary<int, List<string>> pieceLengths;
+
         public string SelectedShape { get { return mSelectedShape; } set { mSelectedShape = value; Refresh(); } }
         public Size CellSize { get { return mCellSize; } set { mCellSize = value; UpdateCells(); } }
         public Color CellBackColor { get; set; }
@@ -76,6 +78,8 @@ namespace RebarPosCommands
             this.ResumeLayout(false);
 
             mSelectedShape = string.Empty;
+
+            pieceLengths = new Dictionary<int, List<string>>();
 
             init = false;
             disposed = false;
@@ -128,6 +132,15 @@ namespace RebarPosCommands
             device.OnSize(mCellSize);
         }
 
+        public void SetPieceLengths(int index, string a, string b, string c, string d, string e, string f)
+        {
+            List<string> lengths = new List<string>() { a, b, c, d, e, f };
+            if (pieceLengths.ContainsKey(index))
+                pieceLengths[index] = lengths;
+            else
+                pieceLengths.Add(index, lengths);
+        }
+
         public void UpdateCells()
         {
             Init();
@@ -160,17 +173,23 @@ namespace RebarPosCommands
         {
             if (init && !disposed && !Disposing && !IsDesigner)
             {
-                string shapeName = (string)((Control)sender).Tag;
+                Control cell = (Control)sender;
+                string shapeName = (string)cell.Tag;
                 if (string.IsNullOrEmpty(shapeName)) return;
-
+                int index = layoutPanel.Controls.IndexOf(cell);
                 PosShape shape = PosShape.GetPosShape(shapeName);
+                List<string> lengths = new List<string>();
+                if (pieceLengths.TryGetValue(index, out lengths) && (lengths.Count == 6))
+                {
+                    shape.SetShapeTexts(lengths[0], lengths[1], lengths[2], lengths[3], lengths[4], lengths[5]);
+                }
 
                 using (Bitmap bmp = shape.ToBitmap(device, view, model, CellBackColor, mCellSize.Width, mCellSize.Height))
                 {
                     e.Graphics.DrawImageUnscaled(bmp, 0, 0);
                 }
 
-                view.EraseAll();
+                shape.ClearShapeTexts();
 
                 if (ShowShapeNames)
                 {

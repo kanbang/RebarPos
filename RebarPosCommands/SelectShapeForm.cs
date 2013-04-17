@@ -35,6 +35,11 @@ namespace RebarPosCommands
             SetShapes(current, PosShape.GetAllPosShapes());
         }
 
+        public void SetShapes(IEnumerable<string> inshapes)
+        {
+            SetShapes("", inshapes);
+        }
+
         public void SetShapes(string current, IEnumerable<string> inshapes)
         {
             m_Current = current;
@@ -45,6 +50,11 @@ namespace RebarPosCommands
             shapesView.SelectedShape = m_Current;
             shapesView.ShowShapeNames = true;
             shapesView.ShapeClick += new MultiPosShapeViewClickEventHandler(posShapeView_Click);
+        }
+
+        public void SetPieceLengths(int index, string a, string b, string c, string d, string e, string f)
+        {
+            shapesView.SetPieceLengths(index, a, b, c, d, e, f);
         }
 
         private void posShapeView_Click(object sender, MultiPosShapeViewClickEventArgs e)

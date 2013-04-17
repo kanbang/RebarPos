@@ -9,6 +9,297 @@ using OZOZ.RebarPosWrapper;
 
 namespace RebarPosCommands
 {
+    #region PosCheckResult (abstract)
+    public abstract class PosCheckResult
+    {
+        public string Pos { get; protected set; }
+        public List<ObjectId> Items { get; private set; }
+        public List<ObjectId> DetachedItems { get; private set; }
+        public abstract string ErrorMessage { get; }
+        public abstract string Key { get; }
+        public abstract string Description { get; }
+
+        public abstract bool Fix();
+
+        public PosCheckResult()
+            : this(string.Empty)
+        {
+            ;
+        }
+
+        public PosCheckResult(string pos)
+        {
+            Pos = pos;
+            Items = new List<ObjectId>();
+            DetachedItems = new List<ObjectId>();
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("\n");
+            sb.Append(Pos);
+            sb.Append(" Pozu ");
+            sb.Append(Description);
+            sb.Append(": ");
+            sb.Append(ErrorMessage);
+            sb.Append(" (");
+            sb.Append(Items.Count);
+            sb.Append(" adet poz)");
+
+            return sb.ToString();
+        }
+
+        public static List<PosCheckResult> CheckAllInSelection(IEnumerable<ObjectId> items, bool checkErrors, bool checkWarnings)
+        {
+            List<PosCheckResult> results = new List<PosCheckResult>();
+
+            // Read all pos objects
+            List<PosCopy> pliste = PosCopy.ReadAllInSelection(items, true, PosCopy.PosGrouping.None);
+
+            if (checkErrors)
+            {
+                // Read standard diameter list
+                List<int> standardDiameters = DWGUtility.GetStandardDiameters();
+
+                // Maximum bar length
+                double maxLength = DWGUtility.GetMaximumBarLength();
+
+                // Check if standard diameter
+                Dictionary<string, List<PosCopy>> sdcheck = new Dictionary<string, List<PosCopy>>();
+                foreach (PosCopy x in pliste)
+                {
+                    int dia = 0;
+                    if (!int.TryParse(x.diameter, out dia) || !standardDiameters.Contains(dia))
+                    {
+                        string key = x.pos + dia.ToString();
+                        if (sdcheck.ContainsKey(key))
+                            sdcheck[key].Add(x);
+                        else
+                            sdcheck[key] = new List<PosCopy>() { x };
+                    }
+                }
+                foreach (List<PosCopy> list in sdcheck.Values)
+                {
+                    StandardDiameterCheck check = new StandardDiameterCheck(list[0].pos, list[0].diameter, standardDiameters);
+                    foreach (PosCopy copy in list)
+                        check.Items.Add(copy.list[0]);
+                    results.Add(check);
+                }
+
+                // Check maximum bar length
+                Dictionary<string, List<PosCopy>> maxcheck = new Dictionary<string, List<PosCopy>>();
+                foreach (PosCopy copy in pliste)
+                {
+                    if (copy.length1 / 1000.0 > maxLength || copy.length2 / 1000.0 > maxLength)
+                    {
+                        string key = copy.pos + copy.key;
+                        if (maxcheck.ContainsKey(key))
+                            maxcheck[key].Add(copy);
+                        else
+                            maxcheck[key] = new List<PosCopy>() { copy };
+                    }
+                }
+                foreach (List<PosCopy> list in maxcheck.Values)
+                {
+                    MaximumLengthCheck check = new MaximumLengthCheck(list[0].pos, list[0].length1 / 1000.0, list[0].length2 / 1000.0, list[0].isVarLength, maxLength, list[0].a, list[0].b, list[0].c, list[0].d, list[0].e, list[0].f);
+                    foreach (PosCopy copy in list)
+                        check.Items.Add(copy.list[0]);
+                    results.Add(check);
+                }
+
+                // Check unknown shapes
+                Dictionary<string, List<PosCopy>> unknownshapecheck = new Dictionary<string, List<PosCopy>>();
+                foreach (PosCopy copy in pliste)
+                {
+                    if (PosShape.GetPosShape(copy.shapename).IsUnknown)
+                    {
+                        string key = copy.shapename;
+                        if (unknownshapecheck.ContainsKey(key))
+                            unknownshapecheck[key].Add(copy);
+                        else
+                            unknownshapecheck[key] = new List<PosCopy>() { copy };
+                    }
+                }
+                foreach (List<PosCopy> list in unknownshapecheck.Values)
+                {
+                    UnknownShapeCheck check = new UnknownShapeCheck(list[0].pos, list[0].shapename);
+                    foreach (PosCopy copy in list)
+                        check.Items.Add(copy.list[0]);
+                    results.Add(check);
+                }
+
+                // Check empty piece lengths
+                Dictionary<string, List<PosCopy>> emptypiecelengthcheck = new Dictionary<string, List<PosCopy>>();
+                foreach (PosCopy copy in pliste)
+                {
+                    bool err = false;
+                    int fieldCount = copy.fieldCount;
+                    if (!err && fieldCount > 0 && string.IsNullOrEmpty(copy.a)) err = true;
+                    if (!err && fieldCount > 1 && string.IsNullOrEmpty(copy.b)) err = true;
+                    if (!err && fieldCount > 2 && string.IsNullOrEmpty(copy.c)) err = true;
+                    if (!err && fieldCount > 3 && string.IsNullOrEmpty(copy.d)) err = true;
+                    if (!err && fieldCount > 4 && string.IsNullOrEmpty(copy.e)) err = true;
+                    if (!err && fieldCount > 5 && string.IsNullOrEmpty(copy.f)) err = true;
+
+                    if (err)
+                    {
+                        string key = copy.shapename + copy.a + copy.b + copy.c + copy.d + copy.e + copy.f;
+                        if (emptypiecelengthcheck.ContainsKey(key))
+                            emptypiecelengthcheck[key].Add(copy);
+                        else
+                            emptypiecelengthcheck[key] = new List<PosCopy>() { copy };
+                    }
+                }
+                foreach (List<PosCopy> list in emptypiecelengthcheck.Values)
+                {
+                    EmptyPieceLengthCheck check = new EmptyPieceLengthCheck(list[0].pos, list[0].fieldCount, list[0].a, list[0].b, list[0].c, list[0].d, list[0].e, list[0].f);
+                    foreach (PosCopy copy in list)
+                        check.Items.Add(copy.list[0]);
+                    results.Add(check);
+                }
+
+                // Group by pos
+                Dictionary<string, List<PosCopy>> poscheck = new Dictionary<string, List<PosCopy>>();
+                foreach (PosCopy copy in pliste)
+                {
+                    string key = copy.pos;
+                    if (poscheck.ContainsKey(key))
+                        poscheck[key].Add(copy);
+                    else
+                        poscheck[key] = new List<PosCopy>() { copy };
+                }
+
+                foreach (List<PosCopy> list in poscheck.Values)
+                {
+                    // Check if diameters different in same pos
+                    Dictionary<string, List<PosCopy>> dcheck = new Dictionary<string, List<PosCopy>>();
+                    foreach (PosCopy copy in list)
+                    {
+                        if (dcheck.ContainsKey(copy.diameter))
+                            dcheck[copy.diameter].Add(copy);
+                        else
+                            dcheck[copy.diameter] = new List<PosCopy>() { copy };
+                    }
+
+                    if (dcheck.Count > 1)
+                    {
+                        DiameterCheck check = new DiameterCheck(list[0].pos, dcheck.Keys);
+                        foreach (List<PosCopy> checklist in dcheck.Values)
+                        {
+                            foreach (PosCopy copy in checklist)
+                                check.Items.Add(copy.list[0]);
+                        }
+                        results.Add(check);
+                    }
+
+                    // Check if shapes and piece lengths different in same pos
+                    Dictionary<string, List<PosCopy>> lcheck = new Dictionary<string, List<PosCopy>>();
+                    foreach (PosCopy copy in list)
+                    {
+                        string key = copy.shapename + copy.a + copy.b + copy.c + copy.d + copy.e + copy.f;
+                        if (lcheck.ContainsKey(key))
+                            lcheck[key].Add(copy);
+                        else
+                            lcheck[key] = new List<PosCopy>() { copy };
+                    }
+
+                    if (lcheck.Count > 1)
+                    {
+                        PieceLengthCheck check = new PieceLengthCheck(list[0].pos);
+                        foreach (List<PosCopy> checklist in lcheck.Values)
+                        {
+                            foreach (PosCopy copy in checklist)
+                            {
+                                PieceLengthCheck.ShapeDefiniton shape = new PieceLengthCheck.ShapeDefiniton(copy.shapename, copy.a, copy.b, copy.c, copy.d, copy.e, copy.f);
+                                if (!check.Shapes.Contains(shape))
+                                    check.Shapes.Add(shape);
+                            }
+
+                            foreach (PosCopy copy in checklist)
+                                check.Items.Add(copy.list[0]);
+                        }
+                        results.Add(check);
+                    }
+                }
+            }
+
+            if (checkWarnings)
+            {
+                // Group by pos key
+                Dictionary<string, List<PosCopy>> poscheck = new Dictionary<string, List<PosCopy>>();
+                foreach (PosCopy copy in pliste)
+                {
+                    if (poscheck.ContainsKey(copy.key))
+                        poscheck[copy.key].Add(copy);
+                    else
+                        poscheck[copy.key] = new List<PosCopy>() { copy };
+                }
+
+                foreach (List<PosCopy> list in poscheck.Values)
+                {
+                    // Check if pos numbers are different with same pos key
+                    Dictionary<string, List<PosCopy>> scheck = new Dictionary<string, List<PosCopy>>();
+                    foreach (PosCopy copy in list)
+                    {
+                        if (scheck.ContainsKey(copy.pos))
+                            scheck[copy.pos].Add(copy);
+                        else
+                            scheck[copy.pos] = new List<PosCopy>() { copy };
+                    }
+
+                    if (scheck.Count > 1)
+                    {
+                        SamePosKeyCheck check = new SamePosKeyCheck(scheck.Keys);
+                        foreach (List<PosCopy> checklist in scheck.Values)
+                        {
+                            foreach (PosCopy copy in checklist)
+                            {
+                                check.Items.Add(copy.list[0]);
+                            }
+                        }
+                        results.Add(check);
+                    }
+                }
+            }
+
+            results.Sort(new CompareByPosNumber());
+
+            return results;
+        }
+
+        private class CompareByPosNumber : IComparer<PosCheckResult>
+        {
+            public int Compare(PosCheckResult e1, PosCheckResult e2)
+            {
+                int p1 = 0;
+                int p2 = 0;
+                int.TryParse(e1.Pos, out p1);
+                int.TryParse(e2.Pos, out p2);
+
+                return (p1 == p2 ? 0 : (p1 < p2 ? -1 : 1));
+            }
+        }
+
+        public static void ConsoleOut(List<PosCheckResult> list)
+        {
+            if (list.Count != 0)
+            {
+                Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+                ed.WriteMessage("\nPozlandirmada asagidaki hatalar bulundu:");
+                ed.WriteMessage("\n----------------------------------------");
+                StringBuilder sb = new StringBuilder();
+                foreach (PosCheckResult result in list)
+                {
+                    sb.Append(result.ToString());
+                }
+                ed.WriteMessage(sb.ToString());
+            }
+        }
+    }
+    #endregion
+
     #region DiameterCheck
     public class DiameterCheck : PosCheckResult
     {
@@ -318,9 +609,14 @@ namespace RebarPosCommands
                 List<string> list = new List<string>();
                 foreach (ShapeDefiniton def in Shapes)
                     list.Add(def.Shape);
-                // TODO: Add piece lengths
-                frmEdit.SetShapes(Shapes[0].Shape, list);
-
+                frmEdit.SetShapes(list);
+                // Add piece lengths
+                int i = 0;
+                foreach (ShapeDefiniton def in Shapes)
+                {
+                    frmEdit.SetPieceLengths(i, def.A, def.B, def.C, def.D, def.E, def.F);
+                    i++;
+                }
                 if (frmEdit.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     ShapeDefiniton shape = Shapes.Find(p => p.Shape == frmEdit.Current);
@@ -1274,293 +1570,4 @@ namespace RebarPosCommands
         }
     }
     #endregion
-
-    public abstract class PosCheckResult
-    {
-        public string Pos { get; protected set; }
-        public List<ObjectId> Items { get; private set; }
-        public List<ObjectId> DetachedItems { get; private set; }
-        public abstract string ErrorMessage { get; }
-        public abstract string Key { get; }
-        public abstract string Description { get; }
-
-        public abstract bool Fix();
-
-        public PosCheckResult()
-            : this(string.Empty)
-        {
-            ;
-        }
-
-        public PosCheckResult(string pos)
-        {
-            Pos = pos;
-            Items = new List<ObjectId>();
-            DetachedItems = new List<ObjectId>();
-        }
-
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            sb.Append("\n");
-            sb.Append(Pos);
-            sb.Append(" Pozu ");
-            sb.Append(Description);
-            sb.Append(": ");
-            sb.Append(ErrorMessage);
-            sb.Append(" (");
-            sb.Append(Items.Count);
-            sb.Append(" adet poz)");
-
-            return sb.ToString();
-        }
-
-        public static List<PosCheckResult> CheckAllInSelection(IEnumerable<ObjectId> items, bool checkErrors, bool checkWarnings)
-        {
-            List<PosCheckResult> results = new List<PosCheckResult>();
-
-            // Read all pos objects
-            List<PosCopy> pliste = PosCopy.ReadAllInSelection(items, true, PosCopy.PosGrouping.None);
-
-            if (checkErrors)
-            {
-                // Read standard diameter list
-                List<int> standardDiameters = DWGUtility.GetStandardDiameters();
-
-                // Maximum bar length
-                double maxLength = DWGUtility.GetMaximumBarLength();
-
-                // Check if standard diameter
-                Dictionary<string, List<PosCopy>> sdcheck = new Dictionary<string, List<PosCopy>>();
-                foreach (PosCopy x in pliste)
-                {
-                    int dia = 0;
-                    if (!int.TryParse(x.diameter, out dia) || !standardDiameters.Contains(dia))
-                    {
-                        string key = x.pos + dia.ToString();
-                        if (sdcheck.ContainsKey(key))
-                            sdcheck[key].Add(x);
-                        else
-                            sdcheck[key] = new List<PosCopy>() { x };
-                    }
-                }
-                foreach (List<PosCopy> list in sdcheck.Values)
-                {
-                    StandardDiameterCheck check = new StandardDiameterCheck(list[0].pos, list[0].diameter, standardDiameters);
-                    foreach (PosCopy copy in list)
-                        check.Items.Add(copy.list[0]);
-                    results.Add(check);
-                }
-
-                // Check maximum bar length
-                Dictionary<string, List<PosCopy>> maxcheck = new Dictionary<string, List<PosCopy>>();
-                foreach (PosCopy copy in pliste)
-                {
-                    if (copy.length1 / 1000.0 > maxLength || copy.length2 / 1000.0 > maxLength)
-                    {
-                        string key = copy.pos + copy.key;
-                        if (maxcheck.ContainsKey(key))
-                            maxcheck[key].Add(copy);
-                        else
-                            maxcheck[key] = new List<PosCopy>() { copy };
-                    }
-                }
-                foreach (List<PosCopy> list in maxcheck.Values)
-                {
-                    MaximumLengthCheck check = new MaximumLengthCheck(list[0].pos, list[0].length1 / 1000.0, list[0].length2 / 1000.0, list[0].isVarLength, maxLength, list[0].a, list[0].b, list[0].c, list[0].d, list[0].e, list[0].f);
-                    foreach (PosCopy copy in list)
-                        check.Items.Add(copy.list[0]);
-                    results.Add(check);
-                }
-
-                // Check unknown shapes
-                Dictionary<string, List<PosCopy>> unknownshapecheck = new Dictionary<string, List<PosCopy>>();
-                foreach (PosCopy copy in pliste)
-                {
-                    if (PosShape.GetPosShape(copy.shapename).IsUnknown)
-                    {
-                        string key = copy.shapename;
-                        if (unknownshapecheck.ContainsKey(key))
-                            unknownshapecheck[key].Add(copy);
-                        else
-                            unknownshapecheck[key] = new List<PosCopy>() { copy };
-                    }
-                }
-                foreach (List<PosCopy> list in unknownshapecheck.Values)
-                {
-                    UnknownShapeCheck check = new UnknownShapeCheck(list[0].pos, list[0].shapename);
-                    foreach (PosCopy copy in list)
-                        check.Items.Add(copy.list[0]);
-                    results.Add(check);
-                }
-
-                // Check empty piece lengths
-                Dictionary<string, List<PosCopy>> emptypiecelengthcheck = new Dictionary<string, List<PosCopy>>();
-                foreach (PosCopy copy in pliste)
-                {
-                    bool err = false;
-                    int fieldCount = copy.fieldCount;
-                    if (!err && fieldCount > 0 && string.IsNullOrEmpty(copy.a)) err = true;
-                    if (!err && fieldCount > 1 && string.IsNullOrEmpty(copy.b)) err = true;
-                    if (!err && fieldCount > 2 && string.IsNullOrEmpty(copy.c)) err = true;
-                    if (!err && fieldCount > 3 && string.IsNullOrEmpty(copy.d)) err = true;
-                    if (!err && fieldCount > 4 && string.IsNullOrEmpty(copy.e)) err = true;
-                    if (!err && fieldCount > 5 && string.IsNullOrEmpty(copy.f)) err = true;
-
-                    if (err)
-                    {
-                        string key = copy.shapename + copy.a + copy.b + copy.c + copy.d + copy.e + copy.f;
-                        if (emptypiecelengthcheck.ContainsKey(key))
-                            emptypiecelengthcheck[key].Add(copy);
-                        else
-                            emptypiecelengthcheck[key] = new List<PosCopy>() { copy };
-                    }
-                }
-                foreach (List<PosCopy> list in emptypiecelengthcheck.Values)
-                {
-                    EmptyPieceLengthCheck check = new EmptyPieceLengthCheck(list[0].pos, list[0].fieldCount, list[0].a, list[0].b, list[0].c, list[0].d, list[0].e, list[0].f);
-                    foreach (PosCopy copy in list)
-                        check.Items.Add(copy.list[0]);
-                    results.Add(check);
-                }
-
-                // Group by pos
-                Dictionary<string, List<PosCopy>> poscheck = new Dictionary<string, List<PosCopy>>();
-                foreach (PosCopy copy in pliste)
-                {
-                    string key = copy.pos;
-                    if (poscheck.ContainsKey(key))
-                        poscheck[key].Add(copy);
-                    else
-                        poscheck[key] = new List<PosCopy>() { copy };
-                }
-
-                foreach (List<PosCopy> list in poscheck.Values)
-                {
-                    // Check if diameters different in same pos
-                    Dictionary<string, List<PosCopy>> dcheck = new Dictionary<string, List<PosCopy>>();
-                    foreach (PosCopy copy in list)
-                    {
-                        if (dcheck.ContainsKey(copy.diameter))
-                            dcheck[copy.diameter].Add(copy);
-                        else
-                            dcheck[copy.diameter] = new List<PosCopy>() { copy };
-                    }
-
-                    if (dcheck.Count > 1)
-                    {
-                        DiameterCheck check = new DiameterCheck(list[0].pos, dcheck.Keys);
-                        foreach (List<PosCopy> checklist in dcheck.Values)
-                        {
-                            foreach (PosCopy copy in checklist)
-                                check.Items.Add(copy.list[0]);
-                        }
-                        results.Add(check);
-                    }
-
-                    // Check if shapes and piece lengths different in same pos
-                    Dictionary<string, List<PosCopy>> lcheck = new Dictionary<string, List<PosCopy>>();
-                    foreach (PosCopy copy in list)
-                    {
-                        string key = copy.shapename + copy.a + copy.b + copy.c + copy.d + copy.e + copy.f;
-                        if (lcheck.ContainsKey(key))
-                            lcheck[key].Add(copy);
-                        else
-                            lcheck[key] = new List<PosCopy>() { copy };
-                    }
-
-                    if (lcheck.Count > 1)
-                    {
-                        PieceLengthCheck check = new PieceLengthCheck(list[0].pos);
-                        foreach (List<PosCopy> checklist in lcheck.Values)
-                        {
-                            foreach (PosCopy copy in checklist)
-                            {
-                                PieceLengthCheck.ShapeDefiniton shape = new PieceLengthCheck.ShapeDefiniton(copy.shapename, copy.a, copy.b, copy.c, copy.d, copy.e, copy.f);
-                                if (!check.Shapes.Contains(shape))
-                                    check.Shapes.Add(shape);
-                            }
-
-                            foreach (PosCopy copy in checklist)
-                                check.Items.Add(copy.list[0]);
-                        }
-                        results.Add(check);
-                    }
-                }
-            }
-
-            if (checkWarnings)
-            {
-                // Group by pos key
-                Dictionary<string, List<PosCopy>> poscheck = new Dictionary<string, List<PosCopy>>();
-                foreach (PosCopy copy in pliste)
-                {
-                    if (poscheck.ContainsKey(copy.key))
-                        poscheck[copy.key].Add(copy);
-                    else
-                        poscheck[copy.key] = new List<PosCopy>() { copy };
-                }
-
-                foreach (List<PosCopy> list in poscheck.Values)
-                {
-                    // Check if pos numbers are different with same pos key
-                    Dictionary<string, List<PosCopy>> scheck = new Dictionary<string, List<PosCopy>>();
-                    foreach (PosCopy copy in list)
-                    {
-                        if (scheck.ContainsKey(copy.pos))
-                            scheck[copy.pos].Add(copy);
-                        else
-                            scheck[copy.pos] = new List<PosCopy>() { copy };
-                    }
-
-                    if (scheck.Count > 1)
-                    {
-                        SamePosKeyCheck check = new SamePosKeyCheck(scheck.Keys);
-                        foreach (List<PosCopy> checklist in scheck.Values)
-                        {
-                            foreach (PosCopy copy in checklist)
-                            {
-                                check.Items.Add(copy.list[0]);
-                            }
-                        }
-                        results.Add(check);
-                    }
-                }
-            }
-
-            results.Sort(new CompareByPosNumber());
-
-            return results;
-        }
-
-        private class CompareByPosNumber : IComparer<PosCheckResult>
-        {
-            public int Compare(PosCheckResult e1, PosCheckResult e2)
-            {
-                int p1 = 0;
-                int p2 = 0;
-                int.TryParse(e1.Pos, out p1);
-                int.TryParse(e2.Pos, out p2);
-
-                return (p1 == p2 ? 0 : (p1 < p2 ? -1 : 1));
-            }
-        }
-
-        public static void ConsoleOut(List<PosCheckResult> list)
-        {
-            if (list.Count != 0)
-            {
-                Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
-                ed.WriteMessage("\nPozlandirmada asagidaki hatalar bulundu:");
-                ed.WriteMessage("\n----------------------------------------");
-                StringBuilder sb = new StringBuilder();
-                foreach (PosCheckResult result in list)
-                {
-                    sb.Append(result.ToString());
-                }
-                ed.WriteMessage(sb.ToString());
-            }
-        }
-    }
 }
