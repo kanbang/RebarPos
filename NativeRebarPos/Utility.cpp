@@ -508,7 +508,7 @@ void Utility::DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& positi
 		if(horizontalAlignment == AcDb::kTextLeft)
 			x = 0.0;
 		else if(horizontalAlignment == AcDb::kTextRight)
-			x = totalWidth - widths[i];
+			x = -widths[i];
 		else // horizontal center
 			x = -widths[i] / 2.0;
 
