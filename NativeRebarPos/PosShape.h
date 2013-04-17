@@ -74,13 +74,12 @@ protected:
 
 public:
 	/// Converts the shape image to a HBITMAP
+	HBITMAP ToBitmap(AcGsDevice* device, AcGsView* view, AcGsModel* model, const AcGsColor backColor, const int width, const int height);
+	/// Converts the shape image to a HBITMAP
 	HBITMAP ToBitmap(const AcGsColor backColor, const int width, const int height);
-	/// Saves the shape image to the given file
-	void SaveImage(const ACHAR* fileName, const AcGsColor backColor, const int width, const int height);
 
 private:
-	Atil::Image* ATILGetImage(const AcGsColor backColor, const int width, const int height);
-	void ATILSaveImage(Atil::Image* pImage, const ACHAR* fileName);
+	Atil::Image* ATILGetImage(AcGsDevice* device, AcGsView* view, AcGsModel* model, const AcGsColor backColor, const int width, const int height);
 	HBITMAP ATILConvertToBitmap(Atil::Image* pImage);
 
 public:

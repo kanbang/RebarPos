@@ -162,22 +162,15 @@ Acad::ErrorStatus CPosShape::setIsInternal(const Adesk::Boolean newVal)
 	return Acad::eOk;
 }
 
-HBITMAP CPosShape::ToBitmap(const AcGsColor backColor, const int width, const int height)
+HBITMAP CPosShape::ToBitmap(AcGsDevice* device, AcGsView* view, AcGsModel* model, const AcGsColor backColor, const int width, const int height)
 {
-	Atil::Image* image = ATILGetImage(backColor, width, height);
+	Atil::Image* image = ATILGetImage(device, view, model, backColor, width, height);
 	HBITMAP hBmp = ATILConvertToBitmap(image);
 	delete image;
 	return hBmp;
 }
 
-void CPosShape::SaveImage(const ACHAR* fileName, const AcGsColor backColor, const int width, const int height)
-{
-	Atil::Image* image = ATILGetImage(backColor, width, height);
-	ATILSaveImage(image, fileName);
-	delete image;
-}
-
-Atil::Image* CPosShape::ATILGetImage(const AcGsColor backColor, const int width, const int height)
+HBITMAP CPosShape::ToBitmap(const AcGsColor backColor, const int width, const int height)
 {
 	AcGsManager* manager = acgsGetGsManager();
 	AcGsClassFactory* factory = manager->getGSClassFactory();
@@ -193,6 +186,21 @@ Atil::Image* CPosShape::ATILGetImage(const AcGsColor backColor, const int width,
 	AcGsModel* model = manager->createAutoCADModel();
 
 	device->add(view);
+
+	HBITMAP hBmp = ToBitmap(device, view, model, backColor, width, height);
+
+	device->eraseAll();
+
+	manager->destroyAutoCADView(view);
+	manager->destroyAutoCADModel(model);
+	manager->destroyAutoCADDevice(device);
+
+	return hBmp;
+}
+
+Atil::Image* CPosShape::ATILGetImage(AcGsDevice* device, AcGsView* view, AcGsModel* model, const AcGsColor backColor, const int width, const int height)
+{
+	device->setBackgroundColor(backColor);
 
 	AcDbExtents extents;
 	bounds(extents);
@@ -215,32 +223,9 @@ Atil::Image* CPosShape::ATILGetImage(const AcGsColor backColor, const int width,
 
 	view->getSnapShot(image, AcGsDCPoint(0,0));
 
-	device->eraseAll();
 	view->eraseAll();
 
-	manager->destroyAutoCADView(view);
-	manager->destroyAutoCADModel(model);
-	manager->destroyAutoCADDevice(device);
-
 	return image;
-}
-
-void CPosShape::ATILSaveImage(Atil::Image* pImage, const ACHAR* fileName)
-{
-	Atil::RowProviderInterface *pPipe = pImage->read(pImage->size(), Atil::Offset(0,0), Atil::kBottomUpLeftRight);
-	Atil::ImageFormatCodec *pCodec = new BmpFormatCodec();
-
-	Atil::FileWriteDescriptor fileWriter(pCodec);
-
-	int nchars = (int)wcslen(fileName);
-	Atil::FileSpecifier fs(Atil::StringBuffer((nchars + 1) * sizeof(ACHAR), (const Atil::Byte *)fileName, Atil::StringBuffer::kUTF_16), Atil::FileSpecifier::kFilePath);
-	fileWriter.setFileSpecifier(fs);
-
-	fileWriter.createImageFrame(pPipe->dataModel(), pPipe->size());
-
-	fileWriter.writeImageFrame(pPipe);
-
-	delete pCodec;
 }
 
 HBITMAP CPosShape::ATILConvertToBitmap(Atil::Image* pImage)

@@ -115,6 +115,21 @@ System::Drawing::Bitmap^ PosShape::ToBitmap(System::Drawing::Color backColor, in
 	return System::Drawing::Bitmap::FromHbitmap(System::IntPtr(GetImpObj()->ToBitmap(color, width, height)));
 }
 
+System::Drawing::Bitmap^ PosShape::ToBitmap(Device^ device, View^ view, Model^ model, System::Drawing::Color backColor, int width, int height)
+{
+	AcGsColor color;
+	color.m_red = backColor.R;
+	color.m_green = backColor.G;
+	color.m_blue = backColor.B;
+	color.m_filler = backColor.A;
+
+	AcGsDevice* pdevice = static_cast<AcGsDevice*>(device->UnmanagedObject.ToPointer());
+	AcGsView* pview = static_cast<AcGsView*>(view->UnmanagedObject.ToPointer());
+	AcGsModel* pmodel = static_cast<AcGsModel*>(model->UnmanagedObject.ToPointer());
+
+	return System::Drawing::Bitmap::FromHbitmap(System::IntPtr(GetImpObj()->ToBitmap(pdevice, pview, pmodel, color, width, height)));
+}
+
 //*************************************************************************
 // Drawable implementation
 //*************************************************************************

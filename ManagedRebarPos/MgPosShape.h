@@ -13,6 +13,7 @@ using namespace System::Drawing;
 using namespace Autodesk::AutoCAD::Geometry;
 using namespace Autodesk::AutoCAD::DatabaseServices;
 using namespace Autodesk::AutoCAD::GraphicsInterface;
+using namespace Autodesk::AutoCAD::GraphicsSystem;
 
 namespace OZOZ 
 {
@@ -262,6 +263,7 @@ namespace OZOZ
 			void SetShapeTexts(String^ a, String^ b, String^ c, String^ d, String^ e, String^ f);
 			void ClearShapeTexts(void);
 
+			System::Drawing::Bitmap^ ToBitmap(Device^ device, View^ view, Model^ model, System::Drawing::Color backColor, int width, int height);
 			System::Drawing::Bitmap^ ToBitmap(System::Drawing::Color backColor, int width, int height);
 
 		public:
