@@ -96,7 +96,9 @@ namespace RebarPosCommands
             g.PushModelTransform(trans);
 
             // Draw shapes
+            shape.SetShapeTexts(pos.A, pos.B, pos.C, pos.D, pos.E, pos.F);
             g.Draw(shape);
+            shape.ClearShapeTexts();
 
             // Reset transform
             g.PopModelTransform();
