@@ -39,56 +39,19 @@ namespace RebarPosCommands
         {
             m_Current = current;
 
-            List<string> shapes = new List<string>(inshapes);
-
-            layoutPanel.Controls.Clear();
-
-            // Get AutoCad model background color
-            Color backColor = DWGUtility.ModelBackgroundColor();
-            try
-            {
-                foreach (string name in shapes)
-                {
-                    Panel panel = new Panel();
-                    panel.Size = new Size(145, 110);
-
-                    Label shapeLabel = new Label();
-                    shapeLabel.Size = new Size(145, 13);
-                    shapeLabel.Text = name;
-                    shapeLabel.Location = new Point(0, 0);
-                    panel.Controls.Add(shapeLabel);
-
-                    PosShapeView posShapeView = new PosShapeView();
-                    posShapeView.SuspendUpdate();
-                    posShapeView.SetShape(name);
-                    posShapeView.Selected = (name == m_Current);
-                    posShapeView.Visible = true;
-                    posShapeView.Size = new Size(145, 90);
-                    posShapeView.BackColor = backColor;
-                    posShapeView.Location = new Point(0, 15);
-                    posShapeView.Click += new EventHandler(posShapeView_Click);
-                    posShapeView.ResumeUpdate();
-
-                    panel.Controls.Add(posShapeView);
-
-                    layoutPanel.Controls.Add(panel);
-                }
-            }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            shapesView.SetShapes(inshapes);
+            shapesView.CellBackColor = DWGUtility.ModelBackgroundColor();
+            shapesView.CellSize = new Size(145, 90);
+            shapesView.SelectedShape = m_Current;
+            shapesView.ShowShapeNames = true;
+            shapesView.ShapeClick += new MultiPosShapeViewClickEventHandler(posShapeView_Click);
         }
 
-        private void posShapeView_Click(object sender, EventArgs e)
+        private void posShapeView_Click(object sender, MultiPosShapeViewClickEventArgs e)
         {
-            PosShapeView ctrl = sender as PosShapeView;
-            if (ctrl != null)
-            {
-                m_Current = ctrl.ShapeName;
-                DialogResult = DialogResult.OK;
-                Close();
-            }
+            m_Current = e.Shape;
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void SelectShapeForm_KeyDown(object sender, KeyEventArgs e)

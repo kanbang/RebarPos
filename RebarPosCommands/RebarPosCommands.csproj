@@ -132,6 +132,9 @@
     <Compile Include="ConfimMessageBox.Designer.cs">
       <DependentUpon>ConfimMessageBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="MultiPosShapeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="TableStylePreview.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -69,7 +69,6 @@ namespace RebarPosCommands
 
                 view = new Autodesk.AutoCAD.GraphicsSystem.View();
                 view.VisualStyle = new Autodesk.AutoCAD.GraphicsInterface.VisualStyle(Autodesk.AutoCAD.GraphicsInterface.VisualStyleType.Wireframe2D);
-
                 model = gsm.CreateAutoCADModel();
 
                 device.Add(view);

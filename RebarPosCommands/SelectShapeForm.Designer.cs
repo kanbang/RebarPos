@@ -28,27 +28,29 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.layoutPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.shapesView = new RebarPosCommands.MultiPosShapeView();
             this.SuspendLayout();
             // 
-            // layoutPanel
+            // shapesView
             // 
-            this.layoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.shapesView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.layoutPanel.AutoScroll = true;
-            this.layoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.layoutPanel.Location = new System.Drawing.Point(13, 13);
-            this.layoutPanel.Name = "layoutPanel";
-            this.layoutPanel.Size = new System.Drawing.Size(1225, 714);
-            this.layoutPanel.TabIndex = 0;
+            this.shapesView.CellBackColor = System.Drawing.Color.Empty;
+            this.shapesView.CellSize = new System.Drawing.Size(300, 150);
+            this.shapesView.Location = new System.Drawing.Point(12, 12);
+            this.shapesView.Name = "shapesView";
+            this.shapesView.SelectedShape = "";
+            this.shapesView.ShowShapeNames = false;
+            this.shapesView.Size = new System.Drawing.Size(1215, 588);
+            this.shapesView.TabIndex = 0;
             // 
             // SelectShapeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1250, 739);
-            this.Controls.Add(this.layoutPanel);
+            this.ClientSize = new System.Drawing.Size(1239, 612);
+            this.Controls.Add(this.shapesView);
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -64,7 +66,8 @@
 
         #endregion
 
-        private System.Windows.Forms.FlowLayoutPanel layoutPanel;
+        private MultiPosShapeView shapesView;
+
 
 
     }
