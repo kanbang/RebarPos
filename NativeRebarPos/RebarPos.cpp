@@ -2050,7 +2050,6 @@ void CRebarPos::Calculate(void)
 			int currCount = 0;
 			try
 			{
-
 				Utility::ReplaceString(countstring, L"x", L"*");
 				Utility::ReplaceString(countstring, L"X", L"*");
 				totalCount = Utility::DoubleToInt(Calculator::Evaluate(countstring));

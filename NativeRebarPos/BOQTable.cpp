@@ -1251,8 +1251,54 @@ void CBOQTable::subList() const
     acdbWcs2Ucs(asDblArray(pt), asDblArray(pt), false);
     acutPrintf(_T("X = %-9.16q0, Y = %-9.16q0, Z = %-9.16q0\n"), pt.x, pt.y, pt.z);
 
+	// Scale
+    acutPrintf(_T("%18s%16s %-9.16q0\n"), _T(/*MSG0*/""), _T("Scale:"), Scale());
+
 	// List all properties
-	// TODO
+	acutPrintf(_T("%18s%16s %i\n"), _T(/*MSG0*/""), _T("Multiplier:"), m_Multiplier);
+
+	switch(m_DisplayUnit)
+	{
+	case CBOQTable::MM:
+		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Display Unit:"), _T("MM"));
+		break;
+	case CBOQTable::CM:
+		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Display Unit:"), _T("CM"));
+		break;
+	case CBOQTable::DM:
+		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Display Unit:"), _T("DM"));
+		break;
+	case CBOQTable::M:
+		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Display Unit:"), _T("M"));
+		break;
+	}
+
+	acutPrintf(_T("%18s%16s %i\n"), _T(/*MSG0*/""), _T("Precision:"), m_Precision);
+
+	if ((m_Heading != NULL) && (m_Heading[0] != _T('\0')))
+		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Heading:"), m_Heading);
+	if ((m_Footing != NULL) && (m_Footing[0] != _T('\0')))
+		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Footing:"), m_Footing);
+	if ((m_Note != NULL) && (m_Note[0] != _T('\0')))
+		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Note:"), m_Note);
+
+	// Cells
+	if(!m_List.empty())
+		acutPrintf(_T("%18s%16s\n"), _T(/*MSG0*/""), _T("BOQ Items:"));
+
+	for(RowListConstIt it = m_List.begin(); it != m_List.end(); it++)
+	{
+		CBOQRow* row = *it;
+
+		double l1 = row->length1;
+		double l2 = row->length2;
+		if(m_DisplayUnit == CBOQTable::CM) { l1 /= 10.0; l2 /= 10.0; }
+
+		if(row->isVarLength)
+			acutPrintf(_T("%18s%16i %4i T%.0f L=%.2f~%.2f\n"), _T(/*MSG0*/""), row->pos, row->count, row->diameter, l1, l2);
+		else
+			acutPrintf(_T("%18s%16i %4i T%.0f L=%.2f\n"), _T(/*MSG0*/""), row->pos, row->count, row->diameter, l1);
+	}
 }
 
 Acad::ErrorStatus CBOQTable::subExplode(AcDbVoidPtrArray& entitySet) const
