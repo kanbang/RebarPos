@@ -466,8 +466,6 @@ void Utility::DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& positi
 					   const AcGiTextStyle& textStyle, const AcDb::TextHorzMode horizontalAlignment, const AcDb::TextVertMode verticalAlignment, 
 					   const Adesk::UInt16 color)
 {
-	double lineSpacing = 0.2 * textStyle.textSize();
-
 	// Split into lines
 	std::vector<std::wstring> lines = SplitString(string, std::wstring(L"\\P"));
 	if(lines.size() == 0) return;
@@ -476,6 +474,7 @@ void Utility::DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& positi
 	std::vector<double> widths;
 	std::vector<double> heights;
 	double totalHeight = 0.0;
+	double lineSpacing = 0.0;
 	double totalWidth = 0.0;
 	double lineHeight = 0.0;
 	for(std::vector<std::wstring>::iterator it = lines.begin(); it != lines.end(); ++it)
@@ -484,9 +483,10 @@ void Utility::DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& positi
 		AcGePoint2d ext = textStyle.extents(line.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
 		widths.push_back(ext.x);
 		heights.push_back(ext.y);
-		lineHeight = max(lineHeight, ext.y);
 		totalWidth = max(totalWidth, ext.x);
 	}
+	lineHeight = 1.333 * textStyle.textSize();
+	lineSpacing = 0.333 * lineHeight;
 	totalHeight = lineHeight * (double)lines.size() + lineSpacing * (double)(lines.size() - 1);
 
 	// Vertical location of first line
