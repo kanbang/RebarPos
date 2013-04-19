@@ -1588,6 +1588,8 @@ Acad::ErrorStatus CRebarPos::subDeepClone(AcDbObject*    pOwner,
         bOwnerXlated = true;
     }
 
+	pClone->Update();
+
     // This must be called for all newly created objects
     // in deepClone.  It is turned off by endDeepClone()
     // after it has translated the references to their
@@ -1792,6 +1794,8 @@ Acad::ErrorStatus CRebarPos::subWblockClone(AcRxObject*    pOwner,
 
     pClonedObject->setOwnerId((pOwn != NULL) ? pOwn->objectId() : ownerId());
 
+	pClone->Update();
+
     // STEP 5:
     // This must be called for all newly created objects
     // in wblockClone.  It is turned off by endDeepClone()
@@ -1806,6 +1810,9 @@ Acad::ErrorStatus CRebarPos::subWblockClone(AcRxObject*    pOwner,
     // idMap entry know whether the clone's owner is
     // correct, or needs to be translated later.
     //
+    idPair.setValue(pClonedObject->objectId());
+    idPair.setIsCloned(Adesk::kTrue);
+    idMap.assign(idPair);
 
     // STEP 7:
     // Using the filer list created above, find and clone
@@ -2669,3 +2676,4 @@ const DrawList CRebarPos::ParseFormula(const ACHAR* formula) const
 
 	return finallist;
 }
+
