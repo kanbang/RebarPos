@@ -1091,28 +1091,28 @@ void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 		{
 			AcGePoint3d circlept(p.x + p.w / 2.0, p.y + p.h / 2.0, 0);
 			circlept.transformBy(trans);
-
-			worldDraw->subEntityTraits().setColor(lastCircleColor);
-			worldDraw->geometry().circle(circlept, circleRadius * scale, NormalVector());
+			Utility::DrawCircle(worldDraw, circlept, circleRadius * scale, lastCircleColor);
 		}
 
 		// Tau sign
 		if(p.hasTau)
 		{
-			worldDraw->subEntityTraits().setColor(p.color);
-
 			AcGePoint3d circle(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0, 0);
-			worldDraw->geometry().ellipticalArc(circle, AcGeVector3d::kZAxis, 0.35, tauSize * 0.5, 0.0, 2.0 * PI, 0.5 * PI);
+			circle.transformBy(trans);
+			Utility::DrawEllipticalArc(worldDraw, circle,
+				0.35 * scale, tauSize * 0.5 * scale, 2.0 * PI, 0.5 * PI, p.color);
 
-			AcGePoint3d line[2];
-			line[0] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 - 0.5, 0);
-			line[1] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 + 0.5, 0);
-			worldDraw->geometry().polyline(2, line);
+			AcGePoint3d pv1(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 - 0.5, 0);
+			AcGePoint3d pv2(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 + 0.5, 0);
+			pv1.transformBy(trans);
+			pv2.transformBy(trans);
+			Utility::DrawLine(worldDraw, pv1, pv2, p.color);
 
-			AcGePoint3d cline[2];
-			cline[0] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0 - 0.2, p.y + p.h / 2.0 + 0.5, 0);
-			cline[1] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0 + 0.2, p.y + p.h / 2.0 + 0.5, 0);
-			worldDraw->geometry().polyline(2, cline);
+			AcGePoint3d ph1(p.x - partSpacing / 2.0 - tauSize / 2.0 - 0.2, p.y + p.h / 2.0 + 0.5, 0);
+			AcGePoint3d ph2(p.x - partSpacing / 2.0 - tauSize / 2.0 + 0.2, p.y + p.h / 2.0 + 0.5, 0);
+			ph1.transformBy(trans);
+			ph2.transformBy(trans);
+			Utility::DrawLine(worldDraw, ph1, ph2, p.color);
 		}
 
 		// Text
