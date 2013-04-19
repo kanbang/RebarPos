@@ -1124,8 +1124,7 @@ void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 			lastTextStyle.setXScale(p.widthFactor);
 			lastNoteStyle.loadStyleRec();
 		}
-		worldDraw->subEntityTraits().setColor(p.color);
-		worldDraw->geometry().text(textpt, NormalVector(), m_Direction, p.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
+		Utility::DrawText(worldDraw, textpt, p.text, lastTextStyle, p.color);
 	}
 
 	// Draw note text
@@ -1134,16 +1133,14 @@ void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 	lastNoteStyle.loadStyleRec();
 	AcGePoint3d notept(lastNoteDraw.x, lastNoteDraw.y, 0);
 	notept.transformBy(noteTrans);
-	worldDraw->subEntityTraits().setColor(lastNoteDraw.color);
-	worldDraw->geometry().text(notept, NormalVector(), m_Direction, m_Note, -1, Adesk::kFalse, lastNoteStyle);
+	Utility::DrawText(worldDraw, notept, lastNoteDraw.text, lastNoteStyle, lastNoteDraw.color);
 
 	// Draw length text
 	lastTextStyle.setXScale(lastLengthDraw.widthFactor);
 	lastTextStyle.loadStyleRec();
 	AcGePoint3d lengthpt(lastLengthDraw.x, lastLengthDraw.y, 0);
 	lengthpt.transformBy(lengthTrans);
-	worldDraw->subEntityTraits().setColor(lastLengthDraw.color);
-	worldDraw->geometry().text(lengthpt, NormalVector(), m_Direction, lastLengthDraw.text.c_str(), -1, Adesk::kFalse, lastTextStyle);
+	Utility::DrawText(worldDraw, lengthpt, lastLengthDraw.text, lastTextStyle, lastLengthDraw.color);
 }
 
 Acad::ErrorStatus CRebarPos::subGetGeomExtents(AcDbExtents& extents) const

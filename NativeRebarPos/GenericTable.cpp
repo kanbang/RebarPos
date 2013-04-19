@@ -873,6 +873,30 @@ Adesk::Boolean CGenericTable::subWorldDraw(AcGiWorldDraw* worldDraw)
     return Adesk::kTrue; // Don't call viewportDraw().
 }
 
+void CGenericTable::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
+{
+    assertReadEnabled();
+
+    if(worldDraw->regenAbort())
+	{
+        return;
+    }
+
+	for(std::vector<CTableCell*>::const_iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
+	{
+		CTableCell* cell = (*it);
+		AcDbVoidPtrArray entitySet;
+		cell->explode(entitySet);
+		for(int i = 0; i < entitySet.length(); ++i)
+		{
+			AcDbEntity* ent = static_cast<AcDbEntity*>(entitySet[i]);
+			worldDraw->geometry().draw(ent);
+			delete ent;
+		}
+		entitySet.removeAll();
+	}
+}
+
 Acad::ErrorStatus CGenericTable::subGetGeomExtents(AcDbExtents& extents) const
 {
     assertReadEnabled();

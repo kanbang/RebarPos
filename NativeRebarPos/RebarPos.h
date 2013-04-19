@@ -15,7 +15,6 @@
 #include "PosGroup.h"
 #include "Shape.h"
 
-
 // The following is part of the code used to export an API
 // and/or use the exported API.
 //

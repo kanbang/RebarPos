@@ -168,6 +168,8 @@ public:
     virtual Acad::ErrorStatus	dxfInFields(AcDbDxfFiler* filer);
     virtual Acad::ErrorStatus	dxfOutFields(AcDbDxfFiler* filer) const;
 
+	virtual void saveAs(AcGiWorldDraw *pWd, AcDb::SaveType saveType);
+
 protected:
 	/// AcDbEntity overrides: geometry
     virtual Acad::ErrorStatus subGetOsnapPoints(
