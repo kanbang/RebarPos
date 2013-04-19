@@ -1055,8 +1055,6 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 
 void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 {
-	const double PI = 4.0 * atan(1.0);
-
     assertReadEnabled();
 
     if(worldDraw->regenAbort())
@@ -1064,83 +1062,15 @@ void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
         return;
     }
 
-	// Quit if there is nothing to draw
-	if(lastDrawList.empty())
+	AcDbVoidPtrArray entitySet;
+	explode(entitySet);
+	for(int i = 0; i < entitySet.length(); ++i)
 	{
-		return;
+		AcDbEntity* ent = static_cast<AcDbEntity*>(entitySet[i]);
+		worldDraw->geometry().draw(ent);
+		delete ent;
 	}
-
-	// Transformations
-	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
-	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, NormalVector());
-	AcGeMatrix3d noteTrans = AcGeMatrix3d::kIdentity;
-	noteTrans.setCoordSystem(m_NoteGrip, m_Direction, m_Up, NormalVector());
-	AcGeMatrix3d lengthTrans = AcGeMatrix3d::kIdentity;
-	lengthTrans.setCoordSystem(m_LengthGrip, m_Direction, m_Up, NormalVector());
-	double scale = m_Direction.length();
-
-	// Draw items
-	lastTextStyle.setTextSize(1.0 * scale);
-	lastTextStyle.loadStyleRec();
-	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
-	{
-		CDrawParams p = lastDrawList.at(i);
-
-		// Circle
-		if(p.hasCircle)
-		{
-			AcGePoint3d circlept(p.x + p.w / 2.0, p.y + p.h / 2.0, 0);
-			circlept.transformBy(trans);
-			Utility::DrawCircle(worldDraw, circlept, circleRadius * scale, lastCircleColor);
-		}
-
-		// Tau sign
-		if(p.hasTau)
-		{
-			AcGePoint3d circle(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0, 0);
-			circle.transformBy(trans);
-			Utility::DrawEllipticalArc(worldDraw, circle,
-				0.35 * scale, tauSize * 0.5 * scale, 2.0 * PI, 0.5 * PI, p.color);
-
-			AcGePoint3d pv1(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 - 0.5, 0);
-			AcGePoint3d pv2(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 + 0.5, 0);
-			pv1.transformBy(trans);
-			pv2.transformBy(trans);
-			Utility::DrawLine(worldDraw, pv1, pv2, p.color);
-
-			AcGePoint3d ph1(p.x - partSpacing / 2.0 - tauSize / 2.0 - 0.2, p.y + p.h / 2.0 + 0.5, 0);
-			AcGePoint3d ph2(p.x - partSpacing / 2.0 - tauSize / 2.0 + 0.2, p.y + p.h / 2.0 + 0.5, 0);
-			ph1.transformBy(trans);
-			ph2.transformBy(trans);
-			Utility::DrawLine(worldDraw, ph1, ph2, p.color);
-		}
-
-		// Text
-		AcGePoint3d textpt(p.x, p.y, 0);
-		textpt.transformBy(trans);
-
-		if(p.widthFactor != lastTextStyle.xScale())
-		{
-			lastTextStyle.setXScale(p.widthFactor);
-			lastNoteStyle.loadStyleRec();
-		}
-		Utility::DrawText(worldDraw, textpt, p.text, lastTextStyle, p.color);
-	}
-
-	// Draw note text
-	lastNoteStyle.setTextSize(lastNoteScale * scale);
-	lastNoteStyle.setXScale(lastNoteDraw.widthFactor);
-	lastNoteStyle.loadStyleRec();
-	AcGePoint3d notept(lastNoteDraw.x, lastNoteDraw.y, 0);
-	notept.transformBy(noteTrans);
-	Utility::DrawText(worldDraw, notept, lastNoteDraw.text, lastNoteStyle, lastNoteDraw.color);
-
-	// Draw length text
-	lastTextStyle.setXScale(lastLengthDraw.widthFactor);
-	lastTextStyle.loadStyleRec();
-	AcGePoint3d lengthpt(lastLengthDraw.x, lastLengthDraw.y, 0);
-	lengthpt.transformBy(lengthTrans);
-	Utility::DrawText(worldDraw, lengthpt, lastLengthDraw.text, lastTextStyle, lastLengthDraw.color);
+	entitySet.removeAll();
 }
 
 Acad::ErrorStatus CRebarPos::subGetGeomExtents(AcDbExtents& extents) const
