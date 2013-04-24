@@ -40,7 +40,7 @@ CRebarPos::CRebarPos() :
 	m_Shape(NULL), m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), 
 	circleRadius(0.9), partSpacing(0.15), tauSize(0.6),
 	defpointsLayer(AcDbObjectId::kNull), m_Detached(Adesk::kFalse), m_GroupForDisplay(NULL),
-	m_CalcProps()
+	m_LengthAlignment(CRebarPos::FREE), m_NoteAlignment(CRebarPos::FREE), m_CalcProps()
 {
 }
 
@@ -197,6 +197,7 @@ const AcGePoint3d& CRebarPos::NoteGrip(void) const
 Acad::ErrorStatus CRebarPos::setNoteGrip(const AcGePoint3d& newVal)
 {
 	assertWriteEnabled();
+	m_NoteAlignment = CRebarPos::FREE;
 	m_NoteGrip = newVal;
 	return Acad::eOk;
 }
@@ -210,6 +211,7 @@ const AcGePoint3d& CRebarPos::LengthGrip(void) const
 Acad::ErrorStatus CRebarPos::setLengthGrip(const AcGePoint3d& newVal)
 {
 	assertWriteEnabled();
+	m_LengthAlignment = CRebarPos::FREE;
 	m_LengthGrip = newVal;
 	return Acad::eOk;
 }
@@ -355,6 +357,34 @@ Acad::ErrorStatus CRebarPos::setDisplay(const CRebarPos::DisplayStyle newVal)
 	// Do not include in BOQ if only marker is shown.
 	if(m_DisplayStyle == CRebarPos::MARKERONLY)
 		m_IncludeInBOQ = Adesk::kFalse;
+
+	Calculate();
+	return Acad::eOk;
+}
+
+const CRebarPos::SubTextAlignment CRebarPos::LengthAlignment(void) const
+{
+	assertReadEnabled();
+	return m_LengthAlignment;
+}
+Acad::ErrorStatus CRebarPos::setLengthAlignment(const CRebarPos::SubTextAlignment newVal)
+{
+	assertWriteEnabled();
+	m_LengthAlignment = newVal;
+
+	Calculate();
+	return Acad::eOk;
+}
+
+const CRebarPos::SubTextAlignment CRebarPos::NoteAlignment(void) const
+{
+	assertReadEnabled();
+	return m_NoteAlignment;
+}
+Acad::ErrorStatus CRebarPos::setNoteAlignment(const CRebarPos::SubTextAlignment newVal)
+{
+	assertWriteEnabled();
+	m_NoteAlignment = newVal;
 
 	Calculate();
 	return Acad::eOk;
@@ -687,11 +717,17 @@ Acad::ErrorStatus CRebarPos::subMoveGripPointsAt(
 
 	// Transform the note grip
 	if(indices.length() == 1 && indices[0] == 1)
+	{
 		m_NoteGrip.transformBy(AcGeMatrix3d::translation(offset));
+		m_NoteAlignment = CRebarPos::FREE;
+	}
 
 	// Transform the length grip
 	if(indices.length() == 1 && indices[0] == 2)
+	{
 		m_LengthGrip.transformBy(AcGeMatrix3d::translation(offset));
+		m_LengthAlignment = CRebarPos::FREE;
+	}
 
 	return Acad::eOk;
 }
@@ -1182,6 +1218,9 @@ Acad::ErrorStatus CRebarPos::dwgOutFields(AcDbDwgFiler* pFiler) const
 	pFiler->writeInt32(m_Multiplier);
 	pFiler->writeInt32(m_DisplayStyle);
 
+	pFiler->writeInt32(m_LengthAlignment);
+	pFiler->writeInt32(m_NoteAlignment);
+
 	if(m_Shape)
 		pFiler->writeString(m_Shape);
 
@@ -1231,45 +1270,52 @@ Acad::ErrorStatus CRebarPos::dwgInFields(AcDbDwgFiler* pFiler)
 		return Acad::eMakeMeProxy;
 
 	// Read params
-	if (version >= 1)
-	{
-		pFiler->readPoint3d(&m_BasePoint);
-		pFiler->readPoint3d(&m_NoteGrip);
-		pFiler->readPoint3d(&m_LengthGrip);
-		pFiler->readVector3d(&m_Direction);
-		pFiler->readVector3d(&m_Up);
-		
-		acutDelString(m_Pos);
-		acutDelString(m_Note);
-		acutDelString(m_Count);
-		acutDelString(m_Diameter);
-		acutDelString(m_Spacing);
-		acutDelString(m_A);
-		acutDelString(m_B);
-		acutDelString(m_C);
-		acutDelString(m_D);
-		acutDelString(m_E);
-		acutDelString(m_F);
+	pFiler->readPoint3d(&m_BasePoint);
+	pFiler->readPoint3d(&m_NoteGrip);
+	pFiler->readPoint3d(&m_LengthGrip);
+	pFiler->readVector3d(&m_Direction);
+	pFiler->readVector3d(&m_Up);
+	
+	acutDelString(m_Pos);
+	acutDelString(m_Note);
+	acutDelString(m_Count);
+	acutDelString(m_Diameter);
+	acutDelString(m_Spacing);
+	acutDelString(m_A);
+	acutDelString(m_B);
+	acutDelString(m_C);
+	acutDelString(m_D);
+	acutDelString(m_E);
+	acutDelString(m_F);
 
-		pFiler->readString(&m_Pos);
-		pFiler->readString(&m_Note);
-		pFiler->readString(&m_Count);
-		pFiler->readString(&m_Diameter);
-		pFiler->readString(&m_Spacing);
-		pFiler->readBoolean(&m_IncludeInBOQ);
-		pFiler->readInt32(&m_Multiplier);
-		Adesk::Int32 display = 0;
-		pFiler->readInt32(&display);
-		m_DisplayStyle = (CRebarPos::DisplayStyle)display;
-		pFiler->readString(&m_Shape);
-		pFiler->readString(&m_A);
-		pFiler->readString(&m_B);
-		pFiler->readString(&m_C);
-		pFiler->readString(&m_D);
-		pFiler->readString(&m_E);
-		pFiler->readString(&m_F);
-		pFiler->readBoolean(&m_Detached);
-	}
+	pFiler->readString(&m_Pos);
+	pFiler->readString(&m_Note);
+	pFiler->readString(&m_Count);
+	pFiler->readString(&m_Diameter);
+	pFiler->readString(&m_Spacing);
+	pFiler->readBoolean(&m_IncludeInBOQ);
+	pFiler->readInt32(&m_Multiplier);
+
+	Adesk::Int32 display = 0;
+	pFiler->readInt32(&display);
+	m_DisplayStyle = (CRebarPos::DisplayStyle)display;
+
+	Adesk::Int32 lengthAlign = 0;
+	pFiler->readInt32(&lengthAlign);
+	m_LengthAlignment = (CRebarPos::SubTextAlignment)lengthAlign;
+
+	Adesk::Int32 noteAlign = 0;
+	pFiler->readInt32(&noteAlign);
+	m_NoteAlignment = (CRebarPos::SubTextAlignment)noteAlign;
+
+	pFiler->readString(&m_Shape);
+	pFiler->readString(&m_A);
+	pFiler->readString(&m_B);
+	pFiler->readString(&m_C);
+	pFiler->readString(&m_D);
+	pFiler->readString(&m_E);
+	pFiler->readString(&m_F);
+	pFiler->readBoolean(&m_Detached);
 
 	Calculate();
 
@@ -1322,7 +1368,12 @@ Acad::ErrorStatus CRebarPos::dxfOutFields(AcDbDxfFiler* pFiler) const
 		pFiler->writeString(AcDb::kDxfXTextString + 3, _T(""));
 	pFiler->writeBoolean(AcDb::kDxfBool, m_IncludeInBOQ);
 	pFiler->writeInt32(AcDb::kDxfInt32 + 1, m_Multiplier);
+
 	pFiler->writeInt32(AcDb::kDxfInt32 + 2, m_DisplayStyle);
+
+	pFiler->writeInt32(AcDb::kDxfInt32 + 3, m_LengthAlignment);
+	pFiler->writeInt32(AcDb::kDxfInt32 + 4, m_NoteAlignment);
+
 	if(m_Shape)
 		pFiler->writeString(AcDb::kDxfText + 1, m_Shape);
 	else
@@ -1391,6 +1442,8 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	Adesk::Boolean t_IncludeInBOQ = Adesk::kTrue;
 	Adesk::Int32 t_Multiplier = 0;
 	int t_Display = 0;
+	int t_NoteAlign = 0;
+	int t_LengthAlign = 0;
 	ACHAR* t_Shape = NULL;
 	ACHAR* t_A = NULL;
 	ACHAR* t_B = NULL;
@@ -1445,6 +1498,13 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 
         case AcDb::kDxfInt32 + 2:
             t_Display = rb.resval.rlong;
+            break;
+
+        case AcDb::kDxfInt32 + 3:
+			t_LengthAlign = rb.resval.rlong;
+            break;
+        case AcDb::kDxfInt32 + 4:
+			t_NoteAlign = rb.resval.rlong;
             break;
 
         case AcDb::kDxfText + 1:
@@ -1505,6 +1565,8 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	m_IncludeInBOQ = t_IncludeInBOQ;
 	m_Multiplier = t_Multiplier;
 	m_DisplayStyle = (CRebarPos::DisplayStyle)t_Display;
+	m_LengthAlignment = (CRebarPos::SubTextAlignment)t_LengthAlign;
+	m_NoteAlignment = (CRebarPos::SubTextAlignment)t_NoteAlign;
 	setShape(t_Shape);
 	setA(t_A);
 	setB(t_B);
@@ -2236,6 +2298,75 @@ void CRebarPos::Calculate(void)
 	lastLengthDraw.y = 0;
 	lastLengthDraw.w = lengthExt.x;
 	lastLengthDraw.h = lastTextStyle.textSize();
+
+	// Align length grip
+	double alignmentX = 1.0;
+	double alignmentY = 0.2;
+	AcGeMatrix3d gripTrans = AcGeMatrix3d::kIdentity;
+	gripTrans.setCoordSystem(m_BasePoint, m_Direction, m_Up, NormalVector());
+	switch(m_LengthAlignment)
+	{
+	case CRebarPos::RIGHT:
+		{
+			double width = 0.0;
+			if(lastDrawList.size() > 0)
+				width = lastDrawList[lastDrawList.size() - 1].x + lastDrawList[lastDrawList.size() - 1].w;
+
+			m_LengthGrip.set(width + alignmentX, 0.0, 0.0);
+			m_LengthGrip.transformBy(gripTrans);
+		}
+		break;
+	case CRebarPos::TOP:
+		{
+			double height = 1.8;
+			m_LengthGrip.set(0.0, height + alignmentY, 0.0);
+			m_LengthGrip.transformBy(gripTrans);
+		}
+		break;
+	case CRebarPos::BOTTOM:
+		{
+			double height = -1.8;
+			m_LengthGrip.set(0.0, height - alignmentY, 0.0);
+			m_LengthGrip.transformBy(gripTrans);
+		}
+		break;
+	}
+
+	// Align note grip
+	bool hasLength = ((m_Length != NULL) && (m_Length[0] != _T('\0')));
+	switch(m_NoteAlignment)
+	{
+	case CRebarPos::RIGHT:
+		{
+			double width = 0.0;
+			if(lastDrawList.size() > 0)
+				width = lastDrawList[lastDrawList.size() - 1].x + lastDrawList[lastDrawList.size() - 1].w;
+
+			if(hasLength && (m_LengthAlignment == CRebarPos::RIGHT)) width += lastLengthDraw.w + alignmentX;
+
+			m_NoteGrip.set(width + alignmentX, 0.0, 0.0);
+			m_NoteGrip.transformBy(gripTrans);
+		}
+		break;
+	case CRebarPos::TOP:
+		{
+			double height = 1.8;
+			if(hasLength && (m_LengthAlignment == CRebarPos::TOP)) height += 2.0;
+
+			m_NoteGrip.set(0.0, height + alignmentY, 0.0);
+			m_NoteGrip.transformBy(gripTrans);
+		}
+		break;
+	case CRebarPos::BOTTOM:
+		{
+			double height = -1.8;
+			if(hasLength && (m_LengthAlignment == CRebarPos::BOTTOM)) height -= 2.0;
+
+			m_NoteGrip.set(0.0, height - alignmentY, 0.0);
+			m_NoteGrip.transformBy(gripTrans);
+		}
+		break;
+	}
 }
 
 bool CRebarPos::GetLengths(const ACHAR* str, const double diameter, const CPosGroup::DrawingUnits inputUnit, double& minLength, double& maxLength, bool& isVar)

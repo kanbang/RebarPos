@@ -68,6 +68,14 @@ public:
 		WITHOUTLENGTH = 1,
 		MARKERONLY = 2,
 	};
+	enum SubTextAlignment
+	{ 
+		FREE = 0,
+		LEFT = 1,
+		RIGHT = 2,
+		TOP = 3,
+		BOTTOM = 4,
+	};
 
 public:
 	struct CCalculatedProperties
@@ -177,7 +185,10 @@ private:
 	Adesk::Boolean m_Detached;
 
 	DisplayStyle m_DisplayStyle;
-	
+
+	SubTextAlignment m_LengthAlignment;
+	SubTextAlignment m_NoteAlignment;
+
 	CPosGroup* m_GroupForDisplay;
 
 	/// Locals
@@ -307,6 +318,14 @@ public:
 	/// Gets or sets whether the pos is detached from shape definitions
 	const Adesk::Boolean Detached(void) const;
 	Acad::ErrorStatus setDetached(const Adesk::Boolean newVal);
+
+	/// Gets or sets the alignment of length text
+	const SubTextAlignment LengthAlignment(void) const;
+	Acad::ErrorStatus setLengthAlignment(const SubTextAlignment newVal);
+
+	/// Gets or sets the alignment of note text
+	const SubTextAlignment NoteAlignment(void) const;
+	Acad::ErrorStatus setNoteAlignment(const SubTextAlignment newVal);
 
 	/// Gets calculated properties
 	const CCalculatedProperties& CalcProps(void) const;

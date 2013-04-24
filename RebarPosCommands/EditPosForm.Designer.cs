@@ -238,7 +238,7 @@
             // btnPickSpacing
             // 
             this.btnPickSpacing.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnPickSpacing.Image = global::RebarPosCommands.Properties.Resources.cursor;
+            this.btnPickSpacing.Image = global::RebarPosCommands.Properties.Resources.dimension;
             this.btnPickSpacing.Location = new System.Drawing.Point(202, 95);
             this.btnPickSpacing.Name = "btnPickSpacing";
             this.btnPickSpacing.Size = new System.Drawing.Size(24, 24);
@@ -418,7 +418,7 @@
             // btnMeasureF
             // 
             this.btnMeasureF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnMeasureF.Image = ((System.Drawing.Image)(resources.GetObject("btnMeasureF.Image")));
+            this.btnMeasureF.Image = global::RebarPosCommands.Properties.Resources.dimension;
             this.btnMeasureF.Location = new System.Drawing.Point(338, 217);
             this.btnMeasureF.Name = "btnMeasureF";
             this.btnMeasureF.Size = new System.Drawing.Size(24, 24);
@@ -429,7 +429,7 @@
             // btnMeasureE
             // 
             this.btnMeasureE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnMeasureE.Image = ((System.Drawing.Image)(resources.GetObject("btnMeasureE.Image")));
+            this.btnMeasureE.Image = global::RebarPosCommands.Properties.Resources.dimension;
             this.btnMeasureE.Location = new System.Drawing.Point(338, 191);
             this.btnMeasureE.Name = "btnMeasureE";
             this.btnMeasureE.Size = new System.Drawing.Size(24, 24);
@@ -440,7 +440,7 @@
             // btnMeasureD
             // 
             this.btnMeasureD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnMeasureD.Image = ((System.Drawing.Image)(resources.GetObject("btnMeasureD.Image")));
+            this.btnMeasureD.Image = global::RebarPosCommands.Properties.Resources.dimension;
             this.btnMeasureD.Location = new System.Drawing.Point(338, 165);
             this.btnMeasureD.Name = "btnMeasureD";
             this.btnMeasureD.Size = new System.Drawing.Size(24, 24);
@@ -451,7 +451,7 @@
             // btnMeasureC
             // 
             this.btnMeasureC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnMeasureC.Image = ((System.Drawing.Image)(resources.GetObject("btnMeasureC.Image")));
+            this.btnMeasureC.Image = global::RebarPosCommands.Properties.Resources.dimension;
             this.btnMeasureC.Location = new System.Drawing.Point(158, 217);
             this.btnMeasureC.Name = "btnMeasureC";
             this.btnMeasureC.Size = new System.Drawing.Size(24, 24);
@@ -462,7 +462,7 @@
             // btnMeasureB
             // 
             this.btnMeasureB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnMeasureB.Image = ((System.Drawing.Image)(resources.GetObject("btnMeasureB.Image")));
+            this.btnMeasureB.Image = global::RebarPosCommands.Properties.Resources.dimension;
             this.btnMeasureB.Location = new System.Drawing.Point(158, 191);
             this.btnMeasureB.Name = "btnMeasureB";
             this.btnMeasureB.Size = new System.Drawing.Size(24, 24);
@@ -473,7 +473,7 @@
             // btnMeasureA
             // 
             this.btnMeasureA.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnMeasureA.Image = ((System.Drawing.Image)(resources.GetObject("btnMeasureA.Image")));
+            this.btnMeasureA.Image = global::RebarPosCommands.Properties.Resources.dimension;
             this.btnMeasureA.Location = new System.Drawing.Point(158, 165);
             this.btnMeasureA.Name = "btnMeasureA";
             this.btnMeasureA.Size = new System.Drawing.Size(24, 24);

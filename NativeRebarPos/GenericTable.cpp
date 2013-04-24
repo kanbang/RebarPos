@@ -975,7 +975,6 @@ Acad::ErrorStatus CGenericTable::dwgInFields(AcDbDwgFiler* pFiler)
 	if (version > CGenericTable::kCurrentVersionNumber)
 		return Acad::eMakeMeProxy;
 
-
 	pFiler->readPoint3d(&m_BasePoint);
 	pFiler->readVector3d(&m_Direction);
 	pFiler->readVector3d(&m_Up);

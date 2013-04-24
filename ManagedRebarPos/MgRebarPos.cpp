@@ -164,6 +164,24 @@ RebarPos::DisplayStyle RebarPos::Display::get()
 	return static_cast<RebarPos::DisplayStyle>(GetImpObj()->Display());
 }
 
+void RebarPos::LengthAlignment::set(RebarPos::SubTextAlignment value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setLengthAlignment(static_cast<CRebarPos::SubTextAlignment>(value)));
+}
+RebarPos::SubTextAlignment RebarPos::LengthAlignment::get()
+{
+	return static_cast<RebarPos::SubTextAlignment>(GetImpObj()->LengthAlignment());
+}
+
+void RebarPos::NoteAlignment::set(RebarPos::SubTextAlignment value)
+{
+	Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setNoteAlignment(static_cast<CRebarPos::SubTextAlignment>(value)));
+}
+RebarPos::SubTextAlignment RebarPos::NoteAlignment::get()
+{
+	return static_cast<RebarPos::SubTextAlignment>(GetImpObj()->NoteAlignment());
+}
+
 void RebarPos::Shape::set(String^ value)
 {
     Autodesk::AutoCAD::Runtime::Interop::Check(GetImpObj()->setShape(Marshal::StringToWchar(value)));

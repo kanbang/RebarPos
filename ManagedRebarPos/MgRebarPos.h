@@ -50,6 +50,14 @@ namespace OZOZ
 				WithoutLength = 1,
 				MarkerOnly = 2,
 			};
+			enum class SubTextAlignment
+			{ 
+				Free = 0,
+				Left = 1,
+				Right = 2,
+				Top = 3,
+				Bottom = 4,
+			};
 
 			ref class CalculatedProperties
 			{
@@ -176,6 +184,9 @@ namespace OZOZ
 			property int Multiplier   { int get(); void set(int value); }
 
 			property DisplayStyle Display { DisplayStyle get(); void set(DisplayStyle value); }
+
+			property SubTextAlignment LengthAlignment { SubTextAlignment get(); void set(SubTextAlignment value); }
+			property SubTextAlignment NoteAlignment { SubTextAlignment get(); void set(SubTextAlignment value); }
 
 			property String^ Shape { String^ get(); void set(String^ value); }
 			property String^ A { String^ get(); void set(String^ value); }
