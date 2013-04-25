@@ -3,6 +3,7 @@ ShowLanguageDialog=no
 AppName=RebarPos x64
 AppVersion=1.0
 DefaultDirName={pf}\SahinEng\RebarPos
+ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
 AppCopyright=Þahin Inþaat
 DisableProgramGroupPage=yes
@@ -17,8 +18,8 @@ Source: "..\x64\Debug\NativeRebarPos.dbx"; DestDir: "{app}\Bin"; Flags: ignoreve
 Source: "..\x64\Debug\COMRebarPos.dbx"; DestDir: "{app}\Bin"; Flags: ignoreversion
 Source: "..\x64\Debug\ManagedRebarPos.dll"; DestDir: "{app}\Bin"; Flags: ignoreversion
 Source: "..\RebarPosCommands\bin\Debug\RebarPos.dll"; DestDir: "{app}\Bin"; Flags: ignoreversion
-Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Menu";
-Source: "..\Menu\RebarPos.mnr"; DestDir: "{app}\Menu";
+Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Menu"
+Source: "..\Menu\RebarPos.mnr"; DestDir: "{app}\Menu"
 
 [Registry]
 Root: "HKLM"; Subkey: "Software\SahinEng\RebarPos"; ValueType: string; ValueName: "InstallPath"; ValueData: "{app}"; Flags: uninsdeletekey
@@ -162,16 +163,27 @@ begin
   if CurStep = ssPostInstall then begin
     // Set registry keys
     
+    // Type library
+    RegPath := 'TypeLib\{26E9A3B0-6567-4857-AABB-E09AC4A7A8AE}';
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', '');
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0', '', 'RebarPos 1.0 Type Library');
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\0', '', '');
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\0\win64', '', ExpandConstant('{app}\Bin\COMRebarPos.dbx'));
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\FLAGS', '', '0');
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\HELPDIR', '', ExpandConstant('{app}\Bin'));
+    
     // COM classes
     RegPath := 'CLSID\{97CAC17D-B1C7-49CA-8D57-D3FF491860FF}';
     RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', 'ComRebarPos Class');
     RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\Programmable', '', '');
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\TypeLib', '', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8AE}');
     RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', '', ExpandConstant('{app}\Bin\COMRebarPos.dbx'));
     RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', 'ThreadingModel', 'Apartment');
     
     RegPath := 'CLSID\{BA77CFFF-0274-4D4C-BFE2-64A5731BAD37}';
     RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', 'ComBOQTable Class');
     RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\Programmable', '', '');
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\TypeLib', '', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8AE}');
     RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', '', ExpandConstant('{app}\Bin\COMRebarPos.dbx'));
     RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', 'ThreadingModel', 'Apartment');
     
@@ -250,6 +262,7 @@ begin
     // Remove registry keys
     
     // COM classes
+    RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, 'TypeLib\{26E9A3B0-6567-4857-AABB-E09AC4A7A8AE}');
     RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, 'CLSID\{97CAC17D-B1C7-49CA-8D57-D3FF491860FF}');
     RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, 'CLSID\{BA77CFFF-0274-4D4C-BFE2-64A5731BAD37}');
     

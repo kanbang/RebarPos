@@ -446,10 +446,6 @@
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe"
 			>
 			<File
-				RelativePath=".\RebarPos.rgs"
-				>
-			</File>
-			<File
 				RelativePath=".\RebarPos.RTF"
 				>
 			</File>

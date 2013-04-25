@@ -39,8 +39,13 @@ public:
 	{
 	}
 
-DECLARE_REGISTRY_RESOURCEID(IDR_COMBOQTABLE)
-DECLARE_NOT_AGGREGATABLE(CComBOQTable)
+	static HRESULT WINAPI UpdateRegistry(BOOL /* bRegister */) throw()
+	{
+		// Do nothing. COM registration is handled by the resource script.
+		return S_OK;
+	}
+	
+	DECLARE_NOT_AGGREGATABLE(CComBOQTable)
 
 BEGIN_COM_MAP(CComBOQTable)
 	COM_INTERFACE_ENTRY(IComBOQTable)

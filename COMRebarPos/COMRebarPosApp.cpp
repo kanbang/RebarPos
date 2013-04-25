@@ -13,10 +13,7 @@
 #include "COMRebarPos_i.c"
 
 #include "ComRebarPos.h"
-#include "../NativeRebarPos/RebarPos.h"
-
 #include "ComBOQTable.h"
-#include "../NativeRebarPos/BOQTable.h"
 
 CComModule _Module;
 
@@ -38,13 +35,14 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpReserved*/)
         // check if the arx app is loaded or not.
         // if not, load it as UI so that we won't have
         // proxy if this dll is unloaded by OS
-        if (!::acrxAppIsLoaded(_T("OZOZRebarPosNative")))
+        if (!acrxAppIsLoaded(_T("OZOZRebarPosNative")))
         {
             if (!acrxLoadApp(_T("OZOZRebarPosNative"), true))
                 return FALSE; //this will trigger a DLL_PROCESS_DETACH right away
         }
         //bump the reference count 
-        acrxLoadApp(_T("OZOZRebarPosNative"), false);
+        if(!acrxLoadApp(_T("OZOZRebarPosNative"), false))
+			return FALSE;
     }
     else if (dwReason == DLL_PROCESS_DETACH)
     {
@@ -75,25 +73,6 @@ STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// DllRegisterServer - Adds entries to the system registry
-
-STDAPI DllRegisterServer(void)
-{
-    // registers object, typelib and all interfaces in typelib
-    return _Module.RegisterServer(TRUE);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DllUnregisterServer - Removes entries from the system registry
-
-STDAPI DllUnregisterServer(void)
-{
-    _Module.UnregisterServer();
-    return S_OK;
-}
-
-
-/////////////////////////////////////////////////////////////////////////////
 //make this additional entry point available so when user loads
 //this dll as an arx it will register itself 
 extern "C" AcRx::AppRetCode __declspec(dllexport)
@@ -105,8 +84,6 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
         //unlock the application
         acrxDynamicLinker->unlockApplication(pkt);
         acrxRegisterAppMDIAware(pkt);
-        //register ourselves
-        DllRegisterServer();
         break;
     case AcRx::kUnloadAppMsg:
         break;

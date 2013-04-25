@@ -50,7 +50,12 @@ public:
 	{
 	}
 
-DECLARE_REGISTRY_RESOURCEID(IDR_COMREBARPOS)
+	static HRESULT WINAPI UpdateRegistry(BOOL /* bRegister */) throw()
+	{
+		// Do nothing. COM registration is handled by the resource script.
+		return S_OK;
+	}
+
 DECLARE_NOT_AGGREGATABLE(CComRebarPos)
 
 BEGIN_COM_MAP(CComRebarPos)
