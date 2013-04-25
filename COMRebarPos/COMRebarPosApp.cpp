@@ -52,8 +52,8 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpReserved*/)
 /*
         //try to decrease the refcount on the dbx
         //if we couldn't load it then this a no op.
-        acrxUnloadModule(_T("NativeRebarPos.dbx"));
 		*/
+        acrxUnloadApp(_T("OZOZRebarPosNative"), false);
     }
     return TRUE;    // ok
 }

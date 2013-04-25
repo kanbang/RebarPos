@@ -26,9 +26,10 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 			acrxDynamicLinker->registerAppMDIAware(pkt);
 
 			AcadApp::LoadReasons reason = (AcadApp::LoadReasons)(AcadApp::kOnProxyDetection | AcadApp::kOnLoadRequest);
-			if(!acrxDynamicLinker->loadApp(L"OZOZRebarPosNative", reason, true, true))
+
+			if(!acrxDynamicLinker->loadApp(L"OZOZRebarPosNative", reason, true, false))
 				return AcRx::kRetError;
-			if(!acrxDynamicLinker->loadApp(L"OZOZRebarPosCOM", reason, true, true))
+			if(!acrxDynamicLinker->loadApp(L"OZOZRebarPosCOM", reason, true, false))
 				return AcRx::kRetError;
 			
 			// create a new object factory array
@@ -45,6 +46,13 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 
 			g_PEs = PEs;
 			
+		}
+		break;
+
+		case AcRx::kUnloadAppMsg:
+		{
+			acrxDynamicLinker->unloadApp(L"OZOZRebarPosCOM", false);
+			acrxDynamicLinker->unloadApp(L"OZOZRebarPosNative", false);
 		}
 		break;
 

@@ -10,11 +10,11 @@
 // DISPIDs for resources
 #define	DISPID_TBASEPOINT		0x00000001
 #define	DISPID_TMULTIPLIER		0x00000002
-#define	DISPID_TSCALE		0x00000004
-#define	DISPID_THEADING		0x00000005
-#define	DISPID_TFOOTING		0x00000006
-#define	DISPID_TMAXROWS		0x00000007
-#define	DISPID_TTABLESPACING		0x00000008
+#define	DISPID_TSCALE			0x00000004
+#define	DISPID_THEADING			0x00000005
+#define	DISPID_TFOOTING			0x00000006
+#define	DISPID_TMAXROWS			0x00000007
+#define	DISPID_TTABLESPACING	0x00000008
 
 /////////////////////////////////////////////////////////////////////////////
 // CComBOQTable
@@ -159,8 +159,5 @@ END_OPMPROP_MAP()
         /* [in] */ DISPID dispID, 
         /* [out] */ DWORD dwCookie, 
         /* [out] */ VARIANT *pVarOut);
-
-    protected:
-        AcDbObjectIdArray mStyleIdArray;
 };
 
