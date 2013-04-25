@@ -43,6 +43,7 @@ namespace RebarPosCommands
         public override bool IsApplicable(RXObject overruledSubject)
         {
             RebarPos pos = overruledSubject as RebarPos;
+            if (pos == null) return false;
             Database db = pos.Database;
             if (db == null) return false;
             return (mIds.ContainsKey(db.FingerprintGuid));
