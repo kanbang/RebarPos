@@ -41,6 +41,8 @@ library COMREBARPOSLib
 		[propput, id(1), helpstring("property BasePoint")] HRESULT BasePoint([in] VARIANT newVal);
 		[propget, id(2), helpstring("property NoteGrip")] HRESULT NoteGrip([out, retval] VARIANT *pVal);
 		[propput, id(2), helpstring("property NoteGrip")] HRESULT NoteGrip([in] VARIANT newVal);
+		[propget, id(18), helpstring("property LengthGrip")] HRESULT LengthGrip([out, retval] VARIANT *pVal);
+		[propput, id(18), helpstring("property LengthGrip")] HRESULT LengthGrip([in] VARIANT newVal);
 		[propget, id(3), helpstring("property Pos")] HRESULT Pos([out, retval] BSTR *pVal);
 		[propput, id(3), helpstring("property Pos")] HRESULT Pos([in] BSTR newVal);
 		[propget, id(4), helpstring("property Count")] HRESULT Count([out, retval] BSTR *pVal);
@@ -51,8 +53,8 @@ library COMREBARPOSLib
 		[propput, id(6), helpstring("property Spacing")] HRESULT Spacing([in] BSTR newVal);
 		[propget, id(7), helpstring("property Multiplier")] HRESULT Multiplier([out, retval] long *pVal);
 		[propput, id(7), helpstring("property Multiplier")] HRESULT Multiplier([in] long newVal);
-		[propget, id(8), helpstring("property DisplayStyle")] HRESULT DisplayStyle([out, retval] BSTR *pVal);
-		[propput, id(8), helpstring("property DisplayStyle")] HRESULT DisplayStyle([in] BSTR newVal);
+		[propget, id(8), helpstring("property ShowTotalLength")] HRESULT ShowLength([out, retval] long *pVal);
+		[propput, id(8), helpstring("property ShowTotalLength")] HRESULT ShowLength([in] long newVal);
 		[propget, id(9), helpstring("property Note")] HRESULT Note([out, retval] BSTR *pVal);
 		[propput, id(9), helpstring("property Note")] HRESULT Note([in] BSTR newVal);
 		[propget, id(10), helpstring("property A")] HRESULT A([out, retval] BSTR *pVal);
@@ -72,6 +74,10 @@ library COMREBARPOSLib
 		[propput, id(17), helpstring("property Shape")] HRESULT Shape([in] BSTR newVal);
 		[propget, id(19), helpstring("property Scale")] HRESULT Scale([out, retval] double *pVal);
 		[propput, id(19), helpstring("property Scale")] HRESULT Scale([in] double newVal);
+		[propget, id(20), helpstring("property LengthAlignment")] HRESULT LengthAlignment([out, retval] long *pVal);
+		[propput, id(20), helpstring("property LengthAlignment")] HRESULT LengthAlignment([in] long newVal);
+		[propget, id(21), helpstring("property NoteAlignment")] HRESULT NoteAlignment([out, retval] long *pVal);
+		[propput, id(21), helpstring("property NoteAlignment")] HRESULT NoteAlignment([in] long newVal);
 	};
 	//
 	// coclasses in type library

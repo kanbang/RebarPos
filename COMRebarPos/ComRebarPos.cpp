@@ -75,22 +75,22 @@ STDMETHODIMP CComRebarPos::Editable(
 			switch(dispID)
 			{
 			case DISPID_A:
-		        acutUpdString(pRebarPos->A(), len);
+				acutUpdString(pRebarPos->A(), len);
 				break;
 			case DISPID_B:
-		        acutUpdString(pRebarPos->B(), len);
+				acutUpdString(pRebarPos->B(), len);
 				break;
 			case DISPID_C:
-		        acutUpdString(pRebarPos->C(), len);
+				acutUpdString(pRebarPos->C(), len);
 				break;
 			case DISPID_D:
-		        acutUpdString(pRebarPos->D(), len);
+				acutUpdString(pRebarPos->D(), len);
 				break;
 			case DISPID_E:
-		        acutUpdString(pRebarPos->E(), len);
+				acutUpdString(pRebarPos->E(), len);
 				break;
 			case DISPID_F:
-		        acutUpdString(pRebarPos->F(), len);
+				acutUpdString(pRebarPos->F(), len);
 				break;
 			default:
 				;
@@ -108,6 +108,7 @@ STDMETHODIMP CComRebarPos::Editable(
 	else if(dispID == DISPID_SHAPE)
 	{
 		*bEditable = 0;
+		return S_OK;
 	}
 
 	return IOPMPropertyExtensionImpl<CComRebarPos>::Editable(dispID, bEditable);
@@ -132,11 +133,8 @@ STDMETHODIMP CComRebarPos::ShowProperty(
 		}
 		else
 		{
-			if(dispID == DISPID_BASEPOINT || dispID == DISPID_NOTEGRIP || dispID == DISPID_POS || 
-				dispID == DISPID_NOTE || dispID == DISPID_SCALE)
-				*pShow = TRUE;
-			else
-				*pShow = FALSE;
+			*pShow = (dispID == DISPID_BASEPOINT || dispID == DISPID_POS || dispID == DISPID_SCALE);
+			return S_OK;
 		}
 	}
 	catch(const Acad::ErrorStatus)
@@ -186,6 +184,19 @@ STDMETHODIMP CComRebarPos::GetElementValue(
 					throw Acad::eInvalidInput;
 
 				pt = pRebarPos->NoteGrip();
+				acdbWcs2Ucs(asDblArray(pt), asDblArray(pt), false);
+				CComVariant var(pt[dwCookie]);
+				::VariantCopy(pVarOut, &var);
+
+				return S_OK;
+			}
+			break;
+		case DISPID_LENGTHGRIP:
+			{
+				if (dwCookie > 2)
+					throw Acad::eInvalidInput;
+
+				pt = pRebarPos->LengthGrip();
 				acdbWcs2Ucs(asDblArray(pt), asDblArray(pt), false);
 				CComVariant var(pt[dwCookie]);
 				::VariantCopy(pVarOut, &var);
@@ -256,6 +267,21 @@ STDMETHODIMP CComRebarPos::SetElementValue(
 
 			return S_OK;
 			break;
+		case DISPID_LENGTHGRIP:
+			if (dwCookie > 2)
+				throw Acad::eInvalidInput;
+
+			pt = pRebarPos->LengthGrip();
+			acdbUcs2Wcs(asDblArray(pt), asDblArray(pt), false);
+	        pt[dwCookie] = V_R8(&VarIn);
+
+		    if ((es = pRebarPos->setLengthGrip(pt)) != Acad::eOk)
+			    throw es;
+
+			Fire_Notification(dispID);
+
+			return S_OK;
+			break;
 		default:
 			;
         }
@@ -313,6 +339,21 @@ STDMETHODIMP CComRebarPos::GetElementStrings(
 
 		return S_OK;
 		break;
+	case DISPID_LENGTHGRIP:
+        size = 3;
+        pCaStringsOut->pElems = (LPOLESTR *)::CoTaskMemAlloc(sizeof(LPOLESTR) * size);
+        pCaCookiesOut->pElems = (DWORD *)::CoTaskMemAlloc(sizeof(DWORD) * size);
+        for (long i = 0; i < size; i++)
+            pCaCookiesOut->pElems[i] = i;
+        pCaStringsOut->cElems = size;
+        pCaCookiesOut->cElems = size;
+
+        pCaStringsOut->pElems[0] = ::SysAllocString(L"Length location X");
+        pCaStringsOut->pElems[1] = ::SysAllocString(L"Length location Y");
+		pCaStringsOut->pElems[2] = ::SysAllocString(L"Length location Z");
+
+		return S_OK;
+		break;
 	default:
 		;
     }
@@ -349,18 +390,31 @@ STDMETHODIMP CComRebarPos::GetPredefinedStrings(DISPID dispID, CALPOLESTR *pCaSt
 
 	switch(dispID)
 	{
-	case DISPID_DISPLAY:
-		size = 3;
+	case DISPID_SHOWLENGTH:
+		size = 2;
 
 		pCaStringsOut->pElems = (LPOLESTR *)::CoTaskMemAlloc(sizeof(LPOLESTR) * size);
 		pCaCookiesOut->pElems = (DWORD *)::CoTaskMemAlloc(sizeof(DWORD) * size);
 
-		pCaStringsOut->pElems[0] = ::SysAllocString(L"Normal");
-		pCaCookiesOut->pElems[0] = 0;
-		pCaStringsOut->pElems[1] = ::SysAllocString(L"Toplam Boyu Gösterme");
-		pCaCookiesOut->pElems[1] = 1;
-		pCaStringsOut->pElems[2] = ::SysAllocString(L"Sadece Poz Numarasý");
-		pCaCookiesOut->pElems[2] = 2;
+		pCaStringsOut->pElems[0] = ::SysAllocString(L"Yes"); pCaCookiesOut->pElems[0] = 1;
+		pCaStringsOut->pElems[1] = ::SysAllocString(L"No");  pCaCookiesOut->pElems[1] = 0;
+
+		pCaStringsOut->cElems = size;
+		pCaCookiesOut->cElems = size;
+
+		return S_OK;
+		break;
+	case DISPID_LENGTHAL:
+	case DISPID_NOTEAL:
+		size = 4;
+
+		pCaStringsOut->pElems = (LPOLESTR *)::CoTaskMemAlloc(sizeof(LPOLESTR) * size);
+		pCaCookiesOut->pElems = (DWORD *)::CoTaskMemAlloc(sizeof(DWORD) * size);
+
+		pCaStringsOut->pElems[0] = ::SysAllocString(L"Free");   pCaCookiesOut->pElems[0] = 0;
+		pCaStringsOut->pElems[1] = ::SysAllocString(L"Right");  pCaCookiesOut->pElems[1] = 2;
+		pCaStringsOut->pElems[2] = ::SysAllocString(L"Top");    pCaCookiesOut->pElems[2] = 3;
+		pCaStringsOut->pElems[3] = ::SysAllocString(L"Bottom"); pCaCookiesOut->pElems[3] = 4;
 
 		pCaStringsOut->cElems = size;
 		pCaCookiesOut->cElems = size;
@@ -382,27 +436,26 @@ STDMETHODIMP CComRebarPos::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VAR
 
 	switch(dispID)
 	{
-	case DISPID_DISPLAY:
-	    assert((INT_PTR)dwCookie >= 0);
-		assert((INT_PTR)dwCookie < 3);
+	case DISPID_SHOWLENGTH:
+		{
+			assert((INT_PTR)dwCookie <= 1);
 
-		if(dwCookie == 0)
-		{
-			CComVariant var(L"Normal");
+			CComVariant var((long)dwCookie);
 			VariantCopy(pVarOut, &var);
-		}
-		else if(dwCookie == 1)
-		{
-			CComVariant var(L"Toplam Boyu Gösterme");
-			VariantCopy(pVarOut, &var);
-		}
-		else
-		{
-			CComVariant var(L"Sadece Poz Numarasý");
-			VariantCopy(pVarOut, &var);
-		}
 
-		return S_OK;
+			return S_OK;
+		}
+		break;
+	case DISPID_LENGTHAL:
+	case DISPID_NOTEAL:
+		{
+			assert((INT_PTR)dwCookie <= 4);
+
+			CComVariant var((long)dwCookie);
+			VariantCopy(pVarOut, &var);
+
+			return S_OK;
+		}
 		break;
 	default:
 		return IOPMPropertyExtensionImpl<CComRebarPos>::GetPredefinedValue(dispID, dwCookie, pVarOut);
@@ -583,6 +636,58 @@ STDMETHODIMP CComRebarPos::put_NoteGrip(VARIANT newVal)
             throw es;
         else
             Fire_Notification(DISPID_NOTEGRIP);
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
+    }
+    catch(const HRESULT hr)
+    {
+        return Error(L"Invalid argument.", IID_IComRebarPos, hr);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComRebarPos::get_LengthGrip(VARIANT * pVal)
+{
+	CHECKOUTPARAM(pVal);
+    try
+    {
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef, AcDb::kForRead, Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
+            throw es;
+        AcAxPoint3d pt;
+		pt = pRebarPos->LengthGrip();
+        pt.setVariant(pVal);
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to open object.", IID_IComRebarPos, E_FAIL);
+    }
+    catch(const HRESULT hr)
+    {
+        return Error(L"Invalid argument.", IID_IComRebarPos, hr);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComRebarPos::put_LengthGrip(VARIANT newVal)
+{
+    try
+    {
+        AcAxPoint3d pt = newVal;
+        AXEntityDocLockNoDbOk(m_objRef.objectId());
+
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef, AcDb::kForWrite, Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
+            throw es;
+        
+        if ((es = pRebarPos->setLengthGrip(pt)) != Acad::eOk)
+            throw es;
+        else
+            Fire_Notification(DISPID_LENGTHGRIP);
     }
     catch(const Acad::ErrorStatus)
     {
@@ -814,7 +919,7 @@ STDMETHODIMP CComRebarPos::put_Multiplier(long newVal)
 	return S_OK;
 }
 
-STDMETHODIMP CComRebarPos::get_DisplayStyle(BSTR * pVal)
+STDMETHODIMP CComRebarPos::get_ShowLength(long * pVal)
 {
     CHECKOUTPARAM(pVal);
     try
@@ -826,11 +931,9 @@ STDMETHODIMP CComRebarPos::get_DisplayStyle(BSTR * pVal)
         
         USES_CONVERSION;
 		if(pRebarPos->Display() == CRebarPos::ALL)
-			*pVal = SysAllocString(L"Normal");
-		else if(pRebarPos->Display() == CRebarPos::WITHOUTLENGTH)
-			*pVal = SysAllocString(L"Toplam Boyu Gösterme");
-		else
-			*pVal = SysAllocString(L"Sadece Poz Numarasý");
+			*pVal = 1;
+		else // if(pRebarPos->Display() == CRebarPos::WITHOUTLENGTH)
+			*pVal = 0;
     }
     catch(const Acad::ErrorStatus)
     {
@@ -839,7 +942,7 @@ STDMETHODIMP CComRebarPos::get_DisplayStyle(BSTR * pVal)
 	return S_OK;
 }
 
-STDMETHODIMP CComRebarPos::put_DisplayStyle(BSTR pVal)
+STDMETHODIMP CComRebarPos::put_ShowLength(long pVal)
 {
     try
     {
@@ -851,17 +954,15 @@ STDMETHODIMP CComRebarPos::put_DisplayStyle(BSTR pVal)
             throw es;
         
         USES_CONVERSION;
-		if(wcscmp(pVal, L"Normal") == 0)
+		if(pVal == 1)
 			es = pRebarPos->setDisplay(CRebarPos::ALL);
-		else if(wcscmp(pVal, L"Toplam Boyu Gösterme") == 0)
+		else // if(pVal == 0)
 			es = pRebarPos->setDisplay(CRebarPos::WITHOUTLENGTH);
-		else
-			es = pRebarPos->setDisplay(CRebarPos::MARKERONLY);
 
         if (es != Acad::eOk)
             throw es;
         else 
-            Fire_Notification(DISPID_DISPLAY);
+            Fire_Notification(DISPID_SHOWLENGTH);
     }
     catch(const Acad::ErrorStatus)
     {
@@ -1285,6 +1386,98 @@ STDMETHODIMP CComRebarPos::put_Scale(double newVal)
             throw es;
         else 
             Fire_Notification(DISPID_SCALE);
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComRebarPos::get_LengthAlignment(long * pVal)
+{
+    CHECKOUTPARAM(pVal);
+    try
+    {
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
+            throw es;
+        
+        USES_CONVERSION;
+		*pVal = (long)pRebarPos->LengthAlignment();
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComRebarPos::put_LengthAlignment(long pVal)
+{
+    try
+    {
+        AXEntityDocLockNoDbOk(m_objRef.objectId());
+
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
+            throw es;
+        
+        USES_CONVERSION;
+		es = pRebarPos->setLengthAlignment(static_cast<CRebarPos::SubTextAlignment>(pVal));
+
+        if (es != Acad::eOk)
+            throw es;
+        else 
+			Fire_Notification(DISPID_LENGTHAL);
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComRebarPos::get_NoteAlignment(long * pVal)
+{
+    CHECKOUTPARAM(pVal);
+    try
+    {
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
+            throw es;
+        
+        USES_CONVERSION;
+		*pVal = (long)pRebarPos->NoteAlignment();
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComRebarPos::put_NoteAlignment(long pVal)
+{
+    try
+    {
+        AXEntityDocLockNoDbOk(m_objRef.objectId());
+
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CRebarPos> pRebarPos(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pRebarPos.openStatus()) != Acad::eOk)
+            throw es;
+        
+        USES_CONVERSION;
+		es = pRebarPos->setNoteAlignment(static_cast<CRebarPos::SubTextAlignment>(pVal));
+
+        if (es != Acad::eOk)
+            throw es;
+        else 
+            Fire_Notification(DISPID_NOTEAL);
     }
     catch(const Acad::ErrorStatus)
     {

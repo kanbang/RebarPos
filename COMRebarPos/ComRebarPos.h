@@ -10,12 +10,13 @@
 // DISPIDs for resources
 #define	DISPID_BASEPOINT	0x00000001
 #define	DISPID_NOTEGRIP		0x00000002
+#define	DISPID_LENGTHGRIP	0x00000012
 #define	DISPID_POS			0x00000003
 #define	DISPID_COUNT		0x00000004
 #define	DISPID_DIAMETER		0x00000005
 #define	DISPID_SPACING		0x00000006
 #define	DISPID_MULTIPLIER	0x00000007
-#define	DISPID_DISPLAY		0x00000008
+#define	DISPID_SHOWLENGTH	0x00000008
 #define	DISPID_NOTE			0x00000009
 #define	DISPID_A			0x0000000A
 #define	DISPID_B			0x0000000B
@@ -26,6 +27,8 @@
 #define	DISPID_LENGTH		0x00000010
 #define	DISPID_SHAPE		0x00000011
 #define	DISPID_SCALE		0x00000013
+#define	DISPID_LENGTHAL		0x00000014
+#define	DISPID_NOTEAL		0x00000015
 
 /////////////////////////////////////////////////////////////////////////////
 // CComRebarPos
@@ -92,6 +95,8 @@ public:
 	STDMETHOD(put_BasePoint)(/*[in]*/ VARIANT newVal);
 	STDMETHOD(get_NoteGrip)(/*[out, retval]*/ VARIANT *pVal);
 	STDMETHOD(put_NoteGrip)(/*[in]*/ VARIANT newVal);
+	STDMETHOD(get_LengthGrip)(/*[out, retval]*/ VARIANT *pVal);
+	STDMETHOD(put_LengthGrip)(/*[in]*/ VARIANT newVal);
 	STDMETHOD(get_Pos)(/*[out, retval]*/ BSTR *pVal);
 	STDMETHOD(put_Pos)(/*[in]*/ BSTR newVal);
 	STDMETHOD(get_Count)(/*[out, retval]*/ BSTR *pVal);
@@ -102,8 +107,8 @@ public:
 	STDMETHOD(put_Spacing)(/*[in]*/ BSTR newVal);
 	STDMETHOD(get_Multiplier)(/*[out, retval]*/ long *pVal);
 	STDMETHOD(put_Multiplier)(/*[in]*/ long newVal);
-	STDMETHOD(get_DisplayStyle)(/*[out, retval]*/ BSTR *pVal);
-	STDMETHOD(put_DisplayStyle)(/*[in]*/ BSTR newVal);
+	STDMETHOD(get_ShowLength)(/*[out, retval]*/ long *pVal);
+	STDMETHOD(put_ShowLength)(/*[in]*/ long newVal);
 	STDMETHOD(get_Note)(/*[out, retval]*/ BSTR *pVal);
 	STDMETHOD(put_Note)(/*[in]*/ BSTR newVal);
 	STDMETHOD(get_A)(/*[out, retval]*/ BSTR *pVal);
@@ -123,30 +128,38 @@ public:
 	STDMETHOD(put_Shape)(/*[in]*/ BSTR newVal);
 	STDMETHOD(get_Scale)(/*[out, retval]*/ double *pVal);
 	STDMETHOD(put_Scale)(/*[in]*/ double newVal);
+	STDMETHOD(get_LengthAlignment)(/*[out, retval]*/ long *pVal);
+	STDMETHOD(put_LengthAlignment)(/*[in]*/ long newVal);
+	STDMETHOD(get_NoteAlignment)(/*[out, retval]*/ long *pVal);
+	STDMETHOD(put_NoteAlignment)(/*[in]*/ long newVal);
+
 //
 // OPM
 //
 
 // IOPMPropertyExtension
 BEGIN_OPMPROP_MAP()
-    OPMPROP_ENTRY(0, DISPID_BASEPOINT, PROPCAT_Position, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_NOTEGRIP, PROPCAT_Position, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_POS, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_COUNT, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_DIAMETER, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_SPACING, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_MULTIPLIER, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_DISPLAY, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_NOTE, PROPCAT_Text, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_A, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_B, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_C, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_D, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_E, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_F, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_LENGTH, PROPCAT_Data, 0, 0, 0, _T(""), 0, 0, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_SHAPE, PROPCAT_Misc, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_SCALE, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_BASEPOINT,  PROPCAT_Position,   0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_NOTEGRIP,   PROPCAT_Position,   0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_LENGTHGRIP, PROPCAT_Position,   0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_POS,        PROPCAT_Data,       0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_COUNT,      PROPCAT_Data,       0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_DIAMETER,   PROPCAT_Data,       0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_SPACING,    PROPCAT_Data,       0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_MULTIPLIER, PROPCAT_Data,       0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_SHOWLENGTH, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_NOTE,       PROPCAT_Text,       0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_A,          PROPCAT_Data,       0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_B,          PROPCAT_Data,       0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_C,          PROPCAT_Data,       0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_D,          PROPCAT_Data,       0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_E,          PROPCAT_Data,       0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_F,          PROPCAT_Data,       0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_LENGTH,     PROPCAT_Data,       0, 0, 0, _T(""), 0, 0, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_SHAPE,      PROPCAT_Misc,       0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_SCALE,      PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_LENGTHAL,   PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_NOTEAL,     PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
 END_OPMPROP_MAP()
 
 	STDMETHOD(GetDisplayName)(
