@@ -215,6 +215,8 @@
 				AdditionalDependencies="odbc32.lib odbccp32.lib axdb.lib ..\NativeRebarPos\$(IntDir)\NativeRebarPos.lib "
 				AdditionalLibraryDirectories="..\..\..\lib;..\..\..\..\lib;..\"
 				ModuleDefinitionFile="COMRebarPos.def"
+				GenerateDebugInformation="false"
+				ProgramDatabaseFile=""
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -287,6 +289,8 @@
 				AdditionalDependencies="odbc32.lib odbccp32.lib axdb.lib ..\NativeRebarPos\$(IntDir)\NativeRebarPos.lib "
 				AdditionalLibraryDirectories="..\..\..\lib;..\..\..\..\lib;..\"
 				ModuleDefinitionFile="COMRebarPos.def"
+				GenerateDebugInformation="false"
+				ProgramDatabaseFile=""
 				TargetMachine="17"
 			/>
 			<Tool

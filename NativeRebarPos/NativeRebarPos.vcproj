@@ -214,6 +214,8 @@
 				AdditionalLibraryDirectories="..\..\..\..\lib;..\..\..\lib;..\..\..\..\utils\Atil\Lib-$(PlatformName)"
 				ModuleDefinitionFile=""
 				TypeLibraryFile="$(OutDir)\$(TargetName).tlb"
+				GenerateDebugInformation="false"
+				ProgramDatabaseFile=""
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -287,6 +289,8 @@
 				AdditionalLibraryDirectories="..\..\..\..\lib;..\..\..\lib;..\..\..\..\utils\Atil\Lib-$(PlatformName)"
 				ModuleDefinitionFile=""
 				TypeLibraryFile="$(OutDir)\$(TargetName).tlb"
+				GenerateDebugInformation="false"
+				ProgramDatabaseFile=""
 				TargetMachine="17"
 			/>
 			<Tool
