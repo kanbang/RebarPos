@@ -1,14 +1,11 @@
 // COMRebarPos.idl : IDL source for COMRebarPos.dll
 //
-#include "RebarPos.hm"
-//
 // Type library section and components
 //
 [
 	uuid(26E9A3B0-6567-4857-AABB-E09AC4A7A8AE),
 	version(1.0),
 	helpstring("RebarPos 1.0 Type Library"),
-	helpfile("RebarPos.hlp")
 ]
 library COMREBARPOSLib
 {
@@ -36,46 +33,45 @@ library COMREBARPOSLib
 		uuid(5D19CA2D-2E6E-4dce-A7FB-DA0B7C7CD913),
 		dual,
 		helpstring("IComRebarPos Interface"),
-		helpcontext(IDH_ICOMREBARPOS),
 		pointer_default(unique)
 	]
 	interface IComRebarPos : IAcadEntity
 	{
-		[propget, id(1), helpstring("property BasePoint"),helpcontext(IDH_BASEPOINT)] HRESULT BasePoint([out, retval] VARIANT *pVal);
-		[propput, id(1), helpstring("property BasePoint"),helpcontext(IDH_BASEPOINT)] HRESULT BasePoint([in] VARIANT newVal);
-		[propget, id(2), helpstring("property NoteGrip"),helpcontext(IDH_NOTEGRIP)] HRESULT NoteGrip([out, retval] VARIANT *pVal);
-		[propput, id(2), helpstring("property NoteGrip"),helpcontext(IDH_NOTEGRIP)] HRESULT NoteGrip([in] VARIANT newVal);
-		[propget, id(3), helpstring("property Pos"),helpcontext(IDH_POS)] HRESULT Pos([out, retval] BSTR *pVal);
-		[propput, id(3), helpstring("property Pos"),helpcontext(IDH_POS)] HRESULT Pos([in] BSTR newVal);
-		[propget, id(4), helpstring("property Count"),helpcontext(IDH_COUNT)] HRESULT Count([out, retval] BSTR *pVal);
-		[propput, id(4), helpstring("property Count"),helpcontext(IDH_COUNT)] HRESULT Count([in] BSTR newVal);
-		[propget, id(5), helpstring("property Diameter"),helpcontext(IDH_DIAMETER)] HRESULT Diameter([out, retval] BSTR *pVal);
-		[propput, id(5), helpstring("property Diameter"),helpcontext(IDH_DIAMETER)] HRESULT Diameter([in] BSTR newVal);
-		[propget, id(6), helpstring("property Spacing"),helpcontext(IDH_SPACING)] HRESULT Spacing([out, retval] BSTR *pVal);
-		[propput, id(6), helpstring("property Spacing"),helpcontext(IDH_SPACING)] HRESULT Spacing([in] BSTR newVal);
-		[propget, id(7), helpstring("property Multiplier"),helpcontext(IDH_MULTIPLIER)] HRESULT Multiplier([out, retval] long *pVal);
-		[propput, id(7), helpstring("property Multiplier"),helpcontext(IDH_MULTIPLIER)] HRESULT Multiplier([in] long newVal);
-		[propget, id(8), helpstring("property DisplayStyle"),helpcontext(IDH_DISPLAYSTYLE)] HRESULT DisplayStyle([out, retval] BSTR *pVal);
-		[propput, id(8), helpstring("property DisplayStyle"),helpcontext(IDH_DISPLAYSTYLE)] HRESULT DisplayStyle([in] BSTR newVal);
-		[propget, id(9), helpstring("property Note"),helpcontext(IDH_NOTE)] HRESULT Note([out, retval] BSTR *pVal);
-		[propput, id(9), helpstring("property Note"),helpcontext(IDH_NOTE)] HRESULT Note([in] BSTR newVal);
-		[propget, id(10), helpstring("property A"),helpcontext(IDH_A)] HRESULT A([out, retval] BSTR *pVal);
-		[propput, id(10), helpstring("property A"),helpcontext(IDH_A)] HRESULT A([in] BSTR newVal);
-		[propget, id(11), helpstring("property B"),helpcontext(IDH_B)] HRESULT B([out, retval] BSTR *pVal);
-		[propput, id(11), helpstring("property B"),helpcontext(IDH_B)] HRESULT B([in] BSTR newVal);
-		[propget, id(12), helpstring("property C"),helpcontext(IDH_C)] HRESULT C([out, retval] BSTR *pVal);
-		[propput, id(12), helpstring("property C"),helpcontext(IDH_C)] HRESULT C([in] BSTR newVal);
-		[propget, id(13), helpstring("property D"),helpcontext(IDH_D)] HRESULT D([out, retval] BSTR *pVal);
-		[propput, id(13), helpstring("property D"),helpcontext(IDH_D)] HRESULT D([in] BSTR newVal);
-		[propget, id(14), helpstring("property E"),helpcontext(IDH_E)] HRESULT E([out, retval] BSTR *pVal);
-		[propput, id(14), helpstring("property E"),helpcontext(IDH_E)] HRESULT E([in] BSTR newVal);
-		[propget, id(15), helpstring("property F"),helpcontext(IDH_F)] HRESULT F([out, retval] BSTR *pVal);
-		[propput, id(15), helpstring("property F"),helpcontext(IDH_F)] HRESULT F([in] BSTR newVal);
-		[propget, id(16), helpstring("property Length"),helpcontext(IDH_LENGTH)] HRESULT Length([out, retval] BSTR *pVal);
-		[propget, id(17), helpstring("property Shape"),helpcontext(IDH_SHAPE)] HRESULT Shape([out, retval] BSTR *pVal);
-		[propput, id(17), helpstring("property Shape"),helpcontext(IDH_SHAPE)] HRESULT Shape([in] BSTR newVal);
-		[propget, id(19), helpstring("property Scale"),helpcontext(IDH_SCALE)] HRESULT Scale([out, retval] double *pVal);
-		[propput, id(19), helpstring("property Scale"),helpcontext(IDH_SCALE)] HRESULT Scale([in] double newVal);
+		[propget, id(1), helpstring("property BasePoint")] HRESULT BasePoint([out, retval] VARIANT *pVal);
+		[propput, id(1), helpstring("property BasePoint")] HRESULT BasePoint([in] VARIANT newVal);
+		[propget, id(2), helpstring("property NoteGrip")] HRESULT NoteGrip([out, retval] VARIANT *pVal);
+		[propput, id(2), helpstring("property NoteGrip")] HRESULT NoteGrip([in] VARIANT newVal);
+		[propget, id(3), helpstring("property Pos")] HRESULT Pos([out, retval] BSTR *pVal);
+		[propput, id(3), helpstring("property Pos")] HRESULT Pos([in] BSTR newVal);
+		[propget, id(4), helpstring("property Count")] HRESULT Count([out, retval] BSTR *pVal);
+		[propput, id(4), helpstring("property Count")] HRESULT Count([in] BSTR newVal);
+		[propget, id(5), helpstring("property Diameter")] HRESULT Diameter([out, retval] BSTR *pVal);
+		[propput, id(5), helpstring("property Diameter")] HRESULT Diameter([in] BSTR newVal);
+		[propget, id(6), helpstring("property Spacing")] HRESULT Spacing([out, retval] BSTR *pVal);
+		[propput, id(6), helpstring("property Spacing")] HRESULT Spacing([in] BSTR newVal);
+		[propget, id(7), helpstring("property Multiplier")] HRESULT Multiplier([out, retval] long *pVal);
+		[propput, id(7), helpstring("property Multiplier")] HRESULT Multiplier([in] long newVal);
+		[propget, id(8), helpstring("property DisplayStyle")] HRESULT DisplayStyle([out, retval] BSTR *pVal);
+		[propput, id(8), helpstring("property DisplayStyle")] HRESULT DisplayStyle([in] BSTR newVal);
+		[propget, id(9), helpstring("property Note")] HRESULT Note([out, retval] BSTR *pVal);
+		[propput, id(9), helpstring("property Note")] HRESULT Note([in] BSTR newVal);
+		[propget, id(10), helpstring("property A")] HRESULT A([out, retval] BSTR *pVal);
+		[propput, id(10), helpstring("property A")] HRESULT A([in] BSTR newVal);
+		[propget, id(11), helpstring("property B")] HRESULT B([out, retval] BSTR *pVal);
+		[propput, id(11), helpstring("property B")] HRESULT B([in] BSTR newVal);
+		[propget, id(12), helpstring("property C")] HRESULT C([out, retval] BSTR *pVal);
+		[propput, id(12), helpstring("property C")] HRESULT C([in] BSTR newVal);
+		[propget, id(13), helpstring("property D")] HRESULT D([out, retval] BSTR *pVal);
+		[propput, id(13), helpstring("property D")] HRESULT D([in] BSTR newVal);
+		[propget, id(14), helpstring("property E")] HRESULT E([out, retval] BSTR *pVal);
+		[propput, id(14), helpstring("property E")] HRESULT E([in] BSTR newVal);
+		[propget, id(15), helpstring("property F")] HRESULT F([out, retval] BSTR *pVal);
+		[propput, id(15), helpstring("property F")] HRESULT F([in] BSTR newVal);
+		[propget, id(16), helpstring("property Length")] HRESULT Length([out, retval] BSTR *pVal);
+		[propget, id(17), helpstring("property Shape")] HRESULT Shape([out, retval] BSTR *pVal);
+		[propput, id(17), helpstring("property Shape")] HRESULT Shape([in] BSTR newVal);
+		[propget, id(19), helpstring("property Scale")] HRESULT Scale([out, retval] double *pVal);
+		[propput, id(19), helpstring("property Scale")] HRESULT Scale([in] double newVal);
 	};
 	//
 	// coclasses in type library
@@ -85,7 +81,6 @@ library COMREBARPOSLib
 	[
 		uuid(97CAC17D-B1C7-49ca-8D57-D3FF491860FF),
 		helpstring("ComRebarPos Class"),
-		helpcontext(IDH_CCOMREBARPOS),
 		noncreatable
 	]
 	coclass ComRebarPos
@@ -103,25 +98,24 @@ library COMREBARPOSLib
 		uuid(3E0EF436-0D8E-41a7-B33D-3B7AAD33BCDB),
 		dual,
 		helpstring("IComBOQTable Interface"),
-		helpcontext(IDH_ICOMBOQTABLE),
 		pointer_default(unique)
 	]
 	interface IComBOQTable : IAcadEntity
 	{
-		[propget, id(1), helpstring("property BasePoint"),helpcontext(IDH_TBASEPOINT)] HRESULT BasePoint([out, retval] VARIANT *pVal);
-		[propput, id(1), helpstring("property BasePoint"),helpcontext(IDH_TBASEPOINT)] HRESULT BasePoint([in] VARIANT newVal);
-		[propget, id(2), helpstring("property Multiplier"),helpcontext(IDH_TMULTIPLIER)] HRESULT Multiplier([out, retval] long *pVal);
-		[propput, id(2), helpstring("property Multiplier"),helpcontext(IDH_TMULTIPLIER)] HRESULT Multiplier([in] long newVal);
-		[propget, id(4), helpstring("property Scale"),helpcontext(IDH_TSCALE)] HRESULT Scale([out, retval] double *pVal);
-		[propput, id(4), helpstring("property Scale"),helpcontext(IDH_TSCALE)] HRESULT Scale([in] double newVal);
-		[propget, id(5), helpstring("property Heading"),helpcontext(IDH_THEADING)] HRESULT Heading([out, retval] BSTR *pVal);
-		[propput, id(5), helpstring("property Heading"),helpcontext(IDH_THEADING)] HRESULT Heading([in] BSTR newVal);
-		[propget, id(6), helpstring("property Footing"),helpcontext(IDH_TFOOTING)] HRESULT Footing([out, retval] BSTR *pVal);
-		[propput, id(6), helpstring("property Footing"),helpcontext(IDH_TFOOTING)] HRESULT Footing([in] BSTR newVal);
-		[propget, id(7), helpstring("property MaxRows"),helpcontext(IDH_TMAXROWS)] HRESULT MaxRows([out, retval] long *pVal);
-		[propput, id(7), helpstring("property MaxRows"),helpcontext(IDH_TMAXROWS)] HRESULT MaxRows([in] long newVal);
-		[propget, id(8), helpstring("property TableSpacing"),helpcontext(IDH_TTABLESPACING)] HRESULT TableSpacing([out, retval] double *pVal);
-		[propput, id(8), helpstring("property TableSpacing"),helpcontext(IDH_TTABLESPACING)] HRESULT TableSpacing([in] double newVal);
+		[propget, id(1), helpstring("property BasePoint")] HRESULT BasePoint([out, retval] VARIANT *pVal);
+		[propput, id(1), helpstring("property BasePoint")] HRESULT BasePoint([in] VARIANT newVal);
+		[propget, id(2), helpstring("property Multiplier")] HRESULT Multiplier([out, retval] long *pVal);
+		[propput, id(2), helpstring("property Multiplier")] HRESULT Multiplier([in] long newVal);
+		[propget, id(4), helpstring("property Scale")] HRESULT Scale([out, retval] double *pVal);
+		[propput, id(4), helpstring("property Scale")] HRESULT Scale([in] double newVal);
+		[propget, id(5), helpstring("property Heading")] HRESULT Heading([out, retval] BSTR *pVal);
+		[propput, id(5), helpstring("property Heading")] HRESULT Heading([in] BSTR newVal);
+		[propget, id(6), helpstring("property Footing")] HRESULT Footing([out, retval] BSTR *pVal);
+		[propput, id(6), helpstring("property Footing")] HRESULT Footing([in] BSTR newVal);
+		[propget, id(7), helpstring("property MaxRows")] HRESULT MaxRows([out, retval] long *pVal);
+		[propput, id(7), helpstring("property MaxRows")] HRESULT MaxRows([in] long newVal);
+		[propget, id(8), helpstring("property TableSpacing")] HRESULT TableSpacing([out, retval] double *pVal);
+		[propput, id(8), helpstring("property TableSpacing")] HRESULT TableSpacing([in] double newVal);
 	};
 	//
 	// coclasses in type library
@@ -131,7 +125,6 @@ library COMREBARPOSLib
 	[
 		uuid(BA77CFFF-0274-4d4c-BFE2-64A5731BAD37),
 		helpstring("ComBOQTable Class"),
-		helpcontext(IDH_CCOMBOQTABLE),
 		noncreatable
 	]
 	coclass ComBOQTable

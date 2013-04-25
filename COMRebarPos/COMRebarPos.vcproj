@@ -332,10 +332,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\COMRebarPos.hpj"
-				>
-			</File>
-			<File
 				RelativePath=".\COMRebarPos.idl"
 				>
 			</File>
@@ -429,10 +425,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RebarPos.hm"
-				>
-			</File>
-			<File
 				RelativePath=".\Resource.h"
 				>
 			</File>
@@ -445,10 +437,6 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe"
 			>
-			<File
-				RelativePath=".\RebarPos.RTF"
-				>
-			</File>
 		</Filter>
 	</Files>
 	<Globals>
