@@ -137,6 +137,13 @@ namespace RebarPosCommands.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Expand {
+            get {
+                object obj = ResourceManager.GetObject("Expand", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap LGOSTER {
             get {
                 object obj = ResourceManager.GetObject("LGOSTER", resourceCulture);

@@ -133,7 +133,7 @@
             this.panel2.Location = new System.Drawing.Point(182, 224);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(52, 50);
-            this.panel2.TabIndex = 16;
+            this.panel2.TabIndex = 14;
             // 
             // rbAlignLengthRight
             // 
@@ -142,7 +142,7 @@
             this.rbAlignLengthRight.Location = new System.Drawing.Point(24, 10);
             this.rbAlignLengthRight.Name = "rbAlignLengthRight";
             this.rbAlignLengthRight.Size = new System.Drawing.Size(24, 24);
-            this.rbAlignLengthRight.TabIndex = 19;
+            this.rbAlignLengthRight.TabIndex = 2;
             this.rbAlignLengthRight.UseVisualStyleBackColor = true;
             // 
             // rbAlignLengthBottom
@@ -152,7 +152,7 @@
             this.rbAlignLengthBottom.Location = new System.Drawing.Point(0, 24);
             this.rbAlignLengthBottom.Name = "rbAlignLengthBottom";
             this.rbAlignLengthBottom.Size = new System.Drawing.Size(24, 24);
-            this.rbAlignLengthBottom.TabIndex = 18;
+            this.rbAlignLengthBottom.TabIndex = 1;
             this.rbAlignLengthBottom.UseVisualStyleBackColor = true;
             // 
             // rbAlignLengthTop
@@ -162,7 +162,7 @@
             this.rbAlignLengthTop.Location = new System.Drawing.Point(0, 0);
             this.rbAlignLengthTop.Name = "rbAlignLengthTop";
             this.rbAlignLengthTop.Size = new System.Drawing.Size(24, 24);
-            this.rbAlignLengthTop.TabIndex = 17;
+            this.rbAlignLengthTop.TabIndex = 0;
             this.rbAlignLengthTop.UseVisualStyleBackColor = true;
             // 
             // panel1
@@ -173,7 +173,7 @@
             this.panel1.Location = new System.Drawing.Point(182, 278);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(52, 50);
-            this.panel1.TabIndex = 16;
+            this.panel1.TabIndex = 17;
             // 
             // rbAlignNoteRight
             // 
@@ -182,7 +182,7 @@
             this.rbAlignNoteRight.Location = new System.Drawing.Point(24, 10);
             this.rbAlignNoteRight.Name = "rbAlignNoteRight";
             this.rbAlignNoteRight.Size = new System.Drawing.Size(24, 24);
-            this.rbAlignNoteRight.TabIndex = 19;
+            this.rbAlignNoteRight.TabIndex = 2;
             this.rbAlignNoteRight.UseVisualStyleBackColor = true;
             // 
             // rbAlignNoteBottom
@@ -192,7 +192,7 @@
             this.rbAlignNoteBottom.Location = new System.Drawing.Point(0, 24);
             this.rbAlignNoteBottom.Name = "rbAlignNoteBottom";
             this.rbAlignNoteBottom.Size = new System.Drawing.Size(24, 24);
-            this.rbAlignNoteBottom.TabIndex = 18;
+            this.rbAlignNoteBottom.TabIndex = 1;
             this.rbAlignNoteBottom.UseVisualStyleBackColor = true;
             // 
             // rbAlignNoteTop
@@ -202,7 +202,7 @@
             this.rbAlignNoteTop.Location = new System.Drawing.Point(0, 0);
             this.rbAlignNoteTop.Name = "rbAlignNoteTop";
             this.rbAlignNoteTop.Size = new System.Drawing.Size(24, 24);
-            this.rbAlignNoteTop.TabIndex = 17;
+            this.rbAlignNoteTop.TabIndex = 0;
             this.rbAlignNoteTop.UseVisualStyleBackColor = true;
             // 
             // chkShowLength
@@ -283,7 +283,7 @@
             this.txtPosNote.Location = new System.Drawing.Point(43, 292);
             this.txtPosNote.Name = "txtPosNote";
             this.txtPosNote.Size = new System.Drawing.Size(129, 20);
-            this.txtPosNote.TabIndex = 15;
+            this.txtPosNote.TabIndex = 16;
             // 
             // label15
             // 
@@ -291,7 +291,7 @@
             this.label15.Location = new System.Drawing.Point(13, 295);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(24, 13);
-            this.label15.TabIndex = 14;
+            this.label15.TabIndex = 15;
             this.label15.Text = "&Not";
             // 
             // txtPosSpacing

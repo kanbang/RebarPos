@@ -41,6 +41,9 @@ namespace RebarPosCommands
                         table.MaxRows = form.TableRows;
                         table.TableSpacing = form.TableMargin;
 
+                        table.DisplayUnit = form.DisplayUnit;
+                        table.Precision = form.Precision;
+                        
                         table.ResumeUpdate();
 
                         tr.Commit();

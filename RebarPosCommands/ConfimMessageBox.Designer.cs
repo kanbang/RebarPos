@@ -43,7 +43,7 @@
             this.lblMessage.Location = new System.Drawing.Point(120, 13);
             this.lblMessage.Name = "lblMessage";
             this.lblMessage.Size = new System.Drawing.Size(35, 13);
-            this.lblMessage.TabIndex = 1;
+            this.lblMessage.TabIndex = 0;
             this.lblMessage.Text = "label1";
             // 
             // button1
@@ -62,7 +62,7 @@
             this.button2.Location = new System.Drawing.Point(93, 171);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 2;
+            this.button2.TabIndex = 3;
             this.button2.Text = "button2";
             this.button2.UseVisualStyleBackColor = true;
             // 
@@ -72,7 +72,7 @@
             this.button3.Location = new System.Drawing.Point(174, 171);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 2;
+            this.button3.TabIndex = 4;
             this.button3.Text = "button3";
             this.button3.UseVisualStyleBackColor = true;
             // 
@@ -92,7 +92,7 @@
             this.chkConfirm.Location = new System.Drawing.Point(123, 136);
             this.chkConfirm.Name = "chkConfirm";
             this.chkConfirm.Size = new System.Drawing.Size(80, 17);
-            this.chkConfirm.TabIndex = 3;
+            this.chkConfirm.TabIndex = 1;
             this.chkConfirm.Text = "checkBox1";
             this.chkConfirm.UseVisualStyleBackColor = true;
             // 

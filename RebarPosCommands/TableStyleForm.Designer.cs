@@ -133,7 +133,7 @@
             this.chkUserOnly.Location = new System.Drawing.Point(15, 526);
             this.chkUserOnly.Name = "chkUserOnly";
             this.chkUserOnly.Size = new System.Drawing.Size(205, 17);
-            this.chkUserOnly.TabIndex = 7;
+            this.chkUserOnly.TabIndex = 4;
             this.chkUserOnly.Text = "&Sadece Kullanıcı Tanımlı Stilleri Göster";
             this.chkUserOnly.UseVisualStyleBackColor = true;
             this.chkUserOnly.CheckedChanged += new System.EventHandler(this.chkUserOnly_CheckedChanged);
@@ -252,7 +252,7 @@
             this.gbColumns.Location = new System.Drawing.Point(317, 13);
             this.gbColumns.Name = "gbColumns";
             this.gbColumns.Size = new System.Drawing.Size(389, 284);
-            this.gbColumns.TabIndex = 2;
+            this.gbColumns.TabIndex = 1;
             this.gbColumns.TabStop = false;
             this.gbColumns.Text = "&Sütunlar";
             // 
@@ -262,7 +262,7 @@
             this.label1.Location = new System.Drawing.Point(18, 249);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(106, 13);
-            this.label1.TabIndex = 14;
+            this.label1.TabIndex = 16;
             this.label1.Text = "&Tablo Çarpanı Başlığı";
             // 
             // label23
@@ -333,7 +333,7 @@
             this.txtMultiplierHeadingLabel.Location = new System.Drawing.Point(149, 246);
             this.txtMultiplierHeadingLabel.Name = "txtMultiplierHeadingLabel";
             this.txtMultiplierHeadingLabel.Size = new System.Drawing.Size(217, 20);
-            this.txtMultiplierHeadingLabel.TabIndex = 15;
+            this.txtMultiplierHeadingLabel.TabIndex = 17;
             this.txtMultiplierHeadingLabel.Validated += new System.EventHandler(this.txtMultiplierHeadingLabel_Validated);
             // 
             // txtDiameterListColumn
@@ -405,7 +405,7 @@
             this.gbRows.Location = new System.Drawing.Point(317, 303);
             this.gbRows.Name = "gbRows";
             this.gbRows.Size = new System.Drawing.Size(389, 150);
-            this.gbRows.TabIndex = 3;
+            this.gbRows.TabIndex = 2;
             this.gbRows.TabStop = false;
             this.gbRows.Text = "&Toplam Satırları";
             // 
@@ -483,7 +483,7 @@
             this.label14.Location = new System.Drawing.Point(18, 29);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(46, 13);
-            this.label14.TabIndex = 14;
+            this.label14.TabIndex = 0;
             this.label14.Text = "&Yazı Stili";
             // 
             // label15
@@ -492,7 +492,7 @@
             this.label15.Location = new System.Drawing.Point(18, 56);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(90, 13);
-            this.label15.TabIndex = 16;
+            this.label15.TabIndex = 2;
             this.label15.Text = "Ü&stbilgi Yazısı Stili";
             // 
             // label6
@@ -501,7 +501,7 @@
             this.label6.Location = new System.Drawing.Point(18, 83);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(86, 13);
-            this.label6.TabIndex = 20;
+            this.label6.TabIndex = 4;
             this.label6.Text = "&Altbilgi Yazısı Stili";
             // 
             // cbTextStyle
@@ -511,7 +511,7 @@
             this.cbTextStyle.Location = new System.Drawing.Point(149, 26);
             this.cbTextStyle.Name = "cbTextStyle";
             this.cbTextStyle.Size = new System.Drawing.Size(217, 21);
-            this.cbTextStyle.TabIndex = 15;
+            this.cbTextStyle.TabIndex = 1;
             this.cbTextStyle.SelectedIndexChanged += new System.EventHandler(this.cbTextStyle_SelectedIndexChanged);
             // 
             // cbHeadingStyle
@@ -521,7 +521,7 @@
             this.cbHeadingStyle.Location = new System.Drawing.Point(149, 53);
             this.cbHeadingStyle.Name = "cbHeadingStyle";
             this.cbHeadingStyle.Size = new System.Drawing.Size(217, 21);
-            this.cbHeadingStyle.TabIndex = 17;
+            this.cbHeadingStyle.TabIndex = 3;
             this.cbHeadingStyle.SelectedIndexChanged += new System.EventHandler(this.cbHeadingStyle_SelectedIndexChanged);
             // 
             // cbFootingStyle
@@ -531,7 +531,7 @@
             this.cbFootingStyle.Location = new System.Drawing.Point(149, 80);
             this.cbFootingStyle.Name = "cbFootingStyle";
             this.cbFootingStyle.Size = new System.Drawing.Size(217, 21);
-            this.cbFootingStyle.TabIndex = 21;
+            this.cbFootingStyle.TabIndex = 5;
             this.cbFootingStyle.SelectedIndexChanged += new System.EventHandler(this.cbFootingStyle_SelectedIndexChanged);
             // 
             // gbDisplay
@@ -545,7 +545,7 @@
             this.gbDisplay.Location = new System.Drawing.Point(317, 459);
             this.gbDisplay.Name = "gbDisplay";
             this.gbDisplay.Size = new System.Drawing.Size(389, 118);
-            this.gbDisplay.TabIndex = 1;
+            this.gbDisplay.TabIndex = 3;
             this.gbDisplay.TabStop = false;
             this.gbDisplay.Text = "Görünüm &Ayarları";
             // 
@@ -558,7 +558,7 @@
             this.groupBox1.Location = new System.Drawing.Point(724, 13);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(491, 564);
-            this.groupBox1.TabIndex = 7;
+            this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Ön İzleme";
             // 
@@ -575,6 +575,7 @@
             this.tableView.DiameterLabel = null;
             this.tableView.DiameterLengthLabel = null;
             this.tableView.DiameterListLabel = null;
+            this.tableView.ForeColor = System.Drawing.SystemColors.ControlText;
             this.tableView.GrossWeightLabel = null;
             this.tableView.LengthLabel = null;
             this.tableView.Location = new System.Drawing.Point(21, 33);

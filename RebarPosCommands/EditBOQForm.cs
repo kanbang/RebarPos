@@ -15,6 +15,8 @@ namespace RebarPosCommands
         public double TextHeight { get { return double.Parse(txtTextHeight.Text); } }
         public int TableRows { get { return int.Parse(txtTableRows.Text); } }
         public double TableMargin { get { return double.Parse(txtTableMargin.Text); } }
+        public BOQTable.DrawingUnits DisplayUnit { get { return cbDisplayUnit.SelectedIndex == 0 ? BOQTable.DrawingUnits.Millimeter : BOQTable.DrawingUnits.Centimeter; } }
+        public int Precision { get { return cbPrecision.SelectedIndex; } }
 
         public EditBOQForm()
         {
@@ -37,6 +39,8 @@ namespace RebarPosCommands
                     txtTextHeight.Text = table.Scale.ToString();
                     txtTableRows.Text  = table.MaxRows.ToString();
                     txtTableMargin.Text = table.TableSpacing.ToString();
+                    cbDisplayUnit.SelectedIndex = (table.DisplayUnit == BOQTable.DrawingUnits.Millimeter ? 0 : 1);
+                    cbPrecision.SelectedIndex = table.Precision;
                 }
             }
             catch (System.Exception ex)

@@ -100,7 +100,7 @@
             this.gbOptions.Controls.Add(this.chkBending);
             this.gbOptions.Location = new System.Drawing.Point(12, 12);
             this.gbOptions.Name = "gbOptions";
-            this.gbOptions.Size = new System.Drawing.Size(394, 355);
+            this.gbOptions.Size = new System.Drawing.Size(308, 355);
             this.gbOptions.TabIndex = 0;
             this.gbOptions.TabStop = false;
             this.gbOptions.Text = "S&eçenekler";
@@ -284,7 +284,7 @@
             this.gbDisplay.Controls.Add(this.label6);
             this.gbDisplay.Controls.Add(this.txtFormula);
             this.gbDisplay.Controls.Add(this.label5);
-            this.gbDisplay.Location = new System.Drawing.Point(415, 12);
+            this.gbDisplay.Location = new System.Drawing.Point(326, 12);
             this.gbDisplay.Name = "gbDisplay";
             this.gbDisplay.Size = new System.Drawing.Size(605, 355);
             this.gbDisplay.TabIndex = 1;
@@ -588,18 +588,20 @@
             // btnExpand
             // 
             this.btnExpand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnExpand.Location = new System.Drawing.Point(266, 379);
+            this.btnExpand.FlatAppearance.BorderSize = 0;
+            this.btnExpand.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExpand.Image = global::RebarPosCommands.Properties.Resources.Expand;
+            this.btnExpand.Location = new System.Drawing.Point(297, 379);
             this.btnExpand.Name = "btnExpand";
-            this.btnExpand.Size = new System.Drawing.Size(140, 23);
+            this.btnExpand.Size = new System.Drawing.Size(23, 23);
             this.btnExpand.TabIndex = 4;
-            this.btnExpand.Text = "&Görünüm Ayarları >>";
             this.btnExpand.UseVisualStyleBackColor = true;
             this.btnExpand.Click += new System.EventHandler(this.btnExpand_Click);
             // 
             // btnDisplayStandard
             // 
             this.btnDisplayStandard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnDisplayStandard.Location = new System.Drawing.Point(734, 379);
+            this.btnDisplayStandard.Location = new System.Drawing.Point(645, 379);
             this.btnDisplayStandard.Name = "btnDisplayStandard";
             this.btnDisplayStandard.Size = new System.Drawing.Size(140, 23);
             this.btnDisplayStandard.TabIndex = 5;
@@ -610,7 +612,7 @@
             // btnDisplayBS
             // 
             this.btnDisplayBS.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnDisplayBS.Location = new System.Drawing.Point(880, 379);
+            this.btnDisplayBS.Location = new System.Drawing.Point(791, 379);
             this.btnDisplayBS.Name = "btnDisplayBS";
             this.btnDisplayBS.Size = new System.Drawing.Size(140, 23);
             this.btnDisplayBS.TabIndex = 6;
@@ -624,7 +626,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(1033, 414);
+            this.ClientSize = new System.Drawing.Size(945, 414);
             this.Controls.Add(this.btnDisplayBS);
             this.Controls.Add(this.btnDisplayStandard);
             this.Controls.Add(this.btnExpand);

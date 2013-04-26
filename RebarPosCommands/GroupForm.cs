@@ -49,7 +49,7 @@ namespace RebarPosCommands
         public GroupForm()
         {
             InitializeComponent();
-            Width = 425;
+            Width = 340;
 
             mCopy = new GroupCopy();
             mTextStyles = new Dictionary<string, ObjectId>();
@@ -518,7 +518,7 @@ namespace RebarPosCommands
 
         private void btnExpand_Click(object sender, EventArgs e)
         {
-            Width = 1038;
+            Width = 950;
             gbDisplay.Visible = true;
             btnExpand.Visible = false;
             gbDisplay.Focus();
