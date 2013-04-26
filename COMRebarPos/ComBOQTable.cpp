@@ -227,8 +227,48 @@ STDMETHODIMP CComBOQTable::GetPredefinedStrings(DISPID dispID, CALPOLESTR *pCaSt
 {
 	USES_CONVERSION;
 
-    return IOPMPropertyExtensionImpl<CComBOQTable>::GetPredefinedStrings(dispID, pCaStringsOut, pCaCookiesOut);
-}
+	long size;
+
+	switch(dispID)
+	{
+	case DISPID_TPRECISION:
+		size = 9;
+
+		pCaStringsOut->pElems = (LPOLESTR *)::CoTaskMemAlloc(sizeof(LPOLESTR) * size);
+		pCaCookiesOut->pElems = (DWORD *)::CoTaskMemAlloc(sizeof(DWORD) * size);
+
+		pCaStringsOut->pElems[0] = ::SysAllocString(L"0"); pCaCookiesOut->pElems[0] = 0;
+		pCaStringsOut->pElems[1] = ::SysAllocString(L"0.0");  pCaCookiesOut->pElems[1] = 1;
+		pCaStringsOut->pElems[2] = ::SysAllocString(L"0.00");  pCaCookiesOut->pElems[2] = 2;
+		pCaStringsOut->pElems[3] = ::SysAllocString(L"0.000");  pCaCookiesOut->pElems[3] = 3;
+		pCaStringsOut->pElems[4] = ::SysAllocString(L"0.0000");  pCaCookiesOut->pElems[4] = 4;
+		pCaStringsOut->pElems[5] = ::SysAllocString(L"0.00000");  pCaCookiesOut->pElems[5] = 5;
+		pCaStringsOut->pElems[6] = ::SysAllocString(L"0.000000");  pCaCookiesOut->pElems[6] = 6;
+		pCaStringsOut->pElems[7] = ::SysAllocString(L"0.0000000");  pCaCookiesOut->pElems[7] = 7;
+		pCaStringsOut->pElems[8] = ::SysAllocString(L"0.00000000");  pCaCookiesOut->pElems[8] = 8;
+
+		pCaStringsOut->cElems = size;
+		pCaCookiesOut->cElems = size;
+
+		return S_OK;
+		break;
+	case DISPID_TDISPLAYUNIT:
+		size = 2;
+
+		pCaStringsOut->pElems = (LPOLESTR *)::CoTaskMemAlloc(sizeof(LPOLESTR) * size);
+		pCaCookiesOut->pElems = (DWORD *)::CoTaskMemAlloc(sizeof(DWORD) * size);
+
+		pCaStringsOut->pElems[0] = ::SysAllocString(L"MM");   pCaCookiesOut->pElems[0] = 0;
+		pCaStringsOut->pElems[1] = ::SysAllocString(L"CM");  pCaCookiesOut->pElems[1] = 1;
+
+		pCaStringsOut->cElems = size;
+		pCaCookiesOut->cElems = size;
+
+		return S_OK;
+		break;
+	default:
+        return IOPMPropertyExtensionImpl<CComBOQTable>::GetPredefinedStrings(dispID, pCaStringsOut, pCaCookiesOut);
+	}}
 
 //OPM calls this function when the user selects an element from a drop down list. OPM provides
 //the cookie that we associated with the element in the GetPredefinedStrings function. We are
@@ -238,8 +278,31 @@ STDMETHODIMP CComBOQTable::GetPredefinedValue(DISPID dispID, DWORD dwCookie, VAR
 {
 	USES_CONVERSION;
 
-	return IOPMPropertyExtensionImpl<CComBOQTable>::GetPredefinedValue(dispID, dwCookie, pVarOut);
-}
+	switch(dispID)
+	{
+	case DISPID_TPRECISION:
+		{
+			assert((INT_PTR)dwCookie <= 8);
+
+			CComVariant var((long)dwCookie);
+			VariantCopy(pVarOut, &var);
+
+			return S_OK;
+		}
+		break;
+	case DISPID_TDISPLAYUNIT:
+		{
+			assert((INT_PTR)dwCookie <= 1);
+
+			CComVariant var((long)dwCookie);
+			VariantCopy(pVarOut, &var);
+
+			return S_OK;
+		}
+		break;
+	default:
+		return IOPMPropertyExtensionImpl<CComBOQTable>::GetPredefinedValue(dispID, dwCookie, pVarOut);
+	}}
 
 HRESULT CComBOQTable::CreateNewObject(AcDbObjectId& objId, AcDbObjectId& ownerId, TCHAR* keyName)
 {
@@ -631,6 +694,266 @@ STDMETHODIMP CComBOQTable::put_Footing(BSTR newVal)
     catch(const Acad::ErrorStatus)
     {
         return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComBOQTable::get_Note(BSTR * pVal)
+{
+    CHECKOUTPARAM(pVal);
+    try
+    {
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pBOQTable.openStatus()) != Acad::eOk)
+            throw es;
+        
+        USES_CONVERSION;
+        *pVal = SysAllocString(CT2W(pBOQTable->Note()));
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to open object", IID_IComRebarPos, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComBOQTable::put_Note(BSTR newVal)
+{
+    try
+    {
+        AXEntityDocLockNoDbOk(m_objRef.objectId());
+
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pBOQTable.openStatus()) != Acad::eOk)
+            throw es;
+        
+        USES_CONVERSION;
+        if ((es = pBOQTable->setNote(W2T(newVal))) != Acad::eOk)
+            throw es;
+        else 
+            Fire_Notification(DISPID_TNOTE);
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to set property.", IID_IComRebarPos, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComBOQTable::get_HeadingScale(double * pVal)
+{
+    CHECKOUTPARAM(pVal);
+    try
+    {
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pBOQTable.openStatus()) != Acad::eOk)
+            throw es;
+
+        *pVal = pBOQTable->HeadingScale();
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to open object", IID_IComBOQTable, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComBOQTable::put_HeadingScale(double newVal)
+{
+    try
+    {
+        AXEntityDocLockNoDbOk(m_objRef.objectId());
+
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pBOQTable.openStatus()) != Acad::eOk)
+            throw es;
+        
+        USES_CONVERSION;
+        if ((es = pBOQTable->setHeadingScale(newVal)) != Acad::eOk)
+            throw es;
+        else 
+            Fire_Notification(DISPID_THEADINGSCALE);
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to set property.", IID_IComBOQTable, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComBOQTable::get_FootingScale(double * pVal)
+{
+    CHECKOUTPARAM(pVal);
+    try
+    {
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pBOQTable.openStatus()) != Acad::eOk)
+            throw es;
+
+        *pVal = pBOQTable->FootingScale();
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to open object", IID_IComBOQTable, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComBOQTable::put_FootingScale(double newVal)
+{
+    try
+    {
+        AXEntityDocLockNoDbOk(m_objRef.objectId());
+
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pBOQTable.openStatus()) != Acad::eOk)
+            throw es;
+        
+        USES_CONVERSION;
+        if ((es = pBOQTable->setFootingScale(newVal)) != Acad::eOk)
+            throw es;
+        else 
+            Fire_Notification(DISPID_TFOOTINGSCALE);
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to set property.", IID_IComBOQTable, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComBOQTable::get_RowSpacing(double * pVal)
+{
+    CHECKOUTPARAM(pVal);
+    try
+    {
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pBOQTable.openStatus()) != Acad::eOk)
+            throw es;
+
+        *pVal = pBOQTable->RowSpacing();
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to open object", IID_IComBOQTable, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComBOQTable::put_RowSpacing(double newVal)
+{
+    try
+    {
+        AXEntityDocLockNoDbOk(m_objRef.objectId());
+
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pBOQTable.openStatus()) != Acad::eOk)
+            throw es;
+        
+        USES_CONVERSION;
+        if ((es = pBOQTable->setRowSpacing(newVal)) != Acad::eOk)
+            throw es;
+        else 
+            Fire_Notification(DISPID_TROWSPACING);
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to set property.", IID_IComBOQTable, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComBOQTable::get_Precision(long * pVal)
+{
+    CHECKOUTPARAM(pVal);
+    try
+    {
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pBOQTable.openStatus()) != Acad::eOk)
+            throw es;
+
+        *pVal = pBOQTable->Precision();
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to open object", IID_IComBOQTable, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComBOQTable::put_Precision(long newVal)
+{
+    try
+    {
+        AXEntityDocLockNoDbOk(m_objRef.objectId());
+
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pBOQTable.openStatus()) != Acad::eOk)
+            throw es;
+        
+        USES_CONVERSION;
+        if ((es = pBOQTable->setPrecision(newVal)) != Acad::eOk)
+            throw es;
+        else 
+            Fire_Notification(DISPID_TPRECISION);
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to set property.", IID_IComBOQTable, E_FAIL);
+    }
+	return S_OK;
+}
+
+
+STDMETHODIMP CComBOQTable::get_DisplayUnit(long * pVal)
+{
+    CHECKOUTPARAM(pVal);
+    try
+    {
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef,AcDb::kForRead,Adesk::kTrue);
+	    if((es = pBOQTable.openStatus()) != Acad::eOk)
+            throw es;
+
+        *pVal = (long)pBOQTable->DisplayUnit();
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to open object", IID_IComBOQTable, E_FAIL);
+    }
+	return S_OK;
+}
+
+STDMETHODIMP CComBOQTable::put_DisplayUnit(long newVal)
+{
+    try
+    {
+        AXEntityDocLockNoDbOk(m_objRef.objectId());
+
+        Acad::ErrorStatus es;
+        AcAxObjectRefPtr<CBOQTable> pBOQTable(&m_objRef,AcDb::kForWrite,Adesk::kTrue);
+	    if((es = pBOQTable.openStatus()) != Acad::eOk)
+            throw es;
+        
+        USES_CONVERSION;
+		if ((es = pBOQTable->setDisplayUnit(static_cast<CBOQTable::DrawingUnits>(newVal))) != Acad::eOk)
+            throw es;
+        else 
+            Fire_Notification(DISPID_TDISPLAYUNIT);
+    }
+    catch(const Acad::ErrorStatus)
+    {
+        return Error(L"Failed to set property.", IID_IComBOQTable, E_FAIL);
     }
 	return S_OK;
 }

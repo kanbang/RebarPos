@@ -122,6 +122,18 @@ library COMREBARPOSLib
 		[propput, id(7), helpstring("property MaxRows")] HRESULT MaxRows([in] long newVal);
 		[propget, id(8), helpstring("property TableSpacing")] HRESULT TableSpacing([out, retval] double *pVal);
 		[propput, id(8), helpstring("property TableSpacing")] HRESULT TableSpacing([in] double newVal);
+		[propget, id(9), helpstring("property Note")] HRESULT Note([out, retval] BSTR *pVal);
+		[propput, id(9), helpstring("property Note")] HRESULT Note([in] BSTR newVal);
+		[propget, id(10), helpstring("property Precision")] HRESULT Precision([out, retval] long *pVal);
+		[propput, id(10), helpstring("property Precision")] HRESULT Precision([in] long newVal);
+		[propget, id(11), helpstring("property DisplayUnit")] HRESULT DisplayUnit([out, retval] long *pVal);
+		[propput, id(11), helpstring("property DisplayUnit")] HRESULT DisplayUnit([in] long newVal);
+		[propget, id(12), helpstring("property HeadingScale")] HRESULT HeadingScale([out, retval] double *pVal);
+		[propput, id(12), helpstring("property HeadingScale")] HRESULT HeadingScale([in] double newVal);
+		[propget, id(13), helpstring("property FootingScale")] HRESULT FootingScale([out, retval] double *pVal);
+		[propput, id(13), helpstring("property FootingScale")] HRESULT FootingScale([in] double newVal);
+		[propget, id(14), helpstring("property RowSpacing")] HRESULT RowSpacing([out, retval] double *pVal);
+		[propput, id(14), helpstring("property RowSpacing")] HRESULT RowSpacing([in] double newVal);
 	};
 	//
 	// coclasses in type library

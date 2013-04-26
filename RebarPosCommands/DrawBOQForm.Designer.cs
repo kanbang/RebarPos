@@ -31,6 +31,8 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DrawBOQForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cbPrecision = new System.Windows.Forms.ComboBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.cbDisplayUnit = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.chkHideMissing = new System.Windows.Forms.CheckBox();
@@ -54,8 +56,6 @@
             this.txtTextHeight = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.label10 = new System.Windows.Forms.Label();
-            this.cbPrecision = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udMultiplier)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -85,6 +85,34 @@
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "&Tablo Seçenekleri";
+            // 
+            // cbPrecision
+            // 
+            this.cbPrecision.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPrecision.FormattingEnabled = true;
+            this.cbPrecision.Items.AddRange(new object[] {
+            "0.",
+            "0.0",
+            "0.00",
+            "0.000",
+            "0.0000",
+            "0.00000",
+            "0.000000",
+            "0.0000000",
+            "0.00000000"});
+            this.cbPrecision.Location = new System.Drawing.Point(156, 91);
+            this.cbPrecision.Name = "cbPrecision";
+            this.cbPrecision.Size = new System.Drawing.Size(100, 21);
+            this.cbPrecision.TabIndex = 5;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(18, 94);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(81, 13);
+            this.label10.TabIndex = 4;
+            this.label10.Text = "&Basamak Sayısı";
             // 
             // cbDisplayUnit
             // 
@@ -311,32 +339,6 @@
             // 
             this.errorProvider.ContainerControl = this;
             this.errorProvider.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProvider.Icon")));
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(18, 94);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(81, 13);
-            this.label10.TabIndex = 4;
-            this.label10.Text = "&Basamak Sayısı";
-            // 
-            // cbPrecision
-            // 
-            this.cbPrecision.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbPrecision.FormattingEnabled = true;
-            this.cbPrecision.Items.AddRange(new object[] {
-            "0.",
-            "0.0",
-            "0.00",
-            "0.000",
-            "0.0000",
-            "0.00000",
-            "0.000000"});
-            this.cbPrecision.Location = new System.Drawing.Point(156, 91);
-            this.cbPrecision.Name = "cbPrecision";
-            this.cbPrecision.Size = new System.Drawing.Size(100, 21);
-            this.cbPrecision.TabIndex = 5;
             // 
             // DrawBOQForm
             // 

@@ -15,6 +15,12 @@
 #define	DISPID_TFOOTING			0x00000006
 #define	DISPID_TMAXROWS			0x00000007
 #define	DISPID_TTABLESPACING	0x00000008
+#define	DISPID_TNOTE			0x00000009
+#define	DISPID_TPRECISION		0x0000000A
+#define	DISPID_TDISPLAYUNIT		0x0000000B
+#define	DISPID_THEADINGSCALE	0x0000000C
+#define	DISPID_TFOOTINGSCALE	0x0000000D
+#define	DISPID_TROWSPACING		0x0000000E
 
 /////////////////////////////////////////////////////////////////////////////
 // CComBOQTable
@@ -91,19 +97,37 @@ public:
 	STDMETHOD(put_Heading)(/*[in]*/ BSTR newVal);
 	STDMETHOD(get_Footing)(/*[out, retval]*/ BSTR *pVal);
 	STDMETHOD(put_Footing)(/*[in]*/ BSTR newVal);
+	STDMETHOD(get_Note)(/*[out, retval]*/ BSTR *pVal);
+	STDMETHOD(put_Note)(/*[in]*/ BSTR newVal);
+	STDMETHOD(get_Precision)(/*[out, retval]*/ long *pVal);
+	STDMETHOD(put_Precision)(/*[in]*/ long newVal);
+	STDMETHOD(get_DisplayUnit)(/*[out, retval]*/ long *pVal);
+	STDMETHOD(put_DisplayUnit)(/*[in]*/ long newVal);
+	STDMETHOD(get_HeadingScale)(/*[out, retval]*/ double *pVal);
+	STDMETHOD(put_HeadingScale)(/*[in]*/ double newVal);
+	STDMETHOD(get_FootingScale)(/*[out, retval]*/ double *pVal);
+	STDMETHOD(put_FootingScale)(/*[in]*/ double newVal);
+	STDMETHOD(get_RowSpacing)(/*[out, retval]*/ double *pVal);
+	STDMETHOD(put_RowSpacing)(/*[in]*/ double newVal);
 //
 // OPM
 //
 
 // IOPMPropertyExtension
 BEGIN_OPMPROP_MAP()
-    OPMPROP_ENTRY(0, DISPID_TBASEPOINT, PROPCAT_Position, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_TMULTIPLIER, PROPCAT_Data, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_TMAXROWS, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_TBASEPOINT,    PROPCAT_Position,   0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_TMULTIPLIER,   PROPCAT_Data,       0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_TMAXROWS,      PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, DISPID_TTABLESPACING, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_TSCALE, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_THEADING, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_TFOOTING, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_TSCALE,        PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_THEADING,      PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_TFOOTING,      PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_TNOTE,         PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_TPRECISION,    PROPCAT_Data,       0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_TDISPLAYUNIT,  PROPCAT_Data,       0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_THEADINGSCALE, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_TFOOTINGSCALE, PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_TROWSPACING,   PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
 END_OPMPROP_MAP()
 
 	STDMETHOD(GetDisplayName)(
