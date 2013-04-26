@@ -92,8 +92,8 @@ namespace RebarPosCommands
             view.SetView(new Point3d((extents.MinPoint.X + extents.MaxPoint.X) / 2.0, (extents.MinPoint.Y + extents.MaxPoint.Y) / 2.0, 1.0),
                 new Point3d((extents.MinPoint.X + extents.MaxPoint.X) / 2.0, (extents.MinPoint.Y + extents.MaxPoint.Y) / 2.0, 0.0),
                 new Vector3d(0.0, 1.0, 0.0),
-                Math.Abs(extents.MaxPoint.X - extents.MinPoint.X),
-                Math.Abs(extents.MaxPoint.Y - extents.MinPoint.Y));
+                1.04 * Math.Abs(extents.MaxPoint.X - extents.MinPoint.X),
+                1.04 * Math.Abs(extents.MaxPoint.Y - extents.MinPoint.Y));
             Refresh();
         }
 
