@@ -156,7 +156,7 @@ std::wstring Utility::StringFromResource(const HINSTANCE hInstance, const std::w
 	LPVOID pLockedResource = LockResource(hLoadedResource);
 	if (!pLockedResource) return L"";
 
-	std::wstring source(static_cast<wchar_t*>(pLockedResource));
+	std::wstring source(static_cast<wchar_t*>(pLockedResource), dwResourceSize / sizeof(wchar_t));
 
 	// Skip UNICODE BOM UTF-16 (LE) 255 254
 	if(source[0] == 65279) source.erase(0, 1);

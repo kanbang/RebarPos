@@ -401,10 +401,8 @@ void CBOQStyle::ReadBOQStylesFromString(const std::wstring source, const bool bu
 		style->setIsBuiltIn(builtin ? Adesk::kTrue : Adesk::kFalse);
 
 		// Add the style to the dictionary
-		if(builtin)
-			m_BuiltInStyles[name] = style;
-		else
-			m_CustomStyles[name] = style;
+		style->setIsBuiltIn(builtin ? Adesk::kTrue : Adesk::kFalse);
+		AddBOQStyle(style);
 	}
 }
 

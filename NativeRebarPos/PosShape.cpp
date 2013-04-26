@@ -336,7 +336,7 @@ Acad::ErrorStatus CPosShape::clearShapeTexts(void)
 //*************************************************************************
 // Common static dictionary methods
 //*************************************************************************
-void CPosShape::AddPosShape(CPosShape* const shape)
+void CPosShape::AddPosShape(CPosShape* shape)
 {
 	if(shape->IsInternal())
 		m_InternalPosShapes[shape->Name()] = shape;
@@ -601,13 +601,11 @@ void CPosShape::ReadPosShapesFromString(const std::wstring& source, const bool b
 			}
 		}
 
+
 		// Add the shape to the dictionary
-		if(isinternal)
-			m_InternalPosShapes[name] = shape;
-		else if(builtin)
-			m_BuiltInPosShapes[name] = shape;
-		else
-			m_CustomPosShapes[name] = shape;
+		shape->setIsInternal(isinternal ? Adesk::kTrue : Adesk::kFalse);
+		shape->setIsBuiltIn(builtin ? Adesk::kTrue : Adesk::kFalse);
+		AddPosShape(shape);
 	}
 }
 

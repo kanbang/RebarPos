@@ -152,7 +152,7 @@ private:
 
 public:
 	/// Add a new shape
-	static void AddPosShape(CPosShape* const shape);
+	static void AddPosShape(CPosShape* shape);
 
 	/// Gets the shape with the given name
 	static CPosShape* GetPosShape(const std::wstring& name);
