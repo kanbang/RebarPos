@@ -843,8 +843,8 @@ const std::vector<CRebarPos*> CPosGroup::GetDisplayedPos(void) const
 	pos->setSpacing(L"200");
 	pos->setShape(L"GENEL");
 	pos->setA(L"1000");
-    pos->setLengthGrip(AcGePoint3d(9.25, 0.0, 0.0));
-    pos->setNoteGrip(AcGePoint3d(0.0, 2.0, 0));
+	pos->setLengthAlignment(CRebarPos::RIGHT);
+	pos->setNoteAlignment(CRebarPos::TOP);
     AcGePoint3d ptpos(0.0, 0.0, 0.0);
 	pos->transformBy(AcGeMatrix3d::translation(ptpos.asVector()));
 	pos->transformBy(AcGeMatrix3d::scaling(25.0, ptpos));
@@ -859,8 +859,8 @@ const std::vector<CRebarPos*> CPosGroup::GetDisplayedPos(void) const
 	varLengthPos->setSpacing(L"200");
 	varLengthPos->setShape(L"GENEL");
 	varLengthPos->setA(L"1000~2000");
-	varLengthPos->setLengthGrip(AcGePoint3d(9.25, 0.0, 0.0));
-    varLengthPos->setNoteGrip(AcGePoint3d(0.0, 0.0, 0));
+	varLengthPos->setLengthAlignment(CRebarPos::RIGHT);
+	varLengthPos->setNoteAlignment(CRebarPos::TOP);
     AcGePoint3d ptvar(0.0, -50.0, 0.0);
 	varLengthPos->transformBy(AcGeMatrix3d::translation(ptvar.asVector()));
 	varLengthPos->transformBy(AcGeMatrix3d::scaling(25.0, ptvar));
@@ -875,8 +875,8 @@ const std::vector<CRebarPos*> CPosGroup::GetDisplayedPos(void) const
 	posOnlyPos->setSpacing(L"200");
 	posOnlyPos->setShape(L"GENEL");
 	posOnlyPos->setA(L"1000");
-	posOnlyPos->setLengthGrip(AcGePoint3d(9.25, 0.0, 0.0));
-    posOnlyPos->setNoteGrip(AcGePoint3d(0.0, -2.0, 0));
+	posOnlyPos->setLengthAlignment(CRebarPos::RIGHT);
+	posOnlyPos->setNoteAlignment(CRebarPos::TOP);
     AcGePoint3d ptposonly(0.0, -100.0, 0.0);
 	posOnlyPos->transformBy(AcGeMatrix3d::translation(ptposonly.asVector()));
 	posOnlyPos->transformBy(AcGeMatrix3d::scaling(25.0, ptposonly));

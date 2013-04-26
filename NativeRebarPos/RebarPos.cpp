@@ -1119,22 +1119,11 @@ Acad::ErrorStatus CRebarPos::subGetGeomExtents(AcDbExtents& extents) const
 	}
 
 	// Get ECS extents
-	CDrawParams p;
-	p = lastDrawList.at(lastDrawList.size() - 1);
+	CDrawParams p = lastDrawList.at(lastDrawList.size() - 1);
 	AcGePoint3d pt1(0, 0, 0);
 	AcGePoint3d pt2(p.x + p.w, 0, 0);
 	AcGePoint3d pt3(p.x + p.w, p.y + p.h, 0);
 	AcGePoint3d pt4(0, p.y + p.h, 0);
-	p = lastNoteDraw;
-	AcGePoint3d pt5(0, 0, 0);
-	AcGePoint3d pt6(p.x + p.w, 0, 0);
-	AcGePoint3d pt7(p.x + p.w, p.y + p.h, 0);
-	AcGePoint3d pt8(0, p.y + p.h, 0);
-	p = lastLengthDraw;
-	AcGePoint3d pt9(0, 0, 0);
-	AcGePoint3d pt10(p.x + p.w, 0, 0);
-	AcGePoint3d pt11(p.x + p.w, p.y + p.h, 0);
-	AcGePoint3d pt12(0, p.y + p.h, 0);
 
 	// Transform to WCS
 	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
@@ -1143,32 +1132,53 @@ Acad::ErrorStatus CRebarPos::subGetGeomExtents(AcDbExtents& extents) const
 	pt2.transformBy(trans);
 	pt3.transformBy(trans);
 	pt4.transformBy(trans);
-	AcGeMatrix3d noteTrans = AcGeMatrix3d::kIdentity;
-	noteTrans.setCoordSystem(m_NoteGrip, m_Direction, m_Up, NormalVector());
-	pt5.transformBy(noteTrans);
-	pt6.transformBy(noteTrans);
-	pt7.transformBy(noteTrans);
-	pt8.transformBy(noteTrans);
-	AcGeMatrix3d lengthTrans = AcGeMatrix3d::kIdentity;
-	lengthTrans.setCoordSystem(m_LengthGrip, m_Direction, m_Up, NormalVector());
-	pt9.transformBy(lengthTrans);
-	pt10.transformBy(lengthTrans);
-	pt11.transformBy(lengthTrans);
-	pt12.transformBy(lengthTrans);
 
+	// Add to extents
 	extents.addPoint(pt1);
 	extents.addPoint(pt2);
 	extents.addPoint(pt3);
 	extents.addPoint(pt4);
-	extents.addPoint(pt5);
-	extents.addPoint(pt6);
-	extents.addPoint(pt7);
-	extents.addPoint(pt8);
-	extents.addPoint(pt9);
-	extents.addPoint(pt10);
-	extents.addPoint(pt11);
-	extents.addPoint(pt12);
-	
+
+	if(m_Note != NULL && m_Note[0] != _T('\0'))
+	{
+		AcGePoint3d pt5(0, 0, 0);
+		AcGePoint3d pt6(lastNoteDraw.w, 0, 0);
+		AcGePoint3d pt7(lastNoteDraw.w, lastNoteDraw.h, 0);
+		AcGePoint3d pt8(0, lastNoteDraw.h, 0);
+
+		AcGeMatrix3d noteTrans = AcGeMatrix3d::kIdentity;
+		noteTrans.setCoordSystem(m_NoteGrip, m_Direction, m_Up, NormalVector());
+		pt5.transformBy(noteTrans);
+		pt6.transformBy(noteTrans);
+		pt7.transformBy(noteTrans);
+		pt8.transformBy(noteTrans);
+
+		extents.addPoint(pt5);
+		extents.addPoint(pt6);
+		extents.addPoint(pt7);
+		extents.addPoint(pt8);
+	}
+
+	if(m_Length != NULL && m_Length[0] != _T('\0'))
+	{
+		AcGePoint3d pt9(0, 0, 0);
+		AcGePoint3d pt10(lastLengthDraw.w, 0, 0);
+		AcGePoint3d pt11(lastLengthDraw.w, lastLengthDraw.h, 0);
+		AcGePoint3d pt12(0, lastLengthDraw.h, 0);
+
+		AcGeMatrix3d lengthTrans = AcGeMatrix3d::kIdentity;
+		lengthTrans.setCoordSystem(m_LengthGrip, m_Direction, m_Up, NormalVector());
+		pt9.transformBy(lengthTrans);
+		pt10.transformBy(lengthTrans);
+		pt11.transformBy(lengthTrans);
+		pt12.transformBy(lengthTrans);
+
+		extents.addPoint(pt9);
+		extents.addPoint(pt10);
+		extents.addPoint(pt11);
+		extents.addPoint(pt12);
+	}
+
 	return Acad::eOk;
 }
 
