@@ -103,4 +103,5 @@ public:
 	static void DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& position, const std::wstring& string, 
 					   const AcGiTextStyle& textStyle, const AcDb::TextHorzMode horizontalAlignment, const AcDb::TextVertMode verticalAlignment, 
 					   const Adesk::UInt16 color);
+	static AcGePoint2d MeasureText(const std::wstring& string, const AcGiTextStyle& textStyle);
 };

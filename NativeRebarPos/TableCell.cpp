@@ -157,8 +157,7 @@ const AcGePoint2d CTableCell::MeasureContents() const
 		Utility::MakeGiTextStyle(textStyle, m_TextStyleId);
 		textStyle.setTextSize(m_TextHeight);
 		textStyle.loadStyleRec();
-
-		pt = textStyle.extents(m_Text, Adesk::kTrue, -1, Adesk::kFalse);
+		pt = Utility::MeasureText(m_Text, textStyle);
 	}
 	else if(HasShape())
 	{

@@ -521,3 +521,27 @@ void Utility::DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& positi
 		i++;
 	}
 }
+
+AcGePoint2d Utility::MeasureText(const std::wstring& string, const AcGiTextStyle& textStyle)
+{
+	// Split into lines
+	std::vector<std::wstring> lines = SplitString(string, std::wstring(L"\\P"));
+	if(lines.size() == 0) return AcGePoint2d(0, 0);
+
+	// Measure text lines
+	double totalWidth = 0.0;
+	double totalHeight = 0.0;
+	double lineSpacing = 0.0;
+	double lineHeight = 0.0;
+	for(std::vector<std::wstring>::iterator it = lines.begin(); it != lines.end(); ++it)
+	{
+		std::wstring line = (*it);
+		AcGePoint2d ext = textStyle.extents(line.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
+		totalWidth = max(totalWidth, ext.x);
+	}
+	lineHeight = 1.333 * textStyle.textSize();
+	lineSpacing = 0.333 * lineHeight;
+	totalHeight = lineHeight * (double)lines.size() + lineSpacing * (double)(lines.size() - 1);
+
+	return AcGePoint2d(totalWidth, totalHeight);
+}
