@@ -349,5 +349,96 @@ namespace RebarPosCommands
             }
             return len;
         }
+
+        public static void DrawShape(string name, Point3d inspt, double height)
+        {
+            DrawShape(PosShape.GetPosShape(name), inspt, height);
+        }
+
+        public static void DrawShape(PosShape shape, Point3d inspt, double height)
+        {
+            Extents3d? bounds = shape.Bounds;
+            if (!bounds.HasValue) return;
+            Point3d p1 = bounds.Value.MinPoint;
+            Point3d p2 = bounds.Value.MaxPoint;
+            double scale = height / (p2.Y - p1.Y);
+            Matrix3d trans = Matrix3d.AlignCoordinateSystem(p1, Vector3d.XAxis, Vector3d.YAxis, Vector3d.ZAxis,
+                inspt, Vector3d.XAxis * scale, Vector3d.YAxis * scale, Vector3d.ZAxis * scale);
+
+            Database db = HostApplicationServices.WorkingDatabase;
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    BlockTableRecord btr = (BlockTableRecord)tr.GetObject(db.CurrentSpaceId, OpenMode.ForWrite);
+
+                    Point3dCollection vertices = new Point3dCollection(new Point3d[]{
+                            new Point3d(p1.X, p1.Y, 0),
+                            new Point3d(p2.X, p1.Y, 0),
+                            new Point3d(p2.X, p2.Y, 0),
+                            new Point3d(p1.X, p2.Y, 0),
+                        });
+                    Polyline2d rec = new Polyline2d(Poly2dType.SimplePoly, vertices, 0, true, 0, 0, null);
+                    rec.TransformBy(trans);
+                    btr.AppendEntity(rec);
+                    tr.AddNewlyCreatedDBObject(rec, true);
+
+                    ObjectId hiddenLayer = PosUtility.DefpointsLayer;
+
+                    foreach (PosShape.Shape item in shape.Items)
+                    {
+                        Entity en = null;
+
+                        if (item is PosShape.ShapeLine)
+                        {
+                            PosShape.ShapeLine line = (PosShape.ShapeLine)item;
+                            en = new Line(new Point3d(line.X1, line.Y1, 0), new Point3d(line.X2, line.Y2, 0));
+                        }
+                        if (item is PosShape.ShapeArc)
+                        {
+                            PosShape.ShapeArc arc = (PosShape.ShapeArc)item;
+                            en = new Arc(new Point3d(arc.X, arc.Y, 0), arc.R, arc.StartAngle, arc.EndAngle);
+                        }
+                        if (item is PosShape.ShapeText)
+                        {
+                            PosShape.ShapeText text = (PosShape.ShapeText)item;
+                            DBText dbobj = new DBText();
+                            dbobj.TextString = text.Text;
+                            dbobj.Position = new Point3d(text.X, text.Y, 0);
+                            dbobj.TextStyleId = PosUtility.CreateTextStyle("ShapeDump_" + shape.Name, text.Font, text.Width);
+                            dbobj.Height = text.Height;
+                            dbobj.WidthFactor = text.Width;
+                            dbobj.HorizontalMode = text.HorizontalAlignment;
+                            if (text.VerticalAlignment == TextVerticalMode.TextBottom)
+                                dbobj.VerticalMode = TextVerticalMode.TextBase;
+                            else
+                                dbobj.VerticalMode = text.VerticalAlignment;
+
+                            if (dbobj.HorizontalMode != TextHorizontalMode.TextLeft || dbobj.VerticalMode != TextVerticalMode.TextBase)
+                            {
+                                dbobj.AlignmentPoint = new Point3d(text.X, text.Y, 0);
+                            }
+                            en = dbobj;
+                        }
+
+                        if (en != null)
+                        {
+                            en.Color = item.Color;
+                            if (!item.Visible) en.LayerId = hiddenLayer;
+                            en.TransformBy(trans);
+
+                            btr.AppendEntity(en);
+                            tr.AddNewlyCreatedDBObject(en, true);
+                        }
+                    }
+
+                    tr.Commit();
+                }
+                catch (System.Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                }
+            }
+        }
     }
 }
