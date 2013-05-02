@@ -162,43 +162,6 @@ bool PosShape::SubWorldDraw(Autodesk::AutoCAD::GraphicsInterface::WorldDraw^ wd)
 }
 
 //*************************************************************************
-// Shape Collection
-//*************************************************************************
-PosShape::ShapeCollection::ShapeCollection(PosShape^ parent)
-{
-	m_Parent = parent;
-}
-
-void PosShape::ShapeCollection::Add(PosShape::Shape^ value)
-{
-	m_Parent->GetImpObj()->AddShape(value->ToNative());
-}
-
-void PosShape::ShapeCollection::RemoveAt(int index)
-{
-	m_Parent->GetImpObj()->RemoveShape(index);
-}
-
-void PosShape::ShapeCollection::Clear()
-{
-	m_Parent->GetImpObj()->ClearShapes();
-}
-
-int PosShape::ShapeCollection::Count::get()
-{
-	return (int)m_Parent->GetImpObj()->GetShapeCount();
-}
-
-PosShape::Shape^ PosShape::ShapeCollection::default::get(int index)
-{
-	return Shape::FromNative(m_Parent->GetImpObj()->GetShape(index));
-}
-void PosShape::ShapeCollection::default::set(int index, PosShape::Shape^ value)
-{
-	m_Parent->GetImpObj()->SetShape(index, value->ToNative());
-}
-
-//*************************************************************************
 // Static Methods
 //*************************************************************************
 void PosShape::AddPosShape(PosShape^ shape)

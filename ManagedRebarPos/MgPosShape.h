@@ -211,8 +211,57 @@ namespace OZOZ
 			};
 
 		public:
-			ref class ShapeCollection
+			ref class ShapeCollection : public System::Collections::Generic::IList<Shape^>
 			{
+			public:
+				ref class ShapeCollectionIterator : public System::Collections::Generic::IEnumerator<Shape^>
+				{
+				private:
+					ShapeCollection^ m_Parent;
+					int index;
+
+				private:
+					ShapeCollectionIterator() { }
+					ShapeCollectionIterator(ShapeCollectionIterator%) { }
+					void operator=(ShapeCollectionIterator%) { }
+
+				internal:
+					ShapeCollectionIterator(ShapeCollection^ parent) 
+					{ 
+						m_Parent = parent; 
+						index = -1; 
+					}
+
+				protected:
+					~ShapeCollectionIterator() { this->!ShapeCollectionIterator(); }
+					!ShapeCollectionIterator() { index = -1; }
+
+				public:
+					virtual bool MoveNext(void) 
+					{
+						if(index == m_Parent->Count - 1)
+						{
+							return false;
+						}
+						else
+						{
+							index++;
+							return true;
+						}
+					}
+					virtual void Reset(void) { index = -1; }
+					property Shape^ Current 
+					{ 
+						virtual Shape^ get() = System::Collections::Generic::IEnumerator<Shape^>::Current::get { return m_Parent[index]; } 
+					}
+
+				protected:
+					property System::Object^ Current2
+					{ 
+						virtual System::Object^ get() = System::Collections::IEnumerator::Current::get { return m_Parent[index]; } 
+					}
+				};
+
 			private:
 				PosShape^ m_Parent;
 
@@ -222,16 +271,32 @@ namespace OZOZ
 				void operator=(ShapeCollection%) { }
 
 			internal:
-				ShapeCollection(PosShape^ parent);
+				ShapeCollection(PosShape^ parent) { m_Parent = parent; }
 
 			public:
-				void Add(Shape^ value);
-				void RemoveAt(int index);
-				void Clear();
+				virtual void Add(Shape^ value) { m_Parent->GetImpObj()->AddShape(value->ToNative()); }
+				virtual void Insert(int index, Shape^ value) { m_Parent->GetImpObj()->InsertShape(index, value->ToNative()); }
+				virtual void RemoveAt(int index) { m_Parent->GetImpObj()->RemoveShape(index); }
+				virtual void Clear() { m_Parent->GetImpObj()->ClearShapes(); }
+				virtual System::Collections::Generic::IEnumerator<Shape^>^ GetEnumerator()
+				{
+					return gcnew ShapeCollectionIterator(this);
+				}
 
 			public:
-				property int Count { int get(); }
-				property Shape^ default[int] { Shape^ get(int index); void set(int index, Shape^ value); }
+				property int Count { virtual int get() { return (int)m_Parent->GetImpObj()->GetShapeCount(); } }
+				property Shape^ default[int] { 
+					virtual Shape^ get(int index) { return Shape::FromNative(m_Parent->GetImpObj()->GetShape(index)); }
+					virtual void set(int index, Shape^ value) { m_Parent->GetImpObj()->SetShape(index, value->ToNative()); }
+				}
+				property bool IsReadOnly { virtual bool get() { return false; } }
+		
+			protected:
+				virtual bool Contains(Shape^ /*value*/) = System::Collections::Generic::ICollection<Shape^>::Contains { throw gcnew NotImplementedException(); }
+				virtual void CopyTo(array<Shape^>^ /*arr*/, int /*index*/) = System::Collections::Generic::ICollection<Shape^>::CopyTo { throw gcnew NotImplementedException(); }
+				virtual int IndexOf(Shape^ /*value*/) = System::Collections::Generic::IList<Shape^>::IndexOf { throw gcnew NotImplementedException(); }
+				virtual bool Remove(Shape^ /*value*/) = System::Collections::Generic::IList<Shape^>::Remove { throw gcnew NotImplementedException(); }
+				virtual System::Collections::IEnumerator^ GetEnumerator2() = System::Collections::IEnumerable::GetEnumerator { return this->GetEnumerator(); }
 			};
 
 		protected:
