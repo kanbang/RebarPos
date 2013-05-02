@@ -162,6 +162,7 @@ const AcGePoint2d CTableCell::MeasureContents() const
 	else if(HasShape())
 	{
 		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
+		pShape->setShapeTexts(m_A, m_B, m_C, m_D, m_E, m_F);
 		AcDbExtents ext;
 		if(pShape->bounds(ext))
 		{
@@ -169,6 +170,7 @@ const AcGePoint2d CTableCell::MeasureContents() const
 			double h = (ext.maxPoint().y - ext.minPoint().y) * m_TextHeight / 25.0;
 			pt.set(w, h);
 		}
+		pShape->clearShapeTexts();
 	}
 
 	pt += AcGeVector2d(2.0 * m_Margin, 2.0 * m_Margin);
@@ -1170,11 +1172,11 @@ Adesk::Boolean CTableCell::worldDraw(AcGiWorldDraw* worldDraw)
 	if(HasShape())
 	{
 		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
+		pShape->setShapeTexts(m_A, m_B, m_C, m_D, m_E, m_F);
+
 		AcDbExtents ext;
 		if(pShape->bounds(ext))
 		{
-			pShape->setShapeTexts(m_A, m_B, m_C, m_D, m_E, m_F);
-
 			double maxwidth = (ext.maxPoint().x - ext.minPoint().x);
 			double maxheight = (ext.maxPoint().y - ext.minPoint().y);
 			double scale = m_TextHeight / 25.0;
@@ -1200,9 +1202,8 @@ Adesk::Boolean CTableCell::worldDraw(AcGiWorldDraw* worldDraw)
 			worldDraw->geometry().pushModelTransform(shapeTrans);
 			worldDraw->geometry().draw(pShape);
 			worldDraw->geometry().popModelTransform();
-
-			pShape->clearShapeTexts();
 		}
+		pShape->clearShapeTexts();
 	}
 
 	// Reset transform
