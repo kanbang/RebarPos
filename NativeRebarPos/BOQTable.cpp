@@ -986,6 +986,7 @@ void CBOQTable::UpdateTable(void)
 				setCellShapeText(ri, rj, row->a.c_str(), row->b.c_str(), row->c.c_str(), row->d.c_str(), row->e.c_str(), row->f.c_str());
 				setCellShapeTextColor(ri, rj, lastShapeTextColor);
 				setCellShapeLineColor(ri, rj, lastShapeLineColor);
+				setCellMargin(ri, rj, 0.0);
 			}
 			else if(!row->isEmpty)
 			{
