@@ -133,7 +133,7 @@ STDMETHODIMP CComRebarPos::ShowProperty(
 		}
 		else
 		{
-			*pShow = (dispID == DISPID_BASEPOINT || dispID == DISPID_POS || dispID == DISPID_SCALE);
+			*pShow = (dispID < DISPID_BASEPOINT || dispID > DISPID_NOTEAL || dispID == DISPID_BASEPOINT || dispID == DISPID_POS || dispID == DISPID_SCALE);
 			return S_OK;
 		}
 	}
