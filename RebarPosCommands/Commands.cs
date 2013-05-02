@@ -368,5 +368,22 @@ namespace RebarPosCommands
         {
             MenuUtility.LoadPosMenu();
         }
+
+        [CommandMethod("DUMPSHAPES")]
+        public void CMD_DumpShapes()
+        {
+            Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+            PromptPointResult result = ed.GetPoint("Baz noktası: ");
+            if (result.Status != PromptStatus.OK)
+                return;
+
+            Point3d pt = result.Value;
+            foreach (string name in PosShape.GetAllPosShapes())
+            {
+                DWGUtility.DrawShape(name, pt, 100);
+
+                pt = pt.Add(new Vector3d(0, 120, 0));
+            }
+        }
     }
 }
