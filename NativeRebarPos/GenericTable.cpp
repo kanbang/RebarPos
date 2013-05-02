@@ -31,7 +31,6 @@ CGenericTable::CGenericTable(void) :
 	m_Direction(1, 0, 0), m_Up(0, 1, 0),
 	m_Rows(0), m_Columns(0), m_Cells(0),
 	columnWidths(), rowHeights(),
-	m_CellMargin(0.2), 
 	m_Width(0), m_Height(0),
 	suspendCount(0), needsUpdate(false)
 {
@@ -91,22 +90,6 @@ const int CGenericTable::Rows(void) const
 {
 	assertReadEnabled();
 	return m_Rows;
-}
-
-const double CGenericTable::CellMargin(void) const
-{
-	assertReadEnabled();
-	return m_CellMargin;
-}
-Acad::ErrorStatus CGenericTable::setCellMargin(const double newVal)
-{
-	assertWriteEnabled();
-	for(std::vector<CTableCell*>::iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
-	{
-		(*it)->setMargin(newVal);
-	}
-	Calculate();
-	return Acad::eOk;
 }
 
 const AcGePoint3d& CGenericTable::BasePoint(void) const
@@ -485,6 +468,23 @@ void CGenericTable::setCellVerticalAlignment(const CTableCell::Alignment newVal)
 	{
 		CTableCell* cell = (*it);
 		cell->setVerticalAlignment(newVal);
+	}
+	Calculate();
+}
+
+void CGenericTable::setCellMargin(const int i, const int j, const double newVal)
+{
+	assertWriteEnabled();
+	CTableCell* cell = m_Cells[i * m_Columns + j];
+	cell->setMargin(newVal);
+	Calculate();
+}
+void CGenericTable::setCellMargin(const double newVal)
+{
+	assertWriteEnabled();
+	for(std::vector<CTableCell*>::iterator it = m_Cells.begin(); it != m_Cells.end(); it++)
+	{
+		(*it)->setMargin(newVal);
 	}
 	Calculate();
 }

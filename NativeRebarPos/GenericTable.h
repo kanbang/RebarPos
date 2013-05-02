@@ -123,6 +123,9 @@ public:
 	void setCellHorizontalAlignment(const CTableCell::Alignment newVal);
 	void setCellVerticalAlignment(const CTableCell::Alignment newVal);
 
+	void setCellMargin(const int i, const int j, const double newVal);
+	void setCellMargin(const double newVal);
+
 	void MergeAcross(const int i, const int j, const int span = 0);
 	void MergeDown(const int i, const int j, const int span = 0);
 
@@ -151,10 +154,6 @@ public:
 	/// Gets or sets the base grip point
 	const AcGePoint3d& BasePoint(void) const;
 	Acad::ErrorStatus setBasePoint(const AcGePoint3d& newVal);
-
-	/// Cell margins
-	const double CellMargin(void) const;
-	Acad::ErrorStatus setCellMargin(const double newVal);
 
 	/// Get extents
 	const double Width(void) const;
