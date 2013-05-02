@@ -271,6 +271,11 @@ void CPosShape::AddShape(CShape* const shape)
 	m_List.push_back(shape);
 }
 
+void CPosShape::InsertShape(const ShapeSize index, CShape* const shape)
+{
+	m_List.insert(m_List.begin() + index, shape);
+}
+
 const CShape* CPosShape::GetShape(const ShapeSize index) const
 {
 	return m_List.at(index);
@@ -301,6 +306,16 @@ void CPosShape::ClearShapes()
 const ShapeSize CPosShape::GetShapeCount() const
 {
 	return m_List.size();
+}
+
+const ShapeListConstIt CPosShape::GetShapeIteratorBegin() const
+{
+	return m_List.begin();
+}
+
+const ShapeListConstIt CPosShape::GetShapeIteratorEnd() const
+{
+	return m_List.begin();
 }
 
 Acad::ErrorStatus CPosShape::setShapeTexts(const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f)
@@ -753,9 +768,17 @@ bool CPosShape::bounds(AcDbExtents& ext) const
 				{
 					CShapeText* text = dynamic_cast<CShapeText*>(shape);
 
+					std::wstring txt(text->text);
+					if(m_A != NULL) Utility::ReplaceString(txt, L"A", m_A);
+					if(m_B != NULL) Utility::ReplaceString(txt, L"B", m_B);
+					if(m_C != NULL) Utility::ReplaceString(txt, L"C", m_C);
+					if(m_D != NULL) Utility::ReplaceString(txt, L"D", m_D);
+					if(m_E != NULL) Utility::ReplaceString(txt, L"E", m_E);
+					if(m_F != NULL) Utility::ReplaceString(txt, L"F", m_F);
+
 					AcGiTextStyle style(text->font.c_str(), NULL, text->height, text->width, 0, 0, Adesk::kFalse, Adesk::kFalse, Adesk::kFalse, Adesk::kFalse, Adesk::kFalse);
 					style.loadStyleRec();
-					AcGePoint2d size = style.extents(text->text.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
+					AcGePoint2d size = Utility::MeasureText(txt, style);
 
 					double xoff = 0.0; 
 					if(text->horizontalAlignment == AcDb::kTextLeft)
@@ -840,7 +863,7 @@ Adesk::Boolean CPosShape::subWorldDraw(AcGiWorldDraw* worldDraw)
 					m_Style.setXScale(text->width);
 					m_Style.loadStyleRec();
 				}
-				Utility::DrawText(worldDraw, AcGePoint3d(text->x, text->y, 0), txt.c_str(), m_Style, text->horizontalAlignment, text->verticalAlignment, text->color);
+				Utility::DrawText(worldDraw, AcGePoint3d(text->x, text->y, 0), txt, m_Style, text->horizontalAlignment, text->verticalAlignment, text->color);
 			}
 			break;
 		}

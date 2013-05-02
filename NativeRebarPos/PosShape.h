@@ -126,6 +126,9 @@ public:
 	/// Adds a shape.
 	void AddShape(CShape* const shape);
 
+	/// Inserts a shape.
+	void InsertShape(const ShapeSize index, CShape* const shape);
+
 	/// Gets the shape at the given index.
 	const CShape* GetShape(const ShapeSize index) const;
 
@@ -140,6 +143,12 @@ public:
 
 	/// Clears all shapes.
 	void ClearShapes();
+
+	// Returns an iterator pointing to the beginning of the list.
+	const ShapeListConstIt GetShapeIteratorBegin() const;
+
+	// Returns an iterator pointing to the end of the list.
+	const ShapeListConstIt GetShapeIteratorEnd() const;
 
 	/// Replaces piece names with given strings
 	Acad::ErrorStatus setShapeTexts(const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f);
