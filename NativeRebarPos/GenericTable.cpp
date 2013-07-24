@@ -29,8 +29,8 @@ ACRX_DXF_DEFINE_MEMBERS(CGenericTable, AcDbEntity,
 CGenericTable::CGenericTable(void) : 
 	m_BasePoint(0, 0, 0), geomInit(false), ucs(AcGeMatrix3d::kIdentity),
 	m_Direction(1, 0, 0), m_Up(0, 1, 0),
-	m_Rows(0), m_Columns(0), m_Cells(0),
-	columnWidths(), rowHeights(),
+	m_Rows(0), m_Columns(0), m_Cells(0), m_CellMargin(0.0),
+	columnWidths(), rowHeights(), minColumnWidths(), minRowHeights(),
 	m_Width(0), m_Height(0),
 	suspendCount(0), needsUpdate(false)
 {
@@ -154,6 +154,11 @@ void CGenericTable::SetSize(int rows, int columns)
 			m_Cells[i * columns + j] = new CTableCell();
 		}
 	}
+
+	for(int i = 0; i < columns; i++)
+		minColumnWidths[i] = 0;
+	for(int i = 0; i < rows; i++)
+		minRowHeights[i] = 0;
 
 	m_Rows = rows;
 	m_Columns = columns;
@@ -586,7 +591,7 @@ void CGenericTable::Calculate(void)
 			AcGePoint2d pt = cell->MeasureContents();
 			double w = pt.x;
 			double h = pt.y;
-			
+
 			if(cell->MergeRight() == 0)
 			{
 				columnWidths[j] = max(columnWidths[j], w);
@@ -595,10 +600,13 @@ void CGenericTable::Calculate(void)
 			{
 				int span = cell->MergeRight();
 				if(j + span - 1 > m_Columns - 1) span = m_Columns - j;
-				w /= (double)span;
-				for(int k = j; k < j + span; k++)
+				if(span > 0)
 				{
-					columnWidths[k] = max(columnWidths[k], w);
+					w /= (double)span;
+					for(int k = j; k < j + span; k++)
+					{
+						columnWidths[k] = max(columnWidths[k], w);
+					}
 				}
 			}
 		}
@@ -629,10 +637,13 @@ void CGenericTable::Calculate(void)
 			{
 				int span = cell->MergeDown();
 				if(i + span - 1 > m_Rows - 1) span = m_Rows - i;
-				h /= (double)span;
-				for(int k = i; k < i + span; k++)
+				if(span > 0)
 				{
-					rowHeights[k] = max(rowHeights[k], h);
+					h /= (double)span;
+					for(int k = i; k < i + span; k++)
+					{
+						rowHeights[k] = max(rowHeights[k], h);
+					}
 				}
 			}
 		}
@@ -858,7 +869,7 @@ Acad::ErrorStatus CGenericTable::subExplode(AcDbVoidPtrArray& entitySet) const
 Adesk::Boolean CGenericTable::subWorldDraw(AcGiWorldDraw* worldDraw)
 {
     assertReadEnabled();
-	
+
     if(worldDraw->regenAbort())
 	{
         return Adesk::kTrue;
