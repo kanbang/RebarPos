@@ -70,6 +70,10 @@ public:
 	static std::wstring StringFromResource(const HINSTANCE hInstance, const std::wstring& resourceType, const int resid);
 	static std::wstring StringFromFile(const std::wstring& filename);
 
+	// Logging
+	static void ClearLog(const std::wstring& filename);
+	static void Log(const std::wstring& filename, const std::wstring& message);
+
 	// Read DXF vals
 	static Acad::ErrorStatus ReadDXFItem(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, resbuf* val);
 	static Acad::ErrorStatus ReadDXFInt(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, short& val);

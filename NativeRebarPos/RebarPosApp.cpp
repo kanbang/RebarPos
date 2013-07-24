@@ -44,15 +44,6 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 		CBOQTable::rxInit();
 		acrxBuildClassHierarchy();
 		
-		// Create default shapes
-		CPosShape::ClearPosShapes(true, true, true);
-		CPosShape::ReadPosShapesFromResource(_hdllInstance, IDR_SHAPES, false);
-		CPosShape::ReadPosShapesFromResource(_hdllInstance, IDR_INTERNALSHAPES, true);
-		
-		// Create default table styles
-		CBOQStyle::ClearBOQStyles(true, true);
-		CBOQStyle::ReadBOQStylesFromResource(_hdllInstance, IDR_TABLESTYLES);
-
 		// Register a service using the class name.
 		if (!acrxServiceIsRegistered(_T("CRebarPos")))
 			acrxRegisterService(_T("CRebarPos"));
@@ -62,6 +53,25 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 	case AcRx::kLoadDwgMsg:
 		// Create default group
 		CPosGroup::CreateGroup();
+
+		// Create default shapes
+		if(CPosShape::GetPosShapeCount(true, true, true) == 0)
+		{
+			CPosShape::ClearPosShapes(true, true, true);
+			CPosShape::ReadPosShapesFromResource(_hdllInstance, IDR_SHAPES, false);
+			CPosShape::ReadPosShapesFromResource(_hdllInstance, IDR_INTERNALSHAPES, true);
+		}
+		
+		// Create default table styles
+		if(CBOQStyle::GetBOQStyleCount(true, true) == 0)
+		{
+			CBOQStyle::ClearBOQStyles(true, true);
+			CBOQStyle::ReadBOQStylesFromResource(_hdllInstance, IDR_TABLESTYLES);
+		}
+
+		// Update all entities
+		CRebarPos::UpdateAll();
+		CBOQTable::UpdateAll();
 
 		break;
 

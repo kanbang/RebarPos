@@ -391,12 +391,12 @@ void CBOQStyle::ReadBOQStylesFromString(const std::wstring source, const bool bu
 		AcDbObjectId textStyleId;
 		AcDbObjectId headingStyleId;
 		AcDbObjectId footingStyleId;
-		Utility::CreateTextStyle(textStyleId, textStyleName.c_str(), textStyleFont.c_str(), textStyleWidth);
-		Utility::CreateTextStyle(headingStyleId, headingStyleName.c_str(), headingStyleFont.c_str(), headingStyleWidth);
-		Utility::CreateTextStyle(footingStyleId, footingStyleName.c_str(), footingStyleFont.c_str(), footingStyleWidth);
-		style->setTextStyleId(textStyleId);
-		style->setHeadingStyleId(headingStyleId);
-		style->setFootingStyleId(footingStyleId);
+		if(Utility::CreateTextStyle(textStyleId, textStyleName.c_str(), textStyleFont.c_str(), textStyleWidth) == Acad::eOk)
+			style->setTextStyleId(textStyleId);
+		if(Utility::CreateTextStyle(headingStyleId, headingStyleName.c_str(), headingStyleFont.c_str(), headingStyleWidth) == Acad::eOk)
+			style->setHeadingStyleId(headingStyleId);
+		if(Utility::CreateTextStyle(footingStyleId, footingStyleName.c_str(), footingStyleFont.c_str(), footingStyleWidth) == Acad::eOk)
+			style->setFootingStyleId(footingStyleId);
 
 		style->setIsBuiltIn(builtin ? Adesk::kTrue : Adesk::kFalse);
 

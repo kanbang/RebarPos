@@ -1196,6 +1196,46 @@ const void CBOQTable::Update(void)
 	UpdateTable();
 }
 
+void CBOQTable::UpdateAll(void)
+{
+	Acad::ErrorStatus es;
+	
+	AcDbBlockTablePointer pTable(acdbHostApplicationServices()->workingDatabase()->blockTableId(), AcDb::kForRead);
+	if((es = pTable.openStatus()) != Acad::eOk)
+		return;
+	 
+	AcDbBlockTableIterator* pTableIter;
+	for(pTable->newIterator(pTableIter); !pTableIter->done(); pTableIter->step())
+	{     
+		AcDbObjectId id;
+		pTableIter->getRecordId(id);
+		AcDbBlockTableRecordPointer pRecord(id, AcDb::kForRead);
+		if((es = pRecord.openStatus()) != Acad::eOk)
+			continue;
+	 
+		AcDbBlockTableRecordIterator* pRecordIter;
+		for (pRecord->newIterator(pRecordIter); !pRecordIter->done(); pRecordIter->step())
+		{
+			AcDbObjectId eid;
+			pRecordIter->getEntityId(eid);
+			AcDbEntityPointer pEnt(eid, AcDb::kForRead);
+			if((es = pEnt.openStatus()) != Acad::eOk)
+				continue;
+			if(!pEnt->isKindOf(CBOQTable::desc()))
+				continue;
+			if((es = pEnt->upgradeOpen()) != Acad::eOk)
+				continue;
+
+			CBOQTable* table = CBOQTable::cast(pEnt);
+			table->Update();
+			table->draw();
+			table->close();
+		}
+		delete pRecordIter;   
+	}
+	delete pTableIter;
+}
+
 //*************************************************************************
 // Overridden methods from AcDbEntity
 //*************************************************************************

@@ -957,10 +957,10 @@ Acad::ErrorStatus CPosGroup::CreateGroup(void)
 
 		AcDbObjectId textStyleId;
 		AcDbObjectId noteStyleId;
-		Utility::CreateTextStyle(textStyleId, TextStyle_Name, TextStyle_Font, TextStyle_Width);
-		Utility::CreateTextStyle(noteStyleId, NoteStyle_Name, NoteStyle_Font, NoteStyle_Width);
-		group->setTextStyleId(textStyleId);
-		group->setNoteStyleId(noteStyleId);
+		if(Utility::CreateTextStyle(textStyleId, TextStyle_Name, TextStyle_Font, TextStyle_Width) == Acad::eOk)
+			group->setTextStyleId(textStyleId);
+		if(Utility::CreateTextStyle(noteStyleId, NoteStyle_Name, NoteStyle_Font, NoteStyle_Width) == Acad::eOk)
+			group->setNoteStyleId(noteStyleId);
 
 		AcDbObjectId id;
 		pGroupDict->upgradeOpen();

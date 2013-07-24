@@ -23,11 +23,14 @@ Acad::ErrorStatus Utility::CreateHiddenLayer(AcDbObjectId& id)
 
 	if (pLayerTbl->getAt(_T("Defpoints"), id, AcDb::kForRead) == Acad::eKeyNotFound)
 	{
+		if(pLayerTbl->upgradeOpen() != Acad::eOk)
+			return es;
+
 		AcDbLayerTableRecord* pLayer = new AcDbLayerTableRecord();
 		pLayer->setName(_T("Defpoints"));
-		pLayerTbl->upgradeOpen();
 		pLayerTbl->add(id, pLayer);
 		pLayer->close();
+
 		pLayerTbl->downgradeOpen();
 	}
 	pLayerTbl->close();
@@ -37,6 +40,7 @@ Acad::ErrorStatus Utility::CreateHiddenLayer(AcDbObjectId& id)
 
 Acad::ErrorStatus Utility::CreateTextStyle(AcDbObjectId& id, const ACHAR* name, const ACHAR* filename, const double scale)
 {
+	ClearLog(L"D:\\r.txt");
 	Acad::ErrorStatus es;
 	AcDbTextStyleTablePointer pStyleTbl(acdbHostApplicationServices()->workingDatabase()->textStyleTableId(), AcDb::kForRead);
 	if((es = pStyleTbl.openStatus()) != Acad::eOk)
@@ -44,15 +48,19 @@ Acad::ErrorStatus Utility::CreateTextStyle(AcDbObjectId& id, const ACHAR* name, 
 
 	if (pStyleTbl->getAt(name, id, AcDb::kForRead) == Acad::eKeyNotFound)
 	{
-		pStyleTbl->upgradeOpen();
+		if(pStyleTbl->upgradeOpen() != Acad::eOk)
+			return es;
+
 		AcDbTextStyleTableRecord* pText = new AcDbTextStyleTableRecord();
 		pText->setName(name);
 		pText->setFileName(filename);
 		pText->setXScale(scale);
 		pStyleTbl->add(id, pText);
 		pText->close();
+
 		pStyleTbl->downgradeOpen();
 	}
+	pStyleTbl->close();
 
 	return Acad::eOk;
 }
@@ -173,6 +181,19 @@ std::wstring Utility::StringFromFile(const std::wstring& filename)
                         (std::istreambuf_iterator<wchar_t>()));
 
 	return source;
+}
+
+void Utility::ClearLog(const std::wstring& filename)
+{
+	std::wofstream ofs(filename.c_str(), std::wofstream::trunc);
+	ofs.close();
+}
+
+void Utility::Log(const std::wstring& filename, const std::wstring& message)
+{
+	std::wofstream ofs(filename.c_str(), std::wofstream::app);
+	ofs << message << std::endl;
+	ofs.close();
 }
 
 Acad::ErrorStatus Utility::ReadDXFItem(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, resbuf* rb)

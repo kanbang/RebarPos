@@ -10,7 +10,7 @@
 //*************************************************************************
 // Constructors and destructors 
 //*************************************************************************
-CTableCell::CTableCell(void) : m_BasePoint(0, 0, 0), m_Direction(1, 0, 0), m_Up(0, 1, 0), m_Normal(0, 0, 1),
+CTableCell::CTableCell() : m_BasePoint(0, 0, 0), m_Direction(1, 0, 0), m_Up(0, 1, 0), m_Normal(0, 0, 1),
 	m_Text(NULL), m_TextColor(0), m_ShapeTextColor(0), m_ShapeLineColor(0),
 	m_TopBorderColor(0), m_LeftBorderColor(0), m_BottomBorderColor(0), m_RightBorderColor(0),
 	m_TopBorder(Adesk::kFalse), m_LeftBorder(Adesk::kFalse), m_BottomBorder(Adesk::kFalse), m_RightBorder(Adesk::kFalse),
@@ -23,7 +23,7 @@ CTableCell::CTableCell(void) : m_BasePoint(0, 0, 0), m_Direction(1, 0, 0), m_Up(
 {
 }
 
-CTableCell::~CTableCell(void)
+CTableCell::~CTableCell()
 {
 	acutDelString(m_Text);
 	acutDelString(m_Shape);
@@ -132,7 +132,7 @@ Acad::ErrorStatus CTableCell::setWidth(const double newVal) { m_Width = newVal; 
 const double CTableCell::Height() const         { return m_Height; }
 Acad::ErrorStatus CTableCell::setHeight(const double newVal) { m_Height = newVal; return Acad::eOk; }
 
-const double CTableCell::Margin() const         { return m_Height; }
+const double CTableCell::Margin() const         { return m_Margin; }
 Acad::ErrorStatus CTableCell::setMargin(const double newVal) { m_Margin = newVal; return Acad::eOk; }
 
 //*************************************************************************
@@ -1091,7 +1091,7 @@ Adesk::Boolean CTableCell::worldDraw(AcGiWorldDraw* worldDraw)
 	worldDraw->geometry().pushModelTransform(trans);
 
 	// Draw texts
-	if(HasText())
+	if(!worldDraw->isDragging() && HasText())
 	{
 		AcGiTextStyle textStyle;
 		Utility::MakeGiTextStyle(textStyle, m_TextStyleId);
@@ -1169,7 +1169,7 @@ Adesk::Boolean CTableCell::worldDraw(AcGiWorldDraw* worldDraw)
 	}
 
 	// Draw shape
-	if(HasShape())
+	if(!worldDraw->isDragging() && HasShape())
 	{
 		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
 		pShape->setShapeTexts(m_A, m_B, m_C, m_D, m_E, m_F);

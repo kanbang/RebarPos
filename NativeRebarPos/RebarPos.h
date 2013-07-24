@@ -344,6 +344,10 @@ public:
 	const void Update(void);
 
 public:
+	/// Updates all objects
+	static void UpdateAll(void);
+
+public:
 	/// AcDbEntity overrides: database    
     virtual Acad::ErrorStatus	dwgInFields(AcDbDwgFiler* filer);
     virtual Acad::ErrorStatus	dwgOutFields(AcDbDwgFiler* filer) const;
