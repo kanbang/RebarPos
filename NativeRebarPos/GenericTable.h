@@ -194,26 +194,4 @@ protected:
     virtual Adesk::Boolean      subWorldDraw(AcGiWorldDraw*	mode);
     
 	virtual Acad::ErrorStatus   subGetGeomExtents(AcDbExtents& extents) const;
-
-private:
-    // These are here because otherwise dllexport tries to export the
-    // private methods of AcDbObject. They're private in AcDbObject
-    // because vc5 and vc6 do not properly support array new and delete.
-    // The "vector deleting dtor" gets optimized into a scalar deleting
-    // dtor by the linker if the server dll does not call vector delete.
-    // The linker shouldn't do that, because it doesn't know that the
-    // object won't be passed to some other dll which *does* do vector
-    // delete.
-    //
-#ifdef MEM_DEBUG
-#undef new
-#undef delete
-#endif
-    void *operator new[](size_t /* nSize */) { return 0;}
-    void operator delete[](void* /* p */) {};
-    void *operator new[](size_t /* nSize */, const TCHAR* /* file*/ , int /* line */) { return 0;}
-#ifdef MEM_DEBUG
-#define new DEBUG_NEW
-#define delete DEBUG_DELETE
-#endif
 };
