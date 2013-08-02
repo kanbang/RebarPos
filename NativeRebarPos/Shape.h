@@ -19,6 +19,7 @@ struct DLLIMPEXP CShape
 		Line = 0,
 		Arc = 1,
 		Text = 2,
+		Circle = 3,
 	};
 
 	CShape::ShapeType type;
@@ -58,6 +59,19 @@ struct DLLIMPEXP CShapeArc : CShape
 	CShapeArc(const Adesk::UInt16 Color, const double X, const double Y, const double R, const double StartAngle, const double EndAngle, const Adesk::Boolean Visible = Adesk::kTrue);
 
 	virtual CShapeArc* clone() const;
+};
+
+struct DLLIMPEXP CShapeCircle : CShape
+{
+	double x;
+	double y;
+	double r;
+
+	CShapeCircle();
+
+	CShapeCircle(const Adesk::UInt16 Color, const double X, const double Y, const double R, const Adesk::Boolean Visible = Adesk::kTrue);
+
+	virtual CShapeCircle* clone() const;
 };
 
 struct DLLIMPEXP CShapeText : CShape

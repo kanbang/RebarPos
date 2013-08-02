@@ -2,6 +2,7 @@
 
 #include "Shape.h"
 
+// LINE
 CShapeLine::CShapeLine() : CShape(CShape::Line), x1(0), y1(0), x2(0), y2(0) 
 { }
 
@@ -14,6 +15,7 @@ CShapeLine* CShapeLine::clone() const
 	return new CShapeLine(*this);
 }
 
+// ARC
 CShapeArc::CShapeArc() : CShape(CShape::Arc), x(0), y(0), r(0), startAngle(0), endAngle(0)
 { }
 
@@ -26,6 +28,20 @@ CShapeArc* CShapeArc::clone() const
 	return new CShapeArc(*this);
 }
 
+// CIRCLE
+CShapeCircle::CShapeCircle() : CShape(CShape::Circle), x(0), y(0), r(0)
+{ }
+
+CShapeCircle::CShapeCircle(const Adesk::UInt16 Color, const double X, const double Y, const double R, const Adesk::Boolean Visible)
+	: CShape(CShape::Circle, Color, Visible), x(X), y(Y), r(R)
+{ }
+
+CShapeCircle* CShapeCircle::clone() const
+{
+	return new CShapeCircle(*this);
+}
+
+// TEXT
 CShapeText::CShapeText() : CShape(CShape::Text), x(0), y(0), height(0), text(L""), 
 	horizontalAlignment(AcDb::kTextLeft), verticalAlignment(AcDb::kTextBase)
 { }

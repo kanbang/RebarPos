@@ -25,6 +25,7 @@ namespace OZOZ
 		public:
 			ref struct ShapeLine;
 			ref struct ShapeArc;
+			ref struct ShapeCircle;
 			ref struct ShapeText;
 
 			ref struct Shape abstract
@@ -66,6 +67,9 @@ namespace OZOZ
 					case CShape::Arc:
 						return FromNative(dynamic_cast<const CShapeArc*>(shape));
 						break;
+					case CShape::Circle:
+						return FromNative(dynamic_cast<const CShapeCircle*>(shape));
+						break;
 					case CShape::Text:
 						return FromNative(dynamic_cast<const CShapeText*>(shape));
 						break;
@@ -84,6 +88,12 @@ namespace OZOZ
 					return gcnew ShapeArc(
 						Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, arc->color),
 						arc->x, arc->y, arc->r, arc->startAngle, arc->endAngle, arc->visible == Adesk::kTrue);
+				}
+				static ShapeCircle^ FromNative(const CShapeCircle* circle)
+				{
+					return gcnew ShapeCircle(
+						Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, circle->color),
+						circle->x, circle->y, circle->r, circle->visible == Adesk::kTrue);
 				}
 				static ShapeText^ FromNative(const CShapeText* text)
 				{
@@ -164,6 +174,39 @@ namespace OZOZ
 				virtual CShape* ToNative(void) override
 				{
 					return new CShapeArc(Color->ColorIndex, X, Y, R, StartAngle, EndAngle, Visible ? Adesk::kTrue : Adesk::kFalse);
+				}
+			};
+
+			ref struct ShapeCircle : Shape
+			{
+			public:
+				property double X;
+				property double Y;
+				property double R;
+
+			public:
+				virtual Shape^ Clone() override
+				{
+					return gcnew ShapeCircle(Color, X, Y, R, Visible);
+				}
+
+			public:
+				ShapeCircle() : Shape()
+				{
+					;
+				}
+
+				ShapeCircle(Autodesk::AutoCAD::Colors::Color^ color, double x, double y, double r, bool visible) : Shape(color, visible)
+				{
+					X = x;
+					Y = y;
+					R = r;
+				}
+
+			internal:
+				virtual CShape* ToNative(void) override
+				{
+					return new CShapeCircle(Color->ColorIndex, X, Y, R, Visible ? Adesk::kTrue : Adesk::kFalse);
 				}
 			};
 

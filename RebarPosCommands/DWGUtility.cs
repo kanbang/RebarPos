@@ -394,12 +394,17 @@ namespace RebarPosCommands
                             PosShape.ShapeLine line = (PosShape.ShapeLine)item;
                             en = new Line(new Point3d(line.X1, line.Y1, 0), new Point3d(line.X2, line.Y2, 0));
                         }
-                        if (item is PosShape.ShapeArc)
+                        else if (item is PosShape.ShapeArc)
                         {
                             PosShape.ShapeArc arc = (PosShape.ShapeArc)item;
                             en = new Arc(new Point3d(arc.X, arc.Y, 0), arc.R, arc.StartAngle, arc.EndAngle);
                         }
-                        if (item is PosShape.ShapeText)
+                        else if (item is PosShape.ShapeCircle)
+                        {
+                            PosShape.ShapeCircle circle = (PosShape.ShapeCircle)item;
+                            en = new Circle(new Point3d(circle.X, circle.Y, 0), Vector3d.ZAxis, circle.R);
+                        }
+                        else if (item is PosShape.ShapeText)
                         {
                             PosShape.ShapeText text = (PosShape.ShapeText)item;
                             DBText dbobj = new DBText();

@@ -601,6 +601,16 @@ void CPosShape::ReadPosShapesFromString(const std::wstring& source, const bool b
 				CShapeArc *arc = new CShapeArc(color, x, y, r, a1, a2, (visible.compare(L"V") == 0 ? Adesk::kTrue : Adesk::kFalse));
 				shape->AddShape(arc);
 			}
+			else if(fieldname.compare(L"CIRCLE") == 0)
+			{
+				double x, y, r;
+				unsigned short color;
+				std::wstring visible;
+				linestream >> x >> y >> r >> color >> visible;
+
+				CShapeCircle *circle = new CShapeCircle(color, x, y, r, (visible.compare(L"V") == 0 ? Adesk::kTrue : Adesk::kFalse));
+				shape->AddShape(circle);
+			}
 			else if(fieldname.compare(L"TEXT") == 0)
 			{
 				double x, y, h, w;
@@ -662,6 +672,13 @@ void CPosShape::SavePosShapesToFile(const std::wstring& filename)
 					arc->x << L'\t' << arc->y << L'\t' << arc->r << L'\t' << 
 					arc->startAngle << L'\t' << arc->endAngle << L'\t' <<
 					arc->color << L'\t' << (arc->visible == Adesk::kTrue ? L'V' : L'I') << std::endl;
+			}
+			else if(shape->type == CShape::Circle)
+			{
+				const CShapeCircle* circle = dynamic_cast<const CShapeCircle*>(shape);
+				ofs << L"CIRCLE" << L'\t' << 
+					circle->x << L'\t' << circle->y << L'\t' << circle->r << L'\t' << 
+					circle->color << L'\t' << (circle->visible == Adesk::kTrue ? L'V' : L'I') << std::endl;
 			}
 			else if(shape->type == CShape::Text)
 			{
@@ -764,6 +781,15 @@ bool CPosShape::bounds(AcDbExtents& ext) const
 					}
 				}
 				break;
+			case CShape::Circle:
+				{
+					CShapeCircle* circle = dynamic_cast<CShapeCircle*>(shape);
+					ext.addPoint(AcGePoint3d(circle->x - circle->r, circle->y - circle->r, 0));
+					ext.addPoint(AcGePoint3d(circle->x - circle->r, circle->y + circle->r, 0));
+					ext.addPoint(AcGePoint3d(circle->x + circle->r, circle->y + circle->r, 0));
+					ext.addPoint(AcGePoint3d(circle->x + circle->r, circle->y - circle->r, 0));
+				}
+				break;
 			case CShape::Text:
 				{
 					CShapeText* text = dynamic_cast<CShapeText*>(shape);
@@ -842,6 +868,12 @@ Adesk::Boolean CPosShape::subWorldDraw(AcGiWorldDraw* worldDraw)
 			{
 				CShapeArc* arc = dynamic_cast<CShapeArc*>(shape);
 				Utility::DrawArc(worldDraw, AcGePoint3d(arc->x, arc->y, 0), arc->r, arc->startAngle, arc->endAngle, arc->color);
+			}
+			break;
+		case CShape::Circle:
+			{
+				CShapeCircle* circle = dynamic_cast<CShapeCircle*>(shape);
+				Utility::DrawCircle(worldDraw, AcGePoint3d(circle->x, circle->y, 0), circle->r, circle->color);
 			}
 			break;
 		case CShape::Text:

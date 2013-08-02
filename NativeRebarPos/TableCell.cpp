@@ -603,6 +603,79 @@ const std::vector<AcDbArc*> CTableCell::GetArcs() const
 	return arcs;
 }
 
+const std::vector<AcDbCircle*> CTableCell::GetCircles() const
+{
+	std::vector<AcDbCircle*> circles;
+
+	// Transform to match orientation
+	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
+	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
+
+	if(HasShape())
+	{
+		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
+		AcDbExtents ext;
+		pShape->bounds(ext);
+		double maxwidth = (ext.maxPoint().x - ext.minPoint().x);
+		double maxheight = (ext.maxPoint().y - ext.minPoint().y);
+		double scale = m_TextHeight / 25.0;
+        double xoff = 0;
+        double yoff = 0;
+		if(m_HorizontalAlignment == CTableCell::eNEAR)
+		{
+			xoff = m_Margin;
+		}
+		else if(m_HorizontalAlignment == CTableCell::eFAR)
+		{
+			xoff = m_Width - m_Margin - maxwidth * scale;
+		}
+		else if(m_HorizontalAlignment == CTableCell::eCENTER)
+		{
+			xoff = (m_Width - maxwidth * scale) / 2.0;
+		}
+		if(m_VerticalAlignment == CTableCell::eNEAR)
+		{
+			yoff = m_Margin;
+		}
+		else if(m_VerticalAlignment == CTableCell::eFAR)
+		{
+			yoff = m_Height - m_Margin - maxheight * scale;
+		}
+		else if(m_VerticalAlignment == CTableCell::eCENTER)
+		{
+			yoff = (m_Height - maxheight * scale) / 2.0;
+		}
+
+		for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
+		{
+			const CShape* shape = pShape->GetShape(i);
+			if(shape->type == CShape::Circle && shape->visible == Adesk::kTrue)
+			{
+				const CShapeCircle* circle = dynamic_cast<const CShapeCircle*>(shape);
+
+				AcDbCircle* mcircle = new AcDbCircle();
+
+				if(m_ShapeLineColor == 0)
+					mcircle->setColorIndex(circle->color);
+				else
+					mcircle->setColorIndex(m_ShapeLineColor);
+
+				// Location
+				double x = xoff + (circle->x - ext.minPoint().x) * scale;
+				double y = yoff + (circle->y - ext.minPoint().y) * scale;
+				double r = circle->r * scale;
+				mcircle->setCenter(AcGePoint3d(x, -m_Height + y, 0));
+				mcircle->setRadius(r);
+
+				mcircle->transformBy(trans);
+				circles.push_back(mcircle);
+			}
+		}
+	}
+
+	return circles;
+}
+
 //*************************************************************************
 // Overridden methods from AcDbObject
 //*************************************************************************
@@ -1074,6 +1147,15 @@ Acad::ErrorStatus CTableCell::explode(AcDbVoidPtrArray& entitySet) const
 		entitySet.append(arc);
 	}
 	arcs.clear();
+
+	// Circles
+	std::vector<AcDbCircle*> circles = GetCircles();
+	for(std::vector<AcDbCircle*>::iterator it = circles.begin(); it != circles.end(); it++)
+	{
+		AcDbCircle* circle = (*it);
+		entitySet.append(circle);
+	}
+	circles.clear();
 
 	return Acad::eOk;
 }

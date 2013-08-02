@@ -267,6 +267,7 @@ namespace RebarPosCommands
                     new TypedValue((int)DxfCode.Operator, "<OR"),
                     new TypedValue((int)DxfCode.Start, "LINE"),
                     new TypedValue((int)DxfCode.Start, "ARC"),
+                    new TypedValue((int)DxfCode.Start, "CIRCLE"),
                     new TypedValue((int)DxfCode.Start, "TEXT"),
                     new TypedValue((int)DxfCode.Operator, "OR>")
                 };
@@ -308,6 +309,11 @@ namespace RebarPosCommands
                             {
                                 Arc arc = obj as Arc;
                                 copy.Items.Add(new PosShape.ShapeArc(arc.Color, arc.Center.X, arc.Center.Y, arc.Radius, arc.StartAngle, arc.EndAngle, visible));
+                            }
+                            else if (obj is Circle)
+                            {
+                                Circle circle = obj as Circle;
+                                copy.Items.Add(new PosShape.ShapeCircle(circle.Color, circle.Center.X, circle.Center.Y, circle.Radius, visible));
                             }
                             else if (obj is DBText)
                             {

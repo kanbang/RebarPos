@@ -184,6 +184,7 @@ private:
 	const std::vector<AcDbMText*> GetTexts() const;
 	const std::vector<AcDbLine*> GetLines() const;
 	const std::vector<AcDbArc*> GetArcs() const;
+	const std::vector<AcDbCircle*> GetCircles() const;
 
 public:
 	/// AcDbEntity overrides: database    
