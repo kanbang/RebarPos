@@ -101,6 +101,7 @@ public:
 	static void DrawLine(const AcGiWorldDraw* worldDraw, const AcGePoint3d& pt1, const AcGePoint3d& pt2, const Adesk::UInt16 color);
 	static void DrawDoubleLine(const AcGiWorldDraw* worldDraw, const AcGePoint3d& pt1, const AcGePoint3d& pt2, const double offset, const Adesk::UInt16 color);
 	static void DrawCircle(const AcGiWorldDraw* worldDraw, const AcGePoint3d& center, const double radius, const Adesk::UInt16 color);
+	static void DrawEllipse(const AcGiWorldDraw* worldDraw, const AcGePoint3d& center, const double majorAxisLength, const double minorAxisLength, const Adesk::UInt16 color);
 	static void DrawArc(const AcGiWorldDraw* worldDraw, const AcGePoint3d& center, const double radius, const double startAngle, const double endAngle, const Adesk::UInt16 color);
 	static void DrawEllipticalArc(const AcGiWorldDraw* worldDraw, const AcGePoint3d& center, const double majorAxisLength, const double minorAxisLength, const double startAngle, const double endAngle, const Adesk::UInt16 color);
 	static void DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& position, const std::wstring& string, const AcGiTextStyle& textStyle, const Adesk::UInt16 color);

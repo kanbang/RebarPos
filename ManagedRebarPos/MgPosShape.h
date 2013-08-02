@@ -26,6 +26,7 @@ namespace OZOZ
 			ref struct ShapeLine;
 			ref struct ShapeArc;
 			ref struct ShapeCircle;
+			ref struct ShapeEllipse;
 			ref struct ShapeText;
 
 			ref struct Shape abstract
@@ -70,6 +71,9 @@ namespace OZOZ
 					case CShape::Circle:
 						return FromNative(dynamic_cast<const CShapeCircle*>(shape));
 						break;
+					case CShape::Ellipse:
+						return FromNative(dynamic_cast<const CShapeEllipse*>(shape));
+						break;
 					case CShape::Text:
 						return FromNative(dynamic_cast<const CShapeText*>(shape));
 						break;
@@ -94,6 +98,12 @@ namespace OZOZ
 					return gcnew ShapeCircle(
 						Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, circle->color),
 						circle->x, circle->y, circle->r, circle->visible == Adesk::kTrue);
+				}
+				static ShapeEllipse^ FromNative(const CShapeEllipse* ellipse)
+				{
+					return gcnew ShapeEllipse(
+						Autodesk::AutoCAD::Colors::Color::FromColorIndex(Autodesk::AutoCAD::Colors::ColorMethod::ByAci, ellipse->color),
+						ellipse->x, ellipse->y, ellipse->width, ellipse->height, ellipse->visible == Adesk::kTrue);
 				}
 				static ShapeText^ FromNative(const CShapeText* text)
 				{
@@ -207,6 +217,41 @@ namespace OZOZ
 				virtual CShape* ToNative(void) override
 				{
 					return new CShapeCircle(Color->ColorIndex, X, Y, R, Visible ? Adesk::kTrue : Adesk::kFalse);
+				}
+			};
+
+			ref struct ShapeEllipse : Shape
+			{
+			public:
+				property double X;
+				property double Y;
+				property double Width;
+				property double Height;
+
+			public:
+				virtual Shape^ Clone() override
+				{
+					return gcnew ShapeEllipse(Color, X, Y, Width, Height, Visible);
+				}
+
+			public:
+				ShapeEllipse() : Shape()
+				{
+					;
+				}
+
+				ShapeEllipse(Autodesk::AutoCAD::Colors::Color^ color, double x, double y, double width, double height, bool visible) : Shape(color, visible)
+				{
+					X = x;
+					Y = y;
+					Width = width;
+					Height = height;
+				}
+
+			internal:
+				virtual CShape* ToNative(void) override
+				{
+					return new CShapeEllipse(Color->ColorIndex, X, Y, Width, Height, Visible ? Adesk::kTrue : Adesk::kFalse);
 				}
 			};
 

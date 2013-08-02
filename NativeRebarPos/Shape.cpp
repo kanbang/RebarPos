@@ -41,6 +41,19 @@ CShapeCircle* CShapeCircle::clone() const
 	return new CShapeCircle(*this);
 }
 
+// ELLIPSE
+CShapeEllipse::CShapeEllipse() : CShape(CShape::Ellipse), x(0), y(0), r(0), width(0), height(0)
+{ }
+
+CShapeEllipse::CShapeEllipse(const Adesk::UInt16 Color, const double X, const double Y, const double Width, const double Height, const Adesk::Boolean Visible)
+	: CShape(CShape::Ellipse, Color, Visible), x(X), y(Y), width(Width), height(Height)
+{ }
+
+CShapeEllipse* CShapeEllipse::clone() const
+{
+	return new CShapeEllipse(*this);
+}
+
 // TEXT
 CShapeText::CShapeText() : CShape(CShape::Text), x(0), y(0), height(0), text(L""), 
 	horizontalAlignment(AcDb::kTextLeft), verticalAlignment(AcDb::kTextBase)

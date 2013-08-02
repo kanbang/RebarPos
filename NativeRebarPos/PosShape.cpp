@@ -611,6 +611,16 @@ void CPosShape::ReadPosShapesFromString(const std::wstring& source, const bool b
 				CShapeCircle *circle = new CShapeCircle(color, x, y, r, (visible.compare(L"V") == 0 ? Adesk::kTrue : Adesk::kFalse));
 				shape->AddShape(circle);
 			}
+			else if(fieldname.compare(L"ELLIPSE") == 0)
+			{
+				double x, y, width, height;
+				unsigned short color;
+				std::wstring visible;
+				linestream >> x >> y >> width >> height >> color >> visible;
+
+				CShapeEllipse *ellipse = new CShapeEllipse(color, x, y, width, height, (visible.compare(L"V") == 0 ? Adesk::kTrue : Adesk::kFalse));
+				shape->AddShape(ellipse);
+			}
 			else if(fieldname.compare(L"TEXT") == 0)
 			{
 				double x, y, h, w;
@@ -679,6 +689,13 @@ void CPosShape::SavePosShapesToFile(const std::wstring& filename)
 				ofs << L"CIRCLE" << L'\t' << 
 					circle->x << L'\t' << circle->y << L'\t' << circle->r << L'\t' << 
 					circle->color << L'\t' << (circle->visible == Adesk::kTrue ? L'V' : L'I') << std::endl;
+			}
+			else if(shape->type == CShape::Ellipse)
+			{
+				const CShapeEllipse* ellipse = dynamic_cast<const CShapeEllipse*>(shape);
+				ofs << L"ELLIPSE" << L'\t' << 
+					ellipse->x << L'\t' << ellipse->y << L'\t' << ellipse->width << L'\t' << ellipse->height << L'\t' << 
+					ellipse->color << L'\t' << (ellipse->visible == Adesk::kTrue ? L'V' : L'I') << std::endl;
 			}
 			else if(shape->type == CShape::Text)
 			{
@@ -790,6 +807,15 @@ bool CPosShape::bounds(AcDbExtents& ext) const
 					ext.addPoint(AcGePoint3d(circle->x + circle->r, circle->y - circle->r, 0));
 				}
 				break;
+			case CShape::Ellipse:
+				{
+					CShapeEllipse* ellipse = dynamic_cast<CShapeEllipse*>(shape);
+					ext.addPoint(AcGePoint3d(ellipse->x - ellipse->width / 2.0, ellipse->y - ellipse->height / 2.0, 0));
+					ext.addPoint(AcGePoint3d(ellipse->x - ellipse->width / 2.0, ellipse->y + ellipse->height / 2.0, 0));
+					ext.addPoint(AcGePoint3d(ellipse->x + ellipse->width / 2.0, ellipse->y + ellipse->height / 2.0, 0));
+					ext.addPoint(AcGePoint3d(ellipse->x + ellipse->width / 2.0, ellipse->y - ellipse->height / 2.0, 0));
+				}
+				break;
 			case CShape::Text:
 				{
 					CShapeText* text = dynamic_cast<CShapeText*>(shape);
@@ -874,6 +900,12 @@ Adesk::Boolean CPosShape::subWorldDraw(AcGiWorldDraw* worldDraw)
 			{
 				CShapeCircle* circle = dynamic_cast<CShapeCircle*>(shape);
 				Utility::DrawCircle(worldDraw, AcGePoint3d(circle->x, circle->y, 0), circle->r, circle->color);
+			}
+			break;
+		case CShape::Ellipse:
+			{
+				CShapeEllipse* ellipse = dynamic_cast<CShapeEllipse*>(shape);
+				Utility::DrawEllipse(worldDraw, AcGePoint3d(ellipse->x, ellipse->y, 0), ellipse->width, ellipse->height, ellipse->color);
 			}
 			break;
 		case CShape::Text:

@@ -464,6 +464,12 @@ void Utility::DrawCircle(const AcGiWorldDraw* worldDraw, const AcGePoint3d& cent
 	worldDraw->geometry().circle(center, radius, AcGeVector3d::kZAxis);
 }
 
+void Utility::DrawEllipse(const AcGiWorldDraw* worldDraw, const AcGePoint3d& center, const double majorAxisLength, const double minorAxisLength, const Adesk::UInt16 color)
+{
+	worldDraw->subEntityTraits().setColor(color);
+	worldDraw->geometry().ellipticalArc(center, AcGeVector3d::kZAxis, majorAxisLength, minorAxisLength, 0.0, 6.28318530717958647692, 0);
+}
+
 void Utility::DrawArc(const AcGiWorldDraw* worldDraw, const AcGePoint3d& center, const double radius, 
 					  const double startAngle, const double endAngle, const Adesk::UInt16 color)
 {
@@ -474,7 +480,7 @@ void Utility::DrawArc(const AcGiWorldDraw* worldDraw, const AcGePoint3d& center,
 void Utility::DrawEllipticalArc(const AcGiWorldDraw* worldDraw, const AcGePoint3d& center, const double majorAxisLength, const double minorAxisLength, const double startAngle, const double endAngle, const Adesk::UInt16 color)
 {
 	worldDraw->subEntityTraits().setColor(color);
-	worldDraw->geometry().ellipticalArc(center, AcGeVector3d::kZAxis, majorAxisLength, minorAxisLength, 0.0, startAngle, endAngle);
+	worldDraw->geometry().ellipticalArc(center, AcGeVector3d::kZAxis, majorAxisLength, minorAxisLength, startAngle, endAngle, 0);
 }
 
 void Utility::DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& position, const std::wstring& string,

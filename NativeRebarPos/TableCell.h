@@ -14,6 +14,8 @@
 #include <vector>
 #include <string>
 
+#include "dbelipse.h"
+
 /// ---------------------------------------------------------------------------
 /// The CTableCell represents a cell in the CGenericTable. It contains
 /// cell contents with formatting and borders.
@@ -185,6 +187,7 @@ private:
 	const std::vector<AcDbLine*> GetLines() const;
 	const std::vector<AcDbArc*> GetArcs() const;
 	const std::vector<AcDbCircle*> GetCircles() const;
+	const std::vector<AcDbEllipse*> GetEllipses() const;
 
 public:
 	/// AcDbEntity overrides: database    

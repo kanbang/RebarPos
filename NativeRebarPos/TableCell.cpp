@@ -676,6 +676,79 @@ const std::vector<AcDbCircle*> CTableCell::GetCircles() const
 	return circles;
 }
 
+const std::vector<AcDbEllipse*> CTableCell::GetEllipses() const
+{
+	std::vector<AcDbEllipse*> ellipses;
+
+	// Transform to match orientation
+	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
+	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, m_Normal);
+
+	if(HasShape())
+	{
+		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
+		AcDbExtents ext;
+		pShape->bounds(ext);
+		double maxwidth = (ext.maxPoint().x - ext.minPoint().x);
+		double maxheight = (ext.maxPoint().y - ext.minPoint().y);
+		double scale = m_TextHeight / 25.0;
+        double xoff = 0;
+        double yoff = 0;
+		if(m_HorizontalAlignment == CTableCell::eNEAR)
+		{
+			xoff = m_Margin;
+		}
+		else if(m_HorizontalAlignment == CTableCell::eFAR)
+		{
+			xoff = m_Width - m_Margin - maxwidth * scale;
+		}
+		else if(m_HorizontalAlignment == CTableCell::eCENTER)
+		{
+			xoff = (m_Width - maxwidth * scale) / 2.0;
+		}
+		if(m_VerticalAlignment == CTableCell::eNEAR)
+		{
+			yoff = m_Margin;
+		}
+		else if(m_VerticalAlignment == CTableCell::eFAR)
+		{
+			yoff = m_Height - m_Margin - maxheight * scale;
+		}
+		else if(m_VerticalAlignment == CTableCell::eCENTER)
+		{
+			yoff = (m_Height - maxheight * scale) / 2.0;
+		}
+
+		for(ShapeSize i = 0; i < pShape->GetShapeCount(); i++)
+		{
+			const CShape* shape = pShape->GetShape(i);
+			if(shape->type == CShape::Ellipse && shape->visible == Adesk::kTrue)
+			{
+				const CShapeEllipse* ellipse = dynamic_cast<const CShapeEllipse*>(shape);
+
+				AcDbEllipse* mellipse = new AcDbEllipse();
+
+				if(m_ShapeLineColor == 0)
+					mellipse->setColorIndex(ellipse->color);
+				else
+					mellipse->setColorIndex(m_ShapeLineColor);
+
+				// Location
+				double x = xoff + (ellipse->x - ext.minPoint().x) * scale;
+				double y = yoff + (ellipse->y - ext.minPoint().y) * scale;
+				double width = ellipse->width * scale;
+				double height = ellipse->height * scale;
+				mellipse->set(AcGePoint3d(x, -m_Height + y, 0), AcGeVector3d::kZAxis, AcGeVector3d::kYAxis * height, width / height);
+
+				mellipse->transformBy(trans);
+				ellipses.push_back(mellipse);
+			}
+		}
+	}
+
+	return ellipses;
+}
+
 //*************************************************************************
 // Overridden methods from AcDbObject
 //*************************************************************************
@@ -1156,6 +1229,15 @@ Acad::ErrorStatus CTableCell::explode(AcDbVoidPtrArray& entitySet) const
 		entitySet.append(circle);
 	}
 	circles.clear();
+
+	// Ellipses
+	std::vector<AcDbEllipse*> ellipses = GetEllipses();
+	for(std::vector<AcDbEllipse*>::iterator it = ellipses.begin(); it != ellipses.end(); it++)
+	{
+		AcDbEllipse* ellipse = (*it);
+		entitySet.append(ellipse);
+	}
+	ellipses.clear();
 
 	return Acad::eOk;
 }

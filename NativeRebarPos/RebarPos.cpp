@@ -966,12 +966,12 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 		}
 		// Tau sign
 		if(p.hasTau)
-		{			
+		{
 			// ellipse
 			AcDbEllipse* ellipse;
 			ellipse = new AcDbEllipse();
 			AcGePoint3d centerpt(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0, 0);
-			ellipse->set(centerpt, AcGeVector3d::kZAxis, AcGeVector3d::kYAxis * 0.35, tauSize / 0.8);
+			ellipse->set(centerpt, AcGeVector3d::kZAxis, AcGeVector3d::kYAxis * 0.35, tauSize / 0.7);
 			ellipse->setColorIndex(p.color);
 			if((es = ellipse->transformBy(trans)) != Acad::eOk)
 			{
@@ -1076,9 +1076,9 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 		// Tau sign
 		if(p.hasTau)
 		{
-			Utility::DrawEllipticalArc(worldDraw, 
+			Utility::DrawEllipse(worldDraw, 
 				AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0, 0),
-				0.35, tauSize * 0.5, 2.0 * PI, 0.5 * PI, p.color);
+				tauSize * 0.5, 0.35, p.color);
 
 			Utility::DrawLine(worldDraw,
 				AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 - 0.5, 0),
