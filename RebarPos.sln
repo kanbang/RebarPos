@@ -1,20 +1,27 @@
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NativeRebarPos", "NativeRebarPos\NativeRebarPos.vcproj", "{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NativeRebarPos", "NativeRebarPos\NativeRebarPos.vcxproj", "{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ManagedRebarPos", "ManagedRebarPos\ManagedRebarPos.vcproj", "{D26DC853-A22B-4C5B-810F-F76D1247FA93}"
-	ProjectSection(ProjectDependencies) = postProject
-		{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046} = {473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ManagedRebarPos", "ManagedRebarPos\ManagedRebarPos.vcxproj", "{D26DC853-A22B-4C5B-810F-F76D1247FA93}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "COMRebarPos", "COMRebarPos\COMRebarPos.vcproj", "{06B9D355-F6F9-4029-A614-834774D248C0}"
-	ProjectSection(ProjectDependencies) = postProject
-		{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046} = {473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "COMRebarPos", "COMRebarPos\COMRebarPos.vcxproj", "{06B9D355-F6F9-4029-A614-834774D248C0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RebarPosCommands", "RebarPosCommands\RebarPosCommands.csproj", "{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}"
 EndProject
-Project("{8BC9CEB9-8B4A-11D0-8D11-00A0C91BC942}") = "acad.exe", "..\..\..\..\..\..\..\..\..\Program Files\Autodesk\AutoCAD 2012 - English\acad.exe", "{117AF3E4-7A90-42D7-8FB8-E30BA37BEA46}"
+Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "acad", "..\..\..\..\..\..\Program Files\Autodesk\AutoCAD 2012 - English\acad.exe", "{117AF3E4-7A90-42D7-8FB8-E30BA37BEA46}"
+	ProjectSection(DebuggerProjectSystem) = preProject
+		PortSupplier = 00000000-0000-0000-0000-000000000000
+		Executable = C:\Program Files\Autodesk\AutoCAD 2012 - English\acad.exe
+		RemoteMachine = TTSPC-02
+		StartingDirectory = C:\Program Files\Autodesk\AutoCAD 2012 - English
+		Environment = Default
+		LaunchingEngine = 00000000-0000-0000-0000-000000000000
+		UseLegacyDebugEngines = No
+		LaunchSQLEngine = No
+		AttachLaunchAction = No
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,7 +37,7 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}.Debug|Any CPU.ActiveCfg = Release|x64
 		{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}.Debug|Mixed Platforms.ActiveCfg = Release|x64
-		{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}.Debug|Mixed Platforms.Build.0 = Debug|x64
+		{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}.Debug|Mixed Platforms.Build.0 = Release|x64
 		{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}.Debug|Win32.ActiveCfg = Debug|Win32
 		{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}.Debug|Win32.Build.0 = Debug|Win32
 		{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}.Debug|x64.ActiveCfg = Debug|x64
@@ -44,7 +51,7 @@ Global
 		{473A95DC-5E6B-47EF-8E4D-77BB2AC1D046}.Release|x64.Build.0 = Release|x64
 		{D26DC853-A22B-4C5B-810F-F76D1247FA93}.Debug|Any CPU.ActiveCfg = Release|x64
 		{D26DC853-A22B-4C5B-810F-F76D1247FA93}.Debug|Mixed Platforms.ActiveCfg = Release|x64
-		{D26DC853-A22B-4C5B-810F-F76D1247FA93}.Debug|Mixed Platforms.Build.0 = Debug|x64
+		{D26DC853-A22B-4C5B-810F-F76D1247FA93}.Debug|Mixed Platforms.Build.0 = Release|x64
 		{D26DC853-A22B-4C5B-810F-F76D1247FA93}.Debug|Win32.ActiveCfg = Debug|Win32
 		{D26DC853-A22B-4C5B-810F-F76D1247FA93}.Debug|Win32.Build.0 = Debug|Win32
 		{D26DC853-A22B-4C5B-810F-F76D1247FA93}.Debug|x64.ActiveCfg = Debug|x64
@@ -58,7 +65,7 @@ Global
 		{D26DC853-A22B-4C5B-810F-F76D1247FA93}.Release|x64.Build.0 = Release|x64
 		{06B9D355-F6F9-4029-A614-834774D248C0}.Debug|Any CPU.ActiveCfg = Release|x64
 		{06B9D355-F6F9-4029-A614-834774D248C0}.Debug|Mixed Platforms.ActiveCfg = Release|x64
-		{06B9D355-F6F9-4029-A614-834774D248C0}.Debug|Mixed Platforms.Build.0 = Debug|x64
+		{06B9D355-F6F9-4029-A614-834774D248C0}.Debug|Mixed Platforms.Build.0 = Release|x64
 		{06B9D355-F6F9-4029-A614-834774D248C0}.Debug|Win32.ActiveCfg = Debug|Win32
 		{06B9D355-F6F9-4029-A614-834774D248C0}.Debug|Win32.Build.0 = Debug|Win32
 		{06B9D355-F6F9-4029-A614-834774D248C0}.Debug|x64.ActiveCfg = Debug|x64
@@ -84,16 +91,16 @@ Global
 		{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}.Release|Win32.ActiveCfg = Release|Any CPU
 		{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}.Release|Win32.Build.0 = Release|Any CPU
-		{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}.Release|x64.ActiveCfg = Release|Any CPU
-		{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}.Release|x64.Build.0 = Release|Any CPU
-		{117AF3E4-7A90-42D7-8FB8-E30BA37BEA46}.Debug|Any CPU.ActiveCfg = Debug
-		{117AF3E4-7A90-42D7-8FB8-E30BA37BEA46}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{117AF3E4-7A90-42D7-8FB8-E30BA37BEA46}.Debug|Win32.ActiveCfg = Debug
-		{117AF3E4-7A90-42D7-8FB8-E30BA37BEA46}.Debug|x64.ActiveCfg = Debug
-		{117AF3E4-7A90-42D7-8FB8-E30BA37BEA46}.Release|Any CPU.ActiveCfg = Debug
-		{117AF3E4-7A90-42D7-8FB8-E30BA37BEA46}.Release|Mixed Platforms.ActiveCfg = Debug
-		{117AF3E4-7A90-42D7-8FB8-E30BA37BEA46}.Release|Win32.ActiveCfg = Debug
-		{117AF3E4-7A90-42D7-8FB8-E30BA37BEA46}.Release|x64.ActiveCfg = Debug
+		{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}.Release|x64.ActiveCfg = Release|x64
+		{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}.Release|x64.Build.0 = Release|x64
+		{117AF3E4-7A90-42D7-8FB8-E30BA37BEA46}.Debug|Any CPU.ActiveCfg = Release
+		{117AF3E4-7A90-42D7-8FB8-E30BA37BEA46}.Debug|Mixed Platforms.ActiveCfg = Release
+		{117AF3E4-7A90-42D7-8FB8-E30BA37BEA46}.Debug|Win32.ActiveCfg = Release
+		{117AF3E4-7A90-42D7-8FB8-E30BA37BEA46}.Debug|x64.ActiveCfg = Release
+		{117AF3E4-7A90-42D7-8FB8-E30BA37BEA46}.Release|Any CPU.ActiveCfg = Release
+		{117AF3E4-7A90-42D7-8FB8-E30BA37BEA46}.Release|Mixed Platforms.ActiveCfg = Release
+		{117AF3E4-7A90-42D7-8FB8-E30BA37BEA46}.Release|Win32.ActiveCfg = Release
+		{117AF3E4-7A90-42D7-8FB8-E30BA37BEA46}.Release|x64.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

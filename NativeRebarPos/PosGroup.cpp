@@ -768,16 +768,6 @@ AcGiDrawable* CPosGroup::drawable()
 	return m_GsNode->drawable();
 }
 
-void CPosGroup::setGsNode(AcGsNode* gsnode)
-{
-	m_GsNode = gsnode;
-}
-
-AcGsNode* CPosGroup::gsNode(void) const
-{
-	return m_GsNode;
-}
-
 bool CPosGroup::bounds(AcDbExtents& ext) const
 {
 	std::vector<CRebarPos*> items = GetDisplayedPos();

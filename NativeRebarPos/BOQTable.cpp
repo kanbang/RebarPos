@@ -910,23 +910,23 @@ void CBOQTable::UpdateTable(void)
 					{
 						std::wstring numtext;
 						Utility::IntToStr(Utility::DoubleToInt((*dit).first), numtext);
-						int k = j + (*dit).second;
+						int kr = j + (*dit).second;
 						std::wstring dtext(lastDiameterListLabel);
 						if(dtext == L"[TD]")
 						{
-							setCellShape(i + 1, k, L"CAP");
-							setCellShapeText(i + 1, k, numtext.c_str(), L"", L"", L"", L"", L"");
-							setCellTextHeight(i + 1, k, 1.0 * 25.0 / 20.0);
-							setCellShapeTextColor(i + 1, k, lastPosColor);
-							setCellShapeLineColor(i + 1, k, lastPosColor);
+							setCellShape(i + 1, kr, L"CAP");
+							setCellShapeText(i + 1, kr, numtext.c_str(), L"", L"", L"", L"", L"");
+							setCellTextHeight(i + 1, kr, 1.0 * 25.0 / 20.0);
+							setCellShapeTextColor(i + 1, kr, lastPosColor);
+							setCellShapeLineColor(i + 1, kr, lastPosColor);
 						}
 						else
 						{
 							Utility::ReplaceString(dtext, L"[D]", numtext);
-							setCellText(i + 1, k, dtext.c_str());
+							setCellText(i + 1, kr, dtext.c_str());
 						}
-						setCellTextColor(i + 1, k, lastPosColor);
-						setCellTextStyleId(i + 1, k, lastTextStyleId);
+						setCellTextColor(i + 1, kr, lastPosColor);
+						setCellTextStyleId(i + 1, kr, lastTextStyleId);
 					}
 				}
 				break;
@@ -1136,9 +1136,9 @@ void CBOQTable::UpdateTable(void)
 				setCellText(ti + 4, k, text.c_str());
 				grossgrosstotal += w;
 			}
-			std::wstring gtext;
-			Utility::DoubleToStr(grossgrosstotal, lastPrecision, gtext);
-			setCellText(ti + 5, cols - (int)diameters.size(), gtext.c_str());
+			std::wstring ggtext;
+			Utility::DoubleToStr(grossgrosstotal, lastPrecision, ggtext);
+			setCellText(ti + 5, cols - (int)diameters.size(), ggtext.c_str());
 		}
 	}
 

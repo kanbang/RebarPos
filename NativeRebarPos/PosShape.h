@@ -201,9 +201,6 @@ public:
     virtual Adesk::Boolean  isPersistent    (void) const;
     virtual AcDbObjectId    id              (void) const;
 
-    virtual void            setGsNode       (AcGsNode* gsnode);
-    virtual AcGsNode*       gsNode          (void) const;
-
     virtual bool            bounds          (AcDbExtents& bounds) const;
 
     virtual Adesk::UInt32   subSetAttributes   (AcGiDrawableTraits* traits);

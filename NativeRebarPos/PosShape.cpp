@@ -173,17 +173,19 @@ HBITMAP CPosShape::ToBitmap(AcGsDevice* device, AcGsView* view, AcGsModel* model
 HBITMAP CPosShape::ToBitmap(const AcGsColor backColor, const int width, const int height)
 {
 	AcGsManager* manager = acgsGetGsManager();
-	AcGsClassFactory* factory = manager->getGSClassFactory();
+	AcGsKernelDescriptor descriptor;
+	descriptor.addRequirement(AcGsKernelDescriptor::k3DDrawing);
+	AcGsGraphicsKernel* kernel = manager->acquireGraphicsKernel(descriptor);
 
-	AcGsDevice* device = manager->createAutoCADOffScreenDevice();
+	AcGsDevice* device = kernel->createOffScreenDevice();
 	device->onSize(width, height);
 	device->setDeviceRenderer(AcGsDevice::kDefault);
 	device->setBackgroundColor(backColor);
 
-	AcGsView* view = factory->createView();
+	AcGsView* view = kernel->createView();
 	view->setVisualStyle(AcGiVisualStyle::k2DWireframe);
 
-	AcGsModel* model = manager->createAutoCADModel();
+	AcGsModel* model = manager->createAutoCADModel(*kernel);
 
 	device->add(view);
 
@@ -588,8 +590,8 @@ void CPosShape::ReadPosShapesFromString(const std::wstring& source, const bool b
 				std::wstring visible;
 				linestream >> x1 >> y1 >> x2 >> y2 >> color >> visible;
 
-				CShapeLine *line = new CShapeLine(color, x1, y1, x2, y2, (visible.compare(L"V") == 0 ? Adesk::kTrue : Adesk::kFalse));
-				shape->AddShape(line);
+				CShapeLine *cline = new CShapeLine(color, x1, y1, x2, y2, (visible.compare(L"V") == 0 ? Adesk::kTrue : Adesk::kFalse));
+				shape->AddShape(cline);
 			}
 			else if(fieldname.compare(L"ARC") == 0)
 			{
@@ -751,16 +753,6 @@ Adesk::Boolean CPosShape::isPersistent(void) const
 AcDbObjectId CPosShape::id(void) const
 {
 	return AcDbObjectId::kNull;
-}
-
-void CPosShape::setGsNode(AcGsNode* gsnode)
-{
-	m_GsNode = gsnode;
-}
-
-AcGsNode* CPosShape::gsNode(void) const
-{
-	return m_GsNode;
 }
 
 bool CPosShape::bounds(AcDbExtents& ext) const

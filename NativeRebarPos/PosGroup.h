@@ -196,9 +196,6 @@ public:
 	// Drawable implementation
     virtual AcGiDrawable*       drawable();
 
-    virtual void            setGsNode       (AcGsNode* gsnode);
-    virtual AcGsNode*       gsNode          (void) const;
-
     virtual bool            bounds          (AcDbExtents& bounds) const;
 
     virtual Adesk::UInt32   subSetAttributes   (AcGiDrawableTraits* traits);

@@ -62,14 +62,18 @@ namespace RebarPosCommands
                 extents = new Extents3d();
 
                 Autodesk.AutoCAD.GraphicsSystem.Manager gsm = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.GraphicsManager;
+                Autodesk.AutoCAD.GraphicsSystem.KernelDescriptor descriptor = new Autodesk.AutoCAD.GraphicsSystem.KernelDescriptor();
+                descriptor.addRequirement(Autodesk.AutoCAD.UniqueString.Intern("3D Drawing"));
+                Autodesk.AutoCAD.GraphicsSystem.GraphicsKernel kernel = Autodesk.AutoCAD.GraphicsSystem.Manager.AcquireGraphicsKernel(descriptor);
 
-                device = gsm.CreateAutoCADDevice(this.Handle);
+                device = gsm.CreateAutoCADDevice(kernel, this.Handle);
                 device.DeviceRenderType = RendererType.Default;
                 device.BackgroundColor = BackColor;
 
                 view = new Autodesk.AutoCAD.GraphicsSystem.View();
                 view.VisualStyle = new Autodesk.AutoCAD.GraphicsInterface.VisualStyle(Autodesk.AutoCAD.GraphicsInterface.VisualStyleType.Wireframe2D);
-                model = gsm.CreateAutoCADModel();
+
+                model = gsm.CreateAutoCADModel(kernel);
 
                 device.Add(view);
                 device.Update();

@@ -91,13 +91,17 @@ namespace RebarPosCommands
             {
                 Autodesk.AutoCAD.GraphicsSystem.Manager gsm = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.GraphicsManager;
 
-                device = gsm.CreateAutoCADOffScreenDevice();
+                Autodesk.AutoCAD.GraphicsSystem.KernelDescriptor descriptor = new Autodesk.AutoCAD.GraphicsSystem.KernelDescriptor();
+                descriptor.addRequirement(Autodesk.AutoCAD.UniqueString.Intern("3D Drawing"));
+                Autodesk.AutoCAD.GraphicsSystem.GraphicsKernel kernel = Autodesk.AutoCAD.GraphicsSystem.Manager.AcquireGraphicsKernel(descriptor);
+
+                device = gsm.CreateAutoCADOffScreenDevice(kernel);
                 device.DeviceRenderType = Autodesk.AutoCAD.GraphicsSystem.RendererType.Default;
                 device.BackgroundColor = CellBackColor;
 
                 view = new Autodesk.AutoCAD.GraphicsSystem.View();
                 view.VisualStyle = new Autodesk.AutoCAD.GraphicsInterface.VisualStyle(Autodesk.AutoCAD.GraphicsInterface.VisualStyleType.Wireframe2D);
-                model = gsm.CreateAutoCADModel();
+                model = gsm.CreateAutoCADModel(kernel);
 
                 device.Add(view);
 
