@@ -15,48 +15,41 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v110</PlatformToolset>
     <UseOfAtl>Static</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\Property Sheets\ObjectARX 2015.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>14.0.23107.0</_ProjectFileVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
-  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
-      <AdditionalIncludeDirectories>..\..\..\inc;..\..\..\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <HeaderFileName>$(ProjectDir)\%(Filename)_i.h</HeaderFileName>
       <DllDataFileName>$(ProjectDir)\%(Filename)_d.c</DllDataFileName>
       <InterfaceIdentifierFileName>$(ProjectDir)\%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>$(ProjectDir)\%(Filename)_p.c</ProxyFileName>
     </Midl>
     <ClCompile>
-      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>$(VCInstallDir)atlmfc\include;C:\Autodesk\ObjectARX 2015\inc;C:\Autodesk\ObjectARX 2015\inc-$(Platform);C:\Autodesk\ObjectARX 2015\utils\Atil\Inc;C:\Autodesk\ObjectARX 2015\utils\Atil\Inc\format_codecs;C:\Autodesk\ObjectARX 2015\utils\Atil\Inc\codec_properties;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_ATL_NO_UUIDOF;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <WarningLevel>Level4</WarningLevel>
-      <AdditionalUsingDirectories>C:\Autodesk\ObjectARX 2015\inc-$(Platform);C:\Autodesk\ObjectARX 2015\inc</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;axdb.lib;NativeRebarPos.lib;acad.lib;accore.lib;ac1st20.lib;acui20.lib;adui20.lib;acdb20.lib;acge20.lib;rxapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration);C:\Autodesk\ObjectARX 2015\lib-$(Platform);$(VCInstallDir)atlmfc\lib\amd64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;axdb.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>COMRebarPos.def</ModuleDefinitionFile>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
       <ProgramDatabaseFile />
-      <TargetMachine>MachineX64</TargetMachine>
       <TypeLibraryFile>COMRebarPos.tlb</TypeLibraryFile>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
     <ResourceCompile>
       <AdditionalIncludeDirectories>$(ProjectDir)$(IntDir)</AdditionalIncludeDirectories>

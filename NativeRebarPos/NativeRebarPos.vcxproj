@@ -23,38 +23,29 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\Property Sheets\ObjectARX 2015.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>14.0.23107.0</_ProjectFileVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
-  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
       <AdditionalIncludeDirectories>..\..\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </Midl>
     <ClCompile>
-      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>C:\Autodesk\ObjectARX 2015\inc;C:\Autodesk\ObjectARX 2015\utils\Atil\Inc;C:\Autodesk\ObjectARX 2015\utils\Atil\Inc\format_codecs;C:\Autodesk\ObjectARX 2015\utils\Atil\Inc\codec_properties;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>ACRXAPP;RADPACK;REBARPOS_MODULE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level4</WarningLevel>
       <DisableSpecificWarnings>4201;4100;4512;4189;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <AdditionalUsingDirectories>C:\Autodesk\ObjectARX 2015\inc-$(Platform);C:\Autodesk\ObjectARX 2015\inc</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>AdImaging.lib;acad.lib;accore.lib;ac1st20.lib;acui20.lib;adui20.lib;acdb20.lib;acge20.lib;rxapi.lib;AcDrawBridge.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(VCInstallDir)atlmfc\lib;$(VCInstallDir)atlmfc\lib\amd64;C:\Autodesk\ObjectARX 2015\lib-$(Platform);C:\Autodesk\ObjectARX 2015\utils\Atil\Lib-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile />
       <TypeLibraryFile>$(OutDir)$(TargetName).tlb</TypeLibraryFile>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
       <ProgramDatabaseFile />
-      <TargetMachine>MachineX64</TargetMachine>
-      <IgnoreSpecificDefaultLibraries>atls.lib</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
       <Command>
