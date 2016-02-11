@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MenuIcons.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\BALONSIL.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\BALONSIL_32.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\LGOSTER.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\METRAJ.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\METRAJSIL.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\METRAJSIL_32.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\METRAJYARDIM.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\METRAJ_32.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZAYAR.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZBENZET.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZBUL.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZBUL_32.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZDEGIS.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZDEGIS_32.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZEDIT.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZEDIT_32.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZEKLE.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZKATKI.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZKONTROL.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZKONTROL_32.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZKOPYALA.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZKOPYALADETAY.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZMIRROR.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZNUM.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZNUM_32.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\SEKILGOSTER.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\SEKILSIL.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\SONPOZ.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\SONPOZ_32.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\YENILE.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\ACILIMLAR.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
