@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+  <!-- ProductCode: Unique GUID for the plug-in. A GUID must be generated for each unique plug-in, and is used for first run notifications and as the installer ID for Add/Remove Programs in Windows when installed from the Autodesk Exchange Apps website. ProductCode should be updated if the AppVersion is changed. This is so upgrade installs work properly and a notification is displayed for the upgrade when loaded into an AutoCAD-based product. -->
+  <!-- UpgradeCode: Unique GUID for the plug-in that must never be changed. The GUID is used by the Autodesk Exchange Apps website to allow for upgrading from an old version to a newer version of a plug-in without the need to uninstall the plug-in first. Note: You must increment AppVersion in order to allow for proper upgrading of a plug-in. -->
+  <ApplicationPackage 
+    SchemaVersion="1.0"
+    ProductType="Application" 
+    Name="RebarPos" 
+    AppVersion="###"
+    Description="Rebar Marking and Scheduling Plugin (64 bit)." 
+    Author="Özgür Özçıtak" 
+    Icon="./Resources/icon.bmp"
+    ProductCode="76f1f87b-1794-4c6a-bade-28640c6a130b"
+    UpgradeCode="237ca78f-5780-4410-95ed-f19683227acc">
+  <CompanyDetails Name="OZOZ" Email="ozcitak@yahoo.com" Url=" " Phone=" " />
+  <Components Description="RebarPos for AutoCAD R18 (AutoCAD 2010, 2011, 2012)">
+    <RuntimeRequirements SupportPath="./Resources" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R18" SeriesMax="R18" />
+    <ComponentEntry AppName="RebarPos" ModuleName="./Bin/2010/NativeRebarPos.dbx" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="RebarPos" ModuleName="./Bin/2010/COMRebarPos.dbx" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="RebarPos" ModuleName="./Bin/2010/ManagedRebarPos.dll" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="RebarPos" ModuleName="./Bin/2010/RebarPosCommands.dll" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="RebarPos" ModuleName="./Resources/RebarPos.cuix" LoadOnAutoCADStartup="True" />
+  </Components>
+  <Components Description="RebarPos for AutoCAD R19 (AutoCAD 2013, 2014)">
+    <RuntimeRequirements SupportPath="./Resources" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R19" SeriesMax="R19" />
+    <ComponentEntry AppName="RebarPos" ModuleName="./Bin/2013/NativeRebarPos.dbx" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="RebarPos" ModuleName="./Bin/2013/COMRebarPos.dbx" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="RebarPos" ModuleName="./Bin/2013/ManagedRebarPos.dll" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="RebarPos" ModuleName="./Bin/2013/RebarPosCommands.dll" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="RebarPos" ModuleName="./Resources/RebarPos.cuix" LoadOnAutoCADStartup="True" />
+  </Components>  
+  <Components Description="RebarPos for AutoCAD R20 (AutoCAD 2015, 2016)">
+    <RuntimeRequirements SupportPath="./Resources" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R20" SeriesMax="R20" />
+    <ComponentEntry AppName="RebarPos" ModuleName="./Bin/2015/NativeRebarPos.dbx" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="RebarPos" ModuleName="./Bin/2015/COMRebarPos.dbx" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="RebarPos" ModuleName="./Bin/2015/ManagedRebarPos.dll" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="RebarPos" ModuleName="./Bin/2015/RebarPosCommands.dll" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="RebarPos" ModuleName="./Resources/RebarPos.cuix" LoadOnAutoCADStartup="True" />
+  </Components>  
+</ApplicationPackage>
