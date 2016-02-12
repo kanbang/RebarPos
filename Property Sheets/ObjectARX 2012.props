@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalUsingDirectories>C:\Autodesk\ObjectARX 2012\inc;C:\Autodesk\ObjectARX 2012\inc-x64;C:\Autodesk\ObjectARX 2012\utils\Atil\Inc;C:\Autodesk\ObjectARX 2012\utils\Atil\Inc\format_codecs;C:\Autodesk\ObjectARX 2012\utils\Atil\Inc\codec_properties;%(AdditionalIncludeDirectories)</AdditionalUsingDirectories>
+      <WarningLevel>Level4</WarningLevel>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>C:\Autodesk\ObjectARX 2012\inc;C:\Autodesk\ObjectARX 2012\inc-x64;C:\Autodesk\ObjectARX 2012\utils\Atil\Inc;C:\Autodesk\ObjectARX 2012\utils\Atil\Inc\format_codecs;C:\Autodesk\ObjectARX 2012\utils\Atil\Inc\codec_properties;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>REBARPOS2012;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4564;4481</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(VCInstallDir)atlmfc\lib\amd64;C:\Autodesk\ObjectARX 2012\lib-$(Platform);C:\Autodesk\ObjectARX 2012\utils\Atil\Lib-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>AdImaging.lib;acad.lib;acui18.lib;adui18.lib;acdb18.lib;acge18.lib;rxapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalOptions>/ignore:4099,4254</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>

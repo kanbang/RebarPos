@@ -201,6 +201,11 @@ public:
     virtual Adesk::Boolean  isPersistent    (void) const;
     virtual AcDbObjectId    id              (void) const;
 
+#ifdef REBARPOS2012
+	virtual void            setGsNode(AcGsNode* gsnode);
+	virtual AcGsNode*       gsNode(void) const;
+#endif
+
     virtual bool            bounds          (AcDbExtents& bounds) const;
 
     virtual Adesk::UInt32   subSetAttributes   (AcGiDrawableTraits* traits);

@@ -12,7 +12,7 @@
       <WarningLevel>Level4</WarningLevel>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <AdditionalIncludeDirectories>C:\Autodesk\ObjectARX 2013\inc;C:\Autodesk\ObjectARX 2013\inc-x64;C:\Autodesk\ObjectARX 2013\utils\Atil\Inc;C:\Autodesk\ObjectARX 2013\utils\Atil\Inc\format_codecs;C:\Autodesk\ObjectARX 2013\utils\Atil\Inc\codec_properties;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>REBARPOS2014;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>REBARPOS2013;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4564;4481</DisableSpecificWarnings>
     </ClCompile>
     <Link>
