@@ -9,8 +9,8 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RebarPosCommands</RootNamespace>
-    <AssemblyName>RebarPos</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <AssemblyName>RebarPosCommands</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <FileUpgradeFlags>
@@ -36,7 +36,8 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-2015|x64' ">
-    <OutputPath>bin\x64\Release-2015\</OutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <OutputPath>Release-2015\</OutputPath>
     <DefineConstants>TRACE;REBARPOS2015</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -44,17 +45,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2014|x64'">
-    <OutputPath>bin\x64\Release-2014\</OutputPath>
-    <DefineConstants>TRACE;REBARPOS2014</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2013|x64'">
-    <OutputPath>bin\x64\Release-2013\</OutputPath>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <OutputPath>Release-2013\</OutputPath>
     <DefineConstants>TRACE;REBARPOS2013</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -62,9 +55,10 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2012|x64'">
-    <OutputPath>bin\x64\Release-2012\</OutputPath>
-    <DefineConstants>TRACE;REBARPOS2012</DefineConstants>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-2010|x64' ">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <OutputPath>Release-2010\</OutputPath>
+    <DefineConstants>TRACE;REBARPOS2010</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -110,44 +104,6 @@
         </Reference>
       </ItemGroup>
     </When>
-    <When Condition=" '$(Configuration)'=='Release-2014' ">
-      <ItemGroup>
-        <Reference Include="AcCoreMgd">
-          <HintPath>C:\Autodesk\ObjectARX 2014\inc\AcCoreMgd.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="AcCui">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\Autodesk\ObjectARX 2014\inc\AcCui.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="AcDbMgd">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\Autodesk\ObjectARX 2014\inc\AcDbMgd.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="AcMgd">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\Autodesk\ObjectARX 2014\inc\AcMgd.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="AcWindows">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\Autodesk\ObjectARX 2014\inc\AcWindows.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="AdWindows">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\Autodesk\ObjectARX 2014\inc\AdWindows.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.AutoCAD.Interop">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\Autodesk\ObjectARX 2014\inc-x64\Autodesk.AutoCAD.Interop.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-      </ItemGroup>
-    </When>
     <When Condition=" '$(Configuration)'=='Release-2013' ">
       <ItemGroup>
         <Reference Include="AcCoreMgd">
@@ -186,36 +142,36 @@
         </Reference>
       </ItemGroup>
     </When>
-    <When Condition=" '$(Configuration)'=='Release-2012' ">
+    <When Condition=" '$(Configuration)'=='Release-2010' ">
       <ItemGroup>
         <Reference Include="AcCui">
           <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\Autodesk\ObjectARX 2012\inc\AcCui.dll</HintPath>
+          <HintPath>C:\Autodesk\ObjectARX 2010\inc-x64\AcCui.dll</HintPath>
           <Private>False</Private>
         </Reference>
         <Reference Include="AcDbMgd">
           <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\Autodesk\ObjectARX 2012\inc\AcDbMgd.dll</HintPath>
+          <HintPath>C:\Autodesk\ObjectARX 2010\inc-x64\AcDbMgd.dll</HintPath>
           <Private>False</Private>
         </Reference>
         <Reference Include="AcMgd">
           <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\Autodesk\ObjectARX 2012\inc\AcMgd.dll</HintPath>
+          <HintPath>C:\Autodesk\ObjectARX 2010\inc-x64\AcMgd.dll</HintPath>
           <Private>False</Private>
         </Reference>
         <Reference Include="AcWindows">
           <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\Autodesk\ObjectARX 2012\inc\AcWindows.dll</HintPath>
+          <HintPath>C:\Autodesk\ObjectARX 2010\inc-x64\AcWindows.dll</HintPath>
           <Private>False</Private>
         </Reference>
         <Reference Include="AdWindows">
           <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\Autodesk\ObjectARX 2012\inc\AdWindows.dll</HintPath>
+          <HintPath>C:\Autodesk\ObjectARX 2010\inc-x64\AdWindows.dll</HintPath>
           <Private>False</Private>
         </Reference>
         <Reference Include="Autodesk.AutoCAD.Interop">
           <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\Autodesk\ObjectARX 2012\inc-x64\Autodesk.AutoCAD.Interop.dll</HintPath>
+          <HintPath>C:\Autodesk\ObjectARX 2010\inc-x64\Autodesk.AutoCAD.Interop.dll</HintPath>
           <Private>False</Private>
         </Reference>
       </ItemGroup>
@@ -232,7 +188,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>

@@ -75,7 +75,18 @@ namespace RebarPosCommands
                 view.VisualStyle = new Autodesk.AutoCAD.GraphicsInterface.VisualStyle(Autodesk.AutoCAD.GraphicsInterface.VisualStyleType.Wireframe2D);
 
                 model = gsm.CreateAutoCADModel(kernel);
-#elif REBARPOS2014
+#endif
+#if REBARPOS2013
+                device = gsm.CreateAutoCADDevice(this.Handle);
+                device.DeviceRenderType = RendererType.Default;
+                device.BackgroundColor = BackColor;
+
+                view = new Autodesk.AutoCAD.GraphicsSystem.View();
+                view.VisualStyle = new Autodesk.AutoCAD.GraphicsInterface.VisualStyle(Autodesk.AutoCAD.GraphicsInterface.VisualStyleType.Wireframe2D);
+
+                model = gsm.CreateAutoCADModel();
+#endif
+#if REBARPOS2010
                 device = gsm.CreateAutoCADDevice(this.Handle);
                 device.DeviceRenderType = RendererType.Default;
                 device.BackgroundColor = BackColor;

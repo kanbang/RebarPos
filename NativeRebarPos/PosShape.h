@@ -201,7 +201,7 @@ public:
     virtual Adesk::Boolean  isPersistent    (void) const;
     virtual AcDbObjectId    id              (void) const;
 
-#ifdef REBARPOS2012
+#ifdef REBARPOS2010
 	virtual void            setGsNode(AcGsNode* gsnode);
 	virtual AcGsNode*       gsNode(void) const;
 #endif

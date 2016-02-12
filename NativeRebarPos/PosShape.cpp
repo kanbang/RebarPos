@@ -190,21 +190,6 @@ HBITMAP CPosShape::ToBitmap(const AcGsColor backColor, const int width, const in
 
 	device->add(view);
 #endif
-#ifdef REBARPOS2014
-	AcGsClassFactory* factory = manager->getGSClassFactory();
-
-	AcGsDevice* device = manager->createAutoCADOffScreenDevice();
-	device->onSize(width, height);
-	device->setDeviceRenderer(AcGsDevice::kDefault);
-	device->setBackgroundColor(backColor);
-
-	AcGsView* view = factory->createView();
-	view->setVisualStyle(AcGiVisualStyle::k2DWireframe);
-
-	AcGsModel* model = manager->createAutoCADModel();
-
-	device->add(view);
-#endif
 #ifdef REBARPOS2013
 	AcGsClassFactory* factory = manager->getGSClassFactory();
 
@@ -220,7 +205,7 @@ HBITMAP CPosShape::ToBitmap(const AcGsColor backColor, const int width, const in
 
 	device->add(view);
 #endif
-#ifdef REBARPOS2012
+#ifdef REBARPOS2010
 	AcGsClassFactory* factory = manager->getGSClassFactory();
 
 	AcGsDevice* device = manager->createAutoCADOffScreenDevice();
@@ -801,7 +786,7 @@ AcDbObjectId CPosShape::id(void) const
 	return AcDbObjectId::kNull;
 }
 
-#ifdef REBARPOS2012
+#ifdef REBARPOS2010
 void CPosShape::setGsNode(AcGsNode* gsnode)
 {
 	m_GsNode = gsnode;
