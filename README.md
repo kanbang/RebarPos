@@ -1,5 +1,17 @@
 Rebar marking and scheduling entities and commands for AutoCAD 2010 and above.
 
+Developer Setup
+---------------
+Download and install ObjectARX SDK files under "C:\Autodesk" so that you have:
+* C:\Autodesk\ObjectARX 2010`
+* C:\Autodesk\ObjectARX 2013`
+* C:\Autodesk\ObjectARX 2015`
+
+Install the corresponding build tools:
+* VS 2012 (v110)
+* VS 2010 (v100)
+* VS 2008 (v90)
+
 Application Compatibility
 -------------------------
 Following list copied from [AutoCAD 2016 online help](http://help.autodesk.com/view/ACD/2016/ENU/?guid=GUID-D54B0935-1638-4F97-8B37-1EC3635A1E71) defines compatibility between different AutoCAD API versions.
