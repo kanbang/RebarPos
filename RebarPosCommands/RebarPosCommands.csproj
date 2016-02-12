@@ -53,6 +53,15 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2013|x64'">
+    <OutputPath>bin\x64\Release-2013\</OutputPath>
+    <DefineConstants>TRACE;REBARPOS2014</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <Choose>
     <When Condition=" '$(Configuration)'=='Release-2015' ">
       <ItemGroup>
@@ -126,6 +135,44 @@
         <Reference Include="Autodesk.AutoCAD.Interop">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>C:\Autodesk\ObjectARX 2014\inc-x64\Autodesk.AutoCAD.Interop.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition=" '$(Configuration)'=='Release-2013' ">
+      <ItemGroup>
+        <Reference Include="AcCoreMgd">
+          <HintPath>C:\Autodesk\ObjectARX 2013\inc\AcCoreMgd.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="AcCui">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>C:\Autodesk\ObjectARX 2013\inc\AcCui.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="AcDbMgd">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>C:\Autodesk\ObjectARX 2013\inc\AcDbMgd.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="AcMgd">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>C:\Autodesk\ObjectARX 2013\inc\AcMgd.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="AcWindows">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>C:\Autodesk\ObjectARX 2013\inc\AcWindows.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="AdWindows">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>C:\Autodesk\ObjectARX 2013\inc\AdWindows.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Autodesk.AutoCAD.Interop">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>C:\Autodesk\ObjectARX 2013\inc-x64\Autodesk.AutoCAD.Interop.dll</HintPath>
           <Private>False</Private>
         </Reference>
       </ItemGroup>
