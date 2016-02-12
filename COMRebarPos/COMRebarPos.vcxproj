@@ -58,9 +58,15 @@
   <PropertyGroup>
     <_ProjectFileVersion>14.0.23107.0</_ProjectFileVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2015|x64'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2013|x64'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2010|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2015|x64'">
+    <TargetExt>.dbx</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2013|x64'">
+    <TargetExt>.dbx</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2010|x64'">
+    <TargetExt>.dbx</TargetExt>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-2015|x64'">
     <Midl>
       <HeaderFileName>$(ProjectDir)\%(Filename)_i.h</HeaderFileName>
