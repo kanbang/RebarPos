@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="BOQEDIT_Local" xml:space="preserve">
     <value>METRAJEDIT</value>
@@ -173,6 +173,9 @@
   </data>
   <data name="POSSHAPES_Local" xml:space="preserve">
     <value>ACILIMLAR</value>
+  </data>
+  <data name="POSUPGRADE_Local" xml:space="preserve">
+    <value>YUKSELT</value>
   </data>
   <data name="POS_Local" xml:space="preserve">
     <value>POZ</value>

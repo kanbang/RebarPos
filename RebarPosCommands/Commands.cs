@@ -59,7 +59,7 @@ namespace RebarPosCommands
 
         public Point3d MonitoredPoint { get; private set; }
 
-        [CommandMethod("RebarPos", "POS", "POS_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.POS", "POS_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_Pos()
         {
             Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
@@ -153,7 +153,7 @@ namespace RebarPosCommands
             }
         }
 
-        [CommandMethod("RebarPos", "POSEDIT", "POSEDIT_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.POSEDIT", "POSEDIT_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_PosEdit()
         {
             Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
@@ -177,7 +177,7 @@ namespace RebarPosCommands
             }
         }
 
-        [CommandMethod("RebarPos", "BOQEDIT", "BOQEDIT_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.BOQEDIT", "BOQEDIT_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_BOQEdit()
         {
             Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
@@ -201,94 +201,94 @@ namespace RebarPosCommands
             }
         }
 
-        [CommandMethod("RebarPos", "NEWPOS", "NEWPOS_Local", CommandFlags.Modal)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.NEWPOS", "NEWPOS_Local", CommandFlags.Modal)]
         public void CMD_NewPos()
         {
             NewPos();
         }
 
-        [CommandMethod("RebarPos", "NUMBERPOS", "NUMBERPOS_Local", CommandFlags.Modal)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.NUMBERPOS", "NUMBERPOS_Local", CommandFlags.Modal)]
         public void CMD_NumberPos()
         {
             NumberPos();
         }
 
-        [CommandMethod("RebarPos", "EMPTYPOS", "EMPTYPOS_Local", CommandFlags.Modal)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.EMPTYPOS", "EMPTYPOS_Local", CommandFlags.Modal)]
         public void CMD_EmptyBalloons()
         {
             EmptyBalloons();
         }
 
-        [CommandMethod("RebarPos", "POSCHECK", "POSCHECK_Local", CommandFlags.Modal)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.POSCHECK", "POSCHECK_Local", CommandFlags.Modal)]
         public void CMD_PosCheck()
         {
             PosCheck();
         }
 
-        [CommandMethod("RebarPos", "COPYPOS", "COPYPOS_Local", CommandFlags.Modal)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.COPYPOS", "COPYPOS_Local", CommandFlags.Modal)]
         public void CMD_CopyPos()
         {
             CopyPos();
         }
 
-        [CommandMethod("RebarPos", "COPYPOSDETAIL", "COPYPOSDETAIL_Local", CommandFlags.Modal)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.COPYPOSDETAIL", "COPYPOSDETAIL_Local", CommandFlags.Modal)]
         public void CMD_CopyPosDetail()
         {
             CopyPosDetail();
         }
 
-        [CommandMethod("RebarPos", "COPYPOSNUMBER", "COPYPOSNUMBER_Local", CommandFlags.Modal)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.COPYPOSNUMBER", "COPYPOSNUMBER_Local", CommandFlags.Modal)]
         public void CMD_CopyPosNumber()
         {
             CopyPosNumber();
         }
 
-        [CommandMethod("RebarPos", "BOQ", "BOQ_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.BOQ", "BOQ_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_DrawBOQ()
         {
             DrawBOQ();
         }
 
-        [CommandMethod("RebarPos", "POSFIND", "POSFIND_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.POSFIND", "POSFIND_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_FindReplace()
         {
             FindReplace(true);
         }
 
-        [CommandMethod("RebarPos", "POSSHAPES", "POSSHAPES_Local", CommandFlags.Modal)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.POSSHAPES", "POSSHAPES_Local", CommandFlags.Modal)]
         public void CMD_PosShapes()
         {
             PosShapes();
         }
 
-        [CommandMethod("RebarPos", "TOGGLESHAPES", "TOGGLESHAPES_Local", CommandFlags.Modal)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.TOGGLESHAPES", "TOGGLESHAPES_Local", CommandFlags.Modal)]
         public void CMD_ToggleShapes()
         {
             ShowShapes = !ShowShapes;
             DWGUtility.RefreshAllPos();
         }
 
-        [CommandMethod("RebarPos", "SHOWSHAPES", "SHOWSHAPES_Local", CommandFlags.Modal)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.SHOWSHAPES", "SHOWSHAPES_Local", CommandFlags.Modal)]
         public void CMD_ShowShapes()
         {
             ShowShapes = true;
             DWGUtility.RefreshAllPos();
         }
 
-        [CommandMethod("RebarPos", "HIDESHAPES", "HIDESHAPES_Local", CommandFlags.Modal)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.HIDESHAPES", "HIDESHAPES_Local", CommandFlags.Modal)]
         public void CMD_HideShapes()
         {
             ShowShapes = false;
             DWGUtility.RefreshAllPos();
         }
 
-        [CommandMethod("RebarPos", "TABLESTYLE", "TABLESTYLE_Local", CommandFlags.Modal)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.TABLESTYLE", "TABLESTYLE_Local", CommandFlags.Modal)]
         public void CMD_TableStyle()
         {
             TableStyles();
         }
 
-        [CommandMethod("RebarPos", "POSLENGTH", "POSLENGTH_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.POSLENGTH", "POSLENGTH_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_PosLength()
         {
             PromptSelectionResult selresult = DWGUtility.SelectAllPosUser();
@@ -312,7 +312,7 @@ namespace RebarPosCommands
             }
         }
 
-        [CommandMethod("RebarPos", "INCLUDEPOS", "INCLUDEPOS_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.INCLUDEPOS", "INCLUDEPOS_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_IncludePos()
         {
             PromptSelectionResult selresult = DWGUtility.SelectAllPosUser();
@@ -336,7 +336,7 @@ namespace RebarPosCommands
             }
         }
 
-        [CommandMethod("RebarPos", "LASTPOSNUMBER", "LASTPOSNUMBER_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.LASTPOSNUMBER", "LASTPOSNUMBER_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_LastPosNumber()
         {
             PromptSelectionResult sel = DWGUtility.SelectAllPosUser();
@@ -351,25 +351,31 @@ namespace RebarPosCommands
             }
         }
 
-        [CommandMethod("RebarPos", "POSHELP", "POSHELP_Local", CommandFlags.Modal)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.POSHELP", "POSHELP_Local", CommandFlags.Modal)]
         public void CMD_PosHelp()
         {
             MessageBox.Show("Yardım dosyası henüz tamamlanmadı.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        [CommandMethod("RebarPos", "POSSETTINGS", "POSSETTINGS_Local", CommandFlags.Modal)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.POSSETTINGS", "POSSETTINGS_Local", CommandFlags.Modal)]
         public void CMD_PosGroups()
         {
             PosGroups();
         }
 
-        [CommandMethod("RebarPos", "POSMENU", "POSMENU_Local", CommandFlags.Modal)]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.POSMENU", "POSMENU_Local", CommandFlags.Modal)]
         public void CMD_PosMenu()
         {
             MenuUtility.LoadPosMenu();
         }
 
-        [CommandMethod("DUMPSHAPES")]
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.POSUPGRADE", "POSUPGRADE_Local", CommandFlags.Modal)]
+        public void CMD_PosUpgrade()
+        {
+            MessageBox.Show("Yükseltme komutu henüz tamamlanmadı.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        
+        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.DUMPSHAPES", CommandFlags.Modal)]
         public void CMD_DumpShapes()
         {
             Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;

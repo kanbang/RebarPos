@@ -241,6 +241,15 @@ namespace RebarPosCommands {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to YUKSELT.
+        /// </summary>
+        internal static string POSUPGRADE_Local {
+            get {
+                return ResourceManager.GetString("POSUPGRADE_Local", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SEKILGOSTER.
         /// </summary>
         internal static string SHOWSHAPES_Local {
