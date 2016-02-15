@@ -193,6 +193,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands_CheckLicense.cs" />
     <Compile Include="Commands_NewPos.cs" />
     <Compile Include="Commands.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -204,6 +205,7 @@
     <Compile Include="Commands_PosGroup.cs" />
     <Compile Include="Commands_CopyPos.cs" />
     <Compile Include="Commands_NumberPos.cs" />
+    <Compile Include="Commands_PosHelp.cs" />
     <Compile Include="Commands_PosShapes.cs" />
     <Compile Include="Commands_FindReplace.cs" />
     <Compile Include="Commands_DrawBOQ.cs" />
@@ -224,7 +226,15 @@
     <Compile Include="ConfimMessageBox.Designer.cs">
       <DependentUpon>ConfimMessageBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Crypto.cs" />
+    <Compile Include="License.cs" />
     <Compile Include="MultiPosShapeView.cs" />
+    <Compile Include="RequestLicenseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RequestLicenseForm.designer.cs">
+      <DependentUpon>RequestLicenseForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TableStylePreview.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -360,6 +370,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RequestLicenseForm.resx">
+      <DependentUpon>RequestLicenseForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SelectShapeForm.resx">
       <DependentUpon>SelectShapeForm.cs</DependentUpon>

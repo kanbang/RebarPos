@@ -92,7 +92,7 @@ var
 begin
   if CurStep = ssPostInstall then begin
     // Set registry keys
-    
+    (*
     // Type library
     RegPath := 'TypeLib\{26E9A3B0-6567-4857-AABB-E09AC4A7A8AE}';
     RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', '');
@@ -115,7 +115,8 @@ begin
     RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\Programmable', '', '');
     RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\TypeLib', '', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8AE}');
     RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', '', ExpandConstant('{app}\Bin\COMRebarPos.dbx'));
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', 'ThreadingModel', 'Apartment');    
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', 'ThreadingModel', 'Apartment');  
+    *);
   end;
 end;
 

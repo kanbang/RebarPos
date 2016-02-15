@@ -7,6 +7,7 @@ using OZOZ.RebarPosWrapper;
 using System.Windows.Forms;
 using System.IO;
 using System;
+using System.ComponentModel;
 
 
 // This line is not mandatory, but improves loading performances
@@ -20,6 +21,17 @@ namespace RebarPosCommands
     // is implicitly per-document!
     public partial class MyCommands
     {
+        public static string DeveloperSymbol { get { return "OZOZ"; } }
+        public static string LicensedAppName { get { return "RebarPos"; } }
+
+        public static string LicenseRegistryKey
+        {
+            get
+            {
+                return "SOFTWARE\\" + DeveloperSymbol + "\\" + LicensedAppName;
+            }
+        }
+
         // The CommandMethod attribute can be applied to any public  member 
         // function of any public class.
         // The function should take no arguments and return nothing.
@@ -40,6 +52,17 @@ namespace RebarPosCommands
             ReadUserTableStyles();
 
             ShowShapes = false;
+
+            // Load prompt
+            string heading = "Donatı Pozlandırma ve Metraj Programı v" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(2) + " yüklendi.";
+            ed.WriteMessage("\n");
+            ed.WriteMessage(heading);
+            ed.WriteMessage("\n");
+            ed.WriteMessage(new string('=', heading.Length));
+            PosCategories();
+
+            // License information
+            LicenseInformation();
         }
 
         private bool ShowShapes
@@ -59,9 +82,13 @@ namespace RebarPosCommands
 
         public Point3d MonitoredPoint { get; private set; }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.POS", "POS_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
+        [Category("Pozlandırma komutları")]
+        [Description("Donatı pozlandırma ve metraj komutları.")]
+        [CommandMethod("OZOZRebarPos", "POS", "POS_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_Pos()
         {
+            if (!CheckLicense()) return;
+
             Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
 
             // Edit entity if there is a pickset
@@ -153,9 +180,13 @@ namespace RebarPosCommands
             }
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.POSEDIT", "POSEDIT_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
+        [Category("Pozlandırma komutları")]
+        [Description("Seçilen pozu düzenler.")]
+        [CommandMethod("OZOZRebarPos", "POSEDIT", "POSEDIT_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_PosEdit()
         {
+            if (!CheckLicense()) return;
+
             Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
 
             // Edit entity if there is a pickset
@@ -177,9 +208,13 @@ namespace RebarPosCommands
             }
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.BOQEDIT", "BOQEDIT_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
+        [Category("Metraj komutları")]
+        [Description("Seçilen metraj tablosunu düzenler.")]
+        [CommandMethod("OZOZRebarPos", "BOQEDIT", "BOQEDIT_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_BOQEdit()
         {
+            if (!CheckLicense()) return;
+
             Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
 
             // Edit entity if there is a pickset
@@ -201,96 +236,136 @@ namespace RebarPosCommands
             }
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.NEWPOS", "NEWPOS_Local", CommandFlags.Modal)]
+        [Category("Pozlandırma komutları")]
+        [Description("Çizime bir poz bloğu ekler.")]
+        [CommandMethod("OZOZRebarPos", "NEWPOS", "NEWPOS_Local", CommandFlags.Modal)]
         public void CMD_NewPos()
         {
+            if (!CheckLicense()) return;
+
             NewPos();
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.NUMBERPOS", "NUMBERPOS_Local", CommandFlags.Modal)]
+        [Category("Pozlandırma komutları")]
+        [Description("Tum pozlara otomatik numara verir. Pozlar çap, şekil, ve boylarına gore gruplandırılır. Ayrıca seçilen kriterlere göre sıralandırılır.")]
+        [CommandMethod("OZOZRebarPos", "NUMBERPOS", "NUMBERPOS_Local", CommandFlags.Modal)]
         public void CMD_NumberPos()
         {
+            if (!CheckLicense()) return;
+
             NumberPos();
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.EMPTYPOS", "EMPTYPOS_Local", CommandFlags.Modal)]
+        [Category("Pozlandırma komutları")]
+        [Description("Poz numaralarını siler.")]
+        [CommandMethod("OZOZRebarPos", "EMPTYPOS", "EMPTYPOS_Local", CommandFlags.Modal)]
         public void CMD_EmptyBalloons()
         {
+            if (!CheckLicense()) return;
+
             EmptyBalloons();
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.POSCHECK", "POSCHECK_Local", CommandFlags.Modal)]
+        [Category("Pozlandırma komutları")]
+        [Description("Pozları kontrol eder.")]
+        [CommandMethod("OZOZRebarPos", "POSCHECK", "POSCHECK_Local", CommandFlags.Modal)]
         public void CMD_PosCheck()
         {
+            if (!CheckLicense()) return;
+
             PosCheck();
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.COPYPOS", "COPYPOS_Local", CommandFlags.Modal)]
+        [Category("Pozlandırma komutları")]
+        [Description("Poz içeriğini diger pozlara kopyalar.")]
+        [CommandMethod("OZOZRebarPos", "COPYPOS", "COPYPOS_Local", CommandFlags.Modal)]
         public void CMD_CopyPos()
         {
+            if (!CheckLicense()) return;
+
             CopyPos();
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.COPYPOSDETAIL", "COPYPOSDETAIL_Local", CommandFlags.Modal)]
+        [Category("Pozlandırma komutları")]
+        [Description("Poz içeriğini diger pozlara kopyalar. Değiştirilen pozlar metraja dahil edilmez.")]
+        [CommandMethod("OZOZRebarPos", "COPYPOSDETAIL", "COPYPOSDETAIL_Local", CommandFlags.Modal)]
         public void CMD_CopyPosDetail()
         {
+            if (!CheckLicense()) return;
+
             CopyPosDetail();
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.COPYPOSNUMBER", "COPYPOSNUMBER_Local", CommandFlags.Modal)]
+        [Category("Pozlandırma komutları")]
+        [Description("Seçilen textlere poz numarası yazar.")]
+        [CommandMethod("OZOZRebarPos", "COPYPOSNUMBER", "COPYPOSNUMBER_Local", CommandFlags.Modal)]
         public void CMD_CopyPosNumber()
         {
+            if (!CheckLicense()) return;
+
             CopyPosNumber();
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.BOQ", "BOQ_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
-        public void CMD_DrawBOQ()
-        {
-            DrawBOQ();
-        }
-
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.POSFIND", "POSFIND_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
+        [Category("Pozlandırma komutları")]
+        [Description("Verilen özelliklere sahip pozları seçer. Seçilen poz bloklarının özelliklerini bir seferde değiştirir.")]
+        [CommandMethod("OZOZRebarPos", "POSFIND", "POSFIND_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_FindReplace()
         {
+            if (!CheckLicense()) return;
+
             FindReplace(true);
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.POSSHAPES", "POSSHAPES_Local", CommandFlags.Modal)]
+        [Category("Pozlandırma komutları")]
+        [Description("Donatı açılımlarını düzenler.")]
+        [CommandMethod("OZOZRebarPos", "POSSHAPES", "POSSHAPES_Local", CommandFlags.Modal)]
         public void CMD_PosShapes()
         {
+            if (!CheckLicense()) return;
+
             PosShapes();
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.TOGGLESHAPES", "TOGGLESHAPES_Local", CommandFlags.Modal)]
+        [Category("Pozlandırma komutları")]
+        [Description("Donatı açılımlarını pozların üzerinde gösterir veya gizler.")]
+        [CommandMethod("OZOZRebarPos", "TOGGLESHAPES", "TOGGLESHAPES_Local", CommandFlags.Modal)]
         public void CMD_ToggleShapes()
         {
+            if (!CheckLicense()) return;
+
             ShowShapes = !ShowShapes;
             DWGUtility.RefreshAllPos();
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.SHOWSHAPES", "SHOWSHAPES_Local", CommandFlags.Modal)]
+        [Category("Pozlandırma komutları")]
+        [Description("Donatı açılımlarını pozların üzerinde gösterir.")]
+        [CommandMethod("OZOZRebarPos", "SHOWSHAPES", "SHOWSHAPES_Local", CommandFlags.Modal)]
         public void CMD_ShowShapes()
         {
+            if (!CheckLicense()) return;
+
             ShowShapes = true;
             DWGUtility.RefreshAllPos();
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.HIDESHAPES", "HIDESHAPES_Local", CommandFlags.Modal)]
+        [Category("Pozlandırma komutları")]
+        [Description("Pozların üzerinde gösterilen tüm açılımları siler.")]
+        [CommandMethod("OZOZRebarPos", "HIDESHAPES", "HIDESHAPES_Local", CommandFlags.Modal)]
         public void CMD_HideShapes()
         {
+            if (!CheckLicense()) return;
+
             ShowShapes = false;
             DWGUtility.RefreshAllPos();
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.TABLESTYLE", "TABLESTYLE_Local", CommandFlags.Modal)]
-        public void CMD_TableStyle()
-        {
-            TableStyles();
-        }
-
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.POSLENGTH", "POSLENGTH_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
+        [Category("Pozlandırma komutları")]
+        [Description("Poz boylarını gösterir veya gizler.")]
+        [CommandMethod("OZOZRebarPos", "POSLENGTH", "POSLENGTH_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_PosLength()
         {
+            if (!CheckLicense()) return;
+
             PromptSelectionResult selresult = DWGUtility.SelectAllPosUser();
             if (selresult.Status != PromptStatus.OK) return;
 
@@ -312,9 +387,13 @@ namespace RebarPosCommands
             }
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.INCLUDEPOS", "INCLUDEPOS_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
+        [Category("Pozlandırma komutları")]
+        [Description("Pozların metraja dahil edilip edilmemesini düzenler.")]
+        [CommandMethod("OZOZRebarPos", "INCLUDEPOS", "INCLUDEPOS_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_IncludePos()
         {
+            if (!CheckLicense()) return;
+
             PromptSelectionResult selresult = DWGUtility.SelectAllPosUser();
             if (selresult.Status != PromptStatus.OK) return;
 
@@ -336,9 +415,13 @@ namespace RebarPosCommands
             }
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.LASTPOSNUMBER", "LASTPOSNUMBER_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
+        [Category("Pozlandırma komutları")]
+        [Description("Son poz numarasını gösterir.")]
+        [CommandMethod("OZOZRebarPos", "LASTPOSNUMBER", "LASTPOSNUMBER_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_LastPosNumber()
         {
+            if (!CheckLicense()) return;
+
             PromptSelectionResult sel = DWGUtility.SelectAllPosUser();
             if (sel.Status != PromptStatus.OK) return;
             ObjectId[] items = sel.Value.GetObjectIds();
@@ -351,31 +434,71 @@ namespace RebarPosCommands
             }
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.POSHELP", "POSHELP_Local", CommandFlags.Modal)]
-        public void CMD_PosHelp()
+        [Category("Metraj komutları")]
+        [Description("Seçilen pozların metrajını yapar.")]
+        [CommandMethod("OZOZRebarPos", "BOQ", "BOQ_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
+        public void CMD_DrawBOQ()
         {
-            MessageBox.Show("Yardım dosyası henüz tamamlanmadı.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (!CheckLicense()) return;
+
+            DrawBOQ();
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.POSSETTINGS", "POSSETTINGS_Local", CommandFlags.Modal)]
+        [Category("Metraj komutları")]
+        [Description("Metraj tablosu sitillerini düzenler.")]
+        [CommandMethod("OZOZRebarPos", "TABLESTYLE", "TABLESTYLE_Local", CommandFlags.Modal)]
+        public void CMD_TableStyle()
+        {
+            if (!CheckLicense()) return;
+
+            TableStyles();
+        }
+
+        [Category("Diğer komutlar")]
+        [Description("Pozlandırma ayarlarını değiştirir.")]
+        [CommandMethod("OZOZRebarPos", "POSSETTINGS", "POSSETTINGS_Local", CommandFlags.Modal)]
         public void CMD_PosGroups()
         {
+            if (!CheckLicense()) return;
+
             PosGroups();
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.POSMENU", "POSMENU_Local", CommandFlags.Modal)]
+        [Category("Diğer komutlar")]
+        [Description("Program menüsünü yeniden yükler.")]
+        [CommandMethod("OZOZRebarPos", "POSMENU", "POSMENU_Local", CommandFlags.Modal)]
         public void CMD_PosMenu()
         {
             MenuUtility.LoadPosMenu();
         }
 
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.POSUPGRADE", "POSUPGRADE_Local", CommandFlags.Modal)]
+        [Category("Diğer komutlar")]
+        [Description("Poz bloğu değişikliklerini çizime uygular.")]
+        [CommandMethod("OZOZRebarPos", "POSUPGRADE", "POSUPGRADE_Local", CommandFlags.Modal)]
         public void CMD_PosUpgrade()
         {
+            if (!CheckLicense()) return;
+
             MessageBox.Show("Yükseltme komutu henüz tamamlanmadı.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-        
-        [CommandMethod("OZOZ.RebarPos", "OZOZ.RebarPos.DUMPSHAPES", CommandFlags.Modal)]
+
+        [Category("Diğer komutlar")]
+        [Description("Donatı pozlandırma ve metraj komutlarının açıklamalarını gösterir.")]
+        [CommandMethod("OZOZRebarPos", "POSHELP", "POSHELP_Local", CommandFlags.Modal)]
+        public void CMD_PosHelp()
+        {
+            PosHelp();
+        }
+
+        [Category("Diğer komutlar")]
+        [Description("Lisans bilgilerini gosterir.")]
+        [CommandMethod("OZOZRebarPos", "POSLICENSE", "POSLICENSE_Local", CommandFlags.Modal)]
+        public void CMD_PosLicense()
+        {
+            LicenseInformation();
+        }
+
+        [CommandMethod("OZOZRebarPos", "DUMPSHAPES", CommandFlags.Modal)]
         public void CMD_DumpShapes()
         {
             Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;

@@ -46,7 +46,7 @@
     
     mimetype: application/x-microsoft.net.object.binary.base64
     value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : System.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
     
     mimetype: application/x-microsoft.net.object.soap.base64
@@ -60,7 +60,6 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
@@ -69,10 +68,9 @@
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
               <xsd:attribute name="type" type="xsd:string" />
               <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
@@ -87,10 +85,9 @@
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
@@ -112,84 +109,9 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BOQEDIT_Local" xml:space="preserve">
-    <value>METRAJEDIT</value>
-  </data>
-  <data name="BOQ_Local" xml:space="preserve">
-    <value>METRAJ</value>
-  </data>
-  <data name="COPYPOSDETAIL_Local" xml:space="preserve">
-    <value>POZKOPYALADETAY</value>
-  </data>
-  <data name="COPYPOSNUMBER_Local" xml:space="preserve">
-    <value>POZBENZET</value>
-  </data>
-  <data name="COPYPOS_Local" xml:space="preserve">
-    <value>POZKOPYALA</value>
-  </data>
-  <data name="EMPTYPOS_Local" xml:space="preserve">
-    <value>NUMARASIL</value>
-  </data>
-  <data name="HIDESHAPES_Local" xml:space="preserve">
-    <value>SEKILSIL</value>
-  </data>
-  <data name="INCLUDEPOS_Local" xml:space="preserve">
-    <value>POZKATKI</value>
-  </data>
-  <data name="LASTPOSNUMBER_Local" xml:space="preserve">
-    <value>SONPOZ</value>
-  </data>
-  <data name="NEWPOS_Local" xml:space="preserve">
-    <value>POZEKLE</value>
-  </data>
-  <data name="NUMBERPOS_Local" xml:space="preserve">
-    <value>POZNUM</value>
-  </data>
-  <data name="POSCHECK_Local" xml:space="preserve">
-    <value>POZKONTROL</value>
-  </data>
-  <data name="POSEDIT_Local" xml:space="preserve">
-    <value>POZEDIT</value>
-  </data>
-  <data name="POSFIND_Local" xml:space="preserve">
-    <value>POZBUL</value>
-  </data>
-  <data name="POSHELP_Local" xml:space="preserve">
-    <value>METRAJYARDIM</value>
-  </data>
-  <data name="POSLENGTH_Local" xml:space="preserve">
-    <value>BOYGOSTER</value>
-  </data>
-  <data name="POSLICENSE_Local" xml:space="preserve">
-    <value>POZLISANS</value>
-  </data>
-  <data name="POSMENU_Local" xml:space="preserve">
-    <value>POZMENU</value>
-  </data>
-  <data name="POSSETTINGS_Local" xml:space="preserve">
-    <value>POZAYAR</value>
-  </data>
-  <data name="POSSHAPES_Local" xml:space="preserve">
-    <value>ACILIMLAR</value>
-  </data>
-  <data name="POSUPGRADE_Local" xml:space="preserve">
-    <value>YUKSELT</value>
-  </data>
-  <data name="POS_Local" xml:space="preserve">
-    <value>POZ</value>
-  </data>
-  <data name="SHOWSHAPES_Local" xml:space="preserve">
-    <value>SEKILGOSTER</value>
-  </data>
-  <data name="TABLESTYLE_Local" xml:space="preserve">
-    <value>TABLOSTILI</value>
-  </data>
-  <data name="TOGGLESHAPES_Local" xml:space="preserve">
-    <value>SEKILGOSTERGIZLE</value>
-  </data>
 </root>

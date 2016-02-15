@@ -214,6 +214,15 @@ namespace RebarPosCommands {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to POZLISANS.
+        /// </summary>
+        internal static string POSLICENSE_Local {
+            get {
+                return ResourceManager.GetString("POSLICENSE_Local", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to POZMENU.
         /// </summary>
         internal static string POSMENU_Local {
