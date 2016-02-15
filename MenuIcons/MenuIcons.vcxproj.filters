@@ -118,5 +118,8 @@
     <Image Include="Resources\ACILIMLAR.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Resources\TABLOSTILI.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

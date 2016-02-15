@@ -87,6 +87,7 @@
     <Image Include="Resources\SEKILSIL.ico" />
     <Image Include="Resources\SONPOZ.ico" />
     <Image Include="Resources\SONPOZ_32.ico" />
+    <Image Include="Resources\TABLOSTILI.ico" />
     <Image Include="Resources\YENILE.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
