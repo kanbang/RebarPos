@@ -373,7 +373,7 @@ namespace RebarPosCommands
 
                     style.TextStyleId = copy.TextStyleId;
                     style.HeadingStyleId = copy.HeadingStyleId;
-                    style.FootingStyleId = copy.HeadingStyleId;
+                    style.FootingStyleId = copy.FootingStyleId;
 
                     BOQStyle.AddBOQStyle(style);
                 }

@@ -419,19 +419,20 @@ void CBOQStyle::SaveBOQStylesToFile(const std::wstring filename)
 
 		ofs << L"BEGIN" << std::endl;
 
-		ofs << L"Name"					<< L'\t' << style->Name()					<< std::endl;
-		ofs << L"Columns"				<< L'\t' << style->Columns()				<< std::endl;
-		ofs << L"PosLabel"				<< L'\t' << style->PosLabel()				<< std::endl;
-		ofs << L"CountLabel"			<< L'\t' << style->CountLabel()				<< std::endl;
-		ofs << L"DiameterLabel"			<< L'\t' << style->DiameterLabel()			<< std::endl;
-		ofs << L"LengthLabel"			<< L'\t' << style->LengthLabel()			<< std::endl;
-		ofs << L"ShapeLabel"			<< L'\t' << style->ShapeLabel()				<< std::endl;
-		ofs << L"TotalLengthLabel"		<< L'\t' << style->TotalLengthLabel()		<< std::endl;
-		ofs << L"DiameterListLabel"		<< L'\t' << style->DiameterListLabel()		<< std::endl;
-		ofs << L"DiameterLengthLabel"	<< L'\t' << style->DiameterLengthLabel()	<< std::endl;
-		ofs << L"UnitWeightLabel"		<< L'\t' << style->UnitWeightLabel()		<< std::endl;
-		ofs << L"WeightLabel"			<< L'\t' << style->WeightLabel()			<< std::endl;
-		ofs << L"GrossWeightLabel"		<< L'\t' << style->GrossWeightLabel()		<< std::endl;
+		ofs << L"Name"					 << L'\t' << style->Name()					<< std::endl;
+		ofs << L"Columns"				 << L'\t' << style->Columns()				<< std::endl;
+		ofs << L"PosLabel"				 << L'\t' << style->PosLabel()				<< std::endl;
+		ofs << L"CountLabel"			 << L'\t' << style->CountLabel()				<< std::endl;
+		ofs << L"DiameterLabel"			 << L'\t' << style->DiameterLabel()			<< std::endl;
+		ofs << L"LengthLabel"			 << L'\t' << style->LengthLabel()			<< std::endl;
+		ofs << L"ShapeLabel"			 << L'\t' << style->ShapeLabel()				<< std::endl;
+		ofs << L"TotalLengthLabel"		 << L'\t' << style->TotalLengthLabel()		<< std::endl;
+		ofs << L"DiameterListLabel"		 << L'\t' << style->DiameterListLabel()		<< std::endl;
+		ofs << L"DiameterLengthLabel"	 << L'\t' << style->DiameterLengthLabel()	<< std::endl;
+		ofs << L"UnitWeightLabel"		 << L'\t' << style->UnitWeightLabel()		<< std::endl;
+		ofs << L"WeightLabel"			 << L'\t' << style->WeightLabel()			<< std::endl;
+		ofs << L"GrossWeightLabel"		 << L'\t' << style->GrossWeightLabel()		<< std::endl;
+		ofs << L"MultiplierHeadingLabel" << L'\t' << style->MultiplierHeadingLabel() << std::endl;
 
 		ACHAR* textStyleName = NULL;	ACHAR* textStyleFont = NULL;	double textStyleWidth = 1.0;
 		ACHAR* headingStyleName = NULL;	ACHAR* headingStyleFont = NULL;	double headingStyleWidth = 1.0;
