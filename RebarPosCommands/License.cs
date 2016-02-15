@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Win32;
 using System.Text;
+using System.Linq;
 
 namespace RebarPosCommands
 {
@@ -73,8 +74,7 @@ namespace RebarPosCommands
 
             try
             {
-                RegistryKey localKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32);
-                RegistryKey key = localKey.OpenSubKey(registryKey);
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(registryKey);
                 if (key == null)
                 {
                     status = LicenseStatus.LicenseNotFound;
@@ -177,8 +177,7 @@ namespace RebarPosCommands
         {
             try
             {
-                RegistryKey localKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32);
-                RegistryKey key = localKey.CreateSubKey(registryKey);
+                RegistryKey key = Registry.CurrentUser.CreateSubKey(registryKey);
                 if (key == null)
                 {
                     return false;
@@ -200,8 +199,7 @@ namespace RebarPosCommands
         // Returns an activation code for this machine.
         public static string GetActivationCode(string app)
         {
-            RegistryKey localKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32);
-            string machineGuid = localKey.OpenSubKey("SOFTWARE").OpenSubKey("Microsoft").OpenSubKey("Cryptography").GetValue("MachineGuid").ToString();
+            string machineGuid = Registry.LocalMachine.OpenSubKey("SOFTWARE").OpenSubKey("Microsoft").OpenSubKey("Cryptography").GetValue("MachineGuid").ToString();
             string key = (app + machineGuid).ToUpper();
             string code = Crypto.GetMd5Hash(key).ToUpper();
             string crc = Crypto.GetMd5Hash(code).Substring(0, 1).ToUpper();
@@ -211,7 +209,7 @@ namespace RebarPosCommands
         // Formats activation code for display
         public static string FormatActivationCode(string code)
         {
-            return string.Join("-", SplitByLength(code, 4));
+            return string.Join("-", SplitByLength(code, 4).ToArray());
         }
 
         // Converts YYYYMMDDhhmmss string to DateTime

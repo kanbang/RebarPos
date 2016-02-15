@@ -45,8 +45,7 @@ namespace RebarPosCommands
         {
             try
             {
-                RegistryKey localKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32);
-                RegistryKey key = localKey.OpenSubKey(registryKey);
+                RegistryKey key =Registry.CurrentUser.OpenSubKey(registryKey);
                 if (key == null)
                 {
                     return string.Empty;

@@ -15,6 +15,7 @@ namespace RebarPosCommands
         {
             Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage("\n");
             Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage(GetColumnFormattedText(GetCommandsAndDescriptions(), 80));
+            Autodesk.AutoCAD.ApplicationServices.Application.DisplayTextScreen = true;
         }
 
         private void PosCategories()
@@ -65,7 +66,7 @@ namespace RebarPosCommands
                     },
                     g =>
                     {
-                        return string.Join(", ", g.ToList());
+                        return string.Join(", ", g.ToArray());
                     }
                 );
         }
@@ -108,7 +109,7 @@ namespace RebarPosCommands
             var charCount = 0;
             var lines = text.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries)
                             .GroupBy(w => (charCount += w.Length + 1) / lineLength)
-                            .Select(g => string.Join(" ", g));
+                            .Select(g => string.Join(" ", g.ToArray()));
             return lines.ToArray();
         }
     }
