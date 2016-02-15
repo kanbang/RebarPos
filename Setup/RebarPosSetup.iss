@@ -57,6 +57,7 @@ Source: "..\Package\icon.bmp"; DestDir: "{app}\Resources"
 
 [Registry]
 Root: "HKCU"; Subkey: "Software\OZOZ\RebarPos";
+Root: "KHCU"; Subkey: "Software\OZOZ\RebarPos"; ValueType: string; ValueName: InstallPath; ValueData: {app}
 
 [Dirs]
 Name: "{userdocs}\RebarPos"

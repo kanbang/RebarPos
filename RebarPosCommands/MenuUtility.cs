@@ -7,6 +7,7 @@ using System.Windows.Input;
 
 using Autodesk.Windows;
 using Autodesk.AutoCAD.ApplicationServices;
+using Microsoft.Win32;
 
 namespace RebarPosCommands
 {
@@ -14,7 +15,7 @@ namespace RebarPosCommands
     {
         public static bool LoadPosMenu()
         {
-            string cuifile = (string)Microsoft.Win32.Registry.LocalMachine.GetValue(@"SOFTWARE\SahinEng\RebarPos\InstallPath", "");
+            string cuifile = MenuPathFromRegistry(RebarPosCommands.MyCommands.ApplicationRegistryKey);
             if (string.IsNullOrEmpty(cuifile))
             {
                 return false;
@@ -38,6 +39,35 @@ namespace RebarPosCommands
             LoadCuix(cuifile);
 
             return true;
+        }
+
+        public static string MenuPathFromRegistry(string registryKey)
+        {
+            try
+            {
+                RegistryKey localKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32);
+                RegistryKey key = localKey.OpenSubKey(registryKey);
+                if (key == null)
+                {
+                    return string.Empty;
+                }
+                else
+                {
+                    object val = key.GetValue("InstallPath");
+                    if (val == null)
+                    {
+                        return string.Empty;
+                    }
+                    else
+                    {
+                        return val.ToString();
+                    }
+                }
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
 
         private static void LoadCuix(string cuiFilename)

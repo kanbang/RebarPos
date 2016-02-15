@@ -24,7 +24,7 @@ namespace RebarPosCommands
         public static string DeveloperSymbol { get { return "OZOZ"; } }
         public static string LicensedAppName { get { return "RebarPos"; } }
 
-        public static string LicenseRegistryKey
+        public static string ApplicationRegistryKey
         {
             get
             {

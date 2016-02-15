@@ -14,10 +14,10 @@ namespace RebarPosCommands
         {
             if (DateTime.Now - LastLicenseCheck < LicenseCheckInterval) return true;
 
-            License license = License.FromRegistry(LicenseRegistryKey, LicensedAppName);
+            License license = License.FromRegistry(ApplicationRegistryKey, LicensedAppName);
             if (license.Status == License.LicenseStatus.Valid)
             {
-                license.SaveToRegistry(LicenseRegistryKey);
+                license.SaveToRegistry(ApplicationRegistryKey);
 
                 LastLicenseCheck = DateTime.Now;
                 return true;
@@ -31,7 +31,7 @@ namespace RebarPosCommands
                 license = License.FromString(form.LicenseKey, LicensedAppName);
                 if (license.Status != License.LicenseStatus.Valid) return false;
 
-                license.SaveToRegistry(LicenseRegistryKey);
+                license.SaveToRegistry(ApplicationRegistryKey);
 
                 LastLicenseCheck = DateTime.Now;
 
@@ -44,7 +44,7 @@ namespace RebarPosCommands
 
         private void LicenseInformation()
         {
-            License license = License.FromRegistry(LicenseRegistryKey, LicensedAppName);
+            License license = License.FromRegistry(ApplicationRegistryKey, LicensedAppName);
 
             Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage(license.LicenseInfo);
         }
