@@ -249,7 +249,7 @@ Acad::ErrorStatus CRebarPos::setNote(const ACHAR* newVal)
 
 	acutDelString(m_Note);
     m_Note = NULL;
-    if(newVal != NULL)
+    if(!m_Detached && newVal != NULL)
     {
         acutUpdString(newVal, m_Note);
     }
@@ -269,7 +269,7 @@ Acad::ErrorStatus CRebarPos::setCount(const ACHAR* newVal)
 	assertWriteEnabled();
 	acutDelString(m_Count);
     m_Count = NULL;
-    if(newVal != NULL)
+    if(!m_Detached && newVal != NULL)
     {
         acutUpdString(newVal, m_Count);
     }
@@ -288,7 +288,7 @@ Acad::ErrorStatus CRebarPos::setDiameter(const ACHAR* newVal)
 	assertWriteEnabled();
 	acutDelString(m_Diameter);
     m_Diameter = NULL;
-    if(newVal != NULL)
+    if(!m_Detached && newVal != NULL)
     {
         acutUpdString(newVal, m_Diameter);
     }
@@ -307,7 +307,7 @@ Acad::ErrorStatus CRebarPos::setSpacing(const ACHAR* newVal)
 	assertWriteEnabled();
 	acutDelString(m_Spacing);
     m_Spacing = NULL;
-    if(newVal != NULL)
+    if(!m_Detached && newVal != NULL)
     {
         acutUpdString(newVal, m_Spacing);
     }
@@ -324,7 +324,10 @@ const Adesk::Boolean CRebarPos::IncludeInBOQ(void) const
 Acad::ErrorStatus CRebarPos::setIncludeInBOQ(const Adesk::Boolean newVal)
 {
 	assertWriteEnabled();
-	m_IncludeInBOQ = newVal;
+	if (!m_Detached)
+		m_IncludeInBOQ = newVal;
+	else
+		m_IncludeInBOQ = Adesk::kFalse;
 	Calculate();
 	return Acad::eOk;
 }
@@ -338,7 +341,10 @@ const Adesk::Int32 CRebarPos::Multiplier(void) const
 Acad::ErrorStatus CRebarPos::setMultiplier(const Adesk::Int32 newVal)
 {
 	assertWriteEnabled();
-	m_Multiplier = newVal;
+	if (!m_Detached)
+		m_Multiplier = newVal;
+	else
+		m_Multiplier = 0;
 	Calculate();
 	return Acad::eOk;
 }
@@ -401,7 +407,7 @@ Acad::ErrorStatus CRebarPos::setShape(const ACHAR* newVal)
 	assertWriteEnabled();
 	acutDelString(m_Shape);
     m_Shape = NULL;
-    if(newVal != NULL)
+    if(!m_Detached && newVal != NULL)
     {
         acutUpdString(newVal, m_Shape);
     }
@@ -420,7 +426,7 @@ Acad::ErrorStatus CRebarPos::setA(const ACHAR* newVal)
 	assertWriteEnabled();
 	acutDelString(m_A);
     m_A = NULL;
-    if(newVal != NULL)
+    if(!m_Detached && newVal != NULL)
     {
         acutUpdString(newVal, m_A);
     }
@@ -439,7 +445,7 @@ Acad::ErrorStatus CRebarPos::setB(const ACHAR* newVal)
 	assertWriteEnabled();
 	acutDelString(m_B);
     m_B = NULL;
-    if(newVal != NULL)
+    if(!m_Detached && newVal != NULL)
     {
         acutUpdString(newVal, m_B);
     }
@@ -458,7 +464,7 @@ Acad::ErrorStatus CRebarPos::setC(const ACHAR* newVal)
 	assertWriteEnabled();
 	acutDelString(m_C);
     m_C = NULL;
-    if(newVal != NULL)
+    if(!m_Detached && newVal != NULL)
     {
         acutUpdString(newVal, m_C);
     }
@@ -477,7 +483,7 @@ Acad::ErrorStatus CRebarPos::setD(const ACHAR* newVal)
 	assertWriteEnabled();
 	acutDelString(m_D);
     m_D = NULL;
-    if(newVal != NULL)
+    if(!m_Detached && newVal != NULL)
     {
         acutUpdString(newVal, m_D);
     }
@@ -496,7 +502,7 @@ Acad::ErrorStatus CRebarPos::setE(const ACHAR* newVal)
 	assertWriteEnabled();
 	acutDelString(m_E);
     m_E = NULL;
-    if(newVal != NULL)
+    if(!m_Detached && newVal != NULL)
     {
         acutUpdString(newVal, m_E);
     }
@@ -515,7 +521,7 @@ Acad::ErrorStatus CRebarPos::setF(const ACHAR* newVal)
 	assertWriteEnabled();
 	acutDelString(m_F);
     m_F = NULL;
-    if(newVal != NULL)
+    if(!m_Detached && newVal != NULL)
     {
         acutUpdString(newVal, m_F);
     }
@@ -2053,9 +2059,27 @@ void CRebarPos::Calculate(void)
 
 	if(m_Detached)
 	{
+		acutUpdString(_T(""), m_Key);
 		acutUpdString(_T(""), m_Length);
 		acutUpdString(_T(""), m_DisplayedSpacing);
-		acutUpdString(_T(""), m_Key);
+
+		acutUpdString(_T(""), m_Count);
+		acutUpdString(_T(""), m_Diameter);
+		acutUpdString(_T(""), m_Spacing);
+
+		m_IncludeInBOQ = Adesk::kFalse;
+		m_Multiplier = 0;
+
+		acutUpdString(_T(""), m_Note);
+		acutUpdString(_T(""), m_Shape);
+		acutUpdString(_T(""), m_A);
+		acutUpdString(_T(""), m_B);
+		acutUpdString(_T(""), m_C);
+		acutUpdString(_T(""), m_D);
+		acutUpdString(_T(""), m_E);
+		acutUpdString(_T(""), m_F);
+
+		m_DisplayStyle = CRebarPos::MARKERONLY;
 
 		// Rebuild draw lists
 		lastDrawList.clear();
