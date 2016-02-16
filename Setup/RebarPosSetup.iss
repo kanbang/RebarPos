@@ -85,11 +85,49 @@ begin
   XMLDoc.Save(FileName);
 end;
 
+
+// Registers COM components
+procedure AddCOMRegistry(AcVersion: String; TypeLibGUID: String; ComRebarPosGUID: String; ComBOQTableGUID: String);
+var
+  RegPath: String;
+begin
+  // Type library
+  RegPath := 'TypeLib\' + TypeLibGUID;
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', '');
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0', '', 'RebarPos ' + AcVersion + ' 1.0 Type Library');
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\0', '', '');
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\0\win64', '', ExpandConstant('{app}\Bin\' + AcVersion + '\COMRebarPos.dbx'));
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\FLAGS', '', '0');
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\HELPDIR', '', ExpandConstant('{app}\Bin' + AcVersion));
+    
+  // COM classes
+  RegPath := 'CLSID\' + ComRebarPosGUID;
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', 'ComRebarPos Class ' + AcVersion);
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\Programmable', '', '');
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\TypeLib', '', TypeLibGUID);
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', '', ExpandConstant('{app}\Bin\' + AcVersion + '\COMRebarPos.dbx'));
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', 'ThreadingModel', 'Apartment');
+    
+  RegPath := 'CLSID\' + ComBOQTableGUID;
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', 'ComBOQTable Class ' + AcVersion);
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\Programmable', '', '');
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\TypeLib', '', TypeLibGUID);
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', '', ExpandConstant('{app}\Bin\' + AcVersion + '\COMRebarPos.dbx'));
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', 'ThreadingModel', 'Apartment');  
+end;
+
+// Unregisters COM components
+procedure RemoveCOMRegistry(TypeLibGUID: String; ComRebarPosGUID: String; ComBOQTableGUID: String);
+begin
+  // Type library
+  RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, 'TypeLib\' + TypeLibGUID);    
+  // COM classes
+  RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, 'CLSID\' + ComRebarPosGUID);
+  RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, 'CLSID\' + ComBOQTableGUID);    
+end;
+  
 // Add registry entries of COM components after installation
 procedure CurStepChanged(CurStep: TSetupStep);
-var
-  I: Integer;
-  RegPath: String;
 begin
   if CurStep = ssPostInstall then begin
     // Set registry keys for COM classes
@@ -100,36 +138,6 @@ begin
     // 2010
     AddCOMRegistry('2010', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8A0}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F0}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD30}');
   end;
-end;
-
-// Registers COM components
-procedure AddCOMRegistry(AcVersion: String; TypeLibGUID: String; ComRebarPosGUID: String; ComBOQTableGUID: String);
-var
-  RegPath: String;
-begin
-    // Type library
-    RegPath := 'TypeLib\' + TypeLibGUID;
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', '');
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0', '', 'RebarPos ' + AcVersion + ' 1.0 Type Library');
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\0', '', '');
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\0\win64', '', ExpandConstant('{app}\Bin\' + AcVersion + '\COMRebarPos.dbx'));
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\FLAGS', '', '0');
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\HELPDIR', '', ExpandConstant('{app}\Bin' + AcVersion));
-    
-    // COM classes
-    RegPath := 'CLSID\' + ComRebarPosGUID;
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', 'ComRebarPos Class ' + AcVersion);
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\Programmable', '', '');
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\TypeLib', '', TypeLibGUID);
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', '', ExpandConstant('{app}\Bin\' + AcVersion + '\COMRebarPos.dbx'));
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', 'ThreadingModel', 'Apartment');
-    
-    RegPath := 'CLSID\' + ComBOQTableGUID;
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', 'ComBOQTable Class ' + AcVersion);
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\Programmable', '', '');
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\TypeLib', '', TypeLibGUID);
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', '', ExpandConstant('{app}\Bin\' + AcVersion + '\COMRebarPos.dbx'));
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', 'ThreadingModel', 'Apartment');  
 end;
 
 // Remove registry keys of COM classes when uninstalled
@@ -143,16 +151,4 @@ begin
     // 2010
     RemoveCOMRegistry('{26E9A3B0-6567-4857-AABB-E09AC4A7A8A0}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F0}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD30}'); 
   end;
-end;
-
-// Unregisters COM components
-procedure RemoveCOMRegistry(TypeLibGUID: String; ComRebarPosGUID: String; ComBOQTableGUID: String);
-var
-  RegPath: String;
-begin
-    // Type library
-    RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, 'TypeLib\' + TypeLibGUID);    
-    // COM classes
-    RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, 'CLSID\' + ComRebarPosGUID);
-    RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, 'CLSID\' + ComBOQTableGUID);    
 end;
