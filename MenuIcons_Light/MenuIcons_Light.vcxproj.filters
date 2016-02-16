@@ -97,6 +97,9 @@
     <Image Include="Resources\TABLOSTILI.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Resources\LISANS.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">

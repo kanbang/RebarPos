@@ -61,6 +61,7 @@
     <Image Include="Resources\BALONSIL.ico" />
     <Image Include="Resources\BALONSIL_32.ico" />
     <Image Include="Resources\LGOSTER.ico" />
+    <Image Include="Resources\LISANS.ico" />
     <Image Include="Resources\METRAJ.ico" />
     <Image Include="Resources\METRAJSIL.ico" />
     <Image Include="Resources\METRAJSIL_32.ico" />
