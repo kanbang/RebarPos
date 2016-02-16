@@ -92,41 +92,67 @@ var
   RegPath: String;
 begin
   if CurStep = ssPostInstall then begin
-    // Set registry keys
-    (*
+    // Set registry keys for COM classes
+    // 2015
+    AddCOMRegistry('2015', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8A5}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F5}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD35}');
+    // 2013
+    AddCOMRegistry('2013', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8A3}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F3}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD33}');
+    // 2010
+    AddCOMRegistry('2010', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8A0}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F0}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD30}');
+  end;
+end;
+
+// Registers COM components
+procedure AddCOMRegistry(AcVersion: String; TypeLibGUID: String; ComRebarPosGUID: String; ComBOQTableGUID: String);
+var
+  RegPath: String;
+begin
     // Type library
-    RegPath := 'TypeLib\{26E9A3B0-6567-4857-AABB-E09AC4A7A8AE}';
+    RegPath := 'TypeLib\' + TypeLibGUID;
     RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', '');
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0', '', 'RebarPos 1.0 Type Library');
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0', '', 'RebarPos ' + AcVersion + ' 1.0 Type Library');
     RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\0', '', '');
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\0\win64', '', ExpandConstant('{app}\Bin\COMRebarPos.dbx'));
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\0\win64', '', ExpandConstant('{app}\Bin\' + AcVersion + '\COMRebarPos.dbx'));
     RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\FLAGS', '', '0');
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\HELPDIR', '', ExpandConstant('{app}\Bin'));
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\HELPDIR', '', ExpandConstant('{app}\Bin' + AcVersion));
     
     // COM classes
-    RegPath := 'CLSID\{97CAC17D-B1C7-49CA-8D57-D3FF491860FF}';
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', 'ComRebarPos Class');
+    RegPath := 'CLSID\' + ComRebarPosGUID;
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', 'ComRebarPos Class ' + AcVersion);
     RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\Programmable', '', '');
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\TypeLib', '', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8AE}');
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', '', ExpandConstant('{app}\Bin\COMRebarPos.dbx'));
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\TypeLib', '', TypeLibGUID);
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', '', ExpandConstant('{app}\Bin\' + AcVersion + '\COMRebarPos.dbx'));
     RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', 'ThreadingModel', 'Apartment');
     
-    RegPath := 'CLSID\{BA77CFFF-0274-4D4C-BFE2-64A5731BAD37}';
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', 'ComBOQTable Class');
+    RegPath := 'CLSID\' + ComBOQTableGUID;
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', 'ComBOQTable Class ' + AcVersion);
     RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\Programmable', '', '');
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\TypeLib', '', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8AE}');
-    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', '', ExpandConstant('{app}\Bin\COMRebarPos.dbx'));
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\TypeLib', '', TypeLibGUID);
+    RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', '', ExpandConstant('{app}\Bin\' + AcVersion + '\COMRebarPos.dbx'));
     RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', 'ThreadingModel', 'Apartment');  
-    *);
-  end;
 end;
 
 // Remove registry keys of COM classes when uninstalled
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
   if CurUninstallStep = usPostUninstall then begin
-    RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, 'TypeLib\{26E9A3B0-6567-4857-AABB-E09AC4A7A8AE}');
-    RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, 'CLSID\{97CAC17D-B1C7-49CA-8D57-D3FF491860FF}');
-    RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, 'CLSID\{BA77CFFF-0274-4D4C-BFE2-64A5731BAD37}');    
+    // 2015
+    RemoveCOMRegistry('{26E9A3B0-6567-4857-AABB-E09AC4A7A8A5}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F5}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD35}');
+    // 2013
+    RemoveCOMRegistry('{26E9A3B0-6567-4857-AABB-E09AC4A7A8A3}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F3}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD33}');
+    // 2010
+    RemoveCOMRegistry('{26E9A3B0-6567-4857-AABB-E09AC4A7A8A0}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F0}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD30}'); 
   end;
+end;
+
+// Unregisters COM components
+procedure RemoveCOMRegistry(TypeLibGUID: String; ComRebarPosGUID: String; ComBOQTableGUID: String);
+var
+  RegPath: String;
+begin
+    // Type library
+    RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, 'TypeLib\' + TypeLibGUID);    
+    // COM classes
+    RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, 'CLSID\' + ComRebarPosGUID);
+    RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, 'CLSID\' + ComBOQTableGUID);    
 end;

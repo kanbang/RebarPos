@@ -6,7 +6,6 @@
 
 #include <sstream>
 #include <iomanip>
-#include <codecvt>
 #include <locale>
 #include <fstream>
 #include <algorithm>
@@ -19,12 +18,12 @@ Acad::ErrorStatus Utility::CreateHiddenLayer(AcDbObjectId& id)
 {
 	Acad::ErrorStatus es;
 	AcDbLayerTablePointer pLayerTbl(acdbHostApplicationServices()->workingDatabase()->layerTableId(), AcDb::kForRead);
-	if((es = pLayerTbl.openStatus()) != Acad::eOk)
+	if ((es = pLayerTbl.openStatus()) != Acad::eOk)
 		return es;
 
 	if (pLayerTbl->getAt(_T("Defpoints"), id, AcDb::kForRead) == Acad::eKeyNotFound)
 	{
-		if(pLayerTbl->upgradeOpen() != Acad::eOk)
+		if (pLayerTbl->upgradeOpen() != Acad::eOk)
 			return es;
 
 		AcDbLayerTableRecord* pLayer = new AcDbLayerTableRecord();
@@ -44,12 +43,12 @@ Acad::ErrorStatus Utility::CreateTextStyle(AcDbObjectId& id, const ACHAR* name, 
 	ClearLog(L"D:\\r.txt");
 	Acad::ErrorStatus es;
 	AcDbTextStyleTablePointer pStyleTbl(acdbHostApplicationServices()->workingDatabase()->textStyleTableId(), AcDb::kForRead);
-	if((es = pStyleTbl.openStatus()) != Acad::eOk)
+	if ((es = pStyleTbl.openStatus()) != Acad::eOk)
 		return es;
 
 	if (pStyleTbl->getAt(name, id, AcDb::kForRead) == Acad::eKeyNotFound)
 	{
-		if(pStyleTbl->upgradeOpen() != Acad::eOk)
+		if (pStyleTbl->upgradeOpen() != Acad::eOk)
 			return es;
 
 		AcDbTextStyleTableRecord* pText = new AcDbTextStyleTableRecord();
@@ -70,27 +69,27 @@ Acad::ErrorStatus Utility::MakeGiTextStyle(AcGiTextStyle &newStyle, const AcDbOb
 {
 	Acad::ErrorStatus es;
 	es = fromAcDbTextStyle(newStyle, styleId);
-	if(es == Acad::eOk) 
+	if (es == Acad::eOk)
 		newStyle.loadStyleRec();
 	return es;
 }
 
 void Utility::MakeGiTextStyle(AcGiTextStyle &newStyle, const ACHAR* filename, const ACHAR* bigFontFilename, const double textSize, const double widthFactor, const double obliquingAngle)
 {
-    newStyle.setFileName(filename);
-    newStyle.setBigFontFileName(bigFontFilename);
+	newStyle.setFileName(filename);
+	newStyle.setBigFontFileName(bigFontFilename);
 
-    newStyle.setTextSize(textSize);
-    newStyle.setXScale(widthFactor);
-    newStyle.setObliquingAngle(obliquingAngle);
+	newStyle.setTextSize(textSize);
+	newStyle.setXScale(widthFactor);
+	newStyle.setObliquingAngle(obliquingAngle);
 
-    newStyle.loadStyleRec();
+	newStyle.loadStyleRec();
 }
 
 void Utility::ReplaceString(std::wstring& str, const std::wstring& oldStr, const std::wstring& newStr)
 {
 	size_t pos = 0;
-	while((pos = str.find(oldStr, pos)) != std::string::npos)
+	while ((pos = str.find(oldStr, pos)) != std::string::npos)
 	{
 		str.replace(pos, oldStr.length(), newStr);
 		pos += newStr.length();
@@ -99,10 +98,10 @@ void Utility::ReplaceString(std::wstring& str, const std::wstring& oldStr, const
 
 bool Utility::IsNumeric(const std::wstring& str)
 {
-    std::wstring::const_iterator it = str.begin();
+	std::wstring::const_iterator it = str.begin();
 	std::locale loc = std::locale::classic();
 	while (it != str.end() && std::isdigit(*it, loc)) ++it;
-    return !str.empty() && it == str.end();
+	return !str.empty() && it == str.end();
 }
 
 void Utility::IntToStr(const int val, std::wstring& str)
@@ -114,7 +113,7 @@ void Utility::IntToStr(const int val, std::wstring& str)
 
 int Utility::DoubleToInt(const double val)
 {
-	 return (int)(val >= 0 ? val + 0.5 : val - 0.5);
+	return (int)(val >= 0 ? val + 0.5 : val - 0.5);
 }
 
 int Utility::StrToInt(const std::wstring& str)
@@ -168,7 +167,8 @@ std::wstring Utility::StringFromResource(const HINSTANCE hInstance, const std::w
 	std::wstring source(static_cast<wchar_t*>(pLockedResource), dwResourceSize / sizeof(wchar_t));
 
 	// Skip UNICODE BOM UTF-16 (LE) 255 254
-	if(source[0] == 0xFEFF) source.erase(0, 1);
+	if (source[0] == 0xFEFF) source.erase(0, 1);
+
 
 	FreeResource(hLoadedResource);
 
@@ -177,28 +177,21 @@ std::wstring Utility::StringFromResource(const HINSTANCE hInstance, const std::w
 
 std::wstring Utility::StringFromFile(const std::wstring& filename)
 {
-	std::wifstream ifs(filename);
-
-	std::locale utf8_locale(std::locale::classic(), new std::codecvt_utf8<wchar_t>);
-	ifs.imbue(utf8_locale);
-
-	std::wstring source((std::istreambuf_iterator<wchar_t>(ifs)),
-                        (std::istreambuf_iterator<wchar_t>()));
-
-	return source;
+	std::ifstream wif(filename);
+	std::stringstream wss;
+	wss << wif.rdbuf();
+	std::string  const &str = wss.str();
+	std::wstring wstr;
+	wstr.resize(str.size() / sizeof(wchar_t));
+	std::memcpy(&wstr[0], str.c_str(), str.size()); // copy data into wstring
+	return wstr;
 }
 
 void Utility::StringToFile(const std::wstring& filename, const std::wstring& str)
 {
-	std::wofstream ofs(filename);
-
-	std::locale utf8_locale(std::locale::classic(), new std::codecvt_utf8<wchar_t>);
-	ofs.imbue(utf8_locale);
-	
-	ofs << str;
-	ofs << std::endl;
-
-	ofs.flush();
+	std::ofstream outFile(filename, std::ios::out | std::ios::binary);
+	outFile.write((char *)str.c_str(), str.length() * sizeof(wchar_t));
+	outFile.close();
 }
 
 void Utility::ClearLog(const std::wstring& filename)
@@ -223,7 +216,7 @@ Acad::ErrorStatus Utility::ReadDXFItem(AcDbDxfFiler* pFiler, const short code, c
 		pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: unable to read group code %d for %s"), code, name);
 		return pFiler->filerStatus();
 	}
-	else if(rb->restype != code)
+	else if (rb->restype != code)
 	{
 		pFiler->pushBackItem();
 		pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: expected group code %d for %s, but got %d"), code, name, rb->restype);
@@ -237,7 +230,7 @@ Acad::ErrorStatus Utility::ReadDXFInt(AcDbDxfFiler* pFiler, const short code, co
 {
 	Acad::ErrorStatus es;
 	resbuf rb;
-	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	if ((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
 	{
 		val = rb.resval.rint;
 	}
@@ -248,7 +241,7 @@ Acad::ErrorStatus Utility::ReadDXFUInt(AcDbDxfFiler* pFiler, const short code, c
 {
 	Acad::ErrorStatus es;
 	resbuf rb;
-	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	if ((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
 	{
 		val = rb.resval.rint;
 	}
@@ -259,7 +252,7 @@ Acad::ErrorStatus Utility::ReadDXFLong(AcDbDxfFiler* pFiler, const short code, c
 {
 	Acad::ErrorStatus es;
 	resbuf rb;
-	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	if ((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
 	{
 		val = rb.resval.rlong;
 	}
@@ -270,7 +263,7 @@ Acad::ErrorStatus Utility::ReadDXFULong(AcDbDxfFiler* pFiler, const short code, 
 {
 	Acad::ErrorStatus es;
 	resbuf rb;
-	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	if ((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
 	{
 		val = rb.resval.rlong;
 	}
@@ -281,7 +274,7 @@ Acad::ErrorStatus Utility::ReadDXFLong(AcDbDxfFiler* pFiler, const short code, c
 {
 	Acad::ErrorStatus es;
 	resbuf rb;
-	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	if ((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
 	{
 		val = rb.resval.rlong;
 	}
@@ -292,7 +285,7 @@ Acad::ErrorStatus Utility::ReadDXFULong(AcDbDxfFiler* pFiler, const short code, 
 {
 	Acad::ErrorStatus es;
 	resbuf rb;
-	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	if ((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
 	{
 		val = rb.resval.rlong;
 	}
@@ -303,7 +296,7 @@ Acad::ErrorStatus Utility::ReadDXFReal(AcDbDxfFiler* pFiler, const short code, c
 {
 	Acad::ErrorStatus es;
 	resbuf rb;
-	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	if ((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
 	{
 		val = rb.resval.rreal;
 	}
@@ -314,11 +307,11 @@ Acad::ErrorStatus Utility::ReadDXFString(AcDbDxfFiler* pFiler, const short code,
 {
 	Acad::ErrorStatus es;
 	resbuf rb;
-	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	if ((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
 	{
 		acutDelString(val);
 		val = NULL;
-		if(rb.resval.rstring != NULL)
+		if (rb.resval.rstring != NULL)
 		{
 			acutUpdString(rb.resval.rstring, val);
 		}
@@ -330,7 +323,7 @@ Acad::ErrorStatus Utility::ReadDXFPoint(AcDbDxfFiler* pFiler, const short code, 
 {
 	Acad::ErrorStatus es;
 	resbuf rb;
-	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	if ((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
 	{
 		val.x = rb.resval.rpoint[0];
 		val.y = rb.resval.rpoint[1];
@@ -342,7 +335,7 @@ Acad::ErrorStatus Utility::ReadDXFPoint(AcDbDxfFiler* pFiler, const short code, 
 {
 	Acad::ErrorStatus es;
 	resbuf rb;
-	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	if ((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
 	{
 		val.x = rb.resval.rpoint[0];
 		val.y = rb.resval.rpoint[1];
@@ -355,7 +348,7 @@ Acad::ErrorStatus Utility::ReadDXFVector(AcDbDxfFiler* pFiler, const short code,
 {
 	Acad::ErrorStatus es;
 	resbuf rb;
-	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	if ((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
 	{
 		val.x = rb.resval.rpoint[0];
 		val.y = rb.resval.rpoint[1];
@@ -367,7 +360,7 @@ Acad::ErrorStatus Utility::ReadDXFVector(AcDbDxfFiler* pFiler, const short code,
 {
 	Acad::ErrorStatus es;
 	resbuf rb;
-	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	if ((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
 	{
 		val.x = rb.resval.rpoint[0];
 		val.y = rb.resval.rpoint[1];
@@ -380,7 +373,7 @@ Acad::ErrorStatus Utility::ReadDXFBool(AcDbDxfFiler* pFiler, const short code, c
 {
 	Acad::ErrorStatus es;
 	resbuf rb;
-	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	if ((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
 	{
 		val = (rb.resval.rint == 0) ? Adesk::kFalse : Adesk::kTrue;
 	}
@@ -391,7 +384,7 @@ Acad::ErrorStatus Utility::ReadDXFBool(AcDbDxfFiler* pFiler, const short code, c
 {
 	Acad::ErrorStatus es;
 	resbuf rb;
-	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	if ((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
 	{
 		val = (rb.resval.rint != 0);
 	}
@@ -402,9 +395,9 @@ Acad::ErrorStatus Utility::ReadDXFObjectId(AcDbDxfFiler* pFiler, const short cod
 {
 	Acad::ErrorStatus es;
 	resbuf rb;
-	if((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
+	if ((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
 	{
-		if((es = acdbGetObjectId(val, rb.resval.rlname)) != Acad::eOk)
+		if ((es = acdbGetObjectId(val, rb.resval.rlname)) != Acad::eOk)
 		{
 			val = AcDbObjectId::kNull;
 		}
@@ -416,26 +409,26 @@ std::vector<std::wstring> Utility::SplitString(const std::wstring& s, const std:
 {
 	std::vector<std::wstring> elems;
 
-    size_t start = 0, end = 0;
+	size_t start = 0, end = 0;
 
-    while(end != std::wstring::npos)
-    {
-        end = s.find(delim, start);
+	while (end != std::wstring::npos)
+	{
+		end = s.find(delim, start);
 
 		std::wstring item;
-		if(end == std::wstring::npos)
+		if (end == std::wstring::npos)
 			item = s.substr(start, std::wstring::npos);
 		else
 			item = s.substr(start, end - start);
 
-		if(!skipEmpty || item.size() > 0)
+		if (!skipEmpty || item.size() > 0)
 			elems.push_back(item);
 
-		if(end > std::wstring::npos - delim.size())
-			start =  std::wstring::npos;
+		if (end > std::wstring::npos - delim.size())
+			start = std::wstring::npos;
 		else
 			start = end + delim.size();
-    }
+	}
 
 	return elems;
 }
@@ -446,9 +439,9 @@ std::vector<std::wstring> Utility::SplitString(const std::wstring& s, const wcha
 
 	std::wstringstream ss(s);
 	std::wstring item;
-	while(std::getline(ss, item, delim)) 
+	while (std::getline(ss, item, delim))
 	{
-		if(!skipEmpty || item.size() > 0)
+		if (!skipEmpty || item.size() > 0)
 			elems.push_back(item);
 	}
 
@@ -488,8 +481,8 @@ void Utility::DrawEllipse(const AcGiWorldDraw* worldDraw, const AcGePoint3d& cen
 	worldDraw->geometry().ellipticalArc(center, AcGeVector3d::kZAxis, majorAxisLength, minorAxisLength, 0.0, 6.28318530717958647692, 0);
 }
 
-void Utility::DrawArc(const AcGiWorldDraw* worldDraw, const AcGePoint3d& center, const double radius, 
-					  const double startAngle, const double endAngle, const Adesk::UInt16 color)
+void Utility::DrawArc(const AcGiWorldDraw* worldDraw, const AcGePoint3d& center, const double radius,
+	const double startAngle, const double endAngle, const Adesk::UInt16 color)
 {
 	worldDraw->subEntityTraits().setColor(color);
 	worldDraw->geometry().ellipticalArc(center, AcGeVector3d::kZAxis, radius, radius, startAngle, endAngle, 0);
@@ -502,18 +495,18 @@ void Utility::DrawEllipticalArc(const AcGiWorldDraw* worldDraw, const AcGePoint3
 }
 
 void Utility::DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& position, const std::wstring& string,
-					   const AcGiTextStyle& textStyle, const Adesk::UInt16 color)
+	const AcGiTextStyle& textStyle, const Adesk::UInt16 color)
 {
 	DrawText(worldDraw, position, string, textStyle, AcDb::kTextLeft, AcDb::kTextBottom, color);
 }
 
-void Utility::DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& position, const std::wstring& string, 
-					   const AcGiTextStyle& textStyle, const AcDb::TextHorzMode horizontalAlignment, const AcDb::TextVertMode verticalAlignment, 
-					   const Adesk::UInt16 color)
+void Utility::DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& position, const std::wstring& string,
+	const AcGiTextStyle& textStyle, const AcDb::TextHorzMode horizontalAlignment, const AcDb::TextVertMode verticalAlignment,
+	const Adesk::UInt16 color)
 {
 	// Split into lines
 	std::vector<std::wstring> lines = SplitString(string, std::wstring(L"\\P"));
-	if(lines.size() == 0) return;
+	if (lines.size() == 0) return;
 
 	// Measure text lines
 	std::vector<double> widths;
@@ -522,7 +515,7 @@ void Utility::DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& positi
 	double lineSpacing = 0.0;
 	double totalWidth = 0.0;
 	double lineHeight = 0.0;
-	for(std::vector<std::wstring>::iterator it = lines.begin(); it != lines.end(); ++it)
+	for (std::vector<std::wstring>::iterator it = lines.begin(); it != lines.end(); ++it)
 	{
 		std::wstring line = (*it);
 		AcGePoint2d ext = textStyle.extents(line.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
@@ -536,9 +529,9 @@ void Utility::DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& positi
 
 	// Vertical location of first line
 	double y = 0.0;
-	if(verticalAlignment == AcDb::kTextTop)
+	if (verticalAlignment == AcDb::kTextTop)
 		y = 0.0;
-	else if(verticalAlignment == AcDb::kTextBase || verticalAlignment == AcDb::kTextBottom)
+	else if (verticalAlignment == AcDb::kTextBase || verticalAlignment == AcDb::kTextBottom)
 		y = totalHeight;
 	else // vertical middle
 		y = totalHeight / 2.0;
@@ -546,15 +539,15 @@ void Utility::DrawText(const AcGiWorldDraw* worldDraw, const AcGePoint3d& positi
 	// Draw lines
 	worldDraw->subEntityTraits().setColor(color);
 	size_t i = 0;
-	for(std::vector<std::wstring>::iterator it = lines.begin(); it != lines.end(); ++it)
+	for (std::vector<std::wstring>::iterator it = lines.begin(); it != lines.end(); ++it)
 	{
 		std::wstring line = (*it);
 
 		y -= lineHeight;
-		double x = 0.0; 
-		if(horizontalAlignment == AcDb::kTextLeft)
+		double x = 0.0;
+		if (horizontalAlignment == AcDb::kTextLeft)
 			x = 0.0;
-		else if(horizontalAlignment == AcDb::kTextRight)
+		else if (horizontalAlignment == AcDb::kTextRight)
 			x = -widths[i];
 		else // horizontal center
 			x = -widths[i] / 2.0;
@@ -571,14 +564,14 @@ AcGePoint2d Utility::MeasureText(const std::wstring& string, const AcGiTextStyle
 {
 	// Split into lines
 	std::vector<std::wstring> lines = SplitString(string, std::wstring(L"\\P"));
-	if(lines.size() == 0) return AcGePoint2d(0, 0);
+	if (lines.size() == 0) return AcGePoint2d(0, 0);
 
 	// Measure text lines
 	double totalWidth = 0.0;
 	double totalHeight = 0.0;
 	double lineSpacing = 0.0;
 	double lineHeight = 0.0;
-	for(std::vector<std::wstring>::iterator it = lines.begin(); it != lines.end(); ++it)
+	for (std::vector<std::wstring>::iterator it = lines.begin(); it != lines.end(); ++it)
 	{
 		std::wstring line = (*it);
 		AcGePoint2d ext = textStyle.extents(line.c_str(), Adesk::kTrue, -1, Adesk::kFalse);

@@ -3,7 +3,15 @@
 // Type library section and components
 //
 [
-	uuid(26E9A3B0-6567-4857-AABB-E09AC4A7A8AE),
+#if REBARPOS2015
+	uuid(26E9A3B0-6567-4857-AABB-E09AC4A7A8A5),
+#endif
+#if REBARPOS2013
+	uuid(26E9A3B0-6567-4857-AABB-E09AC4A7A8A3),
+#endif	
+#if REBARPOS2010
+	uuid(26E9A3B0-6567-4857-AABB-E09AC4A7A8A0),
+#endif	
 	version(1.0),
 	helpstring("RebarPos 1.0 Type Library"),
 ]
@@ -88,7 +96,15 @@ library COMREBARPOSLib
 
 	// ComRebarPos coclass
 	[
-		uuid(97CAC17D-B1C7-49ca-8D57-D3FF491860FF),
+#if REBARPOS2015
+		uuid(97CAC17D-B1C7-49ca-8D57-D3FF491860F5),
+#endif
+#if REBARPOS2013
+		uuid(97CAC17D-B1C7-49ca-8D57-D3FF491860F3),
+#endif	
+#if REBARPOS2010
+		uuid(97CAC17D-B1C7-49ca-8D57-D3FF491860F0),
+#endif
 		helpstring("ComRebarPos Class"),
 		noncreatable
 	]
@@ -144,7 +160,15 @@ library COMREBARPOSLib
 
 	// ComBOQTable coclass
 	[
-		uuid(BA77CFFF-0274-4d4c-BFE2-64A5731BAD37),
+#if REBARPOS2015
+		uuid(BA77CFFF-0274-4d4c-BFE2-64A5731BAD35),
+#endif
+#if REBARPOS2013
+		uuid(BA77CFFF-0274-4d4c-BFE2-64A5731BAD33),
+#endif	
+#if REBARPOS2010
+		uuid(BA77CFFF-0274-4d4c-BFE2-64A5731BAD30),
+#endif
 		helpstring("ComBOQTable Class"),
 		noncreatable
 	]
