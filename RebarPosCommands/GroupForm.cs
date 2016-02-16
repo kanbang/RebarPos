@@ -51,6 +51,15 @@ namespace RebarPosCommands
             InitializeComponent();
             Width = 340;
 
+            bool allowCustomMarkers = false;
+            License license = License.FromRegistry(MyCommands.ApplicationRegistryKey, MyCommands.LicensedAppName);
+            if (license.Status == License.LicenseStatus.Valid)
+            {
+                allowCustomMarkers = license.AllowCustomMarkers;
+            }
+
+            btnExpand.Enabled = btnExpand.Visible = allowCustomMarkers;
+
             mCopy = new GroupCopy();
             mTextStyles = new Dictionary<string, ObjectId>();
 

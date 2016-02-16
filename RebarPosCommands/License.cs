@@ -14,6 +14,7 @@ namespace RebarPosCommands
         public string ActivationCode { get; private set; }
         public DateTime LastUsed { get; private set; }
         public DateTime Expires { get; private set; }
+        public bool AllowCustomMarkers { get; private set; }
 
         public enum LicenseStatus
         {
@@ -25,12 +26,13 @@ namespace RebarPosCommands
             Expired = 5
         }
 
-        private License(LicenseStatus status, string activationCode, DateTime lastUsed, DateTime expires)
+        private License(LicenseStatus status, string activationCode, DateTime lastUsed, DateTime expires, bool allowCustomMarkers)
         {
             Status = status;
             ActivationCode = activationCode;
             LastUsed = lastUsed;
             Expires = expires;
+            AllowCustomMarkers = allowCustomMarkers;
         }
 
         public override string ToString()
@@ -38,6 +40,7 @@ namespace RebarPosCommands
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Status: " + Status.ToString());
             sb.AppendLine("Activation Code: " + ActivationCode);
+            sb.AppendLine("Custom Markers: " + (AllowCustomMarkers ? "Yes" : "No"));
             sb.AppendLine("Last Used: " + LastUsed.ToString("dd/MM/yyyy HH:mm:ss"));
             sb.AppendLine("Expires: " + Expires.ToString("dd/MM/yyyy HH:mm:ss"));
             sb.AppendLine("Days Remaining: " + (Expires - DateTime.Now).Days.ToString());
@@ -71,6 +74,7 @@ namespace RebarPosCommands
             string activationCode = string.Empty;
             DateTime lastUsed = DateTime.MaxValue;
             DateTime expires = DateTime.MinValue;
+            bool allowCustomMarkers = false;
 
             try
             {
@@ -98,9 +102,10 @@ namespace RebarPosCommands
                 activationCode = string.Empty;
                 lastUsed = DateTime.MaxValue;
                 expires = DateTime.MinValue;
+                allowCustomMarkers = false;
             }
 
-            return new License(status, activationCode, lastUsed, expires);
+            return new License(status, activationCode, lastUsed, expires, allowCustomMarkers);
         }
 
         public static License FromString(string licenseString, string app)
@@ -109,6 +114,7 @@ namespace RebarPosCommands
             string activationCode = string.Empty;
             DateTime lastUsed = DateTime.MaxValue;
             DateTime expires = DateTime.MinValue;
+            bool allowCustomMarkers = false;
 
             try
             {
@@ -153,9 +159,10 @@ namespace RebarPosCommands
                                     }
                                     else
                                     {
+                                        // Custom markers
+                                        allowCustomMarkers = (licenseString.Substring(61, 1) == "1");
                                         status = LicenseStatus.Valid;
                                     }
-
                                 }
                             }
                         }
@@ -168,9 +175,10 @@ namespace RebarPosCommands
                 activationCode = string.Empty;
                 lastUsed = DateTime.MaxValue;
                 expires = DateTime.MinValue;
+                allowCustomMarkers = false;
             }
 
-            return new License(status, activationCode, lastUsed, expires);
+            return new License(status, activationCode, lastUsed, expires, allowCustomMarkers);
         }
 
         public bool SaveToRegistry(string registryKey)
@@ -185,7 +193,7 @@ namespace RebarPosCommands
                 else
                 {
                     LastUsed = DateTime.Now;
-                    string licenseString = Crypto.Encrypt(ActivationCode + DateToString(LastUsed) + DateToString(Expires), Secret);
+                    string licenseString = Crypto.Encrypt(ActivationCode + DateToString(LastUsed) + DateToString(Expires) + (AllowCustomMarkers ? "1" : "0"), Secret);
                     key.SetValue("License", licenseString);
                     return true;
                 }

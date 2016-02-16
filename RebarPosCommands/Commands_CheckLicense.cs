@@ -22,13 +22,27 @@ namespace RebarPosCommands
                 LastLicenseCheck = DateTime.Now;
                 return true;
             }
+            else
+            {
+                return RequestLicense();
+            }
+        }
 
+        private void LicenseInformation()
+        {
+            License license = License.FromRegistry(ApplicationRegistryKey, LicensedAppName);
+
+            Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage(license.LicenseInfo);
+        }
+
+        private bool RequestLicense()
+        {
             using (RequestLicenseForm form = new RequestLicenseForm())
             {
                 form.ActivationCode = License.FormatActivationCode(License.GetActivationCode(LicensedAppName));
                 if (Autodesk.AutoCAD.ApplicationServices.Application.ShowModalDialog(null, form, false) != System.Windows.Forms.DialogResult.OK) return false;
 
-                license = License.FromString(form.LicenseKey, LicensedAppName);
+                License license = License.FromString(form.LicenseKey, LicensedAppName);
                 if (license.Status != License.LicenseStatus.Valid) return false;
 
                 license.SaveToRegistry(ApplicationRegistryKey);
@@ -40,13 +54,6 @@ namespace RebarPosCommands
 
                 return true;
             }
-        }
-
-        private void LicenseInformation()
-        {
-            License license = License.FromRegistry(ApplicationRegistryKey, LicensedAppName);
-
-            Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage(license.LicenseInfo);
         }
     }
 }

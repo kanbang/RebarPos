@@ -50,8 +50,10 @@ namespace MakeLicense
             string lastUsed = DateToString(DateTime.MinValue);
             // Expires date: "YYYYMMDDhhmmss" 14 chars    
             string expires = DateToString(DateTime.Now.AddDays((double)(udTimeLimit.Value == 0 ? 3650 : udTimeLimit.Value)));
+            // Allow custom markers
+            string allowCustomMarkers = (cbAllowCustomMarkers.Checked ? "1" : "0");
 
-            txtLicenseKey.Text = Crypto.Encrypt(activationCode + lastUsed + expires, Secret);
+            txtLicenseKey.Text = Crypto.Encrypt(activationCode + lastUsed + expires + allowCustomMarkers, Secret);
         }
 
         // Converts DateTime to YYYYMMDDhhmmss string

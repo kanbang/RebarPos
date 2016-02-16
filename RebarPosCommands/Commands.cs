@@ -496,6 +496,22 @@ namespace RebarPosCommands
         public void CMD_PosLicense()
         {
             LicenseInformation();
+
+            Autodesk.AutoCAD.ApplicationServices.Application.DisplayTextScreen = true;
+
+            PromptKeywordOptions opts = new PromptKeywordOptions("Lisansınızı değiştirmek istiyor musunuz? [Evet/Hayır]: ", "Yes No");
+            opts.AllowNone = false;
+            PromptResult result = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetKeywords(opts);
+
+            if (result.Status == PromptStatus.OK)
+            {
+                switch (result.StringResult)
+                {
+                    case "Yes":
+                        RequestLicense();
+                        break;
+                }
+            }
         }
 
         [CommandMethod("OZOZRebarPos", "DUMPSHAPES", CommandFlags.Modal)]
