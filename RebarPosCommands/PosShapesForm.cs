@@ -471,9 +471,9 @@ namespace RebarPosCommands
             {
                 DWGUtility.DrawShape(GetSelected(), result.Value, 75);
 
-                MessageBox.Show("Açılımı şablon çerçevesi içine çizin ve tekrar bu diyalog kutusuna dönüp çizimden al düğmesini tıklayın.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Açılımı şablon çerçevesi içine çizin ve tekrar bu diyalog kutusuna dönüp çizimden al düğmesini tıklayın." + Environment.NewLine + "Çizimden alırken poz şeklini çerçevesi ile birlikte seçin.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
+            SetShape();
         }
     }
 }
