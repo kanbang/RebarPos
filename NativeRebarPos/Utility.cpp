@@ -6,6 +6,7 @@
 
 #include <sstream>
 #include <iomanip>
+#include <codecvt>
 #include <locale>
 #include <fstream>
 #include <algorithm>
@@ -167,7 +168,7 @@ std::wstring Utility::StringFromResource(const HINSTANCE hInstance, const std::w
 	std::wstring source(static_cast<wchar_t*>(pLockedResource), dwResourceSize / sizeof(wchar_t));
 
 	// Skip UNICODE BOM UTF-16 (LE) 255 254
-	if(source[0] == 65279) source.erase(0, 1);
+	if(source[0] == 0xFEFF) source.erase(0, 1);
 
 	FreeResource(hLoadedResource);
 
@@ -176,11 +177,28 @@ std::wstring Utility::StringFromResource(const HINSTANCE hInstance, const std::w
 
 std::wstring Utility::StringFromFile(const std::wstring& filename)
 {
-	std::wifstream ifs(filename.c_str());
+	std::wifstream ifs(filename);
+
+	std::locale utf8_locale(std::locale::classic(), new std::codecvt_utf8<wchar_t>);
+	ifs.imbue(utf8_locale);
+
 	std::wstring source((std::istreambuf_iterator<wchar_t>(ifs)),
                         (std::istreambuf_iterator<wchar_t>()));
 
 	return source;
+}
+
+void Utility::StringToFile(const std::wstring& filename, const std::wstring& str)
+{
+	std::wofstream ofs(filename);
+
+	std::locale utf8_locale(std::locale::classic(), new std::codecvt_utf8<wchar_t>);
+	ofs.imbue(utf8_locale);
+	
+	ofs << str;
+	ofs << std::endl;
+
+	ofs.flush();
 }
 
 void Utility::ClearLog(const std::wstring& filename)

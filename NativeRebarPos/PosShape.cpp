@@ -680,70 +680,73 @@ void CPosShape::ReadPosShapesFromString(const std::wstring& source, const bool b
 
 void CPosShape::SavePosShapesToFile(const std::wstring& filename)
 {
-	std::wofstream ofs(filename.c_str());
+	std::wstringstream ofs;
+	ofs.clear(); ofs.str(std::wstring());
 
-	if(m_CustomPosShapes.empty()) return;
-
-	for(std::map<std::wstring, CPosShape*>::iterator it = m_CustomPosShapes.begin(); it != m_CustomPosShapes.end(); it++)
+	if(!m_CustomPosShapes.empty())
 	{
-		CPosShape* posShape = (*it).second;
-
-		ofs << L"BEGIN" << std::endl;
-
-		ofs << L"Name"           << L'\t' << posShape->Name()             << std::endl;
-		ofs << L"Fields"         << L'\t' << posShape->Fields()           << std::endl;
-		ofs << L"Formula"        << L'\t' << posShape->Formula()          << std::endl;
-		ofs << L"FormulaBending" << L'\t' << posShape->FormulaBending()   << std::endl;
-		ofs << L"Priority"       << L'\t' << posShape->Priority()         << std::endl;
-		ofs << L"Count"          << L'\t' << posShape->GetShapeCount()    << std::endl;
-
-		// Write shapes
-		for(int i = 0; i < posShape->GetShapeCount(); i++)
+		for (std::map<std::wstring, CPosShape*>::iterator it = m_CustomPosShapes.begin(); it != m_CustomPosShapes.end(); it++)
 		{
-			const CShape* shape = posShape->GetShape(i);
-			if(shape->type == CShape::Line)
-			{
-				const CShapeLine* line = dynamic_cast<const CShapeLine*>(shape);
-				ofs << L"LINE" << L'\t' << 
-					line->x1 << L'\t' << line->y1 << L'\t' << line->x2 << L'\t' << line->y2 << L'\t' << 
-					line->color << L'\t' << (line->visible == Adesk::kTrue ? L'V' : L'I') << std::endl;
-			}
-			else if(shape->type == CShape::Arc)
-			{
-				const CShapeArc* arc = dynamic_cast<const CShapeArc*>(shape);
-				ofs << L"ARC" << L'\t' << 
-					arc->x << L'\t' << arc->y << L'\t' << arc->r << L'\t' << 
-					arc->startAngle << L'\t' << arc->endAngle << L'\t' <<
-					arc->color << L'\t' << (arc->visible == Adesk::kTrue ? L'V' : L'I') << std::endl;
-			}
-			else if(shape->type == CShape::Circle)
-			{
-				const CShapeCircle* circle = dynamic_cast<const CShapeCircle*>(shape);
-				ofs << L"CIRCLE" << L'\t' << 
-					circle->x << L'\t' << circle->y << L'\t' << circle->r << L'\t' << 
-					circle->color << L'\t' << (circle->visible == Adesk::kTrue ? L'V' : L'I') << std::endl;
-			}
-			else if(shape->type == CShape::Ellipse)
-			{
-				const CShapeEllipse* ellipse = dynamic_cast<const CShapeEllipse*>(shape);
-				ofs << L"ELLIPSE" << L'\t' << 
-					ellipse->x << L'\t' << ellipse->y << L'\t' << ellipse->width << L'\t' << ellipse->height << L'\t' << 
-					ellipse->color << L'\t' << (ellipse->visible == Adesk::kTrue ? L'V' : L'I') << std::endl;
-			}
-			else if(shape->type == CShape::Text)
-			{
-				const CShapeText* text = dynamic_cast<const CShapeText*>(shape);
-				ofs << L"TEXT" << L'\t' << 
-					text->x << L'\t' << text->y << L'\t' << text->height << L'\t' << text->width << L'\t' << 
-					text->text << L'\t' << text->font << L'\t' << 
-					text->horizontalAlignment << L'\t' << text->verticalAlignment << L'\t' <<
-					text->color << L'\t' << (text->visible == Adesk::kTrue ? L'V' : L'I') << std::endl;
-			}
-		}
+			CPosShape* posShape = (*it).second;
 
-		ofs << L"END" << std::endl;
-		ofs << std::endl;
+			ofs << L"BEGIN" << std::endl;
+
+			ofs << L"Name" << L'\t' << posShape->Name() << std::endl;
+			ofs << L"Fields" << L'\t' << posShape->Fields() << std::endl;
+			ofs << L"Formula" << L'\t' << posShape->Formula() << std::endl;
+			ofs << L"FormulaBending" << L'\t' << posShape->FormulaBending() << std::endl;
+			ofs << L"Priority" << L'\t' << posShape->Priority() << std::endl;
+			ofs << L"Count" << L'\t' << posShape->GetShapeCount() << std::endl;
+
+			// Write shapes
+			for (int i = 0; i < posShape->GetShapeCount(); i++)
+			{
+				const CShape* shape = posShape->GetShape(i);
+				if (shape->type == CShape::Line)
+				{
+					const CShapeLine* line = dynamic_cast<const CShapeLine*>(shape);
+					ofs << L"LINE" << L'\t' <<
+						line->x1 << L'\t' << line->y1 << L'\t' << line->x2 << L'\t' << line->y2 << L'\t' <<
+						line->color << L'\t' << (line->visible == Adesk::kTrue ? L'V' : L'I') << std::endl;
+				}
+				else if (shape->type == CShape::Arc)
+				{
+					const CShapeArc* arc = dynamic_cast<const CShapeArc*>(shape);
+					ofs << L"ARC" << L'\t' <<
+						arc->x << L'\t' << arc->y << L'\t' << arc->r << L'\t' <<
+						arc->startAngle << L'\t' << arc->endAngle << L'\t' <<
+						arc->color << L'\t' << (arc->visible == Adesk::kTrue ? L'V' : L'I') << std::endl;
+				}
+				else if (shape->type == CShape::Circle)
+				{
+					const CShapeCircle* circle = dynamic_cast<const CShapeCircle*>(shape);
+					ofs << L"CIRCLE" << L'\t' <<
+						circle->x << L'\t' << circle->y << L'\t' << circle->r << L'\t' <<
+						circle->color << L'\t' << (circle->visible == Adesk::kTrue ? L'V' : L'I') << std::endl;
+				}
+				else if (shape->type == CShape::Ellipse)
+				{
+					const CShapeEllipse* ellipse = dynamic_cast<const CShapeEllipse*>(shape);
+					ofs << L"ELLIPSE" << L'\t' <<
+						ellipse->x << L'\t' << ellipse->y << L'\t' << ellipse->width << L'\t' << ellipse->height << L'\t' <<
+						ellipse->color << L'\t' << (ellipse->visible == Adesk::kTrue ? L'V' : L'I') << std::endl;
+				}
+				else if (shape->type == CShape::Text)
+				{
+					const CShapeText* text = dynamic_cast<const CShapeText*>(shape);
+					ofs << L"TEXT" << L'\t' <<
+						text->x << L'\t' << text->y << L'\t' << text->height << L'\t' << text->width << L'\t' <<
+						text->text << L'\t' << text->font << L'\t' <<
+						text->horizontalAlignment << L'\t' << text->verticalAlignment << L'\t' <<
+						text->color << L'\t' << (text->visible == Adesk::kTrue ? L'V' : L'I') << std::endl;
+				}
+			}
+
+			ofs << L"END" << std::endl;
+		}
 	}
+
+	Utility::StringToFile(filename, ofs.str());
 }
 
 //*************************************************************************

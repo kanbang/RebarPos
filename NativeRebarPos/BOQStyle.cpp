@@ -409,9 +409,8 @@ void CBOQStyle::ReadBOQStylesFromString(const std::wstring source, const bool bu
 
 void CBOQStyle::SaveBOQStylesToFile(const std::wstring filename)
 {
-	std::wofstream ofs(filename.c_str());
-
-	if(m_CustomStyles.empty()) return;
+	std::wstringstream ofs;
+	ofs.clear(); ofs.str(std::wstring());
 
 	for(std::map<std::wstring, CBOQStyle*>::iterator it = m_CustomStyles.begin(); it != m_CustomStyles.end(); it++)
 	{
@@ -422,10 +421,10 @@ void CBOQStyle::SaveBOQStylesToFile(const std::wstring filename)
 		ofs << L"Name"					 << L'\t' << style->Name()					<< std::endl;
 		ofs << L"Columns"				 << L'\t' << style->Columns()				<< std::endl;
 		ofs << L"PosLabel"				 << L'\t' << style->PosLabel()				<< std::endl;
-		ofs << L"CountLabel"			 << L'\t' << style->CountLabel()				<< std::endl;
+		ofs << L"CountLabel"			 << L'\t' << style->CountLabel()			<< std::endl;
 		ofs << L"DiameterLabel"			 << L'\t' << style->DiameterLabel()			<< std::endl;
 		ofs << L"LengthLabel"			 << L'\t' << style->LengthLabel()			<< std::endl;
-		ofs << L"ShapeLabel"			 << L'\t' << style->ShapeLabel()				<< std::endl;
+		ofs << L"ShapeLabel"			 << L'\t' << style->ShapeLabel()			<< std::endl;
 		ofs << L"TotalLengthLabel"		 << L'\t' << style->TotalLengthLabel()		<< std::endl;
 		ofs << L"DiameterListLabel"		 << L'\t' << style->DiameterListLabel()		<< std::endl;
 		ofs << L"DiameterLengthLabel"	 << L'\t' << style->DiameterLengthLabel()	<< std::endl;
@@ -457,6 +456,8 @@ void CBOQStyle::SaveBOQStylesToFile(const std::wstring filename)
 		ofs << L"END" << std::endl;
 		ofs << std::endl;
 	}
+
+	Utility::StringToFile(filename, ofs.str());
 }
 
 //*************************************************************************

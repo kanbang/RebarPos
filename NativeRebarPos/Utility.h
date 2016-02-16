@@ -69,6 +69,7 @@ public:
 	// Read UTF-8 string resources
 	static std::wstring StringFromResource(const HINSTANCE hInstance, const std::wstring& resourceType, const int resid);
 	static std::wstring StringFromFile(const std::wstring& filename);
+	static void Utility::StringToFile(const std::wstring& filename, const std::wstring& str);
 
 	// Logging
 	static void ClearLog(const std::wstring& filename);
