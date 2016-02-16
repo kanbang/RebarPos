@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <msclr\marshal_cppstd.h>
 #include <string>
+#include <msclr\marshal_cppstd.h>
 
 namespace OZOZ
 {

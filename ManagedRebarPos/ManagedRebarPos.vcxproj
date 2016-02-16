@@ -68,6 +68,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-2015|x64'">
     <ClCompile>
       <PreprocessorDefinitions>VC7;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <AdditionalDependencies>acdbmgd.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -82,6 +84,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-2013|x64'">
     <ClCompile>
       <PreprocessorDefinitions>VC7;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
       <AdditionalDependencies>acdbmgd.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -97,6 +100,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-2010|x64'">
     <ClCompile>
       <PreprocessorDefinitions>VC7;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
       <AdditionalDependencies>acdbmgd.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
