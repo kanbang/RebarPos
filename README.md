@@ -16,6 +16,10 @@ Install the corresponding build tools:
 * Visual Studio 2010 (v100) for AutoCAD 2013 and 2014
 * Visual Studio 2008 (v90) for AutoCAD 2010, 2011 and 2012
 
+Install corresponding boost libraries: http://www.boost.org/
+
+Boost is assumed to be located `C:\Boost`. So that the include path is `C:\Boost\boost` and library paths are: `C:\Boost\lib\vc90` for Visual Studio 2008, `C:\Boost\lib\vc100` for Visual Studio 2010 and `C:\Boost\lib\vc110` for Visual Studio 2012.
+
 Application Compatibility
 -------------------------
 Following list copied from [AutoCAD 2016 online help](http://help.autodesk.com/view/ACD/2016/ENU/?guid=GUID-D54B0935-1638-4F97-8B37-1EC3635A1E71) defines compatibility between different AutoCAD API versions.

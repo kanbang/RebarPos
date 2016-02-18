@@ -14,6 +14,9 @@
 
 #include "Utility.h"
 
+#include <boost/filesystem.hpp>
+#include <boost/locale.hpp>
+
 Acad::ErrorStatus Utility::CreateHiddenLayer(AcDbObjectId& id)
 {
 	Acad::ErrorStatus es;
@@ -40,7 +43,6 @@ Acad::ErrorStatus Utility::CreateHiddenLayer(AcDbObjectId& id)
 
 Acad::ErrorStatus Utility::CreateTextStyle(AcDbObjectId& id, const ACHAR* name, const ACHAR* filename, const double scale)
 {
-	ClearLog(L"D:\\r.txt");
 	Acad::ErrorStatus es;
 	AcDbTextStyleTablePointer pStyleTbl(acdbHostApplicationServices()->workingDatabase()->textStyleTableId(), AcDb::kForRead);
 	if ((es = pStyleTbl.openStatus()) != Acad::eOk)
@@ -177,21 +179,30 @@ std::wstring Utility::StringFromResource(const HINSTANCE hInstance, const std::w
 
 std::wstring Utility::StringFromFile(const std::wstring& filename)
 {
-	std::ifstream wif(filename);
-	std::stringstream wss;
-	wss << wif.rdbuf();
-	std::string  const &str = wss.str();
-	std::wstring wstr;
-	wstr.resize(str.size() / sizeof(wchar_t));
-	std::memcpy(&wstr[0], str.c_str(), str.size()); // copy data into wstring
-	return wstr;
+	std::wifstream ifs(filename);
+
+	boost::locale::generator gen;
+	std::locale utf8_locale = gen("en_US.UTF-8");
+	ifs.imbue(utf8_locale);
+
+	std::wstring source((std::istreambuf_iterator<wchar_t>(ifs)),
+		(std::istreambuf_iterator<wchar_t>()));
+
+	return source;
 }
 
 void Utility::StringToFile(const std::wstring& filename, const std::wstring& str)
 {
-	std::ofstream outFile(filename, std::ios::out | std::ios::binary);
-	outFile.write((char *)str.c_str(), str.length() * sizeof(wchar_t));
-	outFile.close();
+	std::wofstream ofs(filename);
+
+	boost::locale::generator gen;
+	std::locale utf8_locale = gen("en_US.UTF-8");
+	ofs.imbue(utf8_locale);
+
+	ofs << str;
+	ofs << std::endl;
+
+	ofs.flush();
 }
 
 void Utility::ClearLog(const std::wstring& filename)
