@@ -36,8 +36,8 @@ Following list copied from [AutoCAD 2016 online help](http://help.autodesk.com/v
 
 As a result, the application is compiled for the following configurations:
 
-| App. Release | ObjectARX SDK | .NET Framework | Toolset        | Supported AutoCAD Versions |
-|--------------|---------------|----------------|----------------|--------------------------|
-| Release-2015 | AutoCAD 2015  | 4.5            | VS 2012 (v110) | AutoCAD 2015, 2016       |
-| Release-2013 | AutoCAD 2013  | 4.0            | VS 2010 (v100) | AutoCAD 2013, 2014       |
-| Release-2010 | AutoCAD 2010  | 3.51 SP1       | VS 2008 (v90)  | AutoCAD 2010, 2011, 2012 |
+| App. Release | ObjectARX SDK | .NET Framework | Toolset        | Supported AutoCAD Versions | Release Number     |
+|--------------|---------------|----------------|----------------|----------------------------|--------------------|
+| Release-2015 | AutoCAD 2015  | 4.5            | VS 2012 (v110) | AutoCAD 2015, 2016         | R20.0, R20.1       |
+| Release-2013 | AutoCAD 2013  | 4.0            | VS 2010 (v100) | AutoCAD 2013, 2014         | R19.0, R19.1       |
+| Release-2010 | AutoCAD 2010  | 3.51 SP1       | VS 2008 (v90)  | AutoCAD 2010, 2011, 2012   | R18.0, R18.1, R18.2|
