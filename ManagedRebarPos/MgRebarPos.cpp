@@ -274,6 +274,14 @@ RebarPos::CalculatedProperties^ RebarPos::CalcProperties::get()
 //*************************************************************************
 // Methods
 //*************************************************************************
+void RebarPos::SuspendUpdate()
+{
+	GetImpObj()->SuspendUpdate();
+}
+void RebarPos::ResumeUpdate()
+{
+	GetImpObj()->ResumeUpdate();
+}
 void RebarPos::Update()
 {
 	GetImpObj()->Update();

@@ -205,6 +205,8 @@ namespace OZOZ
 			property String^ PosKey { String^ get(); }
 
 		public:
+			virtual void SuspendUpdate();
+			virtual void ResumeUpdate();
 			void Update();
 			HitTestResult HitTest(Point3d pt);
 			void TextBox([Out] Point3d% minPoint, [Out] Point3d% maxPoint);

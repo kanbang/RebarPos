@@ -479,7 +479,7 @@ namespace RebarPosCommands
         {
             if (!CheckLicense()) return;
 
-            MessageBox.Show("Yükseltme komutu henüz tamamlanmadı.", "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            PosUpgrade();
         }
 
         [Category("Diğer komutlar")]

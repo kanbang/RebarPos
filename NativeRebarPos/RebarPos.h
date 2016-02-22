@@ -195,6 +195,14 @@ private:
 	bool geomInit;
 	AcGeMatrix3d ucs;
 
+private:
+	int suspendCount;
+	bool needsUpdate;
+
+public:
+	virtual void SuspendUpdate(void);
+	virtual void ResumeUpdate(void);
+
 protected:
 	/// Calculates pos properties when the pos is modified.
 	void Calculate(void);

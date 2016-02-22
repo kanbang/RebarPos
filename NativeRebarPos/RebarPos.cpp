@@ -40,7 +40,8 @@ CRebarPos::CRebarPos() :
 	m_Shape(NULL), m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), 
 	circleRadius(0.9), partSpacing(0.15), tauSize(0.6),
 	defpointsLayer(AcDbObjectId::kNull), m_Detached(Adesk::kFalse), m_GroupForDisplay(NULL),
-	m_LengthAlignment(CRebarPos::FREE), m_NoteAlignment(CRebarPos::FREE), m_CalcProps()
+	m_LengthAlignment(CRebarPos::FREE), m_NoteAlignment(CRebarPos::FREE), m_CalcProps(),
+	suspendCount(0), needsUpdate(false)
 {
 }
 
@@ -596,6 +597,22 @@ Acad::ErrorStatus CRebarPos::setGroupForDisplay(const CPosGroup* newVal)
 //*************************************************************************
 // Class Methods
 //*************************************************************************
+void CRebarPos::SuspendUpdate(void)
+{
+	assertWriteEnabled();
+
+	assert(suspendCount >= 0);
+	if (suspendCount == 0) needsUpdate = false;
+	suspendCount++;
+}
+void CRebarPos::ResumeUpdate(void)
+{
+	assertWriteEnabled();
+
+	assert(suspendCount > 0);
+	suspendCount--;
+	if (needsUpdate) Update();
+}
 
 /// Determines which part is under the given point
 const CRebarPos::PosSubEntityType CRebarPos::HitTest(const AcGePoint3d& pt0) const
@@ -2022,6 +2039,12 @@ Acad::ErrorStatus CRebarPos::subGetClassID(CLSID* pClsid) const
 void CRebarPos::Calculate(void)
 {
 	assertWriteEnabled();
+
+	if (suspendCount != 0)
+	{
+		needsUpdate = true;
+		return;
+	}
 
 	// Current UCS
 	if(!geomInit)
