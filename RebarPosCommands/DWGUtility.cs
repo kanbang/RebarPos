@@ -38,6 +38,17 @@ namespace RebarPosCommands
             return SSPosFilter(false);
         }
 
+        private static SelectionFilter SSPosAndBOQTableFilter()
+        {
+            TypedValue[] tvs = new TypedValue[] {
+                new TypedValue((int)DxfCode.Operator, "<OR"),
+                new TypedValue((int)DxfCode.Start, "REBARPOS"),
+                new TypedValue((int)DxfCode.Start, "BOQTABLE"),
+                new TypedValue((int)DxfCode.Operator, "OR>"),
+            };
+            return new SelectionFilter(tvs);
+        }
+
         public static PromptSelectionResult SelectAllPosUser(bool includeDetached)
         {
             try
@@ -54,6 +65,19 @@ namespace RebarPosCommands
         public static PromptSelectionResult SelectAllPosUser()
         {
             return SelectAllPosUser(false);
+        }
+
+        public static PromptSelectionResult SelectAllPosAndBOQTableUser()
+        {
+            try
+            {
+                return Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.GetSelection(SSPosAndBOQTableFilter());
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
         }
 
         public static ObjectId[] GetAllPos()

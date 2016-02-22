@@ -210,6 +210,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Commands.resx</DependentUpon>
     </Compile>
+    <Compile Include="Commands_PosExplode.cs" />
     <Compile Include="Commands_PosUpgrade.cs" />
     <Compile Include="Commands_PosEdit.cs" />
     <Compile Include="Commands_EmptyBalloons.cs" />

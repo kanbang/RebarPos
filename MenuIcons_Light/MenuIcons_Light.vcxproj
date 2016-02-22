@@ -83,6 +83,7 @@
     <Image Include="Resources\POZMIRROR.ico" />
     <Image Include="Resources\POZNUM.ico" />
     <Image Include="Resources\POZNUM_32.ico" />
+    <Image Include="Resources\POZPATLAT.ico" />
     <Image Include="Resources\SEKILGOSTER.ico" />
     <Image Include="Resources\SEKILSIL.ico" />
     <Image Include="Resources\SONPOZ.ico" />

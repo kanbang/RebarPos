@@ -187,6 +187,15 @@ namespace RebarPosCommands {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to POZPATLAT.
+        /// </summary>
+        internal static string POSEXPLODE_Local {
+            get {
+                return ResourceManager.GetString("POSEXPLODE_Local", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to POZBUL.
         /// </summary>
         internal static string POSFIND_Local {

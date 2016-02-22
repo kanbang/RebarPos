@@ -483,6 +483,16 @@ namespace RebarPosCommands
         }
 
         [Category("Diğer komutlar")]
+        [Description("Poz bloklarını ve metraj tablolarını patlatır.")]
+        [CommandMethod("OZOZRebarPos", "POSEXPLODE", "POSEXPLODE_Local", CommandFlags.Modal)]
+        public void CMD_PosExplode()
+        {
+            if (!CheckLicense()) return;
+
+            PosExplode();
+        }
+
+        [Category("Diğer komutlar")]
         [Description("Donatı pozlandırma ve metraj komutlarının açıklamalarını gösterir.")]
         [CommandMethod("OZOZRebarPos", "POSHELP", "POSHELP_Local", CommandFlags.Modal)]
         public void CMD_PosHelp()

@@ -156,6 +156,9 @@
   <data name="POSEDIT_Local" xml:space="preserve">
     <value>POZEDIT</value>
   </data>
+  <data name="POSEXPLODE_Local" xml:space="preserve">
+    <value>POZPATLAT</value>
+  </data>
   <data name="POSFIND_Local" xml:space="preserve">
     <value>POZBUL</value>
   </data>
