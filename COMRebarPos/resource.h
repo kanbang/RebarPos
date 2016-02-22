@@ -3,6 +3,7 @@
 // Used by COMRebarPos.rc
 //
 #define IDS_PROJNAME                    100
+#define IDR_COMREBARPOS                 101
 
 // Next default values for new objects
 // 

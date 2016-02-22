@@ -53,11 +53,9 @@ public:
 	{
 	}
 
-	static HRESULT WINAPI UpdateRegistry(BOOL /* bRegister */) throw()
-	{
-		// Do nothing. COM registration is handled by the resource script.
-		return S_OK;
-	}
+DECLARE_REGISTRY_RESOURCEID(IDR_COMREBARPOS)
+
+DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 DECLARE_NOT_AGGREGATABLE(CComRebarPos)
 
@@ -156,7 +154,7 @@ BEGIN_OPMPROP_MAP()
     OPMPROP_ENTRY(0, DISPID_E,          PROPCAT_Data,       0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, DISPID_F,          PROPCAT_Data,       0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, DISPID_LENGTH,     PROPCAT_Data,       0, 0, 0, _T(""), 0, 0, IID_NULL, IID_NULL, "")
-    OPMPROP_ENTRY(0, DISPID_SHAPE,      PROPCAT_Misc,       0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
+    OPMPROP_ENTRY(0, DISPID_SHAPE,      PROPCAT_Data,       0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, DISPID_SCALE,      PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, DISPID_LENGTHAL,   PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")
     OPMPROP_ENTRY(0, DISPID_NOTEAL,     PROPCAT_Appearance, 0, 0, 0, _T(""), 0, 1, IID_NULL, IID_NULL, "")

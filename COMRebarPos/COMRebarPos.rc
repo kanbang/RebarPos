@@ -82,6 +82,19 @@ BEGIN
     END
 END
 
+/////////////////////////////////////////////////////////////////////////////
+//
+// REGISTRY
+//
+#ifdef REBARPOS2015
+IDR_COMREBARPOS   REGISTRY DISCARDABLE    "COMRebarPos_2015.rgs"
+#endif
+#ifdef REBARPOS2013
+IDR_COMREBARPOS   REGISTRY DISCARDABLE    "COMRebarPos_2013.rgs"
+#endif
+#ifdef REBARPOS2010
+IDR_COMREBARPOS   REGISTRY DISCARDABLE    "COMRebarPos_2010.rgs"
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -103,7 +116,7 @@ END
 //
 // Generated from the TEXTINCLUDE 3 resource.
 //
-//1 TYPELIB "COMRebarPos.tlb"
+1 TYPELIB "COMRebarPos.tlb"
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
