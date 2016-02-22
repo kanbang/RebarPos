@@ -56,8 +56,31 @@ Source: "..\MenuIcons_Light\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resour
 Source: "..\Package\icon.bmp"; DestDir: "{app}\Resources"
 
 [Registry]
-Root: "HKCU"; Subkey: "Software\OZOZ\RebarPos";
-Root: "HKCU"; Subkey: "Software\OZOZ\RebarPos"; ValueType: string; ValueName: InstallPath; ValueData: {app};
+Root: HKCU; Subkey: "Software\OZOZ\RebarPos";
+Root: HKCU; Subkey: "Software\OZOZ\RebarPos"; ValueType: string; ValueName: InstallPath; ValueData: {app};
+; AutoCAD R20 (2015, 2016) ObjectDBX entries
+Root: HKLM; Subkey: "SOFTWARE\Autodesk\ObjectDBX\R20.0\ActiveXCLSID"; ValueType: string; ValueName: RebarPos; ValueData: "{{97CAC17D-B1C7-49ca-8D57-D3FF491860F5}";
+Root: HKLM; Subkey: "SOFTWARE\Autodesk\ObjectDBX\R20.1\ActiveXCLSID"; ValueType: string; ValueName: RebarPos; ValueData: "{{97CAC17D-B1C7-49ca-8D57-D3FF491860F5}";
+; AutoCAD R20 (2015, 2016) Type Library
+Root: HKCR; Subkey: "TypeLib\{{26E9A3B0-6567-4857-AABB-E09AC4A7A8A5}";
+Root: HKCR; Subkey: "TypeLib\{{26E9A3B0-6567-4857-AABB-E09AC4A7A8A5}\1.0"; ValueType: string; ValueData: "ComRebarPos Type Library for AutoCAD R20";
+Root: HKCR; Subkey: "TypeLib\{{26E9A3B0-6567-4857-AABB-E09AC4A7A8A5}\1.0\0";
+Root: HKCR; Subkey: "TypeLib\{{26E9A3B0-6567-4857-AABB-E09AC4A7A8A5}\1.0\0\win64"; ValueType: string; ValueData: "{app}\Bin\2015\COMRebarPos.dbx";
+Root: HKCR; Subkey: "TypeLib\{{26E9A3B0-6567-4857-AABB-E09AC4A7A8A5}\1.0\FLAGS"; ValueType: string; ValueData: "0";
+Root: HKCR; Subkey: "TypeLib\{{26E9A3B0-6567-4857-AABB-E09AC4A7A8A5}\1.0\HELPDIR"; ValueType: string; ValueData: "{app}\Bin\2015";
+; AutoCAD R20 (2015, 2016) COM Objects
+Root: HKCR; Subkey: "COMREBARPOSLib.ComRebarPos2015.1"; ValueType: string; ValueData: "ComRebarPos Class for AutoCAD R20";
+Root: HKCR; Subkey: "COMREBARPOSLib.ComRebarPos2015.1\CLSID"; ValueType: string; ValueData: "{{97CAC17D-B1C7-49ca-8D57-D3FF491860F5}";
+Root: HKCR; Subkey: "COMREBARPOSLib.ComRebarPos2015"; ValueType: string; ValueData: "ComRebarPos Class for AutoCAD R20";
+Root: HKCR; Subkey: "COMREBARPOSLib.ComRebarPos2015\CLSID"; ValueType: string; ValueData: "{{97CAC17D-B1C7-49ca-8D57-D3FF491860F5}";
+Root: HKCR; Subkey: "COMREBARPOSLib.ComRebarPos2015\CurVer"; ValueType: string; ValueData: "COMREBARPOSLib.ComRebarPos2015.1";
+Root: HKCR; Subkey: "CLSID\{{97CAC17D-B1C7-49ca-8D57-D3FF491860F5}"; ValueType: string; ValueData: "ComRebarPos Class for AutoCAD R20";
+Root: HKCR; Subkey: "CLSID\{{97CAC17D-B1C7-49ca-8D57-D3FF491860F5}\ProgID"; ValueType: string; ValueData: "COMREBARPOSLib.ComRebarPos2015.1";
+Root: HKCR; Subkey: "CLSID\{{97CAC17D-B1C7-49ca-8D57-D3FF491860F5}\VersionIndependentProgID"; ValueType: string; ValueData: "COMREBARPOSLib.ComRebarPos2015";
+Root: HKCR; Subkey: "CLSID\{{97CAC17D-B1C7-49ca-8D57-D3FF491860F5}\Programmable";
+Root: HKCR; Subkey: "CLSID\{{97CAC17D-B1C7-49ca-8D57-D3FF491860F5}\InprocServer32"; ValueType: string; ValueData: "{app}\Bin\2015\COMRebarPos.dbx";
+Root: HKCR; Subkey: "CLSID\{{97CAC17D-B1C7-49ca-8D57-D3FF491860F5}\InprocServer32"; ValueType: string; ValueName: ThreadingModel; ValueData: "Apartment";
+Root: HKCR; Subkey: "CLSID\{{97CAC17D-B1C7-49ca-8D57-D3FF491860F5}\TypeLib"; ValueType: string; ValueData: "{{26E9A3B0-6567-4857-AABB-E09AC4A7A8A5}";
 
 [Dirs]
 Name: "{userdocs}\RebarPos"
@@ -83,72 +106,4 @@ begin
   RootNode.setAttribute('AppVersion', Version);
 
   XMLDoc.Save(FileName);
-end;
-
-
-// Registers COM components
-procedure AddCOMRegistry(AcVersion: String; TypeLibGUID: String; ComRebarPosGUID: String; ComBOQTableGUID: String);
-var
-  RegPath: String;
-begin
-  // Type library
-  RegPath := 'TypeLib\' + TypeLibGUID;
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', '');
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0', '', 'RebarPos ' + AcVersion + ' 1.0 Type Library');
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\0', '', '');
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\0\win64', '', ExpandConstant('{app}\Bin\' + AcVersion + '\COMRebarPos.dbx'));
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\FLAGS', '', '0');
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\HELPDIR', '', ExpandConstant('{app}\Bin' + AcVersion));
-    
-  // COM classes
-  RegPath := 'CLSID\' + ComRebarPosGUID;
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', 'ComRebarPos Class ' + AcVersion);
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\Programmable', '', '');
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\TypeLib', '', TypeLibGUID);
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', '', ExpandConstant('{app}\Bin\' + AcVersion + '\COMRebarPos.dbx'));
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', 'ThreadingModel', 'Apartment');
-    
-  RegPath := 'CLSID\' + ComBOQTableGUID;
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', 'ComBOQTable Class ' + AcVersion);
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\Programmable', '', '');
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\TypeLib', '', TypeLibGUID);
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', '', ExpandConstant('{app}\Bin\' + AcVersion + '\COMRebarPos.dbx'));
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', 'ThreadingModel', 'Apartment');  
-end;
-
-// Unregisters COM components
-procedure RemoveCOMRegistry(TypeLibGUID: String; ComRebarPosGUID: String; ComBOQTableGUID: String);
-begin
-  // Type library
-  RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, 'TypeLib\' + TypeLibGUID);    
-  // COM classes
-  RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, 'CLSID\' + ComRebarPosGUID);
-  RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, 'CLSID\' + ComBOQTableGUID);    
-end;
-  
-// Add registry entries of COM components after installation
-procedure CurStepChanged(CurStep: TSetupStep);
-begin
-  if CurStep = ssPostInstall then begin
-    // Set registry keys for COM classes
-    // 2015
-    AddCOMRegistry('2015', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8A5}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F5}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD35}');
-    // 2013
-    AddCOMRegistry('2013', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8A3}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F3}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD33}');
-    // 2010
-    AddCOMRegistry('2010', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8A0}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F0}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD30}');
-  end;
-end;
-
-// Remove registry keys of COM classes when uninstalled
-procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
-begin
-  if CurUninstallStep = usPostUninstall then begin
-    // 2015
-    RemoveCOMRegistry('{26E9A3B0-6567-4857-AABB-E09AC4A7A8A5}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F5}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD35}');
-    // 2013
-    RemoveCOMRegistry('{26E9A3B0-6567-4857-AABB-E09AC4A7A8A3}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F3}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD33}');
-    // 2010
-    RemoveCOMRegistry('{26E9A3B0-6567-4857-AABB-E09AC4A7A8A0}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F0}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD30}'); 
-  end;
 end;

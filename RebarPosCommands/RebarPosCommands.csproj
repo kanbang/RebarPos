@@ -64,8 +64,18 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-2015|x64'">
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <OutputPath>Debug-2015\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;REBARPOS2015</DefineConstants>
+    <Optimize>false</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <Choose>
-    <When Condition=" '$(Configuration)'=='Release-2015' ">
+    <When Condition=" '$(Configuration)'=='Release-2015' Or '$(Configuration)'=='Debug-2015' ">
       <ItemGroup>
         <Reference Include="AcCoreMgd">
           <HintPath>C:\Autodesk\ObjectARX 2015\inc\AcCoreMgd.dll</HintPath>
@@ -229,6 +239,7 @@
     <Compile Include="Crypto.cs" />
     <Compile Include="License.cs" />
     <Compile Include="MultiPosShapeView.cs" />
+    <Compile Include="RebarPosOPMExtension.cs" />
     <Compile Include="RequestLicenseForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -385,6 +396,9 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="DebugLoad.scr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\arrow_left.png" />
   </ItemGroup>
   <ItemGroup>
