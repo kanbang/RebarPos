@@ -179,7 +179,7 @@ std::wstring Utility::StringFromResource(const HINSTANCE hInstance, const std::w
 
 std::wstring Utility::StringFromFile(const std::wstring& filename)
 {
-	std::wifstream ifs(filename);
+	std::wifstream ifs(filename.c_str());
 
 	boost::locale::generator gen;
 	std::locale utf8_locale = gen("en_US.UTF-8");
@@ -193,7 +193,7 @@ std::wstring Utility::StringFromFile(const std::wstring& filename)
 
 void Utility::StringToFile(const std::wstring& filename, const std::wstring& str)
 {
-	std::wofstream ofs(filename);
+	std::wofstream ofs(filename.c_str());
 
 	boost::locale::generator gen;
 	std::locale utf8_locale = gen("en_US.UTF-8");
