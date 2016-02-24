@@ -71,6 +71,20 @@ namespace RebarPosCommands
             }
         }
 
+        public static string ApplicationMenuPath
+        {
+            get
+            {
+#if REBARPOS2015
+                return Path.Combine(ApplicationInstallPath, "Resource\\2015");
+#elif REBARPOS2013
+                return Path.Combine(ApplicationInstallPath, "Resource\\2013");
+#elif REBARPOS2010
+                return Path.Combine(ApplicationInstallPath, "Resource\\2010");
+#endif
+            }
+        }
+
         // The CommandMethod attribute can be applied to any public  member 
         // function of any public class.
         // The function should take no arguments and return nothing.

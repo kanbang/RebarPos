@@ -13,12 +13,11 @@ namespace RebarPosCommands
     {
         public static bool LoadPosMenu()
         {
-            string cuifile = RebarPosCommands.MyCommands.ApplicationInstallPath;
+            string cuifile = RebarPosCommands.MyCommands.ApplicationMenuPath;
             if (string.IsNullOrEmpty(cuifile))
             {
                 return false;
             }
-            cuifile = System.IO.Path.Combine(cuifile, "Resources");
             cuifile = System.IO.Path.Combine(cuifile, "RebarPos.cuix");
             if (!System.IO.File.Exists(cuifile))
             {

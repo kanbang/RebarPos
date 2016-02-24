@@ -35,6 +35,8 @@ Type: filesandordirs; Name: "{app}\Contents\2015"
 [Files]
 ; Application manifest
 Source: "..\Package\PackageContents.xml"; DestDir: "{app}"; Flags: ignoreversion; AfterInstall: PreparePackageXML('{#ShortAppVersion}')
+; Package icon
+Source: "..\Package\icon.bmp"; DestDir: "{app}\Resources"
 ; AutoCAD R18 (2010, 2011, 2012) Libraries
 Source: "..\NativeRebarPos\Release-2010\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2010"; Flags: ignoreversion
 Source: "..\COMRebarPos\Release-2010\COMRebarPos.dbx"; DestDir: "{app}\Bin\2010"; Flags: ignoreversion
@@ -50,11 +52,15 @@ Source: "..\NativeRebarPos\Release-2015\NativeRebarPos.dbx"; DestDir: "{app}\Bin
 Source: "..\COMRebarPos\Release-2015\COMRebarPos.dbx"; DestDir: "{app}\Bin\2015"; Flags: ignoreversion
 Source: "..\ManagedRebarPos\Release-2015\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2015"; Flags: ignoreversion
 Source: "..\RebarPosCommands\Release-2015\RebarPosCommands.dll"; DestDir: "{app}\Bin\2015"; Flags: ignoreversion
+; Cuix file
+Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Resources\2010"
+Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Resources\2013"
+Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Resources\2015"
 ; Menu resources
-Source: "..\Menu\*.cuix"; DestDir: "{app}\Resources"
-Source: "..\MenuIcons\Release\MenuIcons.dll"; DestDir: "{app}\Resources"; DestName: "RebarPos.dll"
-Source: "..\MenuIcons_Light\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources"; DestName: "RebarPos_light.dll"
-Source: "..\Package\icon.bmp"; DestDir: "{app}\Resources"
+Source: "..\MenuIcons_Light\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2010"; DestName: "RebarPos.dll"
+Source: "..\MenuIcons_Light\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2013"; DestName: "RebarPos.dll"
+Source: "..\MenuIcons\Release\MenuIcons.dll"; DestDir: "{app}\Resources\2015"; DestName: "RebarPos.dll"
+Source: "..\MenuIcons_Light\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2015"; DestName: "RebarPos_light.dll"
 
 [Registry]
 Root: HKCU; Subkey: "Software\OZOZ\RebarPos";
