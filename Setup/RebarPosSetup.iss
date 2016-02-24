@@ -21,6 +21,7 @@ WizardImageFile=LargelImage.bmp
 WizardSmallImageFile=SmallImage.bmp
 UsePreviousLanguage=no
 SetupIconFile=Setup.ico
+UninstallDisplayIcon=Setup.ico
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"

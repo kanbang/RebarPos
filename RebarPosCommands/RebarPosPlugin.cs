@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.IO;
 
 using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.DatabaseServices;
@@ -19,6 +18,16 @@ namespace RebarPosCommands
     {
         void IExtensionApplication.Initialize()
         {
+            // Load the dependent assembly
+            try
+            {
+                Assembly.LoadFrom(System.IO.Path.Combine(RebarPosCommands.MyCommands.ApplicationBinPath, "ManagedRebarPos.dll"));
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            }
+
             // Create overrules
             DrawableOverrule.Overruling = true;
             ObjectOverrule.AddOverrule(RXClass.GetClass(typeof(RebarPos)), CountOverrule.Instance, true);

@@ -15,13 +15,13 @@ namespace RebarPosCommands
     {
         public static bool LoadPosMenu()
         {
-            string cuifile = MenuPathFromRegistry(RebarPosCommands.MyCommands.ApplicationRegistryKey);
+            string cuifile = RebarPosCommands.MyCommands.ApplicationInstallPath;
             if (string.IsNullOrEmpty(cuifile))
             {
                 return false;
             }
-            cuifile = Path.Combine(cuifile, "Menu");
-            cuifile = Path.Combine(cuifile, "RebarPos.cuix");
+            cuifile = System.IO.Path.Combine(cuifile, "Resources");
+            cuifile = System.IO.Path.Combine(cuifile, "RebarPos.cuix");
             if (!System.IO.File.Exists(cuifile))
             {
                 return false;
@@ -39,34 +39,6 @@ namespace RebarPosCommands
             LoadCuix(cuifile);
 
             return true;
-        }
-
-        public static string MenuPathFromRegistry(string registryKey)
-        {
-            try
-            {
-                RegistryKey key =Registry.CurrentUser.OpenSubKey(registryKey);
-                if (key == null)
-                {
-                    return string.Empty;
-                }
-                else
-                {
-                    object val = key.GetValue("InstallPath");
-                    if (val == null)
-                    {
-                        return string.Empty;
-                    }
-                    else
-                    {
-                        return val.ToString();
-                    }
-                }
-            }
-            catch
-            {
-                return string.Empty;
-            }
         }
 
         private static void LoadCuix(string cuiFilename)

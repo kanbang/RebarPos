@@ -32,6 +32,45 @@ namespace RebarPosCommands
             }
         }
 
+        public static string ApplicationInstallPath
+        {
+            get
+            {
+                try
+                {
+                    RegistryKey key = Registry.CurrentUser.OpenSubKey(ApplicationRegistryKey);
+                    if (key == null)
+                    {
+                        return string.Empty;
+                    }
+                    else
+                    {
+                        object val = key.GetValue("InstallPath");
+                        if (val == null)
+                        {
+                            return string.Empty;
+                        }
+                        else
+                        {
+                            return val.ToString();
+                        }
+                    }
+                }
+                catch
+                {
+                    return string.Empty;
+                }
+            }
+        }
+
+        public static string ApplicationBinPath
+        {
+            get
+            {
+                return Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            }
+        }
+
         // The CommandMethod attribute can be applied to any public  member 
         // function of any public class.
         // The function should take no arguments and return nothing.

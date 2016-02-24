@@ -15,28 +15,28 @@
   <!-- AutoCAD 2010, 2011, 2012 -->
   <Components Description="RebarPos for AutoCAD R18 (AutoCAD 2010, 2011, 2012)">
     <RuntimeRequirements SupportPath="./Resources" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R18" SeriesMax="R18" />
-    <ComponentEntry AppName="OZOZ.NativeRebarPos.2010" ModuleName="./Bin/2010/NativeRebarPos.dbx" LoadOnAutoCADStartup="True" />
-    <ComponentEntry AppName="OZOZ.COMRebarPos.2010" ModuleName="./Bin/2010/COMRebarPos.dbx" LoadOnAutoCADStartup="True" />
-    <ComponentEntry AppName="OZOZ.ManagedRebarPos.2010" ModuleName="./Bin/2010/ManagedRebarPos.dll" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="OZOZ.NativeRebarPos.2010" ModuleName="./Bin/2010/NativeRebarPos.dbx" LoadOnProxyDetection="True" LoadOnAutoCADStartup="False" LoadOnAppearance="False" />
+    <ComponentEntry AppName="OZOZ.COMRebarPos.2010" ModuleName="./Bin/2010/COMRebarPos.dbx" AppType="Dependency" />
+    <ComponentEntry AppName="OZOZ.ManagedRebarPos.2010" ModuleName="./Bin/2010/ManagedRebarPos.dll" AppType="Dependency" />
     <ComponentEntry AppName="OZOZ.RebarPosCommands.2010" ModuleName="./Bin/2010/RebarPosCommands.dll" LoadOnAutoCADStartup="True" />
-    <ComponentEntry AppName="OZOZ.RebarPosMenu.2010" ModuleName="./Resources/RebarPos.cuix" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="OZOZ.RebarPosMenu.2010" ModuleName="./Resources/RebarPos.cuix" />
   </Components>
   <!-- AutoCAD 2013, 2014 -->
   <Components Description="RebarPos for AutoCAD R19 (AutoCAD 2013, 2014)">
     <RuntimeRequirements SupportPath="./Resources" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R19" SeriesMax="R19" />
-    <ComponentEntry AppName="OZOZ.NativeRebarPos.2013" ModuleName="./Bin/2013/NativeRebarPos.dbx" LoadOnAutoCADStartup="True" />
-    <ComponentEntry AppName="OZOZ.COMRebarPos.2013" ModuleName="./Bin/2013/COMRebarPos.dbx" LoadOnAutoCADStartup="True" />
-    <ComponentEntry AppName="OZOZ.ManagedRebarPos.2013" ModuleName="./Bin/2013/ManagedRebarPos.dll" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="OZOZ.NativeRebarPos.2013" ModuleName="./Bin/2013/NativeRebarPos.dbx" LoadOnProxyDetection="True" LoadOnAutoCADStartup="False" LoadOnAppearance="False" />
+    <ComponentEntry AppName="OZOZ.COMRebarPos.2013" ModuleName="./Bin/2013/COMRebarPos.dbx" AppType="Dependency" />
+    <ComponentEntry AppName="OZOZ.ManagedRebarPos.2013" ModuleName="./Bin/2013/ManagedRebarPos.dll" AppType="Dependency" />
     <ComponentEntry AppName="OZOZ.RebarPosCommands.2013" ModuleName="./Bin/2013/RebarPosCommands.dll" LoadOnAutoCADStartup="True" />
-    <ComponentEntry AppName="OZOZ.RebarPosMenu.2013" ModuleName="./Resources/RebarPos.cuix" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="OZOZ.RebarPosMenu.2013" ModuleName="./Resources/RebarPos.cuix" />
   </Components>  
   <!-- AutoCAD 2015, 2016 -->
   <Components Description="RebarPos for AutoCAD R20 (AutoCAD 2015, 2016)">
     <RuntimeRequirements SupportPath="./Resources" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R20" SeriesMax="R20" />
-    <ComponentEntry AppName="OZOZ.NativeRebarPos.2015" ModuleName="./Bin/2015/NativeRebarPos.dbx" LoadOnAutoCADStartup="True" />
-    <ComponentEntry AppName="OZOZ.COMRebarPos.2015" ModuleName="./Bin/2015/COMRebarPos.dbx" LoadOnAutoCADStartup="True" />
-    <ComponentEntry AppName="OZOZ.RebarPosCommands.2015" ModuleName="./Bin/2015/ManagedRebarPos.dll" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="OZOZ.NativeRebarPos.2015" ModuleName="./Bin/2015/NativeRebarPos.dbx" LoadOnProxyDetection="True" LoadOnAutoCADStartup="False" LoadOnAppearance="False" />
+    <ComponentEntry AppName="OZOZ.COMRebarPos.2015" ModuleName="./Bin/2015/COMRebarPos.dbx" AppType="Dependency" />
+    <ComponentEntry AppName="OZOZ.ManagedRebarPos.2015" ModuleName="./Bin/2015/ManagedRebarPos.dll" AppType="Dependency" />
     <ComponentEntry AppName="OZOZ.RebarPosCommands.2015" ModuleName="./Bin/2015/RebarPosCommands.dll" LoadOnAutoCADStartup="True" />
-    <ComponentEntry AppName="OZOZ.RebarPosMenu.2015" ModuleName="./Resources/RebarPos.cuix" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="OZOZ.RebarPosMenu.2015" ModuleName="./Resources/RebarPos.cuix" />
   </Components>  
 </ApplicationPackage>

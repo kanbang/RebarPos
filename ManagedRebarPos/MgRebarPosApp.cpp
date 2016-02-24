@@ -24,7 +24,9 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 		case AcRx::kInitAppMsg: 
 		{
 			acrxDynamicLinker->registerAppMDIAware(pkt);
-
+			acrxDynamicLinker->loadModule(L"NativeRebarPos.dbx", Adesk::kTrue, Adesk::kFalse);
+			acrxDynamicLinker->loadModule(L"COMRebarPos.dbx", Adesk::kTrue, Adesk::kFalse);
+			
 			// create a new object factory array
 			static AcMgObjectFactoryBase* PEs[] = 
 			{
@@ -44,7 +46,8 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt)
 
 		case AcRx::kUnloadAppMsg:
 		{
-			;
+			acrxDynamicLinker->unloadModule(L"COMRebarPos.dbx", Adesk::kFalse);
+			acrxDynamicLinker->unloadModule(L"NativeRebarPos.dbx", Adesk::kFalse);
 		}
 		break;
 

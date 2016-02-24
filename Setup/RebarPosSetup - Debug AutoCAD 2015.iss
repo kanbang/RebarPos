@@ -16,6 +16,7 @@ WizardImageFile=LargelImage.bmp
 WizardSmallImageFile=SmallImage.bmp
 UsePreviousLanguage=no
 SetupIconFile=Setup.ico
+UninstallDisplayIcon=Setup.ico
 
 [Registry]
 ; AutoCAD R20 (2015, 2016) ObjectDBX entries
