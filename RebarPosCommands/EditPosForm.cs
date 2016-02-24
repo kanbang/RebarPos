@@ -642,6 +642,8 @@ namespace RebarPosCommands
 
         private bool CheckPosSpacing()
         {
+            txtPosSpacing.Text = txtPosSpacing.Text.Replace('-', '~');
+
             if (txtPosSpacing.IsValid)
             {
                 errorProvider.SetError(txtPosSpacing, "");

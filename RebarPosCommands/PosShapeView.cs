@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
-using System.Windows.Forms;
-using System.Drawing.Drawing2D;
-
-using OZOZ.RebarPosWrapper;
+﻿using OZOZ.RebarPosWrapper;
 
 namespace RebarPosCommands
 {
@@ -29,10 +20,12 @@ namespace RebarPosCommands
             SuspendUpdate();
             ClearItems();
             mShapeName = shapeName;
+
             if (!string.IsNullOrEmpty(mShapeName))
             {
                 AddItem(PosShape.GetPosShape(shapeName));
             }
+
             ResumeUpdate();
         }
     }
