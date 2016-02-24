@@ -38,7 +38,7 @@ namespace RebarPosCommands
             {
                 try
                 {
-                    RegistryKey key = Registry.CurrentUser.OpenSubKey(ApplicationRegistryKey);
+                    Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(ApplicationRegistryKey);
                     if (key == null)
                     {
                         return string.Empty;

@@ -5,9 +5,7 @@ using System.IO;
 using System.Windows.Media.Imaging;
 using System.Windows.Input;
 
-using Autodesk.Windows;
 using Autodesk.AutoCAD.ApplicationServices;
-using Microsoft.Win32;
 
 namespace RebarPosCommands
 {
