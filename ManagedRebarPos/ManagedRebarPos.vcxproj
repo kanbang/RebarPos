@@ -184,7 +184,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>acdbmgd.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile />
     </Link>
     <PostBuildEvent>
@@ -200,7 +200,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>acdbmgd.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>
       </ProgramDatabaseFile>
     </Link>
@@ -218,7 +218,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>acdbmgd.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>
       </ProgramDatabaseFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -238,7 +238,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>acdbmgd.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>
       </ProgramDatabaseFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -256,7 +256,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>acdbmgd.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>
       </ProgramDatabaseFile>
     </Link>
@@ -272,7 +272,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>acdbmgd.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>
       </ProgramDatabaseFile>
     </Link>
@@ -288,7 +288,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>acdbmgd.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>
       </ProgramDatabaseFile>
     </Link>
@@ -304,7 +304,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>acdbmgd.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>
       </ProgramDatabaseFile>
     </Link>
