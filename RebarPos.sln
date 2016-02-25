@@ -10,12 +10,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "COMRebarPos", "COMRebarPos\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RebarPosCommands", "RebarPosCommands\RebarPosCommands.csproj", "{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MenuIcons", "MenuIcons\MenuIcons.vcxproj", "{E1C26BDD-5053-45A9-BDA5-18096BADD031}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MenuIcons_Light", "MenuIcons_Light\MenuIcons_Light.vcxproj", "{96F4B113-DA30-46D0-892C-93FA5C10EEE5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeLicense", "MakeLicense\MakeLicense.csproj", "{E0286B2C-3938-45BB-A502-5494E68AE165}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug-2015|x64 = Debug-2015|x64
@@ -56,27 +50,6 @@ Global
 		{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}.Release-2013|x64.Build.0 = Release-2013|x64
 		{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}.Release-2015|x64.ActiveCfg = Release-2015|x64
 		{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}.Release-2015|x64.Build.0 = Release-2015|x64
-		{E1C26BDD-5053-45A9-BDA5-18096BADD031}.Debug-2015|x64.ActiveCfg = Release|Win32
-		{E1C26BDD-5053-45A9-BDA5-18096BADD031}.Release-2010|x64.ActiveCfg = Release|Win32
-		{E1C26BDD-5053-45A9-BDA5-18096BADD031}.Release-2010|x64.Build.0 = Release|Win32
-		{E1C26BDD-5053-45A9-BDA5-18096BADD031}.Release-2013|x64.ActiveCfg = Release|Win32
-		{E1C26BDD-5053-45A9-BDA5-18096BADD031}.Release-2013|x64.Build.0 = Release|Win32
-		{E1C26BDD-5053-45A9-BDA5-18096BADD031}.Release-2015|x64.ActiveCfg = Release|Win32
-		{E1C26BDD-5053-45A9-BDA5-18096BADD031}.Release-2015|x64.Build.0 = Release|Win32
-		{96F4B113-DA30-46D0-892C-93FA5C10EEE5}.Debug-2015|x64.ActiveCfg = Release|Win32
-		{96F4B113-DA30-46D0-892C-93FA5C10EEE5}.Release-2010|x64.ActiveCfg = Release|Win32
-		{96F4B113-DA30-46D0-892C-93FA5C10EEE5}.Release-2010|x64.Build.0 = Release|Win32
-		{96F4B113-DA30-46D0-892C-93FA5C10EEE5}.Release-2013|x64.ActiveCfg = Release|Win32
-		{96F4B113-DA30-46D0-892C-93FA5C10EEE5}.Release-2013|x64.Build.0 = Release|Win32
-		{96F4B113-DA30-46D0-892C-93FA5C10EEE5}.Release-2015|x64.ActiveCfg = Release|Win32
-		{96F4B113-DA30-46D0-892C-93FA5C10EEE5}.Release-2015|x64.Build.0 = Release|Win32
-		{E0286B2C-3938-45BB-A502-5494E68AE165}.Debug-2015|x64.ActiveCfg = Release|x64
-		{E0286B2C-3938-45BB-A502-5494E68AE165}.Release-2010|x64.ActiveCfg = Release|x64
-		{E0286B2C-3938-45BB-A502-5494E68AE165}.Release-2010|x64.Build.0 = Release|x64
-		{E0286B2C-3938-45BB-A502-5494E68AE165}.Release-2013|x64.ActiveCfg = Release|x64
-		{E0286B2C-3938-45BB-A502-5494E68AE165}.Release-2013|x64.Build.0 = Release|x64
-		{E0286B2C-3938-45BB-A502-5494E68AE165}.Release-2015|x64.ActiveCfg = Release|x64
-		{E0286B2C-3938-45BB-A502-5494E68AE165}.Release-2015|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
