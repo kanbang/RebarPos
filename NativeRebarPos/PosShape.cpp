@@ -699,7 +699,7 @@ void CPosShape::SavePosShapesToFile(const std::wstring& filename)
 			ofs << L"Count" << L'\t' << posShape->GetShapeCount() << std::endl;
 
 			// Write shapes
-			for (int i = 0; i < posShape->GetShapeCount(); i++)
+			for (ShapeSize i = 0; i < posShape->GetShapeCount(); i++)
 			{
 				const CShape* shape = posShape->GetShape(i);
 				if (shape->type == CShape::Line)

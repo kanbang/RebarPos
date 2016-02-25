@@ -11,12 +11,12 @@
       <AdditionalUsingDirectories>C:\Autodesk\ObjectARX 2013\inc;C:\Autodesk\ObjectARX 2013\inc-x64;C:\Autodesk\ObjectARX 2013\utils\Atil\Inc;C:\Autodesk\ObjectARX 2013\utils\Atil\Inc\format_codecs;C:\Autodesk\ObjectARX 2013\utils\Atil\Inc\codec_properties;%(AdditionalIncludeDirectories)</AdditionalUsingDirectories>
       <WarningLevel>Level4</WarningLevel>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>C:\Autodesk\ObjectARX 2013\inc;C:\Autodesk\ObjectARX 2013\inc-x64;C:\Autodesk\ObjectARX 2013\utils\Atil\Inc;C:\Autodesk\ObjectARX 2013\utils\Atil\Inc\format_codecs;C:\Autodesk\ObjectARX 2013\utils\Atil\Inc\codec_properties;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Autodesk\ObjectARX 2013\inc;C:\Autodesk\ObjectARX 2013\inc-$(Platform);C:\Autodesk\ObjectARX 2013\utils\Atil\Inc;C:\Autodesk\ObjectARX 2013\utils\Atil\Inc\format_codecs;C:\Autodesk\ObjectARX 2013\utils\Atil\Inc\codec_properties;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>REBARPOS2013;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4564;4481</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(VCInstallDir)atlmfc\lib\amd64;C:\Autodesk\ObjectARX 2013\lib-$(Platform);C:\Autodesk\ObjectARX 2013\utils\Atil\Lib-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(VCInstallDir)atlmfc\lib;$(VCInstallDir)atlmfc\lib\amd64;C:\Autodesk\ObjectARX 2013\lib-$(Platform);C:\Autodesk\ObjectARX 2013\utils\Atil\Lib-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>AdImaging.lib;acad.lib;accore.lib;ac1st19.lib;acui19.lib;adui19.lib;acdb19.lib;acge19.lib;rxapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalOptions>/ignore:4099,4254</AdditionalOptions>

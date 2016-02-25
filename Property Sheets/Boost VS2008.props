@@ -4,7 +4,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <IncludePath>C:\Boost;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Boost\lib\vc90;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Boost\lib\$(Platform)\vc90;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

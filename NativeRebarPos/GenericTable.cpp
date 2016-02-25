@@ -197,7 +197,7 @@ void CGenericTable::setMinimumRowHeight(const int i, const double newVal)
 void CGenericTable::setMinimumColumnWidth(const double newVal)
 {
 	assertWriteEnabled();
-	for(int i = 0; i < minColumnWidths.size(); i++)
+	for(size_t i = 0; i < minColumnWidths.size(); i++)
 	{
 		minColumnWidths[i] = newVal;
 	}
@@ -207,7 +207,7 @@ void CGenericTable::setMinimumColumnWidth(const double newVal)
 void CGenericTable::setMinimumRowHeight(const double newVal)
 {
 	assertWriteEnabled();
-	for(int i = 0; i < minRowHeights.size(); i++)
+	for(size_t i = 0; i < minRowHeights.size(); i++)
 	{
 		minRowHeights[i] = newVal;
 	}
