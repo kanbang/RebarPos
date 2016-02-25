@@ -57,10 +57,10 @@ Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Resources\2010"
 Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Resources\2013"
 Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Resources\2015"
 ; Menu resources
-Source: "..\MenuIcons_Light\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2010"; DestName: "RebarPos.dll"
-Source: "..\MenuIcons_Light\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2013"; DestName: "RebarPos.dll"
+Source: "..\MenuIcons\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2010"; DestName: "RebarPos.dll"
+Source: "..\MenuIcons\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2013"; DestName: "RebarPos.dll"
 Source: "..\MenuIcons\Release\MenuIcons.dll"; DestDir: "{app}\Resources\2015"; DestName: "RebarPos.dll"
-Source: "..\MenuIcons_Light\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2015"; DestName: "RebarPos_light.dll"
+Source: "..\MenuIcons\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2015"; DestName: "RebarPos_light.dll"
 
 [Registry]
 Root: HKCU; Subkey: "Software\OZOZ\RebarPos";

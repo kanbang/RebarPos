@@ -15,11 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="MenuIcons.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
@@ -125,6 +120,105 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Resources\POZPATLAT.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\ACILIMLAR_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\BALONSIL_32_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\BALONSIL_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\LGOSTER_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\LISANS_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\METRAJ_32_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\METRAJSIL_32_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\METRAJSIL_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\METRAJYARDIM_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZAYAR_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZBENZET_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZBUL_32_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZBUL_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZDEGIS_32_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZDEGIS_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZEDIT_32_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZEDIT_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZEKLE_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZKATKI_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZKONTROL_32_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZKONTROL_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZKOPYALA_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZKOPYALADETAY_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZMIRROR_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZNUM_32_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZNUM_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\POZPATLAT_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\SEKILGOSTER_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\SEKILSIL_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\SONPOZ_32_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\SONPOZ_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\TABLOSTILI_Light.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\YENILE_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release-Light|Win32">
+      <Configuration>Release-Light</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
@@ -20,16 +24,33 @@
     <CharacterSet>Unicode</CharacterSet>
     <ConfigurationType>DynamicLibrary</ConfigurationType>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Light|Win32'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release-Light|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <OutDir>$(ProjectDir)Release\</OutDir>
+    <IntDir>Release\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Light|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)Release\</OutDir>
+    <TargetName>$(ProjectName)_Light</TargetName>
+    <IntDir>Release\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -49,48 +70,103 @@
       <NoEntryPoint>true</NoEntryPoint>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
+    <ResourceCompile>
+      <PreprocessorDefinitions>RELEASE_DARK;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="resource.h" />
-  </ItemGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-Light|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;MENUICONS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <NoEntryPoint>true</NoEntryPoint>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+    </Link>
+    <ResourceCompile>
+      <PreprocessorDefinitions>RELEASE_LIGHT;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ResourceCompile Include="MenuIcons.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\ACILIMLAR.ico" />
+    <Image Include="Resources\ACILIMLAR_Light.ico" />
     <Image Include="Resources\BALONSIL.ico" />
     <Image Include="Resources\BALONSIL_32.ico" />
+    <Image Include="Resources\BALONSIL_32_Light.ico" />
+    <Image Include="Resources\BALONSIL_Light.ico" />
     <Image Include="Resources\LGOSTER.ico" />
+    <Image Include="Resources\LGOSTER_Light.ico" />
     <Image Include="Resources\LISANS.ico" />
+    <Image Include="Resources\LISANS_Light.ico" />
     <Image Include="Resources\METRAJ.ico" />
     <Image Include="Resources\METRAJSIL.ico" />
     <Image Include="Resources\METRAJSIL_32.ico" />
+    <Image Include="Resources\METRAJSIL_32_Light.ico" />
+    <Image Include="Resources\METRAJSIL_Light.ico" />
     <Image Include="Resources\METRAJYARDIM.ico" />
+    <Image Include="Resources\METRAJYARDIM_Light.ico" />
     <Image Include="Resources\METRAJ_32.ico" />
+    <Image Include="Resources\METRAJ_32_Light.ico" />
     <Image Include="Resources\POZAYAR.ico" />
+    <Image Include="Resources\POZAYAR_Light.ico" />
     <Image Include="Resources\POZBENZET.ico" />
+    <Image Include="Resources\POZBENZET_Light.ico" />
     <Image Include="Resources\POZBUL.ico" />
     <Image Include="Resources\POZBUL_32.ico" />
+    <Image Include="Resources\POZBUL_32_Light.ico" />
+    <Image Include="Resources\POZBUL_Light.ico" />
     <Image Include="Resources\POZDEGIS.ico" />
     <Image Include="Resources\POZDEGIS_32.ico" />
+    <Image Include="Resources\POZDEGIS_32_Light.ico" />
+    <Image Include="Resources\POZDEGIS_Light.ico" />
     <Image Include="Resources\POZEDIT.ico" />
     <Image Include="Resources\POZEDIT_32.ico" />
+    <Image Include="Resources\POZEDIT_32_Light.ico" />
+    <Image Include="Resources\POZEDIT_Light.ico" />
     <Image Include="Resources\POZEKLE.ico" />
+    <Image Include="Resources\POZEKLE_Light.ico" />
     <Image Include="Resources\POZKATKI.ico" />
+    <Image Include="Resources\POZKATKI_Light.ico" />
     <Image Include="Resources\POZKONTROL.ico" />
     <Image Include="Resources\POZKONTROL_32.ico" />
+    <Image Include="Resources\POZKONTROL_32_Light.ico" />
+    <Image Include="Resources\POZKONTROL_Light.ico" />
     <Image Include="Resources\POZKOPYALA.ico" />
     <Image Include="Resources\POZKOPYALADETAY.ico" />
+    <Image Include="Resources\POZKOPYALADETAY_Light.ico" />
+    <Image Include="Resources\POZKOPYALA_Light.ico" />
     <Image Include="Resources\POZMIRROR.ico" />
+    <Image Include="Resources\POZMIRROR_Light.ico" />
     <Image Include="Resources\POZNUM.ico" />
     <Image Include="Resources\POZNUM_32.ico" />
+    <Image Include="Resources\POZNUM_32_Light.ico" />
+    <Image Include="Resources\POZNUM_Light.ico" />
     <Image Include="Resources\POZPATLAT.ico" />
+    <Image Include="Resources\POZPATLAT_Light.ico" />
     <Image Include="Resources\SEKILGOSTER.ico" />
+    <Image Include="Resources\SEKILGOSTER_Light.ico" />
     <Image Include="Resources\SEKILSIL.ico" />
+    <Image Include="Resources\SEKILSIL_Light.ico" />
     <Image Include="Resources\SONPOZ.ico" />
     <Image Include="Resources\SONPOZ_32.ico" />
+    <Image Include="Resources\SONPOZ_32_Light.ico" />
+    <Image Include="Resources\SONPOZ_Light.ico" />
     <Image Include="Resources\TABLOSTILI.ico" />
+    <Image Include="Resources\TABLOSTILI_Light.ico" />
     <Image Include="Resources\YENILE.ico" />
+    <Image Include="Resources\YENILE_Light.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
