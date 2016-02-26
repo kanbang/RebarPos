@@ -17,7 +17,7 @@
       </DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(VCInstallDir)atlmfc\lib;$(VCInstallDir)atlmfc\lib\amd64;C:\Autodesk\ObjectARX 2015\lib-$(Platform);C:\Autodesk\ObjectARX 2015\utils\Atil\Lib-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Autodesk\ObjectARX 2015\lib-$(Platform);C:\Autodesk\ObjectARX 2015\utils\Atil\Lib-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>AdImaging.lib;acad.lib;accore.lib;ac1st20.lib;acui20.lib;adui20.lib;acdb20.lib;acge20.lib;rxapi.lib;AcDrawBridge.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalOptions>/ignore:4099,4254</AdditionalOptions>

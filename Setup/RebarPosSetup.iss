@@ -28,30 +28,46 @@ Name: "en"; MessagesFile: "compiler:Default.isl"
 Name: "tr"; MessagesFile: "Turkish.isl"
 
 [InstallDelete]
-Type: filesandordirs; Name: "{app}\Contents\2010"
-Type: filesandordirs; Name: "{app}\Contents\2013"
-Type: filesandordirs; Name: "{app}\Contents\2015"
+Type: filesandordirs; Name: "{app}\Bin"
+Type: filesandordirs; Name: "{app}\Contents"
 
 [Files]
 ; Application manifest
 Source: "..\Package\PackageContents.xml"; DestDir: "{app}"; Flags: ignoreversion; AfterInstall: PreparePackageXML('{#ShortAppVersion}')
 ; Package icon
 Source: "..\Package\icon.bmp"; DestDir: "{app}\Resources"
+; x64 Libraries
 ; AutoCAD R18 (2010, 2011, 2012) Libraries
-Source: "..\NativeRebarPos\Release-2010\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2010"; Flags: ignoreversion
-Source: "..\COMRebarPos\Release-2010\COMRebarPos.dbx"; DestDir: "{app}\Bin\2010"; Flags: ignoreversion
-Source: "..\ManagedRebarPos\Release-2010\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2010"; Flags: ignoreversion
-Source: "..\RebarPosCommands\Release-2010\RebarPosCommands.dll"; DestDir: "{app}\Bin\2010"; Flags: ignoreversion
+Source: "..\NativeRebarPos\Release-2010\x64\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2010\x64"; Flags: ignoreversion
+Source: "..\COMRebarPos\Release-2010\x64\COMRebarPos.dbx"; DestDir: "{app}\Bin\2010\x64"; Flags: ignoreversion
+Source: "..\ManagedRebarPos\Release-2010\x64\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2010\x64"; Flags: ignoreversion
+Source: "..\RebarPosCommands\Release-2010\x64\RebarPosCommands.dll"; DestDir: "{app}\Bin\2010\x64"; Flags: ignoreversion
 ; AutoCAD R19 (2013, 2014) Libraries
-Source: "..\NativeRebarPos\Release-2013\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2013"; Flags: ignoreversion
-Source: "..\COMRebarPos\Release-2013\COMRebarPos.dbx"; DestDir: "{app}\Bin\2013"; Flags: ignoreversion
-Source: "..\ManagedRebarPos\Release-2013\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2013"; Flags: ignoreversion
-Source: "..\RebarPosCommands\Release-2013\RebarPosCommands.dll"; DestDir: "{app}\Bin\2013"; Flags: ignoreversion
+Source: "..\NativeRebarPos\Release-2013\x64\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2013\x64"; Flags: ignoreversion
+Source: "..\COMRebarPos\Release-2013\x64\COMRebarPos.dbx"; DestDir: "{app}\Bin\2013\x64"; Flags: ignoreversion
+Source: "..\ManagedRebarPos\Release-2013\x64\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2013\x64"; Flags: ignoreversion
+Source: "..\RebarPosCommands\Release-2013\x64\RebarPosCommands.dll"; DestDir: "{app}\Bin\2013\x64"; Flags: ignoreversion
 ; AutoCAD R20 (2015, 2016) Libraries
-Source: "..\NativeRebarPos\Release-2015\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2015"; Flags: ignoreversion
-Source: "..\COMRebarPos\Release-2015\COMRebarPos.dbx"; DestDir: "{app}\Bin\2015"; Flags: ignoreversion
-Source: "..\ManagedRebarPos\Release-2015\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2015"; Flags: ignoreversion
-Source: "..\RebarPosCommands\Release-2015\RebarPosCommands.dll"; DestDir: "{app}\Bin\2015"; Flags: ignoreversion
+Source: "..\NativeRebarPos\Release-2015\x64\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2015\x64"; Flags: ignoreversion
+Source: "..\COMRebarPos\Release-2015\x64\COMRebarPos.dbx"; DestDir: "{app}\Bin\2015\x64"; Flags: ignoreversion
+Source: "..\ManagedRebarPos\Release-2015\x64\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2015\x64"; Flags: ignoreversion
+Source: "..\RebarPosCommands\Release-2015\x64\RebarPosCommands.dll"; DestDir: "{app}\Bin\2015\x64"; Flags: ignoreversion
+; x86 Libraries
+; AutoCAD R18 (2010, 2011, 2012) Libraries
+Source: "..\NativeRebarPos\Release-2010\win32\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2010\win32"; Flags: ignoreversion
+Source: "..\COMRebarPos\Release-2010\win32\COMRebarPos.dbx"; DestDir: "{app}\Bin\2010\win32"; Flags: ignoreversion
+Source: "..\ManagedRebarPos\Release-2010\win32\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2010\win32"; Flags: ignoreversion
+Source: "..\RebarPosCommands\Release-2010\win32\RebarPosCommands.dll"; DestDir: "{app}\Bin\2010\win32"; Flags: ignoreversion
+; AutoCAD R19 (2013, 2014) Libraries
+Source: "..\NativeRebarPos\Release-2013\win32\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2013\win32"; Flags: ignoreversion
+Source: "..\COMRebarPos\Release-2013\win32\COMRebarPos.dbx"; DestDir: "{app}\Bin\2013\win32"; Flags: ignoreversion
+Source: "..\ManagedRebarPos\Release-2013\win32\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2013\win32"; Flags: ignoreversion
+Source: "..\RebarPosCommands\Release-2013\win32\RebarPosCommands.dll"; DestDir: "{app}\Bin\2013\win32"; Flags: ignoreversion
+; AutoCAD R20 (2015, 2016) Libraries
+Source: "..\NativeRebarPos\Release-2015\win32\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2015\win32"; Flags: ignoreversion
+Source: "..\COMRebarPos\Release-2015\win32\COMRebarPos.dbx"; DestDir: "{app}\Bin\2015\win32"; Flags: ignoreversion
+Source: "..\ManagedRebarPos\Release-2015\win32\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2015\win32"; Flags: ignoreversion
+Source: "..\RebarPosCommands\Release-2015\win32\RebarPosCommands.dll"; DestDir: "{app}\Bin\2015\win32"; Flags: ignoreversion
 ; Cuix file
 Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Resources\2010"
 Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Resources\2013"
@@ -102,7 +118,8 @@ begin
   RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', '');
   RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0', '', 'RebarPos ' + AcVersion + ' 1.0 Type Library');
   RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\0', '', '');
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\0\win64', '', ExpandConstant('{app}\Bin\' + AcVersion + '\COMRebarPos.dbx'));
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\0\win64', '', ExpandConstant('{app}\Bin\' + AcVersion + '\x64\COMRebarPos.dbx'));
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\0\win32', '', ExpandConstant('{app}\Bin\' + AcVersion + '\win32\COMRebarPos.dbx'));
   RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\FLAGS', '', '0');
   RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\HELPDIR', '', ExpandConstant('{app}\Bin' + AcVersion));
     
@@ -111,14 +128,14 @@ begin
   RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', 'ComRebarPos Class ' + AcVersion);
   RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\Programmable', '', '');
   RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\TypeLib', '', TypeLibGUID);
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', '', ExpandConstant('{app}\Bin\' + AcVersion + '\COMRebarPos.dbx'));
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', '', ExpandConstant('{app}\Bin\' + AcVersion + '\x64\COMRebarPos.dbx'));
   RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', 'ThreadingModel', 'Apartment');
     
   RegPath := 'CLSID\' + ComBOQTableGUID;
   RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath, '', 'ComBOQTable Class ' + AcVersion);
   RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\Programmable', '', '');
   RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\TypeLib', '', TypeLibGUID);
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', '', ExpandConstant('{app}\Bin\' + AcVersion + '\COMRebarPos.dbx'));
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', '', ExpandConstant('{app}\Bin\' + AcVersion + '\x64\COMRebarPos.dbx'));
   RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\InprocServer32', 'ThreadingModel', 'Apartment');  
 end;
 

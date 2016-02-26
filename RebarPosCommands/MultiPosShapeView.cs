@@ -62,7 +62,7 @@ namespace RebarPosCommands
             else
                 this.CellBackColor = DWGUtility.ModelBackgroundColor();
             mSelectedShape = string.Empty;
-            mCellSize = new Size(300, 150);
+            mCellSize = new Size(475, 150);
             mSelectionColor = SystemColors.Highlight;
 
             this.Name = "MultiPosShapeView";

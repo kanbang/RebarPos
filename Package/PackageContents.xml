@@ -6,95 +6,66 @@
     ProductType="Application" 
     Name="RebarPos" 
     AppVersion="###"
-    Description="Rebar Marking and Scheduling Plugin (64 bit)." 
+    Description="Rebar Marking and Scheduling Plugin." 
     Author="Özgür Özçıtak" 
     Icon="./Resources/icon.bmp"
     ProductCode="76f1f87b-1794-4c6a-bade-28640c6a130b"
     UpgradeCode="237ca78f-5780-4410-95ed-f19683227acc">
   <CompanyDetails Name="OZOZ" Email="ozcitak@yahoo.com" Url=" " Phone=" " />
+  <!-- x64 -->
   <!-- AutoCAD 2010, 2011, 2012 -->
-  <Components Description="RebarPos for AutoCAD R18 (AutoCAD 2010, 2011, 2012)">
+  <Components Description="RebarPos for AutoCAD R18 (AutoCAD 2010, 2011, 2012) 64 bit">
     <RuntimeRequirements SupportPath="./Resources/2010" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R18.0" SeriesMax="R18.2" />
-    <ComponentEntry AppName="OZOZ.NativeRebarPos.2010" AppDescription="RebarPos for AutoCAD R18 custom object enabler" ModuleName="./Bin/2010/NativeRebarPos.dbx" LoadOnProxyDetection="True" LoadOnAutoCADStartup="False" LoadOnAppearance="False" />
-    <ComponentEntry AppName="OZOZ.COMRebarPos.2010" AppDescription="RebarPos for AutoCAD R18 COM wrapper" ModuleName="./Bin/2010/COMRebarPos.dbx" AppType="Dependency" />
-    <ComponentEntry AppName="OZOZ.ManagedRebarPos.2010" AppDescription="RebarPos for AutoCAD R18 managed wrapper" ModuleName="./Bin/2010/ManagedRebarPos.dll" AppType="Dependency" />
-    <ComponentEntry AppName="OZOZ.RebarPosCommands.2010" AppDescription="RebarPos for AutoCAD R18 commands" ModuleName="./Bin/2010/RebarPosCommands.dll" LoadOnAutoCADStartup="True" />
-    <ComponentEntry AppName="OZOZ.RebarPosMenu.2010" AppDescription="RebarPos for AutoCAD R18 partial menu file" ModuleName="./Resources/2010/RebarPos.cuix" />
+    <ComponentEntry AppName="OZOZ.NativeRebarPos.2010" AppDescription="RebarPos for AutoCAD R18 custom object enabler 64 bit" ModuleName="./Bin/2010/x64/NativeRebarPos.dbx" LoadOnProxyDetection="True" LoadOnAutoCADStartup="False" LoadOnAppearance="False" />
+    <ComponentEntry AppName="OZOZ.COMRebarPos.2010" AppDescription="RebarPos for AutoCAD R18 COM wrapper 64 bit" ModuleName="./Bin/2010/x64/COMRebarPos.dbx" AppType="Dependency" />
+    <ComponentEntry AppName="OZOZ.ManagedRebarPos.2010" AppDescription="RebarPos for AutoCAD R18 managed wrapper 64 bit" ModuleName="./Bin/2010/x64/ManagedRebarPos.dll" AppType="Dependency" />
+    <ComponentEntry AppName="OZOZ.RebarPosCommands.2010" AppDescription="RebarPos for AutoCAD R18 commands 64 bit" ModuleName="./Bin/2010/x64/RebarPosCommands.dll" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="OZOZ.RebarPosMenu.2010" AppDescription="RebarPos for AutoCAD R18 partial menu file 64 bit" ModuleName="./Resources/2010/RebarPos.cuix" />
   </Components>
   <!-- AutoCAD 2013, 2014 -->
-  <Components Description="RebarPos for AutoCAD R19 (AutoCAD 2013, 2014)">
+  <Components Description="RebarPos for AutoCAD R19 (AutoCAD 2013, 2014) 64 bit">
     <RuntimeRequirements SupportPath="./Resources/2013" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R19.0" SeriesMax="R19.1" />
-    <ComponentEntry AppName="OZOZ.NativeRebarPos.2013" AppDescription="RebarPos for AutoCAD R19 custom object enabler" ModuleName="./Bin/2013/NativeRebarPos.dbx" LoadOnProxyDetection="True" LoadOnAutoCADStartup="False" LoadOnAppearance="False" />
-    <ComponentEntry AppName="OZOZ.COMRebarPos.2013" AppDescription="RebarPos for AutoCAD R19 COM wrapper" ModuleName="./Bin/2013/COMRebarPos.dbx" AppType="Dependency" />
-    <ComponentEntry AppName="OZOZ.ManagedRebarPos.2013" AppDescription="RebarPos for AutoCAD R19 managed wrapper" ModuleName="./Bin/2013/ManagedRebarPos.dll" AppType="Dependency" />
-    <ComponentEntry AppName="OZOZ.RebarPosCommands.2013" AppDescription="RebarPos for AutoCAD R19 commands" ModuleName="./Bin/2013/RebarPosCommands.dll" LoadOnCommandInvocation="True">
-        <Commands GroupName="OZOZRebarPos">
-            <Command Global="BOQ" Local="METRAJ"/>
-            <Command Global="BOQEDIT" Local="METRAJEDIT"/>
-            <Command Global="COPYPOS" Local="POZKOPYALA"/>
-            <Command Global="COPYPOSDETAIL" Local="POZKOPYALADETAY"/>
-            <Command Global="COPYPOSNUMBER" Local="POZBENZET"/>
-            <Command Global="EMPTYPOS" Local="NUMARASIL"/>
-            <Command Global="HIDESHAPES" Local="SEKILSIL"/>
-            <Command Global="INCLUDEPOS" Local="POZKATKI"/>
-            <Command Global="LASTPOSNUMBER" Local="SONPOZ"/>
-            <Command Global="NEWPOS" Local="POZEKLE"/>
-            <Command Global="NUMBERPOS" Local="POZNUM"/>
-            <Command Global="POS" Local="POZ"/>
-            <Command Global="POSCHECK" Local="POZKONTROL"/>
-            <Command Global="POSEDIT" Local="POZEDIT"/>
-            <Command Global="POSEXPLODE" Local="POZPATLAT"/>
-            <Command Global="POSFIND" Local="POZBUL"/>
-            <Command Global="POSHELP" Local="METRAJYARDIM"/>
-            <Command Global="POSLENGTH" Local="BOYGOSTER"/>
-            <Command Global="POSLICENSE" Local="POZLISANS"/>
-            <Command Global="POSMENU" Local="POZMENU"/>
-            <Command Global="POSSETTINGS" Local="POZAYAR"/>
-            <Command Global="POSSHAPES" Local="ACILIMLAR"/>
-            <Command Global="POSUPGRADE" Local="YUKSELT"/>
-            <Command Global="SHOWSHAPES" Local="SEKILGOSTER"/>
-            <Command Global="TABLESTYLE" Local="TABLOSTILI"/>
-            <Command Global="TOGGLESHAPES" Local="SEKILGOSTERGIZLE"/>
-        </Commands> 
-    </ComponentEntry>
-    <ComponentEntry AppName="OZOZ.RebarPosMenu.2013" AppDescription="RebarPos for AutoCAD R19 partial menu file" ModuleName="./Resources/2013/RebarPos.cuix" />
+    <ComponentEntry AppName="OZOZ.NativeRebarPos.2013" AppDescription="RebarPos for AutoCAD R19 custom object enabler 64 bit" ModuleName="./Bin/2013/x64/NativeRebarPos.dbx" LoadOnProxyDetection="True" LoadOnAutoCADStartup="False" LoadOnAppearance="False" />
+    <ComponentEntry AppName="OZOZ.COMRebarPos.2013" AppDescription="RebarPos for AutoCAD R19 COM wrapper 64 bit" ModuleName="./Bin/2013/x64/COMRebarPos.dbx" AppType="Dependency" />
+    <ComponentEntry AppName="OZOZ.ManagedRebarPos.2013" AppDescription="RebarPos for AutoCAD R19 managed wrapper 64 bit" ModuleName="./Bin/2013/x64/ManagedRebarPos.dll" AppType="Dependency" />
+    <ComponentEntry AppName="OZOZ.RebarPosCommands.2013" AppDescription="RebarPos for AutoCAD R19 commands 64 bit" ModuleName="./Bin/2013/x64/RebarPosCommands.dll" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="OZOZ.RebarPosMenu.2013" AppDescription="RebarPos for AutoCAD R19 partial menu file 64 bit" ModuleName="./Resources/2013/RebarPos.cuix" />
   </Components>  
   <!-- AutoCAD 2015, 2016 -->
-  <Components Description="RebarPos for AutoCAD R20 (AutoCAD 2015, 2016)">
+  <Components Description="RebarPos for AutoCAD R20 (AutoCAD 2015, 2016) 64 bit">
     <RuntimeRequirements SupportPath="./Resources/2015" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R20.0" SeriesMax="R20.1" />
-    <ComponentEntry AppName="OZOZ.NativeRebarPos.2015" AppDescription="RebarPos for AutoCAD R20 custom object enabler" ModuleName="./Bin/2015/NativeRebarPos.dbx" LoadOnProxyDetection="True" LoadOnAutoCADStartup="False" LoadOnAppearance="False" />
-    <ComponentEntry AppName="OZOZ.COMRebarPos.2015" AppDescription="RebarPos for AutoCAD R20 COM wrapper" ModuleName="./Bin/2015/COMRebarPos.dbx" AppType="Dependency" />
-    <ComponentEntry AppName="OZOZ.ManagedRebarPos.2015" AppDescription="RebarPos for AutoCAD R20 managed wrapper" ModuleName="./Bin/2015/ManagedRebarPos.dll" AppType="Dependency" />
-    <ComponentEntry AppName="OZOZ.RebarPosCommands.2015" AppDescription="RebarPos for AutoCAD R20 commands" ModuleName="./Bin/2015/RebarPosCommands.dll" LoadOnCommandInvocation="True">
-        <Commands GroupName="OZOZRebarPos">
-            <Command Global="BOQ" Local="METRAJ"/>
-            <Command Global="BOQEDIT" Local="METRAJEDIT"/>
-            <Command Global="COPYPOS" Local="POZKOPYALA"/>
-            <Command Global="COPYPOSDETAIL" Local="POZKOPYALADETAY"/>
-            <Command Global="COPYPOSNUMBER" Local="POZBENZET"/>
-            <Command Global="EMPTYPOS" Local="NUMARASIL"/>
-            <Command Global="HIDESHAPES" Local="SEKILSIL"/>
-            <Command Global="INCLUDEPOS" Local="POZKATKI"/>
-            <Command Global="LASTPOSNUMBER" Local="SONPOZ"/>
-            <Command Global="NEWPOS" Local="POZEKLE"/>
-            <Command Global="NUMBERPOS" Local="POZNUM"/>
-            <Command Global="POS" Local="POZ"/>
-            <Command Global="POSCHECK" Local="POZKONTROL"/>
-            <Command Global="POSEDIT" Local="POZEDIT"/>
-            <Command Global="POSEXPLODE" Local="POZPATLAT"/>
-            <Command Global="POSFIND" Local="POZBUL"/>
-            <Command Global="POSHELP" Local="METRAJYARDIM"/>
-            <Command Global="POSLENGTH" Local="BOYGOSTER"/>
-            <Command Global="POSLICENSE" Local="POZLISANS"/>
-            <Command Global="POSMENU" Local="POZMENU"/>
-            <Command Global="POSSETTINGS" Local="POZAYAR"/>
-            <Command Global="POSSHAPES" Local="ACILIMLAR"/>
-            <Command Global="POSUPGRADE" Local="YUKSELT"/>
-            <Command Global="SHOWSHAPES" Local="SEKILGOSTER"/>
-            <Command Global="TABLESTYLE" Local="TABLOSTILI"/>
-            <Command Global="TOGGLESHAPES" Local="SEKILGOSTERGIZLE"/>
-        </Commands>
-    </ComponentEntry>
-    <ComponentEntry AppName="OZOZ.RebarPosMenu.2015" AppDescription="RebarPos for AutoCAD R20 partial menu file" ModuleName="./Resources/2015/RebarPos.cuix" />
+    <ComponentEntry AppName="OZOZ.NativeRebarPos.2015" AppDescription="RebarPos for AutoCAD R20 custom object enabler 64 bit" ModuleName="./Bin/2015/x64/NativeRebarPos.dbx" LoadOnProxyDetection="True" LoadOnAutoCADStartup="False" LoadOnAppearance="False" />
+    <ComponentEntry AppName="OZOZ.COMRebarPos.2015" AppDescription="RebarPos for AutoCAD R20 COM wrapper 64 bit" ModuleName="./Bin/2015/x64/COMRebarPos.dbx" AppType="Dependency" />
+    <ComponentEntry AppName="OZOZ.ManagedRebarPos.2015" AppDescription="RebarPos for AutoCAD R20 managed wrapper 64 bit" ModuleName="./Bin/2015/x64/ManagedRebarPos.dll" AppType="Dependency" />
+    <ComponentEntry AppName="OZOZ.RebarPosCommands.2015" AppDescription="RebarPos for AutoCAD R20 commands 64 bit" ModuleName="./Bin/2015/x64/RebarPosCommands.dll" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="OZOZ.RebarPosMenu.2015" AppDescription="RebarPos for AutoCAD R20 partial menu file 64 bit" ModuleName="./Resources/2015/RebarPos.cuix" />
   </Components>  
+  <!-- x86 -->
+  <!-- AutoCAD 2010, 2011, 2012 -->
+  <Components Description="RebarPos for AutoCAD R18 (AutoCAD 2010, 2011, 2012) 32 bit">
+    <RuntimeRequirements SupportPath="./Resources/2010" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R18.0" SeriesMax="R18.2" />
+    <ComponentEntry AppName="OZOZ.NativeRebarPos.2010" AppDescription="RebarPos for AutoCAD R18 custom object enabler 32 bit" ModuleName="./Bin/2010/win32/NativeRebarPos.dbx" LoadOnProxyDetection="True" LoadOnAutoCADStartup="False" LoadOnAppearance="False" />
+    <ComponentEntry AppName="OZOZ.COMRebarPos.2010" AppDescription="RebarPos for AutoCAD R18 COM wrapper 32 bit" ModuleName="./Bin/2010/win32/COMRebarPos.dbx" AppType="Dependency" />
+    <ComponentEntry AppName="OZOZ.ManagedRebarPos.2010" AppDescription="RebarPos for AutoCAD R18 managed wrapper 32 bit" ModuleName="./Bin/2010/win32/ManagedRebarPos.dll" AppType="Dependency" />
+    <ComponentEntry AppName="OZOZ.RebarPosCommands.2010" AppDescription="RebarPos for AutoCAD R18 commands 32 bit" ModuleName="./Bin/2010/win32/RebarPosCommands.dll" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="OZOZ.RebarPosMenu.2010" AppDescription="RebarPos for AutoCAD R18 partial menu file 32 bit" ModuleName="./Resources/2010/RebarPos.cuix" />
+  </Components>
+  <!-- AutoCAD 2013, 2014 -->
+  <Components Description="RebarPos for AutoCAD R19 (AutoCAD 2013, 2014) 32 bit">
+    <RuntimeRequirements SupportPath="./Resources/2013" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R19.0" SeriesMax="R19.1" />
+    <ComponentEntry AppName="OZOZ.NativeRebarPos.2013" AppDescription="RebarPos for AutoCAD R19 custom object enabler 32 bit" ModuleName="./Bin/2013/win32/NativeRebarPos.dbx" LoadOnProxyDetection="True" LoadOnAutoCADStartup="False" LoadOnAppearance="False" />
+    <ComponentEntry AppName="OZOZ.COMRebarPos.2013" AppDescription="RebarPos for AutoCAD R19 COM wrapper 32 bit" ModuleName="./Bin/2013/win32/COMRebarPos.dbx" AppType="Dependency" />
+    <ComponentEntry AppName="OZOZ.ManagedRebarPos.2013" AppDescription="RebarPos for AutoCAD R19 managed wrapper 32 bit" ModuleName="./Bin/2013/win32/ManagedRebarPos.dll" AppType="Dependency" />
+    <ComponentEntry AppName="OZOZ.RebarPosCommands.2013" AppDescription="RebarPos for AutoCAD R19 commands 32 bit" ModuleName="./Bin/2013/win32/RebarPosCommands.dll" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="OZOZ.RebarPosMenu.2013" AppDescription="RebarPos for AutoCAD R19 partial menu file 32 bit" ModuleName="./Resources/2013/RebarPos.cuix" />
+  </Components>  
+  <!-- AutoCAD 2015, 2016 -->
+  <Components Description="RebarPos for AutoCAD R20 (AutoCAD 2015, 2016) 32 bit">
+    <RuntimeRequirements SupportPath="./Resources/2015" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R20.0" SeriesMax="R20.1" />
+    <ComponentEntry AppName="OZOZ.NativeRebarPos.2015" AppDescription="RebarPos for AutoCAD R20 custom object enabler 32 bit" ModuleName="./Bin/2015/win32/NativeRebarPos.dbx" LoadOnProxyDetection="True" LoadOnAutoCADStartup="False" LoadOnAppearance="False" />
+    <ComponentEntry AppName="OZOZ.COMRebarPos.2015" AppDescription="RebarPos for AutoCAD R20 COM wrapper 32 bit" ModuleName="./Bin/2015/win32/COMRebarPos.dbx" AppType="Dependency" />
+    <ComponentEntry AppName="OZOZ.ManagedRebarPos.2015" AppDescription="RebarPos for AutoCAD R20 managed wrapper 32 bit" ModuleName="./Bin/2015/win32/ManagedRebarPos.dll" AppType="Dependency" />
+    <ComponentEntry AppName="OZOZ.RebarPosCommands.2015" AppDescription="RebarPos for AutoCAD R20 commands 32 bit" ModuleName="./Bin/2015/win32/RebarPosCommands.dll" LoadOnAutoCADStartup="True" />
+    <ComponentEntry AppName="OZOZ.RebarPosMenu.2015" AppDescription="RebarPos for AutoCAD R20 partial menu file 32 bit" ModuleName="./Resources/2015/RebarPos.cuix" />
+  </Components>    
 </ApplicationPackage>

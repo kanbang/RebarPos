@@ -16,7 +16,7 @@
       <DisableSpecificWarnings>4564;4481</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(VCInstallDir)atlmfc\lib;$(VCInstallDir)atlmfc\lib\amd64;C:\Autodesk\ObjectARX 2013\lib-$(Platform);C:\Autodesk\ObjectARX 2013\utils\Atil\Lib-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Autodesk\ObjectARX 2013\lib-$(Platform);C:\Autodesk\ObjectARX 2013\utils\Atil\Lib-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>AdImaging.lib;acad.lib;accore.lib;ac1st19.lib;acui19.lib;adui19.lib;acdb19.lib;acge19.lib;rxapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalOptions>/ignore:4099,4254</AdditionalOptions>

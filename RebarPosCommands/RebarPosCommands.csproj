@@ -36,7 +36,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-2015|x64' ">
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <OutputPath>Release-2015\</OutputPath>
+    <OutputPath>Release-2015\x64</OutputPath>
     <DefineConstants>TRACE;REBARPOS2015</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -46,7 +46,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2013|x64'">
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <OutputPath>Release-2013\</OutputPath>
+    <OutputPath>Release-2013\x64</OutputPath>
     <DefineConstants>TRACE;REBARPOS2013</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -56,7 +56,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-2010|x64' ">
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <OutputPath>Release-2010\</OutputPath>
+    <OutputPath>Release-2010\x64</OutputPath>
     <DefineConstants>TRACE;REBARPOS2010</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -66,7 +66,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-2015|x64'">
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <OutputPath>Debug-2015\</OutputPath>
+    <OutputPath>Debug-2015\x64</OutputPath>
     <DefineConstants>DEBUG;TRACE;REBARPOS2015</DefineConstants>
     <Optimize>false</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -76,7 +76,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2015|x86' Or '$(Configuration)|$(Platform)' == 'Release-2015|AnyCPU'">
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <OutputPath>bin\x86\Release-2015\</OutputPath>
+    <OutputPath>Release-2015\Win32</OutputPath>
     <DefineConstants>TRACE;REBARPOS2015</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -86,7 +86,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2013|x86' Or '$(Configuration)|$(Platform)' == 'Release-2013|AnyCPU'">
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <OutputPath>bin\x86\Release-2013\</OutputPath>
+    <OutputPath>Release-2013\Win32</OutputPath>
     <DefineConstants>TRACE;REBARPOS2013</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -96,7 +96,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2010|x86' Or '$(Configuration)|$(Platform)' == 'Release-2010|AnyCPU'">
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <OutputPath>bin\x86\Release-2010\</OutputPath>
+    <OutputPath>Release-2010\Win32</OutputPath>
     <DefineConstants>TRACE;REBARPOS2010</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -106,7 +106,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-2015|x86' Or '$(Configuration)|$(Platform)' == 'Debug-2015|AnyCPU'">
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <OutputPath>bin\x86\Debug-2015\</OutputPath>
+    <OutputPath>Debug-2015\Win32</OutputPath>
     <DefineConstants>DEBUG;TRACE;REBARPOS2015</DefineConstants>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -247,9 +247,14 @@
           <HintPath>C:\Autodesk\ObjectARX 2013\inc\AdWindows.dll</HintPath>
           <Private>False</Private>
         </Reference>
-        <Reference Include="Autodesk.AutoCAD.Interop">
+        <Reference Include="Autodesk.AutoCAD.Interop" Condition="'$(Platform)'=='x64'">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>C:\Autodesk\ObjectARX 2013\inc-x64\Autodesk.AutoCAD.Interop.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Autodesk.AutoCAD.Interop" Condition="'$(Platform)'=='x86' Or '$(Platform)'=='AnyCPU'">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>C:\Autodesk\ObjectARX 2013\inc-win32\Autodesk.AutoCAD.Interop.dll</HintPath>
           <Private>False</Private>
         </Reference>
         <Reference Include="ManagedRebarPos" Condition="'$(Platform)'=='x64'">
@@ -262,7 +267,7 @@
         </Reference>
       </ItemGroup>
     </When>
-    <When Condition=" '$(Configuration)'=='Release-2010' ">
+    <When Condition=" '$(Configuration)'=='Release-2010' And '$(Platform)'=='x64'">
       <ItemGroup>
         <Reference Include="AcCui">
           <SpecificVersion>False</SpecificVersion>
@@ -294,11 +299,45 @@
           <HintPath>C:\Autodesk\ObjectARX 2010\inc-x64\Autodesk.AutoCAD.Interop.dll</HintPath>
           <Private>False</Private>
         </Reference>
-        <Reference Include="ManagedRebarPos" Condition="'$(Platform)'=='x64'">
+        <Reference Include="ManagedRebarPos">
           <HintPath>..\ManagedRebarPos\Release-2010\x64\ManagedRebarPos.dll</HintPath>
           <Private>False</Private>
         </Reference>
-        <Reference Include="ManagedRebarPos" Condition="'$(Platform)'=='x86' Or '$(Platform)'=='AnyCPU'">
+      </ItemGroup>
+    </When>
+      <When Condition=" '$(Configuration)'=='Release-2010' And ('$(Platform)'=='x86' Or '$(Platform)'=='AnyCPU')">
+      <ItemGroup>
+        <Reference Include="AcCui">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>C:\Autodesk\ObjectARX 2010\inc-win32\AcCui.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="AcDbMgd">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>C:\Autodesk\ObjectARX 2010\inc-win32\AcDbMgd.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="AcMgd">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>C:\Autodesk\ObjectARX 2010\inc-win32\AcMgd.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="AcWindows">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>C:\Autodesk\ObjectARX 2010\inc-win32\AcWindows.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="AdWindows">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>C:\Autodesk\ObjectARX 2010\inc-win32\AdWindows.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Autodesk.AutoCAD.Interop">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>C:\Autodesk\ObjectARX 2010\inc-win32\Autodesk.AutoCAD.Interop.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="ManagedRebarPos">
           <HintPath>..\ManagedRebarPos\Release-2010\win32\ManagedRebarPos.dll</HintPath>
           <Private>False</Private>
         </Reference>

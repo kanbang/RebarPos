@@ -182,7 +182,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;axdb.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(VCInstallDir)atlmfc\lib\amd64;..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>COMRebarPos.def</ModuleDefinitionFile>
       <ProgramDatabaseFile />
       <TypeLibraryFile>COMRebarPos.tlb</TypeLibraryFile>
@@ -205,7 +205,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;axdb.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(VCInstallDir)atlmfc\lib;..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>COMRebarPos.def</ModuleDefinitionFile>
       <ProgramDatabaseFile>
       </ProgramDatabaseFile>
@@ -229,7 +229,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;axdb.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(VCInstallDir)atlmfc\lib\amd64;..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>COMRebarPos.def</ModuleDefinitionFile>
       <ProgramDatabaseFile>
       </ProgramDatabaseFile>
@@ -254,7 +254,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;axdb.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(VCInstallDir)atlmfc\lib;..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>COMRebarPos.def</ModuleDefinitionFile>
       <ProgramDatabaseFile>
       </ProgramDatabaseFile>
@@ -279,7 +279,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;axdb.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(VCInstallDir)atlmfc\lib\amd64;..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>COMRebarPos.def</ModuleDefinitionFile>
       <ProgramDatabaseFile>
       </ProgramDatabaseFile>
@@ -303,7 +303,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;axdb.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(VCInstallDir)atlmfc\lib;..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>COMRebarPos.def</ModuleDefinitionFile>
       <ProgramDatabaseFile>
       </ProgramDatabaseFile>
@@ -327,7 +327,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;axdb.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(VCInstallDir)atlmfc\lib\amd64;..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>COMRebarPos.def</ModuleDefinitionFile>
       <ProgramDatabaseFile>
       </ProgramDatabaseFile>
@@ -351,7 +351,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;axdb.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(VCInstallDir)atlmfc\lib;..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>COMRebarPos.def</ModuleDefinitionFile>
       <ProgramDatabaseFile>
       </ProgramDatabaseFile>
