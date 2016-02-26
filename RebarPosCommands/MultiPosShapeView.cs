@@ -71,7 +71,7 @@ namespace RebarPosCommands
 
             this.layoutPanel = new FlowLayoutPanel();
             this.layoutPanel.Dock = DockStyle.Fill;
-            this.layoutPanel.FlowDirection = FlowDirection.TopDown;
+            this.layoutPanel.FlowDirection = FlowDirection.LeftToRight;
             this.layoutPanel.AutoScroll = true;
             this.Controls.Add(layoutPanel);
 

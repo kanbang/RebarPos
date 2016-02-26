@@ -92,6 +92,7 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.btnDetach = new System.Windows.Forms.Button();
             this.btnAlign = new System.Windows.Forms.Button();
+            this.chkShowPieceLengths = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -121,7 +122,7 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(242, 339);
+            this.groupBox1.Size = new System.Drawing.Size(242, 365);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             // 
@@ -259,8 +260,8 @@
             // 
             // txtPosMultiplier
             // 
-            this.txtPosMultiplier.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPosMultiplier.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPosMultiplier.Location = new System.Drawing.Point(97, 180);
             this.txtPosMultiplier.Name = "txtPosMultiplier";
             this.txtPosMultiplier.Size = new System.Drawing.Size(100, 20);
@@ -278,8 +279,8 @@
             // 
             // txtPosNote
             // 
-            this.txtPosNote.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPosNote.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPosNote.Location = new System.Drawing.Point(43, 292);
             this.txtPosNote.Name = "txtPosNote";
             this.txtPosNote.Size = new System.Drawing.Size(129, 20);
@@ -296,8 +297,8 @@
             // 
             // txtPosSpacing
             // 
-            this.txtPosSpacing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPosSpacing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPosSpacing.Location = new System.Drawing.Point(97, 98);
             this.txtPosSpacing.Name = "txtPosSpacing";
             this.txtPosSpacing.Size = new System.Drawing.Size(100, 20);
@@ -324,8 +325,8 @@
             // 
             // txtPosCount
             // 
-            this.txtPosCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPosCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPosCount.Location = new System.Drawing.Point(97, 46);
             this.txtPosCount.Name = "txtPosCount";
             this.txtPosCount.Size = new System.Drawing.Size(100, 20);
@@ -343,8 +344,8 @@
             // 
             // txtPosMarker
             // 
-            this.txtPosMarker.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPosMarker.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPosMarker.Location = new System.Drawing.Point(97, 20);
             this.txtPosMarker.Name = "txtPosMarker";
             this.txtPosMarker.Size = new System.Drawing.Size(100, 20);
@@ -363,6 +364,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.posShapeView);
+            this.groupBox2.Controls.Add(this.chkShowPieceLengths);
             this.groupBox2.Controls.Add(this.btnMeasureF);
             this.groupBox2.Controls.Add(this.btnMeasureE);
             this.groupBox2.Controls.Add(this.btnMeasureD);
@@ -395,7 +397,7 @@
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Location = new System.Drawing.Point(260, 12);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(379, 339);
+            this.groupBox2.Size = new System.Drawing.Size(379, 365);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             // 
@@ -419,7 +421,7 @@
             // 
             this.btnMeasureF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnMeasureF.Image = global::RebarPosCommands.Properties.Resources.dimension;
-            this.btnMeasureF.Location = new System.Drawing.Point(338, 217);
+            this.btnMeasureF.Location = new System.Drawing.Point(338, 243);
             this.btnMeasureF.Name = "btnMeasureF";
             this.btnMeasureF.Size = new System.Drawing.Size(24, 24);
             this.btnMeasureF.TabIndex = 24;
@@ -430,7 +432,7 @@
             // 
             this.btnMeasureE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnMeasureE.Image = global::RebarPosCommands.Properties.Resources.dimension;
-            this.btnMeasureE.Location = new System.Drawing.Point(338, 191);
+            this.btnMeasureE.Location = new System.Drawing.Point(338, 217);
             this.btnMeasureE.Name = "btnMeasureE";
             this.btnMeasureE.Size = new System.Drawing.Size(24, 24);
             this.btnMeasureE.TabIndex = 20;
@@ -441,7 +443,7 @@
             // 
             this.btnMeasureD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnMeasureD.Image = global::RebarPosCommands.Properties.Resources.dimension;
-            this.btnMeasureD.Location = new System.Drawing.Point(338, 165);
+            this.btnMeasureD.Location = new System.Drawing.Point(338, 191);
             this.btnMeasureD.Name = "btnMeasureD";
             this.btnMeasureD.Size = new System.Drawing.Size(24, 24);
             this.btnMeasureD.TabIndex = 16;
@@ -452,7 +454,7 @@
             // 
             this.btnMeasureC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnMeasureC.Image = global::RebarPosCommands.Properties.Resources.dimension;
-            this.btnMeasureC.Location = new System.Drawing.Point(158, 217);
+            this.btnMeasureC.Location = new System.Drawing.Point(158, 243);
             this.btnMeasureC.Name = "btnMeasureC";
             this.btnMeasureC.Size = new System.Drawing.Size(24, 24);
             this.btnMeasureC.TabIndex = 12;
@@ -463,7 +465,7 @@
             // 
             this.btnMeasureB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnMeasureB.Image = global::RebarPosCommands.Properties.Resources.dimension;
-            this.btnMeasureB.Location = new System.Drawing.Point(158, 191);
+            this.btnMeasureB.Location = new System.Drawing.Point(158, 217);
             this.btnMeasureB.Name = "btnMeasureB";
             this.btnMeasureB.Size = new System.Drawing.Size(24, 24);
             this.btnMeasureB.TabIndex = 8;
@@ -474,7 +476,7 @@
             // 
             this.btnMeasureA.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnMeasureA.Image = global::RebarPosCommands.Properties.Resources.dimension;
-            this.btnMeasureA.Location = new System.Drawing.Point(158, 165);
+            this.btnMeasureA.Location = new System.Drawing.Point(158, 191);
             this.btnMeasureA.Name = "btnMeasureA";
             this.btnMeasureA.Size = new System.Drawing.Size(24, 24);
             this.btnMeasureA.TabIndex = 4;
@@ -485,7 +487,7 @@
             // 
             this.btnSelectF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnSelectF.Image = global::RebarPosCommands.Properties.Resources.textfield;
-            this.btnSelectF.Location = new System.Drawing.Point(308, 217);
+            this.btnSelectF.Location = new System.Drawing.Point(308, 243);
             this.btnSelectF.Name = "btnSelectF";
             this.btnSelectF.Size = new System.Drawing.Size(24, 24);
             this.btnSelectF.TabIndex = 23;
@@ -496,7 +498,7 @@
             // 
             this.btnSelectE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnSelectE.Image = global::RebarPosCommands.Properties.Resources.textfield;
-            this.btnSelectE.Location = new System.Drawing.Point(308, 191);
+            this.btnSelectE.Location = new System.Drawing.Point(308, 217);
             this.btnSelectE.Name = "btnSelectE";
             this.btnSelectE.Size = new System.Drawing.Size(24, 24);
             this.btnSelectE.TabIndex = 19;
@@ -507,7 +509,7 @@
             // 
             this.btnSelectD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnSelectD.Image = global::RebarPosCommands.Properties.Resources.textfield;
-            this.btnSelectD.Location = new System.Drawing.Point(308, 165);
+            this.btnSelectD.Location = new System.Drawing.Point(308, 191);
             this.btnSelectD.Name = "btnSelectD";
             this.btnSelectD.Size = new System.Drawing.Size(24, 24);
             this.btnSelectD.TabIndex = 15;
@@ -518,7 +520,7 @@
             // 
             this.btnSelectC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnSelectC.Image = global::RebarPosCommands.Properties.Resources.textfield;
-            this.btnSelectC.Location = new System.Drawing.Point(128, 217);
+            this.btnSelectC.Location = new System.Drawing.Point(128, 243);
             this.btnSelectC.Name = "btnSelectC";
             this.btnSelectC.Size = new System.Drawing.Size(24, 24);
             this.btnSelectC.TabIndex = 11;
@@ -529,7 +531,7 @@
             // 
             this.btnSelectB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnSelectB.Image = global::RebarPosCommands.Properties.Resources.textfield;
-            this.btnSelectB.Location = new System.Drawing.Point(128, 191);
+            this.btnSelectB.Location = new System.Drawing.Point(128, 217);
             this.btnSelectB.Name = "btnSelectB";
             this.btnSelectB.Size = new System.Drawing.Size(24, 24);
             this.btnSelectB.TabIndex = 7;
@@ -540,7 +542,7 @@
             // 
             this.btnSelectA.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnSelectA.Image = global::RebarPosCommands.Properties.Resources.textfield;
-            this.btnSelectA.Location = new System.Drawing.Point(128, 165);
+            this.btnSelectA.Location = new System.Drawing.Point(128, 191);
             this.btnSelectA.Name = "btnSelectA";
             this.btnSelectA.Size = new System.Drawing.Size(24, 24);
             this.btnSelectA.TabIndex = 3;
@@ -550,7 +552,7 @@
             // txtF
             // 
             this.txtF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtF.Location = new System.Drawing.Point(232, 220);
+            this.txtF.Location = new System.Drawing.Point(232, 246);
             this.txtF.Name = "txtF";
             this.txtF.Size = new System.Drawing.Size(70, 20);
             this.txtF.TabIndex = 22;
@@ -560,7 +562,7 @@
             // 
             this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(199, 223);
+            this.label10.Location = new System.Drawing.Point(199, 249);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(13, 13);
             this.label10.TabIndex = 21;
@@ -569,7 +571,7 @@
             // txtE
             // 
             this.txtE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtE.Location = new System.Drawing.Point(232, 194);
+            this.txtE.Location = new System.Drawing.Point(232, 220);
             this.txtE.Name = "txtE";
             this.txtE.Size = new System.Drawing.Size(70, 20);
             this.txtE.TabIndex = 18;
@@ -579,7 +581,7 @@
             // 
             this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(199, 197);
+            this.label9.Location = new System.Drawing.Point(199, 223);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(14, 13);
             this.label9.TabIndex = 17;
@@ -588,7 +590,7 @@
             // txtD
             // 
             this.txtD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtD.Location = new System.Drawing.Point(232, 168);
+            this.txtD.Location = new System.Drawing.Point(232, 194);
             this.txtD.Name = "txtD";
             this.txtD.Size = new System.Drawing.Size(70, 20);
             this.txtD.TabIndex = 14;
@@ -598,7 +600,7 @@
             // 
             this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(199, 171);
+            this.label8.Location = new System.Drawing.Point(199, 197);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(15, 13);
             this.label8.TabIndex = 13;
@@ -607,7 +609,7 @@
             // txtC
             // 
             this.txtC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtC.Location = new System.Drawing.Point(52, 220);
+            this.txtC.Location = new System.Drawing.Point(52, 246);
             this.txtC.Name = "txtC";
             this.txtC.Size = new System.Drawing.Size(70, 20);
             this.txtC.TabIndex = 10;
@@ -617,7 +619,7 @@
             // 
             this.lblAverageLengthCaption.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblAverageLengthCaption.AutoSize = true;
-            this.lblAverageLengthCaption.Location = new System.Drawing.Point(19, 310);
+            this.lblAverageLengthCaption.Location = new System.Drawing.Point(19, 336);
             this.lblAverageLengthCaption.Name = "lblAverageLengthCaption";
             this.lblAverageLengthCaption.Size = new System.Drawing.Size(73, 13);
             this.lblAverageLengthCaption.TabIndex = 0;
@@ -627,7 +629,7 @@
             // 
             this.lblTotalLengthCaption.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblTotalLengthCaption.AutoSize = true;
-            this.lblTotalLengthCaption.Location = new System.Drawing.Point(19, 284);
+            this.lblTotalLengthCaption.Location = new System.Drawing.Point(19, 310);
             this.lblTotalLengthCaption.Name = "lblTotalLengthCaption";
             this.lblTotalLengthCaption.Size = new System.Drawing.Size(66, 13);
             this.lblTotalLengthCaption.TabIndex = 0;
@@ -637,7 +639,7 @@
             // 
             this.lblTotalLength.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblTotalLength.AutoSize = true;
-            this.lblTotalLength.Location = new System.Drawing.Point(125, 284);
+            this.lblTotalLength.Location = new System.Drawing.Point(125, 310);
             this.lblTotalLength.Name = "lblTotalLength";
             this.lblTotalLength.Size = new System.Drawing.Size(14, 13);
             this.lblTotalLength.TabIndex = 0;
@@ -647,7 +649,7 @@
             // 
             this.lblAverageLength.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblAverageLength.AutoSize = true;
-            this.lblAverageLength.Location = new System.Drawing.Point(125, 310);
+            this.lblAverageLength.Location = new System.Drawing.Point(125, 336);
             this.lblAverageLength.Name = "lblAverageLength";
             this.lblAverageLength.Size = new System.Drawing.Size(14, 13);
             this.lblAverageLength.TabIndex = 0;
@@ -657,7 +659,7 @@
             // 
             this.lblPosShape.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblPosShape.AutoSize = true;
-            this.lblPosShape.Location = new System.Drawing.Point(125, 258);
+            this.lblPosShape.Location = new System.Drawing.Point(125, 284);
             this.lblPosShape.Name = "lblPosShape";
             this.lblPosShape.Size = new System.Drawing.Size(14, 13);
             this.lblPosShape.TabIndex = 0;
@@ -667,7 +669,7 @@
             // 
             this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(19, 258);
+            this.label11.Location = new System.Drawing.Point(19, 284);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(54, 13);
             this.label11.TabIndex = 0;
@@ -677,7 +679,7 @@
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(19, 223);
+            this.label7.Location = new System.Drawing.Point(19, 249);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(14, 13);
             this.label7.TabIndex = 9;
@@ -686,7 +688,7 @@
             // txtB
             // 
             this.txtB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtB.Location = new System.Drawing.Point(52, 194);
+            this.txtB.Location = new System.Drawing.Point(52, 220);
             this.txtB.Name = "txtB";
             this.txtB.Size = new System.Drawing.Size(70, 20);
             this.txtB.TabIndex = 6;
@@ -696,7 +698,7 @@
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(19, 197);
+            this.label6.Location = new System.Drawing.Point(19, 223);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(14, 13);
             this.label6.TabIndex = 5;
@@ -705,7 +707,7 @@
             // txtA
             // 
             this.txtA.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtA.Location = new System.Drawing.Point(52, 168);
+            this.txtA.Location = new System.Drawing.Point(52, 194);
             this.txtA.Name = "txtA";
             this.txtA.Size = new System.Drawing.Size(70, 20);
             this.txtA.TabIndex = 2;
@@ -715,7 +717,7 @@
             // 
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(19, 171);
+            this.label5.Location = new System.Drawing.Point(19, 197);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(14, 13);
             this.label5.TabIndex = 1;
@@ -723,7 +725,8 @@
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(483, 371);
+            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOK.Location = new System.Drawing.Point(483, 393);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 3;
@@ -733,8 +736,9 @@
             // 
             // btnCancel
             // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(564, 371);
+            this.btnCancel.Location = new System.Drawing.Point(564, 393);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 4;
@@ -749,7 +753,8 @@
             // 
             // btnDetach
             // 
-            this.btnDetach.Location = new System.Drawing.Point(12, 371);
+            this.btnDetach.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnDetach.Location = new System.Drawing.Point(12, 393);
             this.btnDetach.Name = "btnDetach";
             this.btnDetach.Size = new System.Drawing.Size(133, 23);
             this.btnDetach.TabIndex = 5;
@@ -759,7 +764,8 @@
             // 
             // btnAlign
             // 
-            this.btnAlign.Location = new System.Drawing.Point(151, 371);
+            this.btnAlign.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnAlign.Location = new System.Drawing.Point(151, 393);
             this.btnAlign.Name = "btnAlign";
             this.btnAlign.Size = new System.Drawing.Size(75, 23);
             this.btnAlign.TabIndex = 3;
@@ -767,13 +773,24 @@
             this.btnAlign.UseVisualStyleBackColor = true;
             this.btnAlign.Click += new System.EventHandler(this.btnAlign_Click);
             // 
+            // chkShowPieceLengths
+            // 
+            this.chkShowPieceLengths.AutoSize = true;
+            this.chkShowPieceLengths.Location = new System.Drawing.Point(22, 168);
+            this.chkShowPieceLengths.Name = "chkShowPieceLengths";
+            this.chkShowPieceLengths.Size = new System.Drawing.Size(142, 17);
+            this.chkShowPieceLengths.TabIndex = 25;
+            this.chkShowPieceLengths.Text = "&Parça boylarını görüntüle";
+            this.chkShowPieceLengths.UseVisualStyleBackColor = true;
+            this.chkShowPieceLengths.CheckedChanged += new System.EventHandler(this.chkShowPieceLengths_CheckedChanged);
+            // 
             // EditPosForm
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(653, 406);
+            this.ClientSize = new System.Drawing.Size(653, 428);
             this.Controls.Add(this.btnDetach);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnAlign);
@@ -863,5 +880,6 @@
         private System.Windows.Forms.RadioButton rbAlignLengthBottom;
         private System.Windows.Forms.RadioButton rbAlignLengthTop;
         private System.Windows.Forms.Button btnAlign;
+        private System.Windows.Forms.CheckBox chkShowPieceLengths;
     }
 }

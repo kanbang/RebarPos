@@ -42,14 +42,14 @@
             this.shapesView.Name = "shapesView";
             this.shapesView.SelectedShape = "";
             this.shapesView.ShowShapeNames = false;
-            this.shapesView.Size = new System.Drawing.Size(1215, 588);
+            this.shapesView.Size = new System.Drawing.Size(1215, 638);
             this.shapesView.TabIndex = 0;
             // 
             // SelectShapeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1239, 612);
+            this.ClientSize = new System.Drawing.Size(1239, 662);
             this.Controls.Add(this.shapesView);
             this.KeyPreview = true;
             this.MaximizeBox = false;

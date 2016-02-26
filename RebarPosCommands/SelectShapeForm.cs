@@ -46,7 +46,7 @@ namespace RebarPosCommands
 
             shapesView.SetShapes(inshapes);
             shapesView.CellBackColor = DWGUtility.ModelBackgroundColor();
-            shapesView.CellSize = new Size(145, 90);
+            shapesView.CellSize = new Size(190, 70);
             shapesView.SelectedShape = m_Current;
             shapesView.ShowShapeNames = true;
             shapesView.ShapeClick += new MultiPosShapeViewClickEventHandler(posShapeView_Click);

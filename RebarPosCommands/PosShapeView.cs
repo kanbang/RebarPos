@@ -23,7 +23,35 @@ namespace RebarPosCommands
 
             if (!string.IsNullOrEmpty(mShapeName))
             {
-                AddItem(PosShape.GetPosShape(shapeName));
+                PosShape shape = PosShape.GetPosShape(shapeName);
+                if (shape != null)
+                {
+                    PosShape shapeCopy = shape.Clone() as PosShape;
+                    shapeCopy.ClearShapeTexts();
+                    AddItem(shapeCopy);
+                }
+            }
+
+            ResumeUpdate();
+        }
+
+
+        public void SetShape(string shapeName, string a, string b, string c, string d, string e, string f)
+        {
+            SuspendUpdate();
+            ClearItems();
+            mShapeName = shapeName;
+
+            if (!string.IsNullOrEmpty(mShapeName))
+            {
+                PosShape shape = PosShape.GetPosShape(shapeName);
+                if (shape != null)
+                {
+                    PosShape shapeCopy = shape.Clone() as PosShape;
+                    shapeCopy.ClearShapeTexts();
+                    shapeCopy.SetShapeTexts(a, b, c, d, e, f);
+                    AddItem(shapeCopy);
+                }
             }
 
             ResumeUpdate();

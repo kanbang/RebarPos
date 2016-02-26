@@ -189,7 +189,7 @@ namespace RebarPosCommands
                         pos.LengthAlignment = RebarPos.SubTextAlignment.Right;
                     else
                         pos.LengthAlignment = RebarPos.SubTextAlignment.Free;
-                    
+
                     tr.Commit();
 
                     DialogResult = DialogResult.OK;
@@ -381,7 +381,10 @@ namespace RebarPosCommands
 
         private bool SetShape()
         {
-            posShapeView.SetShape(m_Shape);
+            if (chkShowPieceLengths.Checked)
+                posShapeView.SetShape(m_Shape, txtA.Text, txtB.Text, txtC.Text, txtD.Text, txtE.Text, txtF.Text);
+            else
+                posShapeView.SetShape(m_Shape);
 
             PosShape shape = PosShape.GetPosShape(m_Shape);
             if (shape == null)
@@ -728,6 +731,7 @@ namespace RebarPosCommands
             if (check == UpdateLengthResult.OK)
             {
                 errorProvider.SetError(source, "");
+                SetShape();
                 return true;
             }
             else
@@ -1001,6 +1005,11 @@ namespace RebarPosCommands
                     System.Windows.Forms.MessageBox.Show("Error: " + ex.Message, "RebarPos", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void chkShowPieceLengths_CheckedChanged(object sender, EventArgs e)
+        {
+            SetShape();
         }
     }
 }

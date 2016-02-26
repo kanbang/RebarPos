@@ -353,12 +353,14 @@ const ShapeListConstIt CPosShape::GetShapeIteratorEnd() const
 
 Acad::ErrorStatus CPosShape::setShapeTexts(const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f)
 {
-	acutUpdString(a, m_A);
-	acutUpdString(b, m_B);
-	acutUpdString(c, m_C);
-	acutUpdString(d, m_D);
-	acutUpdString(e, m_E);
-	acutUpdString(f, m_F);
+	clearShapeTexts();
+
+	if ((a != NULL) && (a[0] != '\0')) acutUpdString(a, m_A);
+	if ((b != NULL) && (b[0] != '\0')) acutUpdString(b, m_B);
+	if ((c != NULL) && (c[0] != '\0')) acutUpdString(c, m_C);
+	if ((d != NULL) && (d[0] != '\0')) acutUpdString(d, m_D);
+	if ((e != NULL) && (e[0] != '\0')) acutUpdString(e, m_E);
+	if ((f != NULL) && (f[0] != '\0')) acutUpdString(f, m_F);
 
 	return Acad::eOk;
 }
