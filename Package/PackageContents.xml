@@ -15,7 +15,7 @@
   <!-- x64 -->
   <!-- AutoCAD 2010, 2011, 2012 -->
   <Components Description="RebarPos for AutoCAD R18 (AutoCAD 2010, 2011, 2012) 64 bit">
-    <RuntimeRequirements SupportPath="./Resources/2010" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R18.0" SeriesMax="R18.2" />
+    <RuntimeRequirements SupportPath="./Resources/2010;./Bin/2010/x64" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R18.0" SeriesMax="R18.2" />
     <ComponentEntry AppName="OZOZ.NativeRebarPos.2010" AppDescription="RebarPos for AutoCAD R18 custom object enabler 64 bit" ModuleName="./Bin/2010/x64/NativeRebarPos.dbx" LoadOnProxyDetection="True" LoadOnAutoCADStartup="False" LoadOnAppearance="False" />
     <ComponentEntry AppName="OZOZ.COMRebarPos.2010" AppDescription="RebarPos for AutoCAD R18 COM wrapper 64 bit" ModuleName="./Bin/2010/x64/COMRebarPos.dbx" AppType="Dependency" />
     <ComponentEntry AppName="OZOZ.ManagedRebarPos.2010" AppDescription="RebarPos for AutoCAD R18 managed wrapper 64 bit" ModuleName="./Bin/2010/x64/ManagedRebarPos.dll" AppType="Dependency" />
@@ -24,7 +24,7 @@
   </Components>
   <!-- AutoCAD 2013, 2014 -->
   <Components Description="RebarPos for AutoCAD R19 (AutoCAD 2013, 2014) 64 bit">
-    <RuntimeRequirements SupportPath="./Resources/2013" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R19.0" SeriesMax="R19.1" />
+    <RuntimeRequirements SupportPath="./Resources/2013;./Bin/2013/x64" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R19.0" SeriesMax="R19.1" />
     <ComponentEntry AppName="OZOZ.NativeRebarPos.2013" AppDescription="RebarPos for AutoCAD R19 custom object enabler 64 bit" ModuleName="./Bin/2013/x64/NativeRebarPos.dbx" LoadOnProxyDetection="True" LoadOnAutoCADStartup="False" LoadOnAppearance="False" />
     <ComponentEntry AppName="OZOZ.COMRebarPos.2013" AppDescription="RebarPos for AutoCAD R19 COM wrapper 64 bit" ModuleName="./Bin/2013/x64/COMRebarPos.dbx" AppType="Dependency" />
     <ComponentEntry AppName="OZOZ.ManagedRebarPos.2013" AppDescription="RebarPos for AutoCAD R19 managed wrapper 64 bit" ModuleName="./Bin/2013/x64/ManagedRebarPos.dll" AppType="Dependency" />
@@ -33,7 +33,7 @@
   </Components>  
   <!-- AutoCAD 2015, 2016 -->
   <Components Description="RebarPos for AutoCAD R20 (AutoCAD 2015, 2016) 64 bit">
-    <RuntimeRequirements SupportPath="./Resources/2015" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R20.0" SeriesMax="R20.1" />
+    <RuntimeRequirements SupportPath="./Resources/2015;./Bin/2015/x64" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R20.0" SeriesMax="R20.1" />
     <ComponentEntry AppName="OZOZ.NativeRebarPos.2015" AppDescription="RebarPos for AutoCAD R20 custom object enabler 64 bit" ModuleName="./Bin/2015/x64/NativeRebarPos.dbx" LoadOnProxyDetection="True" LoadOnAutoCADStartup="False" LoadOnAppearance="False" />
     <ComponentEntry AppName="OZOZ.COMRebarPos.2015" AppDescription="RebarPos for AutoCAD R20 COM wrapper 64 bit" ModuleName="./Bin/2015/x64/COMRebarPos.dbx" AppType="Dependency" />
     <ComponentEntry AppName="OZOZ.ManagedRebarPos.2015" AppDescription="RebarPos for AutoCAD R20 managed wrapper 64 bit" ModuleName="./Bin/2015/x64/ManagedRebarPos.dll" AppType="Dependency" />
@@ -43,7 +43,7 @@
   <!-- x86 -->
   <!-- AutoCAD 2010, 2011, 2012 -->
   <Components Description="RebarPos for AutoCAD R18 (AutoCAD 2010, 2011, 2012) 32 bit">
-    <RuntimeRequirements SupportPath="./Resources/2010" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R18.0" SeriesMax="R18.2" />
+    <RuntimeRequirements SupportPath="./Resources/2010;./Bin/2010/win32" OS="Win32" Platform="AutoCAD|AutoCAD*" SeriesMin="R18.0" SeriesMax="R18.2" />
     <ComponentEntry AppName="OZOZ.NativeRebarPos.2010" AppDescription="RebarPos for AutoCAD R18 custom object enabler 32 bit" ModuleName="./Bin/2010/win32/NativeRebarPos.dbx" LoadOnProxyDetection="True" LoadOnAutoCADStartup="False" LoadOnAppearance="False" />
     <ComponentEntry AppName="OZOZ.COMRebarPos.2010" AppDescription="RebarPos for AutoCAD R18 COM wrapper 32 bit" ModuleName="./Bin/2010/win32/COMRebarPos.dbx" AppType="Dependency" />
     <ComponentEntry AppName="OZOZ.ManagedRebarPos.2010" AppDescription="RebarPos for AutoCAD R18 managed wrapper 32 bit" ModuleName="./Bin/2010/win32/ManagedRebarPos.dll" AppType="Dependency" />
@@ -52,7 +52,7 @@
   </Components>
   <!-- AutoCAD 2013, 2014 -->
   <Components Description="RebarPos for AutoCAD R19 (AutoCAD 2013, 2014) 32 bit">
-    <RuntimeRequirements SupportPath="./Resources/2013" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R19.0" SeriesMax="R19.1" />
+    <RuntimeRequirements SupportPath="./Resources/2013;./Bin/2013/win32" OS="Win32" Platform="AutoCAD|AutoCAD*" SeriesMin="R19.0" SeriesMax="R19.1" />
     <ComponentEntry AppName="OZOZ.NativeRebarPos.2013" AppDescription="RebarPos for AutoCAD R19 custom object enabler 32 bit" ModuleName="./Bin/2013/win32/NativeRebarPos.dbx" LoadOnProxyDetection="True" LoadOnAutoCADStartup="False" LoadOnAppearance="False" />
     <ComponentEntry AppName="OZOZ.COMRebarPos.2013" AppDescription="RebarPos for AutoCAD R19 COM wrapper 32 bit" ModuleName="./Bin/2013/win32/COMRebarPos.dbx" AppType="Dependency" />
     <ComponentEntry AppName="OZOZ.ManagedRebarPos.2013" AppDescription="RebarPos for AutoCAD R19 managed wrapper 32 bit" ModuleName="./Bin/2013/win32/ManagedRebarPos.dll" AppType="Dependency" />
@@ -61,7 +61,7 @@
   </Components>  
   <!-- AutoCAD 2015, 2016 -->
   <Components Description="RebarPos for AutoCAD R20 (AutoCAD 2015, 2016) 32 bit">
-    <RuntimeRequirements SupportPath="./Resources/2015" OS="Win64" Platform="AutoCAD|AutoCAD*" SeriesMin="R20.0" SeriesMax="R20.1" />
+    <RuntimeRequirements SupportPath="./Resources/2015;./Bin/2015/win32" OS="Win32" Platform="AutoCAD|AutoCAD*" SeriesMin="R20.0" SeriesMax="R20.1" />
     <ComponentEntry AppName="OZOZ.NativeRebarPos.2015" AppDescription="RebarPos for AutoCAD R20 custom object enabler 32 bit" ModuleName="./Bin/2015/win32/NativeRebarPos.dbx" LoadOnProxyDetection="True" LoadOnAutoCADStartup="False" LoadOnAppearance="False" />
     <ComponentEntry AppName="OZOZ.COMRebarPos.2015" AppDescription="RebarPos for AutoCAD R20 COM wrapper 32 bit" ModuleName="./Bin/2015/win32/COMRebarPos.dbx" AppType="Dependency" />
     <ComponentEntry AppName="OZOZ.ManagedRebarPos.2015" AppDescription="RebarPos for AutoCAD R20 managed wrapper 32 bit" ModuleName="./Bin/2015/win32/ManagedRebarPos.dll" AppType="Dependency" />

@@ -108,6 +108,28 @@ begin
   XMLDoc.Save(FileName);
 end;
 
+// Registers DBX entitites
+procedure AddDBXRegistry(AcVersion: String; ComRebarPosGUID: String; ComBOQTableGUID: String);
+var
+  RegPath: String;
+begin
+  // e.g. HKEY_LOCAL_MACHINE\SOFTWARE\Autodesk\ObjectDBX\R20.1\ActiveXCLSID
+  RegPath := 'SOFTWARE\Autodesk\ObjectDBX\' + AcVersion + '\ActiveXCLSID';
+  RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'RebarPos', ComRebarPosGUID);
+  RegWriteStringValue(HKEY_LOCAL_MACHINE, RegPath, 'BOQTable', ComBOQTableGUID);
+end;
+
+// Unregisters DBX entitites
+procedure RemoveDBXRegistry(AcVersion: String);
+var
+  RegPath: String;
+begin
+  // e.g. HKEY_LOCAL_MACHINE\SOFTWARE\Autodesk\ObjectDBX\R20.1\ActiveXCLSID
+  RegPath := 'SOFTWARE\Autodesk\ObjectDBX\' + AcVersion + '\ActiveXCLSID';
+  RegDeleteValue(HKEY_LOCAL_MACHINE, RegPath, 'RebarPos');
+  RegDeleteValue(HKEY_LOCAL_MACHINE, RegPath, 'BOQTable');
+end;
+
 // Registers COM components
 procedure AddCOMRegistry(AcVersion: String; TypeLibGUID: String; ComRebarPosGUID: String; ComBOQTableGUID: String);
 var
@@ -156,10 +178,17 @@ begin
     // Set registry keys for COM classes
     // 2015
     AddCOMRegistry('2015', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8A5}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F5}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD35}');
+    AddDBXRegistry('R20.0', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F5}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD35}');
+    AddDBXRegistry('R20.1', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F5}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD35}');
     // 2013
     AddCOMRegistry('2013', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8A3}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F3}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD33}');
+    AddDBXRegistry('R19.0', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F3}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD33}');
+    AddDBXRegistry('R19.1', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F3}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD33}');
     // 2010
     AddCOMRegistry('2010', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8A0}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F0}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD30}');
+    AddDBXRegistry('R18.0', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F0}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD30}');
+    AddDBXRegistry('R18.1', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F0}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD30}');
+    AddDBXRegistry('R18.2', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F0}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD30}');
   end;
 end;
 
@@ -169,9 +198,16 @@ begin
   if CurUninstallStep = usPostUninstall then begin
     // 2015
     RemoveCOMRegistry('{26E9A3B0-6567-4857-AABB-E09AC4A7A8A5}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F5}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD35}');
+    RemoveDBXRegistry('R20.0');
+    RemoveDBXRegistry('R20.1');
     // 2013
     RemoveCOMRegistry('{26E9A3B0-6567-4857-AABB-E09AC4A7A8A3}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F3}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD33}');
+    RemoveDBXRegistry('R19.0');
+    RemoveDBXRegistry('R19.1');
     // 2010
     RemoveCOMRegistry('{26E9A3B0-6567-4857-AABB-E09AC4A7A8A0}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F0}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD30}'); 
+    RemoveDBXRegistry('R18.0');
+    RemoveDBXRegistry('R18.1');
+    RemoveDBXRegistry('R18.2');
   end;
 end;
