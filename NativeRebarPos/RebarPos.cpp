@@ -2202,7 +2202,9 @@ void CRebarPos::Calculate(void)
 		GetTotalLengths(formula, m_CalcProps);
 
 		// Calculate spacing
-		GetLengths(m_Spacing, 0.0, m_CalcProps.DrawingUnit, m_CalcProps.MinSpacing, m_CalcProps.MaxSpacing, m_CalcProps.IsVarSpacing);
+		std::wstring spacingstring(m_Spacing);
+		Utility::ReplaceString(spacingstring, L"-", L"~");
+		GetLengths(spacingstring.c_str(), 0.0, m_CalcProps.DrawingUnit, m_CalcProps.MinSpacing, m_CalcProps.MaxSpacing, m_CalcProps.IsVarSpacing);
 
 		// Scale from MM to display units
 		double scale = ConvertLength(1.0, CPosGroup::MM, m_CalcProps.DisplayUnit);
