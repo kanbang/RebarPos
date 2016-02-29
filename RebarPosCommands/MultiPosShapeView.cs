@@ -103,8 +103,7 @@ namespace RebarPosCommands
                 view = new Autodesk.AutoCAD.GraphicsSystem.View();
                 view.VisualStyle = new Autodesk.AutoCAD.GraphicsInterface.VisualStyle(Autodesk.AutoCAD.GraphicsInterface.VisualStyleType.Wireframe2D);
                 model = gsm.CreateAutoCADModel(kernel);
-#endif
-#if REBARPOS2013
+#elif REBARPOS2013
                 device = gsm.CreateAutoCADOffScreenDevice();
                 device.DeviceRenderType = Autodesk.AutoCAD.GraphicsSystem.RendererType.Default;
                 device.BackgroundColor = CellBackColor;
@@ -112,8 +111,7 @@ namespace RebarPosCommands
                 view = new Autodesk.AutoCAD.GraphicsSystem.View();
                 view.VisualStyle = new Autodesk.AutoCAD.GraphicsInterface.VisualStyle(Autodesk.AutoCAD.GraphicsInterface.VisualStyleType.Wireframe2D);
                 model = gsm.CreateAutoCADModel();
-#endif
-#if REBARPOS2010
+#elif REBARPOS2010
                 device = gsm.CreateAutoCADOffScreenDevice();
                 device.DeviceRenderType = Autodesk.AutoCAD.GraphicsSystem.RendererType.Default;
                 device.BackgroundColor = CellBackColor;
