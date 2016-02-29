@@ -58,7 +58,9 @@ namespace RebarPosCommands
                 allowCustomMarkers = license.AllowCustomMarkers;
             }
 
-            btnExpand.Enabled = btnExpand.Visible = allowCustomMarkers;
+            pnlCustomize.Enabled = pnlCustomize.Visible = allowCustomMarkers;
+            btnDisplayStandard.Enabled = btnDisplayStandard.Visible = allowCustomMarkers;
+            btnDisplayBS.Enabled = btnDisplayBS.Visible = allowCustomMarkers;
 
             mCopy = new GroupCopy();
             mTextStyles = new Dictionary<string, ObjectId>();
@@ -74,7 +76,7 @@ namespace RebarPosCommands
                 try
                 {
                     PosGroup group = tr.GetObject(PosGroup.GroupId, OpenMode.ForRead) as PosGroup;
-                    
+
                     if (group == null) return false;
 
                     mCopy.DrawingUnit = group.DrawingUnit;
@@ -109,16 +111,16 @@ namespace RebarPosCommands
                     return false;
                 }
             }
-            
+
             mTextStyles = DWGUtility.GetTextStyles();
             foreach (string name in mTextStyles.Keys)
             {
                 cbTextStyle.Items.Add(name);
                 cbNoteStyle.Items.Add(name);
             }
-            
+
             SetGroup();
-            
+
             return true;
         }
 

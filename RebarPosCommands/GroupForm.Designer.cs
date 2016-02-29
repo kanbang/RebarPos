@@ -79,10 +79,12 @@
             this.btnExpand = new System.Windows.Forms.Button();
             this.btnDisplayStandard = new System.Windows.Forms.Button();
             this.btnDisplayBS = new System.Windows.Forms.Button();
+            this.pnlCustomize = new System.Windows.Forms.Panel();
             this.gbOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udPrecision)).BeginInit();
             this.gbDisplay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
+            this.pnlCustomize.SuspendLayout();
             this.SuspendLayout();
             // 
             // gbOptions
@@ -169,8 +171,8 @@
             this.txtDiameterList.Name = "txtDiameterList";
             this.txtDiameterList.Size = new System.Drawing.Size(268, 59);
             this.txtDiameterList.TabIndex = 10;
-            this.txtDiameterList.Validated += new System.EventHandler(this.txtDiameterList_Validated);
             this.txtDiameterList.Validating += new System.ComponentModel.CancelEventHandler(this.txtDiameterList_Validating);
+            this.txtDiameterList.Validated += new System.EventHandler(this.txtDiameterList_Validated);
             // 
             // txtMaxLength
             // 
@@ -178,8 +180,8 @@
             this.txtMaxLength.Name = "txtMaxLength";
             this.txtMaxLength.Size = new System.Drawing.Size(100, 20);
             this.txtMaxLength.TabIndex = 7;
-            this.txtMaxLength.Validated += new System.EventHandler(this.txtMaxLength_Validated);
             this.txtMaxLength.Validating += new System.ComponentModel.CancelEventHandler(this.txtMaxLength_Validating);
+            this.txtMaxLength.Validated += new System.EventHandler(this.txtMaxLength_Validated);
             // 
             // label2
             // 
@@ -256,6 +258,7 @@
             // gbDisplay
             // 
             this.gbDisplay.Controls.Add(this.posStylePreview);
+            this.gbDisplay.Controls.Add(this.pnlCustomize);
             this.gbDisplay.Controls.Add(this.btnPickCountColor);
             this.gbDisplay.Controls.Add(this.btnPickGroupColor);
             this.gbDisplay.Controls.Add(this.cbNoteStyle);
@@ -274,16 +277,8 @@
             this.gbDisplay.Controls.Add(this.btnPickTextColor);
             this.gbDisplay.Controls.Add(this.label9);
             this.gbDisplay.Controls.Add(this.txtNoteScale);
-            this.gbDisplay.Controls.Add(this.txtFormulaPosOnly);
             this.gbDisplay.Controls.Add(this.label16);
             this.gbDisplay.Controls.Add(this.label8);
-            this.gbDisplay.Controls.Add(this.label7);
-            this.gbDisplay.Controls.Add(this.txtFormulaVariableLength);
-            this.gbDisplay.Controls.Add(this.label19);
-            this.gbDisplay.Controls.Add(this.txtFormulaLengthOnly);
-            this.gbDisplay.Controls.Add(this.label6);
-            this.gbDisplay.Controls.Add(this.txtFormula);
-            this.gbDisplay.Controls.Add(this.label5);
             this.gbDisplay.Location = new System.Drawing.Point(326, 12);
             this.gbDisplay.Name = "gbDisplay";
             this.gbDisplay.Size = new System.Drawing.Size(605, 355);
@@ -306,7 +301,7 @@
             this.posStylePreview.FormulaPosOnly = null;
             this.posStylePreview.FormulaVariableLength = null;
             this.posStylePreview.GroupColor = System.Drawing.Color.Empty;
-            this.posStylePreview.Location = new System.Drawing.Point(313, 218);
+            this.posStylePreview.Location = new System.Drawing.Point(313, 22);
             this.posStylePreview.MultiplierColor = System.Drawing.Color.Empty;
             this.posStylePreview.Name = "posStylePreview";
             this.posStylePreview.NoteColor = System.Drawing.Color.Empty;
@@ -320,7 +315,7 @@
             // 
             this.btnPickCountColor.BackColor = System.Drawing.Color.White;
             this.btnPickCountColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPickCountColor.Location = new System.Drawing.Point(187, 311);
+            this.btnPickCountColor.Location = new System.Drawing.Point(191, 196);
             this.btnPickCountColor.Name = "btnPickCountColor";
             this.btnPickCountColor.Size = new System.Drawing.Size(100, 23);
             this.btnPickCountColor.TabIndex = 21;
@@ -331,7 +326,7 @@
             // 
             this.btnPickGroupColor.BackColor = System.Drawing.Color.White;
             this.btnPickGroupColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPickGroupColor.Location = new System.Drawing.Point(187, 282);
+            this.btnPickGroupColor.Location = new System.Drawing.Point(191, 167);
             this.btnPickGroupColor.Name = "btnPickGroupColor";
             this.btnPickGroupColor.Size = new System.Drawing.Size(100, 23);
             this.btnPickGroupColor.TabIndex = 19;
@@ -342,7 +337,7 @@
             // 
             this.cbNoteStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbNoteStyle.FormattingEnabled = true;
-            this.cbNoteStyle.Location = new System.Drawing.Point(432, 163);
+            this.cbNoteStyle.Location = new System.Drawing.Point(142, 288);
             this.cbNoteStyle.Name = "cbNoteStyle";
             this.cbNoteStyle.Size = new System.Drawing.Size(149, 21);
             this.cbNoteStyle.TabIndex = 25;
@@ -352,7 +347,7 @@
             // 
             this.cbTextStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbTextStyle.FormattingEnabled = true;
-            this.cbTextStyle.Location = new System.Drawing.Point(432, 137);
+            this.cbTextStyle.Location = new System.Drawing.Point(142, 262);
             this.cbTextStyle.Name = "cbTextStyle";
             this.cbTextStyle.Size = new System.Drawing.Size(149, 21);
             this.cbTextStyle.TabIndex = 23;
@@ -362,7 +357,7 @@
             // 
             this.btnPickMultiplierColor.BackColor = System.Drawing.Color.White;
             this.btnPickMultiplierColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPickMultiplierColor.Location = new System.Drawing.Point(187, 253);
+            this.btnPickMultiplierColor.Location = new System.Drawing.Point(191, 138);
             this.btnPickMultiplierColor.Name = "btnPickMultiplierColor";
             this.btnPickMultiplierColor.Size = new System.Drawing.Size(100, 23);
             this.btnPickMultiplierColor.TabIndex = 17;
@@ -372,7 +367,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(16, 316);
+            this.label13.Location = new System.Drawing.Point(20, 201);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(108, 13);
             this.label13.TabIndex = 20;
@@ -381,7 +376,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(310, 166);
+            this.label15.Location = new System.Drawing.Point(20, 291);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(73, 13);
             this.label15.TabIndex = 24;
@@ -390,7 +385,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(16, 287);
+            this.label12.Location = new System.Drawing.Point(20, 172);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(88, 13);
             this.label12.TabIndex = 18;
@@ -399,7 +394,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(310, 140);
+            this.label14.Location = new System.Drawing.Point(20, 265);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(46, 13);
             this.label14.TabIndex = 22;
@@ -409,7 +404,7 @@
             // 
             this.btnPickNoteColor.BackColor = System.Drawing.Color.White;
             this.btnPickNoteColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPickNoteColor.Location = new System.Drawing.Point(187, 224);
+            this.btnPickNoteColor.Location = new System.Drawing.Point(191, 109);
             this.btnPickNoteColor.Name = "btnPickNoteColor";
             this.btnPickNoteColor.Size = new System.Drawing.Size(100, 23);
             this.btnPickNoteColor.TabIndex = 15;
@@ -420,7 +415,7 @@
             // 
             this.btnPickCircleColor.BackColor = System.Drawing.Color.White;
             this.btnPickCircleColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPickCircleColor.Location = new System.Drawing.Point(187, 195);
+            this.btnPickCircleColor.Location = new System.Drawing.Point(191, 80);
             this.btnPickCircleColor.Name = "btnPickCircleColor";
             this.btnPickCircleColor.Size = new System.Drawing.Size(100, 23);
             this.btnPickCircleColor.TabIndex = 13;
@@ -430,7 +425,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(16, 258);
+            this.label11.Location = new System.Drawing.Point(20, 143);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(95, 13);
             this.label11.TabIndex = 16;
@@ -439,7 +434,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(16, 229);
+            this.label18.Location = new System.Drawing.Point(20, 114);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(85, 13);
             this.label18.TabIndex = 14;
@@ -449,7 +444,7 @@
             // 
             this.btnPickPosColor.BackColor = System.Drawing.Color.White;
             this.btnPickPosColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPickPosColor.Location = new System.Drawing.Point(187, 166);
+            this.btnPickPosColor.Location = new System.Drawing.Point(191, 51);
             this.btnPickPosColor.Name = "btnPickPosColor";
             this.btnPickPosColor.Size = new System.Drawing.Size(100, 23);
             this.btnPickPosColor.TabIndex = 11;
@@ -459,7 +454,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(16, 200);
+            this.label10.Location = new System.Drawing.Point(20, 85);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(91, 13);
             this.label10.TabIndex = 12;
@@ -469,7 +464,7 @@
             // 
             this.btnPickTextColor.BackColor = System.Drawing.Color.White;
             this.btnPickTextColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPickTextColor.Location = new System.Drawing.Point(187, 137);
+            this.btnPickTextColor.Location = new System.Drawing.Point(191, 22);
             this.btnPickTextColor.Name = "btnPickTextColor";
             this.btnPickTextColor.Size = new System.Drawing.Size(100, 23);
             this.btnPickTextColor.TabIndex = 9;
@@ -479,7 +474,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(16, 171);
+            this.label9.Location = new System.Drawing.Point(20, 56);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(103, 13);
             this.label9.TabIndex = 10;
@@ -487,25 +482,25 @@
             // 
             // txtNoteScale
             // 
-            this.txtNoteScale.Location = new System.Drawing.Point(432, 189);
+            this.txtNoteScale.Location = new System.Drawing.Point(142, 314);
             this.txtNoteScale.Name = "txtNoteScale";
             this.txtNoteScale.Size = new System.Drawing.Size(149, 20);
             this.txtNoteScale.TabIndex = 27;
-            this.txtNoteScale.Validated += new System.EventHandler(this.txtNoteScale_Validated);
             this.txtNoteScale.Validating += new System.ComponentModel.CancelEventHandler(this.txtNoteScale_Validating);
+            this.txtNoteScale.Validated += new System.EventHandler(this.txtNoteScale_Validated);
             // 
             // txtFormulaPosOnly
             // 
-            this.txtFormulaPosOnly.Location = new System.Drawing.Point(186, 97);
+            this.txtFormulaPosOnly.Location = new System.Drawing.Point(136, 83);
             this.txtFormulaPosOnly.Name = "txtFormulaPosOnly";
-            this.txtFormulaPosOnly.Size = new System.Drawing.Size(395, 20);
+            this.txtFormulaPosOnly.Size = new System.Drawing.Size(145, 20);
             this.txtFormulaPosOnly.TabIndex = 7;
             this.txtFormulaPosOnly.Validated += new System.EventHandler(this.txtFormulaPosOnly_Validated);
             // 
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(310, 192);
+            this.label16.Location = new System.Drawing.Point(20, 317);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(87, 13);
             this.label16.TabIndex = 26;
@@ -514,7 +509,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(16, 142);
+            this.label8.Location = new System.Drawing.Point(20, 27);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(58, 13);
             this.label8.TabIndex = 8;
@@ -523,24 +518,24 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(15, 100);
+            this.label7.Location = new System.Drawing.Point(5, 86);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(152, 13);
+            this.label7.Size = new System.Drawing.Size(125, 13);
             this.label7.TabIndex = 6;
-            this.label7.Text = "Formül (Sadece &Poz Numarası)";
+            this.label7.Text = "Formül (Sadece &Poz No.)";
             // 
             // txtFormulaVariableLength
             // 
-            this.txtFormulaVariableLength.Location = new System.Drawing.Point(186, 45);
+            this.txtFormulaVariableLength.Location = new System.Drawing.Point(136, 31);
             this.txtFormulaVariableLength.Name = "txtFormulaVariableLength";
-            this.txtFormulaVariableLength.Size = new System.Drawing.Size(395, 20);
+            this.txtFormulaVariableLength.Size = new System.Drawing.Size(145, 20);
             this.txtFormulaVariableLength.TabIndex = 3;
             this.txtFormulaVariableLength.Validated += new System.EventHandler(this.txtFormulaVariableLength_Validated);
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(15, 48);
+            this.label19.Location = new System.Drawing.Point(5, 34);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(113, 13);
             this.label19.TabIndex = 2;
@@ -548,16 +543,16 @@
             // 
             // txtFormulaLengthOnly
             // 
-            this.txtFormulaLengthOnly.Location = new System.Drawing.Point(186, 71);
+            this.txtFormulaLengthOnly.Location = new System.Drawing.Point(136, 57);
             this.txtFormulaLengthOnly.Name = "txtFormulaLengthOnly";
-            this.txtFormulaLengthOnly.Size = new System.Drawing.Size(395, 20);
+            this.txtFormulaLengthOnly.Size = new System.Drawing.Size(145, 20);
             this.txtFormulaLengthOnly.TabIndex = 5;
             this.txtFormulaLengthOnly.Validated += new System.EventHandler(this.txtFormulaLengthOnly_Validated);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(15, 74);
+            this.label6.Location = new System.Drawing.Point(5, 60);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(80, 13);
             this.label6.TabIndex = 4;
@@ -565,16 +560,16 @@
             // 
             // txtFormula
             // 
-            this.txtFormula.Location = new System.Drawing.Point(187, 19);
+            this.txtFormula.Location = new System.Drawing.Point(137, 5);
             this.txtFormula.Name = "txtFormula";
-            this.txtFormula.Size = new System.Drawing.Size(395, 20);
+            this.txtFormula.Size = new System.Drawing.Size(145, 20);
             this.txtFormula.TabIndex = 1;
             this.txtFormula.Validated += new System.EventHandler(this.txtFormula_Validated);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(16, 22);
+            this.label5.Location = new System.Drawing.Point(6, 8);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(38, 13);
             this.label5.TabIndex = 0;
@@ -620,6 +615,21 @@
             this.btnDisplayBS.UseVisualStyleBackColor = true;
             this.btnDisplayBS.Click += new System.EventHandler(this.btnDisplayBS_Click);
             // 
+            // pnlCustomize
+            // 
+            this.pnlCustomize.Controls.Add(this.label6);
+            this.pnlCustomize.Controls.Add(this.label5);
+            this.pnlCustomize.Controls.Add(this.txtFormula);
+            this.pnlCustomize.Controls.Add(this.txtFormulaLengthOnly);
+            this.pnlCustomize.Controls.Add(this.label19);
+            this.pnlCustomize.Controls.Add(this.txtFormulaVariableLength);
+            this.pnlCustomize.Controls.Add(this.label7);
+            this.pnlCustomize.Controls.Add(this.txtFormulaPosOnly);
+            this.pnlCustomize.Location = new System.Drawing.Point(306, 225);
+            this.pnlCustomize.Name = "pnlCustomize";
+            this.pnlCustomize.Size = new System.Drawing.Size(284, 109);
+            this.pnlCustomize.TabIndex = 28;
+            // 
             // GroupForm
             // 
             this.AcceptButton = this.btnOK;
@@ -647,6 +657,8 @@
             this.gbDisplay.ResumeLayout(false);
             this.gbDisplay.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
+            this.pnlCustomize.ResumeLayout(false);
+            this.pnlCustomize.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -702,5 +714,6 @@
         private System.Windows.Forms.Button btnDisplayBS;
         private System.Windows.Forms.TextBox txtFormulaVariableLength;
         private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Panel pnlCustomize;
     }
 }
