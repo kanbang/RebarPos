@@ -17,7 +17,7 @@ namespace RebarPosCommands
 
         public static CountOverrule Instance { get { return mInstance; } }
 
-        public CountOverrule()
+        private CountOverrule()
         {
             mColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(ColorMethod.ByAci, 1);
             SetCustomFilter();

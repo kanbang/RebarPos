@@ -305,7 +305,7 @@
         </Reference>
       </ItemGroup>
     </When>
-      <When Condition=" '$(Configuration)'=='Release-2010' And ('$(Platform)'=='x86' Or '$(Platform)'=='AnyCPU')">
+    <When Condition=" '$(Configuration)'=='Release-2010' And ('$(Platform)'=='x86' Or '$(Platform)'=='AnyCPU')">
       <ItemGroup>
         <Reference Include="AcCui">
           <SpecificVersion>False</SpecificVersion>

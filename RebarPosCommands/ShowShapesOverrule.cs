@@ -17,7 +17,7 @@ namespace RebarPosCommands
 
         public static ShowShapesOverrule Instance { get { return mInstance; } }
 
-        public ShowShapesOverrule()
+        private ShowShapesOverrule()
         {
             mIds = new Dictionary<string, bool>();
             SetCustomFilter();
