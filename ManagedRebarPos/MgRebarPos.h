@@ -7,6 +7,7 @@
 #include "..\NativeRebarPos\RebarPos.h"
 #include "MgPosGroup.h"
 #include "MgPosShape.h"
+#include "Marshal.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -210,6 +211,13 @@ namespace OZOZ
 			void Update();
 			HitTestResult HitTest(Point3d pt);
 			void TextBox([Out] Point3d% minPoint, [Out] Point3d% maxPoint);
+
+			// Bound dimensions
+			void AddBoundDimension(Autodesk::AutoCAD::DatabaseServices::ObjectId id);
+			void RemoveBoundDimension(Autodesk::AutoCAD::DatabaseServices::ObjectId id);
+			System::Collections::Generic::List<Autodesk::AutoCAD::DatabaseServices::ObjectId>^ GetBoundDimensions();
+			void SetBoundDimensions(System::Collections::Generic::List<Autodesk::AutoCAD::DatabaseServices::ObjectId>^ items);
+			void ClearBoundDimensions();
 
 		public:
 			static bool GetTotalLengths(String^ formula, int fieldCount, PosGroup::DrawingUnits inputUnit, String^ a, String^ b, String^ c, String^ d, String^ e, String^ f, String^ diameter, [Out] double% minLength, [Out] double% maxLength, [Out] bool% isVar);

@@ -1753,7 +1753,7 @@ Acad::ErrorStatus CBOQTable::dxfInFields(AcDbDxfFiler* pFiler)
 	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("heading"), t_Heading)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString + 1, _T("footing"), t_Footing)) != Acad::eOk) return es;
 
-	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("prevision"), t_Precision)) != Acad::eOk) return es;
+	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("precision"), t_Precision)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32, _T("display unit"), t_DisplayUnit)) != Acad::eOk) return es;
 	if((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("columns"), t_Columns)) != Acad::eOk) return es;
 

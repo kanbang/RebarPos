@@ -195,23 +195,23 @@ public:
 
 public:
     // RXObject implementation
-	virtual Acad::ErrorStatus copyFrom(const AcRxObject* other);
+	virtual Acad::ErrorStatus copyFrom(const AcRxObject* other) override;
 
     // Drawable implementation
-    virtual Adesk::Boolean  isPersistent    (void) const;
-    virtual AcDbObjectId    id              (void) const;
+    virtual Adesk::Boolean  isPersistent    (void) const override;
+    virtual AcDbObjectId    id              (void) const override;
 
 #ifdef REBARPOS2010
-	virtual void            setGsNode(AcGsNode* gsnode);
-	virtual AcGsNode*       gsNode(void) const;
+	virtual void            setGsNode(AcGsNode* gsnode) override;
+	virtual AcGsNode*       gsNode(void) const override;
 #endif
 
-    virtual bool            bounds          (AcDbExtents& bounds) const;
+    virtual bool            bounds          (AcDbExtents& bounds) const override;
 
-    virtual Adesk::UInt32   subSetAttributes   (AcGiDrawableTraits* traits);
-    virtual Adesk::Boolean  subWorldDraw       (AcGiWorldDraw* worldDraw);
-    virtual void            subViewportDraw    (AcGiViewportDraw* vd);
-	virtual Adesk::UInt32   subViewportDrawLogicalFlags (AcGiViewportDraw * vd);
+    virtual Adesk::UInt32   subSetAttributes   (AcGiDrawableTraits* traits) override;
+    virtual Adesk::Boolean  subWorldDraw       (AcGiWorldDraw* worldDraw) override;
+    virtual void            subViewportDraw    (AcGiViewportDraw* vd) override;
+	virtual Adesk::UInt32   subViewportDrawLogicalFlags (AcGiViewportDraw * vd) override;
 
 private:
 	// Helper functions

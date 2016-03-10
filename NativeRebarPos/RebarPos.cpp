@@ -32,12 +32,12 @@ ACRX_DXF_DEFINE_MEMBERS(CRebarPos, AcDbEntity,
 //*************************************************************************
 
 CRebarPos::CRebarPos() :
-	m_BasePoint(0, 0, 0), geomInit(false), ucs(AcGeMatrix3d::kIdentity), 
+	m_BasePoint(0, 0, 0), geomInit(false), ucs(AcGeMatrix3d::kIdentity),
 	m_Direction(1, 0, 0), m_Up(0, 1, 0), m_NoteGrip(0, 2.0, 0), m_LengthGrip(0, -2.0, 0),
 	m_DisplayStyle(CRebarPos::ALL), m_Length(NULL), m_Key(NULL),
-	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL), 
-	m_IncludeInBOQ(Adesk::kTrue), m_Multiplier(1), m_DisplayedSpacing(NULL),
-	m_Shape(NULL), m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL), 
+	m_Pos(NULL), m_Count(NULL), m_Diameter(NULL), m_Spacing(NULL), m_Note(NULL),
+	m_IncludeInBOQ(Adesk::kTrue), m_Multiplier(1), m_DisplayedSpacing(NULL), m_DisplayedCount(NULL),
+	m_Shape(NULL), m_A(NULL), m_B(NULL), m_C(NULL), m_D(NULL), m_E(NULL), m_F(NULL),
 	circleRadius(0.9), partSpacing(0.15), tauSize(0.6),
 	defpointsLayer(AcDbObjectId::kNull), m_Detached(Adesk::kFalse), m_GroupForDisplay(NULL),
 	m_LengthAlignment(CRebarPos::FREE), m_NoteAlignment(CRebarPos::FREE), m_CalcProps(),
@@ -47,21 +47,22 @@ CRebarPos::CRebarPos() :
 
 CRebarPos::~CRebarPos()
 {
-    acutDelString(m_Key);
-    acutDelString(m_Length);
-    acutDelString(m_Pos);
-    acutDelString(m_Count);
-    acutDelString(m_Diameter);
-    acutDelString(m_DisplayedSpacing);
+	acutDelString(m_Key);
+	acutDelString(m_Length);
+	acutDelString(m_Pos);
+	acutDelString(m_Count);
+	acutDelString(m_Diameter);
+	acutDelString(m_DisplayedSpacing);
+	acutDelString(m_DisplayedCount);
 	acutDelString(m_F);
-    acutDelString(m_Note);
+	acutDelString(m_Note);
 	acutDelString(m_Shape);
-    acutDelString(m_A);
-    acutDelString(m_B);
-    acutDelString(m_C);
-    acutDelString(m_D);
-    acutDelString(m_E);
-    acutDelString(m_F);
+	acutDelString(m_A);
+	acutDelString(m_B);
+	acutDelString(m_C);
+	acutDelString(m_D);
+	acutDelString(m_E);
+	acutDelString(m_F);
 }
 
 //*************************************************************************
@@ -102,20 +103,20 @@ Acad::ErrorStatus CRebarPos::setScale(const double newVal)
 
 const double CRebarPos::Width(void) const
 {
-    assertReadEnabled();
+	assertReadEnabled();
 
-	if(lastDrawList.empty())
+	if (lastDrawList.empty())
 	{
 		return 0.0;
 	}
 
 	double w = 0.0;
 	CDrawParams p;
-	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+	for (DrawListSize i = 0; i < lastDrawList.size(); i++)
 	{
 		p = lastDrawList[i];
 		w = max(w, p.x + p.w);
-		if(p.hasCircle)
+		if (p.hasCircle)
 		{
 			w = max(w, p.x + p.w / 2 + circleRadius);
 		}
@@ -126,20 +127,20 @@ const double CRebarPos::Width(void) const
 
 const double CRebarPos::Height(void) const
 {
-    assertReadEnabled();
+	assertReadEnabled();
 
-	if(lastDrawList.empty())
+	if (lastDrawList.empty())
 	{
 		return 0.0;
 	}
 
 	double h = 0.0;
 	CDrawParams p;
-	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+	for (DrawListSize i = 0; i < lastDrawList.size(); i++)
 	{
 		p = lastDrawList[i];
 		h = max(h, p.y + p.h);
-		if(p.hasCircle)
+		if (p.hasCircle)
 		{
 			h = max(h, p.y + p.h / 2 + circleRadius);
 		}
@@ -150,21 +151,21 @@ const double CRebarPos::Height(void) const
 
 const void CRebarPos::TextBox(AcGePoint3d& ptmin, AcGePoint3d& ptmax)
 {
-    assertReadEnabled();
+	assertReadEnabled();
 
-	if(lastDrawList.empty())
+	if (lastDrawList.empty())
 	{
 		return;
 	}
 
 	double xmin = 0.0, xmax = 0.0, ymin = 0.0, ymax = 0.0;
 	CDrawParams p;
-	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+	for (DrawListSize i = 0; i < lastDrawList.size(); i++)
 	{
 		p = lastDrawList[i];
 		xmin = min(xmin, p.x); xmax = max(xmax, p.x + p.w);
 		ymin = min(ymin, p.y); ymax = max(ymax, p.y + p.h);
-		if(p.hasCircle)
+		if (p.hasCircle)
 		{
 			xmin = min(xmin, p.x + p.w / 2 - circleRadius); xmax = max(xmax, p.x + p.w / 2 + circleRadius);
 			ymin = min(ymin, p.y + p.h / 2 - circleRadius); ymax = max(ymax, p.y + p.h / 2 + circleRadius);
@@ -227,12 +228,12 @@ Acad::ErrorStatus CRebarPos::setPos(const ACHAR* newVal)
 {
 	assertWriteEnabled();
 
-    acutDelString(m_Pos);
-    m_Pos = NULL;
-    if(newVal != NULL)
-    {
-        acutUpdString(newVal, m_Pos);
-    }
+	acutDelString(m_Pos);
+	m_Pos = NULL;
+	if (newVal != NULL)
+	{
+		acutUpdString(newVal, m_Pos);
+	}
 
 	Calculate();
 	return Acad::eOk;
@@ -249,11 +250,11 @@ Acad::ErrorStatus CRebarPos::setNote(const ACHAR* newVal)
 	assertWriteEnabled();
 
 	acutDelString(m_Note);
-    m_Note = NULL;
-    if(!m_Detached && newVal != NULL)
-    {
-        acutUpdString(newVal, m_Note);
-    }
+	m_Note = NULL;
+	if (!m_Detached && newVal != NULL)
+	{
+		acutUpdString(newVal, m_Note);
+	}
 
 	Calculate();
 	return Acad::eOk;
@@ -269,11 +270,11 @@ Acad::ErrorStatus CRebarPos::setCount(const ACHAR* newVal)
 {
 	assertWriteEnabled();
 	acutDelString(m_Count);
-    m_Count = NULL;
-    if(!m_Detached && newVal != NULL)
-    {
-        acutUpdString(newVal, m_Count);
-    }
+	m_Count = NULL;
+	if (!m_Detached && newVal != NULL)
+	{
+		acutUpdString(newVal, m_Count);
+	}
 	Calculate();
 	return Acad::eOk;
 }
@@ -288,11 +289,11 @@ Acad::ErrorStatus CRebarPos::setDiameter(const ACHAR* newVal)
 {
 	assertWriteEnabled();
 	acutDelString(m_Diameter);
-    m_Diameter = NULL;
-    if(!m_Detached && newVal != NULL)
-    {
-        acutUpdString(newVal, m_Diameter);
-    }
+	m_Diameter = NULL;
+	if (!m_Detached && newVal != NULL)
+	{
+		acutUpdString(newVal, m_Diameter);
+	}
 	Calculate();
 	return Acad::eOk;
 }
@@ -307,11 +308,11 @@ Acad::ErrorStatus CRebarPos::setSpacing(const ACHAR* newVal)
 {
 	assertWriteEnabled();
 	acutDelString(m_Spacing);
-    m_Spacing = NULL;
-    if(!m_Detached && newVal != NULL)
-    {
-        acutUpdString(newVal, m_Spacing);
-    }
+	m_Spacing = NULL;
+	if (!m_Detached && newVal != NULL)
+	{
+		acutUpdString(newVal, m_Spacing);
+	}
 	Calculate();
 	return Acad::eOk;
 }
@@ -362,7 +363,7 @@ Acad::ErrorStatus CRebarPos::setDisplay(const CRebarPos::DisplayStyle newVal)
 	m_DisplayStyle = newVal;
 
 	// Do not include in BOQ if only marker is shown.
-	if(m_DisplayStyle == CRebarPos::MARKERONLY)
+	if (m_DisplayStyle == CRebarPos::MARKERONLY)
 		m_IncludeInBOQ = Adesk::kFalse;
 
 	Calculate();
@@ -407,11 +408,11 @@ Acad::ErrorStatus CRebarPos::setShape(const ACHAR* newVal)
 {
 	assertWriteEnabled();
 	acutDelString(m_Shape);
-    m_Shape = NULL;
-    if(!m_Detached && newVal != NULL)
-    {
-        acutUpdString(newVal, m_Shape);
-    }
+	m_Shape = NULL;
+	if (!m_Detached && newVal != NULL)
+	{
+		acutUpdString(newVal, m_Shape);
+	}
 	Calculate();
 	return Acad::eOk;
 }
@@ -426,11 +427,11 @@ Acad::ErrorStatus CRebarPos::setA(const ACHAR* newVal)
 {
 	assertWriteEnabled();
 	acutDelString(m_A);
-    m_A = NULL;
-    if(!m_Detached && newVal != NULL)
-    {
-        acutUpdString(newVal, m_A);
-    }
+	m_A = NULL;
+	if (!m_Detached && newVal != NULL)
+	{
+		acutUpdString(newVal, m_A);
+	}
 	Calculate();
 	return Acad::eOk;
 }
@@ -445,11 +446,11 @@ Acad::ErrorStatus CRebarPos::setB(const ACHAR* newVal)
 {
 	assertWriteEnabled();
 	acutDelString(m_B);
-    m_B = NULL;
-    if(!m_Detached && newVal != NULL)
-    {
-        acutUpdString(newVal, m_B);
-    }
+	m_B = NULL;
+	if (!m_Detached && newVal != NULL)
+	{
+		acutUpdString(newVal, m_B);
+	}
 	Calculate();
 	return Acad::eOk;
 }
@@ -464,11 +465,11 @@ Acad::ErrorStatus CRebarPos::setC(const ACHAR* newVal)
 {
 	assertWriteEnabled();
 	acutDelString(m_C);
-    m_C = NULL;
-    if(!m_Detached && newVal != NULL)
-    {
-        acutUpdString(newVal, m_C);
-    }
+	m_C = NULL;
+	if (!m_Detached && newVal != NULL)
+	{
+		acutUpdString(newVal, m_C);
+	}
 	Calculate();
 	return Acad::eOk;
 }
@@ -483,11 +484,11 @@ Acad::ErrorStatus CRebarPos::setD(const ACHAR* newVal)
 {
 	assertWriteEnabled();
 	acutDelString(m_D);
-    m_D = NULL;
-    if(!m_Detached && newVal != NULL)
-    {
-        acutUpdString(newVal, m_D);
-    }
+	m_D = NULL;
+	if (!m_Detached && newVal != NULL)
+	{
+		acutUpdString(newVal, m_D);
+	}
 	Calculate();
 	return Acad::eOk;
 }
@@ -502,11 +503,11 @@ Acad::ErrorStatus CRebarPos::setE(const ACHAR* newVal)
 {
 	assertWriteEnabled();
 	acutDelString(m_E);
-    m_E = NULL;
-    if(!m_Detached && newVal != NULL)
-    {
-        acutUpdString(newVal, m_E);
-    }
+	m_E = NULL;
+	if (!m_Detached && newVal != NULL)
+	{
+		acutUpdString(newVal, m_E);
+	}
 	Calculate();
 	return Acad::eOk;
 }
@@ -521,11 +522,11 @@ Acad::ErrorStatus CRebarPos::setF(const ACHAR* newVal)
 {
 	assertWriteEnabled();
 	acutDelString(m_F);
-    m_F = NULL;
-    if(!m_Detached && newVal != NULL)
-    {
-        acutUpdString(newVal, m_F);
-    }
+	m_F = NULL;
+	if (!m_Detached && newVal != NULL)
+	{
+		acutUpdString(newVal, m_F);
+	}
 	Calculate();
 	return Acad::eOk;
 }
@@ -546,11 +547,12 @@ Acad::ErrorStatus CRebarPos::setDetached(const Adesk::Boolean newVal)
 {
 	assertWriteEnabled();
 	m_Detached = newVal;
-	if(newVal == Adesk::kTrue)
+	if (newVal == Adesk::kTrue)
 	{
 		acutUpdString(_T(""), m_Key);
 		acutUpdString(_T(""), m_Length);
 		acutUpdString(_T(""), m_DisplayedSpacing);
+		acutUpdString(_T(""), m_DisplayedCount);
 
 		acutUpdString(_T(""), m_Count);
 		acutUpdString(_T(""), m_Diameter);
@@ -620,21 +622,21 @@ const CRebarPos::PosSubEntityType CRebarPos::HitTest(const AcGePoint3d& pt0) con
 	// Transform to text coordinate system
 	AcGeMatrix3d trans = AcGeMatrix3d::kIdentity;
 	trans.setCoordSystem(m_BasePoint, m_Direction, m_Up, NormalVector());
-	if(trans.isSingular())
+	if (trans.isSingular())
 	{
 		return CRebarPos::NONE;
 	}
 	trans.invert();
 	AcGePoint3d pt(pt0);
 	pt.transformBy(trans);
-		
+
 	CDrawParams p;
-	if(lastDrawList.size() != 0)
+	if (lastDrawList.size() != 0)
 	{
-		for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+		for (DrawListSize i = 0; i < lastDrawList.size(); i++)
 		{
 			p = lastDrawList[i];
-			if(pt.x > p.x && pt.x <= p.x + p.w && pt.y > p.y && pt.y < p.y + p.h)
+			if (pt.x > p.x && pt.x <= p.x + p.w && pt.y > p.y && pt.y < p.y + p.h)
 			{
 				return (CRebarPos::PosSubEntityType)p.type;
 			}
@@ -642,7 +644,7 @@ const CRebarPos::PosSubEntityType CRebarPos::HitTest(const AcGePoint3d& pt0) con
 	}
 	// Check multiplier text
 	p = lastMultiplierDraw;
-	if(pt.x > p.x && pt.x <= p.x + p.w && pt.y > p.y && pt.y < p.y + p.h)
+	if (pt.x > p.x && pt.x <= p.x + p.w && pt.y > p.y && pt.y < p.y + p.h)
 	{
 		return CRebarPos::MULTIPLIER;
 	}
@@ -650,7 +652,7 @@ const CRebarPos::PosSubEntityType CRebarPos::HitTest(const AcGePoint3d& pt0) con
 	// Transform to note coordinate system
 	trans = AcGeMatrix3d::kIdentity;
 	trans.setCoordSystem(m_NoteGrip, m_Direction, m_Up, NormalVector());
-	if(trans.isSingular())
+	if (trans.isSingular())
 	{
 		return CRebarPos::NONE;
 	}
@@ -658,7 +660,7 @@ const CRebarPos::PosSubEntityType CRebarPos::HitTest(const AcGePoint3d& pt0) con
 	pt = pt0;
 	pt.transformBy(trans);
 	p = lastNoteDraw;
-	if(pt.x > p.x && pt.x <= p.x + p.w && pt.y > p.y && pt.y < p.y + p.h)
+	if (pt.x > p.x && pt.x <= p.x + p.w && pt.y > p.y && pt.y < p.y + p.h)
 	{
 		return CRebarPos::NOTE;
 	}
@@ -666,7 +668,7 @@ const CRebarPos::PosSubEntityType CRebarPos::HitTest(const AcGePoint3d& pt0) con
 	// Transform to length coordinate system
 	trans = AcGeMatrix3d::kIdentity;
 	trans.setCoordSystem(m_LengthGrip, m_Direction, m_Up, NormalVector());
-	if(trans.isSingular())
+	if (trans.isSingular())
 	{
 		return CRebarPos::NONE;
 	}
@@ -674,7 +676,7 @@ const CRebarPos::PosSubEntityType CRebarPos::HitTest(const AcGePoint3d& pt0) con
 	pt = pt0;
 	pt.transformBy(trans);
 	p = lastLengthDraw;
-	if(pt.x > p.x && pt.x <= p.x + p.w && pt.y > p.y && pt.y < p.y + p.h)
+	if (pt.x > p.x && pt.x <= p.x + p.w && pt.y > p.y && pt.y < p.y + p.h)
 	{
 		return CRebarPos::LENGTH;
 	}
@@ -689,34 +691,125 @@ const void CRebarPos::Update(void)
 	Calculate();
 }
 
+Acad::ErrorStatus CRebarPos::AddBoundDimension(AcDbObjectId id)
+{
+	assertWriteEnabled();
+
+	// Check if erased
+	if (id.isNull() || id.isErased() || !id.isValid() || (!id.objectClass()->isDerivedFrom(AcDbDimension::desc())))
+	{
+		return  Acad::eOk;
+	}
+
+	// Add reactor to dimension
+	Acad::ErrorStatus es;
+	AcDbObjectPointer<AcDbDimension> pDimPointer;
+	pDimPointer.open(id, AcDb::kForWrite);
+	if ((es = pDimPointer.openStatus()) != Acad::eOk)
+	{
+		return es;
+	}
+	pDimPointer->addPersistentReactor(this->objectId());
+	double dimVal = 0;
+	pDimPointer->measurement(dimVal);
+
+	m_BoundDimensions.insert(std::pair<AcDbObjectId, double>(id, dimVal));
+
+	Calculate();
+
+	return Acad::eOk;
+}
+
+Acad::ErrorStatus CRebarPos::RemoveBoundDimension(AcDbObjectId id)
+{
+	assertWriteEnabled();
+
+	// Remove reactor from dimension
+	Acad::ErrorStatus es;
+	AcDbObjectPointer<AcDbDimension> pDimPointer;
+	pDimPointer.open(id, AcDb::kForWrite);
+	if ((es = pDimPointer.openStatus()) != Acad::eOk)
+	{
+		return es;
+	}
+	if ((es = pDimPointer->removePersistentReactor(this->objectId())) != Acad::eOk)
+	{
+		return es;
+	}
+
+	m_BoundDimensions.erase(id);
+
+	Calculate();
+
+	return Acad::eOk;
+}
+
+std::vector<AcDbObjectId> CRebarPos::GetBoundDimensions(void)
+{
+	std::vector<AcDbObjectId> items;
+	for (std::map<AcDbObjectId, double>::iterator it = m_BoundDimensions.begin(); it != m_BoundDimensions.end(); it++)
+	{
+		items.push_back((*it).first);
+	}
+	return items;
+}
+
+Acad::ErrorStatus CRebarPos::ClearBoundDimensions(void)
+{
+	assertWriteEnabled();
+
+	Acad::ErrorStatus es;
+	for (std::map<AcDbObjectId, double>::iterator it = m_BoundDimensions.begin(); it != m_BoundDimensions.end(); it++)
+	{
+		// Remove reactor from dimension
+		const AcDbDimension* pDim = NULL;
+		AcDbObjectPointer<AcDbDimension> pDimPointer;
+		pDimPointer.open((*it).first, AcDb::kForWrite);
+		if ((es = pDimPointer.openStatus()) != Acad::eOk)
+		{
+			return es;
+		}
+		if ((es = pDimPointer->removePersistentReactor(this->objectId())) != Acad::eOk)
+		{
+			return es;
+		}
+	}
+
+	m_BoundDimensions.clear();
+
+	Calculate();
+
+	return Acad::eOk;
+}
+
 void CRebarPos::UpdateAll(void)
 {
 	Acad::ErrorStatus es;
-	
+
 	AcDbBlockTablePointer pTable(acdbHostApplicationServices()->workingDatabase()->blockTableId(), AcDb::kForRead);
-	if((es = pTable.openStatus()) != Acad::eOk)
+	if ((es = pTable.openStatus()) != Acad::eOk)
 		return;
-	 
+
 	AcDbBlockTableIterator* pTableIter;
-	for(pTable->newIterator(pTableIter); !pTableIter->done(); pTableIter->step())
-	{     
+	for (pTable->newIterator(pTableIter); !pTableIter->done(); pTableIter->step())
+	{
 		AcDbObjectId id;
 		pTableIter->getRecordId(id);
 		AcDbBlockTableRecordPointer pRecord(id, AcDb::kForRead);
-		if((es = pRecord.openStatus()) != Acad::eOk)
+		if ((es = pRecord.openStatus()) != Acad::eOk)
 			continue;
-	 
+
 		AcDbBlockTableRecordIterator* pRecordIter;
 		for (pRecord->newIterator(pRecordIter); !pRecordIter->done(); pRecordIter->step())
 		{
 			AcDbObjectId eid;
 			pRecordIter->getEntityId(eid);
 			AcDbEntityPointer pEnt(eid, AcDb::kForRead);
-			if((es = pEnt.openStatus()) != Acad::eOk)
+			if ((es = pEnt.openStatus()) != Acad::eOk)
 				continue;
-			if(!pEnt->isKindOf(CRebarPos::desc()))
+			if (!pEnt->isKindOf(CRebarPos::desc()))
 				continue;
-			if((es = pEnt->upgradeOpen()) != Acad::eOk)
+			if ((es = pEnt->upgradeOpen()) != Acad::eOk)
 				continue;
 
 			CRebarPos* pos = CRebarPos::cast(pEnt);
@@ -724,7 +817,7 @@ void CRebarPos::UpdateAll(void)
 			pos->draw();
 			pos->close();
 		}
-		delete pRecordIter;   
+		delete pRecordIter;
 	}
 	delete pTableIter;
 }
@@ -734,59 +827,59 @@ void CRebarPos::UpdateAll(void)
 //*************************************************************************
 
 Acad::ErrorStatus CRebarPos::subGetOsnapPoints(
-    AcDb::OsnapMode       osnapMode,
-    Adesk::GsMarker       gsSelectionMark,
-    const AcGePoint3d&    pickPoint,
-    const AcGePoint3d&    lastPoint,
-    const AcGeMatrix3d&   viewXform,
-    AcGePoint3dArray&     snapPoints,
-    AcDbIntArray&         /*geomIds*/) const
+	AcDb::OsnapMode       osnapMode,
+	Adesk::GsMarker       gsSelectionMark,
+	const AcGePoint3d&    pickPoint,
+	const AcGePoint3d&    lastPoint,
+	const AcGeMatrix3d&   viewXform,
+	AcGePoint3dArray&     snapPoints,
+	AcDbIntArray&         /*geomIds*/) const
 {
 	assertReadEnabled();
 
-	if(gsSelectionMark == 0)
-        return Acad::eOk;
+	if (gsSelectionMark == 0)
+		return Acad::eOk;
 
-	if(osnapMode == AcDb::kOsModeIns)
+	if (osnapMode == AcDb::kOsModeIns)
 		snapPoints.append(m_BasePoint);
 
 	return Acad::eOk;
 }
 
 Acad::ErrorStatus CRebarPos::subGetGripPoints(
-    AcGePoint3dArray& gripPoints,
-    AcDbIntArray& osnapModes,
-    AcDbIntArray& geomIds) const
+	AcGePoint3dArray& gripPoints,
+	AcDbIntArray& osnapModes,
+	AcDbIntArray& geomIds) const
 {
 	assertReadEnabled();
 	gripPoints.append(m_BasePoint);
-	if(m_Detached == Adesk::kFalse && m_DisplayStyle != CRebarPos::MARKERONLY) gripPoints.append(m_NoteGrip);
-	if(m_Detached == Adesk::kFalse && m_DisplayStyle == CRebarPos::ALL) gripPoints.append(m_LengthGrip);
+	if (m_Detached == Adesk::kFalse && m_DisplayStyle != CRebarPos::MARKERONLY) gripPoints.append(m_NoteGrip);
+	if (m_Detached == Adesk::kFalse && m_DisplayStyle == CRebarPos::ALL) gripPoints.append(m_LengthGrip);
 	return Acad::eOk;
 }
 
 Acad::ErrorStatus CRebarPos::subMoveGripPointsAt(
-    const AcDbIntArray& indices,
-    const AcGeVector3d& offset)
+	const AcDbIntArray& indices,
+	const AcGeVector3d& offset)
 {
-    if(indices.length() == 0 || offset.isZeroLength())
-        return Acad::eOk;
+	if (indices.length() == 0 || offset.isZeroLength())
+		return Acad::eOk;
 
 	assertWriteEnabled();
 
 	// If there are more than one hot points or base point is hot, transform the entire entity
-	if(indices.length() > 1 || (indices.length() == 1 && indices[0] == 0))
+	if (indices.length() > 1 || (indices.length() == 1 && indices[0] == 0))
 		transformBy(AcGeMatrix3d::translation(offset));
 
 	// Transform the note grip
-	if(indices.length() == 1 && indices[0] == 1)
+	if (indices.length() == 1 && indices[0] == 1)
 	{
 		m_NoteGrip.transformBy(AcGeMatrix3d::translation(offset));
 		m_NoteAlignment = CRebarPos::FREE;
 	}
 
 	// Transform the length grip
-	if(indices.length() == 1 && indices[0] == 2)
+	if (indices.length() == 1 && indices[0] == 2)
 	{
 		m_LengthGrip.transformBy(AcGeMatrix3d::translation(offset));
 		m_LengthAlignment = CRebarPos::FREE;
@@ -798,7 +891,7 @@ Acad::ErrorStatus CRebarPos::subMoveGripPointsAt(
 Acad::ErrorStatus CRebarPos::subTransformBy(const AcGeMatrix3d& xform)
 {
 	assertWriteEnabled();
-	
+
 	m_BasePoint.transformBy(xform);
 	m_NoteGrip.transformBy(xform);
 	m_LengthGrip.transformBy(xform);
@@ -813,7 +906,7 @@ Acad::ErrorStatus CRebarPos::subTransformBy(const AcGeMatrix3d& xform)
 
 	// Set mirror base point to middle of entity
 	AcGePoint3d pt;
-	if(lastDrawList.size() != 0)
+	if (lastDrawList.size() != 0)
 	{
 		CDrawParams p = lastDrawList.at(lastDrawList.size() - 1);
 		pt.x = (p.x + p.w) / 2.0;
@@ -825,7 +918,7 @@ Acad::ErrorStatus CRebarPos::subTransformBy(const AcGeMatrix3d& xform)
 	}
 
 	// Text always left to right
-	if(ucsdir.x < 0)
+	if (ucsdir.x < 0)
 	{
 		// Mirror around vertical axis
 		AcGeMatrix3d mirror = AcGeMatrix3d::kIdentity;
@@ -838,7 +931,7 @@ Acad::ErrorStatus CRebarPos::subTransformBy(const AcGeMatrix3d& xform)
 	}
 
 	// Text always upright
-	if(ucsup.y < 0)
+	if (ucsup.y < 0)
 	{
 		// Mirror around horizontal axis
 		AcGeMatrix3d mirror = AcGeMatrix3d::kIdentity;
@@ -862,25 +955,25 @@ Acad::ErrorStatus CRebarPos::subTransformBy(const AcGeMatrix3d& xform)
 
 void CRebarPos::subList() const
 {
-    assertReadEnabled();
+	assertReadEnabled();
 
 	// Call parent first
-    AcDbEntity::subList();
+	AcDbEntity::subList();
 
 	// Base point in UCS
-    acutPrintf(_T("%18s%16s "), _T(/*MSG0*/""), _T("Base Point:"));
-    AcGePoint3d pt(m_BasePoint);
-    acdbWcs2Ucs(asDblArray(pt), asDblArray(pt), false);
-    acutPrintf(_T("X = %-9.16q0, Y = %-9.16q0, Z = %-9.16q0\n"), pt.x, pt.y, pt.z);
+	acutPrintf(_T("%18s%16s "), _T(/*MSG0*/""), _T("Base Point:"));
+	AcGePoint3d pt(m_BasePoint);
+	acdbWcs2Ucs(asDblArray(pt), asDblArray(pt), false);
+	acutPrintf(_T("X = %-9.16q0, Y = %-9.16q0, Z = %-9.16q0\n"), pt.x, pt.y, pt.z);
 
 	// Scale
-    acutPrintf(_T("%18s%16s %-9.16q0\n"), _T(/*MSG0*/""), _T("Scale:"), m_Direction.length());    
+	acutPrintf(_T("%18s%16s %-9.16q0\n"), _T(/*MSG0*/""), _T("Scale:"), m_Direction.length());
 
 	// List all properties
 	if (m_Pos != NULL)
 		acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Pos Marker:"), m_Pos);
 
-	if(m_Detached == Adesk::kFalse)
+	if (m_Detached == Adesk::kFalse)
 	{
 		if (m_Count != NULL)
 			acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Count:"), m_Count);
@@ -889,7 +982,7 @@ void CRebarPos::subList() const
 		if (m_Spacing != NULL)
 			acutPrintf(_T("%18s%16s %s\n"), _T(/*MSG0*/""), _T("Spacing:"), m_Spacing);
 
-		if(m_IncludeInBOQ == Adesk::kTrue)
+		if (m_IncludeInBOQ == Adesk::kTrue)
 			acutPrintf(_T("%18s%16s %i\n"), _T(/*MSG0*/""), _T("Multiplier:"), m_Multiplier);
 		else
 			acutPrintf(_T("%18s%16s %i (Not Included in BOQ)\n"), _T(/*MSG0*/""), _T("Multiplier:"), m_Multiplier);
@@ -920,9 +1013,9 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 {
 	const double PI = 4.0 * atan(1.0);
 
-    assertReadEnabled();
+	assertReadEnabled();
 
-	if(lastDrawList.size() == 0)
+	if (lastDrawList.size() == 0)
 	{
 		return Acad::eInvalidInput;
 	}
@@ -932,21 +1025,21 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 	// Open the one and only group
 	AcDbObjectId groupId;
 	CPosGroup::GetGroupId(groupId);
-	AcDbObjectPointer<CPosGroup> pGroup (groupId, AcDb::kForRead);
-	if((es = pGroup.openStatus()) != Acad::eOk)
+	AcDbObjectPointer<CPosGroup> pGroup(groupId, AcDb::kForRead);
+	if ((es = pGroup.openStatus()) != Acad::eOk)
 	{
 		return es;
 	}
 	// Open text styles
 	AcDbObjectId textStyle = pGroup->TextStyleId();
 	AcDbObjectId noteStyle = pGroup->NoteStyleId();
-	AcDbObjectPointer<AcDbTextStyleTableRecord> pTextStyle (textStyle, AcDb::kForRead);
-	if((es = pTextStyle.openStatus()) != Acad::eOk)
+	AcDbObjectPointer<AcDbTextStyleTableRecord> pTextStyle(textStyle, AcDb::kForRead);
+	if ((es = pTextStyle.openStatus()) != Acad::eOk)
 	{
 		return es;
 	}
-	AcDbObjectPointer<AcDbTextStyleTableRecord> pNoteStyle (noteStyle, AcDb::kForRead);
-	if((es = pNoteStyle.openStatus()) != Acad::eOk)
+	AcDbObjectPointer<AcDbTextStyleTableRecord> pNoteStyle(noteStyle, AcDb::kForRead);
+	if ((es = pNoteStyle.openStatus()) != Acad::eOk)
 	{
 		return es;
 	}
@@ -958,37 +1051,37 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 	noteTrans.setCoordSystem(m_NoteGrip, m_Direction, m_Up, NormalVector());
 	AcGeMatrix3d lengthTrans = AcGeMatrix3d::kIdentity;
 	lengthTrans.setCoordSystem(m_LengthGrip, m_Direction, m_Up, NormalVector());
-	
-    AcDbText* text;
+
+	AcDbText* text;
 	CDrawParams p;
-	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+	for (DrawListSize i = 0; i < lastDrawList.size(); i++)
 	{
 		p = lastDrawList[i];
-		if(!p.text.empty())
+		if (!p.text.empty())
 		{
 			text = new AcDbText(AcGePoint3d(p.x, p.y, 0), p.text.c_str(), textStyle, 1.0);
 			text->setColorIndex(p.color);
 			text->setWidthFactor(p.widthFactor);
-			if((es = text->transformBy(trans)) != Acad::eOk)
+			if ((es = text->transformBy(trans)) != Acad::eOk)
 			{
 				return es;
 			}
 			entitySet.append(text);
 		}
 		// Circle
-		if(p.hasCircle)
+		if (p.hasCircle)
 		{
 			AcDbCircle* circle;
 			circle = new AcDbCircle(AcGePoint3d(p.x + p.w / 2, p.y + p.h / 2, 0), AcGeVector3d::kZAxis, circleRadius);
 			circle->setColorIndex(lastCircleColor);
-			if((es = circle->transformBy(trans)) != Acad::eOk)
+			if ((es = circle->transformBy(trans)) != Acad::eOk)
 			{
 				return es;
 			}
 			entitySet.append(circle);
 		}
 		// Tau sign
-		if(p.hasTau)
+		if (p.hasTau)
 		{
 			// ellipse
 			AcDbEllipse* ellipse;
@@ -996,7 +1089,7 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 			AcGePoint3d centerpt(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0, 0);
 			ellipse->set(centerpt, AcGeVector3d::kZAxis, AcGeVector3d::kYAxis * 0.35, tauSize / 0.7);
 			ellipse->setColorIndex(p.color);
-			if((es = ellipse->transformBy(trans)) != Acad::eOk)
+			if ((es = ellipse->transformBy(trans)) != Acad::eOk)
 			{
 				return es;
 			}
@@ -1008,7 +1101,7 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 			linept[1] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0 + 0.5, 0);
 			line = new AcDbLine(linept[0], linept[1]);
 			line->setColorIndex(p.color);
-			if((es = line->transformBy(trans)) != Acad::eOk)
+			if ((es = line->transformBy(trans)) != Acad::eOk)
 			{
 				return es;
 			}
@@ -1020,7 +1113,7 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 			clinept[1] = AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0 + 0.2, p.y + p.h / 2.0 + 0.5, 0);
 			cline = new AcDbLine(clinept[0], clinept[1]);
 			cline->setColorIndex(p.color);
-			if((es = cline->transformBy(trans)) != Acad::eOk)
+			if ((es = cline->transformBy(trans)) != Acad::eOk)
 			{
 				return es;
 			}
@@ -1028,46 +1121,46 @@ Acad::ErrorStatus CRebarPos::subExplode(AcDbVoidPtrArray& entitySet) const
 		}
 	}
 	p = lastNoteDraw;
-	if(!p.text.empty())
+	if (!p.text.empty())
 	{
 		text = new AcDbText(AcGePoint3d(p.x, p.y, 0), p.text.c_str(), noteStyle, 1.0 * pGroup->NoteScale());
 		text->setColorIndex(p.color);
 		text->setWidthFactor(p.widthFactor);
-		if((es = text->transformBy(noteTrans)) != Acad::eOk)
+		if ((es = text->transformBy(noteTrans)) != Acad::eOk)
 		{
 			return es;
 		}
 		entitySet.append(text);
 	}
 	p = lastLengthDraw;
-	if(!p.text.empty())
+	if (!p.text.empty())
 	{
 		text = new AcDbText(AcGePoint3d(p.x, p.y, 0), p.text.c_str(), textStyle, 1.0);
 		text->setColorIndex(p.color);
 		text->setWidthFactor(p.widthFactor);
-		if((es = text->transformBy(lengthTrans)) != Acad::eOk)
+		if ((es = text->transformBy(lengthTrans)) != Acad::eOk)
 		{
 			return es;
 		}
 		entitySet.append(text);
 	}
 
-    return Acad::eOk;
+	return Acad::eOk;
 }
 
 Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 {
 	const double PI = 4.0 * atan(1.0);
 
-    assertReadEnabled();
+	assertReadEnabled();
 
-    if(worldDraw->regenAbort())
+	if (worldDraw->regenAbort())
 	{
-        return Adesk::kTrue;
-    }
+		return Adesk::kTrue;
+	}
 
 	// Quit if there is nothing to draw
-	if(lastDrawList.empty())
+	if (lastDrawList.empty())
 	{
 		return Adesk::kTrue;
 	}
@@ -1086,20 +1179,20 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	worldDraw->subEntityTraits().setSelectionMarker(1);
 	lastTextStyle.setTextSize(1.0);
 	lastTextStyle.loadStyleRec();
-	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+	for (DrawListSize i = 0; i < lastDrawList.size(); i++)
 	{
 		CDrawParams p = lastDrawList.at(i);
 
 		// Circle
-		if(p.hasCircle)
+		if (p.hasCircle)
 		{
 			Utility::DrawCircle(worldDraw, AcGePoint3d(p.x + p.w / 2.0, p.y + p.h / 2.0, 0), circleRadius, lastCircleColor);
 		}
 
 		// Tau sign
-		if(p.hasTau)
+		if (p.hasTau)
 		{
-			Utility::DrawEllipse(worldDraw, 
+			Utility::DrawEllipse(worldDraw,
 				AcGePoint3d(p.x - partSpacing / 2.0 - tauSize / 2.0, p.y + p.h / 2.0, 0),
 				tauSize * 0.5, 0.35, p.color);
 
@@ -1115,7 +1208,7 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 		}
 
 		// Text
-		if(p.widthFactor != lastTextStyle.xScale())
+		if (p.widthFactor != lastTextStyle.xScale())
 		{
 			lastTextStyle.setXScale(p.widthFactor);
 			lastTextStyle.loadStyleRec();
@@ -1149,21 +1242,21 @@ Adesk::Boolean CRebarPos::subWorldDraw(AcGiWorldDraw* worldDraw)
 	worldDraw->geometry().popModelTransform();
 
 	// Do not call viewportDraw()
-    return Adesk::kTrue; 
+	return Adesk::kTrue;
 }
 
 void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 {
-    assertReadEnabled();
+	assertReadEnabled();
 
-    if(worldDraw->regenAbort())
+	if (worldDraw->regenAbort())
 	{
-        return;
-    }
+		return;
+	}
 
 	AcDbVoidPtrArray entitySet;
 	explode(entitySet);
-	for(int i = 0; i < entitySet.length(); ++i)
+	for (int i = 0; i < entitySet.length(); ++i)
 	{
 		AcDbEntity* ent = static_cast<AcDbEntity*>(entitySet[i]);
 		worldDraw->geometry().draw(ent);
@@ -1174,9 +1267,9 @@ void CRebarPos::saveAs(AcGiWorldDraw *worldDraw, AcDb::SaveType saveType)
 
 Acad::ErrorStatus CRebarPos::subGetGeomExtents(AcDbExtents& extents) const
 {
-    assertReadEnabled();
+	assertReadEnabled();
 
-	if(lastDrawList.empty())
+	if (lastDrawList.empty())
 	{
 		return Acad::eInvalidExtents;
 	}
@@ -1202,7 +1295,7 @@ Acad::ErrorStatus CRebarPos::subGetGeomExtents(AcDbExtents& extents) const
 	extents.addPoint(pt3);
 	extents.addPoint(pt4);
 
-	if(m_Note != NULL && m_Note[0] != _T('\0'))
+	if (m_Note != NULL && m_Note[0] != _T('\0'))
 	{
 		AcGePoint3d pt5(0, 0, 0);
 		AcGePoint3d pt6(lastNoteDraw.w, 0, 0);
@@ -1222,7 +1315,7 @@ Acad::ErrorStatus CRebarPos::subGetGeomExtents(AcDbExtents& extents) const
 		extents.addPoint(pt8);
 	}
 
-	if(m_Length != NULL && m_Length[0] != _T('\0'))
+	if (m_Length != NULL && m_Length[0] != _T('\0'))
 	{
 		AcGePoint3d pt9(0, 0, 0);
 		AcGePoint3d pt10(lastLengthDraw.w, 0, 0);
@@ -1255,7 +1348,7 @@ Acad::ErrorStatus CRebarPos::dwgOutFields(AcDbDwgFiler* pFiler) const
 
 	// Save parent class information first.
 	Acad::ErrorStatus es;
-	if((es = AcDbEntity::dwgOutFields(pFiler)) != Acad::eOk)
+	if ((es = AcDbEntity::dwgOutFields(pFiler)) != Acad::eOk)
 		return es;
 
 	// Object version number
@@ -1271,19 +1364,19 @@ Acad::ErrorStatus CRebarPos::dwgOutFields(AcDbDwgFiler* pFiler) const
 		pFiler->writeString(m_Pos);
 	else
 		pFiler->writeString(_T(""));
-	if(m_Note)
+	if (m_Note)
 		pFiler->writeString(m_Note);
 	else
 		pFiler->writeString(_T(""));
-	if(m_Count)
+	if (m_Count)
 		pFiler->writeString(m_Count);
 	else
 		pFiler->writeString(_T(""));
-	if(m_Diameter)
+	if (m_Diameter)
 		pFiler->writeString(m_Diameter);
 	else
 		pFiler->writeString(_T(""));
-	if(m_Spacing)
+	if (m_Spacing)
 		pFiler->writeString(m_Spacing);
 	else
 		pFiler->writeString(_T(""));
@@ -1294,35 +1387,41 @@ Acad::ErrorStatus CRebarPos::dwgOutFields(AcDbDwgFiler* pFiler) const
 	pFiler->writeInt32(m_LengthAlignment);
 	pFiler->writeInt32(m_NoteAlignment);
 
-	if(m_Shape)
+	if (m_Shape)
 		pFiler->writeString(m_Shape);
 
-	if(m_A)
+	if (m_A)
 		pFiler->writeString(m_A);
 	else
 		pFiler->writeString(_T(""));
-	if(m_B)
+	if (m_B)
 		pFiler->writeString(m_B);
 	else
 		pFiler->writeString(_T(""));
-	if(m_C)
+	if (m_C)
 		pFiler->writeString(m_C);
 	else
 		pFiler->writeString(_T(""));
-	if(m_D)
+	if (m_D)
 		pFiler->writeString(m_D);
 	else
 		pFiler->writeString(_T(""));
-	if(m_E)
+	if (m_E)
 		pFiler->writeString(m_E);
 	else
 		pFiler->writeString(_T(""));
-	if(m_F)
+	if (m_F)
 		pFiler->writeString(m_F);
 	else
 		pFiler->writeString(_T(""));
 
 	pFiler->writeBoolean(m_Detached);
+
+	pFiler->writeInt32((int)m_BoundDimensions.size());
+	for (std::map<AcDbObjectId, double>::const_iterator it = m_BoundDimensions.begin(); it != m_BoundDimensions.end(); it++)
+	{
+		pFiler->writeSoftPointerId((*it).first);
+	}
 
 	return pFiler->filerStatus();
 }
@@ -1333,7 +1432,7 @@ Acad::ErrorStatus CRebarPos::dwgInFields(AcDbDwgFiler* pFiler)
 
 	// Read parent class information first.
 	Acad::ErrorStatus es;
-	if((es = AcDbEntity::dwgInFields(pFiler)) != Acad::eOk)
+	if ((es = AcDbEntity::dwgInFields(pFiler)) != Acad::eOk)
 		return es;
 
 	// Object version number needs to be read first
@@ -1348,7 +1447,7 @@ Acad::ErrorStatus CRebarPos::dwgInFields(AcDbDwgFiler* pFiler)
 	pFiler->readPoint3d(&m_LengthGrip);
 	pFiler->readVector3d(&m_Direction);
 	pFiler->readVector3d(&m_Up);
-	
+
 	acutDelString(m_Pos);
 	acutDelString(m_Note);
 	acutDelString(m_Count);
@@ -1390,6 +1489,16 @@ Acad::ErrorStatus CRebarPos::dwgInFields(AcDbDwgFiler* pFiler)
 	pFiler->readString(&m_F);
 	pFiler->readBoolean(&m_Detached);
 
+	ClearBoundDimensions();
+	Adesk::Int32  dimCount = 0;
+	pFiler->readInt32(&dimCount);
+	for (int i = 0; i < dimCount; i++)
+	{
+		AcDbObjectId id;
+		pFiler->readSoftPointerId((AcDbSoftPointerId*)&id);
+		AddBoundDimension(id);
+	}
+
 	Calculate();
 
 	return pFiler->filerStatus();
@@ -1401,7 +1510,7 @@ Acad::ErrorStatus CRebarPos::dxfOutFields(AcDbDxfFiler* pFiler) const
 
 	// Save parent class information first.
 	Acad::ErrorStatus es;
-	if((es = AcDbEntity::dxfOutFields(pFiler)) != Acad::eOk)
+	if ((es = AcDbEntity::dxfOutFields(pFiler)) != Acad::eOk)
 		return es;
 
 	// Subclass
@@ -1419,23 +1528,23 @@ Acad::ErrorStatus CRebarPos::dxfOutFields(AcDbDxfFiler* pFiler) const
 	pFiler->writeVector3d(AcDb::kDxfXCoord + 4, m_Up, 16);
 
 	// Properties
-	if(m_Pos)
+	if (m_Pos)
 		pFiler->writeString(AcDb::kDxfText, m_Pos);
 	else
 		pFiler->writeString(AcDb::kDxfText, _T(""));
-	if(m_Note)
+	if (m_Note)
 		pFiler->writeString(AcDb::kDxfXTextString, m_Note);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString, _T(""));
-	if(m_Count)
+	if (m_Count)
 		pFiler->writeString(AcDb::kDxfXTextString + 1, m_Count);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString + 1, _T(""));
-	if(m_Diameter)
+	if (m_Diameter)
 		pFiler->writeString(AcDb::kDxfXTextString + 2, m_Diameter);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString + 2, _T(""));
-	if(m_Spacing)
+	if (m_Spacing)
 		pFiler->writeString(AcDb::kDxfXTextString + 3, m_Spacing);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString + 3, _T(""));
@@ -1447,36 +1556,42 @@ Acad::ErrorStatus CRebarPos::dxfOutFields(AcDbDxfFiler* pFiler) const
 	pFiler->writeInt32(AcDb::kDxfInt32 + 3, m_LengthAlignment);
 	pFiler->writeInt32(AcDb::kDxfInt32 + 4, m_NoteAlignment);
 
-	if(m_Shape)
+	if (m_Shape)
 		pFiler->writeString(AcDb::kDxfText + 1, m_Shape);
 	else
 		pFiler->writeString(AcDb::kDxfText + 1, _T(""));
-	if(m_A)
+	if (m_A)
 		pFiler->writeString(AcDb::kDxfXTextString + 4, m_A);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString + 4, _T(""));
-	if(m_B)
+	if (m_B)
 		pFiler->writeString(AcDb::kDxfXTextString + 5, m_B);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString + 5, _T(""));
-	if(m_C)
+	if (m_C)
 		pFiler->writeString(AcDb::kDxfXTextString + 6, m_C);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString + 6, _T(""));
-	if(m_D)
+	if (m_D)
 		pFiler->writeString(AcDb::kDxfXTextString + 7, m_D);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString + 7, _T(""));
-	if(m_E)
+	if (m_E)
 		pFiler->writeString(AcDb::kDxfXTextString + 8, m_E);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString + 8, _T(""));
-	if(m_F)
+	if (m_F)
 		pFiler->writeString(AcDb::kDxfXTextString + 9, m_F);
 	else
 		pFiler->writeString(AcDb::kDxfXTextString + 9, _T(""));
 
 	pFiler->writeBoolean(AcDb::kDxfBool + 1, m_Detached);
+
+	pFiler->writeInt32(AcDb::kDxfInt32, (int)m_BoundDimensions.size());
+	for (std::map<AcDbObjectId, double>::const_iterator it = m_BoundDimensions.begin(); it != m_BoundDimensions.end(); it++)
+	{
+		pFiler->writeItem(AcDb::kDxfSoftPointerId, (AcDbSoftPointerId&)(*it).first);
+	}
 
 	return pFiler->filerStatus();
 }
@@ -1487,20 +1602,20 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 
 	// Read parent class information first.
 	Acad::ErrorStatus es;
-	if(((es = AcDbEntity::dxfInFields(pFiler)) != Acad::eOk) || !pFiler->atSubclassData(_T("RebarPos")))
+	if (((es = AcDbEntity::dxfInFields(pFiler)) != Acad::eOk) || !pFiler->atSubclassData(_T("RebarPos")))
 		return es;
 
 	resbuf rb;
 	// Object version number
-    Adesk::UInt32 version;
-    pFiler->readItem(&rb);
-    if (rb.restype != AcDb::kDxfInt32) 
-    {
-        pFiler->pushBackItem();
-        pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: expected group code %d (version)"), AcDb::kDxfInt32);
-        return pFiler->filerStatus();
-    }
-    version = rb.resval.rlong;
+	Adesk::UInt32 version;
+	pFiler->readItem(&rb);
+	if (rb.restype != AcDb::kDxfInt32)
+	{
+		pFiler->pushBackItem();
+		pFiler->setError(Acad::eInvalidDxfCode, _T("\nError: expected group code %d (version)"), AcDb::kDxfInt32);
+		return pFiler->filerStatus();
+	}
+	version = rb.resval.rlong;
 	if (version > CRebarPos::kCurrentVersionNumber)
 		return Acad::eMakeMeProxy;
 
@@ -1525,105 +1640,52 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	ACHAR* t_E = NULL;
 	ACHAR* t_F = NULL;
 	Adesk::Boolean t_Detached = Adesk::kFalse;
+	int t_DimCount = 0;
+	std::map<AcDbObjectId, double> t_BoundDimensions;
 
-    while ((es == Acad::eOk) && ((es = pFiler->readResBuf(&rb)) == Acad::eOk))
-    {
-        switch (rb.restype) 
-		{
-        case AcDb::kDxfXCoord:
-            t_BasePoint = asPnt3d(rb.resval.rpoint);
-            break;
-        case AcDb::kDxfXCoord + 1:
-            t_NoteGrip = asPnt3d(rb.resval.rpoint);
-            break;
-        case AcDb::kDxfXCoord + 2:
-            t_LengthGrip = asPnt3d(rb.resval.rpoint);
-            break;
-        case AcDb::kDxfXCoord + 3:
-			t_Direction = asVec3d(rb.resval.rpoint);
-            break;
-        case AcDb::kDxfXCoord + 4:
-            t_Up = asVec3d(rb.resval.rpoint);
-            break;
+	if ((es = Utility::ReadDXFPoint(pFiler, AcDb::kDxfXCoord, _T("base point"), t_BasePoint)) != Acad::eOk) return es;
+	if ((es = Utility::ReadDXFPoint(pFiler, AcDb::kDxfXCoord + 1, _T("note point"), t_NoteGrip)) != Acad::eOk) return es;
+	if ((es = Utility::ReadDXFPoint(pFiler, AcDb::kDxfXCoord + 2, _T("length point"), t_LengthGrip)) != Acad::eOk) return es;
 
-        case AcDb::kDxfText:
-            acutUpdString(rb.resval.rstring, t_Pos);
-            break;
-        case AcDb::kDxfXTextString:
-            acutUpdString(rb.resval.rstring, t_Note);
-            break;
-        case AcDb::kDxfXTextString + 1:
-            acutUpdString(rb.resval.rstring, t_Count);
-            break;
-        case AcDb::kDxfXTextString + 2:
-            acutUpdString(rb.resval.rstring, t_Diameter);
-            break;
-        case AcDb::kDxfXTextString + 3:
-            acutUpdString(rb.resval.rstring, t_Spacing);
-            break;
+	if ((es = Utility::ReadDXFVector(pFiler, AcDb::kDxfXCoord + 3, _T("direction vector"), t_Direction)) != Acad::eOk) return es;
+	if ((es = Utility::ReadDXFVector(pFiler, AcDb::kDxfXCoord + 3, _T("up vector"), t_Up)) != Acad::eOk) return es;
 
-        case AcDb::kDxfBool:
-			t_IncludeInBOQ = (rb.resval.rint == 0) ? Adesk::kFalse : Adesk::kTrue;
-            break;
-        case AcDb::kDxfInt32 + 1:
-            t_Multiplier = rb.resval.rlong;
-            break;
+	if ((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText, _T("pos"), t_Pos)) != Acad::eOk) return es;
+	if ((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString, _T("note"), t_Note)) != Acad::eOk) return es;
+	if ((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString + 1, _T("count"), t_Count)) != Acad::eOk) return es;
+	if ((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString + 2, _T("diameter"), t_Diameter)) != Acad::eOk) return es;
+	if ((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString + 3, _T("spacing"), t_Spacing)) != Acad::eOk) return es;
 
-        case AcDb::kDxfInt32 + 2:
-            t_Display = rb.resval.rlong;
-            break;
+	if ((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool, _T("include in BOQ"), t_IncludeInBOQ)) != Acad::eOk) return es;
 
-        case AcDb::kDxfInt32 + 3:
-			t_LengthAlign = rb.resval.rlong;
-            break;
-        case AcDb::kDxfInt32 + 4:
-			t_NoteAlign = rb.resval.rlong;
-            break;
+	if ((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32 + 1, _T("multiplier"), t_Multiplier)) != Acad::eOk) return es;
+	if ((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32 + 2, _T("display style"), t_Display)) != Acad::eOk) return es;
 
-        case AcDb::kDxfText + 1:
-            acutUpdString(rb.resval.rstring, t_Shape);
-            break;
-        case AcDb::kDxfXTextString + 4:
-            acutUpdString(rb.resval.rstring, t_A);
-            break;
-        case AcDb::kDxfXTextString + 5:
-            acutUpdString(rb.resval.rstring, t_B);
-            break;
-        case AcDb::kDxfXTextString + 6:
-            acutUpdString(rb.resval.rstring, t_C);
-            break;
-        case AcDb::kDxfXTextString + 7:
-            acutUpdString(rb.resval.rstring, t_D);
-            break;
-        case AcDb::kDxfXTextString + 8:
-            acutUpdString(rb.resval.rstring, t_E);
-            break;
-        case AcDb::kDxfXTextString + 9:
-            acutUpdString(rb.resval.rstring, t_F);
-            break;
+	if ((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32 + 3, _T("length alignment"), t_LengthAlign)) != Acad::eOk) return es;
+	if ((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32 + 4, _T("note alignment"), t_NoteAlign)) != Acad::eOk) return es;
 
-        case AcDb::kDxfBool + 1:
-			t_Detached = (rb.resval.rint == 0) ? Adesk::kFalse : Adesk::kTrue;
-            break;
+	if ((es = Utility::ReadDXFString(pFiler, AcDb::kDxfText + 1, _T("shape"), t_Shape)) != Acad::eOk) return es;
+	if ((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString + 4, _T("a"), t_A)) != Acad::eOk) return es;
+	if ((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString + 5, _T("b"), t_B)) != Acad::eOk) return es;
+	if ((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString + 6, _T("c"), t_C)) != Acad::eOk) return es;
+	if ((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString + 7, _T("d"), t_D)) != Acad::eOk) return es;
+	if ((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString + 8, _T("e"), t_E)) != Acad::eOk) return es;
+	if ((es = Utility::ReadDXFString(pFiler, AcDb::kDxfXTextString + 9, _T("f"), t_F)) != Acad::eOk) return es;
 
-        default:
-            // An unrecognized group. Push it back so that
-            // the subclass can read it again.
-            pFiler->pushBackItem();
-            es = Acad::eEndOfFile;
-            break;
-        }
-    }
+	if ((es = Utility::ReadDXFBool(pFiler, AcDb::kDxfBool + 1, _T("detached"), t_Detached)) != Acad::eOk) return es;
 
-    // At this point the es variable must contain eEndOfFile
-    // - either from readResBuf() or from pushback. If not,
-    // it indicates that an error happened and we should
-    // return immediately.
-    //
-    if (es != Acad::eEndOfFile)
-        return Acad::eInvalidResBuf;
+	if ((es = Utility::ReadDXFLong(pFiler, AcDb::kDxfInt32 + 1, _T("dimension count"), t_DimCount)) != Acad::eOk) return es;
+
+	for (int i = 0; i < t_DimCount; i++)
+	{
+		AcDbObjectId t_Id;
+		if ((es = Utility::ReadDXFObjectId(pFiler, AcDb::kDxfSoftPointerId, _T("dimension id"), t_Id)) != Acad::eOk) return es;
+		t_BoundDimensions.insert(std::pair<AcDbObjectId, double>(t_Id, 0));
+	}
 
 	// Successfully read DXF codes; set object properties.
+	SuspendUpdate();
+
 	m_BasePoint = t_BasePoint;
 	m_NoteGrip = t_NoteGrip;
 	m_LengthGrip = t_LengthGrip;
@@ -1649,6 +1711,8 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	setF(t_F);
 	setDetached(t_Detached);
 
+	m_BoundDimensions = t_BoundDimensions;
+
 	acutDelString(t_Pos);
 	acutDelString(t_Note);
 	acutDelString(t_Count);
@@ -1662,365 +1726,365 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	acutDelString(t_E);
 	acutDelString(t_F);
 
-	Calculate();
+	ResumeUpdate();
 
-    return es;
+	return es;
 }
 
 Acad::ErrorStatus CRebarPos::subDeepClone(AcDbObject*    pOwner,
-                    AcDbObject*&   pClonedObject,
-                    AcDbIdMapping& idMap,
-                    Adesk::Boolean isPrimary) const
+	AcDbObject*&   pClonedObject,
+	AcDbIdMapping& idMap,
+	Adesk::Boolean isPrimary) const
 {
-    // You should always pass back pClonedObject == NULL
-    // if, for any reason, you do not actually clone it
-    // during this call.  The caller should pass it in
-    // as NULL, but to be safe, we set it here as well.
-    //
-    pClonedObject = NULL;
+	// You should always pass back pClonedObject == NULL
+	// if, for any reason, you do not actually clone it
+	// during this call.  The caller should pass it in
+	// as NULL, but to be safe, we set it here as well.
+	//
+	pClonedObject = NULL;
 
-    // If this object is in the idMap and is already
-    // cloned, then return.
-    //
-    bool isPrim = false;
-    if (isPrimary)
-        isPrim = true;
-    AcDbIdPair idPair(objectId(), (AcDbObjectId)NULL, false, isPrim);
-    if (idMap.compute(idPair) && (idPair.value() != NULL))
-        return Acad::eOk;    
+	// If this object is in the idMap and is already
+	// cloned, then return.
+	//
+	bool isPrim = false;
+	if (isPrimary)
+		isPrim = true;
+	AcDbIdPair idPair(objectId(), (AcDbObjectId)NULL, false, isPrim);
+	if (idMap.compute(idPair) && (idPair.value() != NULL))
+		return Acad::eOk;
 
-    // Create the clone
-    //
-    CRebarPos *pClone = (CRebarPos*)isA()->create();
-    if (pClone != NULL)
-        pClonedObject = pClone;    // set the return value
-    else
-        return Acad::eOutOfMemory;
+	// Create the clone
+	//
+	CRebarPos *pClone = (CRebarPos*)isA()->create();
+	if (pClone != NULL)
+		pClonedObject = pClone;    // set the return value
+	else
+		return Acad::eOutOfMemory;
 
-    AcDbDeepCloneFiler filer;
-    dwgOut(&filer);
+	AcDbDeepCloneFiler filer;
+	dwgOut(&filer);
 
-    filer.seek(0L, AcDb::kSeekFromStart);
-    pClone->dwgIn(&filer);
-    bool bOwnerXlated = false;
-    if (isPrimary)
-    {
-        AcDbBlockTableRecord *pBTR = AcDbBlockTableRecord::cast(pOwner);
-        if (pBTR != NULL)
-        {
-            pBTR->appendAcDbEntity(pClone);
-            bOwnerXlated = true;
-        }
-        else
-        {
-            pOwner->database()->addAcDbObject(pClone);
-        }
-    } 
-	else 
+	filer.seek(0L, AcDb::kSeekFromStart);
+	pClone->dwgIn(&filer);
+	bool bOwnerXlated = false;
+	if (isPrimary)
 	{
-        pOwner->database()->addAcDbObject(pClone);
-        pClone->setOwnerId(pOwner->objectId());
-        bOwnerXlated = true;
-    }
+		AcDbBlockTableRecord *pBTR = AcDbBlockTableRecord::cast(pOwner);
+		if (pBTR != NULL)
+		{
+			pBTR->appendAcDbEntity(pClone);
+			bOwnerXlated = true;
+		}
+		else
+		{
+			pOwner->database()->addAcDbObject(pClone);
+		}
+	}
+	else
+	{
+		pOwner->database()->addAcDbObject(pClone);
+		pClone->setOwnerId(pOwner->objectId());
+		bOwnerXlated = true;
+	}
 
 	pClone->Update();
 
-    // This must be called for all newly created objects
-    // in deepClone.  It is turned off by endDeepClone()
-    // after it has translated the references to their
-    // new values.
-    //
-    pClone->setAcDbObjectIdsInFlux();
-    pClone->disableUndoRecording(true);
+	// This must be called for all newly created objects
+	// in deepClone.  It is turned off by endDeepClone()
+	// after it has translated the references to their
+	// new values.
+	//
+	pClone->setAcDbObjectIdsInFlux();
+	pClone->disableUndoRecording(true);
 
 
-    // Add the new information to the idMap.  We can use
-    // the idPair started above.
-    //
-    idPair.setValue(pClonedObject->objectId());
-    idPair.setIsCloned(Adesk::kTrue);
-    idPair.setIsOwnerXlated(bOwnerXlated);
-    idMap.assign(idPair);
+	// Add the new information to the idMap.  We can use
+	// the idPair started above.
+	//
+	idPair.setValue(pClonedObject->objectId());
+	idPair.setIsCloned(Adesk::kTrue);
+	idPair.setIsOwnerXlated(bOwnerXlated);
+	idMap.assign(idPair);
 
-    // Using the filer list created above, find and clone
-    // any owned objects.
-    //
-    AcDbObjectId id;
-    while (filer.getNextOwnedObject(id)) 
+	// Using the filer list created above, find and clone
+	// any owned objects.
+	//
+	AcDbObjectId id;
+	while (filer.getNextOwnedObject(id))
 	{
-        AcDbObject *pSubObject;
-        AcDbObject *pClonedSubObject;
+		AcDbObject *pSubObject;
+		AcDbObject *pClonedSubObject;
 
-        // Some object's references may be set to NULL, 
-        // so don't try to clone them.
-        //
-        if (id == NULL)
-            continue;
+		// Some object's references may be set to NULL, 
+		// so don't try to clone them.
+		//
+		if (id == NULL)
+			continue;
 
-        // Open the object and clone it.  Note that we now
-        // set "isPrimary" to kFalse here because the object
-        // is being cloned, not as part of the primary set,
-        // but because it is owned by something in the
-        // primary set.
-        //
-        acdbOpenAcDbObject(pSubObject, id, AcDb::kForRead);
-        pClonedSubObject = NULL;
-        pSubObject->deepClone(pClonedObject, pClonedSubObject, idMap, Adesk::kFalse);
+		// Open the object and clone it.  Note that we now
+		// set "isPrimary" to kFalse here because the object
+		// is being cloned, not as part of the primary set,
+		// but because it is owned by something in the
+		// primary set.
+		//
+		acdbOpenAcDbObject(pSubObject, id, AcDb::kForRead);
+		pClonedSubObject = NULL;
+		pSubObject->deepClone(pClonedObject, pClonedSubObject, idMap, Adesk::kFalse);
 
-        // If this is a kDcInsert context, the objects
-        // may be "cheapCloned".  In this case, they are
-        // "moved" instead of cloned.  The result is that
-        // pSubObject and pClonedSubObject will point to
-        // the same object.  So, we only want to close
-        // pSubObject if it really is a different object
-        // than its clone.
-        //
-        if (pSubObject != pClonedSubObject)
-            pSubObject->close();
-        
-        // The pSubObject may either already have been
-        // cloned, or for some reason has chosen not to be
-        // cloned.  In that case, the returned pointer will
-        // be NULL.  Otherwise, since we have no immediate
-        // use for it now, we can close the clone.
-        //
-        if (pClonedSubObject != NULL)
-            pClonedSubObject->close();
-    }
+		// If this is a kDcInsert context, the objects
+		// may be "cheapCloned".  In this case, they are
+		// "moved" instead of cloned.  The result is that
+		// pSubObject and pClonedSubObject will point to
+		// the same object.  So, we only want to close
+		// pSubObject if it really is a different object
+		// than its clone.
+		//
+		if (pSubObject != pClonedSubObject)
+			pSubObject->close();
 
-    // Leave pClonedObject open for the caller
-    //
-    return Acad::eOk;
+		// The pSubObject may either already have been
+		// cloned, or for some reason has chosen not to be
+		// cloned.  In that case, the returned pointer will
+		// be NULL.  Otherwise, since we have no immediate
+		// use for it now, we can close the clone.
+		//
+		if (pClonedSubObject != NULL)
+			pClonedSubObject->close();
+	}
+
+	// Leave pClonedObject open for the caller
+	//
+	return Acad::eOk;
 }
 
 
 Acad::ErrorStatus CRebarPos::subWblockClone(AcRxObject*    pOwner,
-                      AcDbObject*&   pClonedObject,
-                      AcDbIdMapping& idMap,
-                      Adesk::Boolean isPrimary) const
+	AcDbObject*&   pClonedObject,
+	AcDbIdMapping& idMap,
+	Adesk::Boolean isPrimary) const
 {
-    // You should always pass back pClonedObject == NULL
-    // if, for any reason, you do not actually clone it
-    // during this call.  The caller should pass it in
-    // as NULL, but to be safe, we set it here as well.
-    //
-    pClonedObject = NULL;
+	// You should always pass back pClonedObject == NULL
+	// if, for any reason, you do not actually clone it
+	// during this call.  The caller should pass it in
+	// as NULL, but to be safe, we set it here as well.
+	//
+	pClonedObject = NULL;
 
-    // If this is a fast wblock operation then no cloning
-    // should take place, so we simply call the base class's
-    // wblockClone() and return whatever it returns.
-    //
-    // For fast wblock, the source and destination databases
-    // are the same, so we can use that as the test to see
-    // if a fast wblock is in progress.
-    //
-    AcDbDatabase *pDest, *pOrig;
-    idMap.destDb(pDest);
-    idMap.origDb(pOrig);
-    if (pDest == pOrig)
-        return AcDbEntity::subWblockClone(pOwner, pClonedObject, idMap, isPrimary);
+	// If this is a fast wblock operation then no cloning
+	// should take place, so we simply call the base class's
+	// wblockClone() and return whatever it returns.
+	//
+	// For fast wblock, the source and destination databases
+	// are the same, so we can use that as the test to see
+	// if a fast wblock is in progress.
+	//
+	AcDbDatabase *pDest, *pOrig;
+	idMap.destDb(pDest);
+	idMap.origDb(pOrig);
+	if (pDest == pOrig)
+		return AcDbEntity::subWblockClone(pOwner, pClonedObject, idMap, isPrimary);
 
-    // If this is an Xref bind operation and this 
-    // entity is in Paper Space,  then we don't want to
-    // clone because Xref bind doesn't support cloning
-    // entities in Paper Space.  So we simply return
-    // Acad::eOk
-    //
-    AcDbObjectId pspace;
-    AcDbBlockTable *pTable;
-    database()->getSymbolTable(pTable, AcDb::kForRead);
-    pTable->getAt(ACDB_PAPER_SPACE, pspace);
-    pTable->close(); 
+	// If this is an Xref bind operation and this 
+	// entity is in Paper Space,  then we don't want to
+	// clone because Xref bind doesn't support cloning
+	// entities in Paper Space.  So we simply return
+	// Acad::eOk
+	//
+	AcDbObjectId pspace;
+	AcDbBlockTable *pTable;
+	database()->getSymbolTable(pTable, AcDb::kForRead);
+	pTable->getAt(ACDB_PAPER_SPACE, pspace);
+	pTable->close();
 
-    if (idMap.deepCloneContext() == AcDb::kDcXrefBind && ownerId() == pspace)
-        return Acad::eOk;
-    
-    // If this object is in the idMap and is already
-    // cloned, then return.
-    //
-    bool isPrim = false;
-    if (isPrimary)
-        isPrim = true;
+	if (idMap.deepCloneContext() == AcDb::kDcXrefBind && ownerId() == pspace)
+		return Acad::eOk;
 
-    AcDbIdPair idPair(objectId(), (AcDbObjectId)NULL, false, isPrim);
-    if (idMap.compute(idPair) && (idPair.value() != NULL))
-        return Acad::eOk;    
+	// If this object is in the idMap and is already
+	// cloned, then return.
+	//
+	bool isPrim = false;
+	if (isPrimary)
+		isPrim = true;
 
-    // The owner object can be either an AcDbObject, or an
-    // AcDbDatabase.  AcDbDatabase is used if the caller is
-    // not the owner of the object being cloned (because it
-    // is being cloned as part of an AcDbHardPointerId
-    // reference).  In this case, the correct ownership
-    // will be set during reference translation.  So, if
-    // the owner is an AcDbDatabase, then pOwn will be left
-    // NULL here, and is used as a "flag" later.
-    //
+	AcDbIdPair idPair(objectId(), (AcDbObjectId)NULL, false, isPrim);
+	if (idMap.compute(idPair) && (idPair.value() != NULL))
+		return Acad::eOk;
 
-    AcDbObject   *pOwn = AcDbObject::cast(pOwner);
-    AcDbDatabase *pDb = AcDbDatabase::cast(pOwner);
-    if (pDb == NULL) 
-        pDb = pOwn->database();
+	// The owner object can be either an AcDbObject, or an
+	// AcDbDatabase.  AcDbDatabase is used if the caller is
+	// not the owner of the object being cloned (because it
+	// is being cloned as part of an AcDbHardPointerId
+	// reference).  In this case, the correct ownership
+	// will be set during reference translation.  So, if
+	// the owner is an AcDbDatabase, then pOwn will be left
+	// NULL here, and is used as a "flag" later.
+	//
 
-    // STEP 1:
-    // Create the clone
-    //
-    CRebarPos *pClone = (CRebarPos*)isA()->create();
-    if (pClone != NULL)
-        pClonedObject = pClone;    // set the return value
-    else
-        return Acad::eOutOfMemory;
+	AcDbObject   *pOwn = AcDbObject::cast(pOwner);
+	AcDbDatabase *pDb = AcDbDatabase::cast(pOwner);
+	if (pDb == NULL)
+		pDb = pOwn->database();
 
-    // STEP 2:
-    // If the owner is an AcDbBlockTableRecord, go ahead
-    // and append the clone.  If not, but we know who the
-    // owner is, set the clone's ownerId to it.  Otherwise,
-    // we set the clone's ownerId to our own ownerId (in
-    // other words, the original owner Id).  This Id will
-    // then be used later, in reference translation, as
-    // a key to finding who the new owner should be.  This
-    // means that the original owner must also be cloned at
-    // some point during the wblock operation. 
-    // EndDeepClone's reference translation aborts if the
-    // owner is not found in the idMap.
-    //
-    // The most common situation where this happens is
-    // AcDbEntity references to Symbol Table Records, such
-    // as the Layer an Entity is on.  This is when you will
-    // have to pass in the destination database as the owner
-    // of the Layer Table Record.  Since all Symbol Tables
-    // are always cloned in Wblock, you do not need to make
-    // sure that Symbol Table Record owners are cloned. 
-    //
-    // However, if the owner is one of your own classes,
-    // then it is up to you to make sure that it gets
-    // cloned.  This is probably easiest to do at the end
-    // of this function.  Otherwise you may have problems
-    // with recursion when the owner, in turn, attempts
-    // to clone this object as one of its subObjects.
-    // 
-    AcDbBlockTableRecord *pBTR = NULL;
-    if (pOwn != NULL)
-        pBTR = AcDbBlockTableRecord::cast(pOwn);
-    if (pBTR != NULL && isPrimary) 
+	// STEP 1:
+	// Create the clone
+	//
+	CRebarPos *pClone = (CRebarPos*)isA()->create();
+	if (pClone != NULL)
+		pClonedObject = pClone;    // set the return value
+	else
+		return Acad::eOutOfMemory;
+
+	// STEP 2:
+	// If the owner is an AcDbBlockTableRecord, go ahead
+	// and append the clone.  If not, but we know who the
+	// owner is, set the clone's ownerId to it.  Otherwise,
+	// we set the clone's ownerId to our own ownerId (in
+	// other words, the original owner Id).  This Id will
+	// then be used later, in reference translation, as
+	// a key to finding who the new owner should be.  This
+	// means that the original owner must also be cloned at
+	// some point during the wblock operation. 
+	// EndDeepClone's reference translation aborts if the
+	// owner is not found in the idMap.
+	//
+	// The most common situation where this happens is
+	// AcDbEntity references to Symbol Table Records, such
+	// as the Layer an Entity is on.  This is when you will
+	// have to pass in the destination database as the owner
+	// of the Layer Table Record.  Since all Symbol Tables
+	// are always cloned in Wblock, you do not need to make
+	// sure that Symbol Table Record owners are cloned. 
+	//
+	// However, if the owner is one of your own classes,
+	// then it is up to you to make sure that it gets
+	// cloned.  This is probably easiest to do at the end
+	// of this function.  Otherwise you may have problems
+	// with recursion when the owner, in turn, attempts
+	// to clone this object as one of its subObjects.
+	// 
+	AcDbBlockTableRecord *pBTR = NULL;
+	if (pOwn != NULL)
+		pBTR = AcDbBlockTableRecord::cast(pOwn);
+	if (pBTR != NULL && isPrimary)
 	{
-        pBTR->appendAcDbEntity(pClone);
-    } 
-	else 
+		pBTR->appendAcDbEntity(pClone);
+	}
+	else
 	{
-        pDb->addAcDbObject(pClonedObject);
-    }
+		pDb->addAcDbObject(pClonedObject);
+	}
 
-    // STEP 3:
-    // The AcDbWblockCloneFiler makes a list of
-    // AcDbHardOwnershipIds and AcDbHardPointerIds.  These
-    // are the references which must be cloned during a
-    // Wblock operation.
-    //
-    AcDbWblockCloneFiler filer;
-    dwgOut(&filer);
+	// STEP 3:
+	// The AcDbWblockCloneFiler makes a list of
+	// AcDbHardOwnershipIds and AcDbHardPointerIds.  These
+	// are the references which must be cloned during a
+	// Wblock operation.
+	//
+	AcDbWblockCloneFiler filer;
+	dwgOut(&filer);
 
-    // STEP 4:
-    // Rewind the filer and read the data into the clone.
-    //
-    filer.seek(0L, AcDb::kSeekFromStart);
-    pClone->dwgIn(&filer);
+	// STEP 4:
+	// Rewind the filer and read the data into the clone.
+	//
+	filer.seek(0L, AcDb::kSeekFromStart);
+	pClone->dwgIn(&filer);
 
-    idMap.assign(AcDbIdPair(objectId(), pClonedObject->objectId(), Adesk::kTrue, isPrim, (Adesk::Boolean)(pOwn != NULL)));
+	idMap.assign(AcDbIdPair(objectId(), pClonedObject->objectId(), Adesk::kTrue, isPrim, (Adesk::Boolean)(pOwn != NULL)));
 
-    pClonedObject->setOwnerId((pOwn != NULL) ? pOwn->objectId() : ownerId());
+	pClonedObject->setOwnerId((pOwn != NULL) ? pOwn->objectId() : ownerId());
 
 	pClone->Update();
 
-    // STEP 5:
-    // This must be called for all newly created objects
-    // in wblockClone.  It is turned off by endDeepClone()
-    // after it has translated the references to their
-    // new values.
-    //
-    pClone->setAcDbObjectIdsInFlux();
+	// STEP 5:
+	// This must be called for all newly created objects
+	// in wblockClone.  It is turned off by endDeepClone()
+	// after it has translated the references to their
+	// new values.
+	//
+	pClone->setAcDbObjectIdsInFlux();
 
-    // STEP 6:
-    // Add the new information to the idMap.  We can use
-    // the idPair started above.  We must also let the
-    // idMap entry know whether the clone's owner is
-    // correct, or needs to be translated later.
-    //
-    idPair.setValue(pClonedObject->objectId());
-    idPair.setIsCloned(Adesk::kTrue);
-    idMap.assign(idPair);
+	// STEP 6:
+	// Add the new information to the idMap.  We can use
+	// the idPair started above.  We must also let the
+	// idMap entry know whether the clone's owner is
+	// correct, or needs to be translated later.
+	//
+	idPair.setValue(pClonedObject->objectId());
+	idPair.setIsCloned(Adesk::kTrue);
+	idMap.assign(idPair);
 
-    // STEP 7:
-    // Using the filer list created above, find and clone
-    // any hard references.
-    //
-    AcDbObjectId id;
-    while (filer.getNextHardObject(id)) 
+	// STEP 7:
+	// Using the filer list created above, find and clone
+	// any hard references.
+	//
+	AcDbObjectId id;
+	while (filer.getNextHardObject(id))
 	{
-        AcDbObject *pSubObject;
-        AcDbObject *pClonedSubObject;
+		AcDbObject *pSubObject;
+		AcDbObject *pClonedSubObject;
 
-        // Some object's references may be set to NULL, 
-        // so don't try to clone them.
-        //
-        if (id == NULL)
-            continue;
+		// Some object's references may be set to NULL, 
+		// so don't try to clone them.
+		//
+		if (id == NULL)
+			continue;
 
-        // If the referenced object is from a different
-        // database, such as an xref, do not clone it.
-        //
-        acdbOpenAcDbObject(pSubObject, id, AcDb::kForRead);
-        if (pSubObject->database() != database()) 
+		// If the referenced object is from a different
+		// database, such as an xref, do not clone it.
+		//
+		acdbOpenAcDbObject(pSubObject, id, AcDb::kForRead);
+		if (pSubObject->database() != database())
 		{
-            pSubObject->close();
-            continue;
-        }
+			pSubObject->close();
+			continue;
+		}
 
-        // We can find out if this is an AcDbHardPointerId
-        // verses an AcDbHardOwnershipId, by seeing if we
-        // are the owner of the pSubObject.  If we are not,
-        // then we cannot pass our clone in as the owner
-        // for the pSubObject's clone.  In that case, we
-        // pass in our clone's database (the destination
-        // database).
-        // 
-        // Note that we now set "isPrimary" to kFalse here
-        // because the object is being cloned, not as part
-        // of the primary set, but because it is owned by
-        // something in the primary set.
-        //
-        pClonedSubObject = NULL;
-        if (pSubObject->ownerId() == objectId()) 
+		// We can find out if this is an AcDbHardPointerId
+		// verses an AcDbHardOwnershipId, by seeing if we
+		// are the owner of the pSubObject.  If we are not,
+		// then we cannot pass our clone in as the owner
+		// for the pSubObject's clone.  In that case, we
+		// pass in our clone's database (the destination
+		// database).
+		// 
+		// Note that we now set "isPrimary" to kFalse here
+		// because the object is being cloned, not as part
+		// of the primary set, but because it is owned by
+		// something in the primary set.
+		//
+		pClonedSubObject = NULL;
+		if (pSubObject->ownerId() == objectId())
 		{
-            pSubObject->wblockClone(pClone, pClonedSubObject, idMap, Adesk::kFalse);
-        }
-		else 
+			pSubObject->wblockClone(pClone, pClonedSubObject, idMap, Adesk::kFalse);
+		}
+		else
 		{
-            pSubObject->wblockClone(pClone->database(), pClonedSubObject, idMap, Adesk::kFalse);
-        }
-        pSubObject->close();
-        
-        // The pSubObject may either already have been
-        // cloned, or for some reason has chosen not to be
-        // cloned.  In that case, the returned pointer will
-        // be NULL.  Otherwise, since we have no immediate
-        // use for it now, we can close the clone.
-        //
-        if (pClonedSubObject != NULL)
-            pClonedSubObject->close();
-    }
+			pSubObject->wblockClone(pClone->database(), pClonedSubObject, idMap, Adesk::kFalse);
+		}
+		pSubObject->close();
 
-    // Leave pClonedObject open for the caller.
-    //
-    return Acad::eOk;
+		// The pSubObject may either already have been
+		// cloned, or for some reason has chosen not to be
+		// cloned.  In that case, the returned pointer will
+		// be NULL.  Otherwise, since we have no immediate
+		// use for it now, we can close the clone.
+		//
+		if (pClonedSubObject != NULL)
+			pClonedSubObject->close();
+	}
+
+	// Leave pClonedObject open for the caller.
+	//
+	return Acad::eOk;
 }
 
 // Return the CLSID of the class here
 Acad::ErrorStatus CRebarPos::subGetClassID(CLSID* pClsid) const
 {
-    assertReadEnabled();
+	assertReadEnabled();
 	// See the interface definition file for the CLASS ID
 #ifdef REBARPOS2015
-	CLSID clsid = {0x97CAC17D, 0xB1C7, 0x49ca, { 0x8D, 0x57, 0xD3, 0xFF, 0x49, 0x18, 0x60, 0xF5}};
+	CLSID clsid = { 0x97CAC17D, 0xB1C7, 0x49ca, { 0x8D, 0x57, 0xD3, 0xFF, 0x49, 0x18, 0x60, 0xF5} };
 #endif
 #ifdef REBARPOS2013
 	CLSID clsid = { 0x97CAC17D, 0xB1C7, 0x49ca,{ 0x8D, 0x57, 0xD3, 0xFF, 0x49, 0x18, 0x60, 0xF3 } };
@@ -2029,7 +2093,7 @@ Acad::ErrorStatus CRebarPos::subGetClassID(CLSID* pClsid) const
 	CLSID clsid = { 0x97CAC17D, 0xB1C7, 0x49ca,{ 0x8D, 0x57, 0xD3, 0xFF, 0x49, 0x18, 0x60, 0xF0 } };
 #endif
 	*pClsid = clsid;
-    return Acad::eOk;
+	return Acad::eOk;
 }
 
 //*************************************************************************
@@ -2047,7 +2111,7 @@ void CRebarPos::Calculate(void)
 	}
 
 	// Current UCS
-	if(!geomInit)
+	if (!geomInit)
 	{
 		acdbUcsMatrix(ucs);
 		geomInit = true;
@@ -2057,7 +2121,7 @@ void CRebarPos::Calculate(void)
 	Acad::ErrorStatus es;
 	const CPosGroup* pGroup = NULL;
 	AcDbObjectPointer<CPosGroup> pGroupPointer;
-	if(m_GroupForDisplay != NULL)
+	if (m_GroupForDisplay != NULL)
 	{
 		pGroup = m_GroupForDisplay;
 	}
@@ -2066,13 +2130,13 @@ void CRebarPos::Calculate(void)
 		AcDbObjectId groupId;
 		CPosGroup::GetGroupId(groupId);
 		pGroupPointer.open(groupId, AcDb::kForRead);
-		if((es = pGroupPointer.openStatus()) != Acad::eOk)
+		if ((es = pGroupPointer.openStatus()) != Acad::eOk)
 		{
 			return;
 		}
 		pGroup = pGroupPointer;
 	}
-	if(pGroup == NULL)
+	if (pGroup == NULL)
 	{
 		return;
 	}
@@ -2088,11 +2152,12 @@ void CRebarPos::Calculate(void)
 		Utility::MakeGiTextStyle(lastNoteStyle, pGroup->NoteStyleId());
 	lastNoteScale = pGroup->NoteScale();
 
-	if(m_Detached)
+	if (m_Detached)
 	{
 		acutUpdString(_T(""), m_Key);
 		acutUpdString(_T(""), m_Length);
 		acutUpdString(_T(""), m_DisplayedSpacing);
+		acutUpdString(_T(""), m_DisplayedCount);
 
 		acutUpdString(_T(""), m_Count);
 		acutUpdString(_T(""), m_Diameter);
@@ -2114,7 +2179,7 @@ void CRebarPos::Calculate(void)
 
 		// Rebuild draw lists
 		lastDrawList.clear();
-		if(pGroup->FormulaPosOnly() != NULL)
+		if (pGroup->FormulaPosOnly() != NULL)
 		{
 			lastDrawList = ParseFormula(pGroup->FormulaPosOnly());
 		}
@@ -2129,13 +2194,13 @@ void CRebarPos::Calculate(void)
 		m_CalcProps.Precision = pGroup->Precision();
 		m_CalcProps.DrawingUnit = pGroup->DrawingUnit();
 		m_CalcProps.DisplayUnit = pGroup->DisplayUnit();
-		if(m_Shape == NULL || m_Shape[0] == _T('\0'))
+		if (m_Shape == NULL || m_Shape[0] == _T('\0'))
 		{
 			return;
 		}
 		CPosShape* pShape = CPosShape::GetPosShape(m_Shape);
 		const ACHAR* formula;
-		if(m_CalcProps.Bending)
+		if (m_CalcProps.Bending)
 		{
 			formula = pShape->FormulaBending();
 		}
@@ -2145,66 +2210,107 @@ void CRebarPos::Calculate(void)
 		}
 		m_CalcProps.FieldCount = pShape->Fields();
 
+		// Calculate spacing
+		std::wstring spacingstring(m_Spacing);
+		Utility::ReplaceString(spacingstring, L"-", L"~");
+		GetLengths(spacingstring.c_str(), 0.0, m_CalcProps.DrawingUnit, m_CalcProps.MinSpacing, m_CalcProps.MaxSpacing, m_CalcProps.IsVarSpacing);
+
 		// Calculate count
-		if(m_Count != NULL && m_Count[0] != _T('\0'))
+		acutUpdString(L"", m_DisplayedCount);
+
+		if (m_Count != NULL && m_Count[0] != _T('\0'))
 		{
-			std::wstring countstring(m_Count);
-			std::vector<std::wstring> countlist;
-			int minCount = 100000; int maxCount = 0; int totalCount = 0;
-			int currCount = 0;
 			try
 			{
+				// Calculate from string
+				std::wstring countstring(m_Count);
+				std::vector<std::wstring> countlist;
+				int minCount = 100000; int maxCount = 0; int totalCount = 0;
+				int currCount = 0;
+
 				Utility::ReplaceString(countstring, L"x", L"*");
 				Utility::ReplaceString(countstring, L"X", L"*");
 				totalCount = Utility::DoubleToInt(Calculator::Evaluate(countstring));
 				countlist = Utility::SplitString(countstring, L'*');
-				for(std::vector<std::wstring>::iterator cit = countlist.begin(); cit != countlist.end(); cit++)
+				for (std::vector<std::wstring>::iterator cit = countlist.begin(); cit != countlist.end(); cit++)
 				{
 					currCount = Utility::DoubleToInt(Calculator::Evaluate(*cit));
-					if(currCount > maxCount) maxCount = currCount;
-					if(currCount < minCount) minCount = currCount;
+					if (currCount > maxCount) maxCount = currCount;
+					if (currCount < minCount) minCount = currCount;
 				}
 
 				m_CalcProps.Count = totalCount;
 				m_CalcProps.MinCount = minCount;
 				m_CalcProps.MaxCount = maxCount;
 				m_CalcProps.IsMultiCount = (countlist.size() > 1);
+
+				acutUpdString(m_Count, m_DisplayedCount);
 			}
-			catch(...)
+			catch (...)
 			{
 				m_CalcProps.Count = 0;
 				m_CalcProps.MinCount = 0;
 				m_CalcProps.MaxCount = 0;
 				m_CalcProps.IsMultiCount = false;
+
+				acutUpdString(L"", m_DisplayedCount);
+			}
+		}
+
+		// Calculate from bound dimensions
+		if (!m_BoundDimensions.empty() && !m_CalcProps.IsVarSpacing && m_CalcProps.MinSpacing > 0)
+		{
+			int totalCount = 0;
+			for (std::map<AcDbObjectId, double>::iterator it = m_BoundDimensions.begin(); it != m_BoundDimensions.end(); it++)
+			{
+				double dimVal = (*it).second;
+				if (dimVal > 0)
+				{
+					totalCount += Utility::DoubleToInt(dimVal / m_CalcProps.MinSpacing) + 1;
+				}
+			}
+
+			if (totalCount != 0)
+			{
+				std::wstringstream strDisplayedCount;
+				if (m_CalcProps.Count > 0)
+				{
+					m_CalcProps.Count = m_CalcProps.Count * totalCount;
+
+					strDisplayedCount << m_Count;
+					strDisplayedCount << L"*";
+					strDisplayedCount << totalCount;
+				}
+				else
+				{
+					m_CalcProps.Count = totalCount;
+					strDisplayedCount << totalCount;
+				}
+				acutUpdString(strDisplayedCount.str().c_str(), m_DisplayedCount);
 			}
 		}
 
 		// Calculate diameter
-		if(m_Diameter != NULL && m_Diameter[0] != _T('\0'))
+		if (m_Diameter != NULL && m_Diameter[0] != _T('\0'))
 			m_CalcProps.Diameter = Utility::StrToDouble(m_Diameter);
 
 		// Calculate piece lengths
-		if(m_CalcProps.FieldCount >= 1)
+		if (m_CalcProps.FieldCount >= 1)
 			GetLengths(m_A, m_CalcProps.Diameter, m_CalcProps.DrawingUnit, m_CalcProps.MinA, m_CalcProps.MaxA, m_CalcProps.IsVarA);
-		if(m_CalcProps.FieldCount >= 2)
+		if (m_CalcProps.FieldCount >= 2)
 			GetLengths(m_B, m_CalcProps.Diameter, m_CalcProps.DrawingUnit, m_CalcProps.MinB, m_CalcProps.MaxB, m_CalcProps.IsVarB);
-		if(m_CalcProps.FieldCount >= 3)
+		if (m_CalcProps.FieldCount >= 3)
 			GetLengths(m_C, m_CalcProps.Diameter, m_CalcProps.DrawingUnit, m_CalcProps.MinC, m_CalcProps.MaxC, m_CalcProps.IsVarC);
-		if(m_CalcProps.FieldCount >= 4)
+		if (m_CalcProps.FieldCount >= 4)
 			GetLengths(m_D, m_CalcProps.Diameter, m_CalcProps.DrawingUnit, m_CalcProps.MinD, m_CalcProps.MaxD, m_CalcProps.IsVarD);
-		if(m_CalcProps.FieldCount >= 5)
+		if (m_CalcProps.FieldCount >= 5)
 			GetLengths(m_E, m_CalcProps.Diameter, m_CalcProps.DrawingUnit, m_CalcProps.MinE, m_CalcProps.MaxE, m_CalcProps.IsVarE);
-		if(m_CalcProps.FieldCount >= 6)
+		if (m_CalcProps.FieldCount >= 6)
 			GetLengths(m_F, m_CalcProps.Diameter, m_CalcProps.DrawingUnit, m_CalcProps.MinF, m_CalcProps.MaxF, m_CalcProps.IsVarF);
 
 		// Calculate total length
 		m_CalcProps.IsVarLength = m_CalcProps.IsVarA || m_CalcProps.IsVarB || m_CalcProps.IsVarC || m_CalcProps.IsVarD || m_CalcProps.IsVarE || m_CalcProps.IsVarF;
 		GetTotalLengths(formula, m_CalcProps);
-
-		// Calculate spacing
-		std::wstring spacingstring(m_Spacing);
-		Utility::ReplaceString(spacingstring, L"-", L"~");
-		GetLengths(spacingstring.c_str(), 0.0, m_CalcProps.DrawingUnit, m_CalcProps.MinSpacing, m_CalcProps.MaxSpacing, m_CalcProps.IsVarSpacing);
 
 		// Scale from MM to display units
 		double scale = ConvertLength(1.0, CPosGroup::MM, m_CalcProps.DisplayUnit);
@@ -2215,7 +2321,7 @@ void CRebarPos::Calculate(void)
 		std::wstring strL2;
 		Utility::DoubleToStr(m_CalcProps.MaxLength * scale, m_CalcProps.Precision, strL2);
 		std::wstring strL;
-		if(m_CalcProps.IsVarLength)
+		if (m_CalcProps.IsVarLength)
 		{
 			strL = strL1 + L"~" + strL2;
 		}
@@ -2231,7 +2337,7 @@ void CRebarPos::Calculate(void)
 		std::wstring strS2;
 		Utility::DoubleToStr(m_CalcProps.MaxSpacing * scale, m_CalcProps.Precision, strS2);
 		std::wstring strS;
-		if(m_CalcProps.IsVarSpacing)
+		if (m_CalcProps.IsVarSpacing)
 		{
 			strS = strS1 + L"~" + strS2;
 		}
@@ -2243,49 +2349,49 @@ void CRebarPos::Calculate(void)
 
 		// Shape code
 		std::wstringstream oss;
-		if(m_Diameter != NULL && m_Diameter[0] != _T('\0'))
+		if (m_Diameter != NULL && m_Diameter[0] != _T('\0'))
 			oss << L"T" << m_Diameter;
-		if(m_Shape != NULL && m_Shape[0] != _T('\0'))
+		if (m_Shape != NULL && m_Shape[0] != _T('\0'))
 			oss << L":S" << m_Shape;
-	
-		if(m_CalcProps.FieldCount >= 1 && m_A != NULL && m_A[0] != _T('\0'))
+
+		if (m_CalcProps.FieldCount >= 1 && m_A != NULL && m_A[0] != _T('\0'))
 			oss << L":A" << m_A;
-		if(m_CalcProps.FieldCount >= 2 && m_B != NULL && m_B[0] != _T('\0'))
+		if (m_CalcProps.FieldCount >= 2 && m_B != NULL && m_B[0] != _T('\0'))
 			oss << L":B" << m_B;
-		if(m_CalcProps.FieldCount >= 3 && m_C != NULL && m_C[0] != _T('\0'))
+		if (m_CalcProps.FieldCount >= 3 && m_C != NULL && m_C[0] != _T('\0'))
 			oss << L":C" << m_C;
-		if(m_CalcProps.FieldCount >= 4 && m_D != NULL && m_D[0] != _T('\0'))
+		if (m_CalcProps.FieldCount >= 4 && m_D != NULL && m_D[0] != _T('\0'))
 			oss << L":D" << m_D;
-		if(m_CalcProps.FieldCount >= 5 && m_E != NULL && m_E[0] != _T('\0'))
+		if (m_CalcProps.FieldCount >= 5 && m_E != NULL && m_E[0] != _T('\0'))
 			oss << L":E" << m_E;
-		if(m_CalcProps.FieldCount >= 6 && m_F != NULL && m_F[0] != _T('\0'))
+		if (m_CalcProps.FieldCount >= 6 && m_F != NULL && m_F[0] != _T('\0'))
 			oss << L":F" << m_F;
 		acutUpdString(oss.str().c_str(), m_Key);
 
 		// Rebuild draw lists
 		lastDrawList.clear();
-		if((m_DisplayStyle == CRebarPos::ALL || m_DisplayStyle == CRebarPos::WITHOUTLENGTH) && m_CalcProps.IsVarLength && pGroup->FormulaVariableLength() != NULL)
+		if ((m_DisplayStyle == CRebarPos::ALL || m_DisplayStyle == CRebarPos::WITHOUTLENGTH) && m_CalcProps.IsVarLength && pGroup->FormulaVariableLength() != NULL)
 		{
 			lastDrawList = ParseFormula(pGroup->FormulaVariableLength());
 		}
-		else if((m_DisplayStyle == CRebarPos::ALL || m_DisplayStyle == CRebarPos::WITHOUTLENGTH) && pGroup->Formula() != NULL)
+		else if ((m_DisplayStyle == CRebarPos::ALL || m_DisplayStyle == CRebarPos::WITHOUTLENGTH) && pGroup->Formula() != NULL)
 		{
 			lastDrawList = ParseFormula(pGroup->Formula());
 		}
-		else if(m_DisplayStyle == CRebarPos::MARKERONLY && pGroup->FormulaPosOnly() != NULL)
+		else if (m_DisplayStyle == CRebarPos::MARKERONLY && pGroup->FormulaPosOnly() != NULL)
 		{
 			lastDrawList = ParseFormula(pGroup->FormulaPosOnly());
 		}
 
-		if(m_DisplayStyle != CRebarPos::MARKERONLY && m_Note != NULL && m_Note[0] != _T('\0'))
+		if (m_DisplayStyle != CRebarPos::MARKERONLY && m_Note != NULL && m_Note[0] != _T('\0'))
 			lastNoteDraw.text = m_Note;
 		else
 			lastNoteDraw.text = L"";
 
-		if(m_DisplayStyle == CRebarPos::ALL && pGroup->FormulaLengthOnly() != NULL)
+		if (m_DisplayStyle == CRebarPos::ALL && pGroup->FormulaLengthOnly() != NULL)
 		{
 			DrawList lengthList = ParseFormula(pGroup->FormulaLengthOnly());
-			if(lengthList.size() == 0)
+			if (lengthList.size() == 0)
 				lastLengthDraw.text = L"";
 			else
 				lastLengthDraw = lengthList[0];
@@ -2295,17 +2401,17 @@ void CRebarPos::Calculate(void)
 			lastLengthDraw.text = L"";
 		}
 
-		if(m_Multiplier == 0)
+		if (m_Multiplier == 0)
 			lastMultiplierDraw.text = L"-";
 		else
 			Utility::IntToStr(m_Multiplier, lastMultiplierDraw.text);
 	}
 
 	// Set width factors
-	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+	for (DrawListSize i = 0; i < lastDrawList.size(); i++)
 	{
 		CDrawParams p = lastDrawList[i];
-		if(p.type == CRebarPos::POS && p.hasCircle && p.text.length() > 2)
+		if (p.type == CRebarPos::POS && p.hasCircle && p.text.length() > 2)
 		{
 			p.widthFactor = 0.5;
 		}
@@ -2322,10 +2428,10 @@ void CRebarPos::Calculate(void)
 	Utility::CreateHiddenLayer(defpointsLayer);
 	lastCircleColor = pGroup->CircleColor();
 	lastMultiplierDraw.color = pGroup->MultiplierColor();
-	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+	for (DrawListSize i = 0; i < lastDrawList.size(); i++)
 	{
 		CDrawParams p = lastDrawList[i];
-		switch(p.type)
+		switch (p.type)
 		{
 		case CRebarPos::POS:
 			p.color = pGroup->PosColor();
@@ -2348,20 +2454,20 @@ void CRebarPos::Calculate(void)
 	lastNoteStyle.loadStyleRec();
 	double x = 0;
 	double y = 0;
-	for(DrawListSize i = 0; i < lastDrawList.size(); i++)
+	for (DrawListSize i = 0; i < lastDrawList.size(); i++)
 	{
 		CDrawParams p = lastDrawList[i];
-		if(p.widthFactor != lastTextStyle.xScale())
+		if (p.widthFactor != lastTextStyle.xScale())
 		{
 			lastTextStyle.setXScale(p.widthFactor);
 			lastTextStyle.loadStyleRec();
 		}
 		AcGePoint2d ext = lastTextStyle.extents(p.text.c_str(), Adesk::kTrue, -1, Adesk::kFalse);
-		if(p.hasCircle)
+		if (p.hasCircle)
 		{
 			p.x = x + (2.0 * circleRadius - ext.x) / 2.0;
 		}
-		else if(p.hasTau)
+		else if (p.hasTau)
 		{
 			p.x = x + tauSize + partSpacing;
 		}
@@ -2372,11 +2478,11 @@ void CRebarPos::Calculate(void)
 		p.y = y;
 		p.w = ext.x;
 		p.h = lastTextStyle.textSize();
-		if(p.hasCircle)
+		if (p.hasCircle)
 		{
 			x += 2.0 * circleRadius + partSpacing;
 		}
-		else if(p.hasTau)
+		else if (p.hasTau)
 		{
 			x += ext.x + tauSize + partSpacing;
 		}
@@ -2414,81 +2520,81 @@ void CRebarPos::Calculate(void)
 	double alignmentY = 0.2;
 	AcGeMatrix3d gripTrans = AcGeMatrix3d::kIdentity;
 	gripTrans.setCoordSystem(m_BasePoint, m_Direction, m_Up, NormalVector());
-	switch(m_LengthAlignment)
+	switch (m_LengthAlignment)
 	{
 	case CRebarPos::RIGHT:
-		{
-			double width = 0.0;
-			if(lastDrawList.size() > 0)
-				width = lastDrawList[lastDrawList.size() - 1].x + lastDrawList[lastDrawList.size() - 1].w;
+	{
+		double width = 0.0;
+		if (lastDrawList.size() > 0)
+			width = lastDrawList[lastDrawList.size() - 1].x + lastDrawList[lastDrawList.size() - 1].w;
 
-			m_LengthGrip.set(width + alignmentX, 0.0, 0.0);
-			m_LengthGrip.transformBy(gripTrans);
-		}
-		break;
+		m_LengthGrip.set(width + alignmentX, 0.0, 0.0);
+		m_LengthGrip.transformBy(gripTrans);
+	}
+	break;
 	case CRebarPos::TOP:
-		{
-			double height = 1.8;
-			m_LengthGrip.set(0.0, height + alignmentY, 0.0);
-			m_LengthGrip.transformBy(gripTrans);
-		}
-		break;
+	{
+		double height = 1.8;
+		m_LengthGrip.set(0.0, height + alignmentY, 0.0);
+		m_LengthGrip.transformBy(gripTrans);
+	}
+	break;
 	case CRebarPos::BOTTOM:
-		{
-			double height = -1.8;
-			m_LengthGrip.set(0.0, height - alignmentY, 0.0);
-			m_LengthGrip.transformBy(gripTrans);
-		}
-		break;
+	{
+		double height = -1.8;
+		m_LengthGrip.set(0.0, height - alignmentY, 0.0);
+		m_LengthGrip.transformBy(gripTrans);
+	}
+	break;
 	}
 
 	// Align note grip
 	bool hasLength = ((m_Length != NULL) && (m_Length[0] != _T('\0')));
-	switch(m_NoteAlignment)
+	switch (m_NoteAlignment)
 	{
 	case CRebarPos::RIGHT:
-		{
-			double width = 0.0;
-			if(lastDrawList.size() > 0)
-				width = lastDrawList[lastDrawList.size() - 1].x + lastDrawList[lastDrawList.size() - 1].w;
+	{
+		double width = 0.0;
+		if (lastDrawList.size() > 0)
+			width = lastDrawList[lastDrawList.size() - 1].x + lastDrawList[lastDrawList.size() - 1].w;
 
-			if(hasLength && (m_LengthAlignment == CRebarPos::RIGHT)) width += lastLengthDraw.w + alignmentX;
+		if (hasLength && (m_LengthAlignment == CRebarPos::RIGHT)) width += lastLengthDraw.w + alignmentX;
 
-			m_NoteGrip.set(width + alignmentX, 0.0, 0.0);
-			m_NoteGrip.transformBy(gripTrans);
-		}
-		break;
+		m_NoteGrip.set(width + alignmentX, 0.0, 0.0);
+		m_NoteGrip.transformBy(gripTrans);
+	}
+	break;
 	case CRebarPos::TOP:
-		{
-			double height = 1.8;
-			if(hasLength && (m_LengthAlignment == CRebarPos::TOP)) height += 2.0;
+	{
+		double height = 1.8;
+		if (hasLength && (m_LengthAlignment == CRebarPos::TOP)) height += 2.0;
 
-			m_NoteGrip.set(0.0, height + alignmentY, 0.0);
-			m_NoteGrip.transformBy(gripTrans);
-		}
-		break;
+		m_NoteGrip.set(0.0, height + alignmentY, 0.0);
+		m_NoteGrip.transformBy(gripTrans);
+	}
+	break;
 	case CRebarPos::BOTTOM:
-		{
-			double height = -1.8;
-			if(hasLength && (m_LengthAlignment == CRebarPos::BOTTOM)) height -= 2.0;
+	{
+		double height = -1.8;
+		if (hasLength && (m_LengthAlignment == CRebarPos::BOTTOM)) height -= 2.0;
 
-			m_NoteGrip.set(0.0, height - alignmentY, 0.0);
-			m_NoteGrip.transformBy(gripTrans);
-		}
-		break;
+		m_NoteGrip.set(0.0, height - alignmentY, 0.0);
+		m_NoteGrip.transformBy(gripTrans);
+	}
+	break;
 	}
 }
 
 bool CRebarPos::GetLengths(const ACHAR* str, const double diameter, const CPosGroup::DrawingUnits inputUnit, double& minLength, double& maxLength, bool& isVar)
 {
 	std::wstring length;
-	if(str != NULL)
+	if (str != NULL)
 		length.assign(str);
 	std::wstring length1, length2;
-	
+
 	// Get variable lengths
 	size_t i = length.find(L'~');
-	if(i != -1)
+	if (i != -1)
 	{
 		length1 = length.substr(0, i);
 		length2 = length.substr(i + 1, length.length() - i - 1);
@@ -2500,11 +2606,11 @@ bool CRebarPos::GetLengths(const ACHAR* str, const double diameter, const CPosGr
 		length2 = length;
 		isVar = false;
 	}
-	
+
 	// Calculate lengths
 	bool check1 = CalcConsLength(length1.c_str(), diameter, inputUnit, minLength);
 	bool check2 = CalcConsLength(length2.c_str(), diameter, inputUnit, maxLength);
-	if(check1 && check2)
+	if (check1 && check2)
 	{
 		return true;
 	}
@@ -2519,7 +2625,7 @@ bool CRebarPos::GetLengths(const ACHAR* str, const double diameter, const CPosGr
 bool CRebarPos::CalcConsLength(const ACHAR* str, const double diameter, const CPosGroup::DrawingUnits inputUnit, double& value)
 {
 	std::wstring length;
-	if(str != NULL)
+	if (str != NULL)
 		length.assign(str);
 
 	double scale = ConvertLength(1.0, inputUnit, CPosGroup::MM);
@@ -2537,14 +2643,14 @@ bool CRebarPos::CalcConsLength(const ACHAR* str, const double diameter, const CP
 	Utility::ReplaceString(length, L"r", strR);
 	Utility::ReplaceString(length, L"D", strD);
 	Utility::ReplaceString(length, L"R", strR);
-	
+
 	// Calculate length
 	try
 	{
 		value = Calculator::Evaluate(length) * scale;
 		return true;
 	}
-	catch(...)
+	catch (...)
 	{
 		value = 0.0;
 		return false;
@@ -2554,7 +2660,7 @@ bool CRebarPos::CalcConsLength(const ACHAR* str, const double diameter, const CP
 bool CRebarPos::GetTotalLengths(const ACHAR* formula, CRebarPos::CCalculatedProperties& props)
 {
 	std::wstring length1, length2;
-	if(formula != NULL)
+	if (formula != NULL)
 	{
 		length1.assign(formula);
 		length2.assign(formula);
@@ -2610,7 +2716,7 @@ bool CRebarPos::GetTotalLengths(const ACHAR* formula, CRebarPos::CCalculatedProp
 		props.MaxLength = Calculator::Evaluate(length2);
 		return true;
 	}
-	catch(...)
+	catch (...)
 	{
 		props.MinLength = 0;
 		props.MaxLength = 0;
@@ -2621,14 +2727,14 @@ bool CRebarPos::GetTotalLengths(const ACHAR* formula, CRebarPos::CCalculatedProp
 bool CRebarPos::GetTotalLengths(const ACHAR* formula, const int fieldCount, const CPosGroup::DrawingUnits inputUnit, const ACHAR* a, const ACHAR* b, const ACHAR* c, const ACHAR* d, const ACHAR* e, const ACHAR* f, const ACHAR* diameter, double& minLength, double& maxLength, bool& isVar)
 {
 	std::wstring length1, length2;
-	if(formula != NULL)
+	if (formula != NULL)
 	{
 		length1.assign(formula);
 		length2.assign(formula);
 	}
 
 	double dia = 0.0;
-	if(diameter != NULL && diameter[0] != _T('\0'))
+	if (diameter != NULL && diameter[0] != _T('\0'))
 		dia = Utility::StrToDouble(diameter);
 	double rad = BendingRadius(dia);
 
@@ -2637,17 +2743,17 @@ bool CRebarPos::GetTotalLengths(const ACHAR* formula, const int fieldCount, cons
 	bool Avar = false, Bvar = false, Cvar = false, Dvar = false, Evar = false, Fvar = false;
 	std::wstring strA1, strA2, strB1, strB2, strC1, strC2;
 	std::wstring strD1, strD2, strE1, strE2, strF1, strF2;
-	if(fieldCount >= 1)
+	if (fieldCount >= 1)
 		GetLengths(a, dia, inputUnit, A1, A2, Avar);
-	if(fieldCount >= 2)
+	if (fieldCount >= 2)
 		GetLengths(b, dia, inputUnit, B1, B2, Bvar);
-	if(fieldCount >= 3)
+	if (fieldCount >= 3)
 		GetLengths(c, dia, inputUnit, C1, C2, Cvar);
-	if(fieldCount >= 4)
+	if (fieldCount >= 4)
 		GetLengths(d, dia, inputUnit, D1, D2, Dvar);
-	if(fieldCount >= 5)
+	if (fieldCount >= 5)
 		GetLengths(e, dia, inputUnit, E1, E2, Evar);
-	if(fieldCount >= 6)
+	if (fieldCount >= 6)
 		GetLengths(f, dia, inputUnit, F1, F2, Fvar);
 
 	isVar = Avar || Bvar || Cvar || Dvar || Evar || Fvar;
@@ -2698,7 +2804,7 @@ bool CRebarPos::GetTotalLengths(const ACHAR* formula, const int fieldCount, cons
 		maxLength = Calculator::Evaluate(length2);
 		return true;
 	}
-	catch(...)
+	catch (...)
 	{
 		minLength = 0;
 		maxLength = 0;
@@ -2708,12 +2814,12 @@ bool CRebarPos::GetTotalLengths(const ACHAR* formula, const int fieldCount, cons
 
 double CRebarPos::ConvertLength(const double length, const CPosGroup::DrawingUnits fromUnit, const CPosGroup::DrawingUnits toUnit)
 {
-	if(fromUnit == toUnit) return length;
+	if (fromUnit == toUnit) return length;
 
 	double scale = 1.0;
 
 	// Convert from fromUnit to MM
-	switch(fromUnit)
+	switch (fromUnit)
 	{
 	case CPosGroup::MM:
 		scale *= 1.0;
@@ -2724,7 +2830,7 @@ double CRebarPos::ConvertLength(const double length, const CPosGroup::DrawingUni
 	}
 
 	// Convert from MM to toUnit
-	switch(toUnit)
+	switch (toUnit)
 	{
 	case CPosGroup::MM:
 		scale /= 1.0;
@@ -2739,7 +2845,7 @@ double CRebarPos::ConvertLength(const double length, const CPosGroup::DrawingUni
 
 double CRebarPos::BendingRadius(const double d)
 {
-	if(d <= 16.0)
+	if (d <= 16.0)
 		return (2.0 * d);
 	else
 		return (3.5 * d);
@@ -2767,25 +2873,25 @@ const DrawList CRebarPos::ParseFormula(const ACHAR* formula) const
 
 	// First pass: separate parts
 	std::wstring str;
-	if(formula != NULL)
+	if (formula != NULL)
 		str.assign(formula);
 	std::wstring part;
 	bool indeco = false;
-	for(unsigned int i = 0; i < str.length(); i++)
+	for (unsigned int i = 0; i < str.length(); i++)
 	{
 		wchar_t c = str.at(i);
-		if((!indeco && c == L'[') || (indeco && (c == L']')) || (i == str.length() - 1))
+		if ((!indeco && c == L'[') || (indeco && (c == L']')) || (i == str.length() - 1))
 		{
-			if((i == str.length() - 1) && (c != L'[') && (c != L']'))
+			if ((i == str.length() - 1) && (c != L'[') && (c != L']'))
 			{
 				part += c;
 			}
-			if(!indeco && !part.empty())
+			if (!indeco && !part.empty())
 			{
 				CDrawParams p(0, part);
 				list.push_back(p);
 			}
-			else if(indeco && !part.empty())
+			else if (indeco && !part.empty())
 			{
 				CDrawParams p(1, part);
 				list.push_back(p);
@@ -2803,96 +2909,101 @@ const DrawList CRebarPos::ParseFormula(const ACHAR* formula) const
 	// Second pass: separate format strings and decorators
 	DrawList finallist;
 	finallist.clear();
-	for(DrawListSize j = 0; j < list.size(); j++)
+	for (DrawListSize j = 0; j < list.size(); j++)
 	{
 		CDrawParams p = list[j];
-		if(p.type == 0)
+		if (p.type == 0)
 		{
 			p.type = CRebarPos::NONE;
 			p.hasCircle = false;
 			finallist.push_back(p);
 		}
-		else if(p.type == 1)
+		else if (p.type == 1)
 		{
 			p.type = CRebarPos::NONE;
 			part.clear();
 			std::vector<std::wstring> parts;
 			bool inliteral = false;
-			for(unsigned int i = 0; i < p.text.length(); i++)
+			for (unsigned int i = 0; i < p.text.length(); i++)
 			{
 				wchar_t c = p.text.at(i);;
-				if(!inliteral && (c == L'"'))
+				if (!inliteral && (c == L'"'))
 				{
 					inliteral = true;
 				}
-				else if(inliteral && (c == L'"'))
+				else if (inliteral && (c == L'"'))
 				{
 					parts.push_back(part);
 					part.clear();
 					inliteral = false;
 				}
-				else if(c == L':' || (i == p.text.length() - 1))
+				else if (c == L':' || (i == p.text.length() - 1))
 				{
-					if(i == p.text.length() - 1)
+					if (i == p.text.length() - 1)
 					{
 						part += c;
 					}
-					if(part == L"M")
+					if (part == L"M")
 					{
 						p.type = CRebarPos::POS;
 						std::wstring pos(m_Pos);
-						if(pos.length() == 0) pos = _T(" ");
+						if (pos.length() == 0) pos = _T(" ");
 						parts.push_back(pos);
 					}
-					else if(part == L"MM")
+					else if (part == L"MM")
 					{
 						p.type = CRebarPos::POS;
 						std::wstring pos(m_Pos);
-						if(pos.length() == 0) pos = L"  ";
-						if(pos.length() == 1) pos = std::wstring(L"0").append(pos);
+						if (pos.length() == 0) pos = L"  ";
+						if (pos.length() == 1) pos = std::wstring(L"0").append(pos);
 						parts.push_back(pos);
 					}
-					else if(part == L"N" && m_Count != NULL && m_Count[0] != _T('\0'))
+					else if (part == L"N" && m_DisplayedCount != NULL && m_DisplayedCount[0] != _T('\0'))
+					{
+						p.type = CRebarPos::COUNT;
+						parts.push_back(m_DisplayedCount);
+					}
+					else if (part == L"N" && m_Count != NULL && m_Count[0] != _T('\0'))
 					{
 						p.type = CRebarPos::COUNT;
 						parts.push_back(m_Count);
 					}
-					else if(part == L"NM" && m_Count != NULL && m_Count[0] != _T('\0'))
+					else if (part == L"NM" && m_Count != NULL && m_Count[0] != _T('\0'))
 					{
 						p.type = CRebarPos::COUNT;
 						std::wstring countstr;
 						Utility::IntToStr(m_CalcProps.MinCount, countstr);
 						parts.push_back(countstr);
 					}
-					else if(part == L"NX" && m_Count != NULL && m_Count[0] != _T('\0'))
+					else if (part == L"NX" && m_Count != NULL && m_Count[0] != _T('\0'))
 					{
 						p.type = CRebarPos::COUNT;
 						std::wstring countstr;
 						Utility::IntToStr(m_CalcProps.MaxCount, countstr);
 						parts.push_back(countstr);
 					}
-					else if(part == L"D" && m_Diameter != NULL && m_Diameter[0] != _T('\0'))
+					else if (part == L"D" && m_Diameter != NULL && m_Diameter[0] != _T('\0'))
 					{
 						p.type = CRebarPos::DIAMETER;
 						parts.push_back(m_Diameter);
 					}
-					else if(part == L"TD" && m_Diameter != NULL && m_Diameter[0] != _T('\0'))
+					else if (part == L"TD" && m_Diameter != NULL && m_Diameter[0] != _T('\0'))
 					{
 						p.type = CRebarPos::DIAMETER;
 						p.hasTau = true;
 						parts.push_back(m_Diameter);
 					}
-					else if(part == L"S" && m_DisplayedSpacing != NULL && m_DisplayedSpacing[0] != _T('\0') && m_DisplayedSpacing[0] != _T('0'))
+					else if (part == L"S" && m_DisplayedSpacing != NULL && m_DisplayedSpacing[0] != _T('\0') && m_DisplayedSpacing[0] != _T('0'))
 					{
 						p.type = CRebarPos::SPACING;
 						parts.push_back(m_DisplayedSpacing);
 					}
-					else if(part == L"L" && m_Length != NULL && m_Length[0] != _T('\0') && m_Length[0] != _T('0'))
+					else if (part == L"L" && m_Length != NULL && m_Length[0] != _T('\0') && m_Length[0] != _T('0'))
 					{
 						p.type = CRebarPos::LENGTH;
 						parts.push_back(m_Length);
 					}
-					else if(part == L"C")
+					else if (part == L"C")
 					{
 						p.hasCircle = true;
 					}
@@ -2903,10 +3014,10 @@ const DrawList CRebarPos::ParseFormula(const ACHAR* formula) const
 					part += c;
 				}
 			}
-			if(p.type != CRebarPos::NONE)
+			if (p.type != CRebarPos::NONE)
 			{
 				p.text.clear();
-				for(std::vector<std::wstring>::size_type k = 0; k < parts.size(); k++)
+				for (std::vector<std::wstring>::size_type k = 0; k < parts.size(); k++)
 				{
 					p.text.append(parts[k]);
 				}
@@ -2918,3 +3029,62 @@ const DrawList CRebarPos::ParseFormula(const ACHAR* formula) const
 	return finallist;
 }
 
+//*************************************************************************
+// Overridden methods from AcDbObject: reactors
+//*************************************************************************
+void CRebarPos::modified(const AcDbObject* dbObj)
+{
+	AcDbDimension* dim = AcDbDimension::cast(dbObj);
+	AcDbObjectId dimId = dim->objectId();
+
+	double dimVal = 0;
+	if (dimId.isNull() || dimId.isErased() || !dimId.isValid() || (!dimId.objectClass()->isDerivedFrom(AcDbDimension::desc())))
+	{
+		dimVal = -1;
+	}
+	else
+	{
+		dim->measurement(dimVal);
+	}
+	m_BoundDimensions[dimId] = dimVal;
+
+	// Update pos
+	Adesk::Boolean wasWritable;
+	if (upgradeFromNotify(wasWritable) == Acad::eOk)
+	{
+		Update();
+		downgradeToNotify(wasWritable);
+	}
+}
+
+void CRebarPos::erased(const AcDbObject* dbObj, Adesk::Boolean pErasing)
+{
+	AcDbDimension* dim = AcDbDimension::cast(dbObj);
+	AcDbObjectId dimId = dim->objectId();
+
+	if (pErasing)
+	{
+		// Do not bother removing the reactor. Just set length to a negative
+		// value so that it is not used in calculation.
+		m_BoundDimensions[dimId] = -1;
+	}
+	else
+	{
+		double dimVal = 0;
+		dim->measurement(dimVal);
+		m_BoundDimensions[dimId] = dimVal;
+
+		if (!dim->hasPersistentReactor(this->objectId()))
+		{
+			dim->addPersistentReactor(this->objectId());
+		}
+	}
+
+	// Update pos
+	Adesk::Boolean wasWritable;
+	if (upgradeFromNotify(wasWritable) == Acad::eOk)
+	{
+		Update();
+		downgradeToNotify(wasWritable);
+	}
+}

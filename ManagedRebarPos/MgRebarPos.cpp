@@ -301,6 +301,37 @@ void RebarPos::TextBox([Out] Point3d% minPoint, [Out] Point3d% maxPoint)
 	maxPoint = Point3d(pmax.x, pmax.y, 0.0);
 }
 
+void RebarPos::AddBoundDimension(Autodesk::AutoCAD::DatabaseServices::ObjectId id)
+{
+	GetImpObj()->AddBoundDimension(Marshal::FromObjectId(id));
+}
+void RebarPos::RemoveBoundDimension(Autodesk::AutoCAD::DatabaseServices::ObjectId id)
+{
+	GetImpObj()->RemoveBoundDimension(Marshal::FromObjectId(id));
+}
+System::Collections::Generic::List<Autodesk::AutoCAD::DatabaseServices::ObjectId>^ RebarPos::GetBoundDimensions()
+{
+	System::Collections::Generic::List<Autodesk::AutoCAD::DatabaseServices::ObjectId>^ items = gcnew System::Collections::Generic::List<Autodesk::AutoCAD::DatabaseServices::ObjectId>();
+	std::vector<AcDbObjectId> dims = GetImpObj()->GetBoundDimensions();
+	for (std::vector<AcDbObjectId>::iterator it = dims.begin(); it != dims.end(); it++)
+	{
+		items->Add(Marshal::ToObjectId((*it)));
+	}
+	return items;
+}
+void RebarPos::SetBoundDimensions(System::Collections::Generic::List<Autodesk::AutoCAD::DatabaseServices::ObjectId>^ items)
+{
+	ClearBoundDimensions();
+	for each (Autodesk::AutoCAD::DatabaseServices::ObjectId id in items)
+	{
+		AddBoundDimension(id);
+	}
+}
+void RebarPos::ClearBoundDimensions()
+{
+	GetImpObj()->ClearBoundDimensions();
+}
+
 //*************************************************************************
 // Static Methods
 //*************************************************************************

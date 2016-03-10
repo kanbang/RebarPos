@@ -152,7 +152,7 @@ public:
 
 public:
     // RXObject implementation
-	virtual Acad::ErrorStatus copyFrom(const AcRxObject* other);
+	virtual Acad::ErrorStatus copyFrom(const AcRxObject* other) override;
 
 private:
 	// Helper functions

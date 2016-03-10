@@ -33,6 +33,7 @@ namespace RebarPosCommands
         int m_Precision;
         PosGroup.DrawingUnits m_DisplayUnits;
         PosGroup.DrawingUnits m_DrawingUnits;
+        List<ObjectId> boundDimensions;
         double m_MaxLength;
 
         public EditPosForm()
@@ -42,6 +43,7 @@ namespace RebarPosCommands
             m_Pos = ObjectId.Null;
             m_Shape = string.Empty;
             m_StandardDiameters = new List<int>();
+            boundDimensions = new List<ObjectId>();
 
             posShapeView.BackColor = DWGUtility.ModelBackgroundColor();
         }
@@ -90,6 +92,8 @@ namespace RebarPosCommands
                     rbAlignLengthTop.Checked = (pos.LengthAlignment == RebarPos.SubTextAlignment.Top);
                     rbAlignLengthBottom.Checked = (pos.LengthAlignment == RebarPos.SubTextAlignment.Bottom);
                     rbAlignLengthRight.Checked = (pos.LengthAlignment == RebarPos.SubTextAlignment.Right);
+
+                    boundDimensions = pos.GetBoundDimensions();
 
                     if (!SetGroup())
                     {
@@ -149,6 +153,8 @@ namespace RebarPosCommands
                     RebarPos pos = tr.GetObject(m_Pos, OpenMode.ForWrite) as RebarPos;
                     if (pos == null) return;
 
+                    pos.SuspendUpdate();
+
                     pos.Pos = txtPosMarker.Text;
                     pos.Count = txtPosCount.Text;
                     pos.Diameter = cbPosDiameter.Text;
@@ -189,6 +195,10 @@ namespace RebarPosCommands
                         pos.LengthAlignment = RebarPos.SubTextAlignment.Right;
                     else
                         pos.LengthAlignment = RebarPos.SubTextAlignment.Free;
+
+                    pos.SetBoundDimensions(boundDimensions);
+
+                    pos.ResumeUpdate();
 
                     tr.Commit();
 
@@ -817,6 +827,7 @@ namespace RebarPosCommands
                     new TypedValue((int)DxfCode.Operator, "<OR"),
                     new TypedValue((int)DxfCode.Start, "TEXT"),
                     new TypedValue((int)DxfCode.Start, "MTEXT"),
+                    new TypedValue((int)DxfCode.Start, "DIMENSION"),
                     new TypedValue((int)DxfCode.Operator, "OR>")
                 };
                 PromptSelectionResult res = ed.GetSelection(new SelectionFilter(tvs));
@@ -841,6 +852,10 @@ namespace RebarPosCommands
                                 {
                                     MText dobj = obj as MText;
                                     text = dobj.Text;
+                                }
+                                else if (obj is Dimension)
+                                {
+                                    boundDimensions.Add(sobj.ObjectId);
                                 }
                                 if (!string.IsNullOrEmpty(text))
                                 {

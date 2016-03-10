@@ -161,13 +161,13 @@ public:
 
 public:
 	/// AcDbEntity overrides: database    
-    virtual Acad::ErrorStatus	dwgInFields(AcDbDwgFiler* filer);
-    virtual Acad::ErrorStatus	dwgOutFields(AcDbDwgFiler* filer) const;
+    virtual Acad::ErrorStatus	dwgInFields(AcDbDwgFiler* filer) override;
+    virtual Acad::ErrorStatus	dwgOutFields(AcDbDwgFiler* filer) const override;
     
-    virtual Acad::ErrorStatus	dxfInFields(AcDbDxfFiler* filer);
-    virtual Acad::ErrorStatus	dxfOutFields(AcDbDxfFiler* filer) const;
+    virtual Acad::ErrorStatus	dxfInFields(AcDbDxfFiler* filer) override;
+    virtual Acad::ErrorStatus	dxfOutFields(AcDbDxfFiler* filer) const override;
 
-	virtual void saveAs(AcGiWorldDraw *pWd, AcDb::SaveType saveType);
+	virtual void saveAs(AcGiWorldDraw *pWd, AcDb::SaveType saveType) override;
 
 protected:
 	/// AcDbEntity overrides: geometry
@@ -178,20 +178,20 @@ protected:
         const AcGePoint3d&    lastPoint,
         const AcGeMatrix3d&   viewXform,
         AcGePoint3dArray&     snapPoints,
-        AcDbIntArray&         geomIds) const;
+        AcDbIntArray&         geomIds) const override;
 
     virtual Acad::ErrorStatus   subGetGripPoints(AcGePoint3dArray&     gripPoints,
         AcDbIntArray&  osnapModes,
-        AcDbIntArray&  geomIds) const;
+        AcDbIntArray&  geomIds) const override;
 
     virtual Acad::ErrorStatus   subMoveGripPointsAt(const AcDbIntArray& indices,
-        const AcGeVector3d&     offset);
+        const AcGeVector3d&     offset) override;
 
-    virtual Acad::ErrorStatus   subTransformBy(const AcGeMatrix3d& xform);
+    virtual Acad::ErrorStatus   subTransformBy(const AcGeMatrix3d& xform) override;
 
-    virtual Acad::ErrorStatus	subExplode(AcDbVoidPtrArray& entitySet) const;
+    virtual Acad::ErrorStatus	subExplode(AcDbVoidPtrArray& entitySet) const override;
 
-    virtual Adesk::Boolean      subWorldDraw(AcGiWorldDraw*	mode);
+    virtual Adesk::Boolean      subWorldDraw(AcGiWorldDraw*	mode) override;
     
-	virtual Acad::ErrorStatus   subGetGeomExtents(AcDbExtents& extents) const;
+	virtual Acad::ErrorStatus   subGetGeomExtents(AcDbExtents& extents) const override;
 };

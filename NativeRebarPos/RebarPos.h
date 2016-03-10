@@ -9,6 +9,7 @@
 #pragma warning( pop )
 
 #include <vector>
+#include <map>
 
 #include "DrawParams.h"
 #include "PosShape.h"
@@ -170,6 +171,7 @@ private:
 	ACHAR* m_DisplayedSpacing;
 	ACHAR* m_Pos;
 	ACHAR* m_Count;
+	ACHAR* m_DisplayedCount;
 	ACHAR* m_Diameter;
 	ACHAR* m_Spacing;
 	Adesk::Boolean m_IncludeInBOQ;
@@ -188,6 +190,8 @@ private:
 
 	SubTextAlignment m_LengthAlignment;
 	SubTextAlignment m_NoteAlignment;
+
+	std::map<AcDbObjectId, double> m_BoundDimensions;
 
 	CPosGroup* m_GroupForDisplay;
 
@@ -351,20 +355,30 @@ public:
 	/// Forces a view update.
 	const void Update(void);
 
+	/// Adds/removes a bound dimension
+	Acad::ErrorStatus AddBoundDimension(AcDbObjectId id);
+	Acad::ErrorStatus RemoveBoundDimension(AcDbObjectId id);
+	std::vector<AcDbObjectId> GetBoundDimensions(void);
+	Acad::ErrorStatus ClearBoundDimensions(void);
+
 public:
 	/// Updates all objects
 	static void UpdateAll(void);
 
 public:
 	/// AcDbEntity overrides: database    
-    virtual Acad::ErrorStatus	dwgInFields(AcDbDwgFiler* filer);
-    virtual Acad::ErrorStatus	dwgOutFields(AcDbDwgFiler* filer) const;
+    virtual Acad::ErrorStatus	dwgInFields(AcDbDwgFiler* filer) override;
+    virtual Acad::ErrorStatus	dwgOutFields(AcDbDwgFiler* filer) const override;
     
-    virtual Acad::ErrorStatus	dxfInFields(AcDbDxfFiler* filer);
-    virtual Acad::ErrorStatus	dxfOutFields(AcDbDxfFiler* filer) const;
+    virtual Acad::ErrorStatus	dxfInFields(AcDbDxfFiler* filer) override;
+    virtual Acad::ErrorStatus	dxfOutFields(AcDbDxfFiler* filer) const override;
 
-	virtual void saveAs(AcGiWorldDraw *pWd, AcDb::SaveType saveType);
+	virtual void saveAs(AcGiWorldDraw *pWd, AcDb::SaveType saveType) override;
 
+	// AcDbObject overrides: reactors
+	virtual void modified(const AcDbObject* dbObj) override;
+	virtual void erased(const AcDbObject* dbObj, Adesk::Boolean pErasing) override;
+	
 protected:
 	/// AcDbEntity overrides: geometry
     virtual Acad::ErrorStatus subGetOsnapPoints(
@@ -374,24 +388,24 @@ protected:
         const AcGePoint3d&    lastPoint,
         const AcGeMatrix3d&   viewXform,
         AcGePoint3dArray&     snapPoints,
-        AcDbIntArray&         geomIds) const;
+        AcDbIntArray&         geomIds) const override;
 
     virtual Acad::ErrorStatus   subGetGripPoints(AcGePoint3dArray&     gripPoints,
         AcDbIntArray&  osnapModes,
-        AcDbIntArray&  geomIds) const;
+        AcDbIntArray&  geomIds) const override;
 
     virtual Acad::ErrorStatus   subMoveGripPointsAt(const AcDbIntArray& indices,
-        const AcGeVector3d&     offset);
+        const AcGeVector3d&     offset) override;
 
-    virtual Acad::ErrorStatus   subTransformBy(const AcGeMatrix3d& xform);
+    virtual Acad::ErrorStatus   subTransformBy(const AcGeMatrix3d& xform) override;
 
-    virtual void                subList() const;
+    virtual void                subList() const override;
 
-    virtual Acad::ErrorStatus	subExplode(AcDbVoidPtrArray& entitySet) const;
+    virtual Acad::ErrorStatus	subExplode(AcDbVoidPtrArray& entitySet) const override;
 
-    virtual Adesk::Boolean      subWorldDraw(AcGiWorldDraw*	mode);
+    virtual Adesk::Boolean      subWorldDraw(AcGiWorldDraw*	mode) override;
     
-	virtual Acad::ErrorStatus   subGetGeomExtents(AcDbExtents& extents) const;
+	virtual Acad::ErrorStatus   subGetGeomExtents(AcDbExtents& extents) const override;
 
 protected:
     /// Overridden methods from AcDbObject    
@@ -399,13 +413,13 @@ protected:
         AcDbObject*& pClonedObject,
         AcDbIdMapping& idMap,
         Adesk::Boolean isPrimary
-        = Adesk::kTrue) const;
+        = Adesk::kTrue) const override;
     
     virtual Acad::ErrorStatus subWblockClone(AcRxObject* pOwnerObject,
         AcDbObject*& pClonedObject,
         AcDbIdMapping& idMap,
         Adesk::Boolean isPrimary
-        = Adesk::kTrue) const;
+        = Adesk::kTrue) const override;
     
-    virtual Acad::ErrorStatus subGetClassID(CLSID* pClsid) const;
+    virtual Acad::ErrorStatus subGetClassID(CLSID* pClsid) const override;
 };

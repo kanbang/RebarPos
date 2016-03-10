@@ -194,14 +194,14 @@ public:
 
 public:
 	// Drawable implementation
-    virtual AcGiDrawable*       drawable();
+    virtual AcGiDrawable*       drawable() override;
 
-    virtual bool            bounds          (AcDbExtents& bounds) const;
+    virtual bool            bounds          (AcDbExtents& bounds) const override;
 
-    virtual Adesk::UInt32   subSetAttributes   (AcGiDrawableTraits* traits);
-    virtual Adesk::Boolean  subWorldDraw       (AcGiWorldDraw* worldDraw);
-    virtual void            subViewportDraw    (AcGiViewportDraw* vd);
-	virtual Adesk::UInt32   subViewportDrawLogicalFlags (AcGiViewportDraw * vd);
+    virtual Adesk::UInt32   subSetAttributes   (AcGiDrawableTraits* traits) override;
+    virtual Adesk::Boolean  subWorldDraw       (AcGiWorldDraw* worldDraw) override;
+    virtual void            subViewportDraw    (AcGiViewportDraw* vd) override;
+	virtual Adesk::UInt32   subViewportDrawLogicalFlags (AcGiViewportDraw * vd) override;
 
 private:
 	const std::vector<CRebarPos*> GetDisplayedPos(void) const;
