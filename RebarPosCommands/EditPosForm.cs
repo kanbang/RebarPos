@@ -624,7 +624,18 @@ namespace RebarPosCommands
             str = str.Replace('x', '*');
             str = str.Replace('X', '*');
 
-            if (string.IsNullOrEmpty(str) || PosUtility.ValidateFormula(str))
+            if (!str.Contains("<>"))
+            {
+                boundDimensions.Clear();
+            }
+
+            if (str.Contains("<>") && boundDimensions.Count == 0)
+            {
+                errorProvider.SetError(txtPosCount, "Bağlı ölçü seçilmedi.");
+                errorProvider.SetIconAlignment(txtPosCount, ErrorIconAlignment.MiddleLeft);
+                return false;
+            }
+            else if (string.IsNullOrEmpty(str) || PosUtility.ValidateFormula(str.Replace("<>", "1")))
             {
                 errorProvider.SetError(txtPosCount, "");
                 return true;
@@ -831,50 +842,66 @@ namespace RebarPosCommands
                     new TypedValue((int)DxfCode.Operator, "OR>")
                 };
                 PromptSelectionResult res = ed.GetSelection(new SelectionFilter(tvs));
-                if (res.Status == PromptStatus.OK)
+                if (res.Status == PromptStatus.OK && res.Value.Count > 0)
                 {
-                    Database db = HostApplicationServices.WorkingDatabase;
-                    using (Transaction tr = db.TransactionManager.StartTransaction())
+                    PromptIntegerOptions nopts = new PromptIntegerOptions("\nCarpan <1>: ");
+                    nopts.AllowNegative = false;
+                    nopts.AllowZero = false;
+                    nopts.DefaultValue = 1;
+                    PromptIntegerResult nres = ed.GetInteger(nopts);
+                    if (nres.Status == PromptStatus.OK)
                     {
-                        try
+                        string multiplierString = (nres.Value == 1 ? "" : nres.Value.ToString() + "*");
+                        Database db = HostApplicationServices.WorkingDatabase;
+                        using (Transaction tr = db.TransactionManager.StartTransaction())
                         {
-                            int total = 0;
-                            foreach (SelectedObject sobj in res.Value)
+                            try
                             {
-                                string text = "";
-                                DBObject obj = tr.GetObject(sobj.ObjectId, OpenMode.ForRead);
-                                if (obj is DBText)
+                                boundDimensions.Clear();
+                                int total = 0;
+                                foreach (SelectedObject sobj in res.Value)
                                 {
-                                    DBText dobj = obj as DBText;
-                                    text = dobj.TextString;
-                                }
-                                else if (obj is MText)
-                                {
-                                    MText dobj = obj as MText;
-                                    text = dobj.Text;
-                                }
-                                else if (obj is Dimension)
-                                {
-                                    boundDimensions.Add(sobj.ObjectId);
-                                }
-                                if (!string.IsNullOrEmpty(text))
-                                {
-                                    text = text.TrimStart('(').TrimEnd(')');
-                                    int num = 0;
-                                    if (int.TryParse(text, out num))
+                                    string text = "";
+                                    DBObject obj = tr.GetObject(sobj.ObjectId, OpenMode.ForRead);
+                                    if (obj is DBText)
                                     {
-                                        total += num;
+                                        DBText dobj = obj as DBText;
+                                        text = dobj.TextString;
+                                    }
+                                    else if (obj is MText)
+                                    {
+                                        MText dobj = obj as MText;
+                                        text = dobj.Text;
+                                    }
+                                    else if (obj is Dimension)
+                                    {
+                                        boundDimensions.Add(sobj.ObjectId);
+                                    }
+                                    if (!string.IsNullOrEmpty(text))
+                                    {
+                                        text = text.TrimStart('(').TrimEnd(')');
+                                        int num = 0;
+                                        if (int.TryParse(text, out num))
+                                        {
+                                            total += num;
+                                        }
                                     }
                                 }
+                                string countText = "";
+                                if (total != 0)
+                                {
+                                    countText = multiplierString + total.ToString();
+                                }
+                                if (boundDimensions.Count > 0)
+                                {
+                                    countText = (total == 0 ? "" : countText + "+") + multiplierString + "<>";
+                                }
+                                txtPosCount.Text = countText;
                             }
-                            if (total != 0)
+                            catch (System.Exception ex)
                             {
-                                txtPosCount.Text = total.ToString();
+                                MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
-                        }
-                        catch (System.Exception ex)
-                        {
-                            MessageBox.Show("Error: " + ex.Message, "RebarPos", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }

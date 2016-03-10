@@ -749,7 +749,10 @@ std::vector<AcDbObjectId> CRebarPos::GetBoundDimensions(void)
 	std::vector<AcDbObjectId> items;
 	for (std::map<AcDbObjectId, double>::iterator it = m_BoundDimensions.begin(); it != m_BoundDimensions.end(); it++)
 	{
-		items.push_back((*it).first);
+		if ((*it).second > 0)
+		{
+			items.push_back((*it).first);
+		}
 	}
 	return items;
 }
@@ -2220,10 +2223,29 @@ void CRebarPos::Calculate(void)
 
 		if (m_Count != NULL && m_Count[0] != _T('\0'))
 		{
+			std::wstring countstring(m_Count);
+
+			// Calculate bound dimensions
+			if (!m_BoundDimensions.empty() && !m_CalcProps.IsVarSpacing && m_CalcProps.MinSpacing > 0)
+			{
+				int totalCount = 0;
+				for (std::map<AcDbObjectId, double>::iterator it = m_BoundDimensions.begin(); it != m_BoundDimensions.end(); it++)
+				{
+					double dimVal = (*it).second;
+					if (dimVal > 0)
+					{
+						totalCount += Utility::DoubleToInt(dimVal / m_CalcProps.MinSpacing) + 1;
+					}
+				}
+				std::wstring totalCountString;
+				Utility::IntToStr(totalCount, totalCountString);
+				Utility::ReplaceString(countstring, L"<>", totalCountString);
+			}
+			acutUpdString(countstring.c_str(), m_DisplayedCount);
+
+			// Calculate from string
 			try
 			{
-				// Calculate from string
-				std::wstring countstring(m_Count);
 				std::vector<std::wstring> countlist;
 				int minCount = 100000; int maxCount = 0; int totalCount = 0;
 				int currCount = 0;
@@ -2243,8 +2265,6 @@ void CRebarPos::Calculate(void)
 				m_CalcProps.MinCount = minCount;
 				m_CalcProps.MaxCount = maxCount;
 				m_CalcProps.IsMultiCount = (countlist.size() > 1);
-
-				acutUpdString(m_Count, m_DisplayedCount);
 			}
 			catch (...)
 			{
@@ -2254,39 +2274,6 @@ void CRebarPos::Calculate(void)
 				m_CalcProps.IsMultiCount = false;
 
 				acutUpdString(L"", m_DisplayedCount);
-			}
-		}
-
-		// Calculate from bound dimensions
-		if (!m_BoundDimensions.empty() && !m_CalcProps.IsVarSpacing && m_CalcProps.MinSpacing > 0)
-		{
-			int totalCount = 0;
-			for (std::map<AcDbObjectId, double>::iterator it = m_BoundDimensions.begin(); it != m_BoundDimensions.end(); it++)
-			{
-				double dimVal = (*it).second;
-				if (dimVal > 0)
-				{
-					totalCount += Utility::DoubleToInt(dimVal / m_CalcProps.MinSpacing) + 1;
-				}
-			}
-
-			if (totalCount != 0)
-			{
-				std::wstringstream strDisplayedCount;
-				if (m_CalcProps.Count > 0)
-				{
-					m_CalcProps.Count = m_CalcProps.Count * totalCount;
-
-					strDisplayedCount << m_Count;
-					strDisplayedCount << L"*";
-					strDisplayedCount << totalCount;
-				}
-				else
-				{
-					m_CalcProps.Count = totalCount;
-					strDisplayedCount << totalCount;
-				}
-				acutUpdString(strDisplayedCount.str().c_str(), m_DisplayedCount);
 			}
 		}
 
