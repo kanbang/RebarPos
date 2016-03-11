@@ -79,6 +79,32 @@ public:
 	};
 
 public:
+	struct CBoundDimension
+	{
+	public:
+		AcDbObjectId Id;
+		double Measurement;
+		int Count;
+		ACHAR* Text;
+		bool IsBound;
+		AcGePoint3d TextPosition;
+
+	public:
+		CBoundDimension() : Id(AcDbObjectId::kNull), Measurement(0), Count(0), Text(NULL), IsBound(false), TextPosition()
+		{ }
+
+		CBoundDimension(AcDbObjectId id) : Measurement(0), Count(0), Text(NULL), IsBound(false), TextPosition()
+		{
+			Id = id;
+		}
+
+		CBoundDimension(AcDbObjectId id, double measurement) : Count(0), Text(NULL), IsBound(false), TextPosition()
+		{
+			Id = id;
+			Measurement = measurement;
+		}
+	};
+
 	struct CCalculatedProperties
 	{
 	public:
@@ -191,7 +217,7 @@ private:
 	SubTextAlignment m_LengthAlignment;
 	SubTextAlignment m_NoteAlignment;
 
-	std::map<AcDbObjectId, double> m_BoundDimensions;
+	std::map<AcDbObjectId, CBoundDimension> m_BoundDimensions;
 
 	CPosGroup* m_GroupForDisplay;
 
@@ -358,7 +384,7 @@ public:
 	/// Adds/removes a bound dimension
 	Acad::ErrorStatus AddBoundDimension(AcDbObjectId id);
 	Acad::ErrorStatus RemoveBoundDimension(AcDbObjectId id);
-	std::vector<AcDbObjectId> GetBoundDimensions(void);
+	std::vector<CBoundDimension> GetBoundDimensions(void);
 	Acad::ErrorStatus ClearBoundDimensions(void);
 
 public:

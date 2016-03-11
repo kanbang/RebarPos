@@ -713,7 +713,7 @@ Acad::ErrorStatus CRebarPos::AddBoundDimension(AcDbObjectId id)
 	double dimVal = 0;
 	pDimPointer->measurement(dimVal);
 
-	m_BoundDimensions.insert(std::pair<AcDbObjectId, double>(id, dimVal));
+	m_BoundDimensions.insert(std::pair<AcDbObjectId, CBoundDimension>(id, CBoundDimension(id, dimVal)));
 
 	Calculate();
 
@@ -744,14 +744,14 @@ Acad::ErrorStatus CRebarPos::RemoveBoundDimension(AcDbObjectId id)
 	return Acad::eOk;
 }
 
-std::vector<AcDbObjectId> CRebarPos::GetBoundDimensions(void)
+std::vector<CRebarPos::CBoundDimension> CRebarPos::GetBoundDimensions(void)
 {
-	std::vector<AcDbObjectId> items;
-	for (std::map<AcDbObjectId, double>::iterator it = m_BoundDimensions.begin(); it != m_BoundDimensions.end(); it++)
+	std::vector<CBoundDimension> items;
+	for (std::map<AcDbObjectId, CBoundDimension>::iterator it = m_BoundDimensions.begin(); it != m_BoundDimensions.end(); it++)
 	{
-		if ((*it).second > 0)
+		if ((*it).second.IsBound)
 		{
-			items.push_back((*it).first);
+			items.push_back((*it).second);
 		}
 	}
 	return items;
@@ -762,7 +762,7 @@ Acad::ErrorStatus CRebarPos::ClearBoundDimensions(void)
 	assertWriteEnabled();
 
 	Acad::ErrorStatus es;
-	for (std::map<AcDbObjectId, double>::iterator it = m_BoundDimensions.begin(); it != m_BoundDimensions.end(); it++)
+	for (std::map<AcDbObjectId, CBoundDimension>::iterator it = m_BoundDimensions.begin(); it != m_BoundDimensions.end(); it++)
 	{
 		// Remove reactor from dimension
 		const AcDbDimension* pDim = NULL;
@@ -1421,7 +1421,7 @@ Acad::ErrorStatus CRebarPos::dwgOutFields(AcDbDwgFiler* pFiler) const
 	pFiler->writeBoolean(m_Detached);
 
 	pFiler->writeInt32((int)m_BoundDimensions.size());
-	for (std::map<AcDbObjectId, double>::const_iterator it = m_BoundDimensions.begin(); it != m_BoundDimensions.end(); it++)
+	for (std::map<AcDbObjectId, CBoundDimension>::const_iterator it = m_BoundDimensions.begin(); it != m_BoundDimensions.end(); it++)
 	{
 		pFiler->writeSoftPointerId((*it).first);
 	}
@@ -1591,7 +1591,7 @@ Acad::ErrorStatus CRebarPos::dxfOutFields(AcDbDxfFiler* pFiler) const
 	pFiler->writeBoolean(AcDb::kDxfBool + 1, m_Detached);
 
 	pFiler->writeInt32(AcDb::kDxfInt32, (int)m_BoundDimensions.size());
-	for (std::map<AcDbObjectId, double>::const_iterator it = m_BoundDimensions.begin(); it != m_BoundDimensions.end(); it++)
+	for (std::map<AcDbObjectId, CBoundDimension>::const_iterator it = m_BoundDimensions.begin(); it != m_BoundDimensions.end(); it++)
 	{
 		pFiler->writeItem(AcDb::kDxfSoftPointerId, (AcDbSoftPointerId&)(*it).first);
 	}
@@ -1644,7 +1644,7 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	ACHAR* t_F = NULL;
 	Adesk::Boolean t_Detached = Adesk::kFalse;
 	int t_DimCount = 0;
-	std::map<AcDbObjectId, double> t_BoundDimensions;
+	std::map<AcDbObjectId, CBoundDimension> t_BoundDimensions;
 
 	if ((es = Utility::ReadDXFPoint(pFiler, AcDb::kDxfXCoord, _T("base point"), t_BasePoint)) != Acad::eOk) return es;
 	if ((es = Utility::ReadDXFPoint(pFiler, AcDb::kDxfXCoord + 1, _T("note point"), t_NoteGrip)) != Acad::eOk) return es;
@@ -1683,7 +1683,7 @@ Acad::ErrorStatus CRebarPos::dxfInFields(AcDbDxfFiler* pFiler)
 	{
 		AcDbObjectId t_Id;
 		if ((es = Utility::ReadDXFObjectId(pFiler, AcDb::kDxfSoftPointerId, _T("dimension id"), t_Id)) != Acad::eOk) return es;
-		t_BoundDimensions.insert(std::pair<AcDbObjectId, double>(t_Id, 0));
+		t_BoundDimensions.insert(std::pair<AcDbObjectId, CBoundDimension>(t_Id, CBoundDimension(t_Id)));
 	}
 
 	// Successfully read DXF codes; set object properties.
@@ -2229,12 +2229,13 @@ void CRebarPos::Calculate(void)
 			if (!m_BoundDimensions.empty() && !m_CalcProps.IsVarSpacing && m_CalcProps.MinSpacing > 0)
 			{
 				int totalCount = 0;
-				for (std::map<AcDbObjectId, double>::iterator it = m_BoundDimensions.begin(); it != m_BoundDimensions.end(); it++)
+				for (std::map<AcDbObjectId, CBoundDimension>::iterator it = m_BoundDimensions.begin(); it != m_BoundDimensions.end(); it++)
 				{
-					double dimVal = (*it).second;
-					if (dimVal > 0)
+					CBoundDimension boundDim = (*it).second;
+					if (boundDim.IsBound)
 					{
-						totalCount += Utility::DoubleToInt(dimVal / m_CalcProps.MinSpacing) + 1;
+						boundDim.Count = Utility::DoubleToInt(boundDim.Measurement / m_CalcProps.MinSpacing) + 1;
+						totalCount += boundDim.Count;
 					}
 				}
 				std::wstring totalCountString;
@@ -3024,16 +3025,21 @@ void CRebarPos::modified(const AcDbObject* dbObj)
 	AcDbDimension* dim = AcDbDimension::cast(dbObj);
 	AcDbObjectId dimId = dim->objectId();
 
-	double dimVal = 0;
+	CBoundDimension boundDim = m_BoundDimensions[dimId];
+	boundDim.Id = dimId;
 	if (dimId.isNull() || dimId.isErased() || !dimId.isValid() || (!dimId.objectClass()->isDerivedFrom(AcDbDimension::desc())))
 	{
-		dimVal = -1;
+		boundDim.IsBound = false;
 	}
 	else
 	{
+		boundDim.IsBound = true;
+		double dimVal = 0;
 		dim->measurement(dimVal);
+		boundDim.Measurement = dimVal;
+		boundDim.TextPosition = dim->textPosition();
 	}
-	m_BoundDimensions[dimId] = dimVal;
+	m_BoundDimensions[dimId] = boundDim;
 
 	// Update pos
 	Adesk::Boolean wasWritable;
@@ -3049,23 +3055,28 @@ void CRebarPos::erased(const AcDbObject* dbObj, Adesk::Boolean pErasing)
 	AcDbDimension* dim = AcDbDimension::cast(dbObj);
 	AcDbObjectId dimId = dim->objectId();
 
+	CBoundDimension boundDim = m_BoundDimensions[dimId];
+	boundDim.Id = dimId;
 	if (pErasing)
 	{
-		// Do not bother removing the reactor. Just set length to a negative
-		// value so that it is not used in calculation.
-		m_BoundDimensions[dimId] = -1;
+		// Do not bother removing the reactor. Just set flag to false
+		// so that it is not used in calculation.
+		boundDim.IsBound = false;
 	}
 	else
 	{
+		boundDim.IsBound = true;
 		double dimVal = 0;
 		dim->measurement(dimVal);
-		m_BoundDimensions[dimId] = dimVal;
+		boundDim.Measurement = dimVal;
+		boundDim.TextPosition = dim->textPosition();
 
 		if (!dim->hasPersistentReactor(this->objectId()))
 		{
 			dim->addPersistentReactor(this->objectId());
 		}
 	}
+	m_BoundDimensions[dimId] = boundDim;
 
 	// Update pos
 	Adesk::Boolean wasWritable;

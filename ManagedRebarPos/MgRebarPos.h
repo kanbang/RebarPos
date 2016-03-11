@@ -60,6 +60,41 @@ namespace OZOZ
 				Bottom = 4,
 			};
 
+			ref class BoundDimension
+			{
+			private:
+				Autodesk::AutoCAD::DatabaseServices::ObjectId mId;
+				double mMeasurement;
+				int mCount;
+				String^ mText;
+				bool mIsBound;
+				Point3d mTextPosition;
+
+			public:
+				property Autodesk::AutoCAD::DatabaseServices::ObjectId Id { Autodesk::AutoCAD::DatabaseServices::ObjectId get() { return mId; } }
+				property double Measurement { double get() { return mMeasurement; } }
+				property int Count { int get() { return mCount; } }
+				property String^ Text { String^ get() { return mText; } }
+				property bool IsBound { bool get() { return mIsBound; } }
+				property Point3d TextPosition { Point3d get() { return mTextPosition; } }
+
+			internal:
+				BoundDimension()
+				{
+					;
+				}
+
+				BoundDimension(const CRebarPos::CBoundDimension& source)
+				{
+					mId = Marshal::ToObjectId(source.Id);
+					mMeasurement = source.Measurement;
+					mCount = source.Count;
+					mText = Marshal::WcharToString(source.Text);
+					mIsBound = source.IsBound;
+					mTextPosition = Marshal::ToPoint3d(source.TextPosition);
+				}
+			};
+
 			ref class CalculatedProperties
 			{
 			internal:
@@ -215,7 +250,7 @@ namespace OZOZ
 			// Bound dimensions
 			void AddBoundDimension(Autodesk::AutoCAD::DatabaseServices::ObjectId id);
 			void RemoveBoundDimension(Autodesk::AutoCAD::DatabaseServices::ObjectId id);
-			System::Collections::Generic::List<Autodesk::AutoCAD::DatabaseServices::ObjectId>^ GetBoundDimensions();
+			System::Collections::Generic::List<BoundDimension^>^ GetBoundDimensions();
 			void SetBoundDimensions(System::Collections::Generic::List<Autodesk::AutoCAD::DatabaseServices::ObjectId>^ items);
 			void ClearBoundDimensions();
 

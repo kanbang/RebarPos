@@ -83,6 +83,13 @@ namespace RebarPosCommands
             double w = pos.Width / dir.Length;
             double h = pos.Height / dir.Length;
 
+            // Draw bound dimension lines
+            foreach (RebarPos.BoundDimension dim in pos.GetBoundDimensions())
+            {
+                Line line = new Line(dim.TextPosition, pos.BasePoint);
+                g.Draw(line);
+            }
+
             // Draw shape
             double xmin = ext.MinPoint.X, ymin = ext.MinPoint.Y, xmax = ext.MaxPoint.X, ymax = ext.MaxPoint.Y;
 

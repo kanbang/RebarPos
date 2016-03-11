@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
+using System.Linq;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
@@ -93,7 +93,7 @@ namespace RebarPosCommands
                     rbAlignLengthBottom.Checked = (pos.LengthAlignment == RebarPos.SubTextAlignment.Bottom);
                     rbAlignLengthRight.Checked = (pos.LengthAlignment == RebarPos.SubTextAlignment.Right);
 
-                    boundDimensions = pos.GetBoundDimensions();
+                    boundDimensions = pos.GetBoundDimensions().Select(p => p.Id).ToList();
 
                     if (!SetGroup())
                     {
@@ -844,7 +844,7 @@ namespace RebarPosCommands
                 PromptSelectionResult res = ed.GetSelection(new SelectionFilter(tvs));
                 if (res.Status == PromptStatus.OK && res.Value.Count > 0)
                 {
-                    PromptIntegerOptions nopts = new PromptIntegerOptions("\nCarpan <1>: ");
+                    PromptIntegerOptions nopts = new PromptIntegerOptions("\nCarpan: ");
                     nopts.AllowNegative = false;
                     nopts.AllowZero = false;
                     nopts.DefaultValue = 1;
