@@ -15,6 +15,7 @@ namespace RebarPosCommands
     {
         private bool m_Selected;
         private Color m_SelectionColor;
+        private List<Drawable> items;
 
         private bool init;
         private bool disposed;
@@ -39,6 +40,8 @@ namespace RebarPosCommands
 
         public DrawingPreview()
         {
+            items = new List<Drawable>();
+
             if (IsDesigner)
                 this.BackColor = System.Drawing.SystemColors.Control;
             else
@@ -62,41 +65,38 @@ namespace RebarPosCommands
                 extents = new Extents3d();
 
                 Autodesk.AutoCAD.GraphicsSystem.Manager gsm = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.GraphicsManager;
+
 #if REBARPOS2015
                 Autodesk.AutoCAD.GraphicsSystem.KernelDescriptor descriptor = new Autodesk.AutoCAD.GraphicsSystem.KernelDescriptor();
                 descriptor.addRequirement(Autodesk.AutoCAD.UniqueString.Intern("3D Drawing"));
                 Autodesk.AutoCAD.GraphicsSystem.GraphicsKernel kernel = Autodesk.AutoCAD.GraphicsSystem.Manager.AcquireGraphicsKernel(descriptor);
 
-                device = gsm.CreateAutoCADDevice(kernel, this.Handle);
-                device.DeviceRenderType = RendererType.Default;
+                device = gsm.CreateAutoCADOffScreenDevice(kernel);
+                device.DeviceRenderType = Autodesk.AutoCAD.GraphicsSystem.RendererType.Default;
                 device.BackgroundColor = BackColor;
 
                 view = new Autodesk.AutoCAD.GraphicsSystem.View();
                 view.VisualStyle = new Autodesk.AutoCAD.GraphicsInterface.VisualStyle(Autodesk.AutoCAD.GraphicsInterface.VisualStyleType.Wireframe2D);
-
                 model = gsm.CreateAutoCADModel(kernel);
 #elif REBARPOS2013
-                device = gsm.CreateAutoCADDevice(this.Handle);
-                device.DeviceRenderType = RendererType.Default;
+                device = gsm.CreateAutoCADOffScreenDevice();
+                device.DeviceRenderType = Autodesk.AutoCAD.GraphicsSystem.RendererType.Default;
                 device.BackgroundColor = BackColor;
 
                 view = new Autodesk.AutoCAD.GraphicsSystem.View();
                 view.VisualStyle = new Autodesk.AutoCAD.GraphicsInterface.VisualStyle(Autodesk.AutoCAD.GraphicsInterface.VisualStyleType.Wireframe2D);
-
                 model = gsm.CreateAutoCADModel();
 #elif REBARPOS2010
-                device = gsm.CreateAutoCADDevice(this.Handle);
-                device.DeviceRenderType = RendererType.Default;
+                device = gsm.CreateAutoCADOffScreenDevice();
+                device.DeviceRenderType = Autodesk.AutoCAD.GraphicsSystem.RendererType.Default;
                 device.BackgroundColor = BackColor;
 
                 view = new Autodesk.AutoCAD.GraphicsSystem.View();
                 view.VisualStyle = new Autodesk.AutoCAD.GraphicsInterface.VisualStyle(Autodesk.AutoCAD.GraphicsInterface.VisualStyleType.Wireframe2D);
-
                 model = gsm.CreateAutoCADModel();
 #endif
 
                 device.Add(view);
-                device.Update();
 
                 init = true;
             }
@@ -110,14 +110,13 @@ namespace RebarPosCommands
             Extents3d? itemExtents = item.Bounds;
             if (itemExtents.HasValue)
             {
-                extents.AddExtents(itemExtents.Value);
+                if (items.Count == 0)
+                    extents.Set(itemExtents.Value.MinPoint, itemExtents.Value.MaxPoint);
+                else
+                    extents.AddExtents(itemExtents.Value);
             }
-            view.Add(item, model);
-            view.SetView(new Point3d((extents.MinPoint.X + extents.MaxPoint.X) / 2.0, (extents.MinPoint.Y + extents.MaxPoint.Y) / 2.0, 1.0),
-                new Point3d((extents.MinPoint.X + extents.MaxPoint.X) / 2.0, (extents.MinPoint.Y + extents.MaxPoint.Y) / 2.0, 0.0),
-                new Vector3d(0.0, 1.0, 0.0),
-                1.04 * Math.Abs(extents.MaxPoint.X - extents.MinPoint.X),
-                1.04 * Math.Abs(extents.MaxPoint.Y - extents.MinPoint.Y));
+            items.Add(item);
+
             Refresh();
         }
 
@@ -139,7 +138,7 @@ namespace RebarPosCommands
             if (IsDesigner) return;
 
             Init();
-            view.EraseAll();
+            items.Clear();
             extents = new Extents3d();
             Refresh();
         }
@@ -159,7 +158,25 @@ namespace RebarPosCommands
         {
             if (!suspended && init && !disposed && !Disposing && !IsDesigner)
             {
-                device.Update();
+                device.BackgroundColor = BackColor;
+                device.OnSize(ClientSize);
+                view.EraseAll();
+                Point3d pt1 = extents.MinPoint;
+                Point3d pt2 = extents.MaxPoint;
+                Point3d ptm = new Point3d((pt1.X + pt2.X) / 2.0, (pt1.Y + pt2.Y) / 2.0, 0.0);
+                Point3d ptc = new Point3d(ptm.X, ptm.Y, 1.0);
+                double fw = Math.Abs(pt2.X - pt1.X);
+                double fh = Math.Abs(pt2.Y - pt1.Y);
+                view.SetView(ptc, ptm, Vector3d.YAxis, fw, fh);
+                foreach (Drawable item in items)
+                {
+                    view.Add(item, model);
+                }
+                view.Update();
+                using (Bitmap bmp = view.GetSnapshot(ClientRectangle))
+                {
+                    e.Graphics.DrawImageUnscaled(bmp, 0, 0);
+                }
 
                 if (m_Selected)
                 {
@@ -175,11 +192,10 @@ namespace RebarPosCommands
 
         protected override void OnSizeChanged(EventArgs e)
         {
-            if (init && !disposed && !Disposing && !IsDesigner && this.Size.Width > 0 && this.Size.Height > 0)
+            if (init && !disposed && !Disposing && !IsDesigner && !ClientSize.IsEmpty)
             {
-                device.OnSize(this.Size);
+                device.OnSize(ClientSize);
             }
-
             base.OnSizeChanged(e);
         }
 
