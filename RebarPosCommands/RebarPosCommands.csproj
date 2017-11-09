@@ -1,39 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{CAC7E4D1-71A4-4C05-BAC1-34201C067CF9}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RebarPosCommands</RootNamespace>
-    <AssemblyName>RebarPosCommands</AssemblyName>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <TargetFrameworkProfile />
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-2015|x64' ">
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <OutputPath>Release-2015\x64</OutputPath>
@@ -64,68 +30,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-2015|x64'">
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <OutputPath>Debug-2015\x64</OutputPath>
-    <DefineConstants>DEBUG;TRACE;REBARPOS2015</DefineConstants>
-    <Optimize>false</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
   <Choose>
-    <When Condition=" '$(Configuration)'=='Debug-2015' ">
-      <ItemGroup>
-        <Reference Include="AcCoreMgd">
-          <HintPath>C:\Autodesk\ObjectARX 2015\inc\AcCoreMgd.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="AcCui">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\Autodesk\ObjectARX 2015\inc\AcCui.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="AcDbMgd">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\Autodesk\ObjectARX 2015\inc\AcDbMgd.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="AcMgd">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\Autodesk\ObjectARX 2015\inc\AcMgd.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="AcWindows">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\Autodesk\ObjectARX 2015\inc\AcWindows.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="AdWindows">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\Autodesk\ObjectARX 2015\inc\AdWindows.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.AutoCAD.Interop" Condition="'$(Platform)'=='x64'">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\Autodesk\ObjectARX 2015\inc-x64\Autodesk.AutoCAD.Interop.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.AutoCAD.Interop" Condition="'$(Platform)'=='x86' Or '$(Platform)'=='AnyCPU'">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\Autodesk\ObjectARX 2015\inc-win32\Autodesk.AutoCAD.Interop.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="ManagedRebarPos" Condition="'$(Platform)'=='x64'">
-          <HintPath>..\ManagedRebarPos\Debug-2015\x64\ManagedRebarPos.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="ManagedRebarPos" Condition="'$(Platform)'=='x86' Or '$(Platform)'=='AnyCPU'">
-          <HintPath>..\ManagedRebarPos\Debug-2015\win32\ManagedRebarPos.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-      </ItemGroup>
-    </When>
     <When Condition=" '$(Configuration)'=='Release-2015' ">
       <ItemGroup>
         <Reference Include="AcCoreMgd">
@@ -478,9 +383,6 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DebugLoad.scr">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Resources\arrow_left.png" />
   </ItemGroup>
   <ItemGroup>
