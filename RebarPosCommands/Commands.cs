@@ -75,14 +75,10 @@ namespace RebarPosCommands
         {
             get
             {
-#if REBARPOS2017
+#if REBARPOS2018
+                return Path.Combine(Path.Combine(ApplicationInstallPath, "Resources"), "2018");
+#elif REBARPOS2017
                 return Path.Combine(Path.Combine(ApplicationInstallPath, "Resources"), "2017");
-#elif REBARPOS2015
-                return Path.Combine(Path.Combine(ApplicationInstallPath, "Resources"), "2015");
-#elif REBARPOS2013
-                return Path.Combine(Path.Combine(ApplicationInstallPath, "Resources"), "2013");
-#elif REBARPOS2010
-                return Path.Combine(Path.Combine(ApplicationInstallPath, "Resources"), "2010");
 #endif
             }
         }

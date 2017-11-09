@@ -66,7 +66,6 @@ namespace RebarPosCommands
 
                 Autodesk.AutoCAD.GraphicsSystem.Manager gsm = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.GraphicsManager;
 
-#if (REBARPOS2017 || REBARPOS2015)
                 Autodesk.AutoCAD.GraphicsSystem.KernelDescriptor descriptor = new Autodesk.AutoCAD.GraphicsSystem.KernelDescriptor();
                 descriptor.addRequirement(Autodesk.AutoCAD.UniqueString.Intern("3D Drawing"));
                 Autodesk.AutoCAD.GraphicsSystem.GraphicsKernel kernel = Autodesk.AutoCAD.GraphicsSystem.Manager.AcquireGraphicsKernel(descriptor);
@@ -78,15 +77,6 @@ namespace RebarPosCommands
                 view = new Autodesk.AutoCAD.GraphicsSystem.View();
                 view.VisualStyle = new Autodesk.AutoCAD.GraphicsInterface.VisualStyle(Autodesk.AutoCAD.GraphicsInterface.VisualStyleType.Wireframe2D);
                 model = gsm.CreateAutoCADModel(kernel);
-#elif (REBARPOS2013 || REBARPOS2010)
-                device = gsm.CreateAutoCADOffScreenDevice();
-                device.DeviceRenderType = Autodesk.AutoCAD.GraphicsSystem.RendererType.Default;
-                device.BackgroundColor = BackColor;
-
-                view = new Autodesk.AutoCAD.GraphicsSystem.View();
-                view.VisualStyle = new Autodesk.AutoCAD.GraphicsInterface.VisualStyle(Autodesk.AutoCAD.GraphicsInterface.VisualStyleType.Wireframe2D);
-                model = gsm.CreateAutoCADModel();
-#endif
 
                 device.Add(view);
 

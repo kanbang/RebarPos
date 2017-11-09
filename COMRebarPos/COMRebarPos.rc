@@ -86,17 +86,11 @@ END
 //
 // REGISTRY
 //
+#ifdef REBARPOS2018
+IDR_COMREBARPOS   REGISTRY DISCARDABLE    "COMRebarPos_2018.rgs"
+#endif
 #ifdef REBARPOS2017
 IDR_COMREBARPOS   REGISTRY DISCARDABLE    "COMRebarPos_2017.rgs"
-#endif
-#ifdef REBARPOS2015
-IDR_COMREBARPOS   REGISTRY DISCARDABLE    "COMRebarPos_2015.rgs"
-#endif
-#ifdef REBARPOS2013
-IDR_COMREBARPOS   REGISTRY DISCARDABLE    "COMRebarPos_2013.rgs"
-#endif
-#ifdef REBARPOS2010
-IDR_COMREBARPOS   REGISTRY DISCARDABLE    "COMRebarPos_2010.rgs"
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

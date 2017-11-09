@@ -52,31 +52,31 @@ Source: "..\NativeRebarPos\Release-2015\x64\NativeRebarPos.dbx"; DestDir: "{app}
 Source: "..\COMRebarPos\Release-2015\x64\COMRebarPos.dbx"; DestDir: "{app}\Bin\2015\x64"; Flags: ignoreversion
 Source: "..\ManagedRebarPos\Release-2015\x64\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2015\x64"; Flags: ignoreversion
 Source: "..\RebarPosCommands\Release-2015\x64\RebarPosCommands.dll"; DestDir: "{app}\Bin\2015\x64"; Flags: ignoreversion
-; x86 Libraries
-; AutoCAD R18 (2010, 2011, 2012) Libraries
-Source: "..\NativeRebarPos\Release-2010\win32\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2010\win32"; Flags: ignoreversion
-Source: "..\COMRebarPos\Release-2010\win32\COMRebarPos.dbx"; DestDir: "{app}\Bin\2010\win32"; Flags: ignoreversion
-Source: "..\ManagedRebarPos\Release-2010\win32\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2010\win32"; Flags: ignoreversion
-Source: "..\RebarPosCommands\Release-2010\win32\RebarPosCommands.dll"; DestDir: "{app}\Bin\2010\win32"; Flags: ignoreversion
-; AutoCAD R19 (2013, 2014) Libraries
-Source: "..\NativeRebarPos\Release-2013\win32\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2013\win32"; Flags: ignoreversion
-Source: "..\COMRebarPos\Release-2013\win32\COMRebarPos.dbx"; DestDir: "{app}\Bin\2013\win32"; Flags: ignoreversion
-Source: "..\ManagedRebarPos\Release-2013\win32\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2013\win32"; Flags: ignoreversion
-Source: "..\RebarPosCommands\Release-2013\win32\RebarPosCommands.dll"; DestDir: "{app}\Bin\2013\win32"; Flags: ignoreversion
-; AutoCAD R20 (2015, 2016) Libraries
-Source: "..\NativeRebarPos\Release-2015\win32\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2015\win32"; Flags: ignoreversion
-Source: "..\COMRebarPos\Release-2015\win32\COMRebarPos.dbx"; DestDir: "{app}\Bin\2015\win32"; Flags: ignoreversion
-Source: "..\ManagedRebarPos\Release-2015\win32\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2015\win32"; Flags: ignoreversion
-Source: "..\RebarPosCommands\Release-2015\win32\RebarPosCommands.dll"; DestDir: "{app}\Bin\2015\win32"; Flags: ignoreversion
+; AutoCAD R21 (2018) Libraries
+Source: "..\NativeRebarPos\Release-2017\x64\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2017\x64"; Flags: ignoreversion
+Source: "..\COMRebarPos\Release-2017\x64\COMRebarPos.dbx"; DestDir: "{app}\Bin\2017\x64"; Flags: ignoreversion
+Source: "..\ManagedRebarPos\Release-2017\x64\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2017\x64"; Flags: ignoreversion
+Source: "..\RebarPosCommands\Release-2017\x64\RebarPosCommands.dll"; DestDir: "{app}\Bin\2017\x64"; Flags: ignoreversion
+; AutoCAD R22 (2018) Libraries
+Source: "..\NativeRebarPos\Release-2018\x64\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2018\x64"; Flags: ignoreversion
+Source: "..\COMRebarPos\Release-2018\x64\COMRebarPos.dbx"; DestDir: "{app}\Bin\2018\x64"; Flags: ignoreversion
+Source: "..\ManagedRebarPos\Release-2018\x64\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2018\x64"; Flags: ignoreversion
+Source: "..\RebarPosCommands\Release-2018\x64\RebarPosCommands.dll"; DestDir: "{app}\Bin\2018\x64"; Flags: ignoreversion
 ; Cuix file
 Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Resources\2010"
 Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Resources\2013"
 Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Resources\2015"
+Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Resources\2017"
+Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Resources\2018"
 ; Menu resources
 Source: "..\MenuIcons\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2010"; DestName: "RebarPos.dll"
 Source: "..\MenuIcons\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2013"; DestName: "RebarPos.dll"
 Source: "..\MenuIcons\Release\MenuIcons.dll"; DestDir: "{app}\Resources\2015"; DestName: "RebarPos.dll"
 Source: "..\MenuIcons\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2015"; DestName: "RebarPos_light.dll"
+Source: "..\MenuIcons\Release\MenuIcons.dll"; DestDir: "{app}\Resources\2017"; DestName: "RebarPos.dll"
+Source: "..\MenuIcons\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2017"; DestName: "RebarPos_light.dll"
+Source: "..\MenuIcons\Release\MenuIcons.dll"; DestDir: "{app}\Resources\2018"; DestName: "RebarPos.dll"
+Source: "..\MenuIcons\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2018"; DestName: "RebarPos_light.dll"
 
 [Registry]
 Root: HKCU; Subkey: "Software\OZOZ\RebarPos";
@@ -176,6 +176,12 @@ procedure CurStepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssPostInstall then begin
     // Set registry keys for COM classes
+    // 2018
+    AddCOMRegistry('2018', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8A8}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F8}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD38}');
+    AddDBXRegistry('R22.0', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F8}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD38}');
+    // 2017
+    AddCOMRegistry('2017', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8A7}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F7}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD37}');
+    AddDBXRegistry('R21.0', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F7}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD37}');
     // 2015
     AddCOMRegistry('2015', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8A5}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F5}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD35}');
     AddDBXRegistry('R20.0', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F5}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD35}');
@@ -196,6 +202,12 @@ end;
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
   if CurUninstallStep = usPostUninstall then begin
+    // 2018
+    RemoveCOMRegistry('{26E9A3B0-6567-4857-AABB-E09AC4A7A8A8}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F8}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD38}');
+    RemoveDBXRegistry('R22.0');
+    // 2017
+    RemoveCOMRegistry('{26E9A3B0-6567-4857-AABB-E09AC4A7A8A7}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F7}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD37}');
+    RemoveDBXRegistry('R21.0');
     // 2015
     RemoveCOMRegistry('{26E9A3B0-6567-4857-AABB-E09AC4A7A8A5}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F5}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD35}');
     RemoveDBXRegistry('R20.0');

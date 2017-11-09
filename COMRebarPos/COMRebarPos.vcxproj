@@ -1,16 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Release-2010|x64">
-      <Configuration>Release-2010</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release-2013|x64">
-      <Configuration>Release-2013</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release-2015|x64">
-      <Configuration>Release-2015</Configuration>
+    <ProjectConfiguration Include="Release-2018|x64">
+      <Configuration>Release-2018</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release-2017|x64">
@@ -31,23 +23,11 @@
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2015|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2018|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfAtl>Static</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2013|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseOfAtl>Static</UseOfAtl>
-    <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v100</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2010|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseOfAtl>Static</UseOfAtl>
-    <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v90</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -56,17 +36,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\Property Sheets\ObjectARX 2017.props" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release-2015|x64'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release-2018|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\Property Sheets\ObjectARX 2015.props" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release-2013|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\Property Sheets\ObjectARX 2013.props" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release-2010|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\Property Sheets\ObjectARX 2010.props" />
+    <Import Project="..\Property Sheets\ObjectARX 2018.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -77,17 +49,7 @@
     <OutDir>$(ProjectDir)$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(Configuration)\$(Platform)\</IntDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2015|x64'">
-    <TargetExt>.dbx</TargetExt>
-    <OutDir>$(ProjectDir)$(Configuration)\$(Platform)\</OutDir>
-    <IntDir>$(Configuration)\$(Platform)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2013|x64'">
-    <TargetExt>.dbx</TargetExt>
-    <OutDir>$(ProjectDir)$(Configuration)\$(Platform)\</OutDir>
-    <IntDir>$(Configuration)\$(Platform)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2010|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2018|x64'">
     <TargetExt>.dbx</TargetExt>
     <OutDir>$(ProjectDir)$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(Configuration)\$(Platform)\</IntDir>
@@ -115,7 +77,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)$(IntDir)</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-2015|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-2018|x64'">
     <Midl>
       <HeaderFileName>$(ProjectDir)\%(Filename)_i.h</HeaderFileName>
       <DllDataFileName>$(ProjectDir)\%(Filename)_d.c</DllDataFileName>
@@ -138,54 +100,6 @@
       <AdditionalIncludeDirectories>$(ProjectDir)$(IntDir)</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-2013|x64'">
-    <Midl>
-      <HeaderFileName>$(ProjectDir)\%(Filename)_i.h</HeaderFileName>
-      <DllDataFileName>$(ProjectDir)\%(Filename)_d.c</DllDataFileName>
-      <InterfaceIdentifierFileName>$(ProjectDir)\%(Filename)_i.c</InterfaceIdentifierFileName>
-      <ProxyFileName>$(ProjectDir)\%(Filename)_p.c</ProxyFileName>
-    </Midl>
-    <ClCompile>
-      <PreprocessorDefinitions>_ATL_NO_UUIDOF;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;axdb.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(VCInstallDir)atlmfc\lib\amd64;..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ModuleDefinitionFile>COMRebarPos.def</ModuleDefinitionFile>
-      <ProgramDatabaseFile>
-      </ProgramDatabaseFile>
-      <TypeLibraryFile>COMRebarPos.tlb</TypeLibraryFile>
-      <IgnoreSpecificDefaultLibraries>
-      </IgnoreSpecificDefaultLibraries>
-    </Link>
-    <ResourceCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)$(IntDir)</AdditionalIncludeDirectories>
-    </ResourceCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-2010|x64'">
-    <Midl>
-      <HeaderFileName>$(ProjectDir)\%(Filename)_i.h</HeaderFileName>
-      <DllDataFileName>$(ProjectDir)\%(Filename)_d.c</DllDataFileName>
-      <InterfaceIdentifierFileName>$(ProjectDir)\%(Filename)_i.c</InterfaceIdentifierFileName>
-      <ProxyFileName>$(ProjectDir)\%(Filename)_p.c</ProxyFileName>
-    </Midl>
-    <ClCompile>
-      <PreprocessorDefinitions>_ATL_NO_UUIDOF;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;axdb.lib;NativeRebarPos.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(VCInstallDir)atlmfc\lib\amd64;..\NativeRebarPos\$(Configuration)\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ModuleDefinitionFile>COMRebarPos.def</ModuleDefinitionFile>
-      <ProgramDatabaseFile>
-      </ProgramDatabaseFile>
-      <TypeLibraryFile>COMRebarPos.tlb</TypeLibraryFile>
-      <IgnoreSpecificDefaultLibraries>
-      </IgnoreSpecificDefaultLibraries>
-    </Link>
-    <ResourceCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)$(IntDir)</AdditionalIncludeDirectories>
-    </ResourceCompile>
-  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ComBOQTable.cpp" />
     <ClCompile Include="ComRebarPos.cpp" />
@@ -196,9 +110,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="COMRebarPos.def" />
-    <None Include="Resources\COMRebarPos_2010.rgs" />
-    <None Include="Resources\COMRebarPos_2013.rgs" />
-    <None Include="Resources\COMRebarPos_2015.rgs" />
+    <None Include="Resources\COMRebarPos_2018.rgs" />
+    <None Include="Resources\COMRebarPos_2017.rgs" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="COMRebarPos.idl" />

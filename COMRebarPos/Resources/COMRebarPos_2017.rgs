@@ -43,22 +43,3 @@ HKLM
 		}
 	}
 }
-HKLM
-{
-	NoRemove SOFTWARE
-	{
-		NoRemove Autodesk
-		{
-			NoRemove ObjectDBX
-			{
-				NoRemove R21.1
-				{
-					NoRemove ActiveXCLSID
-					{
-						val RebarPos = s '{97CAC17D-B1C7-49ca-8D57-D3FF491860F7}'
-					}
-				}			
-			}
-		}
-	}
-}

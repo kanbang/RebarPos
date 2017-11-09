@@ -32,13 +32,10 @@
     <None Include="COMRebarPos.def">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="Resources\COMRebarPos_2015.rgs">
+    <None Include="Resources\COMRebarPos_2018.rgs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\COMRebarPos_2010.rgs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Resources\COMRebarPos_2013.rgs">
+    <None Include="Resources\COMRebarPos_2017.rgs">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

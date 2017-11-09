@@ -1,0 +1,45 @@
+HKCR
+{
+	COMREBARPOSLib.ComRebarPos2018.1 = s 'ComRebarPos Class for AutoCAD R22'
+	{
+		CLSID = s '{97CAC17D-B1C7-49ca-8D57-D3FF491860F8}'
+	}
+	COMREBARPOSLib.ComRebarPos2018 = s 'ComRebarPos Class for AutoCAD R22'
+	{
+		CLSID = s '{97CAC17D-B1C7-49ca-8D57-D3FF491860F8}'
+		CurVer = s 'COMREBARPOSLib.ComRebarPos2018.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {97CAC17D-B1C7-49ca-8D57-D3FF491860F8} = s 'ComRebarPos Class for AutoCAD R22'
+		{
+			ProgID = s 'COMREBARPOSLib.ComRebarPos2018.1'
+			VersionIndependentProgID = s 'COMREBARPOSLib.ComRebarPos2018'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{26E9A3B0-6567-4857-AABB-E09AC4A7A8A8}'
+		}
+	}
+}
+HKLM
+{
+	NoRemove SOFTWARE
+	{
+		NoRemove Autodesk
+		{
+			NoRemove ObjectDBX
+			{
+				NoRemove R22.0
+				{
+					NoRemove ActiveXCLSID
+					{
+						val RebarPos = s '{97CAC17D-B1C7-49ca-8D57-D3FF491860F8}'
+					}
+				}			
+			}
+		}
+	}
+}
