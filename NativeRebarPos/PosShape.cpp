@@ -173,7 +173,8 @@ HBITMAP CPosShape::ToBitmap(AcGsDevice* device, AcGsView* view, AcGsModel* model
 HBITMAP CPosShape::ToBitmap(const AcGsColor backColor, const int width, const int height)
 {
 	AcGsManager* manager = acgsGetGsManager();
-#ifdef REBARPOS2015
+
+#if defined(REBARPOS2017) || defined(REBARPOS2015)
 	AcGsKernelDescriptor descriptor;
 	descriptor.addRequirement(AcGsKernelDescriptor::k3DDrawing);
 	AcGsGraphicsKernel* kernel = manager->acquireGraphicsKernel(descriptor);
@@ -189,8 +190,7 @@ HBITMAP CPosShape::ToBitmap(const AcGsColor backColor, const int width, const in
 	AcGsModel* model = manager->createAutoCADModel(*kernel);
 
 	device->add(view);
-#endif
-#ifdef REBARPOS2013
+#elif defined(REBARPOS2013) || defined(REBARPOS2010)
 	AcGsClassFactory* factory = manager->getGSClassFactory();
 
 	AcGsDevice* device = manager->createAutoCADOffScreenDevice();
@@ -205,21 +205,7 @@ HBITMAP CPosShape::ToBitmap(const AcGsColor backColor, const int width, const in
 
 	device->add(view);
 #endif
-#ifdef REBARPOS2010
-	AcGsClassFactory* factory = manager->getGSClassFactory();
 
-	AcGsDevice* device = manager->createAutoCADOffScreenDevice();
-	device->onSize(width, height);
-	device->setDeviceRenderer(AcGsDevice::kDefault);
-	device->setBackgroundColor(backColor);
-
-	AcGsView* view = factory->createView();
-	view->setVisualStyle(AcGiVisualStyle::k2DWireframe);
-
-	AcGsModel* model = manager->createAutoCADModel();
-
-	device->add(view);
-#endif
 	HBITMAP hBmp = ToBitmap(device, view, model, backColor, width, height);
 
 	device->eraseAll();

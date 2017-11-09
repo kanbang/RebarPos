@@ -1540,9 +1540,9 @@ Acad::ErrorStatus CBOQTable::dwgInFields(AcDbDwgFiler* pFiler)
 
 	// Rows
 	ClearRows();
-	long count = 0;
+	Adesk::Int32 count = 0;
 	pFiler->readInt32(&count);
-	for(long i = 0; i < count; i++)
+	for(Adesk::Int32 i = 0; i < count; i++)
 	{
 		CBOQRow* row = new CBOQRow();
 		pFiler->readInt32(&row->pos);
@@ -2252,6 +2252,9 @@ Acad::ErrorStatus CBOQTable::subGetClassID(CLSID* pClsid) const
     assertReadEnabled();
 
 	// See the interface definition file for the CLASS ID
+#ifdef REBARPOS2017
+	CLSID clsid = { 0xba77cfff, 0x0274, 0x4d4c,{ 0xbf, 0xe2, 0x64, 0xa5, 0x73, 0x1b, 0xad, 0x37 } };
+#endif
 #ifdef REBARPOS2015
 	CLSID clsid = { 0xba77cfff, 0x0274, 0x4d4c,{ 0xbf, 0xe2, 0x64, 0xa5, 0x73, 0x1b, 0xad, 0x35 } };
 #endif

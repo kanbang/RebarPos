@@ -90,7 +90,6 @@ public:
 	static Acad::ErrorStatus ReadDXFVector(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, AcGeVector2d& val);
 	static Acad::ErrorStatus ReadDXFVector(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, AcGeVector3d& val);
 	static Acad::ErrorStatus ReadDXFBool(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, Adesk::Boolean& val);
-	static Acad::ErrorStatus ReadDXFBool(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, bool& val);
 	static Acad::ErrorStatus ReadDXFObjectId(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, AcDbObjectId& val);
 
 	// Split string

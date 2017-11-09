@@ -391,17 +391,6 @@ Acad::ErrorStatus Utility::ReadDXFBool(AcDbDxfFiler* pFiler, const short code, c
 	return es;
 }
 
-Acad::ErrorStatus Utility::ReadDXFBool(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, bool& val)
-{
-	Acad::ErrorStatus es;
-	resbuf rb;
-	if ((es = ReadDXFItem(pFiler, code, name, &rb)) == Acad::eOk)
-	{
-		val = (rb.resval.rint != 0);
-	}
-	return es;
-}
-
 Acad::ErrorStatus Utility::ReadDXFObjectId(AcDbDxfFiler* pFiler, const short code, const ACHAR* name, AcDbObjectId& val)
 {
 	Acad::ErrorStatus es;

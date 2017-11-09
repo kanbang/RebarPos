@@ -3,7 +3,9 @@
 // Type library section and components
 //
 [
-#if REBARPOS2015
+#if REBARPOS2017
+	uuid(26E9A3B0-6567-4857-AABB-E09AC4A7A8A7),
+#elif REBARPOS2015
 	uuid(26E9A3B0-6567-4857-AABB-E09AC4A7A8A5),
 #elif REBARPOS2013
 	uuid(26E9A3B0-6567-4857-AABB-E09AC4A7A8A3),
@@ -11,7 +13,9 @@
 	uuid(26E9A3B0-6567-4857-AABB-E09AC4A7A8A0),
 #endif	
 	version(1.0),
-#if REBARPOS2015
+#if REBARPOS2017
+	helpstring("RebarPos 1.0 Type Library for AutoCAD R21"),
+#elif REBARPOS2015
 	helpstring("RebarPos 1.0 Type Library for AutoCAD R20"),
 #elif REBARPOS2013
 	helpstring("RebarPos 1.0 Type Library for AutoCAD R19"),
@@ -24,7 +28,9 @@ library COMREBARPOSLib
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
 
-#if REBARPOS2015
+#if REBARPOS2017
+	importlib("C:\\Autodesk\\ObjectARX 2017\\inc-x64\\axdb21enu.tlb");
+#elif REBARPOS2015
 	importlib("C:\\Autodesk\\ObjectARX 2015\\inc-x64\\axdb20enu.tlb");
 #elif REBARPOS2013
 	importlib("C:\\Autodesk\\ObjectARX 2013\\inc-x64\\axdb19enu.tlb");
@@ -98,7 +104,9 @@ library COMREBARPOSLib
 
 	// ComRebarPos coclass
 	[
-#if REBARPOS2015
+#if REBARPOS2017
+		uuid(97CAC17D-B1C7-49ca-8D57-D3FF491860F7),
+#elif REBARPOS2015
 		uuid(97CAC17D-B1C7-49ca-8D57-D3FF491860F5),
 #elif REBARPOS2013
 		uuid(97CAC17D-B1C7-49ca-8D57-D3FF491860F3),
@@ -166,14 +174,18 @@ library COMREBARPOSLib
 
 	// ComBOQTable coclass
 	[
-#if REBARPOS2015
+#if REBARPOS2017
+		uuid(BA77CFFF-0274-4d4c-BFE2-64A5731BAD37),
+#elif REBARPOS2015
 		uuid(BA77CFFF-0274-4d4c-BFE2-64A5731BAD35),
 #elif REBARPOS2013
 		uuid(BA77CFFF-0274-4d4c-BFE2-64A5731BAD33),
 #elif REBARPOS2010
 		uuid(BA77CFFF-0274-4d4c-BFE2-64A5731BAD30),
 #endif
-#if REBARPOS2015
+#if REBARPOS2017
+		helpstring("ComBOQTable Class for AutoCAD R21"),
+#elif REBARPOS2015
 		helpstring("ComBOQTable Class for AutoCAD R20"),
 #elif REBARPOS2013
 		helpstring("ComBOQTable Class for AutoCAD R19"),

@@ -20,7 +20,11 @@ Install the corresponding build tools:
 
 Install corresponding boost libraries: http://www.boost.org/
 
-Boost is assumed to be located `C:\Boost`. So that the include path is `C:\Boost\boost` and library paths are: `C:\Boost\lib\win32\vc90` and `C:\Boost\lib\x64\vc90` for Visual Studio 2008, `C:\Boost\lib\win32\vc100` and `C:\Boost\lib\x64\vc100` for Visual Studio 2010, etc.
+Boost is assumed to be located `C:\Boost`. So that the include path is `C:\Boost\boost` and library paths are:
+* `C:\Boost\lib64-msvc-14.0` for Visual Studio 2015
+* `C:\Boost\lib64-msvc-12.0` for Visual Studio 2012
+* `C:\Boost\lib64-msvc-10.0` for Visual Studio 2010
+* `C:\Boost\lib64-msvc-9.0` for Visual Studio 2008
 
 Application Compatibility
 -------------------------
