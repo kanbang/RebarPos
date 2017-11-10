@@ -113,7 +113,7 @@ namespace RebarPosCommands
             PosCategories();
 
             // License information
-            LicenseInformation();
+            CheckLicense.LicenseInformation();
         }
 
         private bool ShowShapes
@@ -138,7 +138,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "POS", "POS_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_Pos()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
 
@@ -236,7 +236,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "POSEDIT", "POSEDIT_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_PosEdit()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
 
@@ -264,7 +264,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "BOQEDIT", "BOQEDIT_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_BOQEdit()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             Autodesk.AutoCAD.EditorInput.Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
 
@@ -292,7 +292,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "NEWPOS", "NEWPOS_Local", CommandFlags.Modal)]
         public void CMD_NewPos()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             NewPos();
         }
@@ -302,7 +302,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "NUMBERPOS", "NUMBERPOS_Local", CommandFlags.Modal)]
         public void CMD_NumberPos()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             NumberPos();
         }
@@ -312,7 +312,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "EMPTYPOS", "EMPTYPOS_Local", CommandFlags.Modal)]
         public void CMD_EmptyBalloons()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             EmptyBalloons();
         }
@@ -322,7 +322,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "POSCHECK", "POSCHECK_Local", CommandFlags.Modal)]
         public void CMD_PosCheck()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             PosCheck();
         }
@@ -332,7 +332,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "COPYPOS", "COPYPOS_Local", CommandFlags.Modal)]
         public void CMD_CopyPos()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             CopyPos();
         }
@@ -342,7 +342,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "COPYPOSDETAIL", "COPYPOSDETAIL_Local", CommandFlags.Modal)]
         public void CMD_CopyPosDetail()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             CopyPosDetail();
         }
@@ -352,7 +352,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "COPYPOSNUMBER", "COPYPOSNUMBER_Local", CommandFlags.Modal)]
         public void CMD_CopyPosNumber()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             CopyPosNumber();
         }
@@ -362,7 +362,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "POSFIND", "POSFIND_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_FindReplace()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             FindReplace(true);
         }
@@ -372,7 +372,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "POSSHAPES", "POSSHAPES_Local", CommandFlags.Modal)]
         public void CMD_PosShapes()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             PosShapes();
         }
@@ -382,7 +382,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "TOGGLESHAPES", "TOGGLESHAPES_Local", CommandFlags.Modal)]
         public void CMD_ToggleShapes()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             ShowShapes = !ShowShapes;
             DWGUtility.RefreshAllPos();
@@ -393,7 +393,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "SHOWSHAPES", "SHOWSHAPES_Local", CommandFlags.Modal)]
         public void CMD_ShowShapes()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             ShowShapes = true;
             DWGUtility.RefreshAllPos();
@@ -404,7 +404,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "HIDESHAPES", "HIDESHAPES_Local", CommandFlags.Modal)]
         public void CMD_HideShapes()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             ShowShapes = false;
             DWGUtility.RefreshAllPos();
@@ -415,7 +415,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "POSLENGTH", "POSLENGTH_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_PosLength()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             PromptSelectionResult selresult = DWGUtility.SelectAllPosUser();
             if (selresult.Status != PromptStatus.OK) return;
@@ -443,7 +443,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "INCLUDEPOS", "INCLUDEPOS_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_IncludePos()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             PromptSelectionResult selresult = DWGUtility.SelectAllPosUser();
             if (selresult.Status != PromptStatus.OK) return;
@@ -471,7 +471,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "LASTPOSNUMBER", "LASTPOSNUMBER_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_LastPosNumber()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             PromptSelectionResult sel = DWGUtility.SelectAllPosUser();
             if (sel.Status != PromptStatus.OK) return;
@@ -490,7 +490,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "BOQ", "BOQ_Local", CommandFlags.Modal | CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public void CMD_DrawBOQ()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             DrawBOQ();
         }
@@ -500,7 +500,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "TABLESTYLE", "TABLESTYLE_Local", CommandFlags.Modal)]
         public void CMD_TableStyle()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             TableStyles();
         }
@@ -510,7 +510,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "POSSETTINGS", "POSSETTINGS_Local", CommandFlags.Modal)]
         public void CMD_PosGroups()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             PosGroups();
         }
@@ -528,7 +528,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "POSUPGRADE", "POSUPGRADE_Local", CommandFlags.Modal)]
         public void CMD_PosUpgrade()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             PosUpgrade();
         }
@@ -538,7 +538,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "POSEXPLODE", "POSEXPLODE_Local", CommandFlags.Modal)]
         public void CMD_PosExplode()
         {
-            if (!CheckLicense()) return;
+            if (!CheckLicense.Check()) return;
 
             PosExplode();
         }
@@ -556,7 +556,7 @@ namespace RebarPosCommands
         [CommandMethod("OZOZRebarPos", "POSLICENSE", "POSLICENSE_Local", CommandFlags.Modal)]
         public void CMD_PosLicense()
         {
-            LicenseInformation();
+            CheckLicense.LicenseInformation();
 
             Autodesk.AutoCAD.ApplicationServices.Application.DisplayTextScreen = true;
 
@@ -566,11 +566,9 @@ namespace RebarPosCommands
 
             if (result.Status == PromptStatus.OK)
             {
-                switch (result.StringResult)
+                if (result.StringResult == "Yes")
                 {
-                    case "Yes":
-                        RequestLicense();
-                        break;
+                    CheckLicense.Request();
                 }
             }
         }

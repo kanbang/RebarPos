@@ -119,6 +119,9 @@
     </When>
   </Choose>
   <ItemGroup>
+    <Reference Include="LicenseCheck">
+      <HintPath>Libraries\LicenseCheck.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -135,7 +138,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands_CheckLicense.cs" />
+    <Compile Include="CheckLicense.cs" />
     <Compile Include="Commands_NewPos.cs" />
     <Compile Include="Commands.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -171,7 +174,6 @@
       <DependentUpon>ConfimMessageBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Crypto.cs" />
-    <Compile Include="License.cs" />
     <Compile Include="MultiPosShapeView.cs" />
     <Compile Include="RequestLicenseForm.cs">
       <SubType>Form</SubType>

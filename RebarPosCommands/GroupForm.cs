@@ -51,12 +51,7 @@ namespace RebarPosCommands
             InitializeComponent();
             Width = 340;
 
-            bool allowCustomMarkers = false;
-            License license = License.FromRegistry(MyCommands.ApplicationRegistryKey, MyCommands.LicensedAppName);
-            if (license.Status == License.LicenseStatus.Valid)
-            {
-                allowCustomMarkers = license.AllowCustomMarkers;
-            }
+            bool allowCustomMarkers = true;
 
             pnlCustomize.Enabled = pnlCustomize.Visible = allowCustomMarkers;
             btnDisplayStandard.Enabled = btnDisplayStandard.Visible = allowCustomMarkers;
