@@ -37,22 +37,7 @@ Source: "..\Package\PackageContents.xml"; DestDir: "{app}"; Flags: ignoreversion
 ; Package icon
 Source: "..\Package\icon.bmp"; DestDir: "{app}\Resources"
 ; x64 Libraries
-; AutoCAD R18 (2010, 2011, 2012) Libraries
-Source: "..\NativeRebarPos\Release-2010\x64\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2010\x64"; Flags: ignoreversion
-Source: "..\COMRebarPos\Release-2010\x64\COMRebarPos.dbx"; DestDir: "{app}\Bin\2010\x64"; Flags: ignoreversion
-Source: "..\ManagedRebarPos\Release-2010\x64\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2010\x64"; Flags: ignoreversion
-Source: "..\RebarPosCommands\Release-2010\x64\RebarPosCommands.dll"; DestDir: "{app}\Bin\2010\x64"; Flags: ignoreversion
-; AutoCAD R19 (2013, 2014) Libraries
-Source: "..\NativeRebarPos\Release-2013\x64\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2013\x64"; Flags: ignoreversion
-Source: "..\COMRebarPos\Release-2013\x64\COMRebarPos.dbx"; DestDir: "{app}\Bin\2013\x64"; Flags: ignoreversion
-Source: "..\ManagedRebarPos\Release-2013\x64\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2013\x64"; Flags: ignoreversion
-Source: "..\RebarPosCommands\Release-2013\x64\RebarPosCommands.dll"; DestDir: "{app}\Bin\2013\x64"; Flags: ignoreversion
-; AutoCAD R20 (2015, 2016) Libraries
-Source: "..\NativeRebarPos\Release-2015\x64\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2015\x64"; Flags: ignoreversion
-Source: "..\COMRebarPos\Release-2015\x64\COMRebarPos.dbx"; DestDir: "{app}\Bin\2015\x64"; Flags: ignoreversion
-Source: "..\ManagedRebarPos\Release-2015\x64\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2015\x64"; Flags: ignoreversion
-Source: "..\RebarPosCommands\Release-2015\x64\RebarPosCommands.dll"; DestDir: "{app}\Bin\2015\x64"; Flags: ignoreversion
-; AutoCAD R21 (2018) Libraries
+; AutoCAD R21 (2017) Libraries
 Source: "..\NativeRebarPos\Release-2017\x64\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2017\x64"; Flags: ignoreversion
 Source: "..\COMRebarPos\Release-2017\x64\COMRebarPos.dbx"; DestDir: "{app}\Bin\2017\x64"; Flags: ignoreversion
 Source: "..\ManagedRebarPos\Release-2017\x64\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2017\x64"; Flags: ignoreversion
@@ -63,16 +48,9 @@ Source: "..\COMRebarPos\Release-2018\x64\COMRebarPos.dbx"; DestDir: "{app}\Bin\2
 Source: "..\ManagedRebarPos\Release-2018\x64\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2018\x64"; Flags: ignoreversion
 Source: "..\RebarPosCommands\Release-2018\x64\RebarPosCommands.dll"; DestDir: "{app}\Bin\2018\x64"; Flags: ignoreversion
 ; Cuix file
-Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Resources\2010"
-Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Resources\2013"
-Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Resources\2015"
 Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Resources\2017"
 Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Resources\2018"
 ; Menu resources
-Source: "..\MenuIcons\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2010"; DestName: "RebarPos.dll"
-Source: "..\MenuIcons\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2013"; DestName: "RebarPos.dll"
-Source: "..\MenuIcons\Release\MenuIcons.dll"; DestDir: "{app}\Resources\2015"; DestName: "RebarPos.dll"
-Source: "..\MenuIcons\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2015"; DestName: "RebarPos_light.dll"
 Source: "..\MenuIcons\Release\MenuIcons.dll"; DestDir: "{app}\Resources\2017"; DestName: "RebarPos.dll"
 Source: "..\MenuIcons\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2017"; DestName: "RebarPos_light.dll"
 Source: "..\MenuIcons\Release\MenuIcons.dll"; DestDir: "{app}\Resources\2018"; DestName: "RebarPos.dll"
@@ -182,19 +160,6 @@ begin
     // 2017
     AddCOMRegistry('2017', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8A7}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F7}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD37}');
     AddDBXRegistry('R21.0', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F7}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD37}');
-    // 2015
-    AddCOMRegistry('2015', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8A5}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F5}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD35}');
-    AddDBXRegistry('R20.0', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F5}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD35}');
-    AddDBXRegistry('R20.1', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F5}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD35}');
-    // 2013
-    AddCOMRegistry('2013', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8A3}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F3}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD33}');
-    AddDBXRegistry('R19.0', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F3}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD33}');
-    AddDBXRegistry('R19.1', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F3}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD33}');
-    // 2010
-    AddCOMRegistry('2010', '{26E9A3B0-6567-4857-AABB-E09AC4A7A8A0}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F0}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD30}');
-    AddDBXRegistry('R18.0', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F0}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD30}');
-    AddDBXRegistry('R18.1', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F0}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD30}');
-    AddDBXRegistry('R18.2', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F0}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD30}');
   end;
 end;
 
@@ -208,18 +173,5 @@ begin
     // 2017
     RemoveCOMRegistry('{26E9A3B0-6567-4857-AABB-E09AC4A7A8A7}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F7}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD37}');
     RemoveDBXRegistry('R21.0');
-    // 2015
-    RemoveCOMRegistry('{26E9A3B0-6567-4857-AABB-E09AC4A7A8A5}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F5}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD35}');
-    RemoveDBXRegistry('R20.0');
-    RemoveDBXRegistry('R20.1');
-    // 2013
-    RemoveCOMRegistry('{26E9A3B0-6567-4857-AABB-E09AC4A7A8A3}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F3}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD33}');
-    RemoveDBXRegistry('R19.0');
-    RemoveDBXRegistry('R19.1');
-    // 2010
-    RemoveCOMRegistry('{26E9A3B0-6567-4857-AABB-E09AC4A7A8A0}', '{97CAC17D-B1C7-49CA-8D57-D3FF491860F0}', '{BA77CFFF-0274-4D4C-BFE2-64A5731BAD30}'); 
-    RemoveDBXRegistry('R18.0');
-    RemoveDBXRegistry('R18.1');
-    RemoveDBXRegistry('R18.2');
   end;
 end;
