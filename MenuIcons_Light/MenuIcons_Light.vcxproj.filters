@@ -20,106 +20,103 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Resources\BALONSIL.ico">
+    <Image Include="Resources\ACILIMLAR_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\BALONSIL_32.ico">
+    <Image Include="Resources\BALONSIL_32_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\LGOSTER.ico">
+    <Image Include="Resources\BALONSIL_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\METRAJ.ico">
+    <Image Include="Resources\LGOSTER_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\METRAJSIL.ico">
+    <Image Include="Resources\LISANS_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\METRAJSIL_32.ico">
+    <Image Include="Resources\METRAJ_32_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\METRAJYARDIM.ico">
+    <Image Include="Resources\METRAJSIL_32_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\METRAJ_32.ico">
+    <Image Include="Resources\METRAJSIL_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\POZAYAR.ico">
+    <Image Include="Resources\METRAJYARDIM_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\POZBENZET.ico">
+    <Image Include="Resources\POZAYAR_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\POZBUL.ico">
+    <Image Include="Resources\POZBENZET_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\POZBUL_32.ico">
+    <Image Include="Resources\POZBUL_32_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\POZDEGIS.ico">
+    <Image Include="Resources\POZBUL_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\POZDEGIS_32.ico">
+    <Image Include="Resources\POZDEGIS_32_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\POZEDIT.ico">
+    <Image Include="Resources\POZDEGIS_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\POZEDIT_32.ico">
+    <Image Include="Resources\POZEDIT_32_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\POZEKLE.ico">
+    <Image Include="Resources\POZEDIT_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\POZKATKI.ico">
+    <Image Include="Resources\POZEKLE_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\POZKONTROL.ico">
+    <Image Include="Resources\POZKATKI_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\POZKONTROL_32.ico">
+    <Image Include="Resources\POZKONTROL_32_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\POZKOPYALA.ico">
+    <Image Include="Resources\POZKONTROL_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\POZKOPYALADETAY.ico">
+    <Image Include="Resources\POZKOPYALA_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\POZMIRROR.ico">
+    <Image Include="Resources\POZKOPYALADETAY_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\POZNUM.ico">
+    <Image Include="Resources\POZMIRROR_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\POZNUM_32.ico">
+    <Image Include="Resources\POZNUM_32_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\SEKILGOSTER.ico">
+    <Image Include="Resources\POZNUM_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\SEKILSIL.ico">
+    <Image Include="Resources\POZPATLAT_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\SONPOZ.ico">
+    <Image Include="Resources\SEKILGOSTER_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\SONPOZ_32.ico">
+    <Image Include="Resources\SEKILSIL_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\YENILE.ico">
+    <Image Include="Resources\SONPOZ_32_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\ACILIMLAR.ico">
+    <Image Include="Resources\SONPOZ_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\TABLOSTILI.ico">
+    <Image Include="Resources\TABLOSTILI_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\LISANS.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\POZPATLAT.ico">
+    <Image Include="Resources\YENILE_Light.ico">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
