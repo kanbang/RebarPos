@@ -3,6 +3,7 @@
 [Oo]bj/
 [Ww]in32/
 [Xx]64/
+Libraries/
 
 # mstest test results
 TestResults
