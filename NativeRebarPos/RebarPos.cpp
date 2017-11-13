@@ -2085,13 +2085,14 @@ Acad::ErrorStatus CRebarPos::subWblockClone(AcRxObject*    pOwner,
 Acad::ErrorStatus CRebarPos::subGetClassID(CLSID* pClsid) const
 {
 	assertReadEnabled();
+
 	// See the interface definition file for the CLASS ID
-#ifdef REBARPOS2017
+#if defined(REBARPOS2017)
 	CLSID clsid = { 0x97CAC17D, 0xB1C7, 0x49ca, { 0x8D, 0x57, 0xD3, 0xFF, 0x49, 0x18, 0x60, 0xF7} };
-#endif
-#ifdef REBARPOS2018
+#elif defined(REBARPOS2018)
 	CLSID clsid = { 0x97CAC17D, 0xB1C7, 0x49ca, { 0x8D, 0x57, 0xD3, 0xFF, 0x49, 0x18, 0x60, 0xF8} };
 #endif
+
 	*pClsid = clsid;
 	return Acad::eOk;
 }
