@@ -844,7 +844,7 @@ Acad::ErrorStatus CRebarPos::subGetOsnapPoints(
 		return Acad::eOk;
 
 	if (osnapMode == AcDb::kOsModeIns)
-		snapPoints.append(m_BasePoint);
+		snapPoints.append(m_BasePoint + AcGeVector3d(0, -15, 0));
 
 	return Acad::eOk;
 }
@@ -855,7 +855,7 @@ Acad::ErrorStatus CRebarPos::subGetGripPoints(
 	AcDbIntArray& geomIds) const
 {
 	assertReadEnabled();
-	gripPoints.append(m_BasePoint);
+	gripPoints.append(m_BasePoint + AcGeVector3d(0, -15, 0));
 	if (m_Detached == Adesk::kFalse && m_DisplayStyle != CRebarPos::MARKERONLY) gripPoints.append(m_NoteGrip);
 	if (m_Detached == Adesk::kFalse && m_DisplayStyle == CRebarPos::ALL) gripPoints.append(m_LengthGrip);
 	return Acad::eOk;
