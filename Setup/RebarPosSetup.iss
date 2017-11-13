@@ -1,5 +1,5 @@
 #dim Version[4]
-#expr ParseVersion("..\RebarPosCommands\Release-2015\RebarPosCommands.dll", Version[0], Version[1], Version[2], Version[3])
+#expr ParseVersion("..\RebarPosCommands\Release-2018\x64\RebarPosCommands.dll", Version[0], Version[1], Version[2], Version[3])
 #define AppVersion Str(Version[0]) + "." + Str(Version[1]) + "." + Str(Version[2]) + "." + Str(Version[3])
 #define ShortAppVersion Str(Version[0]) + "." + Str(Version[1])
 
@@ -33,28 +33,29 @@ Type: filesandordirs; Name: "{app}\Contents"
 
 [Files]
 ; Application manifest
-Source: "..\Package\PackageContents.xml"; DestDir: "{app}"; Flags: ignoreversion; AfterInstall: PreparePackageXML('{#ShortAppVersion}')
+Source: ".\PackageContents.xml"; DestDir: "{app}"; Flags: ignoreversion; AfterInstall: PreparePackageXML('{#ShortAppVersion}')
 ; Package icon
-Source: "..\Package\icon.bmp"; DestDir: "{app}\Resources"
-; x64 Libraries
-; AutoCAD R21 (2017) Libraries
-Source: "..\NativeRebarPos\Release-2017\x64\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2017\x64"; Flags: ignoreversion
-Source: "..\COMRebarPos\Release-2017\x64\COMRebarPos.dbx"; DestDir: "{app}\Bin\2017\x64"; Flags: ignoreversion
-Source: "..\ManagedRebarPos\Release-2017\x64\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2017\x64"; Flags: ignoreversion
-Source: "..\RebarPosCommands\Release-2017\x64\RebarPosCommands.dll"; DestDir: "{app}\Bin\2017\x64"; Flags: ignoreversion
+Source: ".\icon.bmp"; DestDir: "{app}\Resources"
 ; AutoCAD R22 (2018) Libraries
 Source: "..\NativeRebarPos\Release-2018\x64\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2018\x64"; Flags: ignoreversion
 Source: "..\COMRebarPos\Release-2018\x64\COMRebarPos.dbx"; DestDir: "{app}\Bin\2018\x64"; Flags: ignoreversion
 Source: "..\ManagedRebarPos\Release-2018\x64\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2018\x64"; Flags: ignoreversion
 Source: "..\RebarPosCommands\Release-2018\x64\RebarPosCommands.dll"; DestDir: "{app}\Bin\2018\x64"; Flags: ignoreversion
+Source: "..\RebarPosCommands\Libraries\LicenseCheck.dll"; DestDir: "{app}\Bin\2018\x64"; Flags: ignoreversion
+; AutoCAD R21 (2017) Libraries
+Source: "..\NativeRebarPos\Release-2017\x64\NativeRebarPos.dbx"; DestDir: "{app}\Bin\2017\x64"; Flags: ignoreversion
+Source: "..\COMRebarPos\Release-2017\x64\COMRebarPos.dbx"; DestDir: "{app}\Bin\2017\x64"; Flags: ignoreversion
+Source: "..\ManagedRebarPos\Release-2017\x64\ManagedRebarPos.dll"; DestDir: "{app}\Bin\2017\x64"; Flags: ignoreversion
+Source: "..\RebarPosCommands\Release-2017\x64\RebarPosCommands.dll"; DestDir: "{app}\Bin\2017\x64"; Flags: ignoreversion
+Source: "..\RebarPosCommands\Libraries\LicenseCheck.dll"; DestDir: "{app}\Bin\2017\x64"; Flags: ignoreversion
 ; Cuix file
 Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Resources\2017"
 Source: "..\Menu\RebarPos.cuix"; DestDir: "{app}\Resources\2018"
 ; Menu resources
 Source: "..\MenuIcons\Release\MenuIcons.dll"; DestDir: "{app}\Resources\2017"; DestName: "RebarPos.dll"
-Source: "..\MenuIcons\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2017"; DestName: "RebarPos_light.dll"
+Source: "..\MenuIcons_Light\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2017"; DestName: "RebarPos_light.dll"
 Source: "..\MenuIcons\Release\MenuIcons.dll"; DestDir: "{app}\Resources\2018"; DestName: "RebarPos.dll"
-Source: "..\MenuIcons\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2018"; DestName: "RebarPos_light.dll"
+Source: "..\MenuIcons_Light\Release\MenuIcons_Light.dll"; DestDir: "{app}\Resources\2018"; DestName: "RebarPos_light.dll"
 
 [Registry]
 Root: HKCU; Subkey: "Software\OZOZ\RebarPos";
