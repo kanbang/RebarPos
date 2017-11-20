@@ -47,13 +47,26 @@ STDMETHODIMP CComRebarPos::GetDisplayName(
 	/* [in] */ DISPID dispID,
 	/* [out] */ BSTR * propName)
 {
-	if(dispID == 0x401)
+	switch(dispID)
 	{
+	case 0x401:
 		*propName = ::SysAllocString(L"RebarPos");
-
 		return S_OK;
+	case DISPID_SHOWLENGTH:
+		*propName = ::SysAllocString(L"Show total length");
+		return S_OK;
+	case DISPID_LENGTHAL:
+		*propName = ::SysAllocString(L"Length alignment");
+		return S_OK;
+	case DISPID_NOTEAL:
+		*propName = ::SysAllocString(L"Note alignment");
+		return S_OK;
+	default:
+		CComQIPtr<IOPMPropertyExtension> helper;
+		helper.CoCreateInstance(CLSID_AcadEntity);
+		return helper->GetDisplayName(dispID, propName);
 	}
-
+	
 	return IOPMPropertyExtensionImpl<CComRebarPos>::GetDisplayName(dispID, propName);
 }
 

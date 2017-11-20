@@ -46,11 +46,33 @@ STDMETHODIMP CComBOQTable::GetDisplayName(
 	/* [in] */ DISPID dispID,
 	/* [out] */ BSTR * propName)
 {
-	if(dispID == 0x401)
+	switch (dispID)
 	{
+	case 0x401:
 		*propName = ::SysAllocString(L"BOQTable");
-
 		return S_OK;
+	case DISPID_TDISPLAYUNIT:
+		*propName = ::SysAllocString(L"Display unit");
+		return S_OK;
+	case DISPID_TMAXROWS:
+		*propName = ::SysAllocString(L"Max rows");
+		return S_OK;
+	case DISPID_TTABLESPACING:
+		*propName = ::SysAllocString(L"Table spacing");
+		return S_OK;
+	case DISPID_THEADINGSCALE:
+		*propName = ::SysAllocString(L"Heading scale");
+		return S_OK;
+	case DISPID_TFOOTINGSCALE:
+		*propName = ::SysAllocString(L"Footing scale");
+		return S_OK;
+	case DISPID_TROWSPACING:
+		*propName = ::SysAllocString(L"Row spacing");
+		return S_OK;
+	default:
+		CComQIPtr<IOPMPropertyExtension> helper;
+		helper.CoCreateInstance(CLSID_AcadEntity);
+		return helper->GetDisplayName(dispID, propName);
 	}
 
 	return IOPMPropertyExtensionImpl<CComBOQTable>::GetDisplayName(dispID, propName);
