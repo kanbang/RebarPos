@@ -9,12 +9,32 @@ HKCR
 		CLSID = s '{97CAC17D-B1C7-49ca-8D57-D3FF491860F8}'
 		CurVer = s 'COMREBARPOSLib.ComRebarPos2018.1'
 	}
+	COMREBARPOSLib.ComBOQTable2018.1 = s 'ComBOQTable Class for AutoCAD R22'
+	{
+		CLSID = s '{BA77CFFF-0274-4d4c-BFE2-64A5731BAD38}'
+	}
+	COMREBARPOSLib.ComBOQTable2018 = s 'ComBOQTable Class for AutoCAD R22'
+	{
+		CLSID = s '{BA77CFFF-0274-4d4c-BFE2-64A5731BAD38}'
+		CurVer = s 'COMREBARPOSLib.ComBOQTable2018.1'
+	}
 	NoRemove CLSID
 	{
 		ForceRemove {97CAC17D-B1C7-49ca-8D57-D3FF491860F8} = s 'ComRebarPos Class for AutoCAD R22'
 		{
 			ProgID = s 'COMREBARPOSLib.ComRebarPos2018.1'
 			VersionIndependentProgID = s 'COMREBARPOSLib.ComRebarPos2018'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{26E9A3B0-6567-4857-AABB-E09AC4A7A8A8}'
+		}
+		ForceRemove {BA77CFFF-0274-4d4c-BFE2-64A5731BAD38} = s 'ComBOQTable Class for AutoCAD R22'
+		{
+			ProgID = s 'COMREBARPOSLib.ComBOQTable2018.1'
+			VersionIndependentProgID = s 'COMREBARPOSLib.ComBOQTable2018'
 			ForceRemove 'Programmable'
 			InprocServer32 = s '%MODULE%'
 			{
@@ -37,6 +57,7 @@ HKLM
 					NoRemove ActiveXCLSID
 					{
 						val RebarPos = s '{97CAC17D-B1C7-49ca-8D57-D3FF491860F8}'
+						val BOQTable = s '{BA77CFFF-0274-4d4c-BFE2-64A5731BAD38}'
 					}
 				}			
 			}
