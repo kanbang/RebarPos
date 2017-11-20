@@ -120,9 +120,8 @@ begin
   RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0', '', 'RebarPos ' + AcVersion + ' 1.0 Type Library');
   RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\0', '', '');
   RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\0\win64', '', ExpandConstant('{app}\Bin\' + AcVersion + '\x64\COMRebarPos.dbx'));
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\0\win32', '', ExpandConstant('{app}\Bin\' + AcVersion + '\win32\COMRebarPos.dbx'));
   RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\FLAGS', '', '0');
-  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\HELPDIR', '', ExpandConstant('{app}\Bin' + AcVersion));
+  RegWriteStringValue(HKEY_CLASSES_ROOT, RegPath + '\1.0\HELPDIR', '', ExpandConstant('{app}\Bin\' + AcVersion));
     
   // COM classes
   RegPath := 'CLSID\' + ComRebarPosGUID;
